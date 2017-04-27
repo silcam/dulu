@@ -1,7 +1,5 @@
 class UsersController < ApplicationController
 
-  def index
+#nevermind
 
-  end
-  
 end
