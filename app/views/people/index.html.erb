@@ -3,10 +3,17 @@
   <%= link_to 'Add Person', new_person_path %>
 </p>
 <table>
+  <tr>
+    <td>Name</td>
+    <td>Email</td>
+    <td>Has Login</td>
+    <td> </td> <!-- Column for Edit link-->
+  </tr>
   <% @people.each do |person| %>
     <tr>
       <td><%= person.last_name %>, <%= person.first_name %></td>
       <td><%= person.email %></td>
+      <td><%= person.has_login ? 'Yes' : 'No' %></td>
       <td><%= link_to 'Edit', edit_person_path(person) %></td>
     </tr>
   <% end %>

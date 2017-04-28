@@ -1,4 +1,5 @@
 
+<%= form_for @person do |f| %>
   <p>
     <%= f.label :first_name %>
     <%= f.text_field :first_name %>
@@ -15,5 +16,11 @@
   </p>
 
   <p>
+    <%= f.check_box :has_login %>
+    <%= f.label 'Able to log in' %>
+  </p>
+
+  <p>
     <%= f.submit %>
   </p>
+<% end %>
