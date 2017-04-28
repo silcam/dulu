@@ -9,6 +9,12 @@
   </head>
 
   <body>
+    <% if logged_in? %>
+      <div>
+        <%= link_to 'People', people_path %>
+        <%= link_to 'Log out', logout_url, method: :delete %>
+      </div>
+    <% end %>
     <%= yield %>
   </body>
 </html>
