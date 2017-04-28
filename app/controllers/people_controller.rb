@@ -1,5 +1,7 @@
 class PeopleController < ApplicationController
 
+  before_action :logged_in_user
+
   def index
     @people = Person.all.order("last_name ASC")
   end
@@ -33,5 +35,11 @@ class PeopleController < ApplicationController
 private
   def person_params
     params.require(:person).permit(:first_name, :last_name ,:email, :has_login)
+  end
+
+  def logged_in_user
+    unless logged_in?
+      redirect_to login_url
+    end
   end
 end
