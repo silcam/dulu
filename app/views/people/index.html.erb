@@ -1,8 +1,8 @@
 <h1>People</h1>
 <p>
-  <%= link_to 'Add Person', new_person_path %>
+  <%= link_to 'Add Person', new_person_path, class: "btn btn-primary" %>
 </p>
-<table>
+<table class="table">
   <tr>
     <td>Name</td>
     <td>Email</td>
@@ -14,7 +14,7 @@
       <td><%= person.last_name %>, <%= person.first_name %></td>
       <td><%= person.email %></td>
       <td><%= person.has_login ? 'Yes' : 'No' %></td>
-      <td><%= link_to 'Edit', edit_person_path(person) %></td>
+      <td><%= link_to 'Edit', edit_person_path(person), class: "btn btn-default btn-xs" %></td>
     </tr>
   <% end %>
 </table>
