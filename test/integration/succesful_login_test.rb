@@ -1,5 +1,4 @@
 require 'test_helper'
-include SessionsHelper
 
 class SuccesfulLoginTest < ActionDispatch::IntegrationTest
   def setup
@@ -7,12 +6,15 @@ class SuccesfulLoginTest < ActionDispatch::IntegrationTest
     @pinochio = people(:pinochio)
   end
 
-  test "valid user login" do
+  test "valid user login and logout" do
     get login_path
     post login_path, params: { session: { email: @jiminy.email}}
     assert_redirected_to people_path  #for now
     follow_redirect!
-    assert_equal @jiminy, current_user
+    assert_equal @jiminy, Person.find_by(id: session[:user_id])
+    delete logout_path
+    assert_redirected_to login_path 
+    assert_not is_logged_in
   end
 
   test "invalid user login" do
