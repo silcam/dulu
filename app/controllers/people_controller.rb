@@ -1,7 +1,7 @@
 class PeopleController < ApplicationController
 
-  before_action :logged_in_user  #TODO - move this to application controller
-
+  #before_action :logged_in_user  #TODO - move this to application controller
+  
   def index
     @people = Person.all.order("last_name ASC")
   end
