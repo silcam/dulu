@@ -1,3 +1,4 @@
+<%= render 'shared/error_messages', errors: @person.errors %>
 
 <%= form_for @person do |f| %>
   <p>
@@ -8,6 +9,11 @@
   <p>
     <%= f.label :last_name %>
     <%= f.text_field :last_name %>
+  </p>
+
+  <p>
+    <%= f.label :organization %>
+    <%= f.collection_select :organization_id, Organization.all, :id, :name %>
   </p>
 
   <p>

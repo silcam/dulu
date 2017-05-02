@@ -1,3 +1,5 @@
+<%= render 'shared/error_messages', errors: @organization.errors %>
+
 <%= form_for @organization do |f| %>
   <p>
     <%= f.label :name %>
