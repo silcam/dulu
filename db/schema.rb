@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170502105912) do
+ActiveRecord::Schema.define(version: 20170502130955) do
 
   create_table "countries", force: :cascade do |t|
     t.string   "code"
@@ -37,15 +37,6 @@ ActiveRecord::Schema.define(version: 20170502105912) do
     t.string   "password"
     t.integer  "organization_id"
     t.index ["organization_id"], name: "index_people_on_organization_id"
-  end
-
-  create_table "users", force: :cascade do |t|
-    t.string   "email"
-    t.string   "hashed_password"
-    t.integer  "person_id"
-    t.datetime "created_at",      null: false
-    t.datetime "updated_at",      null: false
-    t.index ["person_id"], name: "index_users_on_person_id"
   end
 
 end
