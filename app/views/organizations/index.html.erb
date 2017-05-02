@@ -1,0 +1,14 @@
+<h1>Organizations</h1>
+<p>
+  <%= link_to 'Add Organization', new_organization_path, class: "btn btn-primary" %>
+</p>
+<table class="table">
+  <tr>
+    <th>Name</th>
+  </tr>
+  <% @organizations.each do |org| %>
+    <tr>
+      <td><%= org.name %></td>
+    </tr>
+  <% end %>
+</table>
