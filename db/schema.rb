@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170502130955) do
+ActiveRecord::Schema.define(version: 20170502134442) do
 
   create_table "countries", force: :cascade do |t|
     t.string   "code"
@@ -25,6 +25,7 @@ ActiveRecord::Schema.define(version: 20170502130955) do
     t.string   "abbreviation"
     t.datetime "created_at",   null: false
     t.datetime "updated_at",   null: false
+    t.integer  "fmid"
   end
 
   create_table "people", force: :cascade do |t|
@@ -36,6 +37,7 @@ ActiveRecord::Schema.define(version: 20170502130955) do
     t.boolean  "has_login",       default: false
     t.string   "password"
     t.integer  "organization_id"
+    t.integer  "fmid"
     t.index ["organization_id"], name: "index_people_on_organization_id"
   end
 
