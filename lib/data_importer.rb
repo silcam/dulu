@@ -1,5 +1,24 @@
 class DataImporter
-  
+  def self.import_countries
+    csv_file = 'lib\csv_files\IP2LOCATION-COUNTRY-MULTILINGUAL.CSV'
+    fields = [:langcode, :langname, :country_code, :country_code_bigger, 
+              :country_number, :country_name]
+    self.generic_import(csv_file, fields) do |params|
+      #p params
+      params[:country_name] = params[:country_name][0..-2] #necessary hack, line endings or something
+      if(params[:langcode]=="EN")
+        country = Country.new
+        country.code = params[:country_code]
+        country.english_name = params[:country_name]
+        country
+      elsif(params[:langcode]=="FR")
+        country = Country.find_by(code: params[:country_code])
+        country.french_name = params[:country_name]
+        country
+      end
+    end
+  end
+
   def self.import_language_statuses
     csv_file = 'lib\csv_files\language_status.csv'
     fields = [:level, :label, :description]
@@ -100,6 +119,7 @@ class DataImporter
       unsaved_items = []
       File.open(csv_file, 'r') do |file|
         while line = file.gets
+          p line[1..-2]
           params = line[1..-2].split('","')
           params_hash = {}
           fields.each_index do |i|
