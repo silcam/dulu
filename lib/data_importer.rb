@@ -1,5 +1,28 @@
 class DataImporter
 
+  def self.import_orgs
+    csv_file = 'lib\csv_files\orgs.csv'
+    #Field order: fmid, name, abbreviation, description, country
+    unsaved_orgs = []
+    File.open csv_file, 'r'do |f|
+      while line = f.gets
+        params = line[1..-2].split('","')
+        unless org = Organization.find_by(fmid: params[0])
+          org = Organization.new 
+        end
+        org.fmid = params[0]
+        org.name = params[1]
+        org.abbreviation = params[2]
+        org.description = params[3]
+        unless org.save
+          unsaved_orgs << org.name
+        end
+      end
+    end
+    unsaved_orgs.each{|org| p "#{org} not saved"}
+    'done'
+  end
+
   def self.import_people 
     csv_file = 'lib\csv_files\people.csv'
     #Field order: email, first_name, last_name, fmid, 

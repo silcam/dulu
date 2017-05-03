@@ -8,7 +8,11 @@
   </tr>
   <% @organizations.each do |org| %>
     <tr>
-      <td><%= org.name %></td>
+      <td><%= org.name %>
+        <% unless org.description.blank? %>
+          - <%= org.description %>
+        <% end %>
+      </td>
     </tr>
   <% end %>
 </table>
