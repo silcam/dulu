@@ -1,4 +1,12 @@
 class DataImporter
+  
+  def self.import_language_statuses
+    csv_file = 'lib\csv_files\language_status.csv'
+    fields = [:level, :label, :description]
+    self.generic_import(csv_file, fields) do |params|
+      langstat = LanguageStatus.new(params)
+    end
+  end
 
   def self.import_orgs
     csv_file = 'lib\csv_files\orgs.csv'
@@ -85,4 +93,24 @@ class DataImporter
       end
     end
   end
+
+  private
+    def self.generic_import(csv_file, fields)
+      #CSV file must have all fields in double quotes, separated by commas with no double quotes in the data
+      unsaved_items = []
+      File.open(csv_file, 'r') do |file|
+        while line = file.gets
+          params = line[1..-2].split('","')
+          params_hash = {}
+          fields.each_index do |i|
+            params_hash[fields[i]] = params[i]
+          end
+          item = yield(params_hash)  #instantiate item etc.
+          unless item.save
+            unsaved_items << item.to_s
+          end
+        end
+      end
+      unsaved_items.each{|item| p "Failed to save: #{item}"}
+    end
 end

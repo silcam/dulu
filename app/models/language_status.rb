@@ -1,0 +1,2 @@
+class LanguageStatus < ApplicationRecord
+end
