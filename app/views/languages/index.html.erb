@@ -1,0 +1,26 @@
+<h1>Languages</h1>
+
+<table class='table'>
+  <tr>
+    <th>Name</th>
+    <th>Code</th>
+    <th>Status</th>
+    <th>Country</th>
+    <th>Region</th>
+    <th>Poplulation</th>
+  </tr>
+  <% @languages.each do |language| %>
+    <tr>
+      <td><%= language.name %></td>
+      <td><%= language.code %></td>
+      <td>
+        <% if status = language.language_status %>
+          <%= "(#{status.level}) #{status.label}" %>
+        <% end %>
+      </td>
+      <td><%= language.country.english_name if language.country %></td>
+      <td><%= language.cameroon_region.english_name if language.cameroon_region %></td>
+      <td><%= language.population_description %></td>
+    </tr>
+  <% end %>
+</table>

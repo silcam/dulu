@@ -158,6 +158,23 @@ class DataImporter
       return id + 3
     end    
   end
+
+  def self.strip_extra_quotes_langs
+    Language.all.each do |lang|
+      lang.population_description.gsub!('",,"', '')
+      lang.save
+    end
+  end
+
+  def self.update_language_statuses 
+    csv_file = 'lib\csv_files\languages_with_statuses.csv'
+    fields = [:name, :language_status_id]
+    self.generic_import(csv_file, fields) do |params|
+      lang = Language.find_by(name: params[:name])
+      lang.language_status_id = params[:language_status_id]
+      lang
+    end
+  end
   
   def self.import_languages
     csv_file = 'lib\csv_files\languages.csv'
