@@ -5,15 +5,15 @@ class DataImporter
               :country_number, :country_name]
     self.generic_import(csv_file, fields) do |params|
       #p params
-      params[:country_name] = params[:country_name][0..-2] #necessary hack, line endings or something
+      #params[:country_name] = params[:country_name][0..-2] #necessary hack, line endings or something
       if(params[:langcode]=="EN")
         country = Country.new
         country.code = params[:country_code]
-        country.english_name = params[:country_name]
+        country.english_name_name = params[:country_name]
         country
       elsif(params[:langcode]=="FR")
         country = Country.find_by(code: params[:country_code])
-        country.french_name = params[:country_name]
+        country.french_name_name = params[:country_name]
         country
       end
     end
@@ -23,7 +23,7 @@ class DataImporter
     csv_file = 'lib\csv_files\language_status.csv'
     fields = [:level, :label, :description]
     self.generic_import(csv_file, fields) do |params|
-      langstat = LanguageStatus.new(params)
+      LanguageStatus.new(params)
     end
   end
 
@@ -64,7 +64,7 @@ class DataImporter
           person.email = params[0]
           person.first_name = params[1]
           person.last_name = params[2]
-          org = Organization.find_by fmid: params[4]
+          org = Organization.find_by fmid: params[4]  #doesn't do anything...needs work
           unless person.save
             unsaved_people << person
           end
@@ -113,24 +113,57 @@ class DataImporter
     end
   end
 
-  private
-    def self.generic_import(csv_file, fields)
-      #CSV file must have all fields in double quotes, separated by commas with no double quotes in the data
-      unsaved_items = []
-      File.open(csv_file, 'r') do |file|
-        while line = file.gets
-          p line[1..-2]
-          params = line[1..-2].split('","')
-          params_hash = {}
-          fields.each_index do |i|
-            params_hash[fields[i]] = params[i]
-          end
-          item = yield(params_hash)  #instantiate item etc.
-          unless item.save
-            unsaved_items << item.to_s
-          end
+  def self.import_regions
+    [ {english_name: 'Adamawa', french_name: 'Adamaoua'},
+      {english_name: 'Centre', french_name: 'Centre'},
+      {english_name: 'East', french_name: 'Est'},
+      {english_name: 'Far North', french_name: 'Extrême-Nord'},
+      {english_name: 'Littoral', french_name: 'Littoral'},
+      {english_name: 'North', french_name: 'Nord'},
+      {english_name: 'Northwest', french_name: 'Nord-Ouest'},
+      {english_name: 'South', french_name: 'Sud'},
+      {english_name: 'Southwest', french_name: 'Sud-Ouest'},
+      {english_name: 'West', french_name: 'Ouest'}].each do |h|
+        CameroonRegion.new(h).save
+      end
+  end
+
+  def self.import_territories
+    csv_file = 'lib\csv_files\territories.csv'
+    fields = [:cameroon_region_id, :name]
+    self.generic_import(csv_file, fields) do |params|
+      CameroonTerritory.new(params)
+    end
+  end
+
+  def self.fix_end_quotes
+    CameroonTerritory.all.each do |territory|
+      territory.name.chomp!('"')
+      territory.save
+    end
+
+    LanguageStatus.all.each do |status|
+      status.description.chomp!('"')
+      status.save
+    end
+  end
+  
+  def self.generic_import(csv_file, fields)
+    #CSV file must have all fields in double quotes, separated by commas with no double quotes in the data
+    unsaved_items = []
+    File.open(csv_file, 'r') do |file|
+      while line = file.gets
+        params = line[1..-3].split('","')
+        params_hash = {}
+        fields.each_index do |i|
+          params_hash[fields[i]] = params[i]
+        end
+        item = yield(params_hash)  #instantiate item etc.
+        unless item.save
+          unsaved_items << item.to_s
         end
       end
-      unsaved_items.each{|item| p "Failed to save: #{item}"}
     end
+    unsaved_items.each{|item| p "Failed to save: #{item}"}
+  end
 end

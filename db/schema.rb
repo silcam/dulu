@@ -10,7 +10,22 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170503101556) do
+ActiveRecord::Schema.define(version: 20170504085249) do
+
+  create_table "cameroon_regions", force: :cascade do |t|
+    t.string   "english_name"
+    t.string   "french_name"
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
+  end
+
+  create_table "cameroon_territories", force: :cascade do |t|
+    t.integer  "cameroon_region_id"
+    t.datetime "created_at",         null: false
+    t.datetime "updated_at",         null: false
+    t.string   "name"
+    t.index ["cameroon_region_id"], name: "index_cameroon_territories_on_cameroon_region_id"
+  end
 
   create_table "countries", force: :cascade do |t|
     t.string   "code"
