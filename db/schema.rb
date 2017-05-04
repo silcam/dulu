@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170504085249) do
+ActiveRecord::Schema.define(version: 20170504094649) do
 
   create_table "cameroon_regions", force: :cascade do |t|
     t.string   "english_name"
@@ -41,6 +41,26 @@ ActiveRecord::Schema.define(version: 20170504085249) do
     t.text     "description"
     t.datetime "created_at",  null: false
     t.datetime "updated_at",  null: false
+  end
+
+  create_table "languages", force: :cascade do |t|
+    t.string   "name"
+    t.integer  "fmid"
+    t.string   "category"
+    t.string   "code"
+    t.integer  "language_status_id"
+    t.text     "notes"
+    t.integer  "country_id"
+    t.string   "international_language"
+    t.integer  "population"
+    t.string   "population_description"
+    t.string   "classification"
+    t.integer  "cameroon_region_id"
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
+    t.index ["cameroon_region_id"], name: "index_languages_on_cameroon_region_id"
+    t.index ["country_id"], name: "index_languages_on_country_id"
+    t.index ["language_status_id"], name: "index_languages_on_language_status_id"
   end
 
   create_table "organizations", force: :cascade do |t|

@@ -147,7 +147,33 @@ class DataImporter
       status.save
     end
   end
+
+  def self.adjust_ls_id(id)
+    case(id)
+    when (1..6) 
+      return id
+    when (7..12)
+      return id + 1
+    when 13
+      return id + 3
+    end    
+  end
   
+  def self.import_languages
+    csv_file = 'lib\csv_files\languages.csv'
+    fields = [:fmid, :name, :category, :code, :language_status_id,
+              :notes, :country_code, :international_language,
+              :population, :population_description, :classification,
+              :cameroon_region_id]
+    self.generic_import(csv_file, fields) do |params|
+      params[:language_status_id] = self.adjust_ls_id(params[:language_status_id])
+      country = Country.find_by(code: params[:country_code])
+      params[:country_id] = country.id if country
+      params.delete(:country_code)
+      Language.new(params)
+    end
+  end
+
   def self.generic_import(csv_file, fields)
     #CSV file must have all fields in double quotes, separated by commas with no double quotes in the data
     unsaved_items = []
