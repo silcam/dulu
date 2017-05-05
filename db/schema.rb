@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170505110520) do
+ActiveRecord::Schema.define(version: 20170505124222) do
 
   create_table "cameroon_regions", force: :cascade do |t|
     t.string   "english_name"
@@ -89,6 +89,20 @@ ActiveRecord::Schema.define(version: 20170505110520) do
     t.integer  "country_id"
     t.index ["country_id"], name: "index_people_on_country_id"
     t.index ["organization_id"], name: "index_people_on_organization_id"
+  end
+
+  create_table "research_permits", force: :cascade do |t|
+    t.integer  "person_id"
+    t.integer  "language_id"
+    t.date     "proposal_date"
+    t.date     "issue_date"
+    t.date     "expiration_date"
+    t.string   "permit_number"
+    t.text     "description"
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
+    t.index ["language_id"], name: "index_research_permits_on_language_id"
+    t.index ["person_id"], name: "index_research_permits_on_person_id"
   end
 
 end
