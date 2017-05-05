@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170504094649) do
+ActiveRecord::Schema.define(version: 20170505110520) do
 
   create_table "cameroon_regions", force: :cascade do |t|
     t.string   "english_name"
@@ -75,13 +75,19 @@ ActiveRecord::Schema.define(version: 20170504094649) do
   create_table "people", force: :cascade do |t|
     t.string   "last_name"
     t.string   "first_name"
-    t.datetime "created_at",                      null: false
-    t.datetime "updated_at",                      null: false
+    t.datetime "created_at",                                 null: false
+    t.datetime "updated_at",                                 null: false
     t.string   "email"
-    t.boolean  "has_login",       default: false
+    t.boolean  "has_login",                  default: false
     t.string   "password"
     t.integer  "organization_id"
     t.integer  "fmid"
+    t.date     "birth_date"
+    t.string   "gender",           limit: 1
+    t.text     "cv_text"
+    t.string   "former_last_name"
+    t.integer  "country_id"
+    t.index ["country_id"], name: "index_people_on_country_id"
     t.index ["organization_id"], name: "index_people_on_organization_id"
   end
 
