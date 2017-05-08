@@ -1,5 +1,7 @@
 class BibleBook < ApplicationRecord
 
+  has_many :books_in_translation
+
   def self.verses_in_bible
     BibleBook.sum(:number_of_verses)
   end

@@ -10,12 +10,24 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170508141851) do
+ActiveRecord::Schema.define(version: 20170508152732) do
 
   create_table "bible_books", force: :cascade do |t|
     t.string  "name"
     t.integer "number_of_chapters"
     t.integer "number_of_verses"
+  end
+
+  create_table "books_in_translation", force: :cascade do |t|
+    t.integer  "project_id"
+    t.integer  "bible_book_id"
+    t.integer  "translation_stage_id"
+    t.integer  "linguist_id"
+    t.datetime "created_at",           null: false
+    t.datetime "updated_at",           null: false
+    t.index ["bible_book_id"], name: "index_books_in_translation_on_bible_book_id"
+    t.index ["project_id"], name: "index_books_in_translation_on_project_id"
+    t.index ["translation_stage_id"], name: "index_books_in_translation_on_translation_stage_id"
   end
 
   create_table "cameroon_regions", force: :cascade do |t|
@@ -97,6 +109,14 @@ ActiveRecord::Schema.define(version: 20170508141851) do
     t.index ["organization_id"], name: "index_people_on_organization_id"
   end
 
+  create_table "projects", force: :cascade do |t|
+    t.integer  "language_id"
+    t.boolean  "is_active"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+    t.index ["language_id"], name: "index_projects_on_language_id"
+  end
+
   create_table "research_permits", force: :cascade do |t|
     t.integer  "person_id"
     t.integer  "language_id"
@@ -109,6 +129,10 @@ ActiveRecord::Schema.define(version: 20170508141851) do
     t.datetime "updated_at",      null: false
     t.index ["language_id"], name: "index_research_permits_on_language_id"
     t.index ["person_id"], name: "index_research_permits_on_person_id"
+  end
+
+  create_table "translation_stages", force: :cascade do |t|
+    t.string "name"
   end
 
 end

@@ -3,4 +3,5 @@ class Language < ApplicationRecord
   belongs_to :country, required: false
   belongs_to :cameroon_region, required: false
 
+  has_many :projects
 end
