@@ -1,6 +1,8 @@
 @import "bootstrap-sprockets";
 @import "bootstrap";
 
+$sil-blue: rgb(0, 104, 166);
+
 body {
   padding-top: 60px;
 }
@@ -16,10 +18,20 @@ body {
     font-weight: bold;
 }
 
-#logo:hover {
-  color: #fff;
-  text-decoration: none;
+#app_header {
+  background-color: $sil-blue;
+  border-color: $sil-blue;
+
+  a{
+    color: white;
+  }
+
+  a:hover {
+    color: white;
+    font-weight: bold; 
+  }
 }
+
 
 // Forms
 
