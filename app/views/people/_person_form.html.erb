@@ -12,6 +12,23 @@
   </p>
 
   <p>
+    <%= f.radio_button :gender, "M", checked: true %>
+    <%= f.label :gender, "Male" %><br />
+    <%= f.radio_button :gender, "F" %>
+    <%= f.label :gender, "Female" %>
+  </p>
+
+  <p>
+    <%= f.label :birth_date, "Date of Birth:" %>
+    <%= f.date_field :birth_date %>
+  </p>
+
+  <p>
+    <%= f.label :country, "Home Country" %>
+    <%= f.collection_select :country_id, Country.all, :id, :english_name %>
+  </p>
+
+  <p>
     <%= f.label :organization %>
     <%= f.collection_select :organization_id, Organization.all, :id, :name %>
   </p>
