@@ -10,7 +10,13 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170505124222) do
+ActiveRecord::Schema.define(version: 20170508141851) do
+
+  create_table "bible_books", force: :cascade do |t|
+    t.string  "name"
+    t.integer "number_of_chapters"
+    t.integer "number_of_verses"
+  end
 
   create_table "cameroon_regions", force: :cascade do |t|
     t.string   "english_name"
