@@ -1,6 +1,6 @@
 class TranslationStage < ApplicationRecord
 
-  has_many :books_in_translation
+  has_many :book_translation_statuses
 
   def self.add_stages_to_db
     ["Planned", "Drafting", "Testing", "Revising", "Back-Translating",

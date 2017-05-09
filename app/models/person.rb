@@ -3,7 +3,7 @@ class Person < ApplicationRecord
   belongs_to :organization, required: false
   belongs_to :country
 
-  has_many :books_in_translation
+  has_many :book_translation_consultants
 
   validates :last_name, presence: true, allow_blank: false
   validates :first_name, presence: true, allow_blank: false

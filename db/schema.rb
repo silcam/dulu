@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170508152732) do
+ActiveRecord::Schema.define(version: 20170509085001) do
 
   create_table "bible_books", force: :cascade do |t|
     t.string  "name"
@@ -18,16 +18,34 @@ ActiveRecord::Schema.define(version: 20170508152732) do
     t.integer "number_of_verses"
   end
 
+  create_table "book_translation_consultants", force: :cascade do |t|
+    t.integer  "book_in_translation_id"
+    t.integer  "person_id"
+    t.date     "start_date"
+    t.date     "end_date"
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
+    t.index ["book_in_translation_id"], name: "index_book_translation_consultants_on_book_in_translation_id"
+    t.index ["person_id"], name: "index_book_translation_consultants_on_person_id"
+  end
+
+  create_table "book_translation_statuses", force: :cascade do |t|
+    t.integer  "book_in_translation_id"
+    t.integer  "translation_stage_id"
+    t.date     "start_date"
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
+    t.index ["book_in_translation_id"], name: "index_book_translation_statuses_on_book_in_translation_id"
+    t.index ["translation_stage_id"], name: "index_book_translation_statuses_on_translation_stage_id"
+  end
+
   create_table "books_in_translation", force: :cascade do |t|
     t.integer  "project_id"
     t.integer  "bible_book_id"
-    t.integer  "translation_stage_id"
-    t.integer  "linguist_id"
-    t.datetime "created_at",           null: false
-    t.datetime "updated_at",           null: false
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
     t.index ["bible_book_id"], name: "index_books_in_translation_on_bible_book_id"
     t.index ["project_id"], name: "index_books_in_translation_on_project_id"
-    t.index ["translation_stage_id"], name: "index_books_in_translation_on_translation_stage_id"
   end
 
   create_table "cameroon_regions", force: :cascade do |t|
@@ -111,9 +129,10 @@ ActiveRecord::Schema.define(version: 20170508152732) do
 
   create_table "projects", force: :cascade do |t|
     t.integer  "language_id"
-    t.boolean  "is_active"
     t.datetime "created_at",  null: false
     t.datetime "updated_at",  null: false
+    t.date     "start_date"
+    t.date     "finish_date"
     t.index ["language_id"], name: "index_projects_on_language_id"
   end
 
