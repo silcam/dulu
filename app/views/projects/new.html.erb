@@ -1,0 +1,14 @@
+<h2>New Project</h2>
+
+<%= render 'shared/error_messages', errors: @project.errors if @project.errors %>
+
+<%= form_for @project do |f| %>
+  <p>
+    <%= f.label :language %>
+    <%= f.collection_select :language_id, 
+          Language.all.order('name'), :id, :name %>
+  </p>
+  <p>
+    <%= f.submit %>
+  </p>
+<% end %>

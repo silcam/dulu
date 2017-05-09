@@ -8,6 +8,7 @@ Rails.application.routes.draw do
   resources :people
   resources :organizations
   resources :languages
+  resources :projects
   
   get     '/login',     to: 'sessions#new'
   post    '/login',     to: 'sessions#create'

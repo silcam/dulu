@@ -1,0 +1,14 @@
+<h1>Projects</h1>
+<p>
+  <%= link_to 'Add Project', new_project_path, class: "btn btn-primary" %>
+</p>
+<table class="table">
+  <tr>
+    <th>Language</th>
+  </tr>
+  <% @projects.each do |project| %>
+    <tr>
+      <td><%= link_to project.language.name, project %></td>
+    </tr>
+  <% end %>
+</table>
