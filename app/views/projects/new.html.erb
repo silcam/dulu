@@ -9,6 +9,10 @@
           Language.all.order('name'), :id, :name %>
   </p>
   <p>
+    <% @project.start_date = Date.today unless @project.start_date %>
+    <%= f.label :start_date %>
+    <%= f.date_field :start_date %>
+  <p>
     <%= f.submit %>
   </p>
 <% end %>

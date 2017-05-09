@@ -26,7 +26,7 @@ class ProjectsController < ApplicationController
 
   private
     def project_params
-      params.require(:project).permit(:language_id)
+      params.require(:project).permit(:language_id, :start_date)
     end
 
 end
