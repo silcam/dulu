@@ -1,0 +1,22 @@
+<%= form_tag(controller: 'books_in_translation', action: 'create', project_id: @project.id) %>
+<%= submit_tag 'Save' %>
+<table>
+  <tr>
+    <th>Old Testament</th>
+    <th>New Testament</th>
+  </tr>
+  <% ot_books = BibleBook.get_old_testament %>
+  <% nt_books = BibleBook.get_new_testament %>
+  <% ot_books.each_index do |i| %>
+    <tr>
+      <td><%= check_box_tag('bible_book_ids[]', ot_books[i].id) %>
+      <%= ot_books[i].name %></td>
+      <td>
+        <% if nt_books[i] %>
+          <%= check_box_tag('bible_book_ids[]', nt_books[i].id) %>
+          <%= nt_books[i].name %>
+        <% end %>    
+      </td>
+    </tr>
+  <% end %>
+</table>
