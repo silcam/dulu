@@ -1,7 +1,7 @@
 class ProjectsController < ApplicationController
 
   def index
-    @projects = Project.all
+    @projects = Project.includes(:language).order("languages.name")
   end
 
   def show
@@ -26,7 +26,7 @@ class ProjectsController < ApplicationController
 
   private
     def project_params
-      params.require(:project).permit(:language_id, :start_date)
+      params.require(:project).permit(:language_id, :start_date, :name)
     end
 
 end

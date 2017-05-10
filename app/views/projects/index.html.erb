@@ -8,7 +8,7 @@
   </tr>
   <% @projects.each do |project| %>
     <tr>
-      <td><%= link_to project.language.name, project %></td>
+      <td><%= link_to "#{project.language.name} #{project.name}", project %></td>
     </tr>
   <% end %>
 </table>

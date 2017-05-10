@@ -1,4 +1,4 @@
-<h1><%= @project.language.name %> Project</h1>
+<h1><%= @project.language.name + ': ' + @project.name %></h1>
 
 <%= link_to 'Add Books to Translate', 
             new_project_book_in_translation_path(@project) %>
