@@ -1,3 +1,13 @@
 <h1><%= @project.language.name %> Project</h1>
 
-<%= link_to 'Add Books to Translate', new_project_book_in_translation_path(@project) %>
+<%= link_to 'Add Books to Translate', 
+            new_project_book_in_translation_path(@project) %>
+
+<table class='table'>
+  <% @project.books_in_translation.order(:bible_book_id).each do |book| %>
+    <tr>
+      <td><%= book.bible_book.name %></td>
+      <td><%= book.current_translation_stage.translation_stage.name %></td>
+    </tr>
+  <% end %>
+</table>

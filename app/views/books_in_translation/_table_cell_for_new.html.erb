@@ -1,0 +1,6 @@
+<td>
+  <% book_already_added = already_added_books.include?(book) %>
+  <%= check_box_tag('bible_book_ids[]', book.id, book_already_added,
+        {disabled: book_already_added}) %>
+  <%= book.name %>
+</td>

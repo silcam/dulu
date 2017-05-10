@@ -5,13 +5,15 @@ class BooksInTranslationController < ApplicationController
   end
 
   def create
-    @project = params[:project_id]
-    #TODO finish this tomorrow - find books_in_translation already assoc with project
-    #add the books_in_translation from params not already assoc
+    @project = Project.find(params[:project_id])
+    if params[:bible_book_ids]
+      params[:bible_book_ids].each do |id|
+        unless @project.bible_books.include?(BibleBook.find(id))
+          BookInTranslation.add_new_to_project(@project, id)
+        end
+      end
+    end
+    redirect_to @project
   end
 
-  private
-    def book_in_translation_params
-
-    end
 end
