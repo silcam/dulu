@@ -1,4 +1,4 @@
-class BookTranslationStatus < ApplicationRecord
+class BookTranslationStage < ApplicationRecord
 
   belongs_to :book_in_translation
   belongs_to :translation_stage

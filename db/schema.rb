@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170509085001) do
+ActiveRecord::Schema.define(version: 20170510095434) do
 
   create_table "bible_books", force: :cascade do |t|
     t.string  "name"
@@ -29,14 +29,14 @@ ActiveRecord::Schema.define(version: 20170509085001) do
     t.index ["person_id"], name: "index_book_translation_consultants_on_person_id"
   end
 
-  create_table "book_translation_statuses", force: :cascade do |t|
+  create_table "book_translation_stages", force: :cascade do |t|
     t.integer  "book_in_translation_id"
     t.integer  "translation_stage_id"
     t.date     "start_date"
     t.datetime "created_at",             null: false
     t.datetime "updated_at",             null: false
-    t.index ["book_in_translation_id"], name: "index_book_translation_statuses_on_book_in_translation_id"
-    t.index ["translation_stage_id"], name: "index_book_translation_statuses_on_translation_stage_id"
+    t.index ["book_in_translation_id"], name: "index_book_translation_stages_on_book_in_translation_id"
+    t.index ["translation_stage_id"], name: "index_book_translation_stages_on_translation_stage_id"
   end
 
   create_table "books_in_translation", force: :cascade do |t|
