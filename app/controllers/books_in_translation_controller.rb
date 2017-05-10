@@ -6,7 +6,6 @@ class BooksInTranslationController < ApplicationController
 
   def create
     @project = Project.find(params[:project_id])
-
     if params[:bible_book_ids]
       params[:bible_book_ids].each do |id|
         unless @project.bible_books.include?(BibleBook.find(id))
@@ -14,7 +13,6 @@ class BooksInTranslationController < ApplicationController
         end
       end
     end
-    
     redirect_to @project
   end
 

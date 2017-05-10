@@ -7,4 +7,11 @@ class BookTranslationStage < ApplicationRecord
     {translation_stage_id: TranslationStage.first.id,
       start_date: Date.today}
   end
+
+  def self.new_for book_in_translation
+    existing = book_in_translation.current_translation_stage
+    BookTranslationStage.new({
+      translation_stage: existing.translation_stage.next_stage,
+      start_date: Date.today})
+  end
 end

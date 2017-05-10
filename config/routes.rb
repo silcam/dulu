@@ -7,8 +7,12 @@ Rails.application.routes.draw do
   resources :people
   resources :organizations
   resources :languages
-  resources :projects do
-    resources :books_in_translation, shallow: true
+  shallow do
+    resources :projects do
+      resources :books_in_translation do
+        resources :book_translation_stages
+      end
+    end
   end
   
   get     '/login',     to: 'sessions#new'

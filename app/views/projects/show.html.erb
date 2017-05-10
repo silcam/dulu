@@ -8,6 +8,9 @@
     <tr>
       <td><%= book.bible_book.name %></td>
       <td><%= book.current_translation_stage.translation_stage.name %></td>
+      <td><%= link_to 'Update', 
+                new_book_in_translation_book_translation_stage_path(book), 
+                class: "btn btn-default btn-xs" %></td>
     </tr>
   <% end %>
 </table>

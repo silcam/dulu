@@ -16,7 +16,8 @@
       <td><%= person.organization.name if person.organization %></td>
       <td><%= person.email %></td>
       <td><%= person.has_login ? 'Yes' : 'No' %></td>
-      <td><%= link_to 'Edit', edit_person_path(person), class: "btn btn-default btn-xs" %></td>
+      <td><%= link_to 'Edit', edit_person_path(person), 
+              class: "btn btn-default btn-xs" %></td>
     </tr>
   <% end %>
 </table>
