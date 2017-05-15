@@ -1,8 +1,8 @@
-<h2>New Project</h2>
+<h2>New Program</h2>
 
-<%= render 'shared/error_messages', errors: @project.errors if @project.errors %>
+<%= render 'shared/error_messages', errors: @program.errors if @program.errors %>
 
-<%= form_for @project do |f| %>
+<%= form_for @program do |f| %>
   <p>
     <%= f.label :language %>
     <%= f.collection_select :language_id, 
@@ -13,7 +13,7 @@
     <%= f.text_field :name %>
     (Ex. New Testament)
   <p>
-    <% @project.start_date = Date.today unless @project.start_date %>
+    <% @program.start_date = Date.today unless @program.start_date %>
     <%= f.label :start_date %>
     <%= f.date_field :start_date %>
   <p>

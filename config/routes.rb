@@ -2,13 +2,13 @@ Rails.application.routes.draw do
 
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 
-  root 'projects#index'
+  root 'programs#index'
 
   resources :people
   resources :organizations
   resources :languages
   shallow do
-    resources :projects do
+    resources :programs do
       resources :books_in_translation do
         resources :book_translation_stages
       end

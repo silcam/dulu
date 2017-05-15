@@ -1,0 +1,14 @@
+<h1>Programs</h1>
+<p>
+  <%= link_to 'Add Program', new_program_path, class: "btn btn-primary" %>
+</p>
+<table class="table">
+  <tr>
+    <th>Language</th>
+  </tr>
+  <% @programs.each do |program| %>
+    <tr>
+      <td><%= link_to "#{program.language.name} #{program.name}", program %></td>
+    </tr>
+  <% end %>
+</table>

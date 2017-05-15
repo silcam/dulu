@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170510131319) do
+ActiveRecord::Schema.define(version: 20170515154001) do
 
   create_table "bible_books", force: :cascade do |t|
     t.string  "name"
@@ -40,12 +40,12 @@ ActiveRecord::Schema.define(version: 20170510131319) do
   end
 
   create_table "books_in_translation", force: :cascade do |t|
-    t.integer  "project_id"
+    t.integer  "program_id"
     t.integer  "bible_book_id"
     t.datetime "created_at",    null: false
     t.datetime "updated_at",    null: false
     t.index ["bible_book_id"], name: "index_books_in_translation_on_bible_book_id"
-    t.index ["project_id"], name: "index_books_in_translation_on_project_id"
+    t.index ["program_id"], name: "index_books_in_translation_on_program_id"
   end
 
   create_table "cameroon_regions", force: :cascade do |t|
@@ -127,14 +127,14 @@ ActiveRecord::Schema.define(version: 20170510131319) do
     t.index ["organization_id"], name: "index_people_on_organization_id"
   end
 
-  create_table "projects", force: :cascade do |t|
+  create_table "programs", force: :cascade do |t|
     t.integer  "language_id"
     t.datetime "created_at",  null: false
     t.datetime "updated_at",  null: false
     t.date     "start_date"
     t.date     "finish_date"
     t.string   "name"
-    t.index ["language_id"], name: "index_projects_on_language_id"
+    t.index ["language_id"], name: "index_programs_on_language_id"
   end
 
   create_table "research_permits", force: :cascade do |t|

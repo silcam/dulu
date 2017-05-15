@@ -1,19 +1,19 @@
 class BooksInTranslationController < ApplicationController
 
   def new
-    @project = Project.find(params[:project_id])
+    @program = Program.find(params[:program_id])
   end
 
   def create
-    @project = Project.find(params[:project_id])
+    @program = Program.find(params[:program_id])
     if params[:bible_book_ids]
       params[:bible_book_ids].each do |id|
-        unless @project.bible_books.include?(BibleBook.find(id))
-          BookInTranslation.add_new_to_project(@project, id)
+        unless @program.bible_books.include?(BibleBook.find(id))
+          BookInTranslation.add_new_to_program(@program, id)
         end
       end
     end
-    redirect_to @project
+    redirect_to @program
   end
 
 end

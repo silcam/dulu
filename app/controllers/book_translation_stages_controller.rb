@@ -8,7 +8,7 @@ class BookTranslationStagesController < ApplicationController
   def create
     @book_in_translation = BookInTranslation.find(params[:book_in_translation_id])
     if @book_in_translation.book_translation_stages.create(book_translation_stage_params)
-      redirect_to @book_in_translation.project
+      redirect_to @book_in_translation.program
     else
       render 'new'
     end

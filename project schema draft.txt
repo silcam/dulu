@@ -1,4 +1,4 @@
-A Project:
+A Program:
     -has mulitple associated People*
     -has multiple associated Organizations
     -has one team leader?
@@ -40,15 +40,15 @@ A Language
     -is in one or more countries
     -is in one or more regions
     -is in a cluster (potentially)
-    -has associated projects (or only one?)
+    -has associated programs (or only one?)
     -has associated publications (in or about this language)
     -has a Linguistic-Status consisting of the status (none-mature?) of various areas (grammer, phonology...)
     -has information about literacy, scripture use, mobilization etc.
 
 People
     -have a position ('Translation Consultant', 'Branch Director'...)
-    -have associated projects
-        -have a role within the project?  (do people have some kind of role which isn't the same as their position?)
+    -have associated programs
+        -have a role within the program?  (do people have some kind of role which isn't the same as their position?)
     -have publications
     -are associated with Events*
         -have a role at this event (Leader, Attendee etc.)
