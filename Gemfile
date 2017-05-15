@@ -37,7 +37,7 @@ gem 'jbuilder', '~> 2.5'
 # gem 'capistrano-rails', group: :development
 
 group :production do
-  gem 'passenger'
+  #gem 'passenger'  #using the ubuntu passenger package with nginx
 end
 
 group :development, :test do
