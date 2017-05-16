@@ -13,4 +13,10 @@ class ActiveSupport::TestCase
   def is_logged_in
     !session[:user_id].nil?
   end
+
+  def log_in_jiminy
+    jiminy = people(:jiminy)
+    get login_path
+    post login_path, params: { session: { email: jiminy.email}}
+  end
 end

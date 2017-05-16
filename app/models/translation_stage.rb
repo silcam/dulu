@@ -4,7 +4,7 @@ class TranslationStage < ApplicationRecord
   belongs_to :stage_name
   
   def self.default_new_params
-    {stage_name_id: StageName.first.id,
+    {stage_name: StageName.first_translation_stage,
       start_date: Date.today}
   end
 

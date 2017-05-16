@@ -10,4 +10,8 @@ class StageNameTest < ActiveSupport::TestCase
     assert_equal stagename.id, stagename.next_stage.id
   end
 
+  test 'first translation stage' do
+    assert_equal 'Planned', StageName.first_translation_stage.name
+  end
+
 end

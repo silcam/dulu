@@ -20,4 +20,8 @@ class StageName < ApplicationRecord
     end
     return self
   end
+
+  def self.first_translation_stage
+    return StageName.find_by(level: FIRST_STAGE, kind: 'Translation')
+  end
 end
