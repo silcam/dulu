@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170516084119) do
+ActiveRecord::Schema.define(version: 20170516085755) do
 
   create_table "bible_books", force: :cascade do |t|
     t.string  "name"
@@ -27,16 +27,6 @@ ActiveRecord::Schema.define(version: 20170516084119) do
     t.datetime "updated_at",             null: false
     t.index ["book_in_translation_id"], name: "index_book_translation_consultants_on_book_in_translation_id"
     t.index ["person_id"], name: "index_book_translation_consultants_on_person_id"
-  end
-
-  create_table "book_translation_stages", force: :cascade do |t|
-    t.integer  "book_in_translation_id"
-    t.integer  "stage_name_id"
-    t.date     "start_date"
-    t.datetime "created_at",             null: false
-    t.datetime "updated_at",             null: false
-    t.index ["book_in_translation_id"], name: "index_book_translation_stages_on_book_in_translation_id"
-    t.index ["stage_name_id"], name: "index_book_translation_stages_on_stage_name_id"
   end
 
   create_table "books_in_translation", force: :cascade do |t|
@@ -153,6 +143,16 @@ ActiveRecord::Schema.define(version: 20170516084119) do
 
   create_table "stage_names", force: :cascade do |t|
     t.string "name"
+  end
+
+  create_table "translation_stages", force: :cascade do |t|
+    t.integer  "book_in_translation_id"
+    t.integer  "stage_name_id"
+    t.date     "start_date"
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
+    t.index ["book_in_translation_id"], name: "index_translation_stages_on_book_in_translation_id"
+    t.index ["stage_name_id"], name: "index_translation_stages_on_stage_name_id"
   end
 
 end

@@ -1,4 +1,4 @@
-class BookTranslationStage < ApplicationRecord
+class TranslationStage < ApplicationRecord
 
   belongs_to :book_in_translation
   belongs_to :stage_name
@@ -10,7 +10,7 @@ class BookTranslationStage < ApplicationRecord
 
   def self.new_for book_in_translation
     existing = book_in_translation.current_translation_stage
-    BookTranslationStage.new({
+    TranslationStage.new({
       stage_name: existing.stage_name.next_stage,
       start_date: Date.today})
   end

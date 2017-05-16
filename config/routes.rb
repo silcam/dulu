@@ -10,7 +10,7 @@ Rails.application.routes.draw do
   shallow do
     resources :programs do
       resources :books_in_translation do
-        resources :book_translation_stages
+        resources :translation_stages
       end
     end
   end

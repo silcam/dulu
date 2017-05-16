@@ -4,8 +4,8 @@
   <%= @book_in_translation.bible_book.name %>
 </h2>
 
-<%= form_for(@book_translation_stage, 
-      url: book_in_translation_book_translation_stages_path(@book_in_translation)) do |f| %>
+<%= form_for(@translation_stage, 
+      url: book_in_translation_translation_stages_path(@book_in_translation)) do |f| %>
   <p>
     <%= f.label :stage_name %>
     <%= f.collection_select(:stage_name_id, StageName.all.order(:id),

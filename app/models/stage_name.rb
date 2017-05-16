@@ -1,6 +1,6 @@
 class StageName < ApplicationRecord
 
-  has_many :book_translation_stages
+  has_many :translation_stages
 
   FIRST_STAGE_ID = 1
   LAST_STAGE_ID = 9
