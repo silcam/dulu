@@ -7,7 +7,7 @@
   <% @program.books_in_translation.order(:bible_book_id).each do |book| %>
     <tr>
       <td><%= book.bible_book.name %></td>
-      <td><%= book.current_translation_stage.translation_stage.name %></td>
+      <td><%= book.current_translation_stage.stage_name.name %></td>
       <td><%= link_to 'Update', 
                 new_book_in_translation_book_translation_stage_path(book), 
                 class: "btn btn-default btn-xs" %></td>

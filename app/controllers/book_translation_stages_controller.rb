@@ -16,7 +16,7 @@ class BookTranslationStagesController < ApplicationController
 
   private
     def book_translation_stage_params
-      params.require(:book_translation_stage).permit(:translation_stage_id, :start_date)
+      params.require(:book_translation_stage).permit(:stage_name_id, :start_date)
     end
 
 end

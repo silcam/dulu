@@ -7,8 +7,8 @@
 <%= form_for(@book_translation_stage, 
       url: book_in_translation_book_translation_stages_path(@book_in_translation)) do |f| %>
   <p>
-    <%= f.label :translation_stage %>
-    <%= f.collection_select(:translation_stage_id, TranslationStage.all.order(:id),
+    <%= f.label :stage_name %>
+    <%= f.collection_select(:stage_name_id, StageName.all.order(:id),
           :id, :name) %>
   </p>
   <p>
