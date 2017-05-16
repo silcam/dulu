@@ -7,8 +7,8 @@ class Country < ApplicationRecord
     self.english_name
   end
 
-  def name=(name)
-    self.english_name = name
-  end
+  # def name=(name)
+  #   self.english_name = name
+  # end
 
 end
