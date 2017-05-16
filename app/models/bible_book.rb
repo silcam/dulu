@@ -1,6 +1,6 @@
 class BibleBook < ApplicationRecord
 
-  has_many :books_in_translation
+  has_many :translation_activities
   GENESIS_ID = 1
   MALACHI_ID = 39
   MATTHEW_ID = 40

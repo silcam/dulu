@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class BookInTranslationTest < ActiveSupport::TestCase
+class TranslationActivityTest < ActiveSupport::TestCase
   # test "the truth" do
   #   assert true
   # end

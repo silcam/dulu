@@ -15,6 +15,5 @@
 #   inflect.acronym 'RESTful'
 # end
 
-ActiveSupport::Inflector.inflections(:en) do |inflect|
-  inflect.irregular 'book_in_translation', 'books_in_translation'
-end
+#ActiveSupport::Inflector.inflections(:en) do |inflect|
+#end

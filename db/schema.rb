@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170516085755) do
+ActiveRecord::Schema.define(version: 20170516090805) do
 
   create_table "bible_books", force: :cascade do |t|
     t.string  "name"
@@ -19,23 +19,14 @@ ActiveRecord::Schema.define(version: 20170516085755) do
   end
 
   create_table "book_translation_consultants", force: :cascade do |t|
-    t.integer  "book_in_translation_id"
+    t.integer  "translation_activity_id"
     t.integer  "person_id"
     t.date     "start_date"
     t.date     "end_date"
-    t.datetime "created_at",             null: false
-    t.datetime "updated_at",             null: false
-    t.index ["book_in_translation_id"], name: "index_book_translation_consultants_on_book_in_translation_id"
+    t.datetime "created_at",              null: false
+    t.datetime "updated_at",              null: false
     t.index ["person_id"], name: "index_book_translation_consultants_on_person_id"
-  end
-
-  create_table "books_in_translation", force: :cascade do |t|
-    t.integer  "program_id"
-    t.integer  "bible_book_id"
-    t.datetime "created_at",    null: false
-    t.datetime "updated_at",    null: false
-    t.index ["bible_book_id"], name: "index_books_in_translation_on_bible_book_id"
-    t.index ["program_id"], name: "index_books_in_translation_on_program_id"
+    t.index ["translation_activity_id"], name: "index_book_translation_consultants_on_translation_activity_id"
   end
 
   create_table "cameroon_regions", force: :cascade do |t|
@@ -145,14 +136,23 @@ ActiveRecord::Schema.define(version: 20170516085755) do
     t.string "name"
   end
 
+  create_table "translation_activities", force: :cascade do |t|
+    t.integer  "program_id"
+    t.integer  "bible_book_id"
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
+    t.index ["bible_book_id"], name: "index_translation_activities_on_bible_book_id"
+    t.index ["program_id"], name: "index_translation_activities_on_program_id"
+  end
+
   create_table "translation_stages", force: :cascade do |t|
-    t.integer  "book_in_translation_id"
+    t.integer  "translation_activity_id"
     t.integer  "stage_name_id"
     t.date     "start_date"
-    t.datetime "created_at",             null: false
-    t.datetime "updated_at",             null: false
-    t.index ["book_in_translation_id"], name: "index_translation_stages_on_book_in_translation_id"
+    t.datetime "created_at",              null: false
+    t.datetime "updated_at",              null: false
     t.index ["stage_name_id"], name: "index_translation_stages_on_stage_name_id"
+    t.index ["translation_activity_id"], name: "index_translation_stages_on_translation_activity_id"
   end
 
 end

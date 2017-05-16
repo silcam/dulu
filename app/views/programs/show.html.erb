@@ -1,15 +1,15 @@
 <h1><%= @program.language.name + ': ' + @program.name %></h1>
 
 <%= link_to 'Add Books to Translate', 
-            new_program_book_in_translation_path(@program) %>
+            new_program_translation_activity_path(@program) %>
 
 <table class='table'>
-  <% @program.books_in_translation.order(:bible_book_id).each do |book| %>
+  <% @program.translation_activities.order(:bible_book_id).each do |book| %>
     <tr>
       <td><%= book.bible_book.name %></td>
       <td><%= book.current_translation_stage.stage_name.name %></td>
       <td><%= link_to 'Update', 
-                new_book_in_translation_translation_stage_path(book), 
+                new_translation_activity_translation_stage_path(book), 
                 class: "btn btn-default btn-xs" %></td>
     </tr>
   <% end %>

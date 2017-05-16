@@ -1,6 +1,6 @@
 class Program < ApplicationRecord
 
-  has_many :books_in_translation
-  has_many :bible_books, through: :books_in_translation
+  has_many :translation_activities
+  has_many :bible_books, through: :translation_activities
   belongs_to :language
 end

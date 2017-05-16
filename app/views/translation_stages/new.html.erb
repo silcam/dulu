@@ -1,11 +1,11 @@
 <h2>
-  <%= @book_in_translation.program.language.name %>
+  <%= @translation_activity.program.language.name %>
   Program - 
-  <%= @book_in_translation.bible_book.name %>
+  <%= @translation_activity.bible_book.name %>
 </h2>
 
 <%= form_for(@translation_stage, 
-      url: book_in_translation_translation_stages_path(@book_in_translation)) do |f| %>
+      url: translation_activity_translation_stages_path(@translation_activity)) do |f| %>
   <p>
     <%= f.label :stage_name %>
     <%= f.collection_select(:stage_name_id, StageName.all.order(:id),
