@@ -6,6 +6,7 @@ Rails.application.routes.draw do
 
   resources :people
   resources :organizations
+  get     '/languages/dashboard', to: 'languages#dashboard'
   resources :languages
   shallow do
     resources :programs do
