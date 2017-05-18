@@ -6,9 +6,7 @@
         <table class="table" id="activities-table">
           <% @program.translation_activities.each do |activity| %>
             <%= render 'current_activity_table_row', 
-                  {item: activity.bible_book.name,
-                  progress: activity.current_translation_stage.progress,
-                  status: activity.current_translation_stage.name, 
+                  {activity: activity,
                   goal: 'Goal: July', 
                   person: 'Joe Translator'} %>
           <% end %>
