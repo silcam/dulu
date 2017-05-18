@@ -14,4 +14,12 @@ class TranslationStage < ApplicationRecord
       stage_name: existing.stage_name.next_stage,
       start_date: Date.today})
   end
+
+  def progress
+    self.stage_name.progress
+  end
+  
+  def name
+    self.stage_name.name
+  end
 end

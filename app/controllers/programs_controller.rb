@@ -1,5 +1,9 @@
 class ProgramsController < ApplicationController
 
+  def dashboard
+    @program = Program.find params[:id]
+  end
+
   def index
     @programs = Program.includes(:language).order("languages.name")
   end
