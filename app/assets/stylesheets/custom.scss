@@ -118,18 +118,20 @@ body {
   margin-top: 0;
 }
 
-//==================================================================================
-
-
-
 .dulu-panel-title {
   font-weight: bold;
 }
 
-// #dulu-sidebar {
-//   background-color: $dulu-green;
-//   color: white;
-// }
+//Calendar
+
+.calendar-past {
+  @include gradient-vertical(#fff, #eee);
+}
+
+.calendar-future {
+  @include gradient-vertical(#e8f0ff, #cee1ff);
+  border-color: white;
+}
 
 
 // Forms
