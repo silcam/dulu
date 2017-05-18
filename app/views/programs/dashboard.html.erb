@@ -1,98 +1,77 @@
-<div class="row">
-  <div class="col-sm-3 col-md-2 sidebar">
-    <h1 class="sidebar-title"><%= @program.language.name %></h1>
-    <h3 class="sidebar-subtitle"><%= @program.language.code %></h3>
-    <h3 class="sidebar-subtitle">
-      <% if @program.language.country %>
-        <%= @program.language.country.name %>
-        <%= ': ' + @program.language.cameroon_region.name if @program.language.cameroon_region %>
-      <% end %>
-    </h3>
-    <ul class="nav nav-sidebar">
-      <li class="h4 active"><a href="#">Overview <span class="sr-only">(current)</span></a></li>
-      <li><a href="#" class="h4">Language</a></li>
-      <li><a href="#" class="h4">Program</a></li>
-      <li><a href="#" class="h4">Partners</a></li>
-    </ul>
-  </div>
-  
-  <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+<%= render layout: 'sidebar' do %>
   <div class="row">
-  <div class="col-md-9">
-    <div>
-      <h2>Current Activities</h2>
-      <table class="table" id="activities-table">
-        <% @program.translation_activities.each do |activity| %>
-          <%= render 'current_activity_table_row', 
-                {item: activity.bible_book.name,
-                progress: activity.current_translation_stage.progress,
-                status: activity.current_translation_stage.name, 
-                goal: 'Goal: July', 
-                person: 'Joe Translator'} %>
-        <% end %>
-        <!-- render 'current_activity_table_row', {item: 'Mark', progress: 10, status: 'Drafting', goal: 'Goal: Jan 2018', person: 'Joe Translator'} %-->
-        <!-- render 'current_activity_table_row', {item: 'Luke', progress: 85, status: 'Consultant Checked', goal: 'Publication: Nov', person: 'Drew Maust'} %-->
-        <!-- render 'current_activity_table_row', {item: 'Luke Film', progress: 20, status: 'Planned', goal: 'Recording: Aug', person: 'Nathaniel Gregoriovich'} %-->
-        <!-- render 'current_activity_table_row', {item: 'Phonology', progress: 65, status: 'Writing', goal: 'Publication: July', person: 'Kendall Isaac'} %-->
-      </table>
-    </div>
-    <hr>
-    <div>
-      <h2>Program Status</h2>
-      <div class="row">
-        <div class="col-md-4">
-          <%= render 'dashboard_panel', {title: 'Bible', list_with_headings: [{heading: 'Old Testament (11%)', items: ['Genesis (2012)', 'Ruth (2013)']}, {heading: 'New Testament (4%)', items: ['James (2015)']}]} %>
-          <%= render 'dashboard_panel', {title: 'Media', list_items: ['Audio Genesis (2013)']} %>
-          <%= render 'dashboard_panel', {title: 'Mobilization', list_items: ['Something']} %>
-          <%= render 'dashboard_panel', {title: 'Ethnomusicology', list_items: ['Hymnal (2016)']} %>
-        </div>
-        <div class="col-md-4">
-          <%= render 'dashboard_panel', {title: 'Publications', list_items: ['Primer (2011)', 'Traditional Stories (2013)']} %>
-          <%= render 'dashboard_panel', {title: 'Literacy', list_items: ['Something']} %>
-          <%= render 'dashboard_panel', {title: 'Community Development', list_items: ['Something']} %>
-        </div>
-        <div class="col-md-4">
-          <%= render 'dashboard_panel', {title: 'Linguistics', list_items: ['Lexicon (2015)']} %>
-          <%= render 'dashboard_panel', {title: 'Scripture Use', list_items: ['Something']} %>
-          <%= render 'dashboard_panel', {title: 'Anthropology', list_items: ['Ewondo Customs (1977)']} %>
+    <div class="col-md-9">
+      <div>
+        <h2>Current Activities</h2>
+        <table class="table" id="activities-table">
+          <% @program.translation_activities.each do |activity| %>
+            <%= render 'current_activity_table_row', 
+                  {item: activity.bible_book.name,
+                  progress: activity.current_translation_stage.progress,
+                  status: activity.current_translation_stage.name, 
+                  goal: 'Goal: July', 
+                  person: 'Joe Translator'} %>
+          <% end %>
+        </table>
+      </div>
+      <hr>
+      <div>
+        <h2>Program Status</h2>
+        <div class="row">
+          <div class="col-md-4">
+            <%= render 'dashboard_panel', {title: 'Bible', list_with_headings: [{heading: 'Old Testament (11%)', items: ['Genesis (2012)', 'Ruth (2013)']}, {heading: 'New Testament (4%)', items: ['James (2015)']}]} %>
+            <%= render 'dashboard_panel', {title: 'Media', list_items: ['Audio Genesis (2013)']} %>
+            <%= render 'dashboard_panel', {title: 'Mobilization', list_items: ['Something']} %>
+            <%= render 'dashboard_panel', {title: 'Ethnomusicology', list_items: ['Hymnal (2016)']} %>
+          </div>
+          <div class="col-md-4">
+            <%= render 'dashboard_panel', {title: 'Publications', list_items: ['Primer (2011)', 'Traditional Stories (2013)']} %>
+            <%= render 'dashboard_panel', {title: 'Literacy', list_items: ['Something']} %>
+            <%= render 'dashboard_panel', {title: 'Community Development', list_items: ['Something']} %>
+          </div>
+          <div class="col-md-4">
+            <%= render 'dashboard_panel', {title: 'Linguistics', list_items: ['Lexicon (2015)']} %>
+            <%= render 'dashboard_panel', {title: 'Scripture Use', list_items: ['Something']} %>
+            <%= render 'dashboard_panel', {title: 'Anthropology', list_items: ['Ewondo Customs (1977)']} %>
+          </div>
         </div>
       </div>
     </div>
-  </div>
 
-  <div class="col-md-3">
-    <div>
-      <h2>Events &amp; Milestones</h2>
-      <ul class="list-group">
-      <a href="#" class="list-group-item calendar-past">
-        <small>7-14 February<br /></small>
-        Literacy Workshop
-      </a>
-      <a href="#" class="list-group-item calendar-past">
-        <small>15 April<br /></small>
-        Completed Luke Consultant Check
-      </a>
-      <a href="#" class="list-group-item calendar-future">
-        <small>6-13 June<br /></small>
-        Translation Workshop
-      </a>
-      <a href="#" class="list-group-item calendar-future">
-        <small>July<br /></small>
-        Publish Phonology
-      </a>
-      <a href="#" class="list-group-item calendar-future">
-        <small>August<br /></small>
-        Record Luke Film
-      </a>
-      <a href="#" class="list-group-item calendar-future">
-        <small>November<br /></small>
-        Publish Luke
-      </a>
-      <a href="#" class="list-group-item calendar-future">
-        <small>Jan 2018<br /></small>
-        Complete Draft of Mark
-      </a>
-      </ul>
+    <div class="col-md-3">
+      <div>
+        <h2>Events &amp; Milestones</h2>
+        <ul class="list-group">
+        <a href="#" class="list-group-item calendar-past">
+          <small>7-14 February<br /></small>
+          Literacy Workshop
+        </a>
+        <a href="#" class="list-group-item calendar-past">
+          <small>15 April<br /></small>
+          Completed Luke Consultant Check
+        </a>
+        <a href="#" class="list-group-item calendar-future">
+          <small>6-13 June<br /></small>
+          Translation Workshop
+        </a>
+        <a href="#" class="list-group-item calendar-future">
+          <small>July<br /></small>
+          Publish Phonology
+        </a>
+        <a href="#" class="list-group-item calendar-future">
+          <small>August<br /></small>
+          Record Luke Film
+        </a>
+        <a href="#" class="list-group-item calendar-future">
+          <small>November<br /></small>
+          Publish Luke
+        </a>
+        <a href="#" class="list-group-item calendar-future">
+          <small>Jan 2018<br /></small>
+          Complete Draft of Mark
+        </a>
+        </ul>
+      </div>
     </div>
-  </div></div></div>
-</div>
+  </div>
+<% end %>

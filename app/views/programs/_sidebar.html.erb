@@ -1,0 +1,30 @@
+<div class="row">
+  <div class="col-sm-3 col-md-2 sidebar">
+    <h1 class="sidebar-title"><%= @program.language.name %></h1>
+    <h3 class="sidebar-subtitle"><%= @program.language.code %></h3>
+    <h3 class="sidebar-subtitle">
+      <% if @program.language.country %>
+        <%= @program.language.country.name %>
+        <%= ': ' + @program.language.cameroon_region.name if @program.language.cameroon_region %>
+      <% end %>
+    </h3>
+    <ul class="nav nav-sidebar">
+      <% links = [['Dashboard', dashboard_program_path(@program)],
+                  ['Language', '#'],
+                  ['Program', program_path(@program)],
+                  ['Partners', '#']] %>
+      <% links.each do |link| %>
+        <% if current_page?(link[1]) %>
+          <li class="h4 active">
+        <% else %>
+          <li class="h4">
+        <% end %>
+        <%= link_to link[0], link[1], class: 'h4' %>
+        </li>
+      <% end %>
+    </ul>
+  </div>
+  <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+    <%= yield %>
+  </div>
+</div>
