@@ -122,6 +122,13 @@ a.h4 {
   color: $link-color;
 }
 
+#activities-table {
+  td {
+    padding-top: 15px;
+    padding-bottom: 15px;
+  }
+}
+
 .progress-cell {
   width: 100px;
 }

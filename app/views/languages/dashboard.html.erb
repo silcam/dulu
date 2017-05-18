@@ -16,7 +16,7 @@
   <div class="col-md-9">
     <div>
       <h2>Current Activities</h2>
-      <table class="table">
+      <table class="table" id="activities-table">
         <%= render 'current_activity_table_row', {item: 'Mark', progress: 10, status: 'Drafting', goal: 'Goal: Jan 2018', person: 'Joe Translator'} %>
         <%= render 'current_activity_table_row', {item: 'Luke', progress: 85, status: 'Consultant Checked', goal: 'Publication: Nov', person: 'Drew Maust'} %>
         <%= render 'current_activity_table_row', {item: 'Luke Film', progress: 20, status: 'Planned', goal: 'Recording: Aug', person: 'Nathaniel Gregoriovich'} %>
@@ -49,7 +49,7 @@
 
   <div class="col-md-3">
     <div>
-      <h3>Events &amp; Milestones</h3>
+      <h2>Events &amp; Milestones</h2>
       <ul class="list-group">
       <a href="#" class="list-group-item calendar-past">
         <small>7-14 February<br /></small>
