@@ -1,5 +1,7 @@
 <tr>
-  <td><a href="#" class="h4"><%= item %></a></td>
+  <td><%= link_to item, 
+        new_translation_activity_translation_stage_path, remote: true %>
+  <a href="#" class="h4"><%= item %></a></td>
   <td class="progress-cell">
     <div class="progress">
       <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="<%= progress %>" aria-valuemin="0" aria-valuemax="100" style="width: <%= progress %>%">
@@ -9,4 +11,9 @@
   <td><%= status %></td>
   <td><%= goal %></td>
   <td><%= person %></td>
+</tr>
+<tr >
+  <td colspan="6" style="border-top: 0px;">
+    <div id="update_stage_form[<%= item %>]" style="display: none;"></div>
+  </td>
 </tr>
