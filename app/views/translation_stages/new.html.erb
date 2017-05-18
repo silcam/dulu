@@ -4,18 +4,4 @@
   <%= @translation_activity.bible_book.name %>
 </h2>
 
-<%= form_for(@translation_stage, 
-      url: translation_activity_translation_stages_path(@translation_activity)) do |f| %>
-  <p>
-    <%= f.label :stage_name %>
-    <%= f.collection_select(:stage_name_id, StageName.all.order(:id),
-          :id, :name) %>
-  </p>
-  <p>
-    <%= f.label :start_date %>
-    <%= f.date_field :start_date %>
-  </p>
-  <p>
-    <%= f.submit 'Save' %>
-  </p>
-<% end %>
+<%= render 'form' %>

@@ -1,9 +1,13 @@
 class TranslationStagesController < ApplicationController
-  respond_to :html, :js
+  #respond_to :html, :js
   
   def new
     @translation_activity = TranslationActivity.find(params[:translation_activity_id])
     @translation_stage = TranslationStage.new_for @translation_activity
+    respond_to do |format|
+      format.html
+      format.js
+    end
   end
 
   def create
