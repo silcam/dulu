@@ -1,12 +1,14 @@
 <tr>
-  <td><a href="#" class="h4"><%= item %></a></td>
+  <td><%= link_to activity.name, '#', class: 'h4' %></td>
   <td class="progress-cell">
     <div class="progress">
-      <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="<%= progress %>" aria-valuemin="0" aria-valuemax="100" style="width: <%= progress %>%">
+      <div class="progress-bar progress-bar-success" role="progressbar" 
+          aria-valuenow="<%= activity.progress %>" aria-valuemin="0" 
+          aria-valuemax="100" style="width: <%= activity.progress %>%">
       </div>
     </div>
   </td>
-  <td><%= status %></td>
+  <td><%= activity.stage_name %></td>
   <td><%= goal %></td>
   <td><%= person %></td>
 </tr>
