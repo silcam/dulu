@@ -1,7 +1,8 @@
 <div class="row">
   <div class="col-sm-3 col-md-2 sidebar">
     <h1 class="sidebar-title"><%= @program.language.name %></h1>
-    <h3 class="sidebar-subtitle"><%= @program.language.code %></h3>
+    <%= link_to @program.language.code, "https://www.ethnologue.com/language/#{@program.language.code}",
+      class: "h3 sidebar-subtitle" %>
     <h3 class="sidebar-subtitle">
       <% if @program.language.country %>
         <%= @program.language.country.name %>
@@ -10,7 +11,7 @@
     </h3>
     <ul class="nav nav-sidebar">
       <% links = [['Dashboard', dashboard_program_path(@program)],
-                  ['Language', '#'],
+                  ['Language Info', '#'],
                   ['Program', program_path(@program)],
                   ['Partners', '#']] %>
       <% links.each do |link| %>
