@@ -3,20 +3,15 @@
         new_translation_activity_translation_stage_path(activity), 
         {class: 'h4', remote: true} %>
   </td>
-  <td class="progress-cell">
-    <div class="progress">
-      <div class="progress-bar progress-bar-success" role="progressbar" 
-          aria-valuenow="<%= activity.progress %>" aria-valuemin="0" 
-          aria-valuemax="100" style="width: <%= activity.progress %>%">
-      </div>
-    </div>
+  <td class="progress-cell" id="activity-progress-<%= activity.id %>">
+    <%= render 'progress_bar', activity: activity %>
   </td>
-  <td><%= activity.stage_name %></td>
+  <td id="activity-stage-name-<%= activity.id %>"><%= activity.stage_name %></td>
   <td><%= goal %></td>
   <td><%= person %></td>
 </tr>
-<tr >
-  <td colspan="6" style="border-top: 0px;">
-    <div id="update-stage-form-<%= activity.id %>" style="display: none;"></div>
+<tr>
+  <td colspan="6" class="update-stage-form" id="update-stage-form-cell-<%= activity.id %>">
+    <div class="row" id="update-stage-form-<%= activity.id %>"></div>
   </td>
 </tr>

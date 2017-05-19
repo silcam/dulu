@@ -127,6 +127,18 @@ a.h4 {
     padding-top: 15px;
     padding-bottom: 15px;
   }
+
+  td.update-stage-form {
+    border-top: 0px;
+    padding-top: 0px;
+    padding-bottom: 0px;
+  }
+
+  border-bottom: 1px solid #ddd;
+
+  div.submit-form {
+    vertical-align: bottom;
+  }
 }
 
 .progress-cell {

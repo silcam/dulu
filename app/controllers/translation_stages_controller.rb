@@ -4,16 +4,15 @@ class TranslationStagesController < ApplicationController
   def new
     @translation_activity = TranslationActivity.find(params[:translation_activity_id])
     @translation_stage = TranslationStage.new_for @translation_activity
-    respond_to do |format|
-      format.html
-      format.js
-    end
   end
 
   def create
     @translation_activity = TranslationActivity.find(params[:translation_activity_id])
     if @translation_activity.translation_stages.create(translation_stage_params)
-      redirect_to @translation_activity.program
+      respond_to do |format|
+        format.js
+        format.html { redirect_to(@translation_activity.program) }
+      end
     else
       render 'new'
     end

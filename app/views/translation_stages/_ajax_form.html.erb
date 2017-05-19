@@ -1,0 +1,21 @@
+  <%= form_for(@translation_stage, 
+        url: translation_activity_translation_stages_path(@translation_activity),
+        remote: true) do |f| %>
+    <div class="col-md-6">
+      <p>
+        <%= f.label :stage_name, "Update stage to:" %>
+        <%= f.collection_select(:stage_name_id, StageName.all.order(:id),
+              :id, :name, {}, class: 'form-control') %>
+      </p>
+    </div>
+    <div class="col-md-4">
+      <p>
+        <%= f.label :start_date, "As of:" %>
+        <%= f.date_field :start_date, class: 'form-control' %>
+      </p>
+    </div>
+    <div class="col-md-2 submit-form">
+      <label>&nbsp;</label><br /> <!-- Can somebody PLEASE tell me a better way to get the submit button to line up with the controls? -->
+      <%= f.submit 'Save', remote: true, class: 'btn btn-default' %>
+    </div>
+  <% end %>

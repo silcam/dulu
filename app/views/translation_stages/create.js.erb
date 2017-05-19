@@ -1,0 +1,5 @@
+$('#update-stage-form-cell-<%= @translation_activity.id %>').html("");
+$('#activity-stage-name-<%= @translation_activity.id %>').html(
+    "<%= @translation_activity.stage_name %>");
+$('#activity-progress-<%= @translation_activity.id %>').html(
+    " <%= j (render 'programs/progress_bar', activity: @translation_activity) %>");
