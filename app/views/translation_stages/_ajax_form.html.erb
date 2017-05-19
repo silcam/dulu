@@ -1,3 +1,6 @@
+ <% @translation_activity = activity %>
+ <% @translation_stage = TranslationStage.new_for(activity) %>
+ 
   <%= form_for(@translation_stage, 
         url: translation_activity_translation_stages_path(@translation_activity),
         remote: true) do |f| %>

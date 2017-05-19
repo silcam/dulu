@@ -1,7 +1,7 @@
 <tr>
   <td><%= link_to activity.name, 
-        new_translation_activity_translation_stage_path(activity), 
-        {class: 'h4', remote: true} %>
+        '#', 
+        {class: 'h4', 'data-slide-form-id' => activity.id} %>
   </td>
   <td class="progress-cell" id="activity-progress-<%= activity.id %>">
     <%= render 'progress_bar', activity: activity %>
@@ -12,6 +12,8 @@
 </tr>
 <tr>
   <td colspan="6" class="update-stage-form" id="update-stage-form-cell-<%= activity.id %>">
-    <div class="row" id="update-stage-form-<%= activity.id %>" style="display: none;"></div>
+    <div class="row" id="update-stage-form-<%= activity.id %>" style="display: none;">
+      <%= render 'translation_stages/ajax_form', activity: activity %>
+    </div>
   </td>
 </tr>

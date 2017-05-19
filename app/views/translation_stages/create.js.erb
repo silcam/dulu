@@ -1,5 +1,4 @@
-$('#update-stage-form-cell-<%= @translation_activity.id %>').slideUp(350);
-$('#update-stage-form-cell-<%= @translation_activity.id %>').html("");
+$('#update-stage-form-<%= @translation_activity.id %>').slideUp(350);
 $('#activity-stage-name-<%= @translation_activity.id %>').html(
     "<%= @translation_activity.stage_name %>");
 $('#activity-progress-<%= @translation_activity.id %>').html(
