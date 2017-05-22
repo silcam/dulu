@@ -1,13 +1,13 @@
-<h1>Languages</h1>
+<h1><%= t :Languages %></h1>
 
 <table class='table'>
   <tr>
-    <th>Name</th>
-    <th>Code</th>
-    <th>Status</th>
-    <th>Country</th>
-    <th>Region</th>
-    <th>Poplulation</th>
+    <th><%= t :Name %></th>
+    <th><%= t :Code %></th>
+    <th><%= t :Status %></th>
+    <th><%= t :Country %></th>
+    <th><%= t :Region %></th>
+    <th><%= t :Population %></th>
   </tr>
   <% @languages.each do |language| %>
     <tr>
@@ -18,7 +18,7 @@
           <%= "(#{status.level}) #{status.label}" %>
         <% end %>
       </td>
-      <td><%= language.country.english_name if language.country %></td>
+      <td><%= language.country.name if language.country %></td>
       <td><%= language.cameroon_region.english_name if language.cameroon_region %></td>
       <td><%= language.population_description %></td>
     </tr>

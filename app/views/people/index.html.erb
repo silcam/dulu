@@ -1,13 +1,13 @@
-<h1>People</h1>
+<h1><%= t :People %></h1>
 <p>
-  <%= link_to 'Add Person', new_person_path, class: "btn btn-primary" %>
+  <%= link_to t(:Add_person), new_person_path, class: "btn btn-primary" %>
 </p>
 <table class="table">
   <tr>
-    <th>Name</th>
-    <th>Organization</th>
-    <th>Email</th>
-    <th>Has Login</th>
+    <th><%= t :Name %></th>
+    <th><%= t :Organization %></th>
+    <th><%= t :Email %></th>
+    <th><%= t :Can_log_in %></th>
     <th> </th> <!-- Column for Edit button-->
   </tr>
   <% @people.each do |person| %>
@@ -15,8 +15,8 @@
       <td><%= person.last_name %>, <%= person.first_name %></td>
       <td><%= person.organization.name if person.organization %></td>
       <td><%= person.email %></td>
-      <td><%= person.has_login ? 'Yes' : 'No' %></td>
-      <td><%= link_to 'Edit', edit_person_path(person), 
+      <td><%= person.has_login ? t(:Oui) : t(:Non) %></td>
+      <td><%= link_to t(:Edit), edit_person_path(person), 
               class: "btn btn-default btn-xs" %></td>
     </tr>
   <% end %>

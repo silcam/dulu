@@ -1,0 +1,58 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+fr:
+  #App
+  Search_bar: 'Rechercher...'
+  Name: 'Nom'
+  Oui: 'Oui'
+  Non: 'Non'
+
+  #People Controller
+  People: 'Personnes'
+  First_Name: 'Prénom'
+  Last_Name: 'Nom'
+  Male: 'Homme'
+  Female: 'Femme'
+  Date_of_Birth: 'Jour de naissance'
+  Home_Country: "Pays d'Origine"
+  Email: 'Adresse Mail'
+  Can_log_in: 'Compte de connexion'
+  dulu_preferred_language: 'Langue préférée pour Dulu'
+  English: 'Anglais'
+  French: 'Français'
+  New_Person: 'Nouvelle Personne'
+  Add_person: 'Créer une personne'
+  Edit_person: 'Éditer une Personne'
+  Edit: 'Éditer'
+
+  #Organizations Controller
+  Organization: 'Organisation'
+  Organizations: 'Organisations'
+  Abbreviation: 'Abréviation'
+  add_organization_button: 'Créer une Organisation'
+  New_Organization: 'Nouvelle Organisation'
+  
+  #Languages Controller
+  Code: 'Code'
+  Status: 'Statut'
+  Country: 'Pays'
+  Region: 'Région'
+  Population: 'Population'
+  Languages: 'Langues'
+
+  #Programs Controller
+  Programs: 'Programmes'
+
+  #Sessions Controller
+  Log_out: 'Déconnexion'

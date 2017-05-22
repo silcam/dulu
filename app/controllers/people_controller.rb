@@ -33,7 +33,8 @@ class PeopleController < ApplicationController
 private
   def person_params
     params.require(:person).permit(:first_name, :last_name ,:email, :birth_date,
-                                  :has_login, :organization_id, :gender, :country_id)
+                                  :has_login, :organization_id, :gender, :country_id,
+                                  :ui_language)
   end
 
   def logged_in_user

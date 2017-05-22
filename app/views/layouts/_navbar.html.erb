@@ -2,7 +2,6 @@
   <div class="container-fluid">
     <div class="navbar-header">
       <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-        <span class="sr-only">Toggle navigation</span>
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
@@ -12,17 +11,17 @@
     <div id="navbar" class="navbar-collapse collapse">
       <% if logged_in? %>
         <ul class="nav navbar-nav">
-          <li><%= link_to 'People', people_path %></li>
-          <li><%= link_to 'Organizations', organizations_path %></li>
-          <li><%= link_to 'Languages', languages_path %></li>
-          <li><%= link_to 'Programs', programs_path %></li>
+          <li><%= link_to t(:People), people_path %></li>
+          <li><%= link_to t(:Organizations), organizations_path %></li>
+          <li><%= link_to t(:Languages), languages_path %></li>
+          <li><%= link_to t(:Programs), programs_path %></li>
         </ul>
         <ul class="nav navbar-nav navbar-right">
           <li><%= link_to @current_user.first_name, '#' %></li>
-          <li><%= link_to 'Log out', logout_url, method: :delete %></li>
+          <li><%= link_to t(:Log_out), logout_url, method: :delete %></li>
         </ul>
         <form class="navbar-form navbar-right">
-          <input type="text" class="form-control" placeholder="Search..." />
+          <input type="text" class="form-control" placeholder="<%= t(:Search_bar) %>" />
         </form>
       <% end %>
     </div>

@@ -1,10 +1,10 @@
-<h1>Organizations</h1>
+<h1><%= t :Organizations %></h1>
 <p>
-  <%= link_to 'Add Organization', new_organization_path, class: "btn btn-primary" %>
+  <%= link_to t(:add_organization_button), new_organization_path, class: "btn btn-primary" %>
 </p>
 <table class="table">
   <tr>
-    <th>Name</th>
+    <th><%= t :Name %></th>
   </tr>
   <% @organizations.each do |org| %>
     <tr>

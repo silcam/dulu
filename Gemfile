@@ -32,6 +32,8 @@ gem 'jbuilder', '~> 2.5'
 # gem 'redis', '~> 3.0'
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
+#Internationalization
+gem 'rails-i18n', '~> 5.0.4'
 
 group :development, :test do
   gem 'puma', '~>3.0'

@@ -20,4 +20,48 @@
 # available at http://guides.rubyonrails.org/i18n.html.
 
 en:
-  hello: "Hello world"
+  #App
+  Search_bar: 'Search...'
+  Name: 'Name'
+  Oui: 'Yes'
+  Non: "No"
+
+  #People Controller
+  People: 'People'
+  First_Name: 'First Name'
+  Last_Name: 'Last Name'
+  Male: 'Male'
+  Female: 'Female'
+  Date_of_Birth: 'Date of Birth'
+  Home_Country: 'Home Country'
+  Email: 'Email'
+  Can_log_in: 'Able to log in'
+  dulu_preferred_language: 'Preferred language for using Dulu'
+  English: 'English'
+  French: 'French'
+  New_Person: 'New Person'
+  Add_person: 'Add Person'
+  Edit_person: 'Edit Person'
+  Edit: 'Edit'
+
+  #Organizations Controller
+  Organization: 'Organization'
+  Organizations: 'Organizations'
+  Abbreviation: 'Abbreviation'
+  add_organization_button: 'Add Organization'
+  New_Organization: 'New Organization'
+
+  #Languages Controller
+  Code: 'Code'
+  Status: 'Status'
+  Country: 'Country'
+  Region: 'Region'
+  Population: 'Population'
+  Languages: 'Languages'
+
+  #Programs Controller
+  Programs: 'Programs'
+
+  #Sessions Controller
+  Log_out: 'Log out'
+

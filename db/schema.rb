@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170516112339) do
+ActiveRecord::Schema.define(version: 20170522114121) do
 
   create_table "bible_books", force: :cascade do |t|
     t.string  "name"
@@ -104,6 +104,7 @@ ActiveRecord::Schema.define(version: 20170516112339) do
     t.text     "cv_text"
     t.string   "former_last_name"
     t.integer  "country_id"
+    t.string   "ui_language"
     t.index ["country_id"], name: "index_people_on_country_id"
     t.index ["organization_id"], name: "index_people_on_organization_id"
   end
