@@ -9,7 +9,7 @@ class SuccesfulLoginTest < ActionDispatch::IntegrationTest
   test "valid user login and logout" do
     get login_path
     post login_path, params: { session: { email: @jiminy.email}}
-    assert_redirected_to people_path  #for now
+    assert_redirected_to root_path
     follow_redirect!
     assert_equal @jiminy, Person.find_by(id: session[:user_id])
     delete logout_path
