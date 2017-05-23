@@ -9,9 +9,9 @@ class BibleBookTest < ActiveSupport::TestCase
     assert_equal "Malachi", ot.last.name
 
     nt = BibleBook.get_new_testament
-    assert nt.length == 27
-    assert nt.first.name = "Matthew"
-    assert nt.last.name = "Revelation"
+    assert_equal 27, nt.length
+    assert_equal "Matthew", nt.first.name
+    assert_equal "Revelation", nt.last.name
   end
 
   test "verse counters" do
