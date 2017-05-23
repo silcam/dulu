@@ -1,0 +1,14 @@
+<%= render layout: 'programs/sidebar' do %>
+  <div class="row">
+    <div class="md-col-6">
+      <h2><%= @translation_activity.name %></h2>
+      <table class="table" id="dulutable" style="width: initial">
+        <% @translation_activity.translation_stages.order(:start_date).each do |stage| %>
+          <tr id="stage-row-<%= stage.id %>">
+            <%= render 'stage_row_view', stage: stage %>
+          </tr>
+        <% end %>
+      </table>
+    </div>
+  </div>
+<% end %>

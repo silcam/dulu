@@ -1,12 +1,12 @@
 <tr>
-  <td><%= link_to activity.name, 
-        '#', 
-        {class: 'h4', 'data-slide-form-id' => activity.id} %>
+  <td><%= link_to activity.name, activity %>
   </td>
   <td class="progress-cell" id="activity-progress-<%= activity.id %>">
     <%= render 'progress_bar', activity: activity %>
   </td>
-  <td id="activity-stage-name-<%= activity.id %>"><%= t(activity.stage_name) %></td>
+  <td id="activity-stage-name-<%= activity.id %>">
+    <%= render 'stage_name_link', activity: activity %>
+  </td>
   <td><%= goal %></td>
   <td><%= person %></td>
 </tr>
