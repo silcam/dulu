@@ -15,7 +15,7 @@
       <td><%= person.last_name %>, <%= person.first_name %></td>
       <td><%= person.organization.name if person.organization %></td>
       <td><%= person.email %></td>
-      <td><%= person.has_login ? t(:Oui) : t(:Non) %></td>
+      <td><%= person.has_login ? t('Yes') : t('No') %></td>
       <td><%= link_to t(:Edit), edit_person_path(person), 
               class: "btn btn-default btn-xs" %></td>
     </tr>

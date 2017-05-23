@@ -1,14 +1,14 @@
 <%= render layout: 'sidebar' do %>
-  <%= link_to 'Add Books to Translate', 
+  <%= link_to t(:Add_books), 
               new_program_translation_activity_path(@program) %>
 
   <table class='table'>
-    <% @program.translation_activities.order(:bible_book_id).each do |book| %>
+    <% @program.translation_activities.order(:bible_book_id).each do |activity| %>
       <tr>
-        <td><%= book.bible_book.name %></td>
-        <td><%= book.current_translation_stage.stage_name.name %></td>
-        <td><%= link_to 'Update', 
-                  new_translation_activity_translation_stage_path(book), 
+        <td><%= activity.bible_book.name %></td>
+        <td><%= t(activity.current_translation_stage.name) %></td>
+        <td><%= link_to t(:Update), 
+                  new_translation_activity_translation_stage_path(activity), 
                   class: "btn btn-default btn-xs" %></td>
       </tr>
     <% end %>

@@ -1,9 +1,9 @@
 <%= form_tag(controller: 'translation_activities', action: 'create', program_id: @program.id) %>
-<%= submit_tag 'Save' %>
+<%= submit_tag t(:Save) %>
 <table class='table'>
   <tr>
-    <th>Old Testament</th>
-    <th>New Testament</th>
+    <th><%= t :Old_testament %></th>
+    <th><%= t :New_testament %></th>
   </tr>
   <% ot_books = BibleBook.get_old_testament %>
   <% nt_books = BibleBook.get_new_testament %>

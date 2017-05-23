@@ -2,7 +2,7 @@
   <div class="row">
     <div class="col-md-9">
       <div id="activities-table-div">
-        <h2>Current Activities</h2>
+        <h2><%= t :Current_activities %></h2>
         <table class="table" id="activities-table">
           <% @program.translation_activities.order('bible_book_id').each do |activity| %>
             <%= render 'current_activity_table_row', 
@@ -13,23 +13,23 @@
         </table>
       </div>
       <div>
-        <h2>Program Status</h2>
+        <h2><%= t :Program_status %></h2>
         <div class="row">
           <div class="col-md-4">
-            <%= render 'dashboard_panel', {title: 'Bible', list_with_headings: [{heading: 'Old Testament (11%)', items: ['Genesis (2012)', 'Ruth (2013)']}, {heading: 'New Testament (4%)', items: ['James (2015)']}]} %>
-            <%= render 'dashboard_panel', {title: 'Media', list_items: ['Audio Genesis (2013)']} %>
-            <%= render 'dashboard_panel', {title: 'Mobilization', list_items: ['Something']} %>
-            <%= render 'dashboard_panel', {title: 'Ethnomusicology', list_items: ['Hymnal (2016)']} %>
+            <%= render 'dashboard_panel', {title: t(:Bible), list_with_headings: [{heading: 'Old Testament (11%)', items: ['Genesis (2012)', 'Ruth (2013)']}, {heading: 'New Testament (4%)', items: ['James (2015)']}]} %>
+            <%= render 'dashboard_panel', {title: t(:Media), list_items: ['Audio Genesis (2013)']} %>
+            <%= render 'dashboard_panel', {title: t(:Mobilization), list_items: ['Something']} %>
+            <%= render 'dashboard_panel', {title: t(:Ethnomusicology), list_items: ['Hymnal (2016)']} %>
           </div>
           <div class="col-md-4">
-            <%= render 'dashboard_panel', {title: 'Publications', list_items: ['Primer (2011)', 'Traditional Stories (2013)']} %>
-            <%= render 'dashboard_panel', {title: 'Literacy', list_items: ['Something']} %>
-            <%= render 'dashboard_panel', {title: 'Community Development', list_items: ['Something']} %>
+            <%= render 'dashboard_panel', {title: t(:Publications), list_items: ['Primer (2011)', 'Traditional Stories (2013)']} %>
+            <%= render 'dashboard_panel', {title: t(:Literacy), list_items: ['Something']} %>
+            <%= render 'dashboard_panel', {title: t(:Community_development), list_items: ['Something']} %>
           </div>
           <div class="col-md-4">
-            <%= render 'dashboard_panel', {title: 'Linguistics', list_items: ['Lexicon (2015)']} %>
-            <%= render 'dashboard_panel', {title: 'Scripture Use', list_items: ['Something']} %>
-            <%= render 'dashboard_panel', {title: 'Anthropology', list_items: ['Ewondo Customs (1977)']} %>
+            <%= render 'dashboard_panel', {title: t(:Linguistics), list_items: ['Lexicon (2015)']} %>
+            <%= render 'dashboard_panel', {title: t(:Scripture_use), list_items: ['Something']} %>
+            <%= render 'dashboard_panel', {title: t(:Anthropology), list_items: ['Ewondo Customs (1977)']} %>
           </div>
         </div>
       </div>

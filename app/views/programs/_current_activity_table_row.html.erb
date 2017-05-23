@@ -6,7 +6,7 @@
   <td class="progress-cell" id="activity-progress-<%= activity.id %>">
     <%= render 'progress_bar', activity: activity %>
   </td>
-  <td id="activity-stage-name-<%= activity.id %>"><%= activity.stage_name %></td>
+  <td id="activity-stage-name-<%= activity.id %>"><%= t(activity.stage_name) %></td>
   <td><%= goal %></td>
   <td><%= person %></td>
 </tr>

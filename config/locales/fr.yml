@@ -1,22 +1,16 @@
-
-
-
-
-
-
-
-
-
-
-
-
-
 fr:
   #App
   Search_bar: 'Rechercher...'
+  Dashboard: 'Aperçu'
+  Start_date: 'Date de commencement'
   Name: 'Nom'
-  Oui: 'Oui'
-  Non: 'Non'
+  Update: 'Mettre à jour'
+  Save: 'Enregistrer'
+  Bible: 'Bible'
+  Old_testament: 'Ancien Testament'
+  New_testament: 'Nouveau Testament'
+  'Yes': 'Oui'
+  'No': 'Non'
 
   #People Controller
   People: 'Personnes'
@@ -42,17 +36,49 @@ fr:
   Abbreviation: 'Abréviation'
   add_organization_button: 'Créer une Organisation'
   New_Organization: 'Nouvelle Organisation'
-  
+  Partners: 'Partenaires'
+
   #Languages Controller
   Code: 'Code'
   Status: 'Statut'
   Country: 'Pays'
   Region: 'Région'
   Population: 'Population'
+  Language: 'Langue'
   Languages: 'Langues'
+  Language_info: 'Langue: Détails'
 
   #Programs Controller
+  Program: 'Programme'
   Programs: 'Programmes'
+  Add_program: 'Créer un Programme'
+  New_program: 'Nouveau Programme'
+  Current_activities: 'Activités Actuelles'
+  Program_status: 'Statut du Programme'
+  Media: 'Audiovisuel'
+  Mobilization: 'Mobilisation'
+  Ethnomusicology: 'Ethnomusicologie'
+  Publications: 'Publications'
+  Literacy: 'Alphabétisation'
+  Community_development: 'Développement Communautaire'
+  Linguistics: 'Linguistique'
+  Scripture_use: "Utilisation des Écritures"
+  Anthropology: 'Anthropologie'
+  Add_books: 'Ajouter des livres à traduire'
+
+  #Translation Stages Controller
+  Planned: 'Prévue'
+  Drafting: 'Rédaction'
+  Testing: 'Évaluation'
+  Review_committee: 'Comité de Révision'
+  Back_translating: 'Traduction en arrière'
+  Ready_for_consultant_check: 'Prêt pour consultant'
+  Consultant_check: 'Vérification du consultant'
+  Consultant_checked: 'Vérifiée par consultant'
+  Published: 'Publiée' 
+  Update_stage: 'Stade actuel'
+  As_of: 'Depuis'
+  Stage: 'Stade'
 
   #Sessions Controller
   Log_out: 'Déconnexion'

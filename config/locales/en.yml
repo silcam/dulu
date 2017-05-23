@@ -1,30 +1,16 @@
-# Files in the config/locales directory are used for internationalization
-# and are automatically loaded by Rails. If you want to use locales other
-# than English, add the necessary files in this directory.
-#
-# To use the locales, use `I18n.t`:
-#
-#     I18n.t 'hello'
-#
-# In views, this is aliased to just `t`:
-#
-#     <%= t('hello') %>
-#
-# To use a different locale, set it with `I18n.locale`:
-#
-#     I18n.locale = :es
-#
-# This would use the information in config/locales/es.yml.
-#
-# To learn more, please read the Rails Internationalization guide
-# available at http://guides.rubyonrails.org/i18n.html.
-
 en:
   #App
   Search_bar: 'Search...'
+  Dashboard: 'Dashboard'
+  Start_date: 'Start Date'
   Name: 'Name'
-  Oui: 'Yes'
-  Non: "No"
+  Update: 'Update'
+  Save: 'Save'
+  Bible: 'Bible'
+  Old_testament: 'Old Testament'
+  New_testament: 'New Testament'
+  'Yes': 'Yes'
+  'No': 'No'
 
   #People Controller
   People: 'People'
@@ -50,6 +36,7 @@ en:
   Abbreviation: 'Abbreviation'
   add_organization_button: 'Add Organization'
   New_Organization: 'New Organization'
+  Partners: 'Partners'
 
   #Languages Controller
   Code: 'Code'
@@ -57,10 +44,41 @@ en:
   Country: 'Country'
   Region: 'Region'
   Population: 'Population'
+  Language: 'Language'
   Languages: 'Languages'
+  Language_info: 'Language Info'
 
   #Programs Controller
+  Program: 'Program'
   Programs: 'Programs'
+  Add_program: 'Add Program'
+  New_program: 'New Program'
+  Current_activities: 'Current Activities'
+  Program_status: 'Program Status'
+  Media: 'Media'
+  Mobilization: 'Mobilization'
+  Ethnomusicology: 'Ethnomusicology'
+  Publications: 'Publications'
+  Literacy: 'Literacy'
+  Community_development: 'Community Development'
+  Linguistics: 'Linguistics'
+  Scripture_use: 'Scripture Use'
+  Anthropology: 'Anthropology'
+  Add_books: 'Add books to translate'
+
+  #Translation Stages Controller
+  Planned: 'Planned'
+  Drafting: 'Drafting'
+  Testing: 'Testing'
+  Review_committee: 'Review Committee'
+  Back_translating: 'Back-Translating'
+  Ready_for_consultant_check: 'Ready for Consultant Check'
+  Consultant_check: 'Consultant Check in Progress'
+  Consultant_checked: 'Consultant Checked'
+  Published: 'Published'  
+  Update_stage: 'Update stage to'
+  As_of: 'As of'
+  Stage: 'Stage'
 
   #Sessions Controller
   Log_out: 'Log out'

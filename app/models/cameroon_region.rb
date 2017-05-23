@@ -3,7 +3,9 @@ class CameroonRegion < ApplicationRecord
   has_many :languges
 
   def name
-    #TODO: I18N of Cameroon Region Name
-    self.english_name
+    if I18n.locale == :fr
+      return french_name
+    end
+    return english_name
   end
 end

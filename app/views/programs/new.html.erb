@@ -1,20 +1,21 @@
-<h2>New Program</h2>
+<h2><%= t :New_program %></h2>
 
 <%= render 'shared/error_messages', errors: @program.errors if @program.errors %>
 
 <%= form_for @program do |f| %>
   <p>
-    <%= f.label :language %>
+    <%= f.label :language, t(:Language) %>
     <%= f.collection_select :language_id, 
           Language.all.order('name'), :id, :name %>
   </p>
   <p>
-    <%= f.label :name %>
+    <%= f.label :name, t(:Name) %>
     <%= f.text_field :name %>
     (Ex. New Testament)
+  </p>
   <p>
     <% @program.start_date = Date.today unless @program.start_date %>
-    <%= f.label :start_date %>
+    <%= f.label :start_date, t(:Start_date) %>
     <%= f.date_field :start_date %>
   <p>
     <%= f.submit %>

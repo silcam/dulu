@@ -10,10 +10,10 @@
       <% end %>
     </h3>
     <ul class="nav nav-sidebar">
-      <% links = [['Dashboard', dashboard_program_path(@program)],
-                  ['Language Info', '#'],
-                  ['Program', program_path(@program)],
-                  ['Partners', '#']] %>
+      <% links = [[t(:Dashboard), dashboard_program_path(@program)],
+                  [t(:Language_info), '#'],
+                  [t(:Program), program_path(@program)],
+                  [t(:Partners), '#']] %>
       <% links.each do |link| %>
         <% if current_page?(link[1]) %>
           <li class="h4 active">

@@ -1,10 +1,10 @@
-<h1>Programs</h1>
+<h1><%= t :Programs %></h1>
 <p>
-  <%= link_to 'Add Program', new_program_path, class: "btn btn-primary" %>
+  <%= link_to t(:Add_program), new_program_path, class: "btn btn-primary" %>
 </p>
 <table class="table">
   <tr>
-    <th>Language</th>
+    <th><%= t :Language %></th>
   </tr>
   <% @programs.each do |program| %>
     <tr>

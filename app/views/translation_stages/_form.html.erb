@@ -1,15 +1,15 @@
 <%= form_for(@translation_stage, 
       url: translation_activity_translation_stages_path(@translation_activity)) do |f| %>
   <p>
-    <%= f.label :stage_name %>
+    <%= f.label :stage_name, t(:Stage) %>
     <%= f.collection_select(:stage_name_id, StageName.all.order(:id),
-          :id, :name) %>
+          :id, :translated_name) %>
   </p>
   <p>
-    <%= f.label :start_date %>
+    <%= f.label :start_date, t(:Start_date) %>
     <%= f.date_field :start_date %>
   </p>
   <p>
-    <%= f.submit 'Save' %>
+    <%= f.submit t(:Save) %>
   </p>
 <% end %>

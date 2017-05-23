@@ -14,6 +14,10 @@ class StageName < ApplicationRecord
   #   end
   # end
 
+  def self.first_translation_stage
+    return StageName.find_by(level: FIRST_STAGE, kind: 'Translation')
+  end
+
   def next_stage
     if ( FIRST_STAGE .. (LAST_TRANSLATION_STAGE-1) ) === self.level
       return StageName.find_by(level: self.level + 1)
@@ -21,8 +25,8 @@ class StageName < ApplicationRecord
     return self
   end
 
-  def self.first_translation_stage
-    return StageName.find_by(level: FIRST_STAGE, kind: 'Translation')
+  def translated_name
+    return I18n.translate(name)
   end
 
   def progress
