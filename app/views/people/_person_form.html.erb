@@ -13,9 +13,9 @@
 
   <p>
     <%= f.radio_button :gender, "M", checked: true %>
-    <%= f.label :gender, t(:Male) %><br />
+    <%= f.label :gender_m, t(:Male) %><br />
     <%= f.radio_button :gender, "F" %>
-    <%= f.label :gender, t(:Female) %>
+    <%= f.label :gender_f, t(:Female) %>
   </p>
 
   <p>
@@ -46,9 +46,9 @@
   <p>
     <%= f.label :ui_language, t(:dulu_preferred_language) %><br />
     <%= f.radio_button :ui_language, "en", checked: true %>
-    <%= f.label :ui_language, t(:English) %><br />
+    <%= f.label :ui_language_en, t(:English) %><br />
     <%= f.radio_button :ui_language, "fr" %>
-    <%= f.label :ui_language, t(:French) %><br />
+    <%= f.label :ui_language_fr, t(:French) %><br />
   </p>
 
   <p>
