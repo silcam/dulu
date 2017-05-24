@@ -1,11 +1,14 @@
 <%= render layout: 'programs/sidebar' do %>
   <div class="row">
-    <div class="md-col-6">
+    <div class="col-md-6">
       <h2><%= @translation_activity.name %></h2>
-      <table class="table" id="dulutable" style="width: initial">
-        <% @translation_activity.translation_stages.order(:start_date).each do |stage| %>
-          <tr id="stage-row-<%= stage.id %>">
+      <table class="table" id="dulutable" >
+        <% @translation_activity.translation_stages.order('start_date DESC').each do |stage| %>
+          <tr id="stage-row-view-<%= stage.id %>">
             <%= render 'stage_row_view', stage: stage %>
+          </tr>
+          <tr id="stage-row-form-<%= stage.id %>", style="display: none">
+            <%= render 'stage_row_form', stage: stage %>
           </tr>
         <% end %>
       </table>

@@ -6,6 +6,8 @@ en:
   Name: 'Name'
   Update: 'Update'
   Save: 'Save'
+  Cancel: 'Cancel'
+  Delete: 'Delete'
   Bible: 'Bible'
   Old_testament: 'Old Testament'
   New_testament: 'New Testament'
@@ -79,6 +81,8 @@ en:
   Update_stage: 'Update stage to'
   As_of: 'As of'
   Stage: 'Stage'
+  Modify_Date: 'Modify Date'
+  Delete_stage_confirmation: "Do you want to delete this stage from the history?"
 
   #Sessions Controller
   Log_out: 'Log out'

@@ -6,6 +6,8 @@ fr:
   Name: 'Nom'
   Update: 'Mettre à jour'
   Save: 'Enregistrer'
+  Cancel: 'Annuler'
+  Delete: 'Supprimer'
   Bible: 'Bible'
   Old_testament: 'Ancien Testament'
   New_testament: 'Nouveau Testament'
@@ -79,6 +81,8 @@ fr:
   Update_stage: 'Stade actuel'
   As_of: 'Depuis'
   Stage: 'Stade'
+  Modify_Date: 'Changer le date'
+  Delete_stage_confirmation: "Confirmez que vous voulez supprimer ce stade de l'histoire."
 
   #Sessions Controller
   Log_out: 'Déconnexion'

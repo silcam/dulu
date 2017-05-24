@@ -1,6 +1,6 @@
 <%= form_for stage, remote: true do |f| %>
   <td><h4><%= t stage.name %></h4></td>
   <td><%= f.date_field(:start_date)%></td>
-  <td><%= f.submit t(:Save) %></td>
-  <td><%= button_tag t(:Cancel) %></td>
+  <td><%= f.submit t(:Save), class: 'btn btn-primary' %></td>
+  <td><%= button_tag t(:Cancel), class: 'btn btn-default', data: {'cancel-edit-stage-id' => stage.id} %></td>
 <% end %>

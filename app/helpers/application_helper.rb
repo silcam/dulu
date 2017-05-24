@@ -20,7 +20,7 @@ module ApplicationHelper
     elsif Date.today.year == date.year
       return date_this_year date
 
-    elsif (0..2) === (date.month - Date.today.month)
+    elsif (Date.today .. Date.today>>2) === date
       return date_this_year date
 
     else

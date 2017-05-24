@@ -17,6 +17,15 @@ class TranslationStagesController < ApplicationController
     end
   end
 
+  def update
+    @stage = TranslationStage.find(params[:id])
+    @stage.update(translation_stage_params)
+    respond_to do |format|
+      format.html { redirect_to(@translation_activity) }
+      format.js
+    end
+  end
+
   def destroy
     @stage = TranslationStage.find(params[:id])
     @stage.destroy

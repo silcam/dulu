@@ -1,6 +1,18 @@
-<td><h4><%= t stage.name %></h4></td>
-<td><%= pretty_format(stage.start_date) %></td>
-<td><%= link_to t(:Modify_Date), '#' %></td>
-<td><%= link_to t(:Delete), translation_stage_path(stage), 
-        method: :delete, remote: true, 
-        data: { confirm: t(:Delete_stage_confirmation)}  %></td>
+<td class="h4" id="stage-name-<%= stage.id %>">
+  <%= t stage.name %>
+</td>
+
+<td id="stage-date-<%= stage.id %>">
+  <%= pretty_format(stage.start_date) %>
+</td>
+
+<td>
+  <%= button_tag t(:Modify_Date), class: 'btn btn-default',
+                    data: {'edit-stage-id' => stage.id}  %>
+</td>
+
+<td>
+  <%= button_to t(:Delete), translation_stage_path(stage), 
+        method: :delete, remote: true, class: 'btn btn-default',
+        data: { confirm: t(:Delete_stage_confirmation)}  %>
+</td>
