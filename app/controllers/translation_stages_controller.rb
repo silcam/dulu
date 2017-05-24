@@ -17,6 +17,15 @@ class TranslationStagesController < ApplicationController
     end
   end
 
+  def destroy
+    @stage = TranslationStage.find(params[:id])
+    @stage.destroy
+    respond_to do |format|
+      format.js
+      format.html { redirect_to(@stage.translation_activity) }
+    end
+  end
+
   private
     def translation_stage_params
       params.require(:translation_stage).permit(:stage_name_id, :start_date)
