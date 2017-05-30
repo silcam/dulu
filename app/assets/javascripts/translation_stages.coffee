@@ -15,3 +15,9 @@ $(document).ready ->
     stage_id = $(this).data("cancel-edit-stage-id")
     $('#stage-row-form-' + stage_id).fadeOut('fast', ->
       $('#stage-row-view-' + stage_id).fadeIn('fast'))
+
+$(document).ready ->
+  $('#show-update-form').click (e) ->
+    e.preventDefault()
+    $(this).fadeOut('fast', ->
+      $('#update-stage-form').fadeIn('fast'))
