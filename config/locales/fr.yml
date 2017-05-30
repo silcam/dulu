@@ -15,7 +15,7 @@ fr:
   'No': 'Non'
 
   #People Controller
-  People: 'Personnes'
+  People: 'Personnel'
   First_Name: 'Prénom'
   Last_Name: 'Nom'
   Male: 'Homme'
@@ -86,3 +86,13 @@ fr:
 
   #Sessions Controller
   Log_out: 'Déconnexion'
+
+  activerecord:
+    models:
+      BibleBook: BibleLivre
+      Person:
+        one: Personne
+        other: Personnel
+      Organization: Organisation
+      Language: Langue
+      Program: Programme
