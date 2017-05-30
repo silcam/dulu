@@ -13,8 +13,8 @@ gem 'sqlite3'
 # Use Puma as the app server
 # gem 'puma', '~> 3.0'
 # Use SCSS for stylesheets
-gem 'sass-rails', '~> 5.0'
 gem 'bootstrap-sass', '~>3.3.7'
+gem 'sass-rails', '~> 5.0'
 # Use Uglifier as compressor for JavaScript assets
 gem 'uglifier', '>= 1.3.0'
 # Use CoffeeScript for .coffee assets and views
@@ -32,7 +32,7 @@ gem 'jbuilder', '~> 2.5'
 # gem 'redis', '~> 3.0'
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
-#Internationalization
+# Internationalization
 gem 'rails-i18n', '~> 5.0.4'
 
 group :development, :test do
@@ -49,5 +49,5 @@ end
 
 group :test do
   gem 'minitest-reporters'
-  gem 'win32console'
+  gem 'win32console', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 end
