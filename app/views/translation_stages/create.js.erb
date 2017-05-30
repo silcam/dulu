@@ -1,5 +1,0 @@
-$('#update-stage-form-<%= @translation_activity.id %>').slideUp(350);
-$('#activity-stage-name-<%= @translation_activity.id %>').html(
-    " <%= j (render 'programs/stage_name_link', activity: @translation_activity) %>");
-$('#activity-progress-<%= @translation_activity.id %>').html(
-    " <%= j (render 'programs/progress_bar', activity: @translation_activity) %>");

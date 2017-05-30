@@ -3,7 +3,10 @@
     <div class="col-md-6">
       <h2><%= @translation_activity.name %></h2>
       <p>
-        Current Stage: <%= @translation_activity.current_translation_stage.name %>
+        Current Stage:
+        <span id="current-stage">
+          <%= t @translation_activity.current_translation_stage.name %>
+        </span>
       </p>
       <%= button_tag t(:Update), id: 'show-update-form', class: 'btn btn-default' %>
       <div class="row" id="update-stage-form" style="display: none;">
@@ -13,13 +16,8 @@
         History
       </h3>
       <table class="table" id="dulutable" >
-        <% @translation_activity.translation_stages.order('start_date DESC').each do |stage| %>
-          <tr id="stage-row-view-<%= stage.id %>">
-            <%= render 'stage_row_view', stage: stage %>
-          </tr>
-          <tr id="stage-row-form-<%= stage.id %>", style="display: none">
-            <%= render 'stage_row_form', stage: stage %>
-          </tr>
+        <% @translation_activity.translation_stages.order('start_date DESC, id DESC').each do |stage| %>
+          <%= render 'stage_rows', stage: stage %>
         <% end %>
       </table>
     </div>
