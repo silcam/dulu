@@ -13,6 +13,7 @@ en:
   New_testament: 'New Testament'
   'Yes': 'Yes'
   'No': 'No'
+  History: 'History'
 
   #People Controller
   People: 'People'
@@ -77,7 +78,8 @@ en:
   Ready_for_consultant_check: 'Ready for Consultant Check'
   Consultant_check: 'Consultant Check in Progress'
   Consultant_checked: 'Consultant Checked'
-  Published: 'Published'  
+  Published: 'Published'
+  Current_stage: 'Current stage: '
   Update_stage: 'Update stage to'
   As_of: 'As of'
   Stage: 'Stage'

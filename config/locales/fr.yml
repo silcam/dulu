@@ -13,6 +13,7 @@ fr:
   New_testament: 'Nouveau Testament'
   'Yes': 'Oui'
   'No': 'Non'
+  History: 'Histoire'
 
   #People Controller
   People: 'Personnel'
@@ -77,7 +78,8 @@ fr:
   Ready_for_consultant_check: 'Prêt pour conseiller'
   Consultant_check: 'Vérification du conseiller'
   Consultant_checked: 'Vérifiée par conseiller'
-  Published: 'Publiée' 
+  Published: 'Publiée'
+  Current_stage: 'Stade actual: '
   Update_stage: 'Stade actuel'
   As_of: 'Depuis'
   Stage: 'Stade'
