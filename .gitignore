@@ -7,7 +7,6 @@
 # Rick's Ignores
 *.pptx
 /db/development-with-clasp-people-orgs.sqlite3.bak
-Gemfile.lock
 config/secrets.yml
 
 # Ignore bundler config.
