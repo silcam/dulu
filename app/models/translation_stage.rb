@@ -1,6 +1,6 @@
 class TranslationStage < ApplicationRecord
 
-  belongs_to :translation_activity
+  belongs_to :activity
   belongs_to :stage_name
   
   def self.default_new_params
