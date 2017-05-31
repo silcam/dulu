@@ -1,8 +1,6 @@
-class TranslationActivity < ApplicationRecord
-  
-  belongs_to :program
+class TranslationActivity < Activity
+
   belongs_to :bible_book
-  has_many :translation_stages
   has_many :book_translation_consultants
 
   def current_translation_stage
