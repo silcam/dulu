@@ -1,0 +1,7 @@
+<p class="alert alert-danger">
+  <ul>
+    <% @translation_stage.errors.full_messages.each do |message| %>
+      <li><%= message %></li>
+    <% end %>
+  </ul>
+</p>

@@ -2,6 +2,8 @@ class TranslationStage < ApplicationRecord
 
   belongs_to :activity
   belongs_to :stage_name
+
+  validates :start_date, presence: true, allow_blank: false
   
   def self.default_new_params
     {stage_name: StageName.first_translation_stage,

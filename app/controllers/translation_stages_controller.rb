@@ -8,13 +8,16 @@ class TranslationStagesController < ApplicationController
   def create
     @translation_activity = TranslationActivity.find(params[:translation_activity_id])
     @translation_stage = @translation_activity.translation_stages.create(translation_stage_params)
-    if @translation_stage
+    unless @translation_stage.new_record?
       respond_to do |format|
         format.js
         format.html { redirect_to(@translation_activity.program) }
       end
     else
-      render 'new'
+      respond_to do |format|
+        format.js { render 'create_with_errors' }
+        format.html { render 'new' }
+      end
     end
   end
 
