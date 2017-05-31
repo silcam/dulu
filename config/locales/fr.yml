@@ -4,7 +4,7 @@ fr:
   Dashboard: 'Tableau de bord'
   Start_date: 'Date de commencement'
   Name: 'Nom'
-  Update: 'Mettre à jour'
+  Update: 'Modifier'
   Save: 'Enregistrer'
   Cancel: 'Annuler'
   Delete: 'Supprimer'
@@ -13,7 +13,7 @@ fr:
   New_testament: 'Nouveau Testament'
   'Yes': 'Oui'
   'No': 'Non'
-  History: 'Histoire'
+  History: 'Historique'
 
   #People Controller
   People: 'Personnel'
@@ -30,8 +30,8 @@ fr:
   French: 'Français'
   New_Person: 'Nouvelle personne'
   Add_person: 'Créer une personne'
-  Edit_person: 'Éditer une personne'
-  Edit: 'Éditer'
+  Edit_person: 'Modifier une personne'
+  Edit: 'Modifier'
 
   #Organizations Controller
   Organization: 'Organisation'
@@ -43,13 +43,13 @@ fr:
 
   #Languages Controller
   Code: 'Code'
-  Status: 'Statut'
+  Status: 'État'
   Country: 'Pays'
   Region: 'Région'
   Population: 'Population'
   Language: 'Langue'
   Languages: 'Langues'
-  Language_info: 'Langue: Détails'
+  Language_info: 'Langue : détails'
 
   #Programs Controller
   Program: 'Programme'
@@ -57,7 +57,7 @@ fr:
   Add_program: 'Créer un programme'
   New_program: 'Nouveau programme'
   Current_activities: 'Activités actuelles'
-  Program_status: 'Statut du programme'
+  Program_status: 'État du programme'
   Media: 'Audiovisuel'
   Mobilization: 'Mobilisation'
   Ethnomusicology: 'Ethnomusicologie'
@@ -65,26 +65,26 @@ fr:
   Literacy: 'Alphabétisation'
   Community_development: 'Développement communautaire'
   Linguistics: 'Linguistique'
-  Scripture_use: "Utilisation des Écritures"
+  Scripture_use: "Promotion des Saintes Écritures"
   Anthropology: 'Anthropologie'
   Add_books: 'Ajouter des livres à traduire'
 
   #Translation Stages Controller
   Planned: 'Prévue'
   Drafting: 'Rédaction'
-  Testing: 'Évaluation'
+  Testing: 'Testing'
   Review_committee: 'Comité de révision'
   Back_translating: 'Retraduction'
   Ready_for_consultant_check: 'Prêt pour conseiller'
   Consultant_check: 'Vérification du conseiller'
-  Consultant_checked: 'Vérifiée par conseiller'
-  Published: 'Publiée'
-  Current_stage: 'Stade actual: '
-  Update_stage: 'Stade actuel'
+  Consultant_checked: 'Vérifié par conseiller'
+  Published: 'Publié'
+  Current_stage: 'Étape actuel : '
+  Update_stage: 'Étape actuelle'
   As_of: 'Depuis'
-  Stage: 'Stade'
+  Stage: 'Étape'
   Modify_Date: 'Changer le date'
-  Delete_stage_confirmation: "Confirmez que vous voulez supprimer ce stade de l'histoire."
+  Delete_stage_confirmation: "Confirmez que vous voulez supprimer cette étape de l'historique."
 
   #Sessions Controller
   Log_out: 'Déconnexion'
