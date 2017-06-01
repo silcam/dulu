@@ -25,7 +25,7 @@ es:
   Home_Country: "Pais de origen"
   Email: 'Correo electrónico'
   Can_log_in: 'Cuenta de ingreso'
-  dulu_preferred_language: 'Idioma por Dulu'
+  dulu_preferred_language: 'Idioma'
   English: 'English'
   French: 'Français'
   Spanish: 'Español'
@@ -66,7 +66,7 @@ es:
   Literacy: 'Alfabetización'
   Community_development: 'Desarrollo comunitario'
   Linguistics: 'Lingüística'
-  Scripture_use: "Promotion des Saintes Écritures"
+  Scripture_use: "Uso de las Escrituras"
   Anthropology: 'Antropología'
   Add_books: 'Añadir libros para traducir'
 
