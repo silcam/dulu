@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170531085642) do
+ActiveRecord::Schema.define(version: 20170608082030) do
 
   create_table "activities", force: :cascade do |t|
     t.integer  "program_id"
@@ -20,6 +20,13 @@ ActiveRecord::Schema.define(version: 20170531085642) do
     t.string   "type"
     t.index ["bible_book_id"], name: "index_activities_on_bible_book_id"
     t.index ["program_id"], name: "index_activities_on_program_id"
+  end
+
+  create_table "activities_pers_prog_rels", force: :cascade do |t|
+    t.integer "activity_id"
+    t.integer "pers_prog_rels_id"
+    t.index ["activity_id"], name: "index_activities_pers_prog_rels_on_activity_id"
+    t.index ["pers_prog_rels_id"], name: "index_activities_pers_prog_rels_on_pers_prog_rels_id"
   end
 
   create_table "bible_books", force: :cascade do |t|
@@ -118,6 +125,25 @@ ActiveRecord::Schema.define(version: 20170531085642) do
     t.string   "ui_language"
     t.index ["country_id"], name: "index_people_on_country_id"
     t.index ["organization_id"], name: "index_people_on_organization_id"
+  end
+
+  create_table "pers_prog_rels", force: :cascade do |t|
+    t.integer  "person_id"
+    t.integer  "program_id"
+    t.integer  "program_role_id"
+    t.string   "start_date"
+    t.string   "end_date"
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
+    t.index ["person_id"], name: "index_pers_prog_rels_on_person_id"
+    t.index ["program_id"], name: "index_pers_prog_rels_on_program_id"
+    t.index ["program_role_id"], name: "index_pers_prog_rels_on_program_role_id"
+  end
+
+  create_table "program_roles", force: :cascade do |t|
+    t.string   "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "programs", force: :cascade do |t|
