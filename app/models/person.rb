@@ -11,4 +11,11 @@ class Person < ApplicationRecord
   validates :fmid, uniqueness: true, allow_blank: true
   validates :gender, inclusion: { in: %w(M F)}
 
+  def full_name
+    "#{first_name} #{last_name}"
+  end
+
+  def full_name_rev
+    "#{last_name}, #{first_name}"
+  end
 end

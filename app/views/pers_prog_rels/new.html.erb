@@ -1,0 +1,39 @@
+<%= render layout: 'programs/sidebar' do %>
+  <h3><%= t :Add_person_to_program %></h3>
+
+  <%= form_for @pers_prog_rel, url: program_pers_prog_rels_path do |form| %>
+    <p>
+      <%= form.label :person_id, t(:Person) %>
+      <%= form.collection_select :person_id, Person.all.order(:last_name, :first_name),
+                                  :id, :full_name_rev %>
+
+      <%= link_to t(:New_person), new_person_path(referred_by: new_program_pers_prog_rel_path(@program)) %>
+    </p>
+    <p>
+      <%= form.label :program_role_id, t(:Role) %>
+      <%= form.collection_select :program_role_id, ProgramRole.all, :id, :name %>
+    </p>
+
+    <p>
+      <%= form.label :start_date, t(:start_date) %>
+      <%= form.date_field :start_date, value: Date.today %>
+    </p>
+
+    <h4><%= t :associated_activities %></h4>
+    <table>
+      <% @program.translation_activities.each do |activity| %>
+        <label>
+          <%= check_box_tag 'assoc_activities[]', activity.id %>
+          <%= activity.name %>
+        </label>
+        <br>
+      <% end %>
+    </table>
+
+    <p>
+      <%= form.submit t(:Save) %>
+    </p>
+  <% end %>
+
+
+<% end %>

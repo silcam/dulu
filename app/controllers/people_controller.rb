@@ -15,7 +15,7 @@ class PeopleController < ApplicationController
   def create
     @person = Person.new(person_params)
     if @person.save
-      redirect_to people_path
+      follow_redirect people_path, person_id: @person.id
     else
       render 'new'
     end

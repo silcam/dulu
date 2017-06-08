@@ -11,7 +11,7 @@ class CreatePersProgRels < ActiveRecord::Migration[5.0]
 
     create_table :activities_pers_prog_rels do |t|
       t.references :activity
-      t.references :pers_prog_rels
+      t.references :pers_prog_rel
     end
   end
 end

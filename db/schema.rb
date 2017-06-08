@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170608082030) do
+ActiveRecord::Schema.define(version: 20170608085253) do
 
   create_table "activities", force: :cascade do |t|
     t.integer  "program_id"
@@ -24,9 +24,9 @@ ActiveRecord::Schema.define(version: 20170608082030) do
 
   create_table "activities_pers_prog_rels", force: :cascade do |t|
     t.integer "activity_id"
-    t.integer "pers_prog_rels_id"
+    t.integer "pers_prog_rel_id"
     t.index ["activity_id"], name: "index_activities_pers_prog_rels_on_activity_id"
-    t.index ["pers_prog_rels_id"], name: "index_activities_pers_prog_rels_on_pers_prog_rels_id"
+    t.index ["pers_prog_rel_id"], name: "index_activities_pers_prog_rels_on_pers_prog_rel_id"
   end
 
   create_table "bible_books", force: :cascade do |t|
