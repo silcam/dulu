@@ -1,1 +1,0 @@
-$('#update-stage-form').append("<%= j(render 'translation_stages/error_messages', errors: @translation_stage.errors) %>")

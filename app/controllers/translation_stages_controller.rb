@@ -15,18 +15,20 @@ class TranslationStagesController < ApplicationController
       end
     else
       respond_to do |format|
-        format.js { render 'create_with_errors' }
+        format.js { render 'display_errors' }
         format.html { render 'new' }
       end
     end
   end
 
   def update
-    @stage = TranslationStage.find(params[:id])
-    @stage.update(translation_stage_params)
+    @translation_stage = TranslationStage.find(params[:id])
     respond_to do |format|
-      format.html { redirect_to(@translation_activity) }
-      format.js
+      if @translation_stage.update(translation_stage_params)
+        format.js
+      else
+        format.js { render 'display_errors'}
+      end
     end
   end
 
