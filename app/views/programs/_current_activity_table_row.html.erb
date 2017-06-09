@@ -7,7 +7,6 @@
   <td id="activity-stage-name-<%= activity.id %>">
     <%= render 'stage_name_link', activity: activity %>
   </td>
-  <td><%= goal %></td>
   <td>
     <% relations = activity.pers_prog_rels_for_my_stage %>
     <% relations.each do |relation| %>
