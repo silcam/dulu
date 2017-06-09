@@ -1,23 +1,35 @@
 <%= render layout: 'programs/sidebar' do %>
+  <h2><%= @translation_activity.name %></h2>
+  <p>
+    <%= t :Current_stage %>
+    <span id="current-stage">
+      <%= t @translation_activity.current_translation_stage.name %>
+    </span>
+  </p>
+  <%= button_tag t(:Update), id: 'show-update-form', class: 'btn btn-default' %>
+  <div class="row" id="update-stage-form" style="display: none;">
+    <%= render 'translation_stages/ajax_form', activity: @translation_activity %>
+  </div>
   <div class="row">
     <div class="col-md-6">
-      <h2><%= @translation_activity.name %></h2>
-      <p>
-        <%= t :Current_stage %>
-        <span id="current-stage">
-          <%= t @translation_activity.current_translation_stage.name %>
-        </span>
-      </p>
-      <%= button_tag t(:Update), id: 'show-update-form', class: 'btn btn-default' %>
-      <div class="row" id="update-stage-form" style="display: none;">
-        <%= render 'translation_stages/ajax_form', activity: @translation_activity %>
-      </div>
       <h3>
         <%= t :History %>
       </h3>
       <table class="table" id="dulutable" >
         <% @translation_activity.translation_stages.order('start_date DESC, id DESC').each do |stage| %>
           <%= render 'stage_rows', stage: stage %>
+        <% end %>
+      </table>
+    </div>
+
+    <div class="col-md-6">
+      <h3><%= t :People %></h3>
+      <table class="table" >
+        <% @translation_activity.pers_prog_rels.each do |pers_prog_rel| %>
+          <tr>
+            <td><%= pers_prog_rel.person.full_name %></td>
+            <td><%= t(pers_prog_rel.program_role.name) %></td>
+          </tr>
         <% end %>
       </table>
     </div>

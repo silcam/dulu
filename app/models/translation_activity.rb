@@ -23,4 +23,8 @@ class TranslationActivity < Activity
   def stage_name
     self.current_translation_stage.name
   end
+
+  def pers_prog_rels_for_my_stage
+    self.pers_prog_rels.where(program_role: current_translation_stage.program_roles)
+  end
 end

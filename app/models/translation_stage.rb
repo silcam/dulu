@@ -2,6 +2,7 @@ class TranslationStage < ApplicationRecord
 
   belongs_to :activity
   belongs_to :stage_name
+  has_many :program_roles, through: :stage_name
 
   validates :start_date, presence: true, allow_blank: false
   

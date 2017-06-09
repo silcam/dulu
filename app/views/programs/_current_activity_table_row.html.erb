@@ -8,7 +8,13 @@
     <%= render 'stage_name_link', activity: activity %>
   </td>
   <td><%= goal %></td>
-  <td><%= person %></td>
+  <td>
+    <% relations = activity.pers_prog_rels_for_my_stage %>
+    <% relations.each do |relation| %>
+      <%= relation.person.full_name %><%= ', ' unless relation==relations.last %>
+    <% end %>
+
+  </td>
 </tr>
 <tr>
   <td colspan="6" class="update-stage-form" id="update-stage-form-cell-<%= activity.id %>">
