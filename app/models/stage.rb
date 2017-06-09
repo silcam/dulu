@@ -6,13 +6,13 @@ class Stage < ApplicationRecord
 
   validates :start_date, presence: true, allow_blank: false
   
-  def self.default_new_params
-    {stage_name: StageName.first_translation_stage,
+  def self.default_new_params(kind)
+    {stage_name: StageName.first_stage(kind),
       start_date: Date.today}
   end
 
-  def self.new_for translation_activity
-    existing = translation_activity.current_stage
+  def self.new_for activity
+    existing = activity.current_stage
     Stage.new({
       stage_name: existing.stage_name.next_stage,
       start_date: Date.today})

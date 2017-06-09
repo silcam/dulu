@@ -3,18 +3,22 @@ class StageName < ApplicationRecord
   has_many :stages
   has_and_belongs_to_many :program_roles
 
-  FIRST_STAGE = 1
-  LAST_TRANSLATION_STAGE = 9
-
   def self.first_translation_stage
-    return StageName.find_by(level: FIRST_STAGE, kind: 'Translation')
+    return self.first_stage(:translation)
   end
 
+  def self.first_stage(kind)
+    return StageName.find_by(level: 1, kind: kind)
+  end
+
+  def self.last_stage(kind)
+    return StageName.where(kind: kind).order(:level).last
+  end
+
+
   def next_stage
-    if ( FIRST_STAGE .. (LAST_TRANSLATION_STAGE-1) ) === self.level
-      return StageName.find_by(level: self.level + 1)
-    end
-    return self
+    stage = StageName.find_by(kind: self.kind, level: self.level + 1)
+    stage ? stage : self
   end
 
   def translated_name
@@ -22,6 +26,17 @@ class StageName < ApplicationRecord
   end
 
   def progress
+    case kind
+      when :translation
+        return translation_progress
+      else
+        return generic_progress
+    end
+  end
+
+  private
+
+  def translation_progress
     case self.level
     when 1, 2
       return 0
@@ -37,6 +52,10 @@ class StageName < ApplicationRecord
       return 95
     end
     return 100
+  end
+
+  def generic_progress
+    return (100 * level) / StageName.last_stage(kind).level
   end
 
 end
