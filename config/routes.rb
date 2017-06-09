@@ -15,7 +15,7 @@ Rails.application.routes.draw do
     resources :programs do
       get 'dashboard', on: :member
       resources :translation_activities do
-        resources :translation_stages
+        resources :stages
       end
       resources :pers_prog_rels
     end

@@ -1,14 +1,14 @@
-class TranslationStagesController < ApplicationController
+class StagesController < ApplicationController
   
   def new
     @translation_activity = TranslationActivity.find(params[:translation_activity_id])
-    @translation_stage = TranslationStage.new_for @translation_activity
+    @stage = Stage.new_for @translation_activity
   end
 
   def create
     @translation_activity = TranslationActivity.find(params[:translation_activity_id])
-    @translation_stage = @translation_activity.translation_stages.create(translation_stage_params)
-    unless @translation_stage.new_record?
+    @stage = @translation_activity.translation_stages.create(translation_stage_params)
+    unless @stage.new_record?
       respond_to do |format|
         format.js
         format.html { redirect_to(@translation_activity.program) }
@@ -22,9 +22,9 @@ class TranslationStagesController < ApplicationController
   end
 
   def update
-    @translation_stage = TranslationStage.find(params[:id])
+    @stage = Stage.find(params[:id])
     respond_to do |format|
-      if @translation_stage.update(translation_stage_params)
+      if @stage.update(translation_stage_params)
         format.js
       else
         format.js { render 'display_errors'}
@@ -33,7 +33,7 @@ class TranslationStagesController < ApplicationController
   end
 
   def destroy
-    @stage = TranslationStage.find(params[:id])
+    @stage = Stage.find(params[:id])
     @stage.destroy
     respond_to do |format|
       format.js
@@ -43,7 +43,7 @@ class TranslationStagesController < ApplicationController
 
   private
     def translation_stage_params
-      params.require(:translation_stage).permit(:stage_name_id, :start_date)
+      params.require(:stage).permit(:stage_name_id, :start_date)
     end
 
 end

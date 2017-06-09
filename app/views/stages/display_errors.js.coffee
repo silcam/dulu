@@ -1,4 +1,4 @@
-<% message = @translation_stage.errors.full_messages.join("\n") %>
+<% message = @stage.errors.full_messages.join("\n") %>
 
 alert("<%= j(message) %>")
 

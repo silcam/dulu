@@ -46,7 +46,7 @@ class CreateNewProgramTest < ActionDispatch::IntegrationTest
     assert_response :success
 
     post translation_activity_translation_stages_path,
-      params: {translation_stage: {
+      params: {stage: {
                 stage_name_id: @genesis.current_translation_stage.stage_name.next_stage.id,
                 start_date: Date.today}}
     assert_redirected_to program_path(@program)

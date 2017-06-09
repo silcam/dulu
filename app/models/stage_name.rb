@@ -1,6 +1,6 @@
 class StageName < ApplicationRecord
 
-  has_many :translation_stages
+  has_many :stages
   has_and_belongs_to_many :program_roles
 
   FIRST_STAGE = 1

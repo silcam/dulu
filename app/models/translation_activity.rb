@@ -9,7 +9,7 @@ class TranslationActivity < Activity
 
   def self.add_new_to_program(program, bible_book_id)
     new_book = program.translation_activities.create!(bible_book_id: bible_book_id)
-    new_book.translation_stages.create!(TranslationStage.default_new_params)
+    new_book.translation_stages.create!(Stage.default_new_params)
   end
 
   def name

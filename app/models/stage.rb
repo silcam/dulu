@@ -1,4 +1,4 @@
-class TranslationStage < ApplicationRecord
+class Stage < ApplicationRecord
 
   belongs_to :activity
   belongs_to :stage_name
@@ -13,7 +13,7 @@ class TranslationStage < ApplicationRecord
 
   def self.new_for translation_activity
     existing = translation_activity.current_translation_stage
-    TranslationStage.new({
+    Stage.new({
       stage_name: existing.stage_name.next_stage,
       start_date: Date.today})
   end
