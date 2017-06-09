@@ -39,20 +39,20 @@ class CreateNewProgramTest < ActionDispatch::IntegrationTest
 
     assert_equal 2,  @program.translation_activities.length
     @genesis = @program.translation_activities.first
-    assert_equal 1, @genesis.current_translation_stage.stage_name.level
-    assert_equal Date.today, @genesis.current_translation_stage.start_date
+    assert_equal 1, @genesis.current_stage.stage_name.level
+    assert_equal Date.today, @genesis.current_stage.start_date
 
-    get new_translation_activity_translation_stage_path(@genesis)
+    get new_translation_activity_stage_path(@genesis)
     assert_response :success
 
-    post translation_activity_translation_stages_path,
+    post translation_activity_stages_path,
       params: {stage: {
-                stage_name_id: @genesis.current_translation_stage.stage_name.next_stage.id,
+                stage_name_id: @genesis.current_stage.stage_name.next_stage.id,
                 start_date: Date.today}}
     assert_redirected_to program_path(@program)
     follow_redirect!
     assert_response :success
 
-    assert_equal 2, @genesis.current_translation_stage.stage_name.level
+    assert_equal 2, @genesis.current_stage.stage_name.level
   end
 end

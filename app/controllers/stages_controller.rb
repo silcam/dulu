@@ -7,7 +7,7 @@ class StagesController < ApplicationController
 
   def create
     @translation_activity = TranslationActivity.find(params[:translation_activity_id])
-    @stage = @translation_activity.translation_stages.create(translation_stage_params)
+    @stage = @translation_activity.stages.create(stage_params)
     unless @stage.new_record?
       respond_to do |format|
         format.js
@@ -24,7 +24,7 @@ class StagesController < ApplicationController
   def update
     @stage = Stage.find(params[:id])
     respond_to do |format|
-      if @stage.update(translation_stage_params)
+      if @stage.update(stage_params)
         format.js
       else
         format.js { render 'display_errors'}
@@ -42,7 +42,7 @@ class StagesController < ApplicationController
   end
 
   private
-    def translation_stage_params
+    def stage_params
       params.require(:stage).permit(:stage_name_id, :start_date)
     end
 

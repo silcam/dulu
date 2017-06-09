@@ -12,7 +12,7 @@ class Stage < ApplicationRecord
   end
 
   def self.new_for translation_activity
-    existing = translation_activity.current_translation_stage
+    existing = translation_activity.current_stage
     Stage.new({
       stage_name: existing.stage_name.next_stage,
       start_date: Date.today})

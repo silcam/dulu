@@ -3,7 +3,7 @@
   <p>
     <%= t :Current_stage %>
     <span id="current-stage">
-      <%= t @translation_activity.current_translation_stage.name %>
+      <%= t @translation_activity.current_stage.name %>
     </span>
   </p>
   <%= button_tag t(:Update), id: 'show-update-form', class: 'btn btn-default' %>
@@ -16,7 +16,7 @@
         <%= t :History %>
       </h3>
       <table class="table" id="dulutable" >
-        <% @translation_activity.translation_stages.order('start_date DESC, id DESC').each do |stage| %>
+        <% @translation_activity.stages.order('start_date DESC, id DESC').each do |stage| %>
           <%= render 'stage_rows', stage: stage %>
         <% end %>
       </table>

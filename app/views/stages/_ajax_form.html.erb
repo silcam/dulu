@@ -2,7 +2,7 @@
  <% @stage = Stage.new_for(activity) %>
  
   <%= form_for(@stage,
-               url: translation_activity_translation_stages_path(@translation_activity),
+               url: translation_activity_stages_path(@translation_activity),
                remote: true) do |f| %>
     <div class="col-md-6">
       <p>
