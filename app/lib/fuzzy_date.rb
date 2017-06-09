@@ -2,9 +2,9 @@ class FuzzyDate
   attr_accessor :year, :month, :day
 
   def initialize(year, month=nil, day=nil)
-    @year = year
-    @month = month
-    @day = day
+    @year = year.to_i
+    @month = month.to_i
+    @day = day.to_i
   end
 
   def self.from_string(datestring)
@@ -28,7 +28,9 @@ class FuzzyDate
   end
 
   def to_date
-    Date.new(@year, (@month || 1), (@day || 1))
+    day = @day ? @day : 1
+    month = @month ? @month : 1
+    Date.new(@year, month, day)
   end
 
   def before? date2
@@ -77,11 +79,11 @@ class FuzzyDate
     daydiff = (to_date - Date.today).to_i
     if (-4..4) === daydiff
       pretty_print_close_date daydiff
-    elsif Date.today.year = @year ||
+    elsif Date.today.year == @year ||
           (Date.today .. Date.today>>2) === to_date
-      I18n.l to_date, :month_day
+      I18n.l to_date, format: :month_day
     else
-      I18n.l to_date, :full
+      I18n.l to_date, format: :full
     end
   end
 
@@ -96,7 +98,7 @@ class FuzzyDate
       when (2..4)
         I18n.t :In_a_few_days, days: daydiff
       when (-4..-2)
-        I18n.t :A_few_days_ago, days: daydiff
+        I18n.t :A_few_days_ago, days: 0-daydiff
     end
   end
 
