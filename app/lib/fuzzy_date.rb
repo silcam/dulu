@@ -21,6 +21,10 @@ class FuzzyDate
     FuzzyDate.new(date.year, date.month, date.day)
   end
 
+  def self.today
+    FuzzyDate.from_date Date.today
+  end
+
   def to_s
     s = @year.to_s
     s += '-' + @month.to_s if @month

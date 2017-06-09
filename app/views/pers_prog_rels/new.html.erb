@@ -16,7 +16,7 @@
 
     <p>
       <%= form.label :start_date, t(:start_date) %>
-      <%= form.date_field :start_date, value: Date.today %>
+      <%= render 'layouts/fuzzy_date_field', form: form, prefix: :start_date, fdate: FuzzyDate.today %>
     </p>
 
     <h4><%= t :associated_activities %></h4>

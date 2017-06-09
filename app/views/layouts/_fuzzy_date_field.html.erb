@@ -1,0 +1,18 @@
+<!-- required inputs: form, prefix (normally the name of the fdate field), fdate -->
+
+<% if [:en].include?(I18n.locale) %>
+  <%= form.text_field "#{prefix}_m", {value: fdate.month, size: 2, maxlength: 2, class: "fuzzy-field form-control", placeholder: "MM"} %>
+  /
+  <%= form.text_field "#{prefix}_d", {value: fdate.day, size: 2, maxlength: 2, class: "fuzzy-field form-control", placeholder: "DD"} %>
+  /
+  <%= form.text_field "#{prefix}_y", {value: fdate.year, size: 4, maxlength: 4, class: "fuzzy-field form-control", placeholder: "YYYY"} %>
+
+<% else %>
+  <%= form.text_field "#{prefix}_d", {value: fdate.day, size: 2, maxlength: 2, class: "fuzzy-field form-control", placeholder: "DD"} %>
+  /
+  <%= form.text_field "#{prefix}_m", {value: fdate.month, size: 2, maxlength: 2, class: "fuzzy-field form-control", placeholder: "MM"} %>
+  /
+  <%= form.text_field "#{prefix}_y", {value: fdate.year, size: 4, maxlength: 4, class: "fuzzy-field form-control", placeholder: "YYYY"} %>
+
+<% end %>
+<%= t :fdate_omit %>
