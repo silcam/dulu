@@ -4,7 +4,7 @@
   <%= form_for @pers_prog_rel, url: program_pers_prog_rels_path do |form| %>
     <p>
       <%= form.label :person_id, t(:Person) %>
-      <%= form.collection_select :person_id, Person.all.order(:last_name, :first_name),
+      <%= form.collection_select :person_id, @program.unassociated_people,
                                   :id, :full_name_rev %>
 
       <%= link_to t(:New_person), new_person_path(referred_by: new_program_pers_prog_rel_path(@program)) %>

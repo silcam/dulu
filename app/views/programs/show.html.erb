@@ -8,11 +8,8 @@
       <table class='table'>
         <% @program.translation_activities.order(:bible_book_id).each do |activity| %>
           <tr>
-            <td><%= activity.bible_book.name %></td>
+            <td><%= link_to activity.name, activity %></td>
             <td><%= t(activity.current_translation_stage.name) %></td>
-            <td><%= link_to t(:Update),
-                      new_translation_activity_translation_stage_path(activity),
-                      class: "btn btn-default btn-xs" %></td>
           </tr>
         <% end %>
       </table>
