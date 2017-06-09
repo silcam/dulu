@@ -15,6 +15,17 @@ fr:
   'No': 'Non'
   History: 'Historique'
 
+  #Dates
+  Today: "Aujourd'hui"
+  Yesterday: 'Hier'
+  Tomorrow: 'Demain'
+  In_a_few_days: "Dans %{days} jours"
+  A_few_days_ago: "Il y a %{days} jours"
+  date:
+    formats:
+      month_day: "%d %B"
+      full: "%d %B %Y"
+
   #People Controller
   People: 'Personnel'
   First_Name: 'Prénom'

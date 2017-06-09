@@ -15,6 +15,17 @@ en:
   'No': 'No'
   History: 'History'
 
+  #Dates
+  Today: 'Today'
+  Yesterday: 'Yesterday'
+  Tomorrow: 'Tomorrow'
+  In_a_few_days: "In %{days} days"
+  A_few_days_ago: "%{days} days ago"
+  date:
+    formats:
+      month_day: "%B %d"
+      full: "%B %d, %Y"
+
   #People Controller
   People: 'People'
   First_Name: 'First Name'
@@ -27,7 +38,8 @@ en:
   Can_log_in: 'Able to log in'
   dulu_preferred_language: 'Preferred language for using Dulu'
   English: 'English'
-  French: 'French'
+  French: 'Français'
+  Spanish: 'Español'
   New_Person: 'New Person'
   Add_person: 'Add Person'
   Edit_person: 'Edit Person'

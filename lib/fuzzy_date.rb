@@ -51,6 +51,55 @@ class FuzzyDate
     return @day == date2.day
   end
 
+  def pretty_print
+    if @month.nil?
+      I18n.l to_date, "%Y"
+    elsif @day.nil?
+      pretty_print_no_day
+    else
+      pretty_print_with_day
+    end
+  end
+
+  private
+
+  def pretty_print_no_day
+    if @year == Date.today.year
+      I18n.l to_date, "%B"
+    elsif (Date.today..Date.today>>2) === to_date
+      I18n.l to_date, "%B"
+    else
+      I18n.l to_date, "%B %Y"
+    end
+  end
+
+  def pretty_print_with_day
+    daydiff = (to_date - Date.today).to_i
+    if (-4..4) === daydiff
+      pretty_print_close_date daydiff
+    elsif Date.today.year = @year ||
+          (Date.today .. Date.today>>2) === to_date
+      I18n.l to_date, :month_day
+    else
+      I18n.l to_date, :full
+    end
+  end
+
+  def pretty_print_close_date(daydiff)
+    case daydiff
+      when 0
+        I18n.t :Today
+      when -1
+        I18n.t :Yesterday
+      when 1
+        I18n.t :Tomorrow
+      when (2..4)
+        I18n.t :In_a_few_days, days: daydiff
+      when (-4..-2)
+        I18n.t :A_few_days_ago, days: daydiff
+    end
+  end
+
 
   # Cute but misguided attempt
   # def strftime format
