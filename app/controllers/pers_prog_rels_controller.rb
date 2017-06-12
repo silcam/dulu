@@ -22,6 +22,7 @@ class PersProgRelsController < ApplicationController
   private
 
   def pers_prog_rel_params
+    assemble_dates params, :pers_prog_rel, :start_date
     params.require(:pers_prog_rel).permit(:person_id, :program_role_id, :start_date)
   end
 end

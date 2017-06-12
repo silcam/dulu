@@ -43,6 +43,7 @@ class StagesController < ApplicationController
 
   private
     def stage_params
+      assemble_dates params, :stage, :start_date
       params.require(:stage).permit(:stage_name_id, :start_date)
     end
 

@@ -25,4 +25,8 @@ class Stage < ApplicationRecord
   def name
     self.stage_name.name
   end
+
+  def f_start_date
+    FuzzyDate.from_string start_date
+  end
 end

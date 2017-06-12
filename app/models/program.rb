@@ -9,7 +9,7 @@ class Program < ApplicationRecord
   def unassociated_people
     excludes = []
     self.people.each{ |p| excludes << "people.id!=#{p.id}" }
-    excludes.join(' AND ')
-    Person.where(excludes).order(:last_name, :first_name)
+    where_clause = excludes.join(' AND ')
+    Person.where(where_clause).order(:last_name, :first_name)
   end
 end
