@@ -86,7 +86,7 @@ class FuzzyDate
 
   def pretty_print
     if @month.nil?
-      I18n.l to_date, "%Y"
+      I18n.l to_date, format: "%Y"
     elsif @day.nil?
       pretty_print_no_day
     else
@@ -98,11 +98,11 @@ class FuzzyDate
 
   def pretty_print_no_day
     if @year == Date.today.year
-      I18n.l to_date, "%b"
+      I18n.l to_date, format: "%b"
     elsif (Date.today..Date.today>>2) === to_date
-      I18n.l to_date, "%b"
+      I18n.l to_date, format: "%b"
     else
-      I18n.l to_date, "%b %Y"
+      I18n.l to_date, format: "%b %Y"
     end
   end
 
