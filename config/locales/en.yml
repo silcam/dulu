@@ -100,3 +100,12 @@ en:
 
   #Sessions Controller
   Log_out: 'Log out'
+
+  #PersProgRels Controller
+  Translator: 'Translator'
+  TranslationConsultant: 'Translation Consultant'
+  TranslationConsultantTraining: 'Translation Consultant in Training'
+  LinguisticConsultant: 'Linguistic Consultant'
+  LinguisticConsultantTraining: 'Linguistic Consultant in Training'
+  LanguageProgramCommittee: 'Language Program Committee'
+  LanguageProgramFacilitator: 'Language Program Facilitator'

@@ -101,6 +101,15 @@ fr:
   #Sessions Controller
   Log_out: 'Déconnexion'
 
+  #PersProgRels Controller
+  Translator: 'Traducteur'
+  TranslationConsultant: 'Conseiller de traduction'
+  TranslationConsultantTraining: 'Conseiller de traduction en formation'
+  LinguisticConsultant: 'Conseiller linguistique'
+  LinguisticConsultantTraining: 'Conseiller linguistique en formation'
+  LanguageProgramCommittee: 'Comite du programme de langue'
+  LanguageProgramFacilitator: 'Facilitateur du programme de langue'
+
   activerecord:
     models:
       BibleBook: BibleLivre
