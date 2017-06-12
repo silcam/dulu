@@ -3,8 +3,18 @@ class FuzzyDate
 
   def initialize(year, month=nil, day=nil)
     @year = year.to_i
-    @month = month.to_i
-    @day = day.to_i
+    @month = month.blank? ? nil : month.to_i
+    @day = day.blank? ? nil : day.to_i
+    raise "Invalid parameters for FuzzyDate" unless valid?
+  end
+
+  def valid?
+    return false unless (1..9999) === @year
+    return true if @month.nil?
+    return false unless (1..12) === @month
+    return true if @day.nil?
+    return false unless (1..Time.days_in_month(@month, @year)) === @day
+    return true
   end
 
   def self.from_string(datestring)
@@ -26,9 +36,18 @@ class FuzzyDate
   end
 
   def to_s
-    s = @year.to_s
-    s += '-' + @month.to_s if @month
-    s += '-' + @day.to_s if @day && @month
+    s = set_length_string(@year, 4)
+    s += '-' + set_length_string(@month, 2) if @month
+    s += '-' + set_length_string(@day, 2) if @day && @month
+    s
+  end
+
+  def set_length_string(number, len)
+    s = number.to_s
+    if s.length < len
+      (len - s.length).times{ s = '0' + s}
+    end
+    s
   end
 
   def to_date
@@ -37,7 +56,7 @@ class FuzzyDate
     Date.new(@year, month, day)
   end
 
-  def before? date2
+  def before?(date2)
     return (@year < date2.year) unless @year == date2.year
     return false unless @month && date2.month
     return (@month < date2.month) unless @month == date2.month
@@ -45,7 +64,7 @@ class FuzzyDate
     return @day < date2.day
   end
 
-  def after? date2
+  def after?(date2)
     return date2.before?(self)
   end
 
@@ -55,6 +74,14 @@ class FuzzyDate
     return false unless @month == date2.month
     return true unless @day && date2.day
     return @day == date2.day
+  end
+
+  def future?
+    return after? FuzzyDate.today
+  end
+
+  def past?
+    return before? FuzzyDate.today
   end
 
   def pretty_print
