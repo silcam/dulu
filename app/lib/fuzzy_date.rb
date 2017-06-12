@@ -98,11 +98,11 @@ class FuzzyDate
 
   def pretty_print_no_day
     if @year == Date.today.year
-      I18n.l to_date, "%B"
+      I18n.l to_date, "%b"
     elsif (Date.today..Date.today>>2) === to_date
-      I18n.l to_date, "%B"
+      I18n.l to_date, "%b"
     else
-      I18n.l to_date, "%B %Y"
+      I18n.l to_date, "%b %Y"
     end
   end
 

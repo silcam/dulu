@@ -23,8 +23,8 @@ en:
   A_few_days_ago: "%{days} days ago"
   date:
     formats:
-      month_day: "%B %d"
-      full: "%B %d, %Y"
+      month_day: "%b %e"
+      full: "%b %e, %Y"
 
   #People Controller
   People: 'People'
