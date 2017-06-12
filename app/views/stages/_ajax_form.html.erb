@@ -13,8 +13,8 @@
     </div>
     <div class="col-md-4">
       <p>
-        <%= f.label :start_date, t(:As_of) %>
-        <%= f.date_field :start_date, class: 'form-control' %>
+        <%= f.label :start_date, t(:As_of), style: "display: block;" %>
+        <%= render 'layouts/fuzzy_date_field', form: f, prefix: :start_date, fdate: FuzzyDate.today %>
       </p>
     </div>
     <div class="col-md-2 submit-form">
