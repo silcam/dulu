@@ -4,7 +4,7 @@
       <div id="activities-table-div">
         <h2><%= t :Current_activities %></h2>
         <table class="table" id="activities-table">
-          <% @program.translation_activities.order('bible_book_id').each do |activity| %>
+          <% @program.sorted_activities.each do |activity| %>
             <%= render 'current_activity_table_row', activity: activity %>
           <% end %>
         </table>

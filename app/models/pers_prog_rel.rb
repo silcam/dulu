@@ -35,4 +35,8 @@ class PersProgRel < ApplicationRecord
     return nil if end_date.blank?
     FuzzyDate.from_string(end_date)
   end
+
+  def sorted_activities
+    activities.order('type, bible_book_id')
+  end
 end

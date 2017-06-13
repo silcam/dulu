@@ -2,10 +2,10 @@
   <td><%= link_to activity.name, activity %>
   </td>
   <td class="progress-cell" id="activity-progress-<%= activity.id %>">
-    <%= render 'progress_bar', activity: activity %>
+    <%= render 'programs/progress_bar', activity: activity %>
   </td>
   <td id="activity-stage-name-<%= activity.id %>">
-    <%= render 'stage_name_link', activity: activity %>
+    <%= render 'programs/stage_name_link', activity: activity %>
   </td>
   <td>
     <% relations = activity.pers_prog_rels_for_my_stage %>

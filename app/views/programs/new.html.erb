@@ -8,16 +8,8 @@
     <%= f.collection_select :language_id, 
           Language.all.order('name'), :id, :name %>
   </p>
-  <p>
-    <%= f.label :name, t(:Name) %>
-    <%= f.text_field :name %>
-    (Ex. New Testament)
-  </p>
-  <p>
-    <% @program.start_date = Date.today unless @program.start_date %>
-    <%= f.label :start_date, t(:Start_date) %>
-    <%= f.date_field :start_date %>
-  <p>
+
+
     <%= f.submit %>
   </p>
 <% end %>

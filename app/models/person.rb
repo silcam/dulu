@@ -18,4 +18,8 @@ class Person < ApplicationRecord
   def full_name_rev
     "#{last_name}, #{first_name}"
   end
+
+  def current_pers_prog_rels
+    pers_prog_rels.where(end_date: nil)
+  end
 end

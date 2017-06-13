@@ -30,6 +30,10 @@ class PeopleController < ApplicationController
     end
   end
 
+  def dashboard
+    @user = current_user
+  end
+
 private
   def person_params
     params.require(:person).permit(:first_name, :last_name ,:email, :birth_date,
