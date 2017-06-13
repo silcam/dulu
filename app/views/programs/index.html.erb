@@ -8,8 +8,7 @@
   </tr>
   <% @programs.each do |program| %>
     <tr>
-      <td><%= link_to "#{program.language.name} #{program.name}", 
-                          dashboard_program_path(program) %></td>
+      <td><%= link_to program.name, dashboard_program_path(program) %></td>
     </tr>
   <% end %>
 </table>
