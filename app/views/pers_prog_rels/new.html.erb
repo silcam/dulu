@@ -19,16 +19,7 @@
       <%= render 'layouts/fuzzy_date_field', form: form, prefix: :start_date, fdate: FuzzyDate.today %>
     </p>
 
-    <h4><%= t :associated_activities %></h4>
-    <table>
-      <% @program.translation_activities.each do |activity| %>
-        <label>
-          <%= check_box_tag 'assoc_activities[]', activity.id %>
-          <%= activity.name %>
-        </label>
-        <br>
-      <% end %>
-    </table>
+    <%= render 'associated_activities' %>
 
     <p>
       <%= form.submit t(:Save) %>

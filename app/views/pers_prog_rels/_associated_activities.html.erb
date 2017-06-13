@@ -1,0 +1,13 @@
+<% associated_activities = [] unless associated_activities %>
+
+<h4><%= t :associated_activities %></h4>
+<table>
+  <% @program.translation_activities.each do |activity| %>
+      <label>
+        <%= check_box_tag 'assoc_activities[]', activity.id,
+                          associated_activities.try(:include?, activity) %>
+        <%= activity.name %>
+      </label>
+      <br>
+  <% end %>
+</table>

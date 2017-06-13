@@ -1,0 +1,30 @@
+<%= render layout: 'programs/sidebar' do %>
+    <h3><%= @pers_prog_rel.person.full_name %></h3>
+
+    <%= form_for @pers_prog_rel do |form| %>
+        <p>
+          <%= form.label :program_role_id, t(:Role) %>
+          <%= form.collection_select :program_role_id, ProgramRole.all, :id, :t_name %>
+        </p>
+
+        <p>
+          <%= form.label :start_date, t(:start_date) %>
+          <%= render 'layouts/fuzzy_date_field', form: form,
+                     prefix: :start_date, fdate: @pers_prog_rel.f_start_date %>
+        </p>
+
+        <% unless @pers_prog_rel.f_end_date.nil? %>
+            <p>
+              <%= form.label :end_date, t(:end_date) %>
+              <%= render 'layouts/fuzzy_date_field', form: form,
+                    prefix: :end_date, fdate: @pers_prog_rel.f_end_date %>
+            </p>
+        <% end %>
+
+        <%= render 'associated_activities', associated_activities: @pers_prog_rel.activities %>
+
+        <p>
+          <%= form.submit t(:Save) %>
+        </p>
+    <% end %>
+<% end %>
