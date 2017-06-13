@@ -1,0 +1,25 @@
+<%= render layout: 'programs/sidebar' do %>
+  <h3><%= t :People %></h3>
+
+  <%= link_to t(:Add_person), new_program_participant_path(@program) %>
+
+  <table class="table">
+    <tr>
+      <th>Name</th>
+      <th>Role</th>
+      <th>Joined Program</th>
+      <th>Left Program</th>
+      <th colspan="2"></th>
+    </tr>
+    <% @program.participants.each do |participant| %>
+      <tr>
+        <td><%= participant.person.full_name %></td>
+        <td><%= t(participant.program_role.name) %></td>
+        <td><%= participant.f_start_date.pretty_print %></td>
+        <td><%= participant.f_end_date.try(:pretty_print) %></td>
+        <td><%= link_to t(:Edit), edit_participant_path(participant) %></td>
+        <td><%= link_to t(:Remove), finish_participant_path(participant) %></td>
+      </tr>
+    <% end %>
+  </table>
+<% end %>

@@ -2,7 +2,7 @@ class Person < ApplicationRecord
 
   belongs_to :organization, required: false
   belongs_to :country
-  has_many :pers_prog_rels
+  has_many :participants
 
   has_many :book_translation_consultants
 
@@ -19,7 +19,7 @@ class Person < ApplicationRecord
     "#{last_name}, #{first_name}"
   end
 
-  def current_pers_prog_rels
-    pers_prog_rels.where(end_date: nil)
+  def current_participants
+    participants.where(end_date: nil)
   end
 end

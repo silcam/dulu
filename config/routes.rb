@@ -1,9 +1,4 @@
 Rails.application.routes.draw do
-
-  get 'pers_prog_rels/new'
-
-  get 'pers_prog_rels/create'
-
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 
   root 'people#dashboard'
@@ -17,7 +12,7 @@ Rails.application.routes.draw do
       resources :translation_activities do
         resources :stages
       end
-      resources :pers_prog_rels do
+      resources :participants do
         member do
           get 'finish'
           patch 'finish'

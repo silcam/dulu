@@ -2,8 +2,8 @@ class Activity < ApplicationRecord
 
   belongs_to :program
   has_many :stages
-  has_and_belongs_to_many :pers_prog_rels
-  has_and_belongs_to_many :people, through: :pers_prog_rels
+  has_and_belongs_to_many :participants
+  has_and_belongs_to_many :people, through: :participants
 
 
   def current_stage
@@ -18,7 +18,7 @@ class Activity < ApplicationRecord
     self.current_stage.name
   end
 
-  def pers_prog_rels_for_my_stage
-    self.pers_prog_rels.where(program_role: current_stage.program_roles)
+  def participants_for_my_stage
+    self.participants.where(program_role: current_stage.program_roles)
   end
 end

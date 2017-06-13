@@ -18,14 +18,14 @@
     <div class="col-md-6">
       <h3><%= t :people %></h3>
 
-      <% if @program.pers_prog_rels.empty? %>
-          <%= link_to t(:Add_person), new_program_pers_prog_rel_path(@program) %>
+      <% if @program.participants.empty? %>
+          <%= link_to t(:Add_person), new_program_participant_path(@program) %>
       <% else %>
-          <%= link_to t(:Manage), program_pers_prog_rels_path(@program) %>
+          <%= link_to t(:Manage), program_participants_path(@program) %>
       <% end %>
 
       <table class="table">
-        <% @program.current_pers_prog_rels.each do |relation| %>
+        <% @program.current_participants.each do |relation| %>
           <tr>
             <td><%= relation.person.full_name %></td>
             <td><%= t(relation.program_role.name) %></td>

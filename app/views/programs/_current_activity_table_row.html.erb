@@ -8,7 +8,7 @@
     <%= render 'programs/stage_name_link', activity: activity %>
   </td>
   <td>
-    <% relations = activity.pers_prog_rels_for_my_stage %>
+    <% relations = activity.participants_for_my_stage %>
     <% relations.each do |relation| %>
       <%= relation.person.full_name %><%= ', ' unless relation==relations.last %>
     <% end %>

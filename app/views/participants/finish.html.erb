@@ -2,7 +2,7 @@
 
     <h3><%= t :End_of_participation %></h3>
 
-    <%= form_for @pers_prog_rel, url: pers_prog_rel_path, method: :patch do |form| %>
+    <%= form_for @participant, url: participant_path, method: :patch do |form| %>
 
      <p>
        <%= form.label :end_date, t(:End_of_participation_prompt) %>

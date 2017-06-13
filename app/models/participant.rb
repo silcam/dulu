@@ -1,4 +1,4 @@
-class PersProgRel < ApplicationRecord
+class Participant < ApplicationRecord
   belongs_to :person
   belongs_to :program
   belongs_to :program_role
