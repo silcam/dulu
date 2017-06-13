@@ -1,0 +1,18 @@
+<%= render layout: 'programs/sidebar' do %>
+
+    <h3><%= t :End_of_participation %></h3>
+
+    <%= form_for @pers_prog_rel, url: pers_prog_rel_path, method: :patch do |form| %>
+
+     <p>
+       <%= form.label :end_date, t(:End_of_participation_prompt) %>
+       <%= render 'layouts/fuzzy_date_field', form: form, prefix: :end_date, fdate: FuzzyDate.today %>
+     </p>
+
+      <p>
+        <%= form.submit t(:Save) %>
+      </p>
+
+    <% end %>
+
+<% end %>

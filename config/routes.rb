@@ -17,7 +17,12 @@ Rails.application.routes.draw do
       resources :translation_activities do
         resources :stages
       end
-      resources :pers_prog_rels
+      resources :pers_prog_rels do
+        member do
+          get 'finish'
+          patch 'finish'
+        end
+      end
     end
   end
   

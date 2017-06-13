@@ -18,7 +18,7 @@
         <td><%= pers_prog_rel.f_start_date.pretty_print %></td>
         <td><%= pers_prog_rel.f_end_date.try(:pretty_print) %></td>
         <td><%= link_to t(:Edit), edit_pers_prog_rel_path(pers_prog_rel) %></td>
-        <td><%= link_to t(:Remove), '#' %></td>
+        <td><%= link_to t(:Remove), finish_pers_prog_rel_path(pers_prog_rel) %></td>
       </tr>
     <% end %>
   </table>
