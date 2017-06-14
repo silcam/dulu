@@ -8,6 +8,7 @@
 *.pptx
 /db/development-with-clasp-people-orgs.sqlite3.bak
 config/secrets.yml
+config/initializers/omniauth.rb
 
 # Ignore bundler config.
 /.bundle

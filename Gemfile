@@ -34,6 +34,8 @@ gem 'jbuilder', '~> 2.5'
 # gem 'bcrypt', '~> 3.1.7'
 # Internationalization
 gem 'rails-i18n', '~> 5.0.4'
+# Google authentication
+gem 'omniauth-google-oauth2', '~> 0.5.0'
 
 group :development, :test do
   gem 'puma', '~>3.0'

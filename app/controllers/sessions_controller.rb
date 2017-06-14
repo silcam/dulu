@@ -9,12 +9,13 @@ class SessionsController < ApplicationController
   end
 
   def create
-    person = Person.find_by(email: params[:session][:email])
-    if person && person.has_login
+    @gmail = request.env['omniauth.auth']['info']['email']
+    person = Person.find_by(email: @gmail)
+    if person.try :has_login
       log_in person
       send_to_correct_page
     else
-      render 'new'
+      render 'no_account'
     end
   end
 
@@ -30,5 +31,9 @@ class SessionsController < ApplicationController
   def destroy
     log_out
     redirect_to login_path
+  end
+
+  def gcreate
+
   end
 end

@@ -3,10 +3,10 @@ lock "3.8.1"
 
 set :application, "clasp"
 set :repo_url, "git@bitbucket.org:richardjconrad/clasp.git"
+set :branch, "google-oauth"
 set :deploy_via, :remote_cache
-set :bundle_flags, nil
 
-append :linked_files, "config/secrets.yml", "db/production.sqlite3"
+append :linked_files, "config/secrets.yml", "db/production.sqlite3", "config/initializers/omniauth.rb"
 
 # task :bundle_install do
 #   on roles(:app) do

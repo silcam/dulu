@@ -21,9 +21,10 @@ Rails.application.routes.draw do
     end
   end
   
-  get     '/login',     to: 'sessions#new'
-  post    '/login',     to: 'sessions#create'
-  delete  '/logout',    to: 'sessions#destroy'
+  get     '/login',                   to: redirect('/auth/google_oauth2')
+  delete  '/logout',                  to: 'sessions#destroy'
+  get     '/auth/:provider/callback', to: 'sessions#create'
+  get     '/auth/failure',            to: redirect('/')
 
-  get     '/dashboard', to: 'people#dashboard'
+  get     '/dashboard',               to: 'people#dashboard'
 end
