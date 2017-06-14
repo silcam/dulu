@@ -19,6 +19,10 @@ class Activity < ApplicationRecord
   end
 
   def participants_for_my_stage
-    self.participants.where(program_role: current_stage.program_roles)
+    current_participants.where(program_role: current_stage.program_roles)
+  end
+
+  def current_participants
+    participants.where(end_date: nil)
   end
 end
