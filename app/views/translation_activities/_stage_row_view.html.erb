@@ -12,7 +12,9 @@
 </td>
 
 <td>
-  <%= button_to t(:Delete), stage_path(stage),
-        method: :delete, remote: true, class: 'btn btn-default',
-        data: { confirm: t(:Delete_stage_confirmation)}  %>
+  <% unless stage == stage.activity.stages_ordered_asc.first %>
+    <%= button_to t(:Delete), stage_path(stage),
+          method: :delete, remote: true, class: 'btn btn-default',
+          data: { confirm: t(:Delete_stage_confirmation)}  %>
+  <% end %>
 </td>

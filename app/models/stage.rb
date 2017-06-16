@@ -18,6 +18,11 @@ class Stage < ApplicationRecord
       start_date: Date.today})
   end
 
+  def destroy
+    return if activity.stages.count == 1
+    super
+  end
+
   def progress
     self.stage_name.progress
   end

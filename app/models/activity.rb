@@ -25,4 +25,12 @@ class Activity < ApplicationRecord
   def current_participants
     participants.where(end_date: nil)
   end
+
+  def stages_ordered_desc
+    stages.order('start_date DESC, id DESC')
+  end
+
+  def stages_ordered_asc
+    stages.order 'start_date ASC, id ASC'
+  end
 end

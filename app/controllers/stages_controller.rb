@@ -34,10 +34,17 @@ class StagesController < ApplicationController
 
   def destroy
     @stage = Stage.find(params[:id])
+    @translation_activity = @stage.activity
     @stage.destroy
     respond_to do |format|
-      format.js
-      format.html { redirect_to(@stage.translation_activity) }
+      if @stage.destroyed?
+        format.js
+        format.html { redirect_to(@stage.translation_activity) }
+      else
+        @error = "Unable to delete this stage from the history. Are you trying to delete the only stage left?"
+        format.js { render 'shared/error_popup' }
+        format.html { redirect_to(@stage.translation_activity)}
+      end
     end
   end
 

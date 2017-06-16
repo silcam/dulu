@@ -16,7 +16,7 @@
         <%= t :History %>
       </h3>
       <table class="table" id="dulutable" >
-        <% @translation_activity.stages.order('start_date DESC, id DESC').each do |stage| %>
+        <% @translation_activity.stages_ordered_desc.each do |stage| %>
           <%= render 'stage_rows', stage: stage %>
         <% end %>
       </table>
