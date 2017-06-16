@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170613111043) do
+ActiveRecord::Schema.define(version: 20170616150409) do
 
   create_table "activities", force: :cascade do |t|
     t.integer  "program_id"
@@ -34,17 +34,6 @@ ActiveRecord::Schema.define(version: 20170613111043) do
     t.integer "number_of_chapters"
     t.integer "number_of_verses"
     t.string  "french_name"
-  end
-
-  create_table "book_translation_consultants", force: :cascade do |t|
-    t.integer  "activity_id"
-    t.integer  "person_id"
-    t.date     "start_date"
-    t.date     "end_date"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
-    t.index ["activity_id"], name: "index_book_translation_consultants_on_activity_id"
-    t.index ["person_id"], name: "index_book_translation_consultants_on_person_id"
   end
 
   create_table "cameroon_regions", force: :cascade do |t|
