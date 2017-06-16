@@ -24,7 +24,7 @@ class ApplicationController < ActionController::Base
       render 'shared/welcome'
     else
       session[:original_request] = request.path
-      redirect_to login_path
+      redirect_to '/auth/google_oauth2'
     end
   end
 
