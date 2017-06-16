@@ -32,6 +32,16 @@
           </tr>
         <% end %>
       </table>
+
+      <h3><%= t :Organizations %></h3>
+
+      <table class="table">
+        <% @program.current_organizations.each do |org| %>
+          <tr>
+            <td><%= org.name %></td>
+          </tr>
+        <% end %>
+      </table>
     </div>
   </div>
 <% end %>

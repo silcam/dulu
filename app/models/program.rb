@@ -22,6 +22,14 @@ class Program < ApplicationRecord
     participants.where(end_date: nil)
   end
 
+  def current_organizations
+    orgs = []
+    current_participants.each do |participant|
+      orgs << participant.person.organization unless orgs.include? participant.person.organization
+    end
+    return orgs
+  end
+
   def sorted_activities
     translation_activities.order :bible_book_id
   end
