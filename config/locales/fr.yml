@@ -100,14 +100,16 @@ fr:
 
   #Sessions Controller
   Log_out: 'Déconnexion'
+  Logout_message: "Merci d'avoir utilisé Dulu."
+  Login_prompt: 'Connecter avec Google'
 
   #Participants Controller
   Translator: 'Traducteur'
-  TranslationConsultant: 'Conseiller de traduction'
-  TranslationConsultantTraining: 'Conseiller de traduction en formation'
-  LinguisticConsultant: 'Conseiller linguistique'
-  LinguisticConsultantTraining: 'Conseiller linguistique en formation'
-  LanguageProgramCommittee: 'Comité du programme de langue'
+  TranslationConsultant: 'Conseiller en traduction'
+  TranslationConsultantTraining: 'Conseiller en traduction en formation'
+  LinguisticConsultant: 'Conseiller en linguistique'
+  LinguisticConsultantTraining: 'Conseiller en linguistique en formation'
+  LanguageProgramCommittee: 'Comité de langue'
   LanguageProgramFacilitator: 'Facilitateur du programme de langue'
 
   activerecord:

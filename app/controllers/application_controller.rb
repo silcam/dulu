@@ -18,10 +18,13 @@ class ApplicationController < ActionController::Base
   private
 
   def require_login
+    return if logged_in?
 
-    unless logged_in?
+    if request.path == root_path
+      render 'shared/welcome'
+    else
       session[:original_request] = request.path
-      redirect_to login_url
+      redirect_to login_path
     end
   end
 

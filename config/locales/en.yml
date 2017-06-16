@@ -100,6 +100,8 @@ en:
 
   #Sessions Controller
   Log_out: 'Log out'
+  Logout_message: 'Thank you for using Dulu.'
+  Login_prompt: 'Google Login'
 
   #Participants Controller
   Translator: 'Translator'
@@ -107,5 +109,5 @@ en:
   TranslationConsultantTraining: 'Translation Consultant in Training'
   LinguisticConsultant: 'Linguistic Consultant'
   LinguisticConsultantTraining: 'Linguistic Consultant in Training'
-  LanguageProgramCommittee: 'Language Program Committee'
+  LanguageProgramCommittee: 'Language Committee'
   LanguageProgramFacilitator: 'Language Program Facilitator'

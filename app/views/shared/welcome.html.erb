@@ -1,0 +1,27 @@
+
+<div id="welcome">
+  <h1 class="welcome"><strong>Welcome to Dulu</strong></h1>
+
+  <p class="lead welcome">Dulu is a tool developed by SIL Cameroon for tracking and managing the many language development programs in Cameroon. To gain access, contact the Cameroon Branch Computer Services Department.</p>
+
+  <p class="welcome">
+    <a href="/auth/google_oauth2">
+      <%= image_tag 'btn_google_signin_light_normal_web.png', id: 'google-signin', size: '287x69' %>
+    </a>
+  </p>
+
+  <% if @failed_login %>
+    <p class="lead" id="error_explanation">
+      Sorry, but no one is authorized to log in to Dulu with the address <%= @gmail %>. Are you using the correct SIL email address?
+    </p>
+  <% end %>
+
+  <footer>
+    <ul class="list-inline">
+      <li class="lead"><%= link_to 'SIL Cameroon', 'http://silcam.org' %></li>
+      <li class="lead"><%= link_to 'SIL International', 'http://sil.org' %></li>
+      <li class="lead"><%= link_to 'Wycliffe Global Alliance', 'http://wycliffe.net' %></li>
+      <li class="lead"><%= link_to 'Ethnologue', 'http://ethnologue.com' %></li>
+    </ul>
+  </footer>
+</div>

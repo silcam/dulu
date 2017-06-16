@@ -5,6 +5,8 @@ class SessionsController < ApplicationController
   def new
     if logged_in?
       redirect_to root_path
+    else
+      redirect_to '/auth/google_oauth2'
     end
   end
 
@@ -15,9 +17,17 @@ class SessionsController < ApplicationController
       log_in person
       send_to_correct_page
     else
-      render 'no_account'
+      @failed_login = true
+      render 'shared/welcome'
     end
   end
+
+  def destroy
+    log_out
+    redirect_to root_path
+  end
+
+  private
 
   def send_to_correct_page
     if session[:original_request]
@@ -28,12 +38,4 @@ class SessionsController < ApplicationController
     end
   end
 
-  def destroy
-    log_out
-    redirect_to login_path
-  end
-
-  def gcreate
-
-  end
 end
