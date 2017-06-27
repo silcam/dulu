@@ -24,7 +24,6 @@ class Participant < ApplicationRecord
       activity = Activity.find activity_id
       self.activities << activity unless self.activities.include? activity
     end
-
   end
 
   def f_start_date
