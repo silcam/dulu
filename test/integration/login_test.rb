@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class SuccesfulLoginTest < Capybara::Rails::TestCase
+class LoginTests < Capybara::Rails::TestCase
   def setup
     @auth_user = people(:Rick)
     @unauth_user = people(:Abanda)
