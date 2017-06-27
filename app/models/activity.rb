@@ -3,8 +3,9 @@ class Activity < ApplicationRecord
   belongs_to :program
   has_many :stages
   has_and_belongs_to_many :participants
-  has_and_belongs_to_many :people, through: :participants
+  has_many :people, through: :participants
 
+  validates :type, presence: true
 
   def current_stage
     self.stages.last
