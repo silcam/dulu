@@ -55,5 +55,6 @@ end
 group :test do
   gem 'minitest-reporters'
   gem 'minitest-rails-capybara'
+  gem 'selenium-webdriver'
   gem 'win32console', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 end
