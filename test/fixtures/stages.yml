@@ -1,0 +1,9 @@
+HdiOne:
+  activity: HdiEzraActivity
+  stage_name: Planned
+  start_date: 2017-01
+
+HdiTwo:
+  activity: HdiEzraActivity
+  stage_name: Drafting
+  start_date: 2017-02

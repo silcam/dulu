@@ -1,0 +1,8 @@
+HdiProgram:
+  language: Hdi
+
+EwondoProgram:
+  language: Ewondo
+
+ZulgoProgram:
+  language: Zulgo

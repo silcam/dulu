@@ -1,0 +1,17 @@
+Genesis:
+  english_name: 'Genesis'
+  french_name: 'Genese'
+  number_of_chapters: 50
+  number_of_verses: 1533
+
+Ezra:
+  english_name: 'Ezra'
+  french_name: 'Esdras'
+  number_of_chapters: 10
+  number_of_verses: 280
+
+John:
+  english_name: 'John'
+  french_name: 'Jean'
+  number_of_chapters: 21
+  number_of_verses: 300

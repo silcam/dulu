@@ -1,0 +1,4 @@
+HdiEzraActivity:
+  type: 'TranslationActivity'
+  program: HdiProgram
+  bible_book: Ezra

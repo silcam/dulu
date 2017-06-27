@@ -1,13 +1,33 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
-jiminy:
-  first_name: Jiminy
-  last_name: Cricket
-  email: jiminy_cricket@sil.org
+Rick:
+  first_name: Rick
+  last_name: Conrad
+  email: rick_conrad@sil.org
+  organization: SIL
   has_login: true
 
-pinochio:
-  first_name: Pinochio
-  last_name: RealBoy
-  email: pinochio@gmail.com
+Drew:
+  first_name: Drew
+  last_name: Maust
+  email: drew_maust@sil.org
+  organization: SIL
+  has_login: true
+
+Abanda:
+  first_name: Abanda
+  last_name: Dunno
+  email: abanda@gmail.cm
   has_login: false
+
+Olga:
+  first_name: Olga
+  last_name: Nka
+  email: olga_nka@sil.org
+  organization: SIL
+  has_login: true
+
+FormerHdiTranslator:
+  first_name: Former
+  last_name: Translator
+  
