@@ -1,4 +1,3 @@
-
 if $(location).attr('href').includes('translation_activities')
   $('#current-stage').html("<%= t(@stage.name) %>")
   $('#update-stage-form').fadeOut('fast', ->
