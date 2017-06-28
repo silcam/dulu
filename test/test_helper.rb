@@ -6,7 +6,7 @@ require 'minitest/rails/capybara'
 
 
 Minitest::Reporters.use!
-# Capybara.default_driver = :selenium
+Capybara.default_driver = :selenium
 
 
 class ActiveSupport::TestCase
@@ -34,3 +34,13 @@ class ActiveSupport::TestCase
     assert should_save.save, "Should save #{model} with valid params"
   end
 end
+
+# Some kind of hack to avoid SQLite::BusyExceptions
+class ActiveRecord::Base
+  mattr_accessor :shared_connection
+  @@shared_connection = nil
+  def self.connection
+    @@shared_connection || retrieve_connection
+  end
+end
+ActiveRecord::Base.shared_connection = ActiveRecord::Base.connection

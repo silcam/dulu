@@ -9,7 +9,7 @@ Drafting:
   kind: 'translation'
 
 ConsultantCheck:
-  name: 'ConsultantCheck'
+  name: 'Consultant_check'
   level: 3
   kind: 'translation'
 

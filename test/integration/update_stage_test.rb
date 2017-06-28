@@ -7,11 +7,10 @@ class UpdateStageTest < Capybara::Rails::TestCase
   end
 
   test 'update stage' do
-
     visit translation_activity_path(@activity)
     click_button 'Update'
     click_button 'Save'
     assert_equal(stage_names(:ConsultantCheck),
-                @activity.current_stage.stage_name)
+              @activity.current_stage.stage_name)
   end
 end
