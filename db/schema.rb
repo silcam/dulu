@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170616150409) do
+ActiveRecord::Schema.define(version: 20170629104929) do
 
   create_table "activities", force: :cascade do |t|
     t.integer  "program_id"
@@ -34,6 +34,7 @@ ActiveRecord::Schema.define(version: 20170616150409) do
     t.integer "number_of_chapters"
     t.integer "number_of_verses"
     t.string  "french_name"
+    t.integer "usfm_number"
   end
 
   create_table "cameroon_regions", force: :cascade do |t|

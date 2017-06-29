@@ -1,17 +1,20 @@
 Genesis:
   english_name: 'Genesis'
   french_name: 'Genese'
+  usfm_number: 1
   number_of_chapters: 50
   number_of_verses: 1533
 
 Ezra:
   english_name: 'Ezra'
   french_name: 'Esdras'
+  usfm_number: 15
   number_of_chapters: 10
   number_of_verses: 280
 
 John:
   english_name: 'John'
   french_name: 'Jean'
+  usfm_number: 44
   number_of_chapters: 21
   number_of_verses: 300
