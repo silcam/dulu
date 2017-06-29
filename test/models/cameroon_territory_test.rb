@@ -1,7 +1,12 @@
 require 'test_helper'
 
 class CameroonTerritoryTest < ActiveSupport::TestCase
-  # test "the truth" do
-  #   assert true
-  # end
+  def setup
+    @mayo_tsanaga = cameroon_territories :MayoTsanaga
+  end
+
+  test 'Relations' do
+    far_north = cameroon_regions :FarNorth
+    assert_equal far_north, @mayo_tsanaga.cameroon_region
+  end
 end
