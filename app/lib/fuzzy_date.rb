@@ -35,6 +35,21 @@ class FuzzyDate
     FuzzyDate.from_date Date.today
   end
 
+  def year= year
+    @year = year
+    raise "Invalid year for FuzzyDate" unless valid?
+  end
+
+  def month= month
+    @month = month
+    raise "Invalid month for FuzzyDate" unless valid?
+  end
+
+  def day= day
+    @day = day
+    raise "Invalid day for FuzzyDate" unless valid?
+  end
+
   def to_s
     s = set_length_string(@year, 4)
     s += '-' + set_length_string(@month, 2) if @month
@@ -54,6 +69,12 @@ class FuzzyDate
     day = @day ? @day : 1
     month = @month ? @month : 1
     Date.new(@year, month, day)
+  end
+
+  def ==(date2)
+    return  @year == date2.year &&
+            @month == date2.month &&
+            @day == date2.day
   end
 
   def before?(date2)
