@@ -2,11 +2,11 @@ require 'test_helper'
 
 class FuzzyDateTest < ActiveSupport::TestCase
   test 'Some Valid Dates' do
-    assert FuzzyDate.new(2017).valid?
-    assert FuzzyDate.new(2017, 6).valid?
-    assert FuzzyDate.new(1, 1, 1).valid?
-    assert FuzzyDate.new(9999, 12, 31).valid?
-    assert FuzzyDate.new(2016, 2, 29).valid?
+    assert FuzzyDate.new(2017).validate!
+    assert FuzzyDate.new(2017, 6).validate!
+    assert FuzzyDate.new(1, 1, 1).validate!
+    assert FuzzyDate.new(9999, 12, 31).validate!
+    assert FuzzyDate.new(2016, 2, 29).validate!
   end
 
   test 'Some Invalid Dates' do
@@ -20,10 +20,10 @@ class FuzzyDateTest < ActiveSupport::TestCase
   end
 
   test 'Some Valid Dates From Strings' do
-    assert FuzzyDate.from_string('2017').valid?
-    assert FuzzyDate.from_string('2017-06').valid?
-    assert FuzzyDate.from_string('0001-01-01').valid?
-    assert FuzzyDate.from_string('9999-12-31').valid?
+    assert FuzzyDate.from_string('2017').validate!
+    assert FuzzyDate.from_string('2017-06').validate!
+    assert FuzzyDate.from_string('0001-01-01').validate!
+    assert FuzzyDate.from_string('9999-12-31').validate!
   end
 
   test 'Some Invalid Dates From Strings' do
@@ -52,7 +52,7 @@ class FuzzyDateTest < ActiveSupport::TestCase
   end
 
   test 'FDate Today' do
-    assert FuzzyDate.today.valid?
+    assert FuzzyDate.today.validate!
   end
 
   test 'FDate to String' do
@@ -148,10 +148,38 @@ class FuzzyDateTest < ActiveSupport::TestCase
     refute FuzzyDate.new(3000).past?
   end
 
-  test 'FDate Pretty Print!' do
-    # TODO Finish FuzzyDate PrettyPrint Test
+  test 'FDate Pretty Print! Just Year' do
     I18n.locale = :en
-    fdate = FuzzyDate.new(2017, 6, 29)
+    assert_equal '2017', FuzzyDate.new(2017).pretty_print
+  end
+
+  test 'FDate Pretty Print! No Day' do
+    I18n.locale = :en
+    assert_equal 'Jan', FuzzyDate.new(Date.today.year, 1).pretty_print
+    Date.stub :today, Date.new(2017, 12, 1) do
+      assert_equal 'Feb', FuzzyDate.new(2018, 2).pretty_print
+    end
+    assert_equal 'Jan 2016', FuzzyDate.new(2016, 1).pretty_print
+  end
+
+  test 'FDate Pretty Print! With Day' do
+    I18n.locale = :en
+    assert_equal 'Dec 31', FuzzyDate.new(Date.today.year, 12, 31).pretty_print
+    Date.stub :today, Date.new(2017, 11, 15) do
+      assert_equal 'Jan 15', FuzzyDate.new(2018, 1, 15).pretty_print
+    end
+    assert_equal 'Sep 25, 2010', FuzzyDate.new(2010, 9, 25).pretty_print
+  end
+
+  test 'FDate Pretty Print! Close' do
+    I18n.locale = :en
+    Date.stub :today, Date.new(2017, 7, 1) do
+      assert_equal 'Today', FuzzyDate.new(2017, 7, 1).pretty_print
+      assert_equal 'Yesterday', FuzzyDate.new(2017, 6, 30).pretty_print
+      assert_equal 'Tomorrow', FuzzyDate.new(2017, 7, 2).pretty_print
+      assert_equal 'In 4 days', FuzzyDate.new(2017, 7, 5).pretty_print
+      assert_equal '4 days ago', FuzzyDate.new(2017, 6, 27).pretty_print
+    end
   end
 
   test 'Invalid Editing' do
@@ -159,5 +187,8 @@ class FuzzyDateTest < ActiveSupport::TestCase
     assert_raises(Exception){fdate.year = 0}
     assert_raises(Exception){fdate.month = 13}
     assert_raises(Exception){fdate.day = 31}
+
+    fdate = FuzzyDate.new(2017)
+    assert_raises(Exception, "Shouldn't set day without month"){ fdate.day = 1 }
   end
 end
