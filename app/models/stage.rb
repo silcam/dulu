@@ -4,7 +4,14 @@ class Stage < ApplicationRecord
   belongs_to :stage_name
   has_many :program_roles, through: :stage_name
 
-  validates :start_date, presence: true, allow_blank: false
+  # validates :start_date, presence: true, allow_blank: false
+  validates_each :start_date do |stage, attr, start_date|
+    begin
+      FuzzyDate.from_string start_date
+    rescue FuzzyDateException => e
+      stage.errors.add(attr, "Invalid Date: #{e.message}")
+    end
+  end
   
   def self.default_new_params(kind)
     {stage_name: StageName.first_stage(kind),
