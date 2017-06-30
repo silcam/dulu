@@ -32,6 +32,9 @@ class AddPersonToProgram < Capybara::Rails::TestCase
     assert page.has_content? 'Drew Maust'
     visit translation_activity_path @zulgo_ezra
     assert page.has_content? 'Drew Maust'
+    visit program_path @zulgo_program
+    assert page.has_content? 'Drew Maust'
+    assert page.has_content? 'SIL'
   end
 
   def modify_drew
@@ -63,5 +66,7 @@ class AddPersonToProgram < Capybara::Rails::TestCase
     assert_equal '2017-07-31', @drew_zulgo.end_date
     refute_includes @zulgo_program.current_participants, @drew_zulgo
     refute page.has_css?("a[href='#{finish_participant_path(@drew_zulgo)}'"), "Remove link should not show after person is removed"
+    visit program_path @zulgo_program
+    refute page.has_content? 'Drew Maust'
   end
 end

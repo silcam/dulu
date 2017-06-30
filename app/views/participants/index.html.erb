@@ -18,7 +18,7 @@
         <td><%= participant.f_start_date.pretty_print %></td>
         <td><%= participant.f_end_date.try(:pretty_print) %></td>
         <td><%= link_to t(:Edit), edit_participant_path(participant) %></td>
-        <td><%= link_to t(:Remove), finish_participant_path(participant) %></td>
+        <td><%= link_to t(:Remove), finish_participant_path(participant) if participant.end_date.nil?%></td>
       </tr>
     <% end %>
   </table>
