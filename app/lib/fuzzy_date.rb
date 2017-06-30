@@ -155,7 +155,7 @@ class FuzzyDate
     end
   end
 
-  def fd_raise(msg)
+  def self.fd_raise(msg)
     raise FuzzyDateException.new(msg)
   end
 end

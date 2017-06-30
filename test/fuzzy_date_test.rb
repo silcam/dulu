@@ -27,6 +27,7 @@ class FuzzyDateTest < ActiveSupport::TestCase
   end
 
   test 'Some Invalid Dates From Strings' do
+    assert_raises(Exception) {FuzzyDate.from_string(nil)}
     assert_raises(Exception) {FuzzyDate.from_string('')}
     assert_raises(Exception) {FuzzyDate.from_string('abc')}
     assert_raises(Exception) {FuzzyDate.from_string('99-01-01')}
