@@ -3,8 +3,8 @@ Translator:
   stage_names: Drafting
 
 TranslationConsultant:
-  name: 'Translation Consultant' 
+  name: 'TranslationConsultant'
   stage_names: ConsultantCheck 
 
 LPF:
-  name: 'Language Program Facilitator'
+  name: 'LanguageProgramFacilitator'

@@ -22,3 +22,18 @@ HdiGenesisThree:
   activity: HdiGenesisActivity
   stage_name: ConsultantCheck
   start_date: 2017-05-29
+
+ZulgoEzraOne:
+  activity: ZulgoEzraActivity
+  stage_name: Planned
+  start_date: 2015
+
+ZulgoEzraTwo:
+  activity: ZulgoEzraActivity
+  stage_name: Drafting
+  start_date: 2016-05
+
+ZulgoEzraThree:
+  activity: ZulgoEzraActivity
+  stage_name: ConsultantCheck
+  start_date: 2017-05-29

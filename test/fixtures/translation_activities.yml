@@ -1,5 +1,5 @@
 HdiEzraActivity:
-  type: 'TranslationActivity'
+  type: 'TranslationActivity' # Do we have to? Yes we do.
   program: HdiProgram
   bible_book: Ezra
 
@@ -7,3 +7,8 @@ HdiGenesisActivity:
   type: 'TranslationActivity'
   program: HdiProgram
   bible_book: Genesis
+
+ZulgoEzraActivity:
+  type: 'TranslationActivity'
+  program: ZulgoProgram
+  bible_book: Ezra
