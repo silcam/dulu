@@ -1,0 +1,24 @@
+HdiOne:
+  activity: HdiEzraActivity
+  stage_name: Planned
+  start_date: 2017-01
+
+HdiTwo:
+  activity: HdiEzraActivity
+  stage_name: Drafting
+  start_date: 2017-02
+
+HdiGenesisOne:
+  activity: HdiGenesisActivity
+  stage_name: Planned
+  start_date: 2015
+
+HdiGenesisTwo:
+  activity: HdiGenesisActivity
+  stage_name: Drafting
+  start_date: 2016-05
+
+HdiGenesisThree:
+  activity: HdiGenesisActivity
+  stage_name: ConsultantCheck
+  start_date: 2017-05-29

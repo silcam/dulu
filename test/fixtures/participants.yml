@@ -1,11 +1,26 @@
-# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+DrewHdi:
+  person: Drew
+  program: HdiProgram
+  program_role: TranslationConsultant
+  start_date: '2017-01-01'
+  activities: HdiEzraActivity
 
-# This model initially had no columns defined. If you add columns to the
-# model remove the '{}' from the fixture names and add the columns immediately
-# below each fixture, per the syntax in the comments below
-#
-one: {}
-# column: value
-#
-two: {}
-# column: value
+OlgaHdi:
+  person: Olga
+  program: HdiProgram
+  program_role: LPF
+  start_date: 2010
+
+AbandaHdi:
+  person: Abanda
+  program: HdiProgram
+  program_role: Translator
+  start_date: 2015-05
+  activities: HdiEzraActivity, HdiGenesisActivity
+
+FormerHdiTranslator:
+  person: FormerHdiTranslator
+  program: HdiProgram
+  program_role: Tranlator
+  start_date: 2013
+  end_date: 2015-03

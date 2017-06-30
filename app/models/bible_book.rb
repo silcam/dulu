@@ -2,10 +2,10 @@ class BibleBook < ApplicationRecord
 
   has_many :translation_activities
 
-  GENESIS_ID = 1
-  MALACHI_ID = 39
-  MATTHEW_ID = 40
-  REVELATION_ID = 66
+  GENESIS_USFM = 1
+  MALACHI_USFM = 39
+  MATTHEW_USFM = 41
+  REVELATION_USFM = 67
 
   def name
     if I18n.locale == :fr
@@ -15,11 +15,11 @@ class BibleBook < ApplicationRecord
   end
 
   def self.get_old_testament
-    BibleBook.where(id: (GENESIS_ID..MALACHI_ID)).order('id').to_a
+    BibleBook.where(usfm_number: (GENESIS_USFM..MALACHI_USFM)).order('usfm_number').to_a
   end
 
   def self.get_new_testament
-    BibleBook.where(id: (MATTHEW_ID..REVELATION_ID)).order('id').to_a
+    BibleBook.where(usfm_number: (MATTHEW_USFM..REVELATION_USFM)).order('usfm_number').to_a
   end
 
   def self.verses_in_bible
@@ -27,11 +27,11 @@ class BibleBook < ApplicationRecord
   end
 
   def self.verses_in_old_testament
-    BibleBook.where(id: (GENESIS_ID..MALACHI_ID)).sum(:number_of_verses)
+    BibleBook.where(usfm_number: (GENESIS_USFM..MALACHI_USFM)).sum(:number_of_verses)
   end
 
   def self.verses_in_new_testament
-    BibleBook.where(id: (MATTHEW_ID..REVELATION_ID)).sum(:number_of_verses)
+    BibleBook.where(usfm_number: (MATTHEW_USFM..REVELATION_USFM)).sum(:number_of_verses)
   end
 
 end

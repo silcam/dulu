@@ -21,6 +21,8 @@ class ApplicationController < ActionController::Base
     return if logged_in?
 
     if request.path == root_path
+      @failed_login_email = session[:failed_login]
+      session.delete :failed_login
       render 'shared/welcome'
     else
       session[:original_request] = request.path

@@ -1,0 +1,19 @@
+Planned:
+  name: 'Planned'
+  level: 1
+  kind: 'translation'
+
+Drafting:
+  name: 'Drafting'
+  level: 2
+  kind: 'translation'
+
+ConsultantCheck:
+  name: 'Consultant_check'
+  level: 3
+  kind: 'translation'
+
+Published:
+  name: 'Published'
+  level: 4
+  kind: 'translation'

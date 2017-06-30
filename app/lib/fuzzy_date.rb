@@ -5,20 +5,21 @@ class FuzzyDate
     @year = year.to_i
     @month = month.blank? ? nil : month.to_i
     @day = day.blank? ? nil : day.to_i
-    raise "Invalid parameters for FuzzyDate" unless valid?
+    validate!
   end
 
-  def valid?
-    return false unless (1..9999) === @year
+  def validate!
+    fd_raise 'Year out of range' unless (1..9999) === @year
+    fd_raise 'Day must be nil if month is nil' if(@month.nil? && !@day.nil?)
     return true if @month.nil?
-    return false unless (1..12) === @month
+    fd_raise 'Month out of range' unless (1..12) === @month
     return true if @day.nil?
-    return false unless (1..Time.days_in_month(@month, @year)) === @day
+    fd_raise 'Day out of range' unless (1..Time.days_in_month(@month, @year)) === @day
     return true
   end
 
   def self.from_string(datestring)
-    raise 'FuzzyDate string must start with 4 digits' unless /^\d{4}/ === datestring
+    fd_raise 'FuzzyDate string must start with 4 digits' unless /^\d{4}/ === datestring
 
     year = datestring[0,4]
     month = (/^\d{4}-\d{2}/ === datestring) ? datestring[5,2] : nil
@@ -33,6 +34,21 @@ class FuzzyDate
 
   def self.today
     FuzzyDate.from_date Date.today
+  end
+
+  def year= year
+    @year = year
+    validate!
+  end
+
+  def month= month
+    @month = month
+    validate!
+  end
+
+  def day= day
+    @day = day
+    validate!
   end
 
   def to_s
@@ -54,6 +70,12 @@ class FuzzyDate
     day = @day ? @day : 1
     month = @month ? @month : 1
     Date.new(@year, month, day)
+  end
+
+  def ==(date2)
+    return  @year == date2.year &&
+            @month == date2.month &&
+            @day == date2.day
   end
 
   def before?(date2)
@@ -133,14 +155,11 @@ class FuzzyDate
     end
   end
 
+  def self.fd_raise(msg)
+    raise FuzzyDateException.new(msg)
+  end
+end
 
-  # Cute but misguided attempt
-  # def strftime format
-  #   unless @day
-  #     format.gsub!(/%[dejAauw]/, '')
-  #     format.gsub!(/%[+c]/, '%b %Y')
-  #     format.gsub!(/%[Dx]/, '%m/%Y')
-  #     format.gsub!('%F', '%Y-%m')
-  #   end
-  # end
+class FuzzyDateException < Exception
+
 end

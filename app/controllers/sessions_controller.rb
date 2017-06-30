@@ -17,8 +17,8 @@ class SessionsController < ApplicationController
       log_in person
       send_to_correct_page
     else
-      @failed_login = true
-      render 'shared/welcome'
+      session[:failed_login] = @gmail
+      redirect_to root_path
     end
   end
 

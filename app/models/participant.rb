@@ -24,7 +24,6 @@ class Participant < ApplicationRecord
       activity = Activity.find activity_id
       self.activities << activity unless self.activities.include? activity
     end
-
   end
 
   def f_start_date
@@ -37,6 +36,7 @@ class Participant < ApplicationRecord
   end
 
   def sorted_activities
-    activities.order('type, bible_book_id')
+    activities.joins(:bible_book).order(
+        'activities.type, bible_books.usfm_number')
   end
 end

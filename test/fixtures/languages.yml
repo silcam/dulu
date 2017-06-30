@@ -1,0 +1,11 @@
+Hdi:
+  name: 'Hdi'
+  country: Cameroon
+  cameroon_region: FarNorth
+  language_status: Developing
+
+Ewondo:
+  name: 'Ewondo'
+
+Zulgo:
+  name: 'Zulgo'
