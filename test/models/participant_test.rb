@@ -24,6 +24,12 @@ class ParticipantTest < ActiveSupport::TestCase
     model_validation_hack_test(Participant, params)
   end
 
+  test 'Disassociate All Activities' do
+    assert_not_empty @drew_hdi.activities
+    @drew_hdi.associate_activities nil
+    assert_empty @drew_hdi.activities
+  end
+
   test 'Associate Activities' do
     hdi_ezra = translation_activities :HdiEzraActivity
     hdi_genesis = translation_activities :HdiGenesisActivity

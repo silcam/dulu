@@ -7,8 +7,7 @@ class Participant < ApplicationRecord
   validates :start_date, presence: true, allow_blank: false
 
   def associate_activities(activity_ids)
-    return unless activity_ids
-
+    activity_ids ||= []
     remove_deleted_associations activity_ids
     add_new_associations activity_ids
   end
