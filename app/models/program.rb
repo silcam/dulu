@@ -31,6 +31,6 @@ class Program < ApplicationRecord
   end
 
   def sorted_activities
-    translation_activities.order :bible_book_id
+    translation_activities.joins(:bible_book).order('bible_books.usfm_number')
   end
 end
