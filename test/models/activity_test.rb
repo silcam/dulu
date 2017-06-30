@@ -20,8 +20,12 @@ class ActivityTest < ActiveSupport::TestCase
   test 'validations' do
     no_program = Activity.new(type: 'TranslationActivity')
     no_type = Activity.new(program: programs(:HdiProgram))
+    # TODO - Test that we can create an activity with no BibleBook
+    # once we have an activity that doesn't require it
+    # good = Activity.new(type: 'OtherActivity', program: programs(:HdiProgram))
     refute(no_program.save, 'Should not save activity with no program')
     refute(no_type.save, 'Should not save activity with no type')
+    # assert(good.save, 'Should save valid Activity')
   end
 
   test 'current stage' do
