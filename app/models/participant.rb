@@ -36,6 +36,7 @@ class Participant < ApplicationRecord
   end
 
   def sorted_activities
-    activities.order('type, bible_book_id')
+    activities.joins(:bible_book).order(
+        'activities.type, bible_books.usfm_number')
   end
 end

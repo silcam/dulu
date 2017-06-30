@@ -2,3 +2,8 @@ HdiEzraActivity:
   type: 'TranslationActivity'
   program: HdiProgram
   bible_book: Ezra
+
+HdiGenesisActivity:
+  type: 'TranslationActivity'
+  program: HdiProgram
+  bible_book: Genesis

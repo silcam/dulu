@@ -24,6 +24,17 @@ class ParticipantTest < ActiveSupport::TestCase
     model_validation_hack_test(Participant, params)
   end
 
+  test 'Associate Activities' do
+    hdi_ezra = translation_activities :HdiEzraActivity
+    hdi_genesis = translation_activities :HdiGenesisActivity
+    assert_includes @drew_hdi.activities, hdi_ezra
+    refute_includes @drew_hdi.activities, hdi_genesis
+
+    @drew_hdi.associate_activities [hdi_genesis.id]
+    assert_includes @drew_hdi.activities, hdi_genesis
+    refute_includes @drew_hdi.activities, hdi_ezra
+  end
+
   test 'Fuzzy Dates' do
     drew_start = FuzzyDate.new 2017, 1, 1
     olga_hdi = participants :OlgaHdi
@@ -39,5 +50,11 @@ class ParticipantTest < ActiveSupport::TestCase
 
     assert_nil @drew_hdi.f_end_date
     assert_equal former_quit, former_hdi.f_end_date
+  end
+
+  test 'Sorted Activities' do
+    abanda_hdi = participants :AbandaHdi
+    genesis = bible_books :Genesis
+    assert_equal genesis, abanda_hdi.sorted_activities.first.bible_book
   end
 end

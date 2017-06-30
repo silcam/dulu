@@ -16,7 +16,7 @@ AbandaHdi:
   program: HdiProgram
   program_role: Translator
   start_date: 2015-05
-  activities: HdiEzraActivity
+  activities: HdiEzraActivity, HdiGenesisActivity
 
 FormerHdiTranslator:
   person: FormerHdiTranslator
