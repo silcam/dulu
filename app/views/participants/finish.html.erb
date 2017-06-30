@@ -5,7 +5,7 @@
     <%= form_for @participant, url: participant_path, method: :patch do |form| %>
 
      <p>
-       <%= form.label :end_date, t(:End_of_participation_prompt) %>
+       <%= form.label :end_date, "#{@participant.full_name} #{t(:End_of_participation_prompt)}" %><br>
        <%= render 'layouts/fuzzy_date_field', form: form, prefix: :end_date, fdate: FuzzyDate.today %>
      </p>
 

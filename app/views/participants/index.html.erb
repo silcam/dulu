@@ -1,14 +1,14 @@
 <%= render layout: 'programs/sidebar' do %>
   <h3><%= t :People %></h3>
 
-  <%= link_to t(:Add_person), new_program_participant_path(@program) %>
+  <%= link_to t(:Add_person_to_program), new_program_participant_path(@program) %>
 
   <table class="table">
     <tr>
-      <th>Name</th>
-      <th>Role</th>
-      <th>Joined Program</th>
-      <th>Left Program</th>
+      <th><%= t :Name %></th>
+      <th><%= t :Role %></th>
+      <th><%= t :Joined_program %></th>
+      <th><%= t :Left_program %></th>
       <th colspan="2"></th>
     </tr>
     <% @program.participants.each do |participant| %>

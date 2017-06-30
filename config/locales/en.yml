@@ -1,25 +1,29 @@
 en:
   #App
-  Search_bar: 'Search...'
-  Dashboard: 'Dashboard'
-  Start_date: 'Start Date'
-  Name: 'Name'
-  Update: 'Update'
-  Save: 'Save'
-  Cancel: 'Cancel'
-  Delete: 'Delete'
-  Bible: 'Bible'
-  Old_testament: 'Old Testament'
-  New_testament: 'New Testament'
-  'Yes': 'Yes'
-  'No': 'No'
-  History: 'History'
+  Search_bar: Search...
+  Dashboard: Dashboard
+  Start_date: Start Date
+  End_date: End Date
+  Name: Name
+  Update: Update
+  Save: Save
+  Cancel: Cancel
+  Delete: Delete
+  Remove: Remove
+  Manage: Manage
+  Bible: Bible
+  Old_testament: Old Testament
+  New_testament: New Testament
+  'Yes': Yes
+  'No': No
+  History: History
+  Fdate_omit: (Day and month are optional)
 
   #Dates
-  Today: 'Today'
-  Yesterday: 'Yesterday'
-  Tomorrow: 'Tomorrow'
-  In_a_few_days: "In %{days} days"
+  Today: Today
+  Yesterday: Yesterday
+  Tomorrow: Tomorrow
+  In_a_few_days: In %{days} days
   A_few_days_ago: "%{days} days ago"
   date:
     formats:
@@ -27,87 +31,100 @@ en:
       full: "%b %e, %Y"
 
   #People Controller
-  People: 'People'
-  First_Name: 'First Name'
-  Last_Name: 'Last Name'
-  Male: 'Male'
-  Female: 'Female'
-  Date_of_Birth: 'Date of Birth'
-  Home_Country: 'Home Country'
-  Email: 'Email'
-  Can_log_in: 'Able to log in'
-  dulu_preferred_language: 'Preferred language for using Dulu'
-  English: 'English'
-  French: 'Français'
-  Spanish: 'Español'
-  New_Person: 'New Person'
-  Add_person: 'Add Person'
-  Edit_person: 'Edit Person'
-  Edit: 'Edit'
+  People: People
+  Person: Person
+  First_Name: First Name
+  Last_Name: Last Name
+  Male: Male
+  Female: Female
+  Date_of_Birth: Date of Birth
+  Home_Country: Home Country
+  Email: Email
+  Can_log_in: Able to log in
+  dulu_preferred_language: Preferred language for using Dulu
+  English: English
+  French: Français
+  Spanish: Español
+  New_person: New Person
+  Add_person: Add Person
+  Edit_person: Edit Person
+  Edit: Edit
 
   #Organizations Controller
-  Organization: 'Organization'
-  Organizations: 'Organizations'
-  Abbreviation: 'Abbreviation'
-  add_organization_button: 'Add Organization'
-  New_Organization: 'New Organization'
-  Partners: 'Partners'
+  Organization: Organization
+  Organizations: Organizations
+  Abbreviation: Abbreviation
+  add_organization_button: Add Organization
+  New_Organization: New Organization
+  Partners: Partners
 
   #Languages Controller
-  Code: 'Code'
-  Status: 'Status'
-  Country: 'Country'
-  Region: 'Region'
-  Population: 'Population'
-  Language: 'Language'
-  Languages: 'Languages'
-  Language_info: 'Language Info'
+  Code: Code
+  Status: Status
+  Country: Country
+  Region: Region
+  Population: Population
+  Language: Language
+  Languages: Languages
+  Language_info: Language Info
 
   #Programs Controller
-  Program: 'Program'
-  Programs: 'Programs'
-  Add_program: 'Add Program'
-  New_program: 'New Program'
-  Current_activities: 'Current Activities'
-  Program_status: 'Program Status'
-  Media: 'Media'
-  Mobilization: 'Mobilization'
-  Ethnomusicology: 'Ethnomusicology'
-  Publications: 'Publications'
-  Literacy: 'Literacy'
-  Community_development: 'Community Development'
-  Linguistics: 'Linguistics'
-  Scripture_use: 'Scripture Use'
-  Anthropology: 'Anthropology'
-  Add_books: 'Add books to translate'
+  Program: Program
+  Programs: Programs
+  Add_program: Add Program
+  New_program: New Program
+  Current_activities: Current Activities
+  Program_status: Program Status
+  Media: Media
+  Mobilization: Mobilization
+  Ethnomusicology: Ethnomusicology
+  Publications: Publications
+  Literacy: Literacy
+  Community_development: Community Development
+  Linguistics: Linguistics
+  Scripture_use: Scripture Use
+  Anthropology: Anthropology
+  Add_books: Add books to translate
 
-  #Translation Stages Controller
-  Planned: 'Planned'
-  Drafting: 'Drafting'
-  Testing: 'Testing'
-  Review_committee: 'Review Committee'
-  Back_translating: 'Back-Translating'
-  Ready_for_consultant_check: 'Ready for Consultant Check'
-  Consultant_check: 'Consultant Check in Progress'
-  Consultant_checked: 'Consultant Checked'
-  Published: 'Published'
-  Current_stage: 'Current stage: '
-  Update_stage: 'Update stage to'
-  As_of: 'As of'
-  Stage: 'Stage'
-  Modify_Date: 'Modify Date'
-  Delete_stage_confirmation: "Do you want to delete this stage from the history?"
-
-  #Sessions Controller
-  Log_out: 'Log out'
-  Logout_message: 'Thank you for using Dulu.'
-  Login_prompt: 'Google Login'
+  #Activities Controller
+  Activities: Activities
+  Associated_activities: Associated Activities
 
   #Participants Controller
-  Translator: 'Translator'
-  TranslationConsultant: 'Translation Consultant'
-  TranslationConsultantTraining: 'Translation Consultant in Training'
-  LinguisticConsultant: 'Linguistic Consultant'
-  LinguisticConsultantTraining: 'Linguistic Consultant in Training'
-  LanguageProgramCommittee: 'Language Committee'
-  LanguageProgramFacilitator: 'Language Program Facilitator'
+  Add_person_to_program: Add a person
+  Role: Role
+  Joined_program: Joined Program
+  Left_program: Left Program
+  End_of_participation: End of Participation
+  End_of_participation_prompt: 'left the program: '
+
+  #Translation Stages Controller
+  Planned: Planned
+  Drafting: Drafting
+  Testing: Testing
+  Review_committee: Review Committee
+  Back_translating: Back-Translating
+  Ready_for_consultant_check: Ready for Consultant Check
+  Consultant_check: Consultant Check in Progress
+  Consultant_checked: Consultant Checked
+  Published: Published
+  Current_stage: 'Current stage: '
+  Update_stage: Update stage to
+  As_of: As of
+  Stage: Stage
+  Modify_Date: Modify Date
+  Delete_stage_confirmation: Do you want to delete this stage from the history?
+
+  #Sessions Controller
+  Log_out: Log out
+  Logout_message: Thank you for using Dulu.
+  Login_prompt: Google Login
+
+  #Participants Controller
+  Translator: Translator
+  TranslationConsultant: Translation Consultant
+  TranslationConsultantTraining: Translation Consultant in Training
+  LinguisticConsultant: Linguistic Consultant
+  LinguisticConsultantTraining: Linguistic Consultant in Training
+  LanguageProgramCommittee: Language Committee
+  LanguageProgramFacilitator: Language Program Facilitator

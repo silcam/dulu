@@ -35,6 +35,10 @@ class ParticipantTest < ActiveSupport::TestCase
     refute_includes @drew_hdi.activities, hdi_ezra
   end
 
+  test 'Full name' do
+    assert_equal 'Drew Maust', @drew_hdi.full_name
+  end
+
   test 'Fuzzy Dates' do
     drew_start = FuzzyDate.new 2017, 1, 1
     olga_hdi = participants :OlgaHdi
