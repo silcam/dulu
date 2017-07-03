@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170629104929) do
+ActiveRecord::Schema.define(version: 20170703101610) do
 
   create_table "activities", force: :cascade do |t|
     t.integer  "program_id"
@@ -126,6 +126,7 @@ ActiveRecord::Schema.define(version: 20170629104929) do
     t.string   "former_last_name"
     t.integer  "country_id"
     t.string   "ui_language"
+    t.integer  "role",                       default: 0
     t.index ["country_id"], name: "index_people_on_country_id"
     t.index ["organization_id"], name: "index_people_on_organization_id"
   end

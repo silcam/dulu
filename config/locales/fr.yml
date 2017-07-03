@@ -48,6 +48,12 @@ fr:
   Add_person: Créer une personne
   Edit_person: Modifier une personne
   Edit: Modifier
+  User_role: Rôle
+  none: Aucun
+  user: Utilisateur
+  program_responsable: Gérer des activités
+  program_supervisor: Gérer des programmes et personnel
+  admin: Administrateur du site
 
   #Organizations Controller
   Organization: Organisation

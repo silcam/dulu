@@ -2,6 +2,7 @@ require 'test_helper'
 
 class UpdateStageTest < Capybara::Rails::TestCase
   def setup
+    Capybara.current_driver = :selenium
     log_in(people(:Drew))
     @activity = translation_activities(:HdiEzraActivity)
   end

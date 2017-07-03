@@ -22,6 +22,10 @@ class Program < ApplicationRecord
     participants.where(end_date: nil)
   end
 
+  def current_people
+    people.joins(:participants).where(participants: {end_date: nil})
+  end
+
   def current_organizations
     orgs = []
     current_participants.each do |participant|

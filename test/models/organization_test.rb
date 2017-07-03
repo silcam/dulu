@@ -16,4 +16,10 @@ class OrganizationTest < ActiveSupport::TestCase
     fake_sil.name = 'SIL'
     refute fake_sil.save, "Shouldn't save Organization with non-unique name"
   end
+
+  test 'All in order' do
+    orgs = Organization.all_in_order
+    assert_equal organizations(:AAA), orgs.first
+    assert_equal organizations(:ZZZ), orgs.last
+  end
 end

@@ -36,6 +36,8 @@ gem 'jbuilder', '~> 2.5'
 gem 'rails-i18n', '~> 5.0.4'
 # Google authentication
 gem 'omniauth-google-oauth2', '~> 0.5.0'
+# User roles
+gem 'access-granted', '~> 1.2.0'
 
 group :development, :test do
   gem 'puma', '~>3.0'

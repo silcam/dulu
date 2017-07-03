@@ -32,11 +32,32 @@ class PersonTest < ActiveSupport::TestCase
     assert_equal 'Maust, Drew', @drew.full_name_rev
   end
 
+  test 'Roles' do
+    kevin = people :Kevin
+    olga = people :Olga
+    abanda = people :Abanda
+    rick = people :Rick
+
+    assert rick.is_admin?, 'Rick should be admin'
+    refute olga.is_admin?, 'Olga should not be admin'
+    assert olga.is_program_supervisor?, 'Olga should be Program Supervisor'
+    refute @drew.is_program_supervisor?, 'Drew should not be Program Supervisor'
+    assert @drew.is_program_responsable?, 'Drew should be Program Responsable'
+    refute kevin.is_program_responsable?, 'Kevin should not be Program Responsable'
+    assert kevin.is_user?, 'Kevin should be User'
+    refute abanda.is_user?, 'Abanda should not be User'
+  end
+
   test "Current Participants" do
     no_participants = people(:FormerHdiTranslator).current_participants
     participants = people(:Drew).current_participants
 
     assert_empty no_participants
     assert_not_empty participants
+  end
+
+  test "Roles List" do
+    assert_equal 4, Person.roles_for_select.count
+    assert_equal 5, Person.roles_for_select(true).count
   end
 end

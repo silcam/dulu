@@ -49,6 +49,12 @@ en:
   Add_person: Add Person
   Edit_person: Edit Person
   Edit: Edit
+  User_role: User Role
+  none: None
+  user: User
+  program_responsable: Update Activities
+  program_supervisor: Manage Programs and People
+  admin: Site Administrator
 
   #Organizations Controller
   Organization: Organization

@@ -31,12 +31,16 @@ class ProgramTest < ActiveSupport::TestCase
     assert_equal 'Hdi', @hdi_program.name
   end
 
-  test 'Current Participants and Orgs' do
+  test 'Current Participants and People and Orgs' do
     drew_hdi = participants :DrewHdi
+    drew = people :Drew
     former_hdi = participants :FormerHdiTranslator
+    former = people :FormerHdiTranslator
     sil = organizations :SIL
     assert_includes @hdi_program.current_participants, drew_hdi
     refute_includes @hdi_program.current_participants, former_hdi
+    assert_includes @hdi_program.current_people, drew
+    refute_includes @hdi_program.current_people, former
     assert_includes @hdi_program.current_organizations, sil
   end
 

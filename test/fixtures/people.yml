@@ -5,7 +5,7 @@ Rick:
   last_name: Conrad
   email: rick_conrad@sil.org
   organization: SIL
-  has_login: true
+  role: 4
 
 Drew:
   first_name: Drew
@@ -13,22 +13,27 @@ Drew:
   email: drew_maust@sil.org
   organization: SIL
   country: USA
-  has_login: true
+  role: 2
 
 Abanda:
   first_name: Abanda
   last_name: Dunno
   email: abanda@gmail.cm
-  has_login: false
+  role: 0
 
 Olga:
   first_name: Olga
   last_name: Nka
   email: olga_nka@sil.org
   organization: SIL
-  has_login: true
+  role: 3
 
 FormerHdiTranslator:
   first_name: Former
   last_name: Translator
-  
+
+Kevin:
+  first_name: Kevin
+  last_name: Bradford
+  organization: SIL
+  role: 1

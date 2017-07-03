@@ -37,4 +37,8 @@ class ApplicationController < ActionController::Base
   def store_redirect
     session[:referred_by] = params[:referred_by] if params[:referred_by]
   end
+
+  rescue_from "AccessGranted::AccessDenied" do |exception|
+    redirect_to not_allowed_path
+  end
 end

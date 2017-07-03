@@ -19,18 +19,13 @@
   </p>
 
   <p>
-    <%= f.label :birth_date, t(:Date_of_Birth) %>
-    <%= f.date_field :birth_date %>
-  </p>
-
-  <p>
     <%= f.label :country, t(:Home_Country) %>
-    <%= f.collection_select :country_id, Country.all, :id, :name %>
+    <%= f.collection_select :country_id, Country.all_in_order, :id, :name %>
   </p>
 
   <p>
     <%= f.label :organization, t(:Organization) %>
-    <%= f.collection_select :organization_id, Organization.all, :id, :name %>
+    <%= f.collection_select :organization_id, Organization.all_in_order, :id, :name, include_blank: true %>
   </p>
 
   <p>
@@ -39,8 +34,8 @@
   </p>
 
   <p>
-    <%= f.check_box :has_login %>
-    <%= f.label t(:Can_log_in) %>
+    <%= f.label :role, t(:User_role) %>
+    <%= f.select :role, options_for_select(Person.roles_for_select(can?(:grant_admin, Person)), @person.role)  %>
   </p>
 
   <p>

@@ -20,7 +20,8 @@ Rails.application.routes.draw do
       end
     end
   end
-  
+
+  get     'not_allowed',              to: 'people#not_allowed'
   get     '/login',                   to: 'sessions#new'
   delete  '/logout',                  to: 'sessions#destroy'
   get     '/auth/:provider/callback', to: 'sessions#create'

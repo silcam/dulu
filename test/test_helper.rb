@@ -1,15 +1,9 @@
-
 `rails db:migrate`
 require File.expand_path('../../config/environment', __FILE__)
 require 'rails/test_help'
 require 'minitest/reporters'
 require 'minitest/rails/capybara'
-
-
 Minitest::Reporters.use!
-Capybara.default_driver = :selenium
-
-
 
 class ActiveSupport::TestCase
   # Setup all fixtures in test/fixtures/*.yml for all tests in alphabetical order.
