@@ -31,6 +31,11 @@ class ProgramTest < ActiveSupport::TestCase
     assert_equal 'Hdi', @hdi_program.name
   end
 
+  test 'Latest Update' do
+    assert_equal FuzzyDate.new(2017, 5, 29),
+                 @hdi_program.latest_update
+  end
+
   test 'Current Participants and People and Orgs' do
     drew_hdi = participants :DrewHdi
     drew = people :Drew

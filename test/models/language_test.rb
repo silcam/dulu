@@ -14,7 +14,6 @@ class LanguageTest < ActiveSupport::TestCase
     assert_equal developing, @hdi.language_status
     assert_equal cameroon, @hdi.country
     assert_equal far_north, @hdi.cameroon_region
-    assert_includes@hdi.programs, hdi_program
-    # TODO assert_equal hdi_program, @hdi.program
+    assert_equal hdi_program, @hdi.program
   end
 end

@@ -1,14 +1,19 @@
 <h1><%= t :Programs %></h1>
-<p>
-  <%= link_to t(:Add_program), new_program_path, class: "btn btn-primary" %>
-</p>
+
 <table class="table">
   <tr>
     <th><%= t :Language %></th>
+    <th></th>
   </tr>
   <% @programs.each do |program| %>
     <tr>
       <td><%= link_to program.name, dashboard_program_path(program) %></td>
+      <td>
+        <% program.sorted_activities.each do |activity| %>
+          <%= "#{activity.name}[#{t(activity.stage_name)}]" %>
+            <%= ', ' unless activity==program.sorted_activities.last %>
+        <% end %>
+      </td>
     </tr>
   <% end %>
 </table>

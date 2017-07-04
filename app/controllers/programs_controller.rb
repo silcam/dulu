@@ -5,32 +5,19 @@ class ProgramsController < ApplicationController
   end
 
   def index
-    @programs = Program.includes(:language).order("languages.name")
+    # Sort by recent activity
+    @programs = Program.all
+    @programs.sort do |a,b|
+      if((a.latest_update.nil? && b.latest_update.nil?) ||
+          a.latest_update.coincident?(b.latest_update))
+        return a.name <=> b.name
+      end
+      return 1 if a.latest_update.nil?
+      return a.latest_update <=> b.latest_update
+    end
   end
 
   def show
     @program = Program.find params[:id]
   end
-
-  def new
-    @program = Program.new
-  end
-
-  def edit
-  end
-
-  def create
-    @program = Program.new(program_params)
-    if @program.save
-      redirect_to @program
-    else
-      render 'new'
-    end
-  end
-
-  private
-    def program_params
-      params.require(:program).permit(:language_id, :start_date, :name)
-    end
-
 end

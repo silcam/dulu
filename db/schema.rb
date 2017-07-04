@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170703101610) do
+ActiveRecord::Schema.define(version: 20170704123911) do
 
   create_table "activities", force: :cascade do |t|
     t.integer  "program_id"
@@ -150,7 +150,6 @@ ActiveRecord::Schema.define(version: 20170703101610) do
     t.datetime "updated_at",  null: false
     t.date     "start_date"
     t.date     "finish_date"
-    t.string   "name"
     t.index ["language_id"], name: "index_programs_on_language_id"
   end
 

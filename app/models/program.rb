@@ -1,6 +1,5 @@
 class Program < ApplicationRecord
-
-  #TODO - Fix here when we add support for other types of activities
+  has_many :activities
   has_many :translation_activities
   has_many :bible_books, through: :translation_activities
   has_many :participants
@@ -16,6 +15,17 @@ class Program < ApplicationRecord
 
   def name
     language.name
+  end
+
+  def latest_update
+    my_stages = Stage.joins(:activity).where(activities: {program: self})
+    return nil if my_stages.empty?
+    date = my_stages.first.f_start_date
+    my_stages.each do |stage|
+      stage_date = stage.f_start_date
+      date = stage_date if stage_date.after? date
+    end
+    return date
   end
 
   def current_participants
