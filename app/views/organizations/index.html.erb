@@ -1,7 +1,9 @@
 <h1><%= t :Organizations %></h1>
-<p>
-  <%= link_to t(:add_organization_button), new_organization_path, class: "btn btn-primary" %>
-</p>
+<% if can? :create, Organization %>
+  <p>
+    <%= link_to t(:add_organization_button), new_organization_path, class: "btn btn-primary" %>
+  </p>
+<% end %>
 <table class="table">
   <tr>
     <th><%= t :Name %></th>

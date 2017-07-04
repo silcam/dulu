@@ -1,4 +1,6 @@
 class OrganizationsController < ApplicationController
+  before_action :set_organization, only: [:create, :edit, :update]
+  before_action :authorize_user, only: [:new, :create, :edit, :update]
 
   def index
     @organizations = Organization.all.order("name ASC")
@@ -18,7 +20,16 @@ class OrganizationsController < ApplicationController
   end
 
   private
-    def org_params
-      params.require(:organization).permit(:name, :abbreviation)
-    end
+
+  def org_params
+    params.require(:organization).permit(:name, :abbreviation)
+  end
+
+  def set_organization
+    @organization = Organization.find params[:id]
+  end
+
+  def authorize_user
+    authorize! :create, Organization
+  end
 end
