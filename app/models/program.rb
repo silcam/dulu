@@ -29,7 +29,8 @@ class Program < ApplicationRecord
   def current_organizations
     orgs = []
     current_participants.each do |participant|
-      orgs << participant.person.organization unless orgs.include? participant.person.organization
+      org = participant.person.organization
+      orgs << org unless(org.nil? || orgs.include?(org))
     end
     return orgs
   end

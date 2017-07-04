@@ -42,6 +42,7 @@ class ProgramTest < ActiveSupport::TestCase
     assert_includes @hdi_program.current_people, drew
     refute_includes @hdi_program.current_people, former
     assert_includes @hdi_program.current_organizations, sil
+    refute_includes @hdi_program.current_organizations, nil
   end
 
   test 'Sorted Activities' do
