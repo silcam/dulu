@@ -1,12 +1,13 @@
 class StagesController < ApplicationController
+  before_action :set_stage, only: [:update, :destroy]
+  before_action :set_activity, only: [:new, :create]
+  before_action :authorize_user
   
   def new
-    @translation_activity = TranslationActivity.find(params[:translation_activity_id])
     @stage = Stage.new_for @translation_activity
   end
 
   def create
-    @translation_activity = TranslationActivity.find(params[:translation_activity_id])
     @stage = @translation_activity.stages.create(stage_params)
     unless @stage.new_record?
       respond_to do |format|
@@ -22,7 +23,6 @@ class StagesController < ApplicationController
   end
 
   def update
-    @stage = Stage.find(params[:id])
     respond_to do |format|
       if @stage.update(stage_params)
         format.js
@@ -33,8 +33,6 @@ class StagesController < ApplicationController
   end
 
   def destroy
-    @stage = Stage.find(params[:id])
-    @translation_activity = @stage.activity
     @stage.destroy
     respond_to do |format|
       if @stage.destroyed?
@@ -49,9 +47,22 @@ class StagesController < ApplicationController
   end
 
   private
-    def stage_params
-      assemble_dates params, :stage, :start_date
-      params.require(:stage).permit(:stage_name_id, :start_date)
-    end
 
+  def stage_params
+    assemble_dates params, :stage, :start_date
+    params.require(:stage).permit(:stage_name_id, :start_date)
+  end
+
+  def set_stage
+    @stage = Stage.find params[:id]
+    @activity = @stage.activity
+  end
+
+  def set_activity
+    @translation_activity = Activity.find params[:translation_activity_id]
+  end
+
+  def authorize_user
+    authorize! :update_activity, @translation_activity
+  end
 end

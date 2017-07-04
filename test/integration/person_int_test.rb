@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class PersonTest < Capybara::Rails::TestCase
+class PersonIntTest < Capybara::Rails::TestCase
   def setup
     @kevin = people :Kevin
     @rick = people :Rick

@@ -2,9 +2,9 @@ class ParticipantsController < ApplicationController
 
   before_action :set_participant, only: [:edit, :update, :finish]
   before_action :set_program, only: [:index, :new, :create]
+  before_action :authorize_user
 
   def index
-
   end
 
   def new
@@ -56,5 +56,9 @@ class ParticipantsController < ApplicationController
   def set_participant
     @participant = Participant.find params[:id]
     @program = @participant.program
+  end
+
+  def authorize_user
+    authorize! :manage_participants, @program
   end
 end

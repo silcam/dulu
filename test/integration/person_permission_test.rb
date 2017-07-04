@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class PermissionTest < Capybara::Rails::TestCase
+class PersonPermissionTest < Capybara::Rails::TestCase
   def setup
     @kevin = people :Kevin
     @olga = people :Olga

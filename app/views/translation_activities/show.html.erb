@@ -6,10 +6,14 @@
       <%= t @translation_activity.current_stage.name %>
     </span>
   </p>
-  <%= button_tag t(:Update), id: 'show-update-form', class: 'btn btn-default' %>
-  <div class="row" id="update-stage-form" style="display: none;">
-    <%= render 'stages/ajax_form', activity: @translation_activity %>
-  </div>
+
+  <% if can? :update_activity, @translation_activity %>
+    <%= button_tag t(:Update), id: 'show-update-form', class: 'btn btn-default' %>
+    <div class="row" id="update-stage-form" style="display: none;">
+      <%= render 'stages/ajax_form', activity: @translation_activity %>
+    </div>
+  <% end %>
+
   <div class="row">
     <div class="col-md-6">
       <h3>

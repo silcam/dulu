@@ -5,7 +5,11 @@
     <%= render 'programs/progress_bar', activity: activity %>
   </td>
   <td id="activity-stage-name-<%= activity.id %>">
-    <%= render 'programs/stage_name_link', activity: activity %>
+    <% if can? :update_activity, activity %>
+      <%= render 'programs/stage_name_link', activity: activity %>
+    <% else %>
+      <%= activity.stage_name %>
+    <% end %>
   </td>
   <td>
     <% relations = activity.participants_for_my_stage %>
@@ -15,10 +19,12 @@
 
   </td>
 </tr>
-<tr>
-  <td colspan="6" class="update-stage-form" id="update-stage-form-cell-<%= activity.id %>">
-    <div class="row" id="update-stage-form-<%= activity.id %>" style="display: none;">
-      <%= render 'stages/ajax_form', activity: activity %>
-    </div>
-  </td>
-</tr>
+<% if can? :update_activity, activity %>
+  <tr>
+    <td colspan="6" class="update-stage-form" id="update-stage-form-cell-<%= activity.id %>">
+      <div class="row" id="update-stage-form-<%= activity.id %>" style="display: none;">
+        <%= render 'stages/ajax_form', activity: activity %>
+      </div>
+    </td>
+  </tr>
+<% end %>

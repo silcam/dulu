@@ -29,6 +29,10 @@ class ActiveSupport::TestCase
     should_save = model.new(params)
     assert should_save.save, "Should save #{model} with valid params"
   end
+
+  def page_has_link?(path)
+    page.has_css? "a[href='#{path}']"
+  end
 end
 
 # Some kind of hack to avoid SQLite::BusyExceptions
