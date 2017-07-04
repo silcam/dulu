@@ -33,6 +33,16 @@ class ActiveSupport::TestCase
   def page_has_link?(path)
     page.has_css? "a[href='#{path}']"
   end
+
+  def click_link_to(path)
+    find(:css, "a[href='#{path}']").click
+  end
+
+  def fill_in_date(prefix, date)
+    fill_in "#{prefix}_date_y", with: date.year
+    fill_in "#{prefix}_date_m", with: date.month
+    fill_in "#{prefix}_date_d", with: date.day
+  end
 end
 
 # Some kind of hack to avoid SQLite::BusyExceptions

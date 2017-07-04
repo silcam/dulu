@@ -55,7 +55,7 @@ class StagesController < ApplicationController
 
   def set_stage
     @stage = Stage.find params[:id]
-    @activity = @stage.activity
+    @translation_activity = @stage.activity
   end
 
   def set_activity

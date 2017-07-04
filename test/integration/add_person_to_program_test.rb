@@ -40,7 +40,7 @@ class AddPersonToProgram < Capybara::Rails::TestCase
   def modify_drew
     visit program_path @zulgo_program
     click_link 'Manage'
-    find(:css, "a[href='#{edit_participant_path(@drew_zulgo)}']").click
+    click_link_to edit_participant_path(@drew_zulgo)
     select 'Translator', from: 'participant_program_role_id'
     fill_in 'participant_start_date_m', with: '8'
     uncheck 'Ezra'
@@ -56,7 +56,7 @@ class AddPersonToProgram < Capybara::Rails::TestCase
   def remove_drew
     visit program_path @zulgo_program
     click_link 'Manage'
-    find(:css, "a[href='#{finish_participant_path(@drew_zulgo)}']").click
+    click_link_to finish_participant_path(@drew_zulgo)
     fill_in 'participant_end_date_y', with: '2017'
     fill_in 'participant_end_date_m', with: '7'
     fill_in 'participant_end_date_d', with: '31'
@@ -65,7 +65,8 @@ class AddPersonToProgram < Capybara::Rails::TestCase
     @drew_zulgo.reload
     assert_equal '2017-07-31', @drew_zulgo.end_date
     refute_includes @zulgo_program.current_participants, @drew_zulgo
-    refute page.has_css?("a[href='#{finish_participant_path(@drew_zulgo)}']"), "Remove link should not show after person is removed"
+    refute page_has_link?(finish_participant_path(@drew_zulgo)),
+                         "Remove link should not show after person is removed"
     visit program_path @zulgo_program
     refute page.has_content? 'Drew Maust'
   end
