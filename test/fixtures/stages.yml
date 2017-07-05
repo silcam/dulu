@@ -37,3 +37,8 @@ ZulgoEzraThree:
   activity: ZulgoEzraActivity
   stage_name: ConsultantCheck
   start_date: 2017-05-29
+
+ReallyOldOne:
+  activity: ReallyOldActivity
+  stage_name: Planned
+  start_date: 1950

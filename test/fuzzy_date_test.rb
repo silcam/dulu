@@ -88,6 +88,17 @@ class FuzzyDateTest < ActiveSupport::TestCase
     refute FuzzyDate.new(1234, 5, 6) == FuzzyDate.new(1234, 5, 7)
   end
 
+  test 'Lesser and Greater Dates' do
+    assert Date.new(2017, 7, 1)  < Date.new(2017, 7, 2)
+    assert Date.new(2017, 7, 2) > Date.new(2017, 7, 1)
+    assert Date.new(2017, 7, 31) < Date.new(2017, 8)
+    assert Date.new(2017, 12, 31) < Date.new(2018)
+    assert Date.new(2017, 7) < Date.new(2017, 7, 2)
+    refute Date.new(2017, 7, 2) < Date.new(2017, 7)
+    assert Date.new(2017) < Date.new(2017, 2)
+    refute Date.new(2017, 2) < Date.new(2017)
+  end
+
   test 'FDates Before' do
     assert FuzzyDate.new(2017, 12, 31).before?(
                                           FuzzyDate.new(2018)

@@ -1,14 +1,19 @@
 HdiEzraActivity:
-  type: 'TranslationActivity' # Do we have to? Yes we do.
+  type: TranslationActivity # Do we have to? Yes we do.
   program: HdiProgram
   bible_book: Ezra
 
 HdiGenesisActivity:
-  type: 'TranslationActivity'
+  type: TranslationActivity
   program: HdiProgram
   bible_book: Genesis
 
 ZulgoEzraActivity:
-  type: 'TranslationActivity'
+  type: TranslationActivity
   program: ZulgoProgram
   bible_book: Ezra
+
+ReallyOldActivity:
+  type: TranslationActivity
+  program: ReallyOldProgram
+  bible_book: Genesis

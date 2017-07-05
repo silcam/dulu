@@ -6,3 +6,9 @@ EwondoProgram:
 
 ZulgoProgram:
   language: Zulgo
+
+NoActivityProgram:
+  language: NoActivity
+
+ReallyOldProgram:
+  language: ReallyOld

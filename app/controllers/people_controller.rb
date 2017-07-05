@@ -4,6 +4,7 @@ class PeopleController < ApplicationController
     @people = Person.all.order(:last_name, :first_name)
   end
 
+  # noinspection RubyArgCount
   def new
     authorize! :create, Person
     @person = Person.new

@@ -54,4 +54,18 @@ class ProgramTest < ActiveSupport::TestCase
     hdi_genesis = translation_activities :HdiGenesisActivity
     assert_equal hdi_genesis, @hdi_program.sorted_activities.first
   end
+
+  test 'Sorted Programs' do
+    no_activity = programs :NoActivityProgram
+    really_old = programs :ReallyOldProgram
+
+    programs = Program.all_sorted_by_recency
+    assert_includes programs, @hdi_program
+    assert_includes programs, no_activity
+    assert_includes programs, really_old
+    assert programs.index(@hdi_program) < programs.index(really_old),
+           "Recent activity should come before old activity"
+    assert programs.index(really_old) < programs.index(no_activity),
+           "Old activity comes before no activity"
+  end
 end

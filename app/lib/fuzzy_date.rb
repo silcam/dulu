@@ -1,4 +1,5 @@
 class FuzzyDate
+  include Comparable
   attr_accessor :year, :month, :day
 
   def initialize(year, month=nil, day=nil)
@@ -72,10 +73,14 @@ class FuzzyDate
     Date.new(@year, month, day)
   end
 
-  def ==(date2)
-    return  @year == date2.year &&
-            @month == date2.month &&
-            @day == date2.day
+  def <=>(date2)
+    if @year == date2.year
+      if @month == date2.month
+        return (@day || 0) <=> (date2.day || 0)
+      end
+      return (@month || 0) <=> (date2.month || 0)
+    end
+    return @year <=> date2.year
   end
 
   def before?(date2)

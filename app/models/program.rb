@@ -48,4 +48,17 @@ class Program < ApplicationRecord
   def sorted_activities
     translation_activities.joins(:bible_book).order('bible_books.usfm_number')
   end
+
+  def self.all_sorted_by_recency
+    programs_with_activity = Program.joins(activities: :stages)
+                                 .order('stages.start_date DESC')
+    programs_without_activity = Program.left_outer_joins(:activities)
+                                    .where('activities.id IS NULL')
+                                    .joins(:language)
+                                    .order('languages.name')
+
+    programs = []
+    programs_with_activity.each{|pwa| programs << pwa unless programs.include? pwa}
+    programs += programs_without_activity
+  end
 end
