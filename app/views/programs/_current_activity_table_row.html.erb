@@ -8,7 +8,7 @@
     <% if can? :update_activity, activity %>
       <%= render 'programs/stage_name_link', activity: activity %>
     <% else %>
-      <%= activity.stage_name %>
+      <%= t(activity.stage_name) %>
     <% end %>
   </td>
   <td>
