@@ -60,4 +60,14 @@ class PersonTest < ActiveSupport::TestCase
     assert_equal 4, Person.roles_for_select.count
     assert_equal 5, Person.roles_for_select(true).count
   end
+
+  test "Search" do
+    results = Person.search 'drew'
+    assert_equal 1, results.count
+    assert_equal 'Drew Maust', results[0][:title]
+    hdi_program = programs :HdiProgram
+    assert_includes results[0][:subresults],
+                    {title: 'Hdi', path: "/programs/#{hdi_program.id}",
+                        description: 'Translation Consultant'}
+  end
 end

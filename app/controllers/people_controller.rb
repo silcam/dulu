@@ -37,6 +37,7 @@ class PeopleController < ApplicationController
 
   def dashboard
     @user = current_user
+    render @user.current_participants.empty? ? 'searches/search' : 'dashboard'
   end
 
   def not_allowed

@@ -61,4 +61,17 @@ class Program < ApplicationRecord
     programs_with_activity.each{|pwa| programs << pwa unless programs.include? pwa}
     programs += programs_without_activity
   end
+
+  def self.search(query)
+    programs = Program.joins(:language).where("languages.name LIKE ?", "%#{query}%").includes(:language)
+    results = []
+    programs.each do |program|
+      path = Rails.application.routes.url_helpers.dashboard_program_path(program)
+      description = "#{I18n.t(:Language_program)}"
+      description += " - #{program.activities.count} #{I18n.t(:Activities).downcase}" if program.activities.count > 0
+      results << {title: program.name, path: path,
+                  description: description}
+    end
+    results
+  end
 end

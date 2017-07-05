@@ -35,4 +35,8 @@ class Activity < ApplicationRecord
   def stages_ordered_asc
     stages.order 'start_date ASC, id ASC'
   end
+
+  def self.search(query)
+    TranslationActivity.search(query)
+  end
 end

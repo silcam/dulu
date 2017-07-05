@@ -1,0 +1,19 @@
+<% level ||= 0 %>
+<% header = "h#{level+4}" %>
+<% results.each do |result| %>
+    <tr>
+      <td style="padding-left:<%= level*40 %>px">
+        <<%= header %>>
+          <% if result[:path] %>
+            <%= link_to result[:title], result[:path] %>
+          <% else %>
+            <%= result[:title] %>
+          <% end %>
+          <small><%= result[:description] %></small>
+        </<%= header %>>
+      </td>
+    </tr>
+    <% if result[:subresults] %>
+      <%= render 'results_table', results: result[:subresults], level: (level+1) %>
+    <% end %>
+<% end %>

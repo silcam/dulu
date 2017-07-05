@@ -1,6 +1,5 @@
 en:
   #App
-  Search_bar: Search...
   Dashboard: Dashboard
   Start_date: Start Date
   End_date: End Date
@@ -29,6 +28,13 @@ en:
     formats:
       month_day: "%b %e"
       full: "%b %e, %Y"
+
+  #Searches Controller
+  Search: Search
+  Search_bar: Search...
+  Search_results: Search Results
+  No_results: No results found
+  No_current_translation: No translations in progress
 
   #People Controller
   People: People
@@ -77,6 +83,7 @@ en:
   #Programs Controller
   Program: Program
   Programs: Programs
+  Language_program: Language Program
   Add_program: Add Program
   New_program: New Program
   Current_activities: Current Activities

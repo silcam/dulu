@@ -68,4 +68,11 @@ class ProgramTest < ActiveSupport::TestCase
     assert programs.index(really_old) < programs.index(no_activity),
            "Old activity comes before no activity"
   end
+
+  test 'Program Search' do
+    results = Program.search('hdi')
+    assert_equal 1, results.count
+    assert_equal 'Hdi', results[0][:title]
+    assert_equal "/programs/#{@hdi_program.id}/dashboard", results[0][:path]
+  end
 end

@@ -17,6 +17,7 @@ module ApplicationHelper
         rescue
           # Bad Data. Set nothing and allow it to fail validation if the field is required
           # Downside: fields that aren't required will be silently ignored which may surprise the user
+          # Probable Solution: JS Validation
           # TODO: revisit this downside
         end
       end

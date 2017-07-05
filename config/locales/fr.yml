@@ -1,6 +1,5 @@
 fr:
   #App
-  Search_bar: Rechercher...
   Dashboard: Tableau de bord
   Start_date: Date de commencement
   End_date: Date de fin
@@ -30,8 +29,16 @@ fr:
       month_day: "%e %b"
       full: "%e %b %Y"
 
+  #Searches Controller
+  Search: Rechercher
+  Search_bar: Rechercher...
+  Search_results: Résultats de recherche
+  No_results: Rien trouvé
+  No_current_translations: Aucun projet de traduction actuel
+
   #People Controller
   People: Personnel
+  Person: Personne
   First_Name: Prénom
   Last_Name: Nom
   Male: Homme
@@ -76,6 +83,7 @@ fr:
   #Programs Controller
   Program: Programme
   Programs: Programmes
+  Language_program: Programme de langue
   Person: Personne
   Add_program: Créer un programme
   New_program: Nouveau programme

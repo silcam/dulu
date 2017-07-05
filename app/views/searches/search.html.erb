@@ -1,0 +1,11 @@
+<%= form_tag(search_path, method: :get, class: 'form-inline', id: 'dulu-search') do %>
+  <%= text_field_tag :q, @query, placeholder: t(:Search_bar), class: 'form-control input-lg' %>
+  <%= submit_tag t(:Search), class: 'form-control input-lg' %>
+<% end %>
+<% if @results %>
+  <h2><%= t :Search_results %></h2>
+    <%= t(:No_results) if @results.empty?%>
+  <table class="table">
+    <%= render 'results_table', results: @results %>
+  </table>
+<% end %>

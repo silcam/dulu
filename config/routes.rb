@@ -21,6 +21,7 @@ Rails.application.routes.draw do
     end
   end
 
+  get     'search',                   to: 'searches#search'
   get     'not_allowed',              to: 'people#not_allowed'
   get     '/login',                   to: 'sessions#new'
   delete  '/logout',                  to: 'sessions#destroy'

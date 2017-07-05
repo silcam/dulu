@@ -51,6 +51,23 @@ class Person < ApplicationRecord
     roles
   end
 
+  def self.search(query)
+    people = Person.where("first_name || ' ' || last_name LIKE ?", "%#{query}%")
+    results = []
+    people.each do |person|
+      subresults = []
+      person.current_participants.each do |participant|
+        subresults << {title: participant.program.name,
+         path: Rails.application.routes.url_helpers.program_path(participant.program),
+        description: I18n.t(participant.program_role.name)}
+      end
+      results << {title: person.full_name,
+                  description: person.organization.name,
+                  subresults: subresults}
+    end
+    results
+  end
+
   private
 
   def has_role?(the_role)

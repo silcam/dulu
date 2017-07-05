@@ -11,4 +11,20 @@ class TranslationActivity < Activity
   def name
     self.bible_book.name
   end
+
+  def self.search(query)
+    books = BibleBook.where("english_name LIKE ? OR french_name LIKE ?", "%#{query}%", "%#{query}%")
+    results = []
+    books.each do |book|
+      subresults = []
+      activities = TranslationActivity.where bible_book: book
+      activities.each do |activity|
+        subresults << {title: activity.program.name, description: I18n.t(activity.stage_name),
+            path: Rails.application.routes.url_helpers.translation_activity_path(activity)}
+      end
+      description = activities.empty? ? I18n.t(:No_current_translations) : ''
+      results << {title: book.name, description: description, subresults: subresults}
+    end
+    results
+  end
 end

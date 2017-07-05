@@ -22,4 +22,21 @@ class OrganizationTest < ActiveSupport::TestCase
     assert_equal organizations(:AAA), orgs.first
     assert_equal organizations(:ZZZ), orgs.last
   end
+
+  test 'Current Participants' do
+    drew_hdi = participants :DrewHdi
+    assert_includes @sil.current_participants, drew_hdi
+  end
+
+  test 'Current Programs' do
+    hdi_program = programs :HdiProgram
+    assert_includes @sil.current_programs, hdi_program
+  end
+
+  test 'Search' do
+    orgs = Organization.search('sil')
+    assert_equal 1, orgs.count
+    assert_equal @sil.name, orgs[0][:title]
+    assert_not_empty orgs[0][:subresults]
+  end
 end
