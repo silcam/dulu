@@ -1,7 +1,7 @@
 class PeopleController < ApplicationController
   
   def index
-    @people = Person.all.order(:last_name, :first_name)
+    @people = Person.all.order(:last_name, :first_name).includes(:organization)
   end
 
   # noinspection RubyArgCount
