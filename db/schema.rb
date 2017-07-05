@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170704123911) do
+ActiveRecord::Schema.define(version: 20170705153657) do
 
   create_table "activities", force: :cascade do |t|
     t.integer  "program_id"
@@ -151,6 +151,18 @@ ActiveRecord::Schema.define(version: 20170704123911) do
     t.date     "start_date"
     t.date     "finish_date"
     t.index ["language_id"], name: "index_programs_on_language_id"
+  end
+
+  create_table "publications", force: :cascade do |t|
+    t.integer  "program_id"
+    t.string   "kind"
+    t.string   "english_name"
+    t.string   "french_name"
+    t.string   "nl_name"
+    t.integer  "year"
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
+    t.index ["program_id"], name: "index_publications_on_program_id"
   end
 
   create_table "research_permits", force: :cascade do |t|
