@@ -11,12 +11,16 @@ class ProgramTest < ActiveSupport::TestCase
     drew_hdi = participants :DrewHdi
     drew = people :Drew
     hdi = languages :Hdi
+    ewondo_program = programs :EwondoProgram
+    ewondo_nt = publications :EwondoNT
 
     assert_includes @hdi_program.translation_activities, hdi_ezra
     assert_includes @hdi_program.bible_books, ezra
     assert_includes @hdi_program.participants, drew_hdi
     assert_includes @hdi_program.people, drew
     assert_equal hdi, @hdi_program.language
+
+    assert_includes ewondo_program.publications, ewondo_nt
   end
 
   test 'Unassociated People' do
@@ -51,8 +55,15 @@ class ProgramTest < ActiveSupport::TestCase
   end
 
   test 'Sorted Activities' do
+    ewondo_nt = publications :EwondoNT
     hdi_genesis = translation_activities :HdiGenesisActivity
     assert_equal hdi_genesis, @hdi_program.sorted_activities.first
+  end
+
+  test 'Sorted Pubs' do
+    ewondo_program = programs :EwondoProgram
+    ewondo_nt = publications :EwondoNT
+    assert_includes ewondo_program.sorted_pubs('Bible'), ewondo_nt
   end
 
   test 'Sorted Programs' do

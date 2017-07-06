@@ -97,6 +97,7 @@ en:
   Linguistics: Linguistics
   Scripture_use: Scripture Use
   Anthropology: Anthropology
+  No_information: No information available
   Add_books: Add books to translate
 
   #Activities Controller
@@ -141,3 +142,11 @@ en:
   LinguisticConsultantTraining: Linguistic Consultant in Training
   LanguageProgramCommittee: Language Committee
   LanguageProgramFacilitator: Language Program Facilitator
+
+  #Publications Controller
+  Publications: Publications
+  No_publications: No Publications
+
+  #Events Controller
+  Upcoming_events: Upcoming Events
+  No_upcoming_events: No Upcoming Events

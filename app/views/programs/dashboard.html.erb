@@ -13,20 +13,20 @@
         <h2><%= t :Program_status %></h2>
         <div class="row">
           <div class="col-md-4">
-            <%= render 'dashboard_panel', {title: t(:Bible), list_with_headings: [{heading: 'Old Testament (11%)', items: ['Genesis (2012)', 'Ruth (2013)']}, {heading: 'New Testament (4%)', items: ['James (2015)']}]} %>
-            <%= render 'dashboard_panel', {title: t(:Media), list_items: ['Audio Genesis (2013)']} %>
-            <%= render 'dashboard_panel', {title: t(:Mobilization), list_items: ['Something']} %>
-            <%= render 'dashboard_panel', {title: t(:Ethnomusicology), list_items: ['Hymnal (2016)']} %>
+            <%= render 'dashboard_panel', {title: t(:Bible), pubs: @program.sorted_pubs('Bible')} %>
+            <%= render 'dashboard_panel', {title: t(:Media), pubs: @program.sorted_pubs('Media')} %>
+            <%= render 'dashboard_panel', {title: t(:Mobilization), info: ''} %>
+            <%= render 'dashboard_panel', {title: t(:Ethnomusicology), info: ''} %>
           </div>
           <div class="col-md-4">
-            <%= render 'dashboard_panel', {title: t(:Publications), list_items: ['Primer (2011)', 'Traditional Stories (2013)']} %>
-            <%= render 'dashboard_panel', {title: t(:Literacy), list_items: ['Something']} %>
-            <%= render 'dashboard_panel', {title: t(:Community_development), list_items: ['Something']} %>
+            <%= render 'dashboard_panel', {title: t(:Publications), pubs: @program.sorted_pubs('NLPub')} %>
+            <%= render 'dashboard_panel', {title: t(:Literacy), info: ''} %>
+            <%= render 'dashboard_panel', {title: t(:Community_development), info: ''} %>
           </div>
           <div class="col-md-4">
-            <%= render 'dashboard_panel', {title: t(:Linguistics), list_items: ['Lexicon (2015)']} %>
-            <%= render 'dashboard_panel', {title: t(:Scripture_use), list_items: ['Something']} %>
-            <%= render 'dashboard_panel', {title: t(:Anthropology), list_items: ['Ewondo Customs (1977)']} %>
+            <%= render 'dashboard_panel', {title: t(:Linguistics), pubs: @program.sorted_pubs('Linguistic')} %>
+            <%= render 'dashboard_panel', {title: t(:Scripture_use), info: ''} %>
+            <%= render 'dashboard_panel', {title: t(:Anthropology), info: ''} %>
           </div>
         </div>
       </div>
@@ -34,37 +34,7 @@
 
     <div class="col-md-3">
       <div>
-        <h2>Events &amp; Milestones</h2>
-        <ul class="list-group">
-        <a href="#" class="list-group-item calendar-past">
-          <small>7-14 February<br /></small>
-          Literacy Workshop
-        </a>
-        <a href="#" class="list-group-item calendar-past">
-          <small>15 April<br /></small>
-          Completed Luke Consultant Check
-        </a>
-        <a href="#" class="list-group-item calendar-future">
-          <small>6-13 June<br /></small>
-          Translation Workshop
-        </a>
-        <a href="#" class="list-group-item calendar-future">
-          <small>July<br /></small>
-          Publish Phonology
-        </a>
-        <a href="#" class="list-group-item calendar-future">
-          <small>August<br /></small>
-          Record Luke Film
-        </a>
-        <a href="#" class="list-group-item calendar-future">
-          <small>November<br /></small>
-          Publish Luke
-        </a>
-        <a href="#" class="list-group-item calendar-future">
-          <small>Jan 2018<br /></small>
-          Complete Draft of Mark
-        </a>
-        </ul>
+        <%= render 'upcoming_events', events: [] %>
       </div>
     </div>
   </div>

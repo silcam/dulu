@@ -3,23 +3,10 @@
     <h3 class="panel-title dulu-panel-title"><%= title %></h3>
   </div>
   <div class="panel-body">
-    <% if defined? list_with_headings %>
-      <ul class="list-unstyled">
-        <% list_with_headings.each do |sublist| %>
-          <%= sublist[:heading] %>
-          <ul>
-            <% sublist[:items].each do |item| %>
-              <li><%= item %></li>
-            <% end %>
-          </ul>
-        <% end %>
-      </ul>
-    <% elsif defined? list_items %>
-      <ul class="list-unstyled">
-        <% list_items.each do |item| %>
-          <li><%= item %></li>
-        <% end %>
-      </ul>
+    <% if defined? pubs %>
+      <%= render 'panel_body_pubs', pubs: pubs %>
+    <% else %>
+      <%= render 'panel_body_info', info: info %>
     <% end %>
   </div>
 </div>

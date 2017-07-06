@@ -1,0 +1,9 @@
+<ul class="list-unstyled">
+  <% if pubs.empty? %>
+      <%= t :No_publications %>
+  <% else %>
+      <% pubs.each do |pub| %>
+          <li><%=  "#{pub.name} (#{pub.year})" %></li>
+      <% end %>
+  <% end %>
+</ul>

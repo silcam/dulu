@@ -84,7 +84,6 @@ fr:
   Program: Programme
   Programs: Programmes
   Language_program: Programme de langue
-  Person: Personne
   Add_program: Créer un programme
   New_program: Nouveau programme
   Current_activities: Activités actuelles
@@ -98,6 +97,7 @@ fr:
   Linguistics: Linguistique
   Scripture_use: Promotion des Saintes Écritures
   Anthropology: Anthropologie
+  No_information: Aucune information disponible
   Add_books: Ajouter des livres à traduire
 
   #Activities Controller
@@ -143,12 +143,10 @@ fr:
   LanguageProgramCommittee: Comité de langue
   LanguageProgramFacilitator: Facilitateur du programme de langue
 
-  activerecord:
-    models:
-      BibleBook: BibleLivre
-      Person:
-        one: Personne
-        other: Personnel
-      Organization: Organisation
-      Language: Langue
-      Program: Programme
+  #Publications Controller
+  Publications: Publications
+  No_publications: Aucune publication
+
+  #Events Controller
+  Upcoming_events: Événements prochains
+  No_upcoming_events: Aucun événement

@@ -2,6 +2,7 @@ class Program < ApplicationRecord
   has_many :activities
   has_many :translation_activities
   has_many :bible_books, through: :translation_activities
+  has_many :publications
   has_many :participants
   has_many :people, through: :participants
   belongs_to :language
@@ -47,6 +48,10 @@ class Program < ApplicationRecord
 
   def sorted_activities
     translation_activities.joins(:bible_book).order('bible_books.usfm_number')
+  end
+
+  def sorted_pubs(kind)
+    publications.where(kind: kind).order('year DESC')
   end
 
   def self.all_sorted_by_recency
