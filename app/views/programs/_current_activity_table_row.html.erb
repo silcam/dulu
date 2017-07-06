@@ -1,5 +1,6 @@
 <tr>
-  <td><%= link_to activity.name, activity %>
+  <td>
+    <%= link_to activity.name, activity %>
   </td>
   <td class="progress-cell" id="activity-progress-<%= activity.id %>">
     <%= render 'programs/progress_bar', activity: activity %>
@@ -11,12 +12,11 @@
       <%= t(activity.stage_name) %>
     <% end %>
   </td>
-  <td>
-    <% relations = activity.participants_for_my_stage %>
-    <% relations.each do |relation| %>
-      <%= relation.person.full_name %><%= ', ' unless relation==relations.last %>
-    <% end %>
-
+  <td id="activity-stage-date-<%= activity.id %>">
+    <%= activity.current_stage.f_start_date.pretty_print %>
+  </td>
+  <td id="activity-participants-<%= activity.id %>">
+    <%= render 'programs/participants', activity: activity %>
   </td>
 </tr>
 <% if can? :update_activity, activity %>

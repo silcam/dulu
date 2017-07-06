@@ -8,8 +8,17 @@ if $(location).attr('href').includes('translation_activities')
   )
 
 else
-  $('#update-stage-form-<%= @translation_activity.id %>').slideUp(350)
-  $('#activity-stage-name-<%= @translation_activity.id %>').html(
-    " <%= j (render 'programs/stage_name_link', activity: @translation_activity) %>")
-  $('#activity-progress-<%= @translation_activity.id %>').html(
-    " <%= j (render 'programs/progress_bar', activity: @translation_activity) %>")
+  <% id = @translation_activity.id %>
+  $('#update-stage-form-<%= id %>').slideUp(350)
+  $('#activity-progress-<%= id %>').html(
+    " <%= j(render 'programs/progress_bar', activity: @translation_activity) %>")
+  $('#activity-stage-name-<%= id %>').html(
+    " <%= j(render 'programs/stage_name_link', activity: @translation_activity) %>")
+  $('#activity-stage-date-<%= id %>').html(
+    " <%= @translation_activity.current_stage.f_start_date.pretty_print %>")
+  $('#activity-participants-<%= id %>').html(
+    " <%= j(render 'programs/participants', activity: @translation_activity) %>")
+
+  $("a[data-slide-form-id]").click (e) ->
+    e.preventDefault()
+    $('#update-stage-form-'+$(this).data("slide-form-id")).slideToggle(350);
