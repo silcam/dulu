@@ -4,5 +4,5 @@ $('#stage-row-view-<%= @stage.id %>').fadeOut('slow', ->
 )
 
 $('#current-stage').html(
-  "<%= @translation_activity.current_stage.name %>"
+  "<%= t(@translation_activity.current_stage.name) %>"
 )
