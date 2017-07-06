@@ -11,9 +11,7 @@
     </h3>
     <ul class="nav nav-sidebar">
       <% links = [[t(:Dashboard), dashboard_program_path(@program)],
-                  [t(:Language_info), '#'],
-                  [t(:Program), program_path(@program)],
-                  [t(:Partners), '#']] %>
+                  [t(:Manage), program_path(@program)]] %>
       <% links.each do |link| %>
         <% if current_page?(link[1]) %>
           <li class="h4 active">
