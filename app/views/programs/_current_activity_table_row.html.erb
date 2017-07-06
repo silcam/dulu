@@ -7,7 +7,7 @@
   </td>
   <td id="activity-stage-name-<%= activity.id %>">
     <% if can? :update_activity, activity %>
-      <%= render 'programs/stage_name_link', activity: activity %>
+        <%= link_to t(activity.stage_name), '#', {'data-slide-form-id' => activity.id} %>
     <% else %>
       <%= t(activity.stage_name) %>
     <% end %>
