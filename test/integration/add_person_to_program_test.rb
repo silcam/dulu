@@ -39,7 +39,7 @@ class AddPersonToProgram < Capybara::Rails::TestCase
 
   def modify_drew
     visit program_path @zulgo_program
-    click_link 'Manage'
+    click_link_to program_participants_path(@zulgo_program)
     click_link_to edit_participant_path(@drew_zulgo)
     select 'Translator', from: 'participant_program_role_id'
     fill_in 'participant_start_date_m', with: '8'
@@ -55,7 +55,7 @@ class AddPersonToProgram < Capybara::Rails::TestCase
 
   def remove_drew
     visit program_path @zulgo_program
-    click_link 'Manage'
+    click_link_to program_participants_path(@zulgo_program)
     click_link_to finish_participant_path(@drew_zulgo)
     fill_in 'participant_end_date_y', with: '2017'
     fill_in 'participant_end_date_m', with: '7'
