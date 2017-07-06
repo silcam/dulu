@@ -5,6 +5,8 @@ require 'minitest/reporters'
 require 'minitest/rails/capybara'
 Minitest::Reporters.use!
 
+#Capybara.default_driver = :selenium
+
 class ActiveSupport::TestCase
   # Setup all fixtures in test/fixtures/*.yml for all tests in alphabetical order.
   fixtures :all
