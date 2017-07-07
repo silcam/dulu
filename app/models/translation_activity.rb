@@ -12,6 +12,25 @@ class TranslationActivity < Activity
     self.bible_book.name
   end
 
+  def build(params)
+    return if program.is_translating? params[:bible_book]
+    self.bible_book_id = params[:bible_book]
+    super
+  end
+
+  def self.build_all(program, params)
+    if ['nt', 'ot'].include? params[:bible_book]
+      books = BibleBook.get_new_testament if params[:bible_book] == 'nt'
+      books = BibleBook.get_old_testament if params[:bible_book] == 'ot'
+      books.each do |book|
+        params[:bible_book] = book.id
+        TranslationActivity.new(program: program).build(params)
+      end
+    else
+      TranslationActivity.new(program: program).build(params)
+    end
+  end
+
   def self.search(query)
     books = BibleBook.where("english_name LIKE ? OR french_name LIKE ?", "%#{query}%", "%#{query}%")
     results = []

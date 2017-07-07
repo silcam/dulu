@@ -1,7 +1,7 @@
 <%= render layout: 'programs/sidebar' do %>
   <h2><%= @translation_activity.name %></h2>
   <p>
-    <%= t :Current_stage %>
+    <%= t :Current_stage %>:
     <span id="current-stage">
       <%= t @translation_activity.current_stage.name %>
     </span>

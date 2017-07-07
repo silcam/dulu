@@ -10,6 +10,9 @@ fr:
   Delete: Supprimer
   Remove: Supprimer
   Manage: Gérer
+  Hint: Conseil
+  All: Tous
+  None: Aucun
   Bible: Bible
   Old_testament: Ancien Testament
   New_testament: Nouveau Testament
@@ -24,6 +27,9 @@ fr:
   Tomorrow: Demain
   In_a_few_days: Dans %{days} jours
   A_few_days_ago: Il y a %{days} jours
+  MM: MM
+  DD: JJ
+  YYYY: AAAA
   date:
     formats:
       month_day: "%e %b"
@@ -103,6 +109,12 @@ fr:
   #Activities Controller
   Activities: Activités
   Associated_activities: Activités associées
+  Bible_translation: Traduction de la Bible
+  Add_activity: Ajouter une activité
+  Activity_type: Type d'activité
+  Associate_people: "Associer %{activity} avec:"
+  new_activity: nouvelle activité
+  Multiple_stages_hint: "Si les livres sont à des differentes étapes, choisissez Prévue et fixez le date au commencement de la traduction. Puis, mettez à jour chaque livre sur le Tableau de bord."
 
   #Participants Controller
   Add_person_to_program: Ajouter une personne
@@ -122,12 +134,13 @@ fr:
   Consultant_check: Vérification du conseiller
   Consultant_checked: Vérifié par conseiller
   Published: Publié
-  Current_stage: 'Étape actuelle : '
+  Current_stage: 'Étape actuelle '
   Update_stage: Étape actuelle
   As_of: Depuis
   Stage: Étape
   Modify_Date: Modifier le date
   Delete_stage_confirmation: Confirmez que vous voulez supprimer cette étape de l'historique.
+  Translate: Traduire
 
   #Sessions Controller
   Log_out: Déconnexion

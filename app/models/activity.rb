@@ -36,6 +36,27 @@ class Activity < ApplicationRecord
     stages.order 'start_date ASC, id ASC'
   end
 
+  def build(params)
+    # Type specific implementation runs first
+    save!
+    stage_one = Stage.new(activity: self, stage_name_id: params[:stage_name_id], start_date: params[:stage_start_date])
+    if stage_one.valid?
+      stage_one.save
+    else
+      destroy
+      raise ActiveRecord::RecordInvalid.new(stage_one)
+    end
+    return if params[:participant_ids].nil?
+    params[:participant_ids].each do |participat_id|
+      participants << Participant.find(participant_id)
+    end
+  end
+
+  def self.types_for_select
+    [[I18n.t(:Bible_translation), 'TranslationActivity']
+    ]
+  end
+
   def self.search(query)
     TranslationActivity.search(query)
   end

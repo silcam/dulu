@@ -2,6 +2,13 @@ Rails.application.routes.draw do
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 
   root 'people#dashboard'
+  get     'search',                   to: 'searches#search'
+  get     'not_allowed',              to: 'people#not_allowed'
+  get     '/login',                   to: 'sessions#new'
+  delete  '/logout',                  to: 'sessions#destroy'
+  get     '/auth/:provider/callback', to: 'sessions#create'
+  get     '/auth/failure',            to: redirect('/')
+  get     '/dashboard',               to: 'people#dashboard'
 
   resources :people
   resources :organizations
@@ -12,6 +19,9 @@ Rails.application.routes.draw do
       resources :translation_activities do
         resources :stages
       end
+      resources :activities do
+        resources :stages
+      end
       resources :participants do
         member do
           get 'finish'
@@ -20,13 +30,4 @@ Rails.application.routes.draw do
       end
     end
   end
-
-  get     'search',                   to: 'searches#search'
-  get     'not_allowed',              to: 'people#not_allowed'
-  get     '/login',                   to: 'sessions#new'
-  delete  '/logout',                  to: 'sessions#destroy'
-  get     '/auth/:provider/callback', to: 'sessions#create'
-  get     '/auth/failure',            to: redirect('/')
-
-  get     '/dashboard',               to: 'people#dashboard'
 end

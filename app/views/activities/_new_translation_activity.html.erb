@@ -1,0 +1,15 @@
+<div class="form-group">
+  <%= label_tag :bible_book, t(:Translate) %>
+  <%= select_tag('activity[bible_book]', options_for_select(BibleBook.options_for_select(@program)),
+                 {class: 'form-control'}) %>
+</div>
+
+<div class="form-group">
+  <%= label_tag :stage_name, t(:Current_stage) %>
+  <%= select_tag( 'activity[stage_name_id]', options_from_collection_for_select(StageName.translation_stages,
+        :id, :translated_name), {class: 'form-control'}) %>
+  <p id="multiple-stages-hint">
+    <b><%= t :Conseil %>:</b>
+    <%= t :Multiple_stages_hint %>
+  </p>
+</div>

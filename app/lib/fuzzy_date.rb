@@ -20,7 +20,7 @@ class FuzzyDate
   end
 
   def self.from_string(datestring)
-    fd_raise 'FuzzyDate string must start with 4 digits' unless /^\d{4}/ === datestring
+    fd_raise 'Year must have 4 digits' unless /^\d{4}/ === datestring
 
     year = datestring[0,4]
     month = (/^\d{4}-\d{2}/ === datestring) ? datestring[5,2] : nil

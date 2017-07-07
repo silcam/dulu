@@ -4,7 +4,7 @@
       <h3><%= t :Activities %></h3>
       <% if can? :create_activity, @program %>
         <%= link_to t(:Add_books),
-                    new_program_translation_activity_path(@program) %>
+                    new_program_activity_path(@program) %>
       <% end %>
 
       <table class='table'>

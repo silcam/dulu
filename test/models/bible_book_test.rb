@@ -1,7 +1,9 @@
 require 'test_helper'
 
 class BibleBookTest < ActiveSupport::TestCase
-
+  def setup
+    I18n.locale = :en
+  end
   test 'Relations' do
     @hdi_ezra = translation_activities(:HdiEzraActivity)
     @ezra = bible_books(:Ezra)
@@ -10,10 +12,9 @@ class BibleBookTest < ActiveSupport::TestCase
 
   test 'Name' do
     @ezra = bible_books(:Ezra)
+    assert_equal 'Ezra', @ezra.name
     I18n.locale = :fr
     assert_equal 'Esdras', @ezra.name
-    I18n.locale = :en
-    assert_equal 'Ezra', @ezra.name
   end
 
   test 'testament getters' do
@@ -27,5 +28,12 @@ class BibleBookTest < ActiveSupport::TestCase
     ot = BibleBook.verses_in_old_testament
     bible = BibleBook.verses_in_bible
     assert_equal(bible, nt + ot, 'Verses in Bible should match sum of NT and OT')
+  end
+
+  test "Options for Select" do
+    options = BibleBook.options_for_select
+    assert_equal(['New Testament', 'nt'], options[0])
+    assert_equal('Genesis', options[2][0])
+    assert_equal(BibleBook.all.count + 2, options.count)
   end
 end

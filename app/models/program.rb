@@ -54,6 +54,10 @@ class Program < ApplicationRecord
     publications.where(kind: kind).order('year DESC')
   end
 
+  def is_translating?(book_id)
+    translation_activities.where(bible_book_id: book_id).count > 0
+  end
+
   def self.all_sorted_by_recency
     programs_with_activity = Program.joins(activities: :stages)
                                  .order('stages.start_date DESC')

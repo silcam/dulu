@@ -3,19 +3,6 @@ class StageName < ApplicationRecord
   has_many :stages
   has_and_belongs_to_many :program_roles
 
-  def self.first_translation_stage
-    return self.first_stage(:translation)
-  end
-
-  def self.first_stage(kind)
-    return StageName.find_by(level: 1, kind: kind)
-  end
-
-  def self.last_stage(kind)
-    return StageName.where(kind: kind).order(:level).last
-  end
-
-
   def next_stage
     stage = StageName.find_by(kind: self.kind, level: self.level + 1)
     stage ? stage : self
@@ -32,6 +19,22 @@ class StageName < ApplicationRecord
       else
         return generic_progress
     end
+  end
+
+  def self.first_stage(kind)
+    return StageName.find_by(level: 1, kind: kind)
+  end
+
+  def self.last_stage(kind)
+    return StageName.where(kind: kind).order(:level).last
+  end
+
+  def self.first_translation_stage
+    return self.first_stage(:translation)
+  end
+
+  def self.translation_stages
+    return self.where(kind: :translation).order(:level)
   end
 
   private

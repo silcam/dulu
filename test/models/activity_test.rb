@@ -25,6 +25,7 @@ class ActivityTest < ActiveSupport::TestCase
     # good = Activity.new(type: 'OtherActivity', program: programs(:HdiProgram))
     refute(no_program.save, 'Should not save activity with no program')
     refute(no_type.save, 'Should not save activity with no type')
+    assert_raises (Exception) {Activity.new(program: programs(:HdiProgram), type: 'FakeActivity')}
     # assert(good.save, 'Should save valid Activity')
   end
 
@@ -66,5 +67,15 @@ class ActivityTest < ActiveSupport::TestCase
   test 'try to destroy the last stage' do
     @hdi_ezra.stages.each { |s| s.destroy }
     assert_equal(1, @hdi_ezra.stages.count)
+  end
+
+  test "Types for select" do
+    types = Activity.types_for_select
+    assert_equal(1, types.count)
+    assert_equal('TranslationActivity',types[0][1])
+  end
+
+  test "Search" do
+    assert_not_empty Activity.search('Genesis')
   end
 end

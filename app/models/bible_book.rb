@@ -34,4 +34,17 @@ class BibleBook < ApplicationRecord
     BibleBook.where(usfm_number: (MATTHEW_USFM..REVELATION_USFM)).sum(:number_of_verses)
   end
 
+  def self.options_for_select(program)
+    books = BibleBook.all - BibleBook.joins(:translation_activities)
+                                      .where('activities.program_id=?', program.id)
+                                      .order(:usfm_number)
+    return [] if books.empty?
+    options = []
+    options << [I18n.t(:New_testament), 'nt'] unless books.last.usfm_number < MATTHEW_USFM
+    options << [I18n.t(:Old_testament), 'ot'] unless books.first.usfm_number > MALACHI_USFM
+    books.each do |book|
+      options << [book.name, book.id] unless program.is_translating?(book.id)
+    end
+    options
+  end
 end

@@ -15,4 +15,11 @@ class StageNameTest < ActiveSupport::TestCase
     assert_equal 'Planned', StageName.first_translation_stage.name
   end
 
+  test "Translation Stages" do
+    t_stages = StageName.translation_stages
+    planned = stage_names :Planned
+    published = stage_names :Published
+    assert_equal(planned, t_stages.first)
+    assert_equal(published, t_stages.last)
+  end
 end
