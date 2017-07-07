@@ -47,7 +47,7 @@ class Activity < ApplicationRecord
       raise ActiveRecord::RecordInvalid.new(stage_one)
     end
     return if params[:participant_ids].nil?
-    params[:participant_ids].each do |participat_id|
+    params[:participant_ids].each do |participant_id|
       participants << Participant.find(participant_id)
     end
   end
