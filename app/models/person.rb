@@ -7,7 +7,6 @@ class Person < ApplicationRecord
 
   validates :last_name, presence: true, allow_blank: false
   validates :first_name, presence: true, allow_blank: false
-  # validates :fmid, uniqueness: true, allow_blank: true
   validates :gender, inclusion: { in: %w(M F)}
 
   def full_name

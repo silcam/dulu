@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170705153657) do
+ActiveRecord::Schema.define(version: 20170710131731) do
 
   create_table "activities", force: :cascade do |t|
     t.integer  "program_id"
@@ -70,7 +70,6 @@ ActiveRecord::Schema.define(version: 20170705153657) do
 
   create_table "languages", force: :cascade do |t|
     t.string   "name"
-    t.integer  "fmid"
     t.string   "category"
     t.string   "code"
     t.integer  "language_status_id"
@@ -93,7 +92,6 @@ ActiveRecord::Schema.define(version: 20170705153657) do
     t.string   "abbreviation"
     t.datetime "created_at",   null: false
     t.datetime "updated_at",   null: false
-    t.integer  "fmid"
     t.text     "description"
   end
 
@@ -113,13 +111,11 @@ ActiveRecord::Schema.define(version: 20170705153657) do
   create_table "people", force: :cascade do |t|
     t.string   "last_name"
     t.string   "first_name"
-    t.datetime "created_at",                                 null: false
-    t.datetime "updated_at",                                 null: false
+    t.datetime "created_at",                             null: false
+    t.datetime "updated_at",                             null: false
     t.string   "email"
-    t.boolean  "has_login",                  default: false
     t.string   "password"
     t.integer  "organization_id"
-    t.integer  "fmid"
     t.date     "birth_date"
     t.string   "gender",           limit: 1
     t.text     "cv_text"
@@ -148,8 +144,6 @@ ActiveRecord::Schema.define(version: 20170705153657) do
     t.integer  "language_id"
     t.datetime "created_at",  null: false
     t.datetime "updated_at",  null: false
-    t.date     "start_date"
-    t.date     "finish_date"
     t.index ["language_id"], name: "index_programs_on_language_id"
   end
 

@@ -11,7 +11,7 @@ class OrganizationTest < ActiveSupport::TestCase
   end
 
   test 'Validations' do
-    fake_sil = Organization.new(abbreviation: 'SIL', fmid: 42)
+    fake_sil = Organization.new(abbreviation: 'SIL')
     refute fake_sil.save, "Shouldn't save Organization with blank name"
     fake_sil.name = 'SIL'
     refute fake_sil.save, "Shouldn't save Organization with non-unique name"
