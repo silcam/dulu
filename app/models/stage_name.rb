@@ -14,7 +14,7 @@ class StageName < ApplicationRecord
 
   def progress
     case kind
-      when :translation
+      when 'translation'
         return translation_progress
       else
         return generic_progress
@@ -42,23 +42,25 @@ class StageName < ApplicationRecord
   def translation_progress
     case self.level
     when 1, 2
-      return 0
+      return 0, :blue
     when 3
-      return 20
+      return 20, :blue
     when 4
-      return 40
+      return 40, :blue
     when 5
-      return 60
-    when 6, 7
-      return 75
+      return 60, :blue
+    when 6
+      return 75, :yellow
+    when 7
+      return 75, :blue
     when 8
-      return 95
+      return 95, :yellow
     end
-    return 100
+    return 100, :green
   end
 
   def generic_progress
-    return (100 * level) / StageName.last_stage(kind).level
+    return (100 * level) / StageName.last_stage(kind).level, :blue
   end
 
 end
