@@ -4,7 +4,13 @@ class Participant < ApplicationRecord
   belongs_to :program_role
   has_and_belongs_to_many :activities
 
-  validates :start_date, presence: true, allow_blank: false
+  validates_each :start_date do |stage, attr, start_date|
+    begin
+      FuzzyDate.from_string start_date
+    rescue FuzzyDateException => e
+      stage.errors.add(attr, "Invalid Date: #{e.message}")
+    end
+  end
 
   def associate_activities(activity_ids)
     activity_ids ||= []
