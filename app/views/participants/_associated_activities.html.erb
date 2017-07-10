@@ -1,7 +1,12 @@
 <% associated_activities = [] unless associated_activities %>
 
 <h4><%= t :Associated_activities %></h4>
-<table>
+<div class="form-group">
+  <ul class="list-inline">
+    <li><a href="#" data-check-all><%= t :All %></a></li>
+    <li><a href="#" data-check-none><%= t :None %></a></li>
+  </ul>
+
   <% @program.translation_activities.each do |activity| %>
       <label>
         <%= check_box_tag 'assoc_activities[]', activity.id,
@@ -10,4 +15,4 @@
       </label>
       <br>
   <% end %>
-</table>
+</div>
