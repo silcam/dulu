@@ -3,6 +3,7 @@ require 'test_helper'
 class PersonTest < ActiveSupport::TestCase
   def setup
     @drew = people :Drew
+    I18n.locale = :en
   end
 
   test 'Relations' do
