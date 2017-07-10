@@ -9,7 +9,7 @@
   <%= select_tag( 'activity[stage_name_id]', options_from_collection_for_select(StageName.translation_stages,
         :id, :translated_name), {class: 'form-control'}) %>
   <p id="multiple-stages-hint">
-    <b><%= t :Conseil %>:</b>
+    <b><%= t :Hint %>:</b>
     <%= t :Multiple_stages_hint %>
   </p>
 </div>
