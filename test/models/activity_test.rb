@@ -64,6 +64,8 @@ class ActivityTest < ActiveSupport::TestCase
     assert_equal(stages(:HdiTwo), stages_desc.first)
   end
 
+  # See Build test in TranslationActivityTest
+
   test 'try to destroy the last stage' do
     @hdi_ezra.stages.each { |s| s.destroy }
     assert_equal(1, @hdi_ezra.stages.count)

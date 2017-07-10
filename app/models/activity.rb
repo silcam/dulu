@@ -9,6 +9,7 @@ class Activity < ApplicationRecord
   validates :type, presence: true
 
   def current_stage
+    # TODO - sort by start_date, then created_at
     self.stages.last
   end
 

@@ -66,6 +66,13 @@ class ProgramTest < ActiveSupport::TestCase
     assert_includes ewondo_program.sorted_pubs('Bible'), ewondo_nt
   end
 
+  test "Is translating" do
+    ezra = bible_books :Ezra
+    john = bible_books :John
+    assert @hdi_program.is_translating?(ezra.id), "Hdi are translating Ezra"
+    refute @hdi_program.is_translating?(john.id), "Hdi are not translating John"
+  end
+
   test 'Sorted Programs' do
     no_activity = programs :NoActivityProgram
     really_old = programs :ReallyOldProgram

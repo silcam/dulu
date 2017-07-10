@@ -35,9 +35,8 @@ class BibleBook < ApplicationRecord
   end
 
   def self.options_for_select(program)
-    books = BibleBook.all - BibleBook.joins(:translation_activities)
-                                      .where('activities.program_id=?', program.id)
-                                      .order(:usfm_number)
+    books = BibleBook.all.order(:usfm_number) - BibleBook.joins(:translation_activities)
+                                                .where('activities.program_id=?', program.id)
     return [] if books.empty?
     options = []
     options << [I18n.t(:New_testament), 'nt'] unless books.last.usfm_number < MATTHEW_USFM

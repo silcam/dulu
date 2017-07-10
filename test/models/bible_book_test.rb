@@ -30,10 +30,20 @@ class BibleBookTest < ActiveSupport::TestCase
     assert_equal(bible, nt + ot, 'Verses in Bible should match sum of NT and OT')
   end
 
-  test "Options for Select" do
-    options = BibleBook.options_for_select
+  test "Options for Select All" do
+    options = BibleBook.options_for_select(programs :EwondoProgram)
     assert_equal(['New Testament', 'nt'], options[0])
     assert_equal('Genesis', options[2][0])
     assert_equal(BibleBook.all.count + 2, options.count)
+  end
+
+  test "Options for Select Limited" do
+    options = BibleBook.options_for_select(programs :HdiProgram)
+    genesis = bible_books :Genesis
+    john = bible_books :John
+    refute_includes options, ['Old Testament', 'ot']
+    assert_includes options, ['New Testament', 'nt']
+    refute_includes options, ['Genesis', genesis.id]
+    assert_includes options, ['John', john.id]
   end
 end
