@@ -10,7 +10,7 @@ class ProgramPermissionTest < Capybara::Rails::TestCase
   test "Kevin can't create activity" do
     log_in @kevin
     visit program_path @hdi_program
-    add_activity_path = new_program_translation_activity_path(@hdi_program)
+    add_activity_path = new_program_activity_path(@hdi_program)
     refute page.has_css?("a[href='#{add_activity_path}']"),
            "Kevin shouldn't see Add Activity link"
     visit add_activity_path
