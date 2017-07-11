@@ -29,7 +29,7 @@ class PeopleController < ApplicationController
     @person = Person.find(params[:id])
     authorize! :update, @person
     if @person.update(person_params)
-      redirect_to people_path
+      follow_redirect people_path
     else
       render 'edit'
     end
