@@ -27,11 +27,6 @@ class StageTest < ActiveSupport::TestCase
     end
   end
 
-  test 'Default new params' do
-    params = {stage_name: stage_names(:Planned), start_date: Date.today}
-    assert_equal params, Stage.default_new_params('translation')
-  end
-
   test 'New For Activity' do
     consultant_check = stage_names :ConsultantCheck
     new_stage = Stage.new_for @hdi_ezra

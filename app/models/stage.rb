@@ -12,11 +12,6 @@ class Stage < ApplicationRecord
       stage.errors.add(attr, "Invalid Date: #{e.message}")
     end
   end
-  
-  def self.default_new_params(kind)
-    {stage_name: StageName.first_stage(kind),
-      start_date: Date.today}
-  end
 
   def self.new_for activity
     existing = activity.current_stage
