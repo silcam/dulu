@@ -27,7 +27,8 @@ class PersonIntTest < Capybara::Rails::TestCase
     check_william
 
     visit people_path
-    find(:css, "a[href='#{edit_person_path(@william)}']").click
+    click_link_to person_path(@william)
+    click_link 'Edit Person'
     select 'Site Administrator', from: 'person_role'
     click_button 'Save'
     @william.reload

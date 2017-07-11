@@ -61,6 +61,7 @@ class Person < ApplicationRecord
         description: I18n.t(participant.program_role.name)}
       end
       results << {title: person.full_name,
+                  path: Rails.application.routes.url_helpers.person_path(person),
                   description: person.organization.name,
                   subresults: subresults}
     end

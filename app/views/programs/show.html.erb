@@ -31,7 +31,8 @@
       <table class="table">
         <% @program.current_participants.each do |relation| %>
           <tr>
-            <td><%= relation.person.full_name %></td>
+            <td><%= link_to relation.person.full_name,
+                        person_path(relation.person) %></td>
             <td><%= t(relation.program_role.name) %></td>
           </tr>
         <% end %>

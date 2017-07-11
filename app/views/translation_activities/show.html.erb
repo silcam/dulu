@@ -31,7 +31,8 @@
       <table class="table" >
         <% @translation_activity.current_participants.each do |participant| %>
           <tr>
-            <td><%= participant.person.full_name %></td>
+            <td><%= link_to participant.person.full_name,
+                            person_path(participant.person) %></td>
             <td><%= t(participant.program_role.name) %></td>
           </tr>
         <% end %>

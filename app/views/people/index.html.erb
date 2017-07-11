@@ -7,19 +7,12 @@
     <th><%= t :Name %></th>
     <th><%= t :Organization %></th>
     <th><%= t :Email %></th>
-    <% if can? :update, Person %>
-      <th></th>
-    <% end %>
   </tr>
   <% @people.each do |person| %>
     <tr>
-      <td><%= person.last_name %>, <%= person.first_name %></td>
+      <td><%= link_to person.full_name_rev, person_path(person) %></td>
       <td><%= person.organization.name if person.organization %></td>
       <td><%= person.email %></td>
-      <% if can? :update, Person %>
-        <td><%= link_to t(:Edit), edit_person_path(person),
-                class: "btn btn-default btn-xs" %></td>
-      <% end %>
     </tr>
   <% end %>
 </table>
