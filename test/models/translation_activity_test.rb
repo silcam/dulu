@@ -10,6 +10,18 @@ class TranslationActivityTest < ActiveSupport::TestCase
     assert_equal 'Ezra', @hdi_ezra.name
   end
 
+  test "Next" do
+    hdi_genesis = translation_activities :HdiGenesisActivity
+    assert_equal @hdi_ezra, hdi_genesis.next
+    assert_nil @hdi_ezra.next, "Next should return nil if there is no Next"
+  end
+
+  test "Prev" do
+    hdi_genesis = translation_activities :HdiGenesisActivity
+    assert_equal hdi_genesis, @hdi_ezra.prev
+    assert_nil hdi_genesis.prev, "Prev should return nil if there is no Prev"
+  end
+
   test "Valid Build" do
     john = bible_books :John
     hdi_program = programs :HdiProgram

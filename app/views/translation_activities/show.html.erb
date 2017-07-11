@@ -1,5 +1,17 @@
 <%= render layout: 'programs/sidebar' do %>
   <h2><%= @translation_activity.name %></h2>
+
+  <ul class="list-inline">
+    <% prev_book = @translation_activity.prev %>
+    <% next_book = @translation_activity.next %>
+    <li>
+      <%= link_to "<#{prev_book.name}", translation_activity_path(prev_book) unless prev_book.nil? %>
+    </li>
+    <li>
+      <%= link_to "#{next_book.name}>", translation_activity_path(next_book) unless next_book.nil? %>
+    </li>
+  </ul>
+
   <p>
     <%= t :Current_stage %>:
     <span id="current-stage">

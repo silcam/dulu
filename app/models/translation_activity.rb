@@ -7,6 +7,18 @@ class TranslationActivity < Activity
     self.bible_book.name
   end
 
+  def next
+    list = self.program.sorted_translation_activities
+    index = list.index(self)
+    return list[index + 1] # This returns nil when we go off the back
+  end
+
+  def prev
+    list = self.program.sorted_translation_activities
+    index = list.index(self)
+    return index==0 ? nil : list[index - 1]
+  end
+
   def build(params)
     return if program.is_translating? params[:bible_book]
     self.bible_book_id = params[:bible_book]
