@@ -1,0 +1,23 @@
+<h2><%= @person.full_name %></h2>
+<h4><%= @person.organization.name %></h4>
+
+<table class="table">
+  <% @person.participants.each do |participant| %>
+    <tr>
+      <td>
+        <%= link_to participant.program.name, dashboard_program_path(participant.program) %>
+         - <%= t(participant.program_role.name) %>
+      </td>
+    </tr>
+<!--
+    <% participant.activities.each do |activity| %>
+      <tr>
+        <td style="padding-left: 40px">
+          <%= link_to activity.name, activity_path(activity) %>
+          - <%= t(activity.stage_name) %>
+        </td>
+      </tr>
+    <% end %>
+-->
+  <% end %>
+</table>

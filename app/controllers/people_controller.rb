@@ -1,7 +1,11 @@
 class PeopleController < ApplicationController
-  
+  before_action :set_person, only: [:show, :edit, :update]
+
   def index
     @people = Person.all.order(:last_name, :first_name).includes(:organization)
+  end
+
+  def show
   end
 
   # noinspection RubyArgCount
@@ -11,7 +15,6 @@ class PeopleController < ApplicationController
   end
 
   def edit
-    @person = Person.find(params[:id])
     authorize! :update, @person
   end
 
@@ -26,7 +29,6 @@ class PeopleController < ApplicationController
   end
 
   def update
-    @person = Person.find(params[:id])
     authorize! :update, @person
     if @person.update(person_params)
       follow_redirect people_path
@@ -50,6 +52,10 @@ private
     params.require(:person).permit(:first_name, :last_name ,:email, :birth_date,
                                   :organization_id, :gender, :country_id,
                                   :role, :ui_language)
+  end
+
+  def set_person
+    @person = Person.find params[:id]
   end
 
   def logged_in_user
