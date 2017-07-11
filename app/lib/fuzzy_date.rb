@@ -160,6 +160,10 @@ class FuzzyDate
     end
   end
 
+  def fd_raise(msg)
+    FuzzyDate.fd_raise(msg)
+  end
+
   def self.fd_raise(msg)
     raise FuzzyDateException.new(msg)
   end
@@ -167,17 +171,4 @@ end
 
 class FuzzyDateException < Exception
 
-end
-
-class FuzzyDateValidator < ActiveModel::EachValidator
-  def validate_each(record, attribute, value)
-    begin
-      fdate = FuzzyDate.from_string value
-      unless value == fdate.to_s
-        stage.errors.add(attribute, "Invalid Date")
-      end
-    rescue FuzzyDateException => e
-      stage.errors.add(attribute, "Invalid Date")
-    end
-  end
 end

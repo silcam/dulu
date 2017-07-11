@@ -30,7 +30,7 @@ class NewTranslationActivityTest < Capybara::Rails::TestCase
   test "Invalid Add" do
     click_button 'Save'
     assert_current_path program_activities_path(@hdi_program)
-    assert find('#error-explanation').has_content?('Date'),
+    assert find('#error-explanation').has_content?('date'),
                     "Should see an error concerning the date"
   end
 end

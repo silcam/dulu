@@ -203,18 +203,4 @@ class FuzzyDateTest < ActiveSupport::TestCase
     fdate = FuzzyDate.new(2017)
     assert_raises(Exception, "Shouldn't set day without month"){ fdate.day = 1 }
   end
-
-  test 'FuzzyDate Validator' do
-    new_stage = Stage.new(activity: @hdi_ezra, stage_name: consultant_check)
-    invalids = [' ', 'abc', '7/1/99', '199-12-31', '-12-31',
-                ' -12-31', '2017-13', '2017-02-29', '2017-1-1']
-    invalids.each do |date|
-      refute FuzzyDateMockModel.new(date: date).valid?,
-                  "Should not validate with invalid dates"
-    end
-  end
-end
-
-class FuzzyDateMockModel < ApplicationRecord
-  validates :date, fuzzy_date: true
 end
