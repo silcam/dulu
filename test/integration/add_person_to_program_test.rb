@@ -16,12 +16,10 @@ class AddPersonToProgram < Capybara::Rails::TestCase
 
   def add_drew
     visit program_path @zulgo_program
-    click_link 'Add Person'
+    click_link 'Add a person'
     select 'Maust, Drew', from: 'participant_person_id'
     select 'Translation Consultant', from: 'participant_program_role_id'
-    fill_in 'participant_start_date_y', with: '2016'
-    fill_in 'participant_start_date_m', with: '7'
-    fill_in 'participant_start_date_d', with: '31'
+    fill_in_date('participant_start_date', FuzzyDate.new(2016, 7, 31))
     check 'Ezra'
     click_button 'Save'
 
@@ -42,7 +40,7 @@ class AddPersonToProgram < Capybara::Rails::TestCase
     click_link_to program_participants_path(@zulgo_program)
     click_link_to edit_participant_path(@drew_zulgo)
     select 'Translator', from: 'participant_program_role_id'
-    fill_in 'participant_start_date_m', with: '8'
+    select 'Aug', from: 'participant_start_date_m'
     uncheck 'Ezra'
     click_button 'Save'
 
@@ -57,9 +55,7 @@ class AddPersonToProgram < Capybara::Rails::TestCase
     visit program_path @zulgo_program
     click_link_to program_participants_path(@zulgo_program)
     click_link_to finish_participant_path(@drew_zulgo)
-    fill_in 'participant_end_date_y', with: '2017'
-    fill_in 'participant_end_date_m', with: '7'
-    fill_in 'participant_end_date_d', with: '31'
+    fill_in_date('participant_end_date', FuzzyDate.new(2017, 7, 31))
     click_button 'Save'
 
     @drew_zulgo.reload

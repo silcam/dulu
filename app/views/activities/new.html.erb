@@ -15,8 +15,7 @@
 
       <div class="form-group">
         <%= label_tag :stage_start_date, t(:As_of) %><br>
-        <%= render 'layouts/fuzzy_date_field',
-                   form: form, prefix: 'stage_start_date'  %>
+        <%= render 'shared/fuzzy_date_field', model: 'activity', field: 'stage_start_date'  %>
       </div>
 
       <% unless @program.participants.empty? %>

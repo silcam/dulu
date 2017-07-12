@@ -9,15 +9,15 @@
 
         <p>
           <%= form.label :start_date, t(:Start_date) %>
-          <%= render 'layouts/fuzzy_date_field', form: form,
-                     prefix: :start_date, fdate: @participant.f_start_date %>
+          <%= render 'shared/fuzzy_date_field', model: 'participant',
+                     field: 'start_date', fdate: @participant.f_start_date %>
         </p>
 
         <% unless @participant.f_end_date.nil? %>
             <p>
               <%= form.label :end_date, t(:End_date) %>
-              <%= render 'layouts/fuzzy_date_field', form: form,
-                    prefix: :end_date, fdate: @participant.f_end_date %>
+              <%= render 'shared/fuzzy_date_field', model: 'participant',
+                    field: 'end_date', fdate: @participant.f_end_date %>
             </p>
         <% end %>
 

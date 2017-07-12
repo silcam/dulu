@@ -207,7 +207,7 @@ a.h4 {
 
 .field_with_errors {
   @extend .has-error;
-  .form_control {
+  .form-control {
     color: $state-danger-text;
   }
 }

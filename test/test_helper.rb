@@ -41,9 +41,11 @@ class ActiveSupport::TestCase
   end
 
   def fill_in_date(prefix, date)
-    fill_in "#{prefix}_date_y", with: date.year
-    fill_in "#{prefix}_date_m", with: date.month
-    fill_in "#{prefix}_date_d", with: date.day
+    fill_in "#{prefix}_y", with: date.year
+    sel_month = date.month.nil? ? I18n.t(:Month) : I18n.t('date.abbr_month_names')[date.month]
+    sel_day = date.day.nil? ? I18n.t(:Day) : date.day
+    select sel_month, from: "#{prefix}_m"
+    select sel_day, from: "#{prefix}_d"
   end
 end
 

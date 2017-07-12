@@ -30,6 +30,9 @@ en:
   MM: MM
   DD: DD
   YYYY: YYYY
+  Month: Month
+  Day: Day
+  Year: Year
   date:
     formats:
       month_day: "%b %e"

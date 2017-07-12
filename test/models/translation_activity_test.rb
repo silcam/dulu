@@ -3,6 +3,7 @@ require 'test_helper'
 class TranslationActivityTest < ActiveSupport::TestCase
   def setup
     @hdi_ezra = translation_activities :HdiEzraActivity
+    I18n.locale = :en
   end
 
   test "Name" do
