@@ -1,8 +1,9 @@
 <!-- required input: model, field -->
-<!-- optional input: fdate, not_required -->
+<!-- optional input: fdate, not_required, horizontal_form -->
 <%
   fdate ||= nil
   not_required ||= false
+  horizontal_form ||= false
   fields = {}
   months = t('date.abbr_month_names')
   months_options = months[1..12].map{|name| [name, months.index(name)]}
@@ -38,6 +39,7 @@
   <span class="fd-year">
     <%= fields[:year] %>
   </span>
+  <% if horizontal_form %><br><% end %>
   <%= t :Fdate_omit %>
   <div class="fuzzy-error has-error">
     <div class="fuzzy-error-year help-block" style="display: none;">

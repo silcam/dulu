@@ -4,21 +4,27 @@
   <%= form_for(@stage,
                url: translation_activity_stages_path(@translation_activity),
                remote: true) do |f| %>
-    <div class="col-md-6">
+    <div class="col-md-3">
       <p>
         <%= f.label :stage_name, t(:Update_stage) %>
         <%= f.collection_select(:stage_name_id, StageName.all.order(:id),
               :id, :translated_name, {}, class: 'form-control') %>
       </p>
     </div>
-    <div class="col-md-4">
+    <div class="col-md-5">
       <p>
         <%= f.label :start_date, t(:As_of), style: "display: block;" %>
-        <%= render 'shared/fuzzy_date_field', model: 'stage', field: 'start_date' %>
+        <%= render 'shared/fuzzy_date_field',
+                   model: 'stage', field: 'start_date',
+                   horizontal_form: true %>
       </p>
     </div>
     <div class="col-md-2 submit-form">
       <label>&nbsp;</label><br /> <!-- Can somebody PLEASE tell me a better way to get the submit button to line up with the controls? -->
       <%= f.submit t(:Save), class: 'btn btn-default' %>
+    </div>
+    <div class="col-md-2">
+     <label>&nbsp;</label><br /> <!-- Can somebody PLEASE tell me a better way to get the submit button to line up with the controls? -->
+     <%= button_tag t(:Cancel), class: 'btn btn-default', data: {'form-cancel-id'=>activity.id} %>
     </div>
   <% end %>

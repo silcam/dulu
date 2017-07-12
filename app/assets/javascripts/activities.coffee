@@ -9,3 +9,7 @@ $(document).ready ->
       $('p#multiple-stages-hint').show()
     else
       $('p#multiple-stages-hint').hide()
+
+  $('input[data-new-activity-submit]').click (e) ->
+    unless window.validate_fuzzy_date_form($(this.closest('form')))
+      e.preventDefault()

@@ -22,7 +22,7 @@
     <%= render 'associated_activities' %>
 
     <p>
-      <%= form.submit t(:Save) %>
+      <%= form.submit t(:Save), data: {'participant_submit' => 1} %>
     </p>
   <% end %>
 
