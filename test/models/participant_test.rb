@@ -24,6 +24,17 @@ class ParticipantTest < ActiveSupport::TestCase
     model_validation_hack_test(Participant, params)
   end
 
+  test 'End Date Validation' do
+    rick = people :Rick
+    role = program_roles :Translator
+    participant = Participant.new(person: rick, program: @hdi_program,
+                    program_role: role, start_date: '2017',
+                                  end_date: 'abc')
+    refute participant.save, "Should not save with invalid end date"
+    participant.end_date = '2017'
+    assert participant.save, "Should save with valid end date"
+  end
+
   test 'Disassociate All Activities' do
     assert_not_empty @drew_hdi.activities
     @drew_hdi.associate_activities nil

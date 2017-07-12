@@ -35,7 +35,8 @@ class ActivityTest < ActiveSupport::TestCase
   end
 
   test 'progress' do
-    assert (0..100) === @hdi_ezra.progress, "Progress should be between 0 and 100"
+    percent, color = @hdi_ezra.progress
+    assert (0..100) === percent, "Progress should be between 0 and 100"
   end
 
   test 'stage_name' do

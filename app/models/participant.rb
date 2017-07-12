@@ -4,6 +4,7 @@ class Participant < ApplicationRecord
   belongs_to :program_role
   has_and_belongs_to_many :activities
 
+  validates :start_date, :end_date, fuzzy_date: true
   validates :start_date, presence: true, allow_blank: false
 
   def associate_activities(activity_ids)

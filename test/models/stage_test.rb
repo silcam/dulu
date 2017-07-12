@@ -21,7 +21,9 @@ class StageTest < ActiveSupport::TestCase
     model_validation_hack_test Stage, params
 
     new_stage = Stage.new(activity: @hdi_ezra, stage_name: consultant_check)
-    [' ', 'abc', '7/1/99', '199-12-31', '-12-31', ' -12-31'].each do |start_date|
+    invalids = [' ', 'abc', '7/1/99', '199-12-31', '-12-31', ' -12-31',
+                ' -12-31', '2017-13', '2017-02-29', '2017-1-1']
+    invalids.each do |start_date|
       new_stage.start_date = start_date
       refute new_stage.save, "Should not save stage with start date: #{start_date}"
     end
@@ -43,7 +45,8 @@ class StageTest < ActiveSupport::TestCase
   end
 
   test 'Progress' do
-    assert (0..100) === @hdi_drafting.progress, "Progress should be between 0 and 100"
+    percent, color = @hdi_drafting.progress
+    assert (0..100) === percent, "Progress should be between 0 and 100"
   end
 
   test 'Name' do

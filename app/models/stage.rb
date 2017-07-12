@@ -4,14 +4,9 @@ class Stage < ApplicationRecord
   belongs_to :stage_name
   has_many :program_roles, through: :stage_name
 
-  # validates :start_date, presence: true, allow_blank: false
-  validates_each :start_date do |stage, attr, start_date|
-    begin
-      FuzzyDate.from_string start_date
-    rescue FuzzyDateException => e
-      stage.errors.add(attr, "Invalid Date: #{e.message}")
-    end
-  end
+  #TODO Localize error message
+  validates :start_date, presence: {message: "year can't be blank"}, allow_blank: false
+  validates :start_date, fuzzy_date: true
 
   def self.new_for activity
     existing = activity.current_stage
