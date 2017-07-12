@@ -19,7 +19,6 @@ en:
   'Yes': Yes
   'No': No
   History: History
-  Fdate_omit: (Day and month are optional)
 
   #Dates
   Today: Today
@@ -33,6 +32,9 @@ en:
   Month: Month
   Day: Day
   Year: Year
+  Year_error: Please enter a valid year
+  Date_error: Please choose a date that falls in the selected month
+  Fdate_omit: (Day and month are optional)
   date:
     formats:
       month_day: "%b %e"

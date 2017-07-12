@@ -11,3 +11,4 @@ $(document).ready ->
     $(this).closest('div.form-group')
             .find("input[type='checkbox']")
             .prop('checked', false)
+

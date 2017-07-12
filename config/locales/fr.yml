@@ -19,7 +19,6 @@ fr:
   'Yes': Oui
   'No': Non
   History: Historique
-  Fdate_omit: (Jour et mois sont optionnels)
 
   #Dates
   Today: Aujourd'hui
@@ -33,6 +32,9 @@ fr:
   Month: Mois
   Day: Jour
   Year: An
+  Year_error: "Saisez un an valide s'il vous plait"
+  Date_error: "Choisissez une date qui est valide pour le mois sélectionné s'il vous plait"
+  Fdate_omit: (Jour et mois sont optionnels)
   date:
     formats:
       month_day: "%e %b"

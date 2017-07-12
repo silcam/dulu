@@ -1,37 +1,50 @@
 <!-- required input: model, field -->
-<!-- optional input: fdate -->
+<!-- optional input: fdate, not_required -->
 <%
   fdate ||= nil
+  not_required ||= false
   fields = {}
   months = t('date.abbr_month_names')
   months_options = months[1..12].map{|name| [name, months.index(name)]}
   days_options = (1..31).to_a
+  div_id = "#{model}-#{field}"
   fields[:year] = text_field_tag("#{model}[#{field}_y]",
                                  fdate.try(:year),
-                                 {size: 4, maxlength: 4, class: 'fuzzy-field form-control', placeholder: t(:Year)})
+                                 {size: 4, maxlength: 4, class: 'fuzzy-year fuzzy-field form-control', placeholder: t(:Year)})
   fields[:month] = select_tag("#{model}[#{field}_m]",
                               options_for_select(months_options, fdate.try(:month)),
-                              {include_blank: t(:Month), class: 'fuzzy-field form-control'})
+                              {include_blank: t(:Month), class: 'fuzzy-month fuzzy-field form-control'})
   fields[:day] = select_tag("#{model}[#{field}_d]",
                             options_for_select(days_options, fdate.try(:day)),
-                            {include_blank: t(:Day), class: 'fuzzy-field form-control'})
+                            {include_blank: t(:Day), class: 'fuzzy-day fuzzy-field form-control'})
 %>
-<% if [:en].include?(I18n.locale) %>
-  <span class="fd-month">
-    <%= fields[:month] %>
+<div id="<%= div_id %>" class="fuzzy-div" 
+  data-required-date="<%= not_required ? 'false' : 'true' %>">
+  <% if [:en].include?(I18n.locale) %>
+    <span class="fd-month">
+      <%= fields[:month] %>
+    </span>
+    <span class="fd-day">
+      <%= fields[:day] %>
+    </span>
+  <% else %>
+    <span class="fd-day">
+      <%= fields[:day] %>
+    </span>
+    <span class="fd-month">
+      <%= fields[:month] %>
+    </span>
+  <% end %>
+  <span class="fd-year">
+    <%= fields[:year] %>
   </span>
-  <span class="fd-day">
-    <%= fields[:day] %>
-  </span>
-<% else %>
-  <span class="fd-day">
-    <%= fields[:day] %>
-  </span>
-  <span class="fd-month">
-    <%= fields[:month] %>
-  </span>
-<% end %>
-<span class="fd-year">
-  <%= fields[:year] %>
-</span>
-<%= t :Fdate_omit %>
+  <%= t :Fdate_omit %>
+  <div class="fuzzy-error has-error">
+    <div class="fuzzy-error-year help-block" style="display: none;">
+      <%= t(:Year_error) %>
+    </div>
+    <div class="fuzzy-error-day help-block" style="display: none;">
+      <%= t(:Date_error) %>
+    </div>
+  </div>
+</div>
