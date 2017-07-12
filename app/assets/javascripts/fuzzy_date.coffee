@@ -12,7 +12,7 @@ valid_year = (year) ->
   return true
     
 $(document).ready ->    
-  $("input.fuzzy-field").change ->
+  $("input.fuzzy-field").blur ->
     # This for changes to year in text box
     top_div = $(this).closest('div.fuzzy-div')
     required = top_div.data('required-date')
@@ -42,8 +42,10 @@ $(document).ready ->
       month = $(this).find('.fuzzy-month').val()
       day = $(this).find('.fuzzy-day').val()
       unless valid_year(year)
+        $(this).find('span.fd-year').prop('class', 'fd-year has-error')
         $(this).find('div.fuzzy-error-year').show()
         e.preventDefault()
       unless day=='' or valid_day(year, month, day)
+        $(this).find('span.fd-day').prop('class', 'fd-day has-error')
         $(this).find('div.fuzzy-error-day').show()
         e.preventDefault()
