@@ -1,30 +1,28 @@
 <%= render layout: 'programs/sidebar' do %>
-    <h3><%= @participant.person.full_name %></h3>
+  <h2><%= @participant.person.full_name %></h2>
 
-    <%= form_for @participant do |form| %>
-        <p>
-          <%= form.label :program_role_id, t(:Role) %>
-          <%= form.collection_select :program_role_id, ProgramRole.all, :id, :t_name %>
-        </p>
+  <%= form_for @participant, html: {class: 'auto-width'} do |form| %>
+    <div class="form-group">
+      <%= form.label :program_role_id, t(:Role) %>
+      <%= form.collection_select :program_role_id, ProgramRole.all, :id, :t_name, {}, {class: 'form-control'} %>
+    </div>
 
-        <p>
-          <%= form.label :start_date, t(:Start_date) %>
-          <%= render 'shared/fuzzy_date_field', model: 'participant',
-                     field: 'start_date', fdate: @participant.f_start_date %>
-        </p>
+    <div class="form-group">
+      <%= form.label :start_date, t(:Start_date) %>
+      <%= render 'shared/fuzzy_date_field', model: 'participant',
+                 field: 'start_date', fdate: @participant.f_start_date %>
+    </div>
 
-        <% unless @participant.f_end_date.nil? %>
-            <p>
-              <%= form.label :end_date, t(:End_date) %>
-              <%= render 'shared/fuzzy_date_field', model: 'participant',
-                    field: 'end_date', fdate: @participant.f_end_date %>
-            </p>
-        <% end %>
-
-        <%= render 'associated_activities', associated_activities: @participant.activities %>
-
-        <p>
-          <%= form.submit t(:Save), data: {'participant_submit' => 1} %>
-        </p>
+    <% unless @participant.f_end_date.nil? %>
+      <div class="form-group">
+        <%= form.label :end_date, t(:End_date) %>
+        <%= render 'shared/fuzzy_date_field', model: 'participant',
+              field: 'end_date', fdate: @participant.f_end_date %>
+      </div>
     <% end %>
+
+    <%= render 'associated_activities', associated_activities: @participant.activities %>
+
+    <%= form.submit t(:Save), class: 'btn btn-primary btn-lg', data: {'participant_submit' => 1} %>
+  <% end %>
 <% end %>
