@@ -1,17 +1,15 @@
 <%= render 'shared/error_messages', errors: @organization.errors %>
 
-<%= form_for @organization do |f| %>
-  <p>
+<%= form_for @organization, html: {class: 'auto-width'} do |f| %>
+  <div class="form-group">
     <%= f.label :name, t(:Name) %>
-    <%= f.text_field :name %>
-  </p>
+    <%= f.text_field :name, class: 'form-control' %>
+  </div>
 
-  <p>
+  <div class="form-group">
     <%= f.label :abbreviation, t(:Abbreviation) %>
-    <%= f.text_field :abbreviation %>
-  </p>
+    <%= f.text_field :abbreviation, class: 'form-control' %>
+  </div>
 
-  <p>
-    <%= f.submit %>
-  </p>
+  <%= f.submit :Save, class: 'btn btn-primary btn-lg' %>
 <% end %>
