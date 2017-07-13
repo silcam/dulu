@@ -1,54 +1,66 @@
 <%= render 'shared/error_messages', errors: @person.errors %>
 
-<%= form_for @person do |f| %>
-  <p>
+<%= form_for @person, html: {class: 'auto-width'} do |f| %>
+  <div class="form-group">
     <%= f.label :first_name, t(:First_Name) %>
-    <%= f.text_field :first_name %>
-  </p>
+    <%= f.text_field :first_name, class: 'form-control' %>
+  </div>
   
-  <p>
+  <div class="form-group">
     <%= f.label :last_name, t(:Last_Name) %>
-    <%= f.text_field :last_name %>
-  </p>
+    <%= f.text_field :last_name, class: 'form-control' %>
+  </div>
 
-  <p>
-    <%= f.radio_button :gender, "M", checked: true %>
-    <%= f.label :gender_m, t(:Male) %><br />
-    <%= f.radio_button :gender, "F" %>
-    <%= f.label :gender_f, t(:Female) %>
-  </p>
+  <div class="form-group">
+    <label class="radio-inline">
+      <%= f.radio_button :gender, "M", checked: true %>
+      <%= t :Male %>
+    </label>
+    <label class="radio-inline">
+      <%= f.radio_button :gender, "F" %>
+      <%= t :Female %>
+    </label>
+  </div>
 
-  <p>
+  <div class="form-group">
     <%= f.label :country, t(:Home_Country) %>
-    <%= f.collection_select :country_id, Country.all_in_order, :id, :name %>
-  </p>
+    <%= f.collection_select :country_id, Country.all_in_order, :id, :name,
+                            {}, {class: 'form-control'}%>
+  </div>
 
-  <p>
+  <div class="form-group">
     <%= f.label :organization, t(:Organization) %>
-    <%= f.collection_select :organization_id, Organization.all_in_order, :id, :name, include_blank: true %>
-  </p>
+    <%= f.collection_select :organization_id, Organization.all_in_order, :id, :name,
+                            {include_blank: true}, {class: 'form-control'} %>
+  </div>
 
-  <p>
+  <div class="form-group">
     <%= f.label :email, t(:Email) %>
-    <%= f.text_field :email %>
-  </p>
+    <%= f.text_field :email, class: 'form-control' %>
+  </div>
 
   <% if can? :change_role, @person %>
-    <p>
+    <div class="form-group">
       <%= f.label :role, t(:User_role) %>
-      <%= f.select :role, options_for_select(Person.roles_for_select(can?(:grant_admin, Person)), @person.role)  %>
-    </p>
+      <%= f.select :role,
+                   options_for_select(Person.roles_for_select(can?(:grant_admin, Person)),
+                                      @person.role),
+                   {}, {class: 'form-control'}  %>
+    </div>
   <% end %>
 
-  <p>
-    <%= f.label :ui_language, t(:dulu_preferred_language) %><br />
-    <%= f.radio_button :ui_language, "en", checked: true %>
-    <%= f.label :ui_language_en, t(:English) %><br />
-    <%= f.radio_button :ui_language, "fr" %>
-    <%= f.label :ui_language_fr, t(:French) %><br />
-  </p>
+  <div class="form-group">
+    <%= f.label :ui_language, t(:dulu_preferred_language) %><br>
+    <label class="radio-inline">
+      <%= f.radio_button :ui_language, "en", checked: true %>
+      <%= t :English %>
+    </label>
+    <label class="radio-inline">
+      <%= f.radio_button :ui_language, "fr" %>
+      <%= t :French %>
+    </label>
+  </div>
 
-  <p>
-    <%= f.submit t(:Save) %>
-  </p>
+  <%= f.submit t(:Save), class: 'btn btn-primary btn-lg' %>
+
 <% end %>
