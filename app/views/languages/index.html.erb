@@ -3,6 +3,7 @@
 <table class='table'>
   <tr>
     <th><%= t :Name %></th>
+    <th><%= t :Language_program %></th>
     <th><%= t :Code %></th>
     <th><%= t :Status %></th>
     <th><%= t :Country %></th>
@@ -12,6 +13,11 @@
   <% @languages.each do |language| %>
     <tr>
       <td><%= language.name %></td>
+      <td>
+        <% unless language.program.activities.empty? %>
+          <%= link_to t(:Active), dashboard_program_path(language.program) %>
+        <% end %>
+      </td>
       <td><%= language.code %></td>
       <td>
         <% if status = language.language_status %>
@@ -19,7 +25,7 @@
         <% end %>
       </td>
       <td><%= language.country.name if language.country %></td>
-      <td><%= language.cameroon_region.english_name if language.cameroon_region %></td>
+      <td><%= language.cameroon_region.name if language.cameroon_region %></td>
       <td><%= language.population_description %></td>
     </tr>
   <% end %>

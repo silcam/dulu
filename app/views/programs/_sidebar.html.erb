@@ -5,8 +5,15 @@
       target: '_blank', class: "h3 sidebar-subtitle" %>
     <h3 class="sidebar-subtitle">
       <% if @program.language.country %>
-        <%= @program.language.country.name %>
-        <%= ': ' + @program.language.cameroon_region.name if @program.language.cameroon_region %>
+        <%= link_to @program.language.country.name,
+                    languages_path(country: @program.language.country),
+                    class: 'h3 sidebar-subtitle' %>
+        <% if @program.language.cameroon_region %>
+          :
+          <%= link_to(@program.language.cameroon_region.name,
+                      languages_path(region: @program.language.cameroon_region),
+                      class: 'h3 sidebar-subtitle') %>
+        <% end %>
       <% end %>
     </h3>
     <ul class="nav nav-sidebar">
