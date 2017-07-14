@@ -33,7 +33,7 @@ fr:
   Day: Jour
   Year: An
   Year_error: "Saisez un an valide s'il vous plait"
-  Date_error: "Choisissez une date qui est valide pour le mois sélectionné s'il vous plait"
+  Date_error: "Veuillez sélectionner une date valide"
   Fdate_omit: (Jour et mois sont optionnels)
   date:
     formats:
@@ -64,7 +64,7 @@ fr:
   Spanish: Español
   New_person: Nouvelle personne
   Add_person: Créer une personne
-  Edit_person: Modifier une personne
+  Edit_person: Modifier
   Edit: Modifier
   User_role: Rôle
   role_none: Aucun
