@@ -5,6 +5,7 @@
     <th><%= t :Name %></th>
     <th><%= t :Language_program %></th>
     <th><%= t :Code %></th>
+    <th><%= t :Alternate_names %></th>
     <th><%= t :Status %></th>
     <th><%= t :Country %></th>
     <th><%= t :Region %></th>
@@ -19,6 +20,7 @@
         <% end %>
       </td>
       <td><%= language.code %></td>
+      <td><%= language.alt_names.try(:gsub, ',', ', ') %></td>
       <td>
         <% if status = language.language_status %>
           <%= "(#{status.level}) #{status.label}" %>
