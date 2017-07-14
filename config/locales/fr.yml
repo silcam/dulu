@@ -67,11 +67,12 @@ fr:
   Edit_person: Modifier une personne
   Edit: Modifier
   User_role: Rôle
-  none: Aucun
-  user: Utilisateur
-  program_responsable: Gérer des activités
-  program_supervisor: Gérer des programmes et personnel
-  admin: Administrateur du site
+  role_none: Aucun
+  role_user: Utilisateur
+  role_program_responsable: Gérer des activités
+  role_program_supervisor: Gérer des programmes et personnel
+  role_program_admin: Gérer tout
+  role_site_admin: Administrateur du site
 
   #Organizations Controller
   Organization: Organisation

@@ -33,20 +33,18 @@ class PersonTest < ActiveSupport::TestCase
     assert_equal 'Maust, Drew', @drew.full_name_rev
   end
 
-  test 'Roles' do
+  test "Has Role" do
     kevin = people :Kevin
-    olga = people :Olga
-    abanda = people :Abanda
     rick = people :Rick
+    assert rick.has_role(:role_program_responsable), "Rick should be program responsable"
+    assert @drew.has_role(:role_program_responsable), "Drew should be program responsable"
+    refute kevin.has_role(:role_program_responsable), "Kevin should not be program responsable"
+  end
 
-    assert rick.is_admin?, 'Rick should be admin'
-    refute olga.is_admin?, 'Olga should not be admin'
-    assert olga.is_program_supervisor?, 'Olga should be Program Supervisor'
-    refute @drew.is_program_supervisor?, 'Drew should not be Program Supervisor'
-    assert @drew.is_program_responsable?, 'Drew should be Program Responsable'
-    refute kevin.is_program_responsable?, 'Kevin should not be Program Responsable'
-    assert kevin.is_user?, 'Kevin should be User'
-    refute abanda.is_user?, 'Abanda should not be User'
+  test "Has Login" do
+    abanda = people :Abanda
+    assert @drew.has_login, "Drew should have a login"
+    refute abanda.has_login, "Abanda does not have a login"
   end
 
   test "Current Participants" do
@@ -58,8 +56,18 @@ class PersonTest < ActiveSupport::TestCase
   end
 
   test "Roles List" do
-    assert_equal 4, Person.roles_for_select.count
-    assert_equal 5, Person.roles_for_select(true).count
+    assert_equal 5, Person.roles_for_select.count
+    assert_equal 6, Person.roles_for_select(true).count
+  end
+
+  test "Get Role Params" do
+    all_false = {}
+    Person::SITE_ROLES.each{|role| all_false[role] = false}
+    user = all_false.clone
+    user[:role_user] = true
+
+    assert_equal all_false, Person.get_role_params('')
+    assert_equal user, Person.get_role_params('0')
   end
 
   test "Search" do

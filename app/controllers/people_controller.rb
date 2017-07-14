@@ -47,10 +47,12 @@ class PeopleController < ApplicationController
 
 private
   def person_params
-    authorize!(:grant_admin, Person) if params[:person][:role] == Person::ROLES.index(:admin).to_s
-    params.require(:person).permit(:first_name, :last_name ,:email, :birth_date,
+    p_params = params.require(:person).permit(:first_name, :last_name ,:email, :birth_date,
                                   :organization_id, :gender, :country_id,
-                                  :role, :ui_language)
+                                  :ui_language)
+    p_params.merge!(Person.get_role_params(params[:person][:role]))
+    authorize!(:grant_admin, Person) if p_params[:role_site_admin]
+    return p_params
   end
 
   def set_person

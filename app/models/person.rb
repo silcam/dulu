@@ -18,10 +18,24 @@ class Person < ApplicationRecord
     "#{last_name}, #{first_name}"
   end
 
+  def role
+    SITE_ROLES.each_with_index do |role, i|
+      return i if self.send(role)
+    end
+  end
+
+  def has_role(role)
+    (SITE_ROLES.index(role) .. SITE_ROLES.count-1).each do |i|
+      return true if self.send(SITE_ROLES[i])
+    end
+    return false
+  end
+
   def has_login
     SITE_ROLES.each do |role|
       return true if self.send(role)
     end
+    return false
   end
 
   def current_participants
@@ -29,11 +43,19 @@ class Person < ApplicationRecord
   end
 
   def self.roles_for_select(include_admin = false)
-    roles = []
-    ROLES.each_with_index do |role, i|
-      roles << [I18n.t(role), i] unless(role==:admin && !include_admin)
+    roles = [[I18n.t(:role_none), '']]
+    SITE_ROLES.each_with_index do |role, i|
+      roles << [I18n.t(role), i] unless(role==:role_site_admin && !include_admin)
     end
     roles
+  end
+
+  def self.get_role_params(role_index_str)
+    role_params = {}
+    SITE_ROLES.each_with_index do |role, i|
+      role_params[role] = (i.to_s==role_index_str) ? true : false
+    end
+    return role_params
   end
 
   def self.search(query)
@@ -52,14 +74,6 @@ class Person < ApplicationRecord
                   subresults: subresults}
     end
     results
-  end
-
-  private
-
-  def has_role?(the_role)
-    i = ROLES.index the_role
-    raise "Invalid role provided to Person:has_role?" if i.nil?
-    return role >= i
   end
 
 end

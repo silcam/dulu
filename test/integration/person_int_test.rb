@@ -32,7 +32,7 @@ class PersonIntTest < Capybara::Rails::TestCase
     select 'Site Administrator', from: 'person_role'
     click_button 'Save'
     @william.reload
-    assert_equal 4, @william.role
+    assert @william.has_role(:role_site_admin), "William should be site admin"
 
     log_in @william
     assert page.has_content? 'William'
@@ -53,7 +53,7 @@ class PersonIntTest < Capybara::Rails::TestCase
     {first_name: 'William', last_name: 'Wallace',
     gender: 'M', country: countries(:Cameroon),
     organization: organizations(:AAA),
-    email: 'scotland_forever@aol.com', role: 1,
+    email: 'scotland_forever@aol.com', role_user: true,
     ui_language: 'fr'}.each_pair do |key, value|
       assert_equal value, @william.send(key)
     end

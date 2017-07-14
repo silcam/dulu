@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170714064317) do
+ActiveRecord::Schema.define(version: 20170714103513) do
 
   create_table "activities", force: :cascade do |t|
     t.integer  "program_id"
@@ -122,7 +122,6 @@ ActiveRecord::Schema.define(version: 20170714064317) do
     t.string   "former_last_name"
     t.integer  "country_id"
     t.string   "ui_language"
-    t.integer  "role",                               default: 0
     t.boolean  "role_user",                          default: false
     t.boolean  "role_program_responsable",           default: false
     t.boolean  "role_program_supervisor",            default: false

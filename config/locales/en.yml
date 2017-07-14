@@ -67,11 +67,12 @@ en:
   Edit_person: Edit Person
   Edit: Edit
   User_role: User Role
-  none: None
-  user: User
-  program_responsable: Update Activities
-  program_supervisor: Manage Programs and People
-  admin: Site Administrator
+  role_none: None
+  role_user: User
+  role_program_responsable: Update Activities
+  role_program_supervisor: Manage Programs and People
+  role_program_admin: Manage All
+  role_site_admin: Site Administrator
 
   #Organizations Controller
   Organization: Organization
