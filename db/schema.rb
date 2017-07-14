@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170710131731) do
+ActiveRecord::Schema.define(version: 20170714064317) do
 
   create_table "activities", force: :cascade do |t|
     t.integer  "program_id"
@@ -111,18 +111,23 @@ ActiveRecord::Schema.define(version: 20170710131731) do
   create_table "people", force: :cascade do |t|
     t.string   "last_name"
     t.string   "first_name"
-    t.datetime "created_at",                             null: false
-    t.datetime "updated_at",                             null: false
+    t.datetime "created_at",                                         null: false
+    t.datetime "updated_at",                                         null: false
     t.string   "email"
     t.string   "password"
     t.integer  "organization_id"
     t.date     "birth_date"
-    t.string   "gender",           limit: 1
+    t.string   "gender",                   limit: 1
     t.text     "cv_text"
     t.string   "former_last_name"
     t.integer  "country_id"
     t.string   "ui_language"
-    t.integer  "role",                       default: 0
+    t.integer  "role",                               default: 0
+    t.boolean  "role_user",                          default: false
+    t.boolean  "role_program_responsable",           default: false
+    t.boolean  "role_program_supervisor",            default: false
+    t.boolean  "role_program_admin",                 default: false
+    t.boolean  "role_site_admin",                    default: false
     t.index ["country_id"], name: "index_people_on_country_id"
     t.index ["organization_id"], name: "index_people_on_organization_id"
   end

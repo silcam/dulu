@@ -1,5 +1,6 @@
 class Person < ApplicationRecord
-  ROLES = [:none, :user, :program_responsable, :program_supervisor, :admin]
+  SITE_ROLES = [:role_user, :role_program_responsable, :role_program_supervisor,
+                :role_program_admin, :role_site_admin]
 
   belongs_to :organization, required: false
   belongs_to :country
@@ -17,25 +18,10 @@ class Person < ApplicationRecord
     "#{last_name}, #{first_name}"
   end
 
-
-  def is_admin?
-    has_role? :admin
-  end
-
-  def is_program_supervisor?
-    has_role? :program_supervisor
-  end
-
-  def is_program_responsable?
-    has_role? :program_responsable
-  end
-
-  def is_user?
-    has_role? :user
-  end
-
   def has_login
-    is_user?
+    SITE_ROLES.each do |role|
+      return true if self.send(role)
+    end
   end
 
   def current_participants
