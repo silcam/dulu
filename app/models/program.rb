@@ -76,7 +76,7 @@ class Program < ApplicationRecord
   end
 
   def self.search(query)
-    programs = Program.joins(:language).where("languages.name LIKE ?", "%#{query}%").includes(:language)
+    programs = Program.joins(:language).where("languages.name LIKE ? OR languages.alt_names LIKE ? OR languages.code=?", "%#{query}%", "%#{query}%", query).includes(:language)
     results = []
     programs.each do |program|
       path = Rails.application.routes.url_helpers.dashboard_program_path(program)
