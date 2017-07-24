@@ -2,7 +2,7 @@
 
   <% unless @language.alt_names.blank? %>
     <h3><%= t :Change_default_name %></h3>
-    <%= form_tag language_path(@language), method: :put, class: 'auto-width' do %>
+    <%= form_tag language_path(@language), method: :put, class: 'auto-width', id: 'change_name_form' do %>
       <div class="form-group">
         <label><%= t :New_name %></label>
         <%= select_tag :language_name, options_for_select(@language.alt_names_array), class: 'form-control' %>
@@ -15,7 +15,7 @@
   <% unless @language.is_dialect? %>
     <h3><%= t :Add_entry_for_dialect %></h3>
       <%= render 'shared/error_messages', errors: @dialect.errors %>
-      <%= form_for @dialect, html: {class: 'auto-width'} do |form| %>
+      <%= form_for @dialect, html: {class: 'auto-width', id: 'new_dialect_form'} do |form| %>
       <%= form.hidden_field :parent_id %>
       <%= form.hidden_field :country_id %>
       <%= form.hidden_field :cameroon_region_id %>
