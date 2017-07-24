@@ -2,8 +2,13 @@ class Language < ApplicationRecord
   belongs_to :language_status, required: false
   belongs_to :country, required: false
   belongs_to :cameroon_region, required: false
+  belongs_to :parent, class_name: 'Language', required: false
 
   has_one :program
+
+  def is_dialect?
+    not parent.nil?
+  end
 
   def ethnologue_link
     return "https://www.ethnologue.com/language/#{code}"

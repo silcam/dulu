@@ -6,6 +6,12 @@ Hdi:
   code: xed
   alt_names: 'Hedi, Hide, Turu-Hide, Xadi, Xdi, Xedi'
 
+HdiDialect:
+  name: HdiDialect
+  country: Cameroon
+  cameroon_region: FarNorth
+  parent: Hdi
+
 Ewondo:
   name: Ewondo
 

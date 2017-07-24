@@ -10,11 +10,19 @@ class LanguageTest < ActiveSupport::TestCase
     cameroon = countries :Cameroon
     far_north = cameroon_regions :FarNorth
     hdi_program = programs :HdiProgram
+    hdi_dialect = languages :HdiDialect
 
     assert_equal developing, @hdi.language_status
     assert_equal cameroon, @hdi.country
     assert_equal far_north, @hdi.cameroon_region
     assert_equal hdi_program, @hdi.program
+    assert_equal @hdi, hdi_dialect.parent
+  end
+
+  test "Is Dialect" do
+    hdi_dialect = languages :HdiDialect
+    assert hdi_dialect.is_dialect?, "Hdi Dialect is a dialect"
+    refute @hdi.is_dialect?, "Hdi is not a dialect"
   end
 
   test 'Ethnologue Link' do
