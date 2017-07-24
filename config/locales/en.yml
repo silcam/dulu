@@ -94,6 +94,8 @@ en:
   Language_info: Language Info
   Alternate_names: Alternate Names
   Language_management: Language Management
+  Change_default_name: Change default name
+  Add_entry_for_dialect: Add entry for dialect
 
   #Programs Controller
   Program: Program

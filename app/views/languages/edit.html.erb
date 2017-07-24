@@ -1,0 +1,17 @@
+<%= render 'programs/sidebar' do %>
+
+  <% unless @language.alt_names.blank? %>
+    <h3><%= t :Change_default_name %></h3>
+    <%= form_tag language_path(@language), method: :put, class: 'auto-width' do %>
+      <div class="form-group">
+        <label><%= t :New_name %></label>
+        <%= select_tag :language_name, options_for_select(@language.alt_names_array), class: 'form-control' %>
+      </div>
+      <%= submit_tag t(:Save), class: 'btn btn-primary' %>
+    <% end %>
+    <hr>
+  <% end %>
+
+  <h3><%= t :Add_entry_for_dialect %></h3>
+
+<% end %>

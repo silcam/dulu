@@ -94,6 +94,8 @@ fr:
   Language_info: 'Langue : détails'
   Alternate_names: Autre noms
   Language_management: Gérer la langue
+  Change_default_name: Changer le nom principal
+  Add_entry_for_dialect: Ajouter une entrée pour un dialecte
 
   #Programs Controller
   Program: Programme

@@ -10,6 +10,7 @@ class AccessPolicy
       can [:create_activity, :manage_participants], Program
       can :update_activity, Activity
       can :manage, Organization
+      can :manage, Language
     end
 
     role :program_supervisor, proc { |u| u.has_role(:role_program_supervisor) } do
@@ -20,6 +21,10 @@ class AccessPolicy
 
       can [:manage_participants], Program do |program, user|
         program.current_people.include? user
+      end
+
+      can :manage, Language do |language, user|
+        language.program.current_people.include? user
       end
     end
 

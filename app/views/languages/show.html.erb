@@ -1,5 +1,7 @@
 <%= render 'programs/sidebar' do %>
-  <%= link_to t(:Language_management), edit_language_path(@language), class: 'h4' %>
+  <% if can? :update, @language %>
+    <%= link_to t(:Language_management), edit_language_path(@language), class: 'h4' %>
+  <% end %>
   <h2><%= t :Language_info %></h2>
   <div >
     <p>

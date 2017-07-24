@@ -20,4 +20,17 @@ class LanguageTest < ActiveSupport::TestCase
   test 'Ethnologue Link' do
     assert_equal 'https://www.ethnologue.com/language/xed', @hdi.ethnologue_link
   end
+
+  test 'Alt Names Array' do
+    array = %w[Hedi Hide Turu-Hide Xadi Xdi Xedi]
+    assert_equal(array, @hdi.alt_names_array)
+  end
+
+  test 'Update Name' do
+    @hdi.update_name 'Xdi'
+    @hdi.reload
+    assert_equal 'Xdi', @hdi.name
+    alts = 'Hdi, Hedi, Hide, Turu-Hide, Xadi, Xedi'
+    assert_equal alts, @hdi.alt_names
+  end
 end
