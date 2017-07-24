@@ -8,6 +8,13 @@ class AddPersonToProgram < Capybara::Rails::TestCase
     @drew = people :Drew
   end
 
+  test "Regression Test: Add to program with no activities" do
+    ewondo_program = programs :EwondoProgram
+    assert ewondo_program.activities.empty?, "This test is for a program with no activities"
+    visit new_program_participant_path(ewondo_program)
+    assert_current_path new_program_participant_path(ewondo_program)
+  end
+
   test 'Add, update and remove Drew from Zulgo Ezra' do
     add_drew
     modify_drew

@@ -24,7 +24,7 @@
       <%= render 'shared/fuzzy_date_field', model: 'participant', field: 'start_date' %>
     </div>
 
-    <%= render 'associated_activities' %>
+    <%= render 'associated_activities' unless @program.activities.empty? %>
 
     <%= form.submit t(:Save), class: 'btn btn-primary btn-lg', data: {'participant_submit' => 1} %>
   <% end %>
