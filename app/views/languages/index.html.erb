@@ -13,7 +13,10 @@
   </tr>
   <% @languages.each do |language| %>
     <tr>
-      <td><%= link_to language.name, language_path(language) %></td>
+      <td>
+        <%= link_to language.name, language_path(language) %><br>
+        <%= "#{t(:A_dialect_of)} #{language.parent.name}"  if language.is_dialect? %>
+      </td>
       <td>
         <% unless language.program.activities.empty? %>
           <%= link_to t(:Active), dashboard_program_path(language.program) %>

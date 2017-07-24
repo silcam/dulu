@@ -1,23 +1,28 @@
+<% @language ||= @program.language %>
 <div class="row">
   <div class="col-sm-3 col-md-2 sidebar">
-    <h1 class="sidebar-title"><%= @program.language.name %></h1>
-    <%= link_to @program.language.code, @program.language.ethnologue_link,
+    <h1 class="sidebar-title"><%= @program.name %></h1>
+    <% link_text = @language.is_dialect? ?
+                     "#{t(:A_dialect_of)} #{@language.code_or_parent_code}" :
+                     @language.code %>
+    <%= link_to link_text, @language.ethnologue_link,
       target: '_blank', class: "h3 sidebar-subtitle" %>
     <h3 class="sidebar-subtitle">
       <% if @program.language.country %>
-        <%= link_to @program.language.country.name,
-                    languages_path(country: @program.language.country),
+        <%= link_to @language.country.name,
+                    languages_path(country: @language.country),
                     class: 'h3 sidebar-subtitle' %>
-        <% if @program.language.cameroon_region %>
+        <% if @language.cameroon_region %>
           :
-          <%= link_to(@program.language.cameroon_region.name,
-                      languages_path(region: @program.language.cameroon_region),
+          <%= link_to(@language.cameroon_region.name,
+                      languages_path(region: @language.cameroon_region),
                       class: 'h3 sidebar-subtitle') %>
         <% end %>
       <% end %>
     </h3>
     <ul class="nav nav-sidebar">
       <% links = [[t(:Dashboard), dashboard_program_path(@program)],
+                  [t(:Language), language_path(@language)],
                   [t(:Manage), program_path(@program)]] %>
       <% links.each do |link| %>
         <% if current_page?(link[1]) %>

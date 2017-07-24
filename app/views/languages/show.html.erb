@@ -10,7 +10,7 @@
     <p>
       <label><%= t :Status %></label><br>
       <% status = @language.language_status %>
-      <%= "(#{status.level}) - #{status.label}" %>
+      <%= "(#{status.level}) - #{status.label}" if status%>
     </p>
     <p>
       <label><%= t :Alternate_names %></label><br>

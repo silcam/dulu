@@ -96,6 +96,9 @@ fr:
   Language_management: Gérer la langue
   Change_default_name: Changer le nom principal
   Add_entry_for_dialect: Ajouter une entrée pour un dialecte
+  New_name: Nouveau nom
+  Name_of_dialect: Nom du dialecte
+  A_dialect_of: Dialecte de 
 
   #Programs Controller
   Program: Programme

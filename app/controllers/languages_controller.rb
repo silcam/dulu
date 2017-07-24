@@ -15,10 +15,21 @@ class LanguagesController < ApplicationController
   end
 
   def create
-    # Create - create a corresponding program
+    @dialect = Language.new language_params
+    if @dialect.save
+      program = Program.create!(language: @dialect)
+      redirect_to dashboard_program_path(program)
+    else
+      @language = Language.find params[:language][:parent_id]
+      @program = @language.program
+      render 'edit'
+    end
   end
 
   def edit
+    authorize! :update, @language
+    @dialect = Language.new(parent: @language, country: @language.country,
+                            cameroon_region: @language.cameroon_region)
   end
 
   def update
@@ -30,6 +41,10 @@ class LanguagesController < ApplicationController
   end
 
   private
+
+  def language_params
+    params.require(:language).permit(:parent_id, :country_id, :cameroon_region_id, :name)
+  end
 
   def set_language
     @language = Language.find(params[:id])

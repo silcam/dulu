@@ -3,15 +3,27 @@ class Language < ApplicationRecord
   belongs_to :country, required: false
   belongs_to :cameroon_region, required: false
   belongs_to :parent, class_name: 'Language', required: false
-
   has_one :program
+
+  validates :name, presence: true, allow_blank: false
+  validate :parent_cannot_be_dialect
+
+  def parent_cannot_be_dialect
+    if parent.try(:is_dialect?)
+      errors.add(:parent_id, 'Cannot add a dialect to a dialect')
+    end
+  end
 
   def is_dialect?
     not parent.nil?
   end
 
+  def code_or_parent_code
+    is_dialect? ? parent.code : code
+  end
+
   def ethnologue_link
-    return "https://www.ethnologue.com/language/#{code}"
+    return "https://www.ethnologue.com/language/#{code_or_parent_code}"
   end
 
   def alt_names_array
