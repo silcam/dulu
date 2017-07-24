@@ -10,6 +10,7 @@ fr:
   Delete: Supprimer
   Remove: Supprimer
   Manage: Gérer
+  Notes: Rémarques
   Hint: Conseil
   All: Tous
   None: Aucun
@@ -92,6 +93,7 @@ fr:
   Languages: Langues
   Language_info: 'Langue : détails'
   Alternate_names: Autre noms
+  Language_management: Gérer la langue
 
   #Programs Controller
   Program: Programme

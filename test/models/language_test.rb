@@ -16,4 +16,8 @@ class LanguageTest < ActiveSupport::TestCase
     assert_equal far_north, @hdi.cameroon_region
     assert_equal hdi_program, @hdi.program
   end
+
+  test 'Ethnologue Link' do
+    assert_equal 'https://www.ethnologue.com/language/xed', @hdi.ethnologue_link
+  end
 end

@@ -1,0 +1,22 @@
+<%= render 'programs/sidebar' do %>
+  <%= link_to t(:Language_management), edit_language_path(@language), class: 'h4' %>
+  <h2><%= t :Language_info %></h2>
+  <div >
+    <p>
+      <%= link_to 'Ethnologue', @language.ethnologue_link %>
+    </p>
+    <p>
+      <label><%= t :Status %></label><br>
+      <% status = @language.language_status %>
+      <%= "(#{status.level}) - #{status.label}" %>
+    </p>
+    <p>
+      <label><%= t :Population %></label><br>
+      <%= @language.population_description %>
+    </p>
+    <p>
+      <label><%= t :Notes %></label><br>
+      <%= @language.notes %>
+    </p>
+  </div>
+<% end %>

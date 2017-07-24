@@ -9,6 +9,13 @@ class LanguagesController < ApplicationController
     end
   end
 
-  # Create - create a corresponding program
-  
+  def show
+    @language = Language.find params[:id]
+    @program = @language.program
+  end
+
+  def create
+    # Create - create a corresponding program
+  end
+
 end

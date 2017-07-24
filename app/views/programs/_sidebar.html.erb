@@ -1,7 +1,7 @@
 <div class="row">
   <div class="col-sm-3 col-md-2 sidebar">
     <h1 class="sidebar-title"><%= @program.language.name %></h1>
-    <%= link_to @program.language.code, "https://www.ethnologue.com/language/#{@program.language.code}",
+    <%= link_to @program.language.code, @program.language.ethnologue_link,
       target: '_blank', class: "h3 sidebar-subtitle" %>
     <h3 class="sidebar-subtitle">
       <% if @program.language.country %>

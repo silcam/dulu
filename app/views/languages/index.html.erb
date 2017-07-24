@@ -13,7 +13,7 @@
   </tr>
   <% @languages.each do |language| %>
     <tr>
-      <td><%= language.name %></td>
+      <td><%= link_to language.name, language_path(language) %></td>
       <td>
         <% unless language.program.activities.empty? %>
           <%= link_to t(:Active), dashboard_program_path(language.program) %>
