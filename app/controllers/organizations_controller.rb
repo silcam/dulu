@@ -1,5 +1,5 @@
 class OrganizationsController < ApplicationController
-  before_action :set_organization, only: [:create, :edit, :update]
+  before_action :set_organization, only: [:edit, :update]
   before_action :authorize_user, only: [:new, :create, :edit, :update]
 
   def index
