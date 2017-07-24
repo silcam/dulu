@@ -13,6 +13,10 @@
       <%= "(#{status.level}) - #{status.label}" %>
     </p>
     <p>
+      <label><%= t :Alternate_names %></label><br>
+      <%= @language.alt_names %>
+    </p>
+    <p>
       <label><%= t :Population %></label><br>
       <%= @language.population_description %>
     </p>
