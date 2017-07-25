@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+DrewHdiGenesis:
+  person: Drew
+  event: HdiGenesisChecking
+  program_role: TranslationConsultant
+
+AbandaHdiGenesis:
+  person: Abanda
+  event: HdiGenesisChecking
+  program_role: Translator

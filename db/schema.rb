@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170724111228) do
+ActiveRecord::Schema.define(version: 20170725081950) do
 
   create_table "activities", force: :cascade do |t|
     t.integer  "program_id"
@@ -58,6 +58,33 @@ ActiveRecord::Schema.define(version: 20170724111228) do
     t.string   "french_name"
     t.datetime "created_at",   null: false
     t.datetime "updated_at",   null: false
+  end
+
+  create_table "event_participants", force: :cascade do |t|
+    t.integer  "event_id"
+    t.integer  "person_id"
+    t.integer  "program_role_id"
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
+    t.index ["event_id"], name: "index_event_participants_on_event_id"
+    t.index ["person_id"], name: "index_event_participants_on_person_id"
+    t.index ["program_role_id"], name: "index_event_participants_on_program_role_id"
+  end
+
+  create_table "events", force: :cascade do |t|
+    t.string   "start_date"
+    t.string   "end_date"
+    t.integer  "kind"
+    t.string   "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "events_programs", force: :cascade do |t|
+    t.integer "event_id"
+    t.integer "program_id"
+    t.index ["event_id"], name: "index_events_programs_on_event_id"
+    t.index ["program_id"], name: "index_events_programs_on_program_id"
   end
 
   create_table "language_statuses", force: :cascade do |t|
