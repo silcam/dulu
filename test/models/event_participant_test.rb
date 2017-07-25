@@ -17,7 +17,7 @@ class EventParticipantTest < ActiveSupport::TestCase
   test "Validation Hack Test" do
     rick = people :Rick
     consultant = program_roles :TranslationConsultant
-    params = {event: @genesis_check, person: rick, program_role: consultant}
+    params = {event: @genesis_check, person: rick}
     model_validation_hack_test EventParticipant, params
   end
 end

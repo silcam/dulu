@@ -60,6 +60,11 @@ class PersonTest < ActiveSupport::TestCase
     assert_equal 6, Person.roles_for_select(true).count
   end
 
+  test "All Sorted" do
+    kevin = people :Kevin
+    assert_equal kevin, Person.all_sorted.first
+  end
+
   test "Get Role Params" do
     all_false = {}
     Person::SITE_ROLES.each{|role| all_false[role] = false}

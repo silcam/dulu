@@ -65,6 +65,7 @@ fr:
   Spanish: Español
   New_person: Nouvelle personne
   Add_person: Créer une personne
+  Add_a_person: Ajouter une personne
   Edit_person: Modifier
   Edit: Modifier
   User_role: Rôle
@@ -105,6 +106,7 @@ fr:
   Programs: Programmes
   Language_program: Programme de langue
   Add_program: Créer un programme
+  Add_a_program: Ajouter un programme
   New_program: Nouveau programme
   Current_activities: Activités actuelles
   Program_status: État du programme
@@ -133,7 +135,6 @@ fr:
   Multiple_stages_hint: "Si les livres sont à des differentes étapes, choisissez Prévue et fixez le date au commencement de la traduction. Puis, mettez à jour chaque livre sur le Tableau de bord."
 
   #Participants Controller
-  Add_person_to_program: Ajouter une personne
   Role: Rôle
   Joined_program: Commencement
   Left_program: Fin
@@ -179,3 +180,7 @@ fr:
   #Events Controller
   Upcoming_events: Événements prochains
   No_upcoming_events: Aucun événement
+  Events: Événements
+  New_event: Nouvel événement
+  Type_of_event: Type d'événement
+  with_a_role_of: dont le rôle est

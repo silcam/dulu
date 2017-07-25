@@ -23,6 +23,7 @@
     <ul class="nav nav-sidebar">
       <% links = [[t(:Dashboard), dashboard_program_path(@program)],
                   [t(:Language), language_path(@language)],
+                  [t(:Events), program_events_path(@program)],
                   [t(:Manage), program_path(@program)]] %>
       <% links.each do |link| %>
         <% if current_page?(link[1]) %>

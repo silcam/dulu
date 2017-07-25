@@ -28,6 +28,8 @@ Rails.application.routes.draw do
           patch 'finish'
         end
       end
+      resources :events
     end
   end
+  resources :events
 end

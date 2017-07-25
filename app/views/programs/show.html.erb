@@ -22,7 +22,7 @@
 
       <% if can? :manage_participants, @program %>
         <% if @program.participants.empty? %>
-            <%= link_to t(:Add_person_to_program), new_program_participant_path(@program) %>
+            <%= link_to t(:Add_a_person), new_program_participant_path(@program) %>
         <% else %>
             <%= link_to t(:Manage), program_participants_path(@program) %>
         <% end %>

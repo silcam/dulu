@@ -11,6 +11,7 @@ class ProgramTest < ActiveSupport::TestCase
     drew_hdi = participants :DrewHdi
     drew = people :Drew
     hdi = languages :Hdi
+    genesis_check = events :HdiGenesisChecking
     ewondo_program = programs :EwondoProgram
     ewondo_nt = publications :EwondoNT
 
@@ -19,6 +20,7 @@ class ProgramTest < ActiveSupport::TestCase
     assert_includes @hdi_program.participants, drew_hdi
     assert_includes @hdi_program.people, drew
     assert_equal hdi, @hdi_program.language
+    assert_includes @hdi_program.events, genesis_check
 
     assert_includes ewondo_program.publications, ewondo_nt
   end
@@ -73,7 +75,12 @@ class ProgramTest < ActiveSupport::TestCase
     refute @hdi_program.is_translating?(john.id), "Hdi are not translating John"
   end
 
-  test 'Sorted Programs' do
+  test "All Sorted" do
+    ewondo = programs :EwondoProgram
+    assert_equal ewondo, Program.all_sorted.first
+  end
+
+  test 'Programs Sorted by Recency' do
     no_activity = programs :NoActivityProgram
     really_old = programs :ReallyOldProgram
 

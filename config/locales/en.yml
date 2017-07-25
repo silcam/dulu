@@ -65,6 +65,7 @@ en:
   Spanish: Español
   New_person: New Person
   Add_person: Add Person
+  Add_a_person: Add a person
   Edit_person: Edit Person
   Edit: Edit
   User_role: User Role
@@ -105,6 +106,7 @@ en:
   Programs: Programs
   Language_program: Language Program
   Add_program: Add Program
+  Add_a_program: Add Program
   New_program: New Program
   Current_activities: Current Activities
   Program_status: Program Status
@@ -133,7 +135,6 @@ en:
   Multiple_stages_hint: "If the books are at different stages, set the stage to Planned and the date to the beginning of the project. Then update each book to it's current stage on the Project Dashboard."
 
   #Participants Controller
-  Add_person_to_program: Add a person
   Role: Role
   Joined_program: Joined Program
   Left_program: Left Program
@@ -179,3 +180,7 @@ en:
   #Events Controller
   Upcoming_events: Upcoming Events
   No_upcoming_events: No Upcoming Events
+  Events: Events
+  New_event: New Event
+  Type_of_event: Type of event
+  with_a_role_of: with a role of

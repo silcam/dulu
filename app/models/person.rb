@@ -42,6 +42,10 @@ class Person < ApplicationRecord
     participants.where(end_date: nil)
   end
 
+  def self.all_sorted
+    Person.all.order(:last_name, :first_name)
+  end
+
   def self.roles_for_select(include_admin = false)
     roles = [[I18n.t(:role_none), '']]
     SITE_ROLES.each_with_index do |role, i|

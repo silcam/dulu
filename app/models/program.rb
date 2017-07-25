@@ -5,6 +5,7 @@ class Program < ApplicationRecord
   has_many :publications
   has_many :participants
   has_many :people, through: :participants
+  has_and_belongs_to_many :events
   belongs_to :language
 
   def unassociated_people
@@ -60,6 +61,10 @@ class Program < ApplicationRecord
 
   def is_translating?(book_id)
     translation_activities.where(bible_book_id: book_id).count > 0
+  end
+
+  def self.all_sorted
+    Program.joins(:language).order('languages.name')
   end
 
   def self.all_sorted_by_recency

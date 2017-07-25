@@ -3,7 +3,7 @@ class Event < ApplicationRecord
   has_many :event_participants
   has_many :people, through: :event_participants
 
-  enum kind: [:ConsultantCheck]
+  enum kind: [:Consultant_check]
 
   validates :kind, inclusion: { in: Event.kinds }
   validates :start_date, presence: true

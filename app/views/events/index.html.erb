@@ -1,0 +1,6 @@
+<%= render 'programs/sidebar' do %>
+
+  <h2><%= t :Events %></h2>
+
+  <%= link_to t(:New_event), new_program_event_path(@program) %>
+<% end %>
