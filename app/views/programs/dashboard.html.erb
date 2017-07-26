@@ -33,9 +33,34 @@
     </div>
 
     <div class="col-md-3">
-      <div>
-        <%= render 'upcoming_events', events: [] %>
-      </div>
+      <% events = @program.events_as_hash %>
+      <% unless events[:current].empty? %>
+        <div>
+          <%= render 'events/events_column', title: t(:Current_events), events: events[:current] %>
+        </div>
+      <% end %>
+
+      <% unless events[:future].empty? %>
+        <div>
+          <%= render 'events/events_column', title: t(:Upcoming_events), events: events[:future].first(3) %>
+          <% if events[:future].count > 3 %>
+            <p class="lead">
+              <%= link_to t(:More), program_events_path(@program) %>
+            </p>
+          <% end %>
+        </div>
+      <% end %>
+
+      <% unless events[:past].empty? %>
+        <div>
+          <%= render 'events/events_column', title: t(:Past_events), events: events[:past].first(3) %>
+          <% if events[:past].count > 3 %>
+              <p class="lead">
+                <%= link_to t(:More), program_events_path(@program) %>
+              </p>
+          <% end %>
+        </div>
+      <% end %>
     </div>
   </div>
 <% end %>
