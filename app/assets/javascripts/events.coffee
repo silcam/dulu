@@ -11,6 +11,7 @@ $(document).ready ->
     e.preventDefault()
     hidden_select = $('div.program-select').last()
     hidden_select.after(hidden_select.clone())
+    hidden_select.find('select').removeProp('disabled')
     hidden_select.fadeIn('fast')
 
   $('div#program-ids').on('click', 'a[data-remove-program-select]', ->

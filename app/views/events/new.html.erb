@@ -31,7 +31,7 @@
       <div class="program-select" style="display: none">
         <%= select_tag 'event[program_ids][]',
                        options_from_collection_for_select(Program.all_sorted, :id, :name),
-                       style: 'display: inline-block', class: 'form-control' %>
+                       style: 'display: inline-block', class: 'form-control', disabled: true %>
         <a href="#" data-remove-program-select><%= t :Remove %></a>
       </div>
       <a href="#" data-add-program-select><%= t(:Add_a_program) %></a>
