@@ -29,7 +29,6 @@ class EventsController < ApplicationController
     prms = event_params
     prms[:program_ids].uniq!
     prms[:event_participants].collect! do |ep_params|
-      # ep_params.permit(:person_id, :program_role_id)
       EventParticipant.new(ep_params) unless ep_params[:person_id].blank?
     end
     prms[:event_participants].delete_if{|ep| ep.nil?}
@@ -38,12 +37,8 @@ class EventsController < ApplicationController
 
   def event_params
     assemble_dates params, 'event', 'start_date', 'end_date'
-    # params[:event][:program_ids].uniq!
-    # participant_params[:event][:event_participants].collect do |ep_params|
-    #   # ep_params.permit(:person_id, :program_role_id)
-    #   EventParticipant.new(ep_params) unless ep_params[:person_id].blank?
-    # end
     params.require(:event).permit(:kind, :name, :start_date, :end_date,
-                                  program_ids: [], event_participants: [:person_id, :program_role_id])
+                                  program_ids: [],
+                                  event_participants: [:person_id, :program_role_id])
   end
 end
