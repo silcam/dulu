@@ -3,5 +3,17 @@
 HdiGenesisChecking:
   start_date: 2018-01-15
   end_date: 2018-01-30
-  kind: ConsultantCheck
+  kind: Consultation
+  programs: HdiProgram
+
+HdiPastChecking:
+  start_date: 2017-01
+  end_date: 2017-02
+  kind: Consultation
+  programs: HdiProgram
+
+HdiCurrentChecking:
+  start_date: 2017-07
+  end_date: 2017-07
+  kind: Consultation
   programs: HdiProgram

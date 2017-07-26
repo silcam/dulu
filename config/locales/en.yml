@@ -27,6 +27,7 @@ en:
   Tomorrow: Tomorrow
   In_a_few_days: In %{days} days
   A_few_days_ago: "%{days} days ago"
+  to: to
   MM: MM
   DD: DD
   YYYY: YYYY
@@ -179,6 +180,9 @@ en:
 
   #Events Controller
   Upcoming_events: Upcoming Events
+  Current_events: Current Events
+  Past_events: Past Events
+  No_events: No Events
   No_upcoming_events: No Upcoming Events
   Events: Events
   New_event: New Event

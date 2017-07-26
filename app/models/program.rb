@@ -63,6 +63,39 @@ class Program < ApplicationRecord
     translation_activities.where(bible_book_id: book_id).count > 0
   end
 
+  # These methods may still be needed later, but I abandoned them when
+  # I though of events_as_hash
+  #
+  # def current_events
+  #
+  # end
+  #
+  # def upcoming_events
+  #   self.events.where('start_date > ?', Date.today.to_s).order(:start_date)
+  # end
+  #
+  # def past_events
+  #   past = self.events.where('end_date < ?', Date.today.to_s).order(:start_date)
+  #   today = FuzzyDate.today
+  #   past.delete_if{ |event| event.f_end_date.coincident?(today)}
+  #   past
+  # end
+
+  def events_as_hash
+    my_events = self.events.order(:start_date)
+    event_hash = {past: [], current: [], future: []}
+    my_events.each do |event|
+      if event.f_end_date.past?
+        event_hash[:past] << event
+      elsif event.f_start_date.future?
+        event_hash[:future] << event
+      else
+        event_hash[:current] << event
+      end
+    end
+    event_hash
+  end
+
   def self.all_sorted
     Program.joins(:language).order('languages.name')
   end

@@ -27,6 +27,7 @@ fr:
   Tomorrow: Demain
   In_a_few_days: Dans %{days} jours
   A_few_days_ago: Il y a %{days} jours
+  to: à
   MM: MM
   DD: JJ
   YYYY: AAAA
@@ -179,6 +180,9 @@ fr:
 
   #Events Controller
   Upcoming_events: Événements prochains
+  Current_events: Événements actuels
+  Past_events: Événements passés
+  No_events: Aucun événement
   No_upcoming_events: Aucun événement
   Events: Événements
   New_event: Nouvel événement

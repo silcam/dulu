@@ -3,4 +3,37 @@
   <h2><%= t :Events %></h2>
 
   <%= link_to t(:New_event), new_program_event_path(@program) %>
+
+  <% events = @program.events_as_hash %>
+
+  <% if @program.events.empty? %>
+      <h3><%= t :No_events %></h3>
+  <% end %>
+
+  <div class="row">
+    <% unless events[:current].empty? %>
+      <div class="col-md-4">
+        <%= render 'events/events_column',
+                   title: t(:Current_events),
+                   events: events[:current] %>
+      </div>
+    <% end %>
+
+    <% unless events[:future].empty? %>
+      <div class="col-md-4">
+        <%= render 'events/events_column',
+                   title: t(:Upcoming_events),
+                   events: events[:future] %>
+      </div>
+    <% end %>
+
+    <% unless events[:past].empty? %>
+      <div class="col-md-4">
+        <%= render 'events/events_column',
+                   title: t(:Past_events),
+                   events: events[:past] %>
+      </div>
+    <% end %>
+
+  </div>
 <% end %>

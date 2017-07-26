@@ -24,6 +24,13 @@ class Event < ApplicationRecord
     end
   end
 
+  def f_start_date
+    FuzzyDate.from_string self.start_date
+  end
+
+  def f_end_date
+    FuzzyDate.from_string self.end_date
+  end
 
   def role_of(person)
     self.event_participants.where(person: person).first.try(:program_role)

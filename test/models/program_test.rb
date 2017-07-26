@@ -75,6 +75,52 @@ class ProgramTest < ActiveSupport::TestCase
     refute @hdi_program.is_translating?(john.id), "Hdi are not translating John"
   end
 
+  # test "Current Events" do
+  #   event_test_setup
+  #   Date.stub(:today, Date.new(2017, 7, 26)) do
+  #     refute_includes @hdi_program.current_events, @future_event
+  #     refute_includes @hdi_program.current_events, @past_event
+  #     assert_includes @hdi_program.current_events, @current_event
+  #   end
+  # end
+  #
+  # test "Upcoming Events" do
+  #   event_test_setup
+  #   Date.stub(:today, Date.new(2017, 7, 26)) do
+  #     assert_includes @hdi_program.upcoming_events, @future_event
+  #     refute_includes @hdi_program.upcoming_events, @past_event
+  #     refute_includes @hdi_program.upcoming_events, @current_event
+  #   end
+  # end
+  #
+  # test "Past Events" do
+  #   event_test_setup
+  #   Date.stub(:today, Date.new(2017, 7, 26)) do
+  #     assert_includes @hdi_program.past_events, @past_event
+  #     refute_includes @hdi_program.past_events, @future_event
+  #     refute_includes @hdi_program.past_events, @current_event
+  #   end
+  # end
+
+  test "Events as hash" do
+    event_test_setup
+    Date.stub(:today, Date.new(2017, 7, 26)) do
+      event_hash = @hdi_program.events_as_hash
+      assert_includes event_hash[:future], @future_event
+      assert_includes event_hash[:past], @past_event
+      assert_includes event_hash[:current], @current_event
+      refute_includes event_hash[:future], @current_event
+      refute_includes event_hash[:past], @current_event
+      refute_includes event_hash[:current], @past_event
+    end
+  end
+
+  def event_test_setup
+    @future_event = events :HdiGenesisChecking
+    @past_event = events :HdiPastChecking
+    @current_event = events :HdiCurrentChecking
+  end
+
   test "All Sorted" do
     ewondo = programs :EwondoProgram
     assert_equal ewondo, Program.all_sorted.first

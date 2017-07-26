@@ -1,0 +1,32 @@
+<%
+  title = event.name.blank? ? t(event.kind) : event.name
+  title = "#{event.programs.first.name} #{title}" if event.programs.count == 1
+
+  start = event.f_start_date
+  finish = event.f_end_date
+  date_text = start.pretty_print
+  if(start != finish)
+    date_text += ' ' + t(:to) + ' ' + finish.pretty_print
+  end
+
+  programs_text = event.programs.collect{|p| p.name}.join(', ')
+
+  people_text = event.people.collect{|p| p.full_name}.join(', ')
+%>
+
+<div class="panel panel-info">
+  <div class="panel-heading">
+    <h5 class="panel-title dulu-panel-title">
+      <%= title %>
+    </h5>
+  </div>
+  <div class="panel-body">
+    <p><strong><%= date_text %></strong></p>
+    <p>
+      <% unless programs_text.blank? %>
+        <%= programs_text %><br>
+      <% end %>
+      <%= people_text unless people_text.blank? %>
+    </p>
+  </div>
+</div>
