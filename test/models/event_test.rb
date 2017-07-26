@@ -35,6 +35,8 @@ class EventTest < ActiveSupport::TestCase
   test "F Dates" do
     assert_equal FuzzyDate.new(2018, 1, 15), @genesis_check.f_start_date
     assert_equal FuzzyDate.new(2018, 1, 30), @genesis_check.f_end_date
+    assert_nil Event.new.f_start_date
+    assert_nil Event.new.f_end_date
   end
 
   test "Role Of" do

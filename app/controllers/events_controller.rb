@@ -23,15 +23,38 @@ class EventsController < ApplicationController
     end
   end
 
+  def edit
+    @event = Event.find params[:id]
+  end
+
+  def update
+    @event = Event.find params[:id]
+    if(@event.update(prepared_event_params))
+      redirect_to program_events_path(6)
+    else
+      render 'edit'
+    end
+  end
+
   private
 
   def prepared_event_params
     prms = event_params
     prms[:program_ids].uniq!
-    prms[:event_participants].collect! do |ep_params|
-      EventParticipant.new(ep_params) unless ep_params[:person_id].blank?
+    prms[:event_participants] = []
+    prms[:new_event_participants].each do |ep_params|
+      unless ep_params[:person_id].blank?
+        prms[:event_participants] << EventParticipant.new(ep_params)
+      end
     end
-    prms[:event_participants].delete_if{|ep| ep.nil?}
+    prms[:event_participant].try(:each) do |ep_id, ep_params|
+      if(ep = EventParticipant.find(ep_id))
+        ep.assign_attributes(ep_params)
+        prms[:event_participants] << ep
+      end
+    end
+    prms.delete(:event_participant)
+    prms.delete(:new_event_participants)
     prms
   end
 
@@ -39,6 +62,11 @@ class EventsController < ApplicationController
     assemble_dates params, 'event', 'start_date', 'end_date'
     params.require(:event).permit(:kind, :name, :start_date, :end_date,
                                   program_ids: [],
-                                  event_participants: [:person_id, :program_role_id])
+                                  event_participant: [:person_id, :program_role_id],
+                                  new_event_participants: [:person_id, :program_role_id])
   end
+
+  # def event_participant_params(ep_id)
+  #   params.require(:event).require(:event_participant).require(ep_id).permit(:person_id, :program_role_id)
+  # end
 end

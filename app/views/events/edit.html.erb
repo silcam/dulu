@@ -1,0 +1,7 @@
+<h2><%= @event.name.blank? ? t(@event.kind) : @event.name %></h2>
+
+<%= form_for @event, html: {class: 'auto-width'} do |form| %>
+
+  <%= render 'events/event_form', form: form %>
+
+<% end %>

@@ -1,6 +1,6 @@
 class Event < ApplicationRecord
   has_and_belongs_to_many :programs
-  has_many :event_participants
+  has_many :event_participants, autosave: true, dependent: :destroy
   has_many :people, through: :event_participants
 
   enum kind: [:Consultation]
@@ -25,11 +25,19 @@ class Event < ApplicationRecord
   end
 
   def f_start_date
-    FuzzyDate.from_string self.start_date
+    begin
+      FuzzyDate.from_string self.start_date
+    rescue (FuzzyDateException)
+      nil
+    end
   end
 
   def f_end_date
-    FuzzyDate.from_string self.end_date
+    begin
+      FuzzyDate.from_string self.end_date
+    rescue (FuzzyDateException)
+      nil
+    end
   end
 
   def role_of(person)

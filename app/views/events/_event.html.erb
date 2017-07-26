@@ -16,9 +16,12 @@
 
 <div class="panel panel-info">
   <div class="panel-heading">
-    <h5 class="panel-title dulu-panel-title">
+    <span class="h5 panel-title dulu-panel-title">
       <%= title %>
-    </h5>
+    </span>
+    <span style="float: right">
+      <%= link_to t(:Edit), edit_event_path(event) %>
+    </span>
   </div>
   <div class="panel-body">
     <p><strong><%= date_text %></strong></p>
