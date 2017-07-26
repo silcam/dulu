@@ -3,6 +3,7 @@ require 'test_helper'
 class EventTest < ActiveSupport::TestCase
   def setup
     @genesis_check = events :HdiGenesisChecking
+    I18n.locale = :en
   end
 
   test "Relations" do
@@ -30,6 +31,12 @@ class EventTest < ActiveSupport::TestCase
 
   test "Validate End Date not before Start Date" do
     refute @genesis_check.update(end_date: '2017-01'), "Should not save with end date before start date"
+  end
+
+  test "Display Name" do
+    hdi_past = events :HdiPastChecking
+    assert_equal 'Hdi Genesis Checking', @genesis_check.display_name
+    assert_equal 'Consultant Check', hdi_past.display_name
   end
 
   test "F Dates" do

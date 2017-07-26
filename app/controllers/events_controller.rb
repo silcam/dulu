@@ -36,6 +36,12 @@ class EventsController < ApplicationController
     end
   end
 
+  def destroy
+    @event = Event.find params[:id]
+    @event.destroy
+    redirect_to program_events_path(6)
+  end
+
   private
 
   def prepared_event_params
@@ -65,8 +71,4 @@ class EventsController < ApplicationController
                                   event_participant: [:person_id, :program_role_id],
                                   new_event_participants: [:person_id, :program_role_id])
   end
-
-  # def event_participant_params(ep_id)
-  #   params.require(:event).require(:event_participant).require(ep_id).permit(:person_id, :program_role_id)
-  # end
 end

@@ -5,6 +5,7 @@ HdiGenesisChecking:
   end_date: 2018-01-30
   kind: Consultation
   programs: HdiProgram
+  name: Hdi Genesis Checking
 
 HdiPastChecking:
   start_date: 2017-01

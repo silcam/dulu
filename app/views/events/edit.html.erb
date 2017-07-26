@@ -1,4 +1,16 @@
-<h2><%= @event.name.blank? ? t(@event.kind) : @event.name %></h2>
+<h2>
+  <style>
+    form.button_to {
+      display: inline-block;
+    }
+  </style>
+  <%= @event.display_name %>
+  <%= button_to t(:Delete_event), event_path(@event),
+              method: :delete,
+              data: {confirm: t(:Delete_event_confirmation, event: @event.display_name)},
+              class: 'btn btn-danger',
+              style: 'margin-left: 40px' %>
+</h2>
 
 <%= form_for @event, html: {class: 'auto-width'} do |form| %>
 

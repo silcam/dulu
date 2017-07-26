@@ -97,7 +97,7 @@ class Program < ApplicationRecord
   end
 
   def self.all_sorted
-    Program.joins(:language).order('languages.name')
+    Program.joins(:language).order('languages.name').includes(:language)
   end
 
   def self.all_sorted_by_recency

@@ -1,5 +1,5 @@
 <%
-  title = event.name.blank? ? t(event.kind) : event.name
+  title = event.display_name
   title = "#{event.programs.first.name} #{title}" if event.programs.count == 1
 
   start = event.f_start_date

@@ -24,6 +24,10 @@ class Event < ApplicationRecord
     end
   end
 
+  def display_name
+    name.blank? ? I18n.t(kind) : name
+  end
+
   def f_start_date
     begin
       FuzzyDate.from_string self.start_date
