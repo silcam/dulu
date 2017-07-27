@@ -9,11 +9,13 @@ class EventsController < ApplicationController
   end
 
   def new
+    authorize! :create, Event
     @program = Program.find params[:program_id]
     @event = @program.events.build
   end
 
   def create
+    authorize! :create, Event
     @program = Program.find params[:program_id]
     @event = Event.new(prepared_event_params)
     if(@event.save)
@@ -25,10 +27,12 @@ class EventsController < ApplicationController
 
   def edit
     @event = Event.find params[:id]
+    authorize! :update, @event
   end
 
   def update
     @event = Event.find params[:id]
+    authorize! :update, @event
     if(@event.update(prepared_event_params))
       follow_redirect events_path
     else
@@ -38,6 +42,7 @@ class EventsController < ApplicationController
 
   def destroy
     @event = Event.find params[:id]
+    authorize! :destroy, @event
     @event.destroy
     follow_redirect events_path
   end

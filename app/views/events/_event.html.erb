@@ -20,7 +20,7 @@
       <%= title %>
     </span>
     <span style="float: right">
-      <%= link_to t(:Edit), edit_event_path(event, referred_by: request.path) %>
+      <%= link_to t(:Edit), edit_event_path(event, referred_by: request.path) if can?(:update, event) %>
     </span>
   </div>
   <div class="panel-body">

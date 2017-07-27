@@ -11,6 +11,7 @@ class AccessPolicy
       can :update_activity, Activity
       can :manage, Organization
       can :manage, Language
+      can :manage, Event
     end
 
     role :program_supervisor, proc { |u| u.has_role(:role_program_supervisor) } do
@@ -26,10 +27,6 @@ class AccessPolicy
       can :manage, Language do |language, user|
         language.program.current_people.include? user
       end
-
-      can :manage, Event do |event, user|
-
-      end
     end
 
     role :program_responsable, proc { |u| u.has_role(:role_program_responsable) } do
@@ -41,8 +38,8 @@ class AccessPolicy
         activity.program.current_people.include? user
       end
 
-      can [:update, :delete], Event do |event, user|
-        event.updateable_by? user
+      can [:update, :destroy], Event do |event, user|
+        event.associated_with? user
       end
       can :create, Event
     end

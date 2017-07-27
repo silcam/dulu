@@ -48,26 +48,12 @@ class Event < ApplicationRecord
     self.event_participants.where(person: person).first.try(:program_role)
   end
 
-  def updateable_by?(user)
-    send "#{kind}_updateable_by?".downcase.to_sym, user
-  end
+  def associated_with?(user)
+    return true if self.people.include? user
 
-  private
-
-  def consultation_updateable_by?(user)
-    tc_roles = ProgramRole.where("name LIKE 'TranslationConsultant%'")
-
-    return true if tc_roles.include?(role_of(user))
-
-    self.programs.each do |program|
-      in_clause = tc_roles.collect{|role| role.id}.join(',')
-      unless(Participant.where("person_id=? AND
-                                program_id=? AND
-                                program_role_id IN (?)",
-                                user.id, program.id, in_clause).empty?)
-        return true
-      end
-    end
+    event_programs_list = self.programs.collect{|p| p.id}
+    assocs = Participant.where("person_id=? AND program_id IN (?)", user.id, event_programs_list)
+    return true unless assocs.empty?
 
     return false
   end
