@@ -17,7 +17,7 @@ class EventTest < ActiveSupport::TestCase
   end
 
   test "Presence Validation" do
-    params = {kind: :Consultant_check, start_date: '2019-04', end_date: '2019-04'}
+    params = {kind: :Consultation, start_date: '2019-04', end_date: '2019-04'}
     model_validation_hack_test Event, params
   end
 
