@@ -53,4 +53,24 @@ class EventTest < ActiveSupport::TestCase
     assert_equal consultant, @genesis_check.role_of(drew)
     assert_nil @genesis_check.role_of(rick)
   end
+
+  test "Consultation Not Updateable without Association" do
+    rick = people :Rick
+    refute @genesis_check.updateable_by?(rick), "updateable_by?(rick) should be false"
+  end
+
+  test "Consultation Updateable by Direct Association" do
+    rick = people :Rick
+    tc = program_roles :TranslationConsultant
+    @genesis_check.event_participants << EventParticipant.new(person: rick, program_role: tc)
+    assert @genesis_check.updateable_by?(rick), "updateable_by?(rick) should be true"
+  end
+
+  test "Consultation Updateable by Program Association" do
+    rick = people :Rick
+    tc = program_roles :TranslationConsultant
+    hdi = programs :HdiProgram
+    Participant.create(person: rick, program: hdi, program_role: tc, start_date: '2017')
+    assert @genesis_check.updateable_by?(rick), "updateable_by?(rick) should be true"
+  end
 end

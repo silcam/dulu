@@ -26,15 +26,25 @@ class AccessPolicy
       can :manage, Language do |language, user|
         language.program.current_people.include? user
       end
+
+      can :manage, Event do |event, user|
+
+      end
     end
 
     role :program_responsable, proc { |u| u.has_role(:role_program_responsable) } do
       can [:create_activity], Program do |program, user|
         program.current_people.include? user
       end
+
       can :update_activity, Activity do |activity, user|
         activity.program.current_people.include? user
       end
+
+      can [:update, :delete], Event do |event, user|
+        event.updateable_by? user
+      end
+      can :create, Event
     end
 
     role :user do
