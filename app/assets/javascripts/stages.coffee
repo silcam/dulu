@@ -7,7 +7,10 @@ $(document).ready ->
     e.preventDefault()
     stage_id = $(this).data("edit-stage-id")
     $('#stage-row-view-' + stage_id).fadeOut('fast', ->
-      $('#stage-row-form-'+ stage_id).fadeIn('fast'))
+      $('#stage-row-form-'+ stage_id).fadeIn('fast', ->
+        $(this).find('select').first().focus()
+      )
+    )
 
   $("button[data-cancel-edit-stage-id]").click (e) ->
     e.preventDefault()
@@ -18,7 +21,10 @@ $(document).ready ->
   $('#show-update-form').click (e) ->
     e.preventDefault()
     $(this).fadeOut('fast', ->
-      $('#update-stage-form').fadeIn('fast'))
+      $('#update-stage-form').fadeIn('fast', ->
+        $('select#stage_stage_name_id').focus()
+      )
+    )
 
   $('.new_stage').on('ajax:before', () ->
     return window.validate_fuzzy_date_form($(this))

@@ -5,7 +5,11 @@
 $(document).ready ->
   $("a[data-slide-form-id]").click (e) ->
     e.preventDefault()
-    $('#update-stage-form-'+$(this).data("slide-form-id")).slideToggle(350)
+    slide_form = $('#update-stage-form-'+$(this).data("slide-form-id"))
+    slide_form.slideToggle(350, ->
+      if(slide_form.is(':visible'))
+        slide_form.find('select#stage_stage_name_id').focus()
+    )
 
   $("button[data-form-cancel-id]").click (e) ->
     e.preventDefault()
