@@ -51,7 +51,7 @@
 
       <% @event.event_participants.each do |ep| %>
         <%= form.fields_for ep, index: ep.id do |ep_form| %>
-          <div class="person-select">
+          <div class="person-select" id="person-select-<%= ep.id %>">
             <%= ep_form.collection_select :person_id, Person.all_sorted, :id, :full_name,
                                           {}, style: 'display: inline-block',
                                           class: 'form-control' %>

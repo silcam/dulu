@@ -51,8 +51,9 @@ class EventsController < ApplicationController
 
   def prepared_event_params
     prms = event_params
-    prms[:program_ids].uniq!
     prms[:event_participants] = []
+    prms[:program_ids] ||= []
+    prms[:program_ids].uniq!
     prms[:new_event_participants].each do |ep_params|
       unless ep_params[:person_id].blank?
         prms[:event_participants] << EventParticipant.new(ep_params)

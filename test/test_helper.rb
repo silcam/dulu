@@ -47,6 +47,10 @@ class ActiveSupport::TestCase
     select sel_month, from: "#{prefix}_m"
     select sel_day, from: "#{prefix}_d"
   end
+
+  def error_message_with(content)
+    find(:css, 'div#error-explanation').has_content? content
+  end
 end
 
 # Some kind of hack to avoid SQLite::BusyExceptions
