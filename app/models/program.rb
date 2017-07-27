@@ -63,6 +63,19 @@ class Program < ApplicationRecord
     translation_activities.where(bible_book_id: book_id).count > 0
   end
 
+  def percentages
+    percents = {}
+    translation_activities.includes(:bible_book).each do |ta|
+      bible_book = ta.bible_book
+      testament = bible_book.testament
+      stage_name = ta.stage_name
+      percents[testament] ||= {}
+      percents[testament][stage_name] ||= 0.0;
+      percents[testament][stage_name] += bible_book.percent_of_testament
+    end
+    percents
+  end
+
   # These methods may still be needed later, but I abandoned them when
   # I though of events_as_hash
   #

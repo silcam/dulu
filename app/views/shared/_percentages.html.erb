@@ -1,0 +1,22 @@
+<%
+  t_stages = StageName.translation_stages
+  percentages = program.percentages
+  testaments = {ot: t(:Old_testament), nt: t(:New_testament)}
+%>
+
+<% [:ot, :nt].each do |testament| %>
+  <% if percentages[testament] %>
+    <strong><%= testaments[testament] %>:</strong>
+
+    <% nocomma = percentages[testament].count %>
+    <% item = 1 %>
+    <% t_stages.each do |stage| %>
+      <% if percentages[testament][stage.name] %>
+        <%= percentages[testament][stage.name].round %>%
+        <%= t(stage.name) %><% unless item==nocomma %>&nbsp;&nbsp;<% end %>
+        <% item += 1 %>
+      <% end %>
+    <% end %>
+  <% end %>
+  <% if percentages[:ot] && percentages[:nt] && testament==:ot %> <br> <% end %>
+<% end %>

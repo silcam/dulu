@@ -3,7 +3,10 @@ require 'test_helper'
 class BibleBookTest < ActiveSupport::TestCase
   def setup
     I18n.locale = :en
+    @ezra = bible_books(:Ezra)
+    @john = bible_books(:John)
   end
+
   test 'Relations' do
     @hdi_ezra = translation_activities(:HdiEzraActivity)
     @ezra = bible_books(:Ezra)
@@ -11,10 +14,19 @@ class BibleBookTest < ActiveSupport::TestCase
   end
 
   test 'Name' do
-    @ezra = bible_books(:Ezra)
     assert_equal 'Ezra', @ezra.name
     I18n.locale = :fr
     assert_equal 'Esdras', @ezra.name
+  end
+
+  test 'testament' do
+    assert_equal :ot, @ezra.testament
+    assert_equal :nt, @john.testament
+  end
+
+  test 'percent of testament' do
+    assert_in_delta 1.2, @ezra.percent_of_testament, 0.1
+    assert_in_delta 3.8, @john.percent_of_testament, 0.1
   end
 
   test 'testament getters' do

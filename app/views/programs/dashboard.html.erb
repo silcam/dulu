@@ -3,6 +3,7 @@
     <div class="col-md-9">
       <div id="activities-table-div">
         <h2><%= t :Current_activities %></h2>
+        <%= render 'shared/percentages', program: @program %>
         <table class="table" id="activities-table">
           <% @program.sorted_activities.each do |activity| %>
             <%= render 'current_activity_table_row', activity: activity %>

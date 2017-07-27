@@ -9,10 +9,7 @@
     <tr>
       <td><%= link_to program.name, dashboard_program_path(program) %></td>
       <td>
-        <% program.sorted_activities.each do |activity| %>
-          <%= "#{activity.name}[#{t(activity.stage_name)}]" %>
-            <%= ', ' unless activity==program.sorted_activities.last %>
-        <% end %>
+        <%= render 'shared/percentages', program: program %>
       </td>
     </tr>
   <% end %>

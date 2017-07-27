@@ -7,11 +7,33 @@ class BibleBook < ApplicationRecord
   MATTHEW_USFM = 41
   REVELATION_USFM = 67
 
+  VERSES = 30986
+  VERSES_NT = 7957
+  VERSES_OT = 23029
+
   def name
     if I18n.locale == :fr
       return french_name
     end
     return english_name
+  end
+
+  def testament
+    case usfm_number
+      when (1 .. 39)
+        return :ot
+      when (41 .. 67)
+        return :nt
+    end
+  end
+
+  def percent_of_testament
+    case testament
+      when :ot
+        return number_of_verses.to_f / VERSES_OT * 100
+      when :nt
+        return number_of_verses.to_f / VERSES_NT * 100
+    end
   end
 
   def self.get_old_testament

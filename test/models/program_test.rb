@@ -75,6 +75,12 @@ class ProgramTest < ActiveSupport::TestCase
     refute @hdi_program.is_translating?(john.id), "Hdi are not translating John"
   end
 
+  test "Percentages" do
+    percents = @hdi_program.percentages
+    assert_in_delta 1.2, percents[:ot]['Drafting'], 0.1
+    assert_in_delta 6.6, percents[:ot]['Consultant_check'], 0.1
+  end
+
   # test "Current Events" do
   #   event_test_setup
   #   Date.stub(:today, Date.new(2017, 7, 26)) do
