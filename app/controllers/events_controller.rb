@@ -54,10 +54,9 @@ class EventsController < ApplicationController
       end
     end
     prms[:event_participant].try(:each) do |ep_id, ep_params|
-      if(ep = EventParticipant.find(ep_id))
-        ep.assign_attributes(ep_params)
-        prms[:event_participants] << ep
-      end
+      ep = EventParticipant.find_by(id: ep_id) || EventParticipant.new
+      ep.assign_attributes(ep_params)
+      prms[:event_participants] << ep
     end
     prms.delete(:event_participant)
     prms.delete(:new_event_participants)

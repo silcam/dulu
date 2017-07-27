@@ -17,7 +17,7 @@ class Event < ApplicationRecord
       start_fuzzy = FuzzyDate.from_string start_date
       end_fuzzy = FuzzyDate.from_string end_date
       if(end_fuzzy.before?(start_fuzzy))
-        errors.add(:end_date, "End date can't be before start date")
+        errors.add(:end_date, "can't be before start date")
       end
     rescue (FuzzyDateException)
       # No worries, the fuzzy date validator will complain about this
