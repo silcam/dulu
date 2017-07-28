@@ -114,16 +114,7 @@ class Program < ApplicationRecord
   end
 
   def self.all_sorted_by_recency
-    programs_with_activity = Program.joins(activities: :stages)
-                                 .order('stages.start_date DESC')
-    programs_without_activity = Program.left_outer_joins(:activities)
-                                    .where('activities.id IS NULL')
-                                    .joins(:language)
-                                    .order('languages.name')
-
-    programs = []
-    programs_with_activity.each{|pwa| programs << pwa unless programs.include? pwa}
-    programs += programs_without_activity
+    Program.all.order('updated_at DESC')
   end
 
   def self.search(query)

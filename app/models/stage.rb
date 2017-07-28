@@ -1,6 +1,6 @@
 class Stage < ApplicationRecord
 
-  belongs_to :activity
+  belongs_to :activity, touch: true
   belongs_to :stage_name
   has_many :program_roles, through: :stage_name
 

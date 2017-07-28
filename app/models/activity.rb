@@ -1,6 +1,6 @@
 class Activity < ApplicationRecord
 
-  belongs_to :program
+  belongs_to :program, touch: true
   belongs_to :bible_book, required: false
   has_many :stages
   has_and_belongs_to_many :participants
