@@ -9,7 +9,7 @@ class Activity < ApplicationRecord
   validates :type, presence: true
 
   def current_stage
-    self.stages.order(:start_date, :created_at).last
+    self.stages.find_by(current: true)
   end
 
   def progress

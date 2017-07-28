@@ -1,5 +1,8 @@
 <h1><%= t :Programs %></h1>
 
+<% percentages = Program.percentages %>
+<% t_stages = StageName.translation_stages %>
+
 <table class="table">
   <tr>
     <th><%= t :Language %></th>
@@ -9,7 +12,7 @@
     <tr>
       <td><%= link_to program.name, dashboard_program_path(program) %></td>
       <td>
-        <%= render 'shared/percentages', program: program %>
+        <%= render 'shared/percentages', {percentages: percentages[program.id], t_stages: t_stages}  if percentages[program.id]%>
       </td>
     </tr>
   <% end %>

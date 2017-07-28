@@ -7,6 +7,7 @@ HdiTwo:
   activity: HdiEzraActivity
   stage_name: Drafting
   start_date: 2017-02
+  current: true
 
 HdiGenesisOne:
   activity: HdiGenesisActivity
@@ -22,6 +23,7 @@ HdiGenesisThree:
   activity: HdiGenesisActivity
   stage_name: ConsultantCheck
   start_date: 2017-05-29
+  current: true
 
 ZulgoEzraOne:
   activity: ZulgoEzraActivity
@@ -37,6 +39,7 @@ ZulgoEzraThree:
   activity: ZulgoEzraActivity
   stage_name: ConsultantCheck
   start_date: 2017-05-29
+  current: true
 
 ReallyOldOne:
   activity: ReallyOldActivity

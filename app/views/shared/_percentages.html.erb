@@ -1,6 +1,6 @@
 <%
-  t_stages = StageName.translation_stages
-  percentages = program.percentages
+  t_stages ||= StageName.translation_stages
+  percentages = program.percentages unless percentages
   testaments = {ot: t(:Old_testament), nt: t(:New_testament)}
 %>
 

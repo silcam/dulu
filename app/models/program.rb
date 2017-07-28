@@ -109,12 +109,33 @@ class Program < ApplicationRecord
     event_hash
   end
 
+  def self.percentages
+    percentages = {}
+    programs = Program.includes(:translation_activities => [:bible_book, :stages => :stage_name])
+                      .where(stages: {current: true})
+    # programs = Program.joins(:translation_activities => [:bible_book, :stages => :stage_name])
+    #                   .where(stages: {current: true})
+    programs.each do |program|
+      percents = {}
+      program.translation_activities.each do |ta|
+        bible_book = ta.bible_book
+        testament = bible_book.testament
+        stage_name = ta.stages.first.stage_name.name
+        percents[testament] ||= {}
+        percents[testament][stage_name] ||= 0.0;
+        percents[testament][stage_name] += bible_book.percent_of_testament
+      end
+      percentages[program.id] = percents
+    end
+    percentages
+  end
+
   def self.all_sorted
     Program.joins(:language).order('languages.name').includes(:language)
   end
 
   def self.all_sorted_by_recency
-    Program.all.order('updated_at DESC')
+    Program.all.order('updated_at DESC').includes(:language)
   end
 
   def self.search(query)

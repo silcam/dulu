@@ -77,6 +77,10 @@ class ProgramTest < ActiveSupport::TestCase
 
   test "Percentages" do
     percents = @hdi_program.percentages
+    percentage_assertions percents
+  end
+
+  def percentage_assertions(percents)
     assert_in_delta 1.2, percents[:ot]['Drafting'], 0.1
     assert_in_delta 6.6, percents[:ot]['Consultant_check'], 0.1
   end
@@ -125,6 +129,11 @@ class ProgramTest < ActiveSupport::TestCase
     @future_event = events :HdiGenesisChecking
     @past_event = events :HdiPastChecking
     @current_event = events :HdiCurrentChecking
+  end
+
+  test "All Percentages" do
+    percentages = Program.percentages
+    percentage_assertions percentages[@hdi_program.id]
   end
 
   test "All Sorted" do
