@@ -8,8 +8,16 @@ class Activity < ApplicationRecord
 
   validates :type, presence: true
 
+  after_touch :update_current_stage
+
   def current_stage
     self.stages.find_by(current: true)
+  end
+
+  def update_current_stage
+    my_stages = stages.order(start_date: :desc)
+    my_stages.update(current: false)
+    my_stages.first.update(current: true)
   end
 
   def progress
@@ -39,7 +47,10 @@ class Activity < ApplicationRecord
   def build(params)
     # Type specific implementation runs first
     save!
-    stage_one = Stage.new(activity: self, stage_name_id: params[:stage_name_id], start_date: params[:stage_start_date])
+    stage_one = Stage.new(activity: self,
+                          stage_name_id: params[:stage_name_id],
+                          start_date: params[:stage_start_date],
+                          current: true)
     if stage_one.valid?
       stage_one.save
     else

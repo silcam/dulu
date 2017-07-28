@@ -34,6 +34,18 @@ class ActivityTest < ActiveSupport::TestCase
                   @hdi_ezra.current_stage)
   end
 
+  test 'update_current_stage' do
+    planned = stages :HdiOne
+    drafting = stages :HdiTwo
+    planned.update(current: true)
+    drafting.update(current: false)
+    @hdi_ezra.touch
+    planned.reload
+    drafting.reload
+    refute planned.current, "Planned should no longer be current"
+    assert drafting.current, "Drafting shoulde be current"
+  end
+
   test 'progress' do
     percent, color = @hdi_ezra.progress
     assert (0..100) === percent, "Progress should be between 0 and 100"

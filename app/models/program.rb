@@ -63,19 +63,6 @@ class Program < ApplicationRecord
     translation_activities.where(bible_book_id: book_id).count > 0
   end
 
-  def percentages
-    percents = {}
-    translation_activities.includes(:bible_book).each do |ta|
-      bible_book = ta.bible_book
-      testament = bible_book.testament
-      stage_name = ta.stage_name
-      percents[testament] ||= {}
-      percents[testament][stage_name] ||= 0.0;
-      percents[testament][stage_name] += bible_book.percent_of_testament
-    end
-    percents
-  end
-
   # These methods may still be needed later, but I abandoned them when
   # I though of events_as_hash
   #
@@ -109,23 +96,27 @@ class Program < ApplicationRecord
     event_hash
   end
 
+  def percentages
+    percents = {}
+    translations = translation_activities.loaded? ? translation_activities :
+                    translation_activities.includes([:bible_book, :stages => :stage_name]).where(stages: {current: true})
+    translations.each do |translation|
+      bible_book = translation.bible_book
+      testament = bible_book.testament
+      stage_name = translation.stages.first.stage_name.name
+      percents[testament] ||= {}
+      percents[testament][stage_name] ||= 0.0;
+      percents[testament][stage_name] += bible_book.percent_of_testament
+    end
+    percents
+  end
+
   def self.percentages
     percentages = {}
     programs = Program.includes(:translation_activities => [:bible_book, :stages => :stage_name])
                       .where(stages: {current: true})
-    # programs = Program.joins(:translation_activities => [:bible_book, :stages => :stage_name])
-    #                   .where(stages: {current: true})
     programs.each do |program|
-      percents = {}
-      program.translation_activities.each do |ta|
-        bible_book = ta.bible_book
-        testament = bible_book.testament
-        stage_name = ta.stages.first.stage_name.name
-        percents[testament] ||= {}
-        percents[testament][stage_name] ||= 0.0;
-        percents[testament][stage_name] += bible_book.percent_of_testament
-      end
-      percentages[program.id] = percents
+      percentages[program.id] = program.percentages()
     end
     percentages
   end
@@ -150,4 +141,8 @@ class Program < ApplicationRecord
     end
     results
   end
+
+  private
+
+
 end

@@ -45,3 +45,4 @@ ReallyOldOne:
   activity: ReallyOldActivity
   stage_name: Planned
   start_date: 1950
+  current: true
