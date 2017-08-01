@@ -3,6 +3,10 @@ class ActivitiesController < ApplicationController
   before_action :set_program
   before_action :authorize_user
 
+  def index
+    @program = Program.find params[:program_id]
+  end
+
   def new
     @activity = @program.activities.new
   end

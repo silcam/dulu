@@ -20,21 +20,7 @@
         <% end %>
       <% end %>
     </h3>
-    <ul class="nav nav-sidebar">
-      <% links = [[t(:Dashboard), dashboard_program_path(@program)],
-                  [t(:Language), language_path(@language)],
-                  [t(:Events), program_events_path(@program)],
-                  [t(:Manage), program_path(@program)]] %>
-      <% links.each do |link| %>
-        <% if current_page?(link[1]) %>
-          <li class="h4 active">
-        <% else %>
-          <li class="h4">
-        <% end %>
-        <%= link_to link[0], link[1], class: 'h4' %>
-        </li>
-      <% end %>
-    </ul>
+    <%= render 'programs/sidebar_links' %>
   </div>
   <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
     <%= yield %>

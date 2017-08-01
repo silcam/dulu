@@ -1,0 +1,16 @@
+<%= render 'programs/sidebar' do %>
+  <h2><%= t :Activities %></h2>
+  <% if can? :create_activity, @program %>
+      <%= link_to t(:Add_books),
+                  new_program_activity_path(@program) %>
+  <% end %>
+
+  <table class='table'>
+    <% @program.sorted_translation_activities.each do |activity| %>
+        <tr>
+          <td><%= link_to activity.name, activity %></td>
+          <td><%= t(activity.current_stage.name) %></td>
+        </tr>
+    <% end %>
+  </table>
+<% end %>
