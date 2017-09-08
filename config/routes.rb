@@ -13,6 +13,7 @@ Rails.application.routes.draw do
   resources :people
   resources :organizations
   resources :languages
+  resources :events
   shallow do
     resources :programs do
       get 'dashboard', on: :member
@@ -31,5 +32,4 @@ Rails.application.routes.draw do
       resources :events
     end
   end
-  resources :events
 end

@@ -26,10 +26,14 @@
   <div class="panel-body">
     <p><strong><%= date_text %></strong></p>
     <p>
-      <% unless programs_text.blank? %>
-        <%= programs_text %><br>
+      <% unless event.programs.empty? %>
+        <% event.programs.each do |program| %>
+          <%= link_to program.name, dashboard_program_path(program) %><%= ',' unless program == event.programs.last %>
+        <% end %><br>
       <% end %>
-      <%= people_text unless people_text.blank? %>
+      <% event.people.each do |person| %>
+        <%= link_to person.full_name, person %><%= ',' unless person == event.people.last %>
+      <% end %>
     </p>
   </div>
 </div>

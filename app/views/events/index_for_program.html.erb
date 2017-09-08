@@ -1,0 +1,14 @@
+<%= render 'programs/sidebar' do %>
+
+    <h2><%= t :Events %></h2>
+
+    <%= link_to t(:New_event), new_program_event_path(@program) if can?(:create, Event) %>
+
+    <% events = @program.events_as_hash %>
+
+    <% if @program.events.empty? %>
+      <h3><%= t :No_events %></h3>
+    <% else %>
+      <%= render 'events_table', events: events %>
+    <% end %>
+<% end %>

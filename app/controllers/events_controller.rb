@@ -3,23 +3,30 @@ class EventsController < ApplicationController
   def index
     if params[:program_id]
       @program = Program.find(params[:program_id])
-      # @upcoming_events = @program.upcoming_events
-      # @past_events =
+      render 'index_for_program'
+    else
+      render 'index'
     end
   end
 
   def new
     authorize! :create, Event
-    @program = Program.find params[:program_id]
-    @event = @program.events.build
+    if params[:program_id]
+      @program = Program.find params[:program_id]
+      @event = @program.events.build
+      render 'new_for_program'
+    else
+      @event = Event.new
+      render 'new'
+    end
   end
 
   def create
     authorize! :create, Event
-    @program = Program.find params[:program_id]
     @event = Event.new(prepared_event_params)
     if(@event.save)
-      redirect_to dashboard_program_path(@program)
+      redirect_to params[:program_id] ? dashboard_program_path(params[:program_id]) :
+                                        events_path
     else
       render 'new'
     end

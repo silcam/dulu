@@ -1,0 +1,26 @@
+<div class="row">
+  <% unless events[:current].empty? %>
+      <div class="col-md-4">
+        <%= render 'events/events_column',
+                   title: t(:Current_events),
+                   events: events[:current] %>
+      </div>
+  <% end %>
+
+  <% unless events[:future].empty? %>
+      <div class="col-md-4">
+        <%= render 'events/events_column',
+                   title: t(:Upcoming_events),
+                   events: events[:future] %>
+      </div>
+  <% end %>
+
+  <% unless events[:past].empty? %>
+      <div class="col-md-4">
+        <%= render 'events/events_column',
+                   title: t(:Past_events),
+                   events: events[:past],
+                   reverse: true%>
+      </div>
+  <% end %>
+</div>

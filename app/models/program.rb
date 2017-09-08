@@ -82,18 +82,7 @@ class Program < ApplicationRecord
   # end
 
   def events_as_hash
-    my_events = self.events.order(:start_date)
-    event_hash = {past: [], current: [], future: []}
-    my_events.each do |event|
-      if event.f_end_date.past?
-        event_hash[:past] << event
-      elsif event.f_start_date.future?
-        event_hash[:future] << event
-      else
-        event_hash[:current] << event
-      end
-    end
-    event_hash
+    Event.events_as_hash(self)
   end
 
   def percentages

@@ -59,7 +59,7 @@
 
       <% unless events[:past].empty? %>
         <div>
-          <%= render 'events/events_column', title: t(:Past_events), events: events[:past].first(3) %>
+          <%= render 'events/events_column', title: t(:Past_events), events: events[:past].last(3), reverse: true %>
           <% if events[:past].count > 3 %>
               <p class="lead">
                 <%= link_to t(:More), program_events_path(@program) %>
