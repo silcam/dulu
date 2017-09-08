@@ -1,20 +1,18 @@
 <%= render layout: 'sidebar' do %>
   <div class="row">
     <div class="col-md-9">
-      <div id="activities-table-div">
+      <div id="activities-table-div" class="bottom-border">
         <h2><%= t :Current_activities %></h2>
         <%= button_to t(:New_activity), new_program_activity_path(@program), method: :get, class: 'btn btn-primary' if can? :create_activity, @program %>
         <%= render 'shared/percentages', program: @program %>
         <% if @program.sorted_activities.empty? %>
           <h3><%= t :No_current_activities %></h3>
         <% else %>
-          <div class="bottom-border">
             <table class="table" id="activities-table">
               <% @program.sorted_activities.each do |activity| %>
                 <%= render 'current_activity_table_row', activity: activity %>
               <% end %>
             </table>
-          </div>
         <% end %>
       </div>
       <div>
