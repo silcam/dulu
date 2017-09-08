@@ -1,7 +1,7 @@
 class ActivitiesController < ApplicationController
   # before_action :set_activity, only: []
   before_action :set_program
-  before_action :authorize_user
+  before_action :authorize_user, only: [:new, :create]
 
   def index
     @program = Program.find params[:program_id]

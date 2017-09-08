@@ -165,6 +165,7 @@ fr:
   Log_out: Déconnexion
   Logout_message: Merci d'avoir utilisé Dulu.
   Login_prompt: Connecter avec Google
+  not_allowed: Votre compte n'a pas accès à ce page.
 
   #Participants Controller
   Translator: Traducteur
