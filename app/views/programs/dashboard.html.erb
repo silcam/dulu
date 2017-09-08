@@ -5,7 +5,9 @@
         <h2><%= t :Current_activities %></h2>
         <%= button_to t(:New_activity), new_program_activity_path(@program), method: :get, class: 'btn btn-primary' if can? :create_activity, @program %>
         <%= render 'shared/percentages', program: @program %>
-        <% unless @program.sorted_activities.empty? %>
+        <% if @program.sorted_activities.empty? %>
+          <h3><%= t :No_current_activities %></h3>
+        <% else %>
           <div class="bottom-border">
             <table class="table" id="activities-table">
               <% @program.sorted_activities.each do |activity| %>

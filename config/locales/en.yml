@@ -136,6 +136,7 @@ en:
   New_activity: New Activity
   new_activity: new activity
   Multiple_stages_hint: "If the books are at different stages, set the stage to Planned and the date to the beginning of the project. Then update each book to it's current stage on the Project Dashboard."
+  No_current_activites: No Current Activities
 
   #Participants Controller
   Role: Role
