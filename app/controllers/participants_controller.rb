@@ -2,7 +2,7 @@ class ParticipantsController < ApplicationController
 
   before_action :set_participant, only: [:edit, :update, :finish]
   before_action :set_program, only: [:index, :new, :create]
-  before_action :authorize_user
+  before_action :authorize_user, only: [:new, :edit, :create, :update, :finish]
 
   def index
   end

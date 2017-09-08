@@ -34,7 +34,7 @@ class UpdateStageTest < Capybara::Rails::TestCase
       page.accept_alert
     end
 
-    sleep 1
+    sleep 1.4
     refute page.has_content?('Drafting'),
            "Should not see Drafting stage anymore"
     assert_equal(stage_names(:Planned),

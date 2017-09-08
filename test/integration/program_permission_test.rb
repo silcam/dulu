@@ -19,12 +19,9 @@ class ProgramPermissionTest < Capybara::Rails::TestCase
 
   test "Drew can't manage people" do
     log_in @drew
-    visit program_path @hdi_program
-    manage_people_path = program_participants_path @hdi_program
-    refute page_has_link?(manage_people_path),
+    visit program_participants_path @hdi_program
+    refute page_has_link?(new_program_participant_path(@hdi_program)),
            "Drew shouldn't see manage participants link"
-    visit manage_people_path
-    assert_current_path not_allowed_path
     visit new_program_participant_path(@hdi_program)
     assert_current_path not_allowed_path
   end

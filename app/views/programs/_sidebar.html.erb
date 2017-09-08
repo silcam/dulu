@@ -1,6 +1,6 @@
 <% @language ||= @program.language %>
 <div class="row">
-  <div class="col-sm-3 col-md-2 sidebar">
+  <div class="col-sm-3 col-md-2 sidebar" id="sidebar">
     <h1 class="sidebar-title"><%= @program.name %></h1>
     <% link_text = @language.is_dialect? ?
                      "#{t(:A_dialect_of)} #{@language.code_or_parent_code}" :
