@@ -133,6 +133,7 @@ fr:
   Add_activity: Ajouter une activité
   Activity_type: Type d'activité
   Associate_people: "Associer %{activity} avec:"
+  New_activity: Nouvelle activité
   new_activity: nouvelle activité
   Multiple_stages_hint: "Si les livres sont à des differentes étapes, choisissez Prévue et fixez le date au commencement de la traduction. Puis, mettez à jour chaque livre sur le Tableau de bord."
 

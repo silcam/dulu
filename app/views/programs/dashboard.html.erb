@@ -3,12 +3,17 @@
     <div class="col-md-9">
       <div id="activities-table-div">
         <h2><%= t :Current_activities %></h2>
+        <%= button_to t(:New_activity), new_program_activity_path(@program), method: :get, class: 'btn btn-primary' if can? :create_activity, @program %>
         <%= render 'shared/percentages', program: @program %>
-        <table class="table" id="activities-table">
-          <% @program.sorted_activities.each do |activity| %>
-            <%= render 'current_activity_table_row', activity: activity %>
-          <% end %>
-        </table>
+        <% unless @program.sorted_activities.empty? %>
+          <div class="bottom-border">
+            <table class="table" id="activities-table">
+              <% @program.sorted_activities.each do |activity| %>
+                <%= render 'current_activity_table_row', activity: activity %>
+              <% end %>
+            </table>
+          </div>
+        <% end %>
       </div>
       <div>
         <h2><%= t :Program_status %></h2>
