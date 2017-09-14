@@ -15,7 +15,7 @@ class Activity < ApplicationRecord
   end
 
   def update_current_stage
-    my_stages = stages.order(start_date: :desc)
+    my_stages = stages.order(start_date: :desc, id: :desc)
     my_stages.update(current: false)
     my_stages.first.update(current: true)
   end

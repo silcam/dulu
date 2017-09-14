@@ -2,23 +2,33 @@
   <td>
     <%= link_to activity.name, activity %>
   </td>
+
   <td class="progress-cell" id="activity-progress-<%= activity.id %>">
     <%= render 'programs/progress_bar', activity: activity %>
   </td>
+
   <td id="activity-stage-name-<%= activity.id %>">
     <% if can? :update_activity, activity %>
         <%= link_to t(activity.stage_name), '#', {'data-slide-form-id' => activity.id} %>
     <% else %>
       <%= t(activity.stage_name) %>
     <% end %>
+    <span id="activity-stage-date-<%= activity.id %>">
+      (<%= activity.current_stage.f_start_date.pretty_print %>)
+    </span>
   </td>
-  <td id="activity-stage-date-<%= activity.id %>">
-    <%= activity.current_stage.f_start_date.pretty_print %>
+
+  <td>
+    <% unless activity.note.blank? %>
+      <abbr title="<%= activity.note %>"><%= t :Notes %></abbr>
+    <% end %>
   </td>
+
   <td id="activity-participants-<%= activity.id %>">
     <%= render 'programs/participants', activity: activity %>
   </td>
 </tr>
+
 <% if can? :update_activity, activity %>
   <tr>
     <td colspan="6" class="update-stage-form" id="update-stage-form-cell-<%= activity.id %>">
