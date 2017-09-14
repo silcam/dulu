@@ -3,10 +3,14 @@
     <div class="col-md-9">
       <div id="activities-table-div" class="bottom-border">
         <h2><%= t :Current_activities %></h2>
-        <%= button_to t(:New_activity), new_program_activity_path(@program), method: :get, class: 'btn btn-primary' if can? :create_activity, @program %>
+        <% if can?(:create_activity, @program) and not @program.sorted_activities.empty? %>
+          <%= button_to t(:New_activity), new_program_activity_path(@program), method: :get, class: 'btn btn-primary' %>
+        <% end %>
         <%= render 'shared/percentages', program: @program %>
         <% if @program.sorted_activities.empty? %>
           <h3><%= t :No_current_activities %></h3>
+          <%= button_to t(:New_activity), new_program_activity_path(@program), method: :get, class: 'btn btn-primary' if can? :create_activity, @program %>
+          <br>
         <% else %>
             <table class="table" id="activities-table">
               <% @program.sorted_activities.each do |activity| %>
