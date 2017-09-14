@@ -1,19 +1,28 @@
 <%
   percent, color = activity.progress
-  color_word = case color
-    when :blue
-      'info'
+  color = case color
+    when :red
+      '#A93226'
+    when :orange
+      '#CA6F1E'
     when :yellow
-      'warning'
-    when :green
-      'success'
+      '#F4D03F'
+    when :light_green
+      '#58D68D'
+    when :dark_green
+      '#1E8449'
+    when :light_blue
+      '#5DADE2'
+    when :dark_blue
+      '#21618C'
+    when :purple
+      '#6C3483'
   end
-  bar_class = "progress-bar progress-bar-#{color_word}"
 %>
 
 <div class="progress">
-  <div class="<%= bar_class %>" role="progressbar"
+  <div class="progress-bar" role="progressbar"
       aria-valuenow="<%= percent %>" aria-valuemin="0"
-      aria-valuemax="100" style="width: <%= percent %>%">
+      aria-valuemax="100" style="width: <%= percent %>%; background-color: <%= color %>">
   </div>
 </div>

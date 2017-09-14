@@ -41,22 +41,24 @@ class StageName < ApplicationRecord
 
   def translation_progress
     case self.level
-    when 1, 2
-      return 0, :blue
+    when 1
+      return 0, :red
+    when 2
+        return 10, :red
     when 3
-      return 20, :blue
+      return 20, :orange
     when 4
-      return 40, :blue
+      return 40, :yellow
     when 5
-      return 60, :blue
+      return 60, :light_green
     when 6
-      return 75, :yellow
+      return 75, :dark_green
     when 7
-      return 75, :blue
+      return 75, :light_blue
     when 8
-      return 95, :yellow
+      return 95, :dark_blue
     end
-    return 100, :green
+    return 100, :purple
   end
 
   def generic_progress
