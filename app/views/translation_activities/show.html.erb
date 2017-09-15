@@ -39,7 +39,9 @@
       <h3>
         <%= t :Notes %>
         <small>
-          <%= link_to t(:Edit), '#', data: {'edit-note' => 'edit-note'} %>
+          <% if can? :update_activity, @translation_activity %>
+            <%= link_to t(:Edit), '#', data: {'edit-note' => 'edit-note'} %>
+          <% end %>
         </small>
       </h3>
       <div id="view-note">

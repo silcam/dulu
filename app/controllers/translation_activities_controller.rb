@@ -7,6 +7,7 @@ class TranslationActivitiesController < ApplicationController
 
   def update
     @translation_activity = TranslationActivity.find params[:id]
+    authorize! :update_activity, @translation_activity
     @translation_activity.update ta_params
     redirect_to @translation_activity
   end
