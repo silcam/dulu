@@ -74,7 +74,7 @@ class Person < ApplicationRecord
       end
       results << {title: person.full_name,
                   path: Rails.application.routes.url_helpers.person_path(person),
-                  description: person.organization.name,
+                  description: person.organization.try(:name),
                   subresults: subresults}
     end
     results

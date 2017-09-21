@@ -84,4 +84,10 @@ class PersonTest < ActiveSupport::TestCase
                     {title: 'Hdi', path: "/programs/#{hdi_program.id}",
                         description: 'Translation Consultant'}
   end
+
+  test "Search for person without Org" do
+    assert_nil people(:Abanda).organization
+    results = Person.search 'abanda'
+    assert_equal 1, results.count
+  end
 end
