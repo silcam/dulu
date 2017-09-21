@@ -111,13 +111,13 @@ class FuzzyDate
     return before? FuzzyDate.today
   end
 
-  def pretty_print
+  def pretty_print(options={})
     if @month.nil?
       I18n.l to_date, format: "%Y"
     elsif @day.nil?
       pretty_print_no_day
     else
-      pretty_print_with_day
+      pretty_print_with_day options
     end
   end
 
@@ -133,9 +133,9 @@ class FuzzyDate
     end
   end
 
-  def pretty_print_with_day
+  def pretty_print_with_day(options)
     daydiff = (to_date - Date.today).to_i
-    if (-4..4) === daydiff
+    if (-4..4) === daydiff and not options[:no_relative_dates]
       pretty_print_close_date daydiff
     elsif Date.today.year == @year ||
           (Date.today .. Date.today>>2) === to_date

@@ -4,9 +4,9 @@
 
   start = event.f_start_date
   finish = event.f_end_date
-  date_text = start.pretty_print
+  date_text = start.pretty_print(no_relative_dates: true)
   if(start != finish)
-    date_text += ' ' + t(:to) + ' ' + finish.pretty_print
+    date_text += ' ' + t(:to) + ' ' + finish.pretty_print(no_relative_dates: true)
   end
 
   programs_text = event.programs.collect{|p| p.name}.join(', ')
