@@ -1,4 +1,4 @@
 <% participants = activity.participants_for_my_stage %>
 <% participants.each do |participant| %>
-    <%= participant.person.full_name %><%= ', ' unless participant==participants.last %>
+    <%= link_to participant.person.full_name, participant.person %><%= ', ' unless participant==participants.last %>
 <% end %>
