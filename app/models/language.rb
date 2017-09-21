@@ -8,6 +8,10 @@ class Language < ApplicationRecord
   validates :name, presence: true, allow_blank: false
   validate :parent_cannot_be_dialect
 
+  default_scope { order(:name) }
+
+  scope :std_includes, -> { includes(:language_status, :country, :cameroon_region, {program: :activities}) }
+
   def parent_cannot_be_dialect
     if parent.try(:is_dialect?)
       errors.add(:parent_id, 'Cannot add a dialect to a dialect')

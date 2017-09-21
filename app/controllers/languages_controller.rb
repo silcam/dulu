@@ -3,11 +3,11 @@ class LanguagesController < ApplicationController
 
   def index
     if params[:region]
-      @languages = Language.where(cameroon_region_id: params[:region]).order('name').includes(:language_status, :country, :cameroon_region)
+      @languages = Language.where(cameroon_region_id: params[:region]).std_includes
     elsif params[:country]
-      @languages = Language.where(country_id: params[:country]).order('name').includes(:language_status, :country, :cameroon_region)
+      @languages = Language.where(country_id: params[:country]).std_includes
     else
-      @languages = Language.all.order('name').includes(:language_status, :country, :cameroon_region)
+      @languages = Language.std_includes
     end
   end
 
