@@ -28,6 +28,13 @@ class PersonTest < ActiveSupport::TestCase
     assert valid_person.save, "Should save valid person"
   end
 
+  test "Duplicate Email" do
+    drew2 = Person.new(last_name: 'Maust', first_name: 'DrewToo', gender: 'M', email: 'drew_maust@sil.org')
+    refute drew2.save, "Should not save person with duplicate email"
+    drew2.email = "drew_maust_too@sil.org"
+    assert drew2.save, "Should save with unique email."
+  end
+
   test 'Full Names' do
     assert_equal 'Drew Maust', @drew.full_name
     assert_equal 'Maust, Drew', @drew.full_name_rev

@@ -3,12 +3,13 @@ class Person < ApplicationRecord
                 :role_program_admin, :role_site_admin]
 
   belongs_to :organization, required: false
-  belongs_to :country
+  belongs_to :country, required: false, counter_cache: true
   has_many :participants
 
   validates :last_name, presence: true, allow_blank: false
   validates :first_name, presence: true, allow_blank: false
   validates :gender, inclusion: { in: %w(M F)}
+  validates :email, uniqueness: true, allow_blank: true
 
   def full_name
     "#{first_name} #{last_name}"
