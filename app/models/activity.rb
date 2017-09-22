@@ -11,13 +11,20 @@ class Activity < ApplicationRecord
   after_touch :update_current_stage
 
   def current_stage
-    self.stages.find_by(current: true)
+    self.stages.find_by(current: true) or
+        stages.new(stage_name: StageName.first_stage(kind))
   end
 
   def update_current_stage
     my_stages = stages.order(start_date: :desc, id: :desc)
-    my_stages.update(current: false)
-    my_stages.first.update(current: true)
+    unless my_stages.empty?
+      my_stages.update(current: false)
+      my_stages.first.update(current: true)
+    end
+  end
+
+  def kind
+    type.gsub('Activity', '').downcase
   end
 
   def progress

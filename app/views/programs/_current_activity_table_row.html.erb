@@ -14,7 +14,8 @@
       <%= t(activity.stage_name) %>
     <% end %>
     <span id="activity-stage-date-<%= activity.id %>">
-      (<%= activity.current_stage.f_start_date.pretty_print %>)
+      <% date = activity.current_stage.f_start_date.try(:pretty_print) %>
+      <%= "(#{date})" unless date.nil? %>
     </span>
   </td>
 

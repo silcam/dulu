@@ -15,11 +15,6 @@ class Stage < ApplicationRecord
       start_date: Date.today})
   end
 
-  def destroy
-    return if activity.stages.count == 1
-    super
-  end
-
   def progress
     self.stage_name.progress
   end
@@ -29,6 +24,10 @@ class Stage < ApplicationRecord
   end
 
   def f_start_date
-    FuzzyDate.from_string start_date
+    begin
+      FuzzyDate.from_string start_date
+    rescue FuzzyDateException
+      nil
+    end
   end
 end

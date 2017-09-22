@@ -21,10 +21,10 @@
     </div>
     <div class="col-md-2 submit-form">
       <label>&nbsp;</label><br /> <!-- Can somebody PLEASE tell me a better way to get the submit button to line up with the controls? -->
-      <%= f.submit t(:Save), class: 'btn btn-default' %>
+      <%= f.submit t(:Save), class: 'btn btn-primary' %>
     </div>
     <div class="col-md-2">
      <label>&nbsp;</label><br /> <!-- Can somebody PLEASE tell me a better way to get the submit button to line up with the controls? -->
-     <%= button_tag t(:Cancel), class: 'btn btn-default', data: {'form-cancel-id'=>activity.id} %>
+     <%= button_tag t(:Cancel), class: 'btn btn-danger', data: {'form-cancel-id'=>activity.id} %>
     </div>
   <% end %>

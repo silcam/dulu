@@ -19,16 +19,17 @@ class Program < ApplicationRecord
     language.name
   end
 
-  def latest_update
-    my_stages = Stage.joins(:activity).where(activities: {program: self})
-    return nil if my_stages.empty?
-    date = my_stages.first.f_start_date
-    my_stages.each do |stage|
-      stage_date = stage.f_start_date
-      date = stage_date if stage_date.after? date
-    end
-    return date
-  end
+  # Do we still use this?
+  # def latest_update
+  #   my_stages = Stage.joins(:activity).where(activities: {program: self})
+  #   return nil if my_stages.empty?
+  #   date = my_stages.first.f_start_date
+  #   my_stages.each do |stage|
+  #     stage_date = stage.f_start_date
+  #     date = stage_date if stage_date.after? date
+  #   end
+  #   return date
+  # end
 
   def current_participants
     participants.where(end_date: nil)

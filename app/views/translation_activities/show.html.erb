@@ -26,7 +26,7 @@
       </p>
 
       <% if can? :update_activity, @translation_activity %>
-        <%= button_tag t(:Update), id: 'show-update-form', class: 'btn btn-default' %>
+        <%= button_tag t(:Update), id: 'show-update-form', class: 'btn btn-primary' %>
         <div class="row" id="update-stage-form" style="display: none;">
           <%= render 'stages/ajax_form', activity: @translation_activity %>
         </div>
@@ -69,6 +69,9 @@
         <%= t :History %>
       </h3>
       <table class="table" id="dulutable" >
+        <% if @translation_activity.stages_ordered_desc.empty? %>
+          <tr></tr>
+        <% end %>
         <% @translation_activity.stages_ordered_desc.each do |stage| %>
           <%= render 'stage_rows', stage: stage %>
         <% end %>
