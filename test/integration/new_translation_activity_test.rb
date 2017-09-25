@@ -13,25 +13,22 @@ class NewTranslationActivityTest < Capybara::Rails::TestCase
 
   test "Add John Translation" do
     select 'John', from: 'activity_bible_book'
-    select 'Drafting', from: 'activity_stage_name_id'
-    fill_in 'activity_stage_start_date_y', with: '2017'
     check 'Drew Maust'
     click_button 'Save'
     assert_current_path dashboard_program_path @hdi_program
     hdi_john = @hdi_program.translation_activities.find_by(bible_book: @john)
     row = find(:css, "tr#activity-row-#{hdi_john.id}")
     assert row.has_content?('John'), "Should see John listed"
-    assert row.has_content?('Drafting'), "Should see stage of Drafting"
-    assert row.has_content?('2017'), "Should see correct stage date"
     click_link 'John'
     assert page.has_content?('Drew Maust'), "Should see Drew's name on John page"
   end
 
-  test "Invalid Add" do
-    select 'John', from: 'activity_bible_book'
+  test "Add a whole Testament" do
+    select 'New Testament', from: 'activity_bible_book'
+    check 'Drew Maust'
     click_button 'Save'
-    assert_current_path program_activities_path(@hdi_program)
-    assert find('#error-explanation').has_content?('date'),
-                    "Should see an error concerning the date"
+    assert_current_path dashboard_program_path @hdi_program
+    click_link 'John'
+    assert page.has_content?('Drew Maust'), "Should see Drew's name on the John page"
   end
 end

@@ -30,7 +30,7 @@ class TranslationActivity < Activity
       books = BibleBook.get_new_testament if params[:bible_book] == 'nt'
       books = BibleBook.get_old_testament if params[:bible_book] == 'ot'
       books.each do |book|
-        params = {bible_book: book.id}
+        params[:bible_book] = book.id
         TranslationActivity.new(program: program).build(params)
       end
     else
