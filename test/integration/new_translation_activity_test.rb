@@ -27,6 +27,15 @@ class NewTranslationActivityTest < Capybara::Rails::TestCase
     assert page.has_content?('Drew Maust'), "Should see Drew's name on John page"
   end
 
+  test "Add a whole Testament" do
+    select 'New Testament', from: 'activity_bible_book'
+    check 'Drew Maust'
+    click_button 'Save'
+    assert_current_path dashboard_program_path @hdi_program
+    click_link 'John'
+    assert page.has_content?('Drew Maust'), "Should see Drew's name on the John page"
+  end
+
   test "Invalid Add" do
     select 'John', from: 'activity_bible_book'
     click_button 'Save'
