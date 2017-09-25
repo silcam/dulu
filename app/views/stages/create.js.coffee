@@ -6,6 +6,7 @@ if $(location).attr('href').includes('translation_activities')
       " <%= j (render 'translation_activities/stage_rows',
                 stage: @stage) %> "
   )
+  window.add_edit_stage_click_handlers()
 
 else
   <% id = @translation_activity.id %>
