@@ -17,7 +17,7 @@ class Organization < ApplicationRecord
   end
 
   def self.search(query)
-    orgs = Organization.where("name LIKE ? OR abbreviation LIKE ?", "%#{query}%", "%#{query}%")
+    orgs = Organization.where("name ILIKE ? OR abbreviation ILIKE ?", "%#{query}%", "%#{query}%")
     results = []
     orgs.each do |org|
       subresults = []

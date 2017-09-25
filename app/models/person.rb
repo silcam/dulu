@@ -64,7 +64,7 @@ class Person < ApplicationRecord
   end
 
   def self.search(query)
-    people = Person.where("first_name || ' ' || last_name LIKE ?", "%#{query}%")
+    people = Person.where("first_name || ' ' || last_name ILIKE ?", "%#{query}%")
     results = []
     people.each do |person|
       subresults = []
