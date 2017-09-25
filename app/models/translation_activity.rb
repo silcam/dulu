@@ -27,7 +27,6 @@ class TranslationActivity < Activity
 
   def self.build_all(program, params)
     if ['nt', 'ot'].include? params[:bible_book]
-      params.delete(:stage_name_id)
       books = BibleBook.get_new_testament if params[:bible_book] == 'nt'
       books = BibleBook.get_old_testament if params[:bible_book] == 'ot'
       books.each do |book|

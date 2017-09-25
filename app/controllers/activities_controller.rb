@@ -12,15 +12,8 @@ class ActivitiesController < ApplicationController
   end
 
   def create
-    assemble_dates params, :activity, 'stage_start_date'
-    begin
-      params[:activity][:type].constantize.build_all(@program, params[:activity])
-      redirect_to dashboard_program_path @program
-    rescue ActiveRecord::RecordInvalid => e
-      @activity = @program.activities.new
-      @errors = e.record.errors
-      render 'new'
-    end
+    params[:activity][:type].constantize.build_all(@program, params[:activity])
+    redirect_to dashboard_program_path @program
   end
 
   private
