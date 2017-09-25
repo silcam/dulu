@@ -65,7 +65,7 @@ class Program < ApplicationRecord
   end
 
   # These methods may still be needed later, but I abandoned them when
-  # I though of events_as_hash
+  # I thought of events_as_hash
   #
   # def current_events
   #
@@ -91,12 +91,14 @@ class Program < ApplicationRecord
     translations = translation_activities.loaded? ? translation_activities :
                     translation_activities.includes([:bible_book, :stages => :stage_name]).where(stages: {current: true})
     translations.each do |translation|
-      bible_book = translation.bible_book
-      testament = bible_book.testament
-      stage_name = translation.stages.first.stage_name.name
-      percents[testament] ||= {}
-      percents[testament][stage_name] ||= 0.0;
-      percents[testament][stage_name] += bible_book.percent_of_testament
+      unless translation.stages.first.stage_name == StageName.first_translation_stage
+        bible_book = translation.bible_book
+        testament = bible_book.testament
+        stage_name = translation.stages.first.stage_name.name
+        percents[testament] ||= {}
+        percents[testament][stage_name] ||= 0.0;
+        percents[testament][stage_name] += bible_book.percent_of_testament
+      end
     end
     percents
   end
