@@ -19,5 +19,6 @@ $(document).ready ->
 
 
   $('input[data-new-activity-submit]').click (e) ->
-    if $('div.input-stage').is(":visible") and not window.validate_fuzzy_date_form($(this.closest('form')))
+#    alert()
+    if $('div.stage-input').is(":visible") and not window.validate_fuzzy_date_form($(this.closest('form')))
       e.preventDefault()
