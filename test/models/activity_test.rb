@@ -81,7 +81,7 @@ class ActivityTest < ActiveSupport::TestCase
 
   test 'try to destroy the last stage' do
     @hdi_ezra.stages.each { |s| s.destroy }
-    assert_equal(1, @hdi_ezra.stages.count)
+    assert_equal(0, @hdi_ezra.stages.count)
   end
 
   test "Types for select" do

@@ -28,6 +28,7 @@ class NewTranslationActivityTest < Capybara::Rails::TestCase
   end
 
   test "Invalid Add" do
+    select 'John', from: 'activity_bible_book'
     click_button 'Save'
     assert_current_path program_activities_path(@hdi_program)
     assert find('#error-explanation').has_content?('date'),

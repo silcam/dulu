@@ -71,7 +71,7 @@ class TranslationActivityTest < ActiveSupport::TestCase
     ewondo_program = programs :EwondoProgram
     drafting = stage_names :Drafting
     params = {type: 'TranslationActivity', bible_book: 'ot',
-              stage_name_id: drafting.id.to_s, stage_start_date: '2016-01-01'}
+              stage_name_id: drafting.id.to_s, stage_start_date: ''}
     TranslationActivity.build_all(ewondo_program, params)
     ezra = bible_books :Ezra
     genesis = bible_books :Genesis

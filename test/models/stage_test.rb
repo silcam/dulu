@@ -40,8 +40,8 @@ class StageTest < ActiveSupport::TestCase
     hdi_planned = stages :HdiOne
     @hdi_drafting.destroy
     assert_equal 1, @hdi_ezra.stages.count
-    hdi_planned.destroy # Should not work
-    assert_equal 1, @hdi_ezra.stages.count, "Should still have the hdi_planned stage after trying to delete it"
+    hdi_planned.destroy # Should work
+    assert_equal 0, @hdi_ezra.stages.count, "Should still have the hdi_planned stage after trying to delete it"
   end
 
   test 'Progress' do

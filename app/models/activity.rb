@@ -54,16 +54,10 @@ class Activity < ApplicationRecord
   def build(params)
     # Type specific implementation runs first
     save!
-    stage_one = Stage.new(activity: self,
-                          stage_name_id: params[:stage_name_id],
-                          start_date: params[:stage_start_date],
-                          current: true)
-    if stage_one.valid?
-      stage_one.save
-    else
-      destroy
-      raise ActiveRecord::RecordInvalid.new(stage_one)
+    if params[:stage_name_id]
+      add_a_stage params
     end
+
     return if params[:participant_ids].nil?
     params[:participant_ids].each do |participant_id|
       participants << Participant.find(participant_id)
@@ -77,5 +71,20 @@ class Activity < ApplicationRecord
 
   def self.search(query)
     TranslationActivity.search(query)
+  end
+
+  private
+
+  def add_a_stage(params)
+    stage_one = Stage.new(activity: self,
+                          stage_name_id: params[:stage_name_id],
+                          start_date: params[:stage_start_date],
+                          current: true)
+    if stage_one.valid?
+      stage_one.save
+    else
+      destroy
+      raise ActiveRecord::RecordInvalid.new(stage_one)
+    end
   end
 end
