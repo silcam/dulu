@@ -1,10 +1,10 @@
 # config valid only for current version of Capistrano
 lock "3.8.1"
 
-set :application, "clasp"
+set :application, "dulu"
 set :repo_url, "https://github.com/silcam/dulu.git"
 set :deploy_via, :remote_cache
-set :branch, "postgres"
+# set :branch, "postgres"
 
 append :linked_files, "config/secrets.yml", "db/production.sqlite3", "config/initializers/omniauth.rb"
 
