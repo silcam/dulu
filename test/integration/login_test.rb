@@ -2,6 +2,7 @@ require 'test_helper'
 
 class LoginTest < Capybara::Rails::TestCase
   def setup
+    Capybara.current_driver = :selenium
     @auth_user = people(:Rick)
     @unauth_user = people(:Abanda)
   end

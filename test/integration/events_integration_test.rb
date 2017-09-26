@@ -72,11 +72,12 @@ class EventsIntegrationTest < Capybara::Rails::TestCase
   test "Remove Event Program" do
     setup_edit true
     within(:css, 'div#program-ids'){ click_on 'Remove'}
+    fill_in 'Name', with: 'Genesis Consult'
+    sleep 0.3
     click_on 'Save'
-    refute page.has_content?('Hdi Genesis Consult'), "Should no longer see dissassociated event"
-    # TODO : Uncomment this when Events page is added
-    # visit events_path
-    # refute event_panel_for(@genesis_consult).has_content?('Hdi'), "Should not see Hdi listed for event"
+    refute page.has_content?('Genesis Consult'), "Should no longer see dissassociated event"
+    visit events_path
+    refute event_panel_for(@genesis_consult).has_content?('Hdi'), "Should not see Hdi listed for event"
   end
 
   test "Change Event Program" do

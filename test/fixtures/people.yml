@@ -18,7 +18,7 @@ Drew:
 Abanda:
   first_name: Abanda
   last_name: Dunno
-  email: abanda@gmail.cm
+  email: abanda@dunno.org
 
 Olga:
   first_name: Olga
@@ -36,3 +36,4 @@ Kevin:
   last_name: Bradford
   organization: SIL
   role_user: true
+  email: kevin_bradford@sil.org

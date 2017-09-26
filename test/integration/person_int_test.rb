@@ -4,6 +4,7 @@ class PersonIntTest < Capybara::Rails::TestCase
   def setup
     @kevin = people :Kevin
     @rick = people :Rick
+
   end
 
   test 'Kevin edits self' do
