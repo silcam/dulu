@@ -20,12 +20,12 @@ class RedirectTest < Capybara::Rails::TestCase
   end
 
   test "Does not use expired redirects" do
-    log_in_luke
-    visit standard_charge_notes_path
-    click_on 'Welcome, Luke' #Stores redirect to standard_charge_notes_path
-    visit new_vacation_path
+    log_in @rick
+    visit organizations_path # Random path
+    click_on 'Rick' # Stores redirect to organizations_path
+    visit edit_event_path(Event.first)
     click_on 'Save'
-    assert_current_path vacations_path
-    refute page.has_css?('form#new_vacation')
+    assert_current_path events_path # And not the organizations path
+    assert page.has_content? 'Past Events'  # We should be on Events index, not back on the form due to validation failure
   end
 end
