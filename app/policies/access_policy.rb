@@ -12,6 +12,7 @@ class AccessPolicy
       can :manage, Organization
       can :manage, Language
       can :manage, Event
+      can :manage, Publication
     end
 
     role :program_supervisor, proc { |u| u.has_role(:role_program_supervisor) } do
@@ -41,7 +42,12 @@ class AccessPolicy
       can [:update, :destroy], Event do |event, user|
         event.associated_with? user
       end
+
       can :create, Event
+
+      can :manage, Publication do |pub, user|
+        pub.program.current_people.include? user
+      end
     end
 
     role :user do

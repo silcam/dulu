@@ -1,0 +1,29 @@
+<%= render 'programs/sidebar' do %>
+  <h2><%= t :Publications %></h2>
+
+  <% if can? :create, @program.publications.new %>
+    <%= link_to t(:New_publication), new_program_publication_path, class: 'btn btn-primary' %>
+  <% end %>
+
+  <% if @publications.empty? %>
+    <h3><%= t :No_publications %></h3>
+  <% end %>
+
+  <% Publication.kinds.each do |kind| %>
+    <% kind_pubs = @publications.select{ |pub| pub.kind==kind } %>
+    <% unless kind_pubs.empty? %>
+      <h3><%= t kind %></h3>
+      <ul class="list-unstyled" style="margin-left: 20px;">
+        <% kind_pubs.each do |pub| %>
+          <li>
+            <span class="bigger">
+              <%= pub.name %>
+              <%= " - #{pub.year}" if pub.year %>
+            </span>
+            <%= link_to t(:Edit), edit_publication_path(pub) if can? :update, pub %>
+          </li>
+        <% end %>
+      </ul>
+    <% end %>
+  <% end %>
+<% end %>

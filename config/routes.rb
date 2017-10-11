@@ -30,6 +30,7 @@ Rails.application.routes.draw do
         end
       end
       resources :events
+      resources :publications
     end
   end
 end

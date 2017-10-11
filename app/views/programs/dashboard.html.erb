@@ -22,7 +22,7 @@
         <h2><%= t :Program_status %></h2>
         <div class="row">
           <div class="col-md-4">
-            <%= render 'dashboard_panel', {title: t(:Bible), pubs: @program.sorted_pubs('Bible')} %>
+            <%= render 'dashboard_panel', {title: t(:Bible), pubs: @program.sorted_pubs('Scripture')} %>
             <%= render 'dashboard_panel', {title: t(:Media), pubs: @program.sorted_pubs('Media')} %>
             <%= render 'dashboard_panel', {title: t(:Mobilization), info: ''} %>
             <%= render 'dashboard_panel', {title: t(:Ethnomusicology), info: ''} %>

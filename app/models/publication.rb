@@ -1,12 +1,13 @@
 class Publication < ApplicationRecord
   belongs_to :program, required: false
 
-  validates :kind, inclusion: {in: %w[Bible Linguistic NLPub Media]}
-  validates_each :english_name do |publication, attr, english_name|
-    if(english_name.blank? && publication.french_name.blank? && publication.nl_name.blank?)
-      publication.errors.add(attr, "Publication must have a name")
-    end
+  def self.kinds
+    %w[Scripture Linguistic NLPub Media]
   end
+
+  validates :kind, inclusion: {in: Publication.kinds}
+  validates :year, numericality: {only_integer: true, greater_than: 0, less_than: 10000, allow_nil: true}
+  validate :has_a_name
 
   def name
     n = I18n.locale==:fr ? french_name : english_name
@@ -17,5 +18,13 @@ class Publication < ApplicationRecord
 
   def nl_name_or_name
     nl_name.blank? ? name : nl_name
+  end
+
+  private
+
+  def has_a_name
+    if english_name.blank? && french_name.blank? && nl_name.blank?
+      errors.add(:base, "Publication must have a name")
+    end
   end
 end

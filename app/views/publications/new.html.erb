@@ -1,0 +1,11 @@
+<%= render 'programs/sidebar' do %>
+
+  <h2><%= t :New_publication %></h2>
+
+  <%= form_for @publication,
+               url: program_publications_path(@program),
+               html: {class: 'auto-width'} do |form| %>
+    <%= render 'pub_form', form: form %>
+  <% end %>
+
+<% end %>

@@ -19,6 +19,7 @@ en:
   Bible: Bible
   Old_testament: Old Testament
   New_testament: New Testament
+  Scripture: Scripture
   'Yes': Yes
   'No': No
   History: History
@@ -119,6 +120,7 @@ en:
   Publications: Publications
   Literacy: Literacy
   Community_development: Community Development
+  Linguistic: Linguistic
   Linguistics: Linguistics
   Scripture_use: Scripture Use
   Anthropology: Anthropology
@@ -183,6 +185,14 @@ en:
   #Publications Controller
   Publications: Publications
   No_publications: No Publications
+  New_publication: New Publication
+  Type_of_publication: Type of Publication
+  English_title: English Title
+  French_title: French Title
+  Title: Title
+  Publication_year: Year of publication
+  NLPub: Naional Language Publication
+  Delete_pub_confirmation: Are you sure you want to delete %{title}?
 
   #Events Controller
   Upcoming_events: Upcoming Events

@@ -19,6 +19,7 @@ fr:
   Bible: Bible
   Old_testament: Ancien Testament
   New_testament: Nouveau Testament
+  Scripture: Saintes Écritures
   'Yes': Oui
   'No': Non
   History: Historique
@@ -119,6 +120,7 @@ fr:
   Publications: Publications
   Literacy: Alphabétisation
   Community_development: Développement communautaire
+  Linguistic: Linguistique
   Linguistics: Linguistique
   Scripture_use: Promotion des Saintes Écritures
   Anthropology: Anthropologie
@@ -183,6 +185,14 @@ fr:
   #Publications Controller
   Publications: Publications
   No_publications: Aucune publication
+  New_publication: Nouvelle Publication
+  Type_of_publication: Type de Publication
+  English_title: Titre en anglais
+  French_title: Titre en français
+  Title: Titre
+  Publication_year: An de publication
+  NLPub: Publication en langue nationale
+  Delete_pub_confirmation: Confirmez que vous voulez supprimer %{title}.
 
   #Events Controller
   Upcoming_events: Événements prochains

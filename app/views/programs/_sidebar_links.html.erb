@@ -1,9 +1,10 @@
 <ul class="nav nav-sidebar">
-  <% links = [{text: t(:Dashboard),  path: dashboard_program_path(@program)},
-              {text: t(:Language),   path: language_path(@language), highlight_if_path_has: 'languages'},
-              {text: t(:Activities), path: program_activities_path(@program), highlight_if_path_has: 'activities'},
-              {text: t(:Events),     path: program_events_path(@program), highlight_if_path_has: 'events'},
-              {text: t(:People),     path: program_participants_path(@program), highlight_if_path_has: 'participants'}] %>
+  <% links = [{text: t(:Dashboard),     path: dashboard_program_path(@program)},
+              {text: t(:Language),      path: language_path(@language), highlight_if_path_has: 'languages'},
+              {text: t(:Activities),    path: program_activities_path(@program), highlight_if_path_has: 'activities'},
+              {text: t(:Events),        path: program_events_path(@program), highlight_if_path_has: 'events'},
+              {text: t(:People),        path: program_participants_path(@program), highlight_if_path_has: 'participants'},
+              {text: t(:Publications),  path: program_publications_path(@program), highlight_if_path_has: 'publications'}] %>
   <% links.each do |link| %>
     <% if current_page?(link[:path]) ||
         link[:highlight_if_path_has] && request.path.include?(link[:highlight_if_path_has])%>

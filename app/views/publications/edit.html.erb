@@ -1,0 +1,22 @@
+<%= render 'programs/sidebar' do %>
+
+  <h2>
+    <style>
+      form.button_to {
+        display: inline-block;
+      }
+    </style>
+    <%= @publication.name %>
+    <%= button_to t(:Delete),
+                  publication_path(@publication),
+                  method: :delete,
+                  data: {confirm: t(:Delete_pub_confirmation,
+                                    title: @publication.name)},
+                  class: 'btn btn-danger' %>
+  </h2>
+
+  <%= form_for @publication, html: {class: 'auto-width'} do |form| %>
+    <%= render 'pub_form', form: form %>
+  <% end %>
+
+<% end %>
