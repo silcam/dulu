@@ -13,6 +13,7 @@ class AccessPolicy
       can :manage, Language
       can :manage, Event
       can :manage, Publication
+      can :manage, DomainUpdate
     end
 
     role :program_supervisor, proc { |u| u.has_role(:role_program_supervisor) } do
@@ -47,6 +48,10 @@ class AccessPolicy
 
       can :manage, Publication do |pub, user|
         pub.program.current_people.include? user
+      end
+
+      can :manage, DomainUpdate do |domain_update, user|
+        domain_update.program.current_people.include? user
       end
     end
 

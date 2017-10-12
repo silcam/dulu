@@ -31,6 +31,7 @@ Rails.application.routes.draw do
       end
       resources :events
       resources :publications
+      resources :domain_updates
     end
   end
 end

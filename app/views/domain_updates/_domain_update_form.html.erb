@@ -1,0 +1,35 @@
+<% name_prefix = 'domain_update' %>
+<% name_prefix += "s[#{param_id_text}]" if defined? param_id_text %>
+<h3><%= status_parameter.prompt %></h3>
+
+<%= render 'shared/error_messages', errors: @domain_update.errors %>
+<div style="margin-bottom: 40px; margin-left: 20px;">
+  <% if status_parameter.number_field %>
+      <div class="form-group">
+        <%= text_field_tag "#{name_prefix}[number]",
+                           @domain_update.number,
+                           {size: 4,
+                            style: 'display: inline-block;',
+                            class: 'form-control'} %>
+        <label>
+          <%= t(status_parameter.number_unit) %>
+        </label>
+      </div>
+  <% end %>
+  <div class="form-group">
+    <label><%= status_parameter.number_field ? t(:Note) : t(:Status) %></label>
+    <%= text_field_tag "#{name_prefix}[status]",
+                       @domain_update.status,
+                       {size: 50,
+                        class: 'form-control'} %>
+  </div>
+
+  <div class="form-group">
+    <label><%= t(:Explanation_analysis) %></label>
+    <%= text_area_tag "#{name_prefix}[note]",
+                      @domain_update.note,
+                      {rows: 4,
+                       cols: 50,
+                       class: 'form-control'} %>
+  </div>
+</div>

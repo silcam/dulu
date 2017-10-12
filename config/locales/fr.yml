@@ -4,7 +4,7 @@ fr:
   Start_date: Date de commencement
   End_date: Date de fin
   Name: Nom
-  Update: Modifier
+  Update: Mettre au jour
   Save: Enregistrer
   Cancel: Annuler
   Delete: Supprimer
@@ -114,16 +114,6 @@ fr:
   New_program: Nouveau programme
   Current_activities: Activités actuelles
   Program_status: État du programme
-  Media: Audiovisuel
-  Mobilization: Mobilisation
-  Ethnomusicology: Ethnomusicologie
-  Publications: Publications
-  Literacy: Alphabétisation
-  Community_development: Développement communautaire
-  Linguistic: Linguistique
-  Linguistics: Linguistique
-  Scripture_use: Promotion des Saintes Écritures
-  Anthropology: Anthropologie
   No_information: Aucune information disponible
   Add_books: Ajouter des livres à traduire
   Active: Actif
@@ -207,3 +197,20 @@ fr:
   Type_of_event: Type d'événement
   with_a_role_of: dont le rôle est
   Consultation: Vérification du conseiller
+
+  # Domain Updates
+  Domain: Domaine
+  Domains: Domaines
+  Domain_updates: Statut des domaines
+  New_domain_update: Mettre au jour le statut du domaine
+  Media: Audiovisuel
+  Mobilization: Mobilisation
+  Ethnomusicology: Ethnomusicologie
+  Publications: Publications
+  Literacy: Alphabétisation
+  Community_development: Développement communautaire
+  Linguistic: Linguistique
+  Linguistics: Linguistique
+  Scripture_use: Promotion des Saintes Écritures
+  Anthropology: Anthropologie
+  Translation: Traduction

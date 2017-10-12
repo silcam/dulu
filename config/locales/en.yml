@@ -114,16 +114,6 @@ en:
   New_program: New Program
   Current_activities: Current Activities
   Program_status: Program Status
-  Media: Media
-  Mobilization: Mobilization
-  Ethnomusicology: Ethnomusicology
-  Publications: Publications
-  Literacy: Literacy
-  Community_development: Community Development
-  Linguistic: Linguistic
-  Linguistics: Linguistics
-  Scripture_use: Scripture Use
-  Anthropology: Anthropology
   No_information: No information available
   Add_books: Add books to translate
   Active: Active
@@ -207,3 +197,20 @@ en:
   Type_of_event: Type of event
   with_a_role_of: with a role of
   Consultation: Consultant Check
+
+  # Domain Updates
+  Domain: Domain
+  Domains: Domains
+  Domain_updates: Domain Updates
+  New_domain_update: New Domain Update
+  Media: Media
+  Mobilization: Mobilization
+  Ethnomusicology: Ethnomusicology
+  Publications: Publications
+  Literacy: Literacy
+  Community_development: Community Development
+  Linguistic: Linguistic
+  Linguistics: Linguistics
+  Scripture_use: Scripture Use
+  Anthropology: Anthropology
+  Translation: Translation

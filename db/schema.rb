@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170922134239) do
+ActiveRecord::Schema.define(version: 20171012100410) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -63,6 +63,19 @@ ActiveRecord::Schema.define(version: 20170922134239) do
     t.datetime "created_at",   null: false
     t.datetime "updated_at",   null: false
     t.integer  "people_count"
+  end
+
+  create_table "domain_updates", force: :cascade do |t|
+    t.integer  "program_id"
+    t.integer  "status_parameter_id"
+    t.float    "number"
+    t.string   "status"
+    t.text     "note"
+    t.string   "date"
+    t.datetime "created_at",          null: false
+    t.datetime "updated_at",          null: false
+    t.index ["program_id"], name: "index_domain_updates_on_program_id", using: :btree
+    t.index ["status_parameter_id"], name: "index_domain_updates_on_status_parameter_id", using: :btree
   end
 
   create_table "event_participants", force: :cascade do |t|
@@ -227,6 +240,15 @@ ActiveRecord::Schema.define(version: 20170922134239) do
     t.boolean  "current",       default: false
     t.index ["activity_id"], name: "index_stages_on_activity_id", using: :btree
     t.index ["stage_name_id"], name: "index_stages_on_stage_name_id", using: :btree
+  end
+
+  create_table "status_parameters", force: :cascade do |t|
+    t.string   "domain"
+    t.string   "prompt"
+    t.boolean  "number_field"
+    t.string   "number_unit"
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
   end
 
 end

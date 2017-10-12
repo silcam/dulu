@@ -1,0 +1,2 @@
+module DomainUpdatesHelper
+end

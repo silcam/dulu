@@ -4,6 +4,7 @@ class Program < ApplicationRecord
   has_many :bible_books, through: :translation_activities
   has_many :publications
   has_many :participants
+  has_many :domain_updates
   has_many :people, through: :participants
   has_and_belongs_to_many :events
   belongs_to :language

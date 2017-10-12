@@ -1,0 +1,30 @@
+<%= render 'programs/sidebar' do %>
+
+  <h2><%= t @domain %></h2>
+
+  <%= form_tag program_domain_updates_path, class: 'auto-width' do %>
+    <%= hidden_field_tag :domain, @domain %>
+    <label><%= t :Date %></label>
+    <%= render 'shared/fuzzy_date_field',
+               model: :domain_update,
+               field: :date,
+               no_day: true,
+               fdate: FuzzyDate.today %>
+
+    <% parameters = StatusParameter.where(domain: @domain).to_a %>
+    <% parameters << StatusParameter.other_parameter(@domain) %>
+    <% parameters.each do |status_parameter| %>
+      <% param_id_text = status_parameter.persisted? ? status_parameter.id : 'other' %>
+      <% @domain_update = @domain_updates.select{ |du| du.status_parameter == status_parameter}.try(:first) %>
+      <% @domain_update ||= @program.domain_updates.new %>
+      <%= render 'domain_update_form',
+                 status_parameter: status_parameter,
+                 param_id_text: param_id_text %>
+    <% end %>
+
+    <div class="form-group">
+      <%= submit_tag t(:Save), class: 'btn btn-primary btn-lg' %>
+    </div>
+  <% end %>
+
+<% end %>

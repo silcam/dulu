@@ -1,9 +1,10 @@
 <!-- required input: model, field -->
-<!-- optional input: fdate, not_required, horizontal_form -->
+<!-- optional input: fdate, not_required, horizontal_form, no_day -->
 <%
   fdate ||= nil
   not_required ||= false
   horizontal_form ||= false
+  no_day ||= false
   fields = {}
   months = t('date.abbr_month_names')
   months_options = months[1..12].map{|name| [name, months.index(name)]}
@@ -26,11 +27,11 @@
       <%= fields[:month] %>
     </span>
     <span class="fd-day">
-      <%= fields[:day] %>
+      <%= fields[:day] unless no_day %>
     </span>
   <% else %>
     <span class="fd-day">
-      <%= fields[:day] %>
+      <%= fields[:day] unless no_day %>
     </span>
     <span class="fd-month">
       <%= fields[:month] %>
@@ -40,7 +41,7 @@
     <%= fields[:year] %>
   </span>
   <% if horizontal_form %><br><% end %>
-  <%= t :Fdate_omit %>
+  <%= t :Fdate_omit unless no_day %>
   <div class="fuzzy-error has-error">
     <div class="fuzzy-error-year help-block" style="display: none;">
       <%= t(:Year_error) %>

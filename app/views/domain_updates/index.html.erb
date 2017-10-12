@@ -1,0 +1,23 @@
+<%= render 'programs/sidebar' do %>
+
+  <h2><%= t :Domain_updates %></h2>
+
+  <% domains = StatusParameter.domains %>
+  <% domains.sort!{ |a, b| t(a) <=> t(b) } %>
+  <% domains.each do |domain| %>
+    <h3>
+      <%= t domain %>
+      <%= link_to t(:Update), new_program_domain_update_path(@program, dmn: domain), class: 'btn btn-primary' %>
+    </h3>
+    <ul class="list-unstyled">
+      <% @domain_updates.each do |domain_update| %>
+        <% prompt = domain_update.status_parameter ? domain_update.status_parameter.prompt : 'Other' %>
+        <li>
+          <i><%= domain_update.f_date.pretty_print %></i>
+          <b><%= prompt %></b>
+          <%= domain_update.short_version %>
+        </li>
+      <% end %>
+    </ul>
+  <% end %>
+<% end %>
