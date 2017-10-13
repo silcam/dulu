@@ -5,6 +5,8 @@
   <div class="panel-body">
     <% if defined? pubs %>
       <%= render 'panel_body_pubs', pubs: pubs %>
+    <% elsif defined? updates %>
+      <%= render 'panel_body_updates', updates: updates %>
     <% else %>
       <%= render 'panel_body_info', info: info %>
     <% end %>

@@ -1,0 +1,6 @@
+<% if update.number %>
+    <%= number_to_human update.number %>
+    <%= update.status_parameter.number_unit %>
+    <%= '-' unless update.status.blank? %>
+<% end %>
+<%= update.status %>

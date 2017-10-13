@@ -19,9 +19,16 @@ class DomainUpdateTest < ActiveSupport::TestCase
     assert domain_update.valid?
   end
 
+  test "Valid Domain" do
+    domain_update = DomainUpdate.new some_valid_params
+    assert domain_update.valid?
+    domain_update.domain = "mmmm Donut!"
+    refute domain_update.valid?
+  end
+
   private
 
   def some_valid_params(other_params={})
-    {program: @hdi, status: 'Going good', date: '2017'}.merge other_params
+    {program: @hdi, status: 'Going good', date: '2017', domain: 'Literacy'}.merge other_params
   end
 end

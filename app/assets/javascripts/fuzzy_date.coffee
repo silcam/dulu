@@ -16,7 +16,7 @@ window.validate_fuzzy_date_form = (form) ->
   form.find('div.fuzzy-div[data-required-date=true]').each ->
     year = $(this).find('.fuzzy-year').val()
     month = $(this).find('.fuzzy-month').val()
-    day = $(this).find('.fuzzy-day').val()
+    day = $(this).find('.fuzzy-day').val() or ''
     unless valid_year(year)
       $(this).find('span.fd-year').prop('class', 'fd-year has-error')
       $(this).find('div.fuzzy-error-year').show()
@@ -44,7 +44,7 @@ $(document).ready ->
     top_div = $(this).closest('div.fuzzy-div')
     year = top_div.find('.fuzzy-year').val()
     month = top_div.find('.fuzzy-month').val()
-    day = top_div.find('.fuzzy-day').val()
+    day = top_div.find('.fuzzy-day').val() or ''
     if month=='' or day=='' or valid_day(year, month, day)
       top_div.find('span.fd-day').prop('class', 'fd-day')
       top_div.find('div.fuzzy-error-day').hide()

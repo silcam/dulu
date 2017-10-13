@@ -15,6 +15,7 @@ class DomainUpdatesController < ApplicationController
 
   def create
     authorize! :create, @program.domain_updates.new
+    @domain = params[:domain]
     @domain_updates = []
     all_succeeded = true
     assemble_dates params, 'domain_update', 'date'
@@ -22,6 +23,7 @@ class DomainUpdatesController < ApplicationController
       if du_params.any?{ |key, val| not val.blank? }
         domain_update = @program.domain_updates.new(domain_update_params(du_params))
         domain_update.date = params[:domain_update][:date]
+        domain_update.domain = @domain
         domain_update.status_parameter_id = key if StatusParameter.find_by id: key
         all_succeeded = false unless domain_update.save
         @domain_updates << domain_update
@@ -30,7 +32,6 @@ class DomainUpdatesController < ApplicationController
     if all_succeeded
       redirect_to program_domain_updates_path @program
     else
-      @domain = params[:domain]
       render :new
     end
   end
@@ -41,6 +42,7 @@ class DomainUpdatesController < ApplicationController
 
   def update
     authorize! :update, @domain_update
+    assemble_dates params, 'domain_update', 'date'
     if @domain_update.update domain_update_params params[:domain_update]
       redirect_to program_domain_updates_path @program
     else

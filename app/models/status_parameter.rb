@@ -13,6 +13,10 @@ class StatusParameter < ApplicationRecord
   def self.other_parameter(domain)
     StatusParameter.new(domain: domain, prompt: 'Other')
   end
+  #
+  # def self.parameters_with_other(domain)
+  #   StatusParameter.where(domain: domain).to_a.push(other_parameter(domain))
+  # end
 
   private
 

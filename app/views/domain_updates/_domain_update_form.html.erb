@@ -7,7 +7,7 @@
   <% if status_parameter.number_field %>
       <div class="form-group">
         <%= text_field_tag "#{name_prefix}[number]",
-                           @domain_update.number,
+                           number_to_human(@domain_update.number),
                            {size: 4,
                             style: 'display: inline-block;',
                             class: 'form-control'} %>

@@ -6,6 +6,7 @@ class DomainUpdate < ApplicationRecord
   validates :number, numericality: true, allow_nil: true
   validates :date, presence: true
   validates :date, fuzzy_date: true
+  validates :domain, inclusion: {in: StatusParameter.domains}
   validate :number_or_status
 
   default_scope { order('date DESC')}
@@ -17,7 +18,7 @@ class DomainUpdate < ApplicationRecord
   def short_version
     s = ""
     if number
-      s+= number.to_s + ' ' + status_parameter.number_unit + ' '
+      s+= number_to_human(number) + ' ' + status_parameter.number_unit + ' '
     end
     s += status
     s

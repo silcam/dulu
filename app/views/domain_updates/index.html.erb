@@ -9,15 +9,13 @@
       <%= t domain %>
       <%= link_to t(:Update), new_program_domain_update_path(@program, dmn: domain), class: 'btn btn-primary' %>
     </h3>
-    <ul class="list-unstyled">
-      <% @domain_updates.each do |domain_update| %>
-        <% prompt = domain_update.status_parameter ? domain_update.status_parameter.prompt : 'Other' %>
-        <li>
-          <i><%= domain_update.f_date.pretty_print %></i>
-          <b><%= prompt %></b>
-          <%= domain_update.short_version %>
-        </li>
+    <div style="margin-left: 20px;">
+      <% StatusParameter.where(domain: domain).each do |status_parameter| %>
+        <% updates = @domain_updates.select{ |du| du.status_parameter == status_parameter } %>
+        <%= render 'domain_updates_table', updates: updates, status_parameter: status_parameter %>
       <% end %>
-    </ul>
+      <% updates = @domain_updates.select{ |du| du.domain==domain and du.status_parameter.nil? } %>
+      <%= render 'domain_updates_table', updates: updates, status_parameter: StatusParameter.other_parameter(domain) %>
+    </div>
   <% end %>
 <% end %>

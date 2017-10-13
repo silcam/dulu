@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171012100410) do
+ActiveRecord::Schema.define(version: 20171013104734) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -74,6 +74,7 @@ ActiveRecord::Schema.define(version: 20171012100410) do
     t.string   "date"
     t.datetime "created_at",          null: false
     t.datetime "updated_at",          null: false
+    t.string   "domain"
     t.index ["program_id"], name: "index_domain_updates_on_program_id", using: :btree
     t.index ["status_parameter_id"], name: "index_domain_updates_on_status_parameter_id", using: :btree
   end

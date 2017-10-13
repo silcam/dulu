@@ -1,0 +1,21 @@
+<% unless updates.empty? %>
+    <b><%= status_parameter.prompt %></b>
+    <table class="table">
+      <% updates.each do |update| %>
+          <tr>
+            <% text = update.f_date.to_date.strftime("%B %Y") %>
+            <td style="width: 140px">
+              <% if can? :update, update %>
+                <%= link_to text, edit_domain_update_path(update) %>
+              <% else %>
+                <%= text %>
+              <% end %>
+            </td>
+            <td style="width: 280px">
+              <%= render 'status', update: update %>
+            </td>
+            <td><%= update.note %></td>
+          </tr>
+      <% end %>
+    </table>
+<% end %>
