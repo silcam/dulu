@@ -3,7 +3,7 @@
     <table class="table">
       <% updates.each do |update| %>
           <tr>
-            <% text = update.f_date.to_date.strftime("%B %Y") %>
+            <% text = update.f_date.pretty_print(always_year: true) %>
             <td style="width: 140px">
               <% if can? :update, update %>
                 <%= link_to text, edit_domain_update_path(update) %>

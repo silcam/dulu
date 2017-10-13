@@ -115,7 +115,7 @@ class FuzzyDate
     if @month.nil?
       I18n.l to_date, format: "%Y"
     elsif @day.nil?
-      pretty_print_no_day
+      pretty_print_no_day options
     else
       pretty_print_with_day options
     end
@@ -123,10 +123,10 @@ class FuzzyDate
 
   private
 
-  def pretty_print_no_day
-    if @year == Date.today.year
+  def pretty_print_no_day(options)
+    if @year == Date.today.year && !options[:always_year]
       I18n.l to_date, format: "%b"
-    elsif (Date.today..Date.today>>2) === to_date
+    elsif (Date.today..Date.today>>2) === to_date && !options[:always_year]
       I18n.l to_date, format: "%b"
     else
       I18n.l to_date, format: "%b %Y"
