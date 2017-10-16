@@ -18,18 +18,24 @@
   <% end %>
   <div class="form-group">
     <label><%= status_parameter.number_field ? t(:Note) : t(:Status) %></label>
+    <% prompt = status_parameter.number_field ?
+                    'eg "A handful" or "Mostly in the village" or "No good data"...' :
+                    'Brief status of this aspect of the language program.' %>
     <%= text_field_tag "#{name_prefix}[status]",
                        @domain_update.status,
                        {size: 50,
-                        class: 'form-control'} %>
+                        class: 'form-control',
+                        placeholder: prompt} %>
   </div>
 
   <div class="form-group">
     <label><%= t(:Explanation_analysis) %></label>
+    <% prompt = 'Give more details about the status and also give any explanation you can as to why the status is what it is. What actions have been taken to improve in this area? What obstacles are impeding progress?' %>
     <%= text_area_tag "#{name_prefix}[note]",
                       @domain_update.note,
                       {rows: 4,
                        cols: 50,
-                       class: 'form-control'} %>
+                       class: 'form-control',
+                       placeholder: prompt} %>
   </div>
 </div>
