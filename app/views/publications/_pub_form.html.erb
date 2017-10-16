@@ -5,22 +5,30 @@
   <%= form.select(:kind,
                   options_for_select(Publication.kinds.collect{ |k| [t(k), k]}),
                   {},
-                  class: 'form-control') %>
+                  class: 'form-control',
+                  autofocus: true) %>
 </div>
 
 <div class="form-group">
-  <%= form.label :english_name, t(:English_title) %>
-  <%= form.text_field :english_name, class: 'form-control' %>
-</div>
+  <%= form.label :english_name, t(:Title) %><br>
+  <i><%= t :One_title_required %></i>
 
-<div class="form-group">
-  <%= form.label :french_name, t(:French_title) %>
-  <%= form.text_field :french_name, class: 'form-control' %>
-</div>
+  <div style="margin-left: 20px;">
+    <div class="form-group">
+      <%= form.label :english_name, t(:English) %>
+      <%= form.text_field :english_name, class: 'form-control' %>
+    </div>
 
-<div class="form-group">
-  <%= form.label :nl_name, "#{@program.name} #{t(:Title)}" %>
-  <%= form.text_field :nl_name, class: 'form-control' %>
+    <div class="form-group">
+      <%= form.label :french_name, t(:French) %>
+      <%= form.text_field :french_name, class: 'form-control' %>
+    </div>
+
+    <div class="form-group">
+      <%= form.label :nl_name, @program.name %>
+      <%= form.text_field :nl_name, class: 'form-control' %>
+    </div>
+  </div>
 </div>
 
 <div class="form-group">
