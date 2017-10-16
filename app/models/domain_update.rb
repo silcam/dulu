@@ -28,7 +28,7 @@ class DomainUpdate < ApplicationRecord
 
   def number_or_status
     if status.blank? and number.nil?
-      errors.add(:status, "can't be blank")
+      errors.add(:base, "Must provide a number, note or status")
     end
   end
 end

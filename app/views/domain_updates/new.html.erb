@@ -5,18 +5,25 @@
   <%= form_tag program_domain_updates_path, class: 'auto-width' do %>
     <%= hidden_field_tag :domain, @domain %>
     <label><%= t :Date %></label>
+    <% fdate = defined?(@domain_updates_with_errors) ?
+                   @domain_updates_with_errors.first.f_date :
+                   FuzzyDate.today %>
     <%= render 'shared/fuzzy_date_field',
                model: :domain_update,
                field: :date,
                no_day: true,
-               fdate: FuzzyDate.today %>
+               fdate: fdate %>
 
     <% parameters = StatusParameter.where(domain: @domain).to_a %>
     <% parameters << StatusParameter.other_parameter(@domain) %>
     <% parameters.each do |status_parameter| %>
+      <% if defined? @domain_updates_with_errors %>
+        <% @domain_update = @domain_updates_with_errors.select{ |du| du.status_parameter_id == status_parameter.id}.try(:first) %>
+        <% next unless @domain_update %>
+      <% else %>
+        <% @domain_update = @program.domain_updates.new %>
+      <% end %>
       <% param_id_text = status_parameter.persisted? ? status_parameter.id : 'other' %>
-      <% @domain_update = @domain_updates.select{ |du| du.status_parameter == status_parameter}.try(:first) %>
-      <% @domain_update ||= @program.domain_updates.new %>
       <%= render 'domain_update_form',
                  status_parameter: status_parameter,
                  param_id_text: param_id_text %>
