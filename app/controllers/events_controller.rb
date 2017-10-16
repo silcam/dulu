@@ -78,7 +78,7 @@ class EventsController < ApplicationController
 
   def event_params
     assemble_dates params, 'event', 'start_date', 'end_date'
-    params.require(:event).permit(:domain, :name, :start_date, :end_date,
+    params.require(:event).permit(:domain, :name, :start_date, :end_date, :note,
                                   program_ids: [],
                                   event_participant: [:person_id, :program_role_id],
                                   new_event_participants: [:person_id, :program_role_id])
