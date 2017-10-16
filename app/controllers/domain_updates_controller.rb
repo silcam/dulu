@@ -9,6 +9,7 @@ class DomainUpdatesController < ApplicationController
 
   def new
     @domain = params[:dmn]
+    redirect_to program_domain_updates_path(@program) unless StatusParameter.domains.include? @domain
     @domain_updates = []
     authorize! :create, @program.domain_updates.new
   end

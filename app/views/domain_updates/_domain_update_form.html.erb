@@ -4,38 +4,70 @@
 
 <%= render 'shared/error_messages', errors: @domain_update.errors %>
 <div style="margin-bottom: 40px; margin-left: 20px;">
-  <% if status_parameter.number_field %>
-      <div class="form-group">
-        <%= text_field_tag "#{name_prefix}[number]",
-                           number_to_human(@domain_update.number),
-                           {size: 4,
-                            style: 'display: inline-block;',
-                            class: 'form-control'} %>
-        <label>
-          <%= t(status_parameter.number_unit) %>
-        </label>
-      </div>
-  <% end %>
-  <div class="form-group">
-    <label><%= status_parameter.number_field ? t(:Note) : t(:Status) %></label>
-    <% prompt = status_parameter.number_field ?
-                    'eg "A handful" or "Mostly in the village" or "No good data"...' :
-                    'Brief status of this aspect of the language program.' %>
-    <%= text_field_tag "#{name_prefix}[status]",
-                       @domain_update.status,
-                       {size: 50,
-                        class: 'form-control',
-                        placeholder: prompt} %>
+  <div style="display: inline-block;">
+    <% if status_parameter.number_field %>
+        <div class="form-group">
+          <%= text_field_tag "#{name_prefix}[number]",
+                             number_to_human(@domain_update.number),
+                             {size: 4,
+                              style: 'display: inline-block;',
+                              class: 'form-control'} %>
+          <label>
+            <%= t(status_parameter.number_unit) %>
+          </label>
+        </div>
+    <% end %>
+    <div class="form-group">
+      <label><%= status_parameter.number_field ? t(:Note) : t(:Status) %></label>
+      <% prompt = status_parameter.number_field ?
+                      'eg "A handful" or "Mostly in the village" or "No good data"...' :
+                      'Brief status of this aspect of the language program.' %>
+      <%= text_field_tag "#{name_prefix}[status]",
+                         @domain_update.status,
+                         {size: 50,
+                          class: 'form-control',
+                          placeholder: prompt} %>
+    </div>
+
+    <div class="form-group">
+      <label><%= t(:Explanation_analysis) %></label>
+      <% prompt = 'Give more details about the status and also give any explanation you can as to why the status is what it is. What actions have been taken to improve in this area? What obstacles are impeding progress?' %>
+      <%= text_area_tag "#{name_prefix}[note]",
+                        @domain_update.note,
+                        {rows: 4,
+                         cols: 50,
+                         class: 'form-control',
+                         placeholder: prompt} %>
+    </div>
   </div>
 
-  <div class="form-group">
-    <label><%= t(:Explanation_analysis) %></label>
-    <% prompt = 'Give more details about the status and also give any explanation you can as to why the status is what it is. What actions have been taken to improve in this area? What obstacles are impeding progress?' %>
-    <%= text_area_tag "#{name_prefix}[note]",
-                      @domain_update.note,
-                      {rows: 4,
-                       cols: 50,
-                       class: 'form-control',
-                       placeholder: prompt} %>
-  </div>
+  <% unless @domain_update.persisted? %>
+    <% domain = status_parameter.domain %>
+    <% old_update = @program.domain_updates.find_by(domain: domain, status_parameter_id: status_parameter.id) %>
+    <% if old_update %>
+      <div style="display: inline-block; margin-left: 38px; width: 300px; vertical-align: top;">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <%= old_update.f_date.pretty_print always_year: true %>
+          </div>
+          <div class="panel-body">
+            <% unless old_update.number.blank? %>
+              <p>
+                <%= number_to_human old_update.number %>
+                <%= old_update.status_parameter.number_unit %>
+              </p>
+            <% end %>
+            <p>
+              <label><%= status_parameter.number_field ? t(:Note) : t(:Status) %></label><br>
+              <%= old_update.status %>
+            </p>
+            <p>
+              <label><%= t :Explanation_analysis %></label><br>
+              <%= old_update.note %>
+            </p>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  <% end %>
 </div>
