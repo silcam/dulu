@@ -18,6 +18,7 @@
         </span>
       </li>
     <% end %>
-    <%= link_to t(:More), program_domain_updates_path(@program) %>
+    <% domain = updates.first.domain %>
+    <%= link_to t(:More), program_domain_updates_path(@program, anchor: domain) %>
   <% end %>
 </ul>

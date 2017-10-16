@@ -5,7 +5,7 @@
   <% domains = StatusParameter.domains %>
   <% domains.sort!{ |a, b| t(a) <=> t(b) } %>
   <% domains.each do |domain| %>
-    <h3>
+    <h3 id="<%= domain %>">
       <%= t domain %>
       <%= link_to t(:Update), new_program_domain_update_path(@program, dmn: domain), class: 'btn btn-primary' %>
     </h3>
