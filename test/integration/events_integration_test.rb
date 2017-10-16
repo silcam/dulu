@@ -12,12 +12,13 @@ class EventsIntegrationTest < Capybara::Rails::TestCase
   test "New Minimal Event" do
     my_setup
     click_on 'New Event'
+    fill_in 'Name', with: 'Taco Party'
     fill_in_date 'event_start_date', FuzzyDate.new(2017)
     fill_in_date 'event_end_date', FuzzyDate.new(2017)
     click_on 'Save'
     assert_current_path dashboard_program_path(@hdi)
     event_panel = newest_event_panel
-    assert event_panel.has_content?('Consultant Check'), "Expect to see new event name"
+    assert event_panel.has_content?('Taco Party'), "Expect to see new event name"
     assert event_panel.has_content?('2017'), "Expect to see new event date"
     assert event_panel.has_content?('Hdi'), "Expect to see new event program"
   end

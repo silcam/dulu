@@ -18,6 +18,10 @@ class StatusParameter < ApplicationRecord
   #   StatusParameter.where(domain: domain).to_a.push(other_parameter(domain))
   # end
 
+  def self.sorted_domains
+    domains.sort{ |a, b| I18n.t(a) <=> I18n.t(b) }
+  end
+
   private
 
   def number_unit_if_number_field

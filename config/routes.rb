@@ -18,10 +18,10 @@ Rails.application.routes.draw do
     resources :programs do
       get 'dashboard', on: :member
       resources :translation_activities do
-        resources :stages
+        resources :stages, only: [:new, :create, :update, :destroy]
       end
       resources :activities do
-        resources :stages
+        resources :stages, only: [:new, :create, :update, :destroy]
       end
       resources :participants do
         member do

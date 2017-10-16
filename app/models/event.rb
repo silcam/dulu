@@ -3,9 +3,12 @@ class Event < ApplicationRecord
   has_many :event_participants, autosave: true, dependent: :destroy
   has_many :people, through: :event_participants
 
+  # NB: The kind field is being deprecated
   enum kind: [:Consultation]
 
-  validates :kind, inclusion: { in: Event.kinds }
+  # validates :kind, inclusion: { in: Event.kinds }
+  validates :domain, inclusion: {in: StatusParameter.domains}
+  validates :name, presence: true
   validates :start_date, presence: true
   validates :end_date, presence: true
   validates :start_date, fuzzy_date: true
@@ -16,7 +19,7 @@ class Event < ApplicationRecord
     begin
       start_fuzzy = FuzzyDate.from_string start_date
       end_fuzzy = FuzzyDate.from_string end_date
-      if(end_fuzzy.before?(start_fuzzy))
+      if end_fuzzy.before?(start_fuzzy)
         errors.add(:end_date, "can't be before start date")
       end
     rescue (FuzzyDateException)
@@ -25,7 +28,7 @@ class Event < ApplicationRecord
   end
 
   def display_name
-    name.blank? ? I18n.t(kind) : name
+    name
   end
 
   def f_start_date

@@ -2,8 +2,7 @@
 
   <h2><%= t :Domain_updates %></h2>
 
-  <% domains = StatusParameter.domains %>
-  <% domains.sort!{ |a, b| t(a) <=> t(b) } %>
+  <% domains = StatusParameter.sorted_domains %>
   <% domains.each do |domain| %>
     <h3 id="<%= domain %>">
       <%= t domain %>

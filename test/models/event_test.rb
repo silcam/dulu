@@ -17,12 +17,12 @@ class EventTest < ActiveSupport::TestCase
   end
 
   test "Presence Validation" do
-    params = {kind: :Consultation, start_date: '2019-04', end_date: '2019-04'}
+    params = {domain: 'Translation', name: 'Taco Pary', start_date: '2019-04', end_date: '2019-04'}
     model_validation_hack_test Event, params
   end
 
-  test "Validate Kind" do
-    assert_raises(Exception){ @genesis_check.update(kind: 'NotARealKind') }
+  test "Validate Domain" do
+    assert_raises(Exception){ @genesis_check.update!(domain: 'NotARealKind') }
   end
 
   test "Validate Start Date Fuzzy Date" do
@@ -33,11 +33,11 @@ class EventTest < ActiveSupport::TestCase
     refute @genesis_check.update(end_date: '2017-01'), "Should not save with end date before start date"
   end
 
-  test "Display Name" do
-    hdi_past = events :HdiPastChecking
-    assert_equal 'Hdi Genesis Checking', @genesis_check.display_name
-    assert_equal 'Consultant Check', hdi_past.display_name
-  end
+  # test "Display Name" do
+  #   hdi_past = events :HdiPastChecking
+  #   assert_equal 'Hdi Genesis Checking', @genesis_check.display_name
+  #   assert_equal 'Consultant Check', hdi_past.display_name
+  # end
 
   test "F Dates" do
     assert_equal FuzzyDate.new(2018, 1, 15), @genesis_check.f_start_date

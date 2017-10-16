@@ -1,8 +1,8 @@
     <%= render 'shared/error_messages', errors: @event.errors %>
 
     <div class="form-group">
-      <%= form.label :kind, t(:Type_of_event) %>
-      <%= form.select :kind, Event.kinds.keys.collect{|k| [t(k), k]},
+      <%= form.label :domain, t(:Type_of_event) %>
+      <%= form.select :domain, StatusParameter.sorted_domains.collect{ |d| [t(d), d]},
                       {}, class: 'form-control', autofocus: true %>
     </div>
 
