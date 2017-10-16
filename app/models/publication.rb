@@ -1,5 +1,5 @@
 class Publication < ApplicationRecord
-  belongs_to :program, required: false
+  belongs_to :program, touch: true, required: false
 
   def self.kinds
     %w[Scripture Linguistic NLPub Media]
