@@ -1,3 +1,18 @@
 <%= render 'searches/search_form' %>
 
+<% survey_programs = @user.current_participants
+                      .collect{ |ptcpt| ptcpt.program }
+                      .select{ |pgm| pgm.surveys.find_by(open: true)} %>
+<% unless survey_programs.empty? %>
+  <h2><%= t :Surveys %></h2>
+  <ul class="list-unstyled">
+    <% survey_programs.each do |program| %>
+      <li>
+        <% survey = program.surveys.find_by(open: true) %>
+        <%= link_to "#{program.name} #{survey.name} Survey", program_survey_path(program, survey), class: 'h4' %>
+      </li>
+    <% end %>
+  </ul>
+<% end %>
+
 <%= render 'dashboard_activities' unless @user.current_participants.empty? %>

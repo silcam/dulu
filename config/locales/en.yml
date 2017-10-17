@@ -225,3 +225,6 @@ en:
   Delete_domain_update_confirmation: Are you sure you want to delete this update?
   people: people
   percent: percent
+
+  # Surveys
+  Surveys: Surveys

@@ -5,6 +5,7 @@ class Person < ApplicationRecord
   belongs_to :organization, required: false
   belongs_to :country, required: false, counter_cache: true
   has_many :participants
+  has_many :programs, through: :participants
 
   validates :last_name, presence: true, allow_blank: false
   validates :first_name, presence: true, allow_blank: false
