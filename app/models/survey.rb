@@ -9,7 +9,7 @@ class Survey < ApplicationRecord
 
   def self.generate_end_a
     program_ids = [68]
-    status_parameters = StatusParameter.where.not(id: [])
+    status_parameters = StatusParameter.where.not(id: [23])
 
     Survey.find_by(name: '2017 End A').try(:destroy)
     survey = Survey.create!(name: '2017 End A', open: true)

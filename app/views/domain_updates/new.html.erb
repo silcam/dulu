@@ -14,7 +14,11 @@
                no_day: true,
                fdate: fdate %>
 
-    <% parameters = StatusParameter.where(domain: @domain).to_a %>
+    <% if defined? @survey %>
+      <% parameters = @survey.status_parameters.where(domain: @domain).to_a %>
+    <% else %>
+      <% parameters = StatusParameter.where(domain: @domain).to_a %>
+    <% end %>
     <% parameters << StatusParameter.other_parameter(@domain) %>
     <% parameters.each do |status_parameter| %>
       <% if defined? @domain_updates_with_errors %>

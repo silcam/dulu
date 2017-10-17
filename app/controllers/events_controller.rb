@@ -25,8 +25,9 @@ class EventsController < ApplicationController
     authorize! :create, Event
     @event = Event.new(prepared_event_params)
     if(@event.save)
-      redirect_to params[:program_id] ? dashboard_program_path(params[:program_id]) :
+      default_redirect = params[:program_id] ? dashboard_program_path(params[:program_id]) :
                                         events_path
+      follow_redirect default_redirect
     else
       render 'new'
     end

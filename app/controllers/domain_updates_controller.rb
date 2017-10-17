@@ -9,6 +9,7 @@ class DomainUpdatesController < ApplicationController
 
   def new
     @domain = params[:dmn]
+    @survey = Survey.find(params[:survey]) if params[:survey]
     redirect_to program_domain_updates_path(@program) unless StatusParameter.domains.include? @domain
     authorize! :create, @program.domain_updates.new
   end
@@ -28,7 +29,7 @@ class DomainUpdatesController < ApplicationController
       end
     end
     if @domain_updates_with_errors.empty?
-      redirect_to program_domain_updates_path @program
+      follow_redirect program_domain_updates_path(@program)
     else
       render :new
     end

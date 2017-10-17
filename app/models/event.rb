@@ -31,6 +31,16 @@ class Event < ApplicationRecord
     name
   end
 
+  def dates_display_text
+    start = f_start_date
+    finish = f_end_date
+    date_text = start.pretty_print(no_relative_dates: true)
+    if start != finish
+      date_text += ' ' + I18n.t(:to) + ' ' + finish.pretty_print(no_relative_dates: true)
+    end
+    date_text
+  end
+
   def f_start_date
     begin
       FuzzyDate.from_string self.start_date

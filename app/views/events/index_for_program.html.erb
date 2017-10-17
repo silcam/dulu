@@ -2,7 +2,7 @@
 
     <h2><%= t :Events %></h2>
 
-    <%= link_to t(:New_event), new_program_event_path(@program) if can?(:create, Event) %>
+    <%= link_to t(:Enter_event), new_program_event_path(@program) if can?(:create, Event) %>
 
     <% events = @program.events_as_hash %>
 

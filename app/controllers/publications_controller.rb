@@ -16,7 +16,7 @@ class PublicationsController < ApplicationController
     @publication = @program.publications.new(pub_params)
     authorize! :create, @publication
     if @publication.save
-      redirect_to program_publications_path @program
+      follow_redirect program_publications_path(@program)
     else
       render :new
     end

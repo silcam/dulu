@@ -2,7 +2,7 @@
   <h2><%= t :Publications %></h2>
 
   <% if can? :create, @program.publications.new %>
-    <%= link_to t(:New_publication), new_program_publication_path, class: 'btn btn-primary' %>
+    <%= link_to t(:Enter_a_publication), new_program_publication_path, class: 'btn btn-primary' %>
   <% end %>
 
   <% if @publications.empty? %>

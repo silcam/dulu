@@ -1,17 +1,6 @@
 <%
   title = event.display_name
   title = "#{event.programs.first.name} #{title}" if event.programs.count == 1
-
-  start = event.f_start_date
-  finish = event.f_end_date
-  date_text = start.pretty_print(no_relative_dates: true)
-  if(start != finish)
-    date_text += ' ' + t(:to) + ' ' + finish.pretty_print(no_relative_dates: true)
-  end
-
-  programs_text = event.programs.collect{|p| p.name}.join(', ')
-
-  people_text = event.people.collect{|p| p.full_name}.join(', ')
 %>
 
 <div class="panel panel-info" id="event-panel-<%= event.id %>">
@@ -24,7 +13,7 @@
     </span>
   </div>
   <div class="panel-body">
-    <p><strong><%= date_text %></strong></p>
+    <p><strong><%= event.dates_display_text %></strong></p>
     <p>
       <% unless event.programs.empty? %>
         <% event.programs.each do |program| %>
