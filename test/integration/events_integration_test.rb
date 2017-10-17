@@ -11,7 +11,7 @@ class EventsIntegrationTest < Capybara::Rails::TestCase
 
   test "New Minimal Event" do
     my_setup
-    click_on 'New Event'
+    click_on 'Enter an event'
     fill_in 'Name', with: 'Taco Party'
     fill_in_date 'event_start_date', FuzzyDate.new(2017)
     fill_in_date 'event_end_date', FuzzyDate.new(2017)
@@ -25,7 +25,7 @@ class EventsIntegrationTest < Capybara::Rails::TestCase
 
   test "New Event with Bells and Whistles" do
     my_setup true
-    click_on 'New Event'
+    click_on 'Enter an event'
     fill_in 'Name', with: "Taco Party"
     fill_in_date 'event_start_date', FuzzyDate.new(2017, 7, 1)
     fill_in_date 'event_end_date', FuzzyDate.new(2017, 8, 1)
@@ -157,7 +157,7 @@ class EventsIntegrationTest < Capybara::Rails::TestCase
 
   test "Can't make New Event with End Date before Start Date" do
     my_setup
-    click_on 'New Event'
+    click_on 'Enter an event'
     fill_in_date 'event_start_date', FuzzyDate.new(2017,8, 1)
     fill_in_date 'event_start_date', FuzzyDate.new(2017, 7, 31)
     click_on 'Save'
@@ -167,7 +167,7 @@ class EventsIntegrationTest < Capybara::Rails::TestCase
 
   test "Valid User" do
     my_setup
-    assert page.has_content?('New Event'), "Drew should see New Event link"
+    assert page.has_content?('Enter an event'), "Drew should see New Event link"
     assert page.has_content?('Edit'), "Drew should see Edit links"
   end
 
