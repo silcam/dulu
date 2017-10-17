@@ -7,7 +7,7 @@ class AccessPolicy
     end
 
     role :program_admin, proc { |u| u.has_role(:role_program_admin)} do
-      can [:create_activity, :manage_participants], Program
+      can [:create_activity, :manage_participants, :manage_surveys], Program
       can :update_activity, Activity
       can :manage, Organization
       can :manage, Language
@@ -32,7 +32,7 @@ class AccessPolicy
     end
 
     role :program_responsable, proc { |u| u.has_role(:role_program_responsable) } do
-      can [:create_activity], Program do |program, user|
+      can [:create_activity, :manage_surveys], Program do |program, user|
         program.current_people.include? user
       end
 
