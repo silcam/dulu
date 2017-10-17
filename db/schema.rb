@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171016131455) do
+ActiveRecord::Schema.define(version: 20171017082131) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -202,6 +202,13 @@ ActiveRecord::Schema.define(version: 20171016131455) do
     t.index ["language_id"], name: "index_programs_on_language_id", using: :btree
   end
 
+  create_table "programs_surveys", force: :cascade do |t|
+    t.integer "program_id"
+    t.integer "survey_id"
+    t.index ["program_id"], name: "index_programs_surveys_on_program_id", using: :btree
+    t.index ["survey_id"], name: "index_programs_surveys_on_survey_id", using: :btree
+  end
+
   create_table "publications", force: :cascade do |t|
     t.integer  "program_id"
     t.string   "kind"
@@ -252,6 +259,31 @@ ActiveRecord::Schema.define(version: 20171016131455) do
     t.string   "number_unit"
     t.datetime "created_at",   null: false
     t.datetime "updated_at",   null: false
+  end
+
+  create_table "status_parameters_surveys", force: :cascade do |t|
+    t.integer "status_parameter_id"
+    t.integer "survey_id"
+    t.index ["status_parameter_id"], name: "index_status_parameters_surveys_on_status_parameter_id", using: :btree
+    t.index ["survey_id"], name: "index_status_parameters_surveys_on_survey_id", using: :btree
+  end
+
+  create_table "survey_completions", force: :cascade do |t|
+    t.integer  "survey_id"
+    t.integer  "program_id"
+    t.integer  "person_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["person_id"], name: "index_survey_completions_on_person_id", using: :btree
+    t.index ["program_id"], name: "index_survey_completions_on_program_id", using: :btree
+    t.index ["survey_id"], name: "index_survey_completions_on_survey_id", using: :btree
+  end
+
+  create_table "surveys", force: :cascade do |t|
+    t.string   "name"
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
+    t.boolean  "open",       default: false
   end
 
 end

@@ -8,6 +8,7 @@ class Program < ApplicationRecord
   has_many :people, through: :participants
   has_and_belongs_to_many :events
   belongs_to :language
+  has_and_belongs_to_many :surveys
 
   def unassociated_people
     excludes = []

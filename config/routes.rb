@@ -9,6 +9,7 @@ Rails.application.routes.draw do
   get     '/auth/:provider/callback', to: 'sessions#create'
   get     '/auth/failure',            to: redirect('/')
   get     '/dashboard',               to: 'people#dashboard'
+  get     '/programs/:program_id/surveys/:survey_id', to: 'surveys_completions#new', as: :program_survey
 
   resources :people
   resources :organizations
