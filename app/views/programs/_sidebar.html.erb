@@ -20,6 +20,14 @@
         <% end %>
       <% end %>
     </h3>
+    <% if @language.cluster %>
+      <h3 class="sidebar-subtitle">
+        <%= link_to t(:Cluster_x, name: @language.cluster.name),
+                    languages_path(cluster: @language.cluster),
+                    class: 'h3 sidebar-subtitle' %>
+      </h3>
+    <% end %>
+
     <%= render 'programs/sidebar_links' %>
   </div>
   <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">

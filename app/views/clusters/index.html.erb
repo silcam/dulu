@@ -13,7 +13,7 @@
   <% @clusters.each do |cluster| %>
     <tr>
       <td><%= link_to t(:Cluster_x, name: cluster.name), languages_path(cluster: cluster.id) %></td>
-      <td><%= cluster.languages.collect{ |l| l.name }.join(', ') %></td>
+      <td><%= cluster.languages.collect{ |l| link_to(l.name, dashboard_program_path(l.program)) }.join(', ').html_safe %></td>
       <td><%= link_to t(:Add_language), edit_cluster_path(cluster) %></td>
     </tr>
   <% end %>

@@ -3,13 +3,20 @@ class LanguagesController < ApplicationController
 
   def index
     if params[:region]
-      @languages = Language.where(cameroon_region_id: params[:region]).std_includes
+      region = CameroonRegion.find params[:region]
+      @languages = region.languages.std_includes
+      @subtitle = region.name
     elsif params[:country]
-      @languages = Language.where(country_id: params[:country]).std_includes
+      country = Country.find params[:country]
+      @languages = country.languages.std_includes
+      @subtitle = country.name
     elsif params[:cluster]
-      @languages = Cluster.find(params[:cluster]).languages
+      cluster = Cluster.find params[:cluster]
+      @languages = cluster.languages.std_includes
+      @subtitle = cluster.name
     else
       @languages = Language.std_includes
+      @subtitle = ''
     end
   end
 
