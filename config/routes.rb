@@ -17,6 +17,7 @@ Rails.application.routes.draw do
   resources :organizations
   resources :languages
   resources :events
+  resources :clusters
   shallow do
     resources :programs do
       get 'dashboard', on: :member

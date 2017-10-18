@@ -108,6 +108,11 @@ fr:
   Name_of_dialect: Nom du dialecte
   A_dialect_of: Dialecte de 
 
+  # Clusters
+  Cluster: Kluster
+  Clusters: Klusters
+  Language_clusters: Klusters de langues
+
   #Programs Controller
   Program: Programme
   Programs: Programmes

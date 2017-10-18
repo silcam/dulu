@@ -1,0 +1,11 @@
+<h2><%= t :Language_clusters %></h2>
+
+<table>
+  <% @clusters.each do |cluster| %>
+    <tr>
+      <td><%= cluster.name %></td>
+      <td><%= cluster.languages.collect{ |l| l.name }.join(',') %></td>
+      <td><%= link_to t(:Add_language), edit_cluster_path(cluster) %></td>
+    </tr>
+  <% end %>
+</table>
