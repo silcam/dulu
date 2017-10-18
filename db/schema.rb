@@ -56,12 +56,6 @@ ActiveRecord::Schema.define(version: 20171018095410) do
     t.index ["cameroon_region_id"], name: "index_cameroon_territories_on_cameroon_region_id", using: :btree
   end
 
-  create_table "clusters", force: :cascade do |t|
-    t.string   "name"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
   create_table "countries", force: :cascade do |t|
     t.string   "code"
     t.string   "english_name"
@@ -138,9 +132,7 @@ ActiveRecord::Schema.define(version: 20171018095410) do
     t.datetime "updated_at",             null: false
     t.string   "alt_names"
     t.integer  "parent_id"
-    t.integer  "cluster_id"
     t.index ["cameroon_region_id"], name: "index_languages_on_cameroon_region_id", using: :btree
-    t.index ["cluster_id"], name: "index_languages_on_cluster_id", using: :btree
     t.index ["country_id"], name: "index_languages_on_country_id", using: :btree
     t.index ["language_status_id"], name: "index_languages_on_language_status_id", using: :btree
     t.index ["parent_id"], name: "index_languages_on_parent_id", using: :btree
