@@ -1,5 +1,7 @@
 <h2><%= t :Enter_cluster %></h2>
 
+<%= render 'shared/error_messages', errors: @cluster.errors %>
+
 <%= form_for @cluster, html: {class: 'auto-width'} do |form| %>
 
   <div class="form-group">
