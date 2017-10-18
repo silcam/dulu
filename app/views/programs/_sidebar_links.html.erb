@@ -7,7 +7,7 @@
               {text: t(:Publications),    path: program_publications_path(@program), highlight_if_path_has: 'publications'},
               {text: t(:Domain_updates),  path: program_domain_updates_path(@program), highlight_if_path_has: 'domain_updates'}] %>
   <% if can? :manage_surveys, @program %>
-    <% survey = @program.surveys.find_by(open: true) %>
+    <% survey = Survey.find_by(open: true) %>
     <% if survey %>
       <% links << {text: survey.display_name, path: program_survey_path(@program, survey), highlight_if_path_has: 'survey'} %>
     <% end %>

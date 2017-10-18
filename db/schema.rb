@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171018090735) do
+ActiveRecord::Schema.define(version: 20171018095410) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -54,6 +54,12 @@ ActiveRecord::Schema.define(version: 20171018090735) do
     t.datetime "updated_at",         null: false
     t.string   "name"
     t.index ["cameroon_region_id"], name: "index_cameroon_territories_on_cameroon_region_id", using: :btree
+  end
+
+  create_table "clusters", force: :cascade do |t|
+    t.string   "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "countries", force: :cascade do |t|
@@ -132,7 +138,9 @@ ActiveRecord::Schema.define(version: 20171018090735) do
     t.datetime "updated_at",             null: false
     t.string   "alt_names"
     t.integer  "parent_id"
+    t.integer  "cluster_id"
     t.index ["cameroon_region_id"], name: "index_languages_on_cameroon_region_id", using: :btree
+    t.index ["cluster_id"], name: "index_languages_on_cluster_id", using: :btree
     t.index ["country_id"], name: "index_languages_on_country_id", using: :btree
     t.index ["language_status_id"], name: "index_languages_on_language_status_id", using: :btree
     t.index ["parent_id"], name: "index_languages_on_parent_id", using: :btree
@@ -200,13 +208,6 @@ ActiveRecord::Schema.define(version: 20171018090735) do
     t.datetime "created_at",  null: false
     t.datetime "updated_at",  null: false
     t.index ["language_id"], name: "index_programs_on_language_id", using: :btree
-  end
-
-  create_table "programs_surveys", force: :cascade do |t|
-    t.integer "program_id"
-    t.integer "survey_id"
-    t.index ["program_id"], name: "index_programs_surveys_on_program_id", using: :btree
-    t.index ["survey_id"], name: "index_programs_surveys_on_survey_id", using: :btree
   end
 
   create_table "publications", force: :cascade do |t|
