@@ -40,15 +40,51 @@ body {
 .navbar-fixed-top {
   border: 0;
 
-  a{
-    color: white;
-  }
-
   a:hover {
     color: white;
     font-weight: bold;
   }
+
+  .dropdown:focus {
+    outline: none;
+  }
+
+  .nav-btn, .nav-btn:focus {
+    border: none;
+    padding: 15px;
+    color: #ccc;
+    text-decoration: none;
+    outline-color: white;
+  }
+
+  .nav-btn:hover {
+    color: white;
+    font-weight: bold;
+    text-decoration: none;
+  }
+
+  .dropdown-menu {
+    background: #272727;
+    margin: 0;
+    border-radius: unset;
+
+    li {
+      a {
+        color: #ccc;
+      }
+      a:hover {
+        color: white;
+        font-weight: bold;
+        background: #272727;
+      }
+    }
+
+    li:hover {
+      background: #272727;
+    }
+  }
 }
+
 
 /*
  * Sidebar

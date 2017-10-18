@@ -11,11 +11,31 @@
     <div id="navbar" class="navbar-collapse collapse">
       <% if logged_in? %>
         <ul class="nav navbar-nav">
-          <li><%= link_to t(:People), people_path %></li>
-          <li><%= link_to t(:Organizations), organizations_path %></li>
-          <li><%= link_to t(:Languages), languages_path %></li>
-          <li><%= link_to t(:Clusters), clusters_path %></li>
-          <li><%= link_to t(:Programs), programs_path %></li>
+          <li>
+            <div class="dropdown">
+              <button class="btn btn-link nav-btn dropdown-toggle" data-toggle="dropdown">
+                <%= t(:People) %>
+                <span class="caret"></span>
+              </button>
+              <ul class="dropdown-menu">
+                <li><%= link_to t(:People), people_path %></li>
+                <li><%= link_to t(:Organizations), organizations_path %></li>
+              </ul>
+            </div>
+          </li>
+          <li>
+            <div class="dropdown">
+              <button class="btn btn-link nav-btn dropdown-toggle" data-toggle="dropdown">
+                <%= t(:Languages) %>
+                <span class="caret"></span>
+              </button>
+              <ul class="dropdown-menu">
+                <li><%= link_to t(:Languages), languages_path %></li>
+                <li><%= link_to t(:Clusters), clusters_path %></li>
+                <li><%= link_to t(:Programs), programs_path %></li>
+              </ul>
+            </div>
+          </li>
           <li><%= link_to t(:Events), events_path %></li>
         </ul>
         <ul class="nav navbar-nav navbar-right">
@@ -23,7 +43,7 @@
           <li><%= link_to t(:Log_out), logout_url, method: :delete %></li>
         </ul>
         <%= form_tag(search_path, method: :get, class: 'navbar-form navbar-right') do %>
-          <%= text_field_tag :q, '', placeholder: t(:Search_bar), class: 'form-control' %>
+          <%= text_field_tag :q, '', placeholder: t(:Search_bar), class: 'form-control', size: 16; %>
         <% end %>
       <% end %>
     </div>
