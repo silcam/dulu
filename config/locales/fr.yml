@@ -111,8 +111,10 @@ fr:
   # Clusters
   Cluster: Groupe
   Clusters: Groupes
-  Language_clusters: Groupe de langues
+  Language_clusters: Groupes de langues
   Enter_cluster: Saisir un groupe
+  Add_language: Ajouter une langue
+  Cluster_x: Groupe %{name}
 
   #Programs Controller
   Program: Programme

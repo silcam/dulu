@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171018081327) do
+ActiveRecord::Schema.define(version: 20171018095410) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -210,13 +210,6 @@ ActiveRecord::Schema.define(version: 20171018081327) do
     t.index ["language_id"], name: "index_programs_on_language_id", using: :btree
   end
 
-  create_table "programs_surveys", force: :cascade do |t|
-    t.integer "program_id"
-    t.integer "survey_id"
-    t.index ["program_id"], name: "index_programs_surveys_on_program_id", using: :btree
-    t.index ["survey_id"], name: "index_programs_surveys_on_survey_id", using: :btree
-  end
-
   create_table "publications", force: :cascade do |t|
     t.integer  "program_id"
     t.string   "kind"
@@ -267,6 +260,7 @@ ActiveRecord::Schema.define(version: 20171018081327) do
     t.string   "number_unit"
     t.datetime "created_at",   null: false
     t.datetime "updated_at",   null: false
+    t.integer  "order"
   end
 
   create_table "status_parameters_surveys", force: :cascade do |t|

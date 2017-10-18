@@ -2,6 +2,8 @@ class StatusParameter < ApplicationRecord
 
   has_many :domain_updates
 
+  default_scope { order(:order) }
+
   def self.domains
     %w[Literacy Scripture_use Mobilization Ethnomusicology Anthropology Community_development Translation Linguistics Media]
   end

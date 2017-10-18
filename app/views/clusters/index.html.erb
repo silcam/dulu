@@ -1,10 +1,19 @@
 <h2><%= t :Language_clusters %></h2>
 
-<table>
+<p>
+  <%= link_to t(:Enter_cluster), new_cluster_path, class: 'btn btn-primary' %>
+</p>
+
+<table class="table" style="width: auto;">
+  <tr>
+    <th><%= t :Cluster %></th>
+    <th><%= t :Languages %></th>
+    <th></th>
+  </tr>
   <% @clusters.each do |cluster| %>
     <tr>
-      <td><%= cluster.name %></td>
-      <td><%= cluster.languages.collect{ |l| l.name }.join(',') %></td>
+      <td><%= link_to t(:Cluster_x, name: cluster.name), languages_path(cluster: cluster.id) %></td>
+      <td><%= cluster.languages.collect{ |l| l.name }.join(', ') %></td>
       <td><%= link_to t(:Add_language), edit_cluster_path(cluster) %></td>
     </tr>
   <% end %>

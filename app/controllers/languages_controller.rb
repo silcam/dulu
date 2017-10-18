@@ -6,6 +6,8 @@ class LanguagesController < ApplicationController
       @languages = Language.where(cameroon_region_id: params[:region]).std_includes
     elsif params[:country]
       @languages = Language.where(country_id: params[:country]).std_includes
+    elsif params[:cluster]
+      @languages = Cluster.find(params[:cluster]).languages
     else
       @languages = Language.std_includes
     end

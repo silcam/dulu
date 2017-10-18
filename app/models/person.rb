@@ -44,6 +44,10 @@ class Person < ApplicationRecord
     participants.where(end_date: nil)
   end
 
+  def current_programs
+    current_participants.collect{ |ptcpt| ptcpt.program }
+  end
+
   def self.all_sorted
     Person.all.order(:last_name, :first_name)
   end

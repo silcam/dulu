@@ -28,5 +28,10 @@ class ClustersController < ApplicationController
     redirect_to clusters_path
   end
 
+  private
+
+  def cluster_params
+    params.require(:cluster).permit(:name)
+  end
 
 end

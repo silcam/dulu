@@ -113,6 +113,8 @@ en:
   Clusters: Clusters
   Language_clusters: Language Clusters
   Enter_cluster: Enter a cluster
+  Add_language: Add Language
+  Cluster_x: "%{name} Cluster"
 
   #Programs Controller
   Program: Program
