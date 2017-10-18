@@ -109,9 +109,10 @@ fr:
   A_dialect_of: Dialecte de 
 
   # Clusters
-  Cluster: Kluster
-  Clusters: Klusters
-  Language_clusters: Klusters de langues
+  Cluster: Groupe
+  Clusters: Groupes
+  Language_clusters: Groupe de langues
+  Enter_cluster: Saisir un groupe
 
   #Programs Controller
   Program: Programme
