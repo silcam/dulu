@@ -2,7 +2,7 @@
   <h2><%= t :Publications %></h2>
 
   <% if can? :create, @program.publications.new %>
-    <%= link_to t(:Enter_a_publication), new_program_publication_path, class: 'btn btn-primary' %>
+    <%= link_to t(:Add_publication), new_program_publication_path, class: 'btn btn-primary' %>
   <% end %>
 
   <% if @publications.empty? %>
@@ -13,17 +13,21 @@
     <% kind_pubs = @publications.select{ |pub| pub.kind==kind } %>
     <% unless kind_pubs.empty? %>
       <h3><%= t kind %></h3>
-      <ul class="list-unstyled" style="margin-left: 20px;">
+      <table class="table auto-width" style="margin-left: 20px;">
         <% kind_pubs.each do |pub| %>
-          <li>
-            <span class="bigger">
-              <%= pub.name %>
-              <%= " - #{pub.year}" if pub.year %>
-            </span>
-            <%= link_to t(:Edit), edit_publication_path(pub) if can? :update, pub %>
-          </li>
+          <tr>
+            <td>
+              <span class="bigger">
+                <%= pub.name %>
+                <%= " - #{pub.year}" if pub.year %>
+              </span>
+            </td>
+            <td>
+              <%= link_to t(:Edit), edit_publication_path(pub) if can? :update, pub %>
+            </td>
+          </tr>
         <% end %>
-      </ul>
+      </table>
     <% end %>
   <% end %>
 <% end %>

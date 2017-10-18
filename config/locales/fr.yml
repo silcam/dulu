@@ -71,7 +71,7 @@ fr:
   French: Français
   Spanish: Español
   New_person: Nouvelle personne
-  Add_person: Créer une personne
+  Add_person: Ajouter une personne
   Add_a_person: Ajouter une personne
   Edit_person: Modifier
   Edit: Modifier
@@ -87,7 +87,7 @@ fr:
   Organization: Organisation
   Organizations: Organisations
   Abbreviation: Abréviation
-  add_organization_button: Créer une organisation
+  add_organization_button: Ajouter une organisation
   New_Organization: Nouvelle organisation
   Partners: Partenaires
 
@@ -112,7 +112,7 @@ fr:
   Cluster: Groupe
   Clusters: Groupes
   Language_clusters: Groupes de langues
-  Enter_cluster: Saisir un groupe
+  Add_cluster: Ajouter un groupe
   Add_language: Ajouter une langue
   Cluster_x: Groupe %{name}
 
@@ -187,7 +187,7 @@ fr:
   Publications: Publications
   No_publications: Aucune publication
   New_publication: Nouvelle Publication
-  Enter_a_publication: Saisir une publication
+  Add_publication: Ajouter une publication
   Type_of_publication: Type de Publication
   English_title: Titre en anglais
   French_title: Titre en français
@@ -205,7 +205,7 @@ fr:
   No_upcoming_events: Aucun événement
   Events: Événements
   New_event: Nouvel événement
-  Enter_event: Saisir un événement
+  Add_event: Ajouter un événement
   Delete_event: Supprimer cet événement
   Delete_event_confirmation: Confirmez que vous voulez supprimer %{event}.
   Type_of_event: Type d'événement

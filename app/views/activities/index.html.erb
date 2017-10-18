@@ -1,8 +1,11 @@
 <%= render 'programs/sidebar' do %>
   <h2><%= t :Activities %></h2>
   <% if can? :create_activity, @program %>
-      <%= link_to t(:Add_books),
-                  new_program_activity_path(@program) %>
+    <p>
+      <%= link_to t(:Add_activity),
+                  new_program_activity_path(@program),
+                  class: 'btn btn-primary' %>
+    </p>
   <% end %>
 
   <table class='table'>

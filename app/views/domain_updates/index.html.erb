@@ -6,7 +6,7 @@
   <% domains.each do |domain| %>
     <h3 id="<%= domain %>">
       <%= t domain %>
-      <%= link_to t(:Update), new_program_domain_update_path(@program, dmn: domain), class: 'btn btn-primary' %>
+      <%= link_to t(:Update), new_program_domain_update_path(@program, dmn: domain), class: 'btn btn-link bigger' %>
     </h3>
     <div style="margin-left: 20px;">
       <% StatusParameter.where(domain: domain).each do |status_parameter| %>

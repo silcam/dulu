@@ -2,6 +2,7 @@ class ClustersController < ApplicationController
 
   def index
     @clusters = Cluster.all.includes(:languages)
+    @cluster = Cluster.new
   end
 
   def new
@@ -13,7 +14,8 @@ class ClustersController < ApplicationController
     if @cluster.save
       redirect_to clusters_path
     else
-      render :new
+      @clusters = Cluster.all.includes(:languages)
+      render :index
     end
   end
 

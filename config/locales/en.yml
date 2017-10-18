@@ -112,7 +112,7 @@ en:
   Cluster: Cluster
   Clusters: Clusters
   Language_clusters: Language Clusters
-  Enter_cluster: Enter a cluster
+  Add_cluster: Add Cluster
   Add_language: Add Language
   Cluster_x: "%{name} Cluster"
 
@@ -187,7 +187,7 @@ en:
   Publications: Publications
   No_publications: No Publications
   New_publication: New Publication
-  Enter_a_publication: Enter a publication
+  Add_publication: Add Publication
   Type_of_publication: Type of Publication
   English_title: English Title
   French_title: French Title
@@ -205,7 +205,7 @@ en:
   No_upcoming_events: No Upcoming Events
   Events: Events
   New_event: New Event
-  Enter_event: Enter an event
+  Add_event: Add Event
   Delete_event: Delete this event
   Delete_event_confirmation: Are you sure you want to delete %{event}?
   Type_of_event: Type of event

@@ -1,7 +1,9 @@
 <%= render layout: 'programs/sidebar' do %>
   <h2><%= t :People %></h2>
 
-  <%= link_to t(:Add_a_person), new_program_participant_path(@program) if can? :manage_participants, @program %>
+  <p>
+    <%= link_to t(:Add_a_person), new_program_participant_path(@program), class: 'btn btn-primary' if can? :manage_participants, @program %>
+  </p>
 
   <table class="table">
     <tr>
