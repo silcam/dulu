@@ -3,18 +3,17 @@
 
     <h2><%= t :My_activities %></h2>
 
-    <% @user.current_participants.where.not(program: nil).each do |participant| %>
+    <% @current_programs.each do |program| %>
         <div class="panel panel-primary">
 
           <div class="panel-heading">
             <h3 class="panel-title">
-              <%= link_to participant.cluster_program.name, participant.cluster_program %>
+              <%= link_to program.name, program %>
             </h3>
           </div>
 
           <div class="panel-body">
-            <% activities = participant.activities.empty? ?
-                              participant.program.sorted_activities : participant.sorted_activities %>
+            <% activities = program.sorted_activities %>
             <table class="table" id="activities-table">
 
               <% activities.each do |activity| %>

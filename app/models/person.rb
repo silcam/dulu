@@ -48,7 +48,15 @@ class Person < ApplicationRecord
   end
 
   def current_programs
-    current_participants.where.not(program: nil).collect{ |ptcpt| ptcpt.program }
+    programs = []
+    current_participants.each do |participant|
+      if participant.program
+        programs << participant.program
+      else
+        programs += participant.cluster.programs
+      end
+    end
+    programs
   end
 
   def self.roles_for_select(include_admin = false)

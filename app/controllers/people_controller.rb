@@ -39,6 +39,7 @@ class PeopleController < ApplicationController
 
   def dashboard
     @user = current_user
+    @current_programs = @user.current_programs
   end
 
   def not_allowed

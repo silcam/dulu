@@ -1,11 +1,10 @@
 <%= render 'searches/search_form' %>
 
 <% survey = Survey.find_by(open: true) %>
-<% programs = @user.current_programs %>
-<% if survey and not programs.empty? and can?(:create, programs.first.domain_updates.new) %>
+<% if survey and not @current_programs.empty? and can?(:create, @current_programs.first.domain_updates.new) %>
   <h2><%= t :Surveys %></h2>
   <ul class="list-unstyled">
-    <% programs.each do |program| %>
+    <% @current_programs.each do |program| %>
       <li>
         <%= link_to "#{program.name} #{survey.name} Survey", program_survey_path(program, survey), class: 'h4' %>
       </li>
@@ -13,4 +12,4 @@
   </ul>
 <% end %>
 
-<%= render 'dashboard_activities' unless @user.current_programs.empty? %>
+<%= render 'dashboard_activities' unless @current_programs.empty? %>
