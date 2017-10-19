@@ -81,7 +81,7 @@ class Person < ApplicationRecord
     people.each do |person|
       subresults = []
       person.current_participants.each do |participant|
-        subresults << {title: participant.cluster_program.name,
+        subresults << {title: participant.cluster_program.display_name,
                        model: participant.cluster_program,
                        description: I18n.t(participant.program_role.name)}
       end
