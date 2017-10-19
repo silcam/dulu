@@ -6,7 +6,7 @@ class Cluster < ApplicationRecord
   has_many :participants
   has_many :people, through: :participants
 
-  validates :name, presence: true
+  validates :name, presence: true, uniqueness: true
 
   default_scope { order(:name) }
 

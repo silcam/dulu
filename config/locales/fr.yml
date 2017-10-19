@@ -246,3 +246,5 @@ fr:
     attributes:
       participant:
         end_date: Date de fin
+      cluster:
+        name: Nom
