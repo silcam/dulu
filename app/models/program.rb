@@ -94,7 +94,7 @@ class Program < ApplicationRecord
   def all_events
     cluster.nil? ?
         events :
-        events + cluster.events
+        (events + cluster.events).sort{ |a,b| a.start_date <=> b.start_date }
   end
 
   def events_as_hash

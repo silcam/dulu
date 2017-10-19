@@ -30,10 +30,10 @@
   <p>
     Please enter any events in the last three years that promoted literacy or <%= @program.name %> Scripture use.
   </p>
-  <% unless @program.events.empty? %>
+  <% unless @program.all_events.empty? %>
     <b><%= @program.name %> <%= t :Events %></b>
     <table class="table" style="width: auto;">
-      <% @program.events.each do |event| %>
+      <% @program.all_events.each do |event| %>
         <tr>
           <td><%= event.name %></td>
           <td><%= event.dates_display_text %></td>
