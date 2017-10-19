@@ -60,8 +60,12 @@ class Participant < ApplicationRecord
   end
 
   def end_date_after_start_date
-    if end_date and f_end_date.before? f_start_date
-      errors.add :end_date, I18n.t(:not_before_start)
+    begin
+      if end_date and f_end_date.before? f_start_date
+        errors.add :end_date, I18n.t(:not_before_start)
+      end
+    rescue FuzzyDateException => e
+      # This will fail Fuzzy Date validation
     end
   end
 end
