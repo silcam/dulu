@@ -62,6 +62,11 @@ ActiveRecord::Schema.define(version: 20171019144749) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "clusters_events", id: false, force: :cascade do |t|
+    t.integer "cluster_id", null: false
+    t.integer "event_id",   null: false
+  end
+
   create_table "countries", force: :cascade do |t|
     t.string   "code"
     t.string   "english_name"

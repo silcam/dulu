@@ -6,7 +6,7 @@
 
     <% events = @program.events_as_hash %>
 
-    <% if @program.events.empty? %>
+    <% if events == {past: [], current: [], future: []} %>
       <h3><%= t :No_events %></h3>
     <% else %>
       <%= render 'events_table', events: events %>

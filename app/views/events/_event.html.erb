@@ -1,6 +1,10 @@
 <%
   title = event.display_name
-  title = "#{event.programs.first.name} #{title}" if event.programs.count == 1
+  if event.programs.count == 1 and event.clusters.empty?
+    title = "#{event.programs.first.name} #{title}"
+  elsif event.clusters.count == 1 and event.programs.empty?
+    title = "#{event.clusters.first.display_name} #{title}"
+  end
 %>
 
 <div class="panel panel-info" id="event-panel-<%= event.id %>">
@@ -16,13 +20,14 @@
     <p><strong><%= event.dates_display_text %></strong></p>
     <p>
       <% unless event.programs.empty? %>
-        <% event.programs.each do |program| %>
-          <%= link_to program.name, dashboard_program_path(program) %><%= ',' unless program == event.programs.last %>
-        <% end %><br>
+          <%= event.programs.collect{ |p| link_to(p.name, p)}.join(', ').html_safe %>
+          <br>
       <% end %>
-      <% event.people.each do |person| %>
-        <%= link_to person.full_name, person %><%= ',' unless person == event.people.last %>
+      <% unless event.clusters.empty? %>
+        <%= event.clusters.collect{ |c| link_to(t(:Cluster_x, name: c.name), c) }.join(', ').html_safe %>
+        <br>
       <% end %>
+      <%= event.people.collect{ |p| link_to(p.name, p) }.join(', ').html_safe %>
     </p>
     <p>
       <%= event.note %>
