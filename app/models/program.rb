@@ -39,6 +39,12 @@ class Program < ApplicationRecord
       participants + cluster.participants
   end
 
+  def all_people
+    cluster.nil? ?
+      people :
+      people + cluster.people
+  end
+
   def all_current_participants
     cluster.nil? ?
       current_participants :

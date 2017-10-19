@@ -2,7 +2,7 @@ module HasParticipants
   extend ActiveSupport::Concern
 
   def unassociated_people
-    excludes = people.collect{ |p| p.id }
+    excludes = all_people.collect{ |p| p.id }
     Person.where.not(id: excludes)
   end
 

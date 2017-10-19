@@ -14,7 +14,12 @@
     </tr>
     <% program_cluster.all_participants.each do |participant| %>
         <tr>
-          <td><%= link_to participant.person.full_name, participant.person %></td>
+          <td>
+            <%= link_to participant.person.full_name, participant.person %>
+            <% if program_cluster.is_a? Program and participant.cluster %>
+              (<%= t :Cluster_x, name: participant.cluster.name %>)
+            <% end %>
+          </td>
           <td><%= t(participant.program_role.name) %></td>
           <td><%= participant.f_start_date.pretty_print %></td>
           <td><%= participant.f_end_date.try(:pretty_print) %></td>

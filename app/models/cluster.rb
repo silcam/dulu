@@ -11,6 +11,7 @@ class Cluster < ApplicationRecord
   default_scope { order(:name) }
 
   alias all_participants participants
+  alias all_people people
   alias all_current_participants current_participants
   alias all_current_people current_people
 
