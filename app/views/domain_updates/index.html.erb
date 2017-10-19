@@ -2,18 +2,26 @@
 
   <h2><%= t :Domain_updates %></h2>
 
+  <% if @domain_updates.empty? and !can? :create, @program.domain_updates.new %>
+    <%= t :No_information %>
+  <% end %>
+
   <% domains = StatusParameter.sorted_domains %>
   <% domains.each do |domain| %>
-    <h3 id="<%= domain %>">
-      <%= t domain %>
-      <%= link_to t(:Update), new_program_domain_update_path(@program, dmn: domain), class: 'btn btn-link bigger' %>
-    </h3>
+    <% if !@domain_updates.where(domain: domain).empty? or can? :create, @program.domain_updates.new %>
+      <h3 id="<%= domain %>">
+        <%= t domain %>
+        <% if can? :create, @program.domain_updates.new %>
+          <%= link_to t(:Update), new_program_domain_update_path(@program, dmn: domain), class: 'btn btn-link bigger' %>
+        <% end %>
+      </h3>
+    <% end %>
     <div style="margin-left: 20px;">
       <% StatusParameter.where(domain: domain).each do |status_parameter| %>
-        <% updates = @domain_updates.select{ |du| du.status_parameter == status_parameter } %>
+        <% updates = @domain_updates.where(status_parameter: status_parameter) %>
         <%= render 'domain_updates_table', updates: updates, status_parameter: status_parameter %>
       <% end %>
-      <% updates = @domain_updates.select{ |du| du.domain==domain and du.status_parameter.nil? } %>
+      <% updates = @domain_updates.where(domain: domain, status_parameter: nil) %>
       <%= render 'domain_updates_table', updates: updates, status_parameter: StatusParameter.other_parameter(domain) %>
     </div>
   <% end %>
