@@ -14,8 +14,15 @@ $(document).ready ->
     hidden_select.find('select').removeProp('disabled')
     hidden_select.fadeIn('fast')
 
-  $('div#program-ids').on('click', 'a[data-remove-program-select]', ->
-    delete_me = $(this).closest('div.program-select')
+  $('a[data-add-cluster-select]').click (e) ->
+    e.preventDefault()
+    hidden_select = $('div.cluster-select').last()
+    hidden_select.after(hidden_select.clone())
+    hidden_select.find('select').removeProp('disabled')
+    hidden_select.fadeIn('fast')
+
+  $('div.select-collection').on('click', 'a[data-remove-select]', ->
+    delete_me = $(this).closest('div.select')
     delete_me.fadeOut('fast', ->
       delete_me.remove()
     )
@@ -25,15 +32,8 @@ $(document).ready ->
     e.preventDefault()
     copy_me = $('div.person-select').last()
     new_div = copy_me.clone()
-    new_div.find('a[data-remove-person-select]').show()
+    new_div.find('a[data-remove-select]').show()
     new_div.hide()
     copy_me.after(new_div)
     new_div.fadeIn('fast')
-
-  $('div#event-participants').on('click', 'a[data-remove-person-select]', ->
-    delete_me = $(this).closest('div.person-select')
-    delete_me.fadeOut('fast', ->
-      delete_me.remove()
-    )
-  )
 

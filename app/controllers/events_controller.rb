@@ -59,9 +59,14 @@ class EventsController < ApplicationController
 
   def prepared_event_params
     prms = event_params
-    prms[:event_participants] = []
+
     prms[:program_ids] ||= []
     prms[:program_ids].uniq!
+
+    prms[:cluster_ids] ||= []
+    prms[:cluster_ids].uniq!
+
+    prms[:event_participants] = []
     prms[:new_event_participants].each do |ep_params|
       unless ep_params[:person_id].blank?
         prms[:event_participants] << EventParticipant.new(ep_params)
@@ -81,6 +86,7 @@ class EventsController < ApplicationController
     assemble_dates params, 'event', 'start_date', 'end_date'
     params.require(:event).permit(:domain, :name, :start_date, :end_date, :note,
                                   program_ids: [],
+                                  cluster_ids: [],
                                   event_participant: [:person_id, :program_role_id],
                                   new_event_participants: [:person_id, :program_role_id])
   end

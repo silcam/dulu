@@ -5,6 +5,7 @@ class Cluster < ApplicationRecord
   has_many :programs, through: :languages
   has_many :participants
   has_many :people, through: :participants
+  has_and_belongs_to_many :events
 
   validates :name, presence: true, uniqueness: true
 
