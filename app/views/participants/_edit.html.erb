@@ -22,7 +22,7 @@
         </div>
     <% end %>
 
-    <% if defined? @program %>
+    <% if defined? @program and !@program.activities.empty? %>
       <%= render 'associated_activities', associated_activities: @participant.activities %>
     <% end %>
 
