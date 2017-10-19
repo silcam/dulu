@@ -1,5 +1,7 @@
 class ClustersController < ApplicationController
 
+  before_action :authorize, except: :index
+
   def index
     @clusters = Cluster.all.includes(:languages)
     @cluster = Cluster.new
@@ -34,6 +36,10 @@ class ClustersController < ApplicationController
 
   def cluster_params
     params.require(:cluster).permit(:name)
+  end
+
+  def authorize
+    authorize! :create, Cluster
   end
 
 end

@@ -2,7 +2,7 @@
 
 <% survey = Survey.find_by(open: true) %>
 <% programs = @user.current_programs %>
-<% if survey and not programs.empty? %>
+<% if survey and not programs.empty? and can?(:create, programs.first.domain_updates.new) %>
   <h2><%= t :Surveys %></h2>
   <ul class="list-unstyled">
     <% programs.each do |program| %>

@@ -25,15 +25,15 @@ class AccessPolicy
       can [:manage_participants], Program do |program, user|
         program.current_people.include? user
       end
-
-      can :manage, Language do |language, user|
-        language.program.current_people.include? user
-      end
     end
 
     role :program_responsable, proc { |u| u.has_role(:role_program_responsable) } do
       can [:create_activity, :manage_surveys], Program do |program, user|
         program.current_people.include? user
+      end
+
+      can :manage, Language do |language, user|
+        language.program.current_people.include? user
       end
 
       can :update_activity, Activity do |activity, user|
@@ -53,6 +53,8 @@ class AccessPolicy
       can :manage, DomainUpdate do |domain_update, user|
         domain_update.program.current_people.include? user
       end
+      
+      can :manage, Cluster
     end
 
     role :user do

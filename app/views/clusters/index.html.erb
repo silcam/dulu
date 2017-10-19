@@ -4,29 +4,34 @@
   <tr>
     <th><%= t :Cluster %></th>
     <th><%= t :Languages %></th>
-    <th></th>
+    <% if can? :update, Cluster %>
+      <th></th>
+    <% end %>
   </tr>
   <% @clusters.each do |cluster| %>
     <tr>
       <td><%= link_to t(:Cluster_x, name: cluster.name), languages_path(cluster: cluster.id) %></td>
       <td><%= cluster.languages.collect{ |l| link_to(l.name, dashboard_program_path(l.program)) }.join(', ').html_safe %></td>
-      <td><%= link_to t(:Add_language), edit_cluster_path(cluster) %></td>
+      <% if can? :update, Cluster %>
+        <td><%= link_to t(:Add_language), edit_cluster_path(cluster) %></td>
+      <% end %>
     </tr>
   <% end %>
 </table>
 
+<% if can? :create, Cluster %>
+  <%= render 'shared/error_messages', errors: @cluster.errors %>
 
-<%= render 'shared/error_messages', errors: @cluster.errors %>
+  <%= form_for @cluster, html: {class: 'auto-width'} do |form| %>
 
-<%= form_for @cluster, html: {class: 'auto-width'} do |form| %>
+      <div class="form-group">
+        <%= form.label :name, t(:Add_cluster) %>
+        <%= form.text_field :name, placeholder: t(:Name), class: 'form-control' %>
+      </div>
 
-    <div class="form-group">
-      <%= form.label :name, t(:Add_cluster) %>
-      <%= form.text_field :name, placeholder: t(:Name), class: 'form-control' %>
-    </div>
+      <div class="form-group">
+        <%= form.submit t(:Save), class: 'btn btn-primary' %>
+      </div>
 
-    <div class="form-group">
-      <%= form.submit t(:Save), class: 'btn btn-primary' %>
-    </div>
-
+  <% end %>
 <% end %>
