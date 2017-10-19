@@ -73,8 +73,8 @@ class Event < ApplicationRecord
   end
 
   def self.events_as_hash(program=nil)
-    events = program ? program.events : Event.all
-    events = events.order(:start_date)
+    events = program ? program.all_events : Event.all
+    events = events.sort{ |a,b| a.start_date <=> b.start_date }
     event_hash = {past: [], current: [], future: []}
     events.each do |event|
       if event.f_end_date.past?

@@ -91,6 +91,12 @@ class Program < ApplicationRecord
   #   past
   # end
 
+  def all_events
+    cluster.nil? ?
+        events :
+        events + cluster.events
+  end
+
   def events_as_hash
     Event.events_as_hash(self)
   end
