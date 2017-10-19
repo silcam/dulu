@@ -12,9 +12,12 @@ class Person < ApplicationRecord
   validates :gender, inclusion: { in: %w(M F)}
   validates :email, uniqueness: true, allow_blank: true
 
+  default_scope{ order(:last_name, :first_name) }
+
   def full_name
     "#{first_name} #{last_name}"
   end
+  alias name full_name
 
   def full_name_rev
     "#{last_name}, #{first_name}"
@@ -45,11 +48,7 @@ class Person < ApplicationRecord
   end
 
   def current_programs
-    current_participants.collect{ |ptcpt| ptcpt.program }
-  end
-
-  def self.all_sorted
-    Person.all.order(:last_name, :first_name)
+    current_participants.where.not(program: nil).collect{ |ptcpt| ptcpt.program }
   end
 
   def self.roles_for_select(include_admin = false)
@@ -74,12 +73,12 @@ class Person < ApplicationRecord
     people.each do |person|
       subresults = []
       person.current_participants.each do |participant|
-        subresults << {title: participant.program.name,
-         path: Rails.application.routes.url_helpers.program_path(participant.program),
-        description: I18n.t(participant.program_role.name)}
+        subresults << {title: participant.cluster_program.name,
+                       model: participant.cluster_program,
+                       description: I18n.t(participant.program_role.name)}
       end
-      results << {title: person.full_name,
-                  path: Rails.application.routes.url_helpers.person_path(person),
+      results << {title: person.name,
+                  model: person,
                   description: person.organization.try(:name),
                   subresults: subresults}
     end

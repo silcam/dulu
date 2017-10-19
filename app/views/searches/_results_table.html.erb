@@ -4,8 +4,8 @@
     <tr>
       <td style="padding-left:<%= level*40 %>px">
         <<%= header %>>
-          <% if result[:path] %>
-            <%= link_to result[:title], result[:path] %>
+          <% if result[:model] %>
+            <%= link_to result[:title], result[:model] %>
           <% else %>
             <%= result[:title] %>
           <% end %>

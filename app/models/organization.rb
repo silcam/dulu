@@ -23,8 +23,8 @@ class Organization < ApplicationRecord
       subresults = []
       org.current_programs.each do |program|
         subresults << {title: program.name,
-              path: Rails.application.routes.url_helpers.dashboard_program_path(program),
-              description: I18n.t(:Language_program)}
+                       model: program,
+                       description: I18n.t(:Language_program)}
       end
       results << {title: org.name, description: org.description, subresults: subresults}
     end

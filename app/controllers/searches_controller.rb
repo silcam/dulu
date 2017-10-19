@@ -10,8 +10,8 @@ class SearchesController < ApplicationController
       Person.search(@query) +
       Organization.search(@query) +
       Cluster.search(@query)
-      if @results.count==1 && @results[0][:path]
-        redirect_to @results[0][:path]
+      if @results.count==1 && @results[0][:model]
+        redirect_to @results[0][:model]
       end
     end
   end

@@ -115,6 +115,7 @@ en:
   Add_cluster: Add Cluster
   Add_language: Add Language
   Cluster_x: "%{name} Cluster"
+  View_language_page: View languages page
 
   #Programs Controller
   Program: Program

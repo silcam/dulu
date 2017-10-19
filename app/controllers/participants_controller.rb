@@ -1,14 +1,14 @@
 class ParticipantsController < ApplicationController
 
   before_action :set_participant, only: [:edit, :update, :finish]
-  before_action :set_program, only: [:index, :new, :create]
+  before_action :set_cluster_program, only: [:index, :new, :create]
   before_action :authorize_user, only: [:new, :edit, :create, :update, :finish]
 
   def index
   end
 
   def new
-    @participant = @program.participants.new
+    @participant = @cluster_program.participants.new
     if session[:referred_by_params] && session[:referred_by_params]['person_id']
       @participant.person_id = session[:referred_by_params]['person_id']
       session.delete :referred_by_params
@@ -20,10 +20,12 @@ class ParticipantsController < ApplicationController
   end
 
   def create
-    @participant = @program.participants.new(participant_params)
+    @participant = @cluster_program.participants.new(participant_params)
     if @participant.save
       @participant.associate_activities(params[:assoc_activities])
-      redirect_to program_participants_path @program
+      redirect_to @cluster_program.is_a?(Program) ?
+                      program_participants_path(@cluster_program) :
+                      cluster_path(@cluster_program)
     else
       render 'new'
     end
@@ -32,7 +34,9 @@ class ParticipantsController < ApplicationController
   def update
     if @participant.update participant_params
       @participant.associate_activities params[:assoc_activities]
-      redirect_to program_participants_path @participant.program
+      redirect_to @cluster_program.is_a?(Program) ?
+                      program_participants_path(@cluster_program) :
+                      cluster_path(@cluster_program)
     else
       render 'edit'
     end
@@ -49,16 +53,18 @@ class ParticipantsController < ApplicationController
     params.require(:participant).permit(:person_id, :program_role_id, :start_date, :end_date)
   end
 
-  def set_program
-    @program = Program.find params[:program_id]
+  def set_cluster_program
+    @cluster_program = params[:program_id] ?
+                           Program.find(params[:program_id]) :
+                           Cluster.find(params[:cluster_id])
   end
 
   def set_participant
     @participant = Participant.find params[:id]
-    @program = @participant.program
+    @cluster_program = @participant.cluster_program
   end
 
   def authorize_user
-    authorize! :manage_participants, @program
+    authorize! :manage_participants, @cluster_program
   end
 end

@@ -1,24 +1,25 @@
 class Program < ApplicationRecord
+  include HasParticipants
+
   has_many :activities
   has_many :translation_activities
   has_many :bible_books, through: :translation_activities
-  has_many :publications
-  has_many :participants
-  has_many :domain_updates
-  has_many :people, through: :participants
-  has_and_belongs_to_many :events
-  belongs_to :language
 
-  def unassociated_people
-    excludes = []
-    self.people.each{ |p| excludes << "people.id!=#{p.id}" }
-    where_clause = excludes.join(' AND ')
-    Person.where(where_clause).order(:last_name, :first_name)
-  end
+  has_many :publications
+  has_many :domain_updates
+  has_and_belongs_to_many :events
+
+  has_many :participants
+  has_many :people, through: :participants
+
+  belongs_to :language
+  has_one :cluster, through: :language
+
 
   def name
     language.name
   end
+  alias display_name name
 
   # Do we still use this?
   # def latest_update
@@ -32,21 +33,22 @@ class Program < ApplicationRecord
   #   return date
   # end
 
-  def current_participants
-    participants.where(end_date: nil)
+  def all_participants
+    cluster.nil? ?
+      participants :
+      participants + cluster.participants
   end
 
-  def current_people
-    people.joins(:participants).where(participants: {end_date: nil})
+  def all_current_participants
+    cluster.nil? ?
+      current_participants :
+      current_participants + cluster.current_participants
   end
 
-  def current_organizations
-    orgs = []
-    current_participants.each do |participant|
-      org = participant.person.organization
-      orgs << org unless(org.nil? || orgs.include?(org))
-    end
-    return orgs
+  def all_current_people
+    cluster.nil? ?
+      current_people :
+      current_people + cluster.current_people
   end
 
   def sorted_activities
@@ -104,10 +106,12 @@ class Program < ApplicationRecord
     percents
   end
 
-  def self.percentages
+  def self.percentages(programs=nil)
     percentages = {}
-    programs = Program.includes(:translation_activities => [:bible_book, :stages => :stage_name])
-                      .where(stages: {current: true})
+    unless programs
+      programs = Program.includes(:translation_activities => [:bible_book, :stages => :stage_name])
+                        .where(stages: {current: true})
+    end
     programs.each do |program|
       percentages[program.id] = program.percentages()
     end
@@ -126,10 +130,10 @@ class Program < ApplicationRecord
     programs = Program.joins(:language).where("languages.name ILIKE ? OR languages.alt_names ILIKE ? OR languages.code=?", "%#{query}%", "%#{query}%", query).includes(:language)
     results = []
     programs.each do |program|
-      path = Rails.application.routes.url_helpers.dashboard_program_path(program)
       description = "#{I18n.t(:Language_program)}"
       description += " - #{program.activities.count} #{I18n.t(:Activities).downcase}" if program.activities.count > 0
-      results << {title: program.name, path: path,
+      results << {title: program.name,
+                  model: program,
                   description: description}
     end
     results

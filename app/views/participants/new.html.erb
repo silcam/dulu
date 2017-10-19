@@ -1,33 +1,14 @@
-<%= render layout: 'programs/sidebar' do %>
-  <h2><%= t :Add_a_person %></h2>
+<% if @cluster_program.is_a? Program %>
+  <% @program = @cluster_program %>
+  <%= render layout: 'programs/sidebar' do %>
+    <h2><%= t :Add_a_person %></h2>
 
-  <%= form_for @participant, url: program_participants_path,
-               html: {class: 'auto-width'} do |form| %>
-
-    <div class="form-group">
-      <%= form.label :person_id, t(:Person), {style: 'display: block;'} %>
-      <%= form.collection_select :person_id, @program.unassociated_people,
-                                 :id, :full_name_rev, {},
-                                 {class: 'form-control', autofocus: true,
-                                 style: 'display: inline-block;'} %>
-      <%= link_to t(:New_person), new_person_path(referred_by: new_program_participant_path(@program)) %>
-    </div>
-
-    <div class="form-group">
-      <%= form.label :program_role_id, t(:Role) %>
-      <%= form.collection_select :program_role_id, ProgramRole.all, :id, :t_name, {},
-                                 {class: 'form-control'} %>
-    </div>
-
-    <div class="form-group">
-      <%= form.label :start_date, t(:Start_date) %>
-      <%= render 'shared/fuzzy_date_field', model: 'participant', field: 'start_date' %>
-    </div>
-
-    <%= render 'associated_activities' unless @program.activities.empty? %>
-
-    <%= form.submit t(:Save), class: 'btn btn-primary btn-lg', data: {'participant_submit' => 1} %>
+    <%= render 'new', submit_path: program_participants_path %>
   <% end %>
 
-
+<% else %>
+  <% @cluster = @cluster_program %>
+  <h2><%= t :Cluster_x, name: @cluster.name %></h2>
+  <h3><%= t :Add_a_person %></h3>
+  <%= render 'new', submit_path: cluster_participants_path %>
 <% end %>

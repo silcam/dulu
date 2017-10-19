@@ -4,17 +4,11 @@
   <tr>
     <th><%= t :Cluster %></th>
     <th><%= t :Languages %></th>
-    <% if can? :update, Cluster %>
-      <th></th>
-    <% end %>
   </tr>
   <% @clusters.each do |cluster| %>
     <tr>
-      <td><%= link_to t(:Cluster_x, name: cluster.name), languages_path(cluster: cluster.id) %></td>
+      <td><%= link_to t(:Cluster_x, name: cluster.name), cluster_path(cluster) %></td>
       <td><%= cluster.languages.collect{ |l| link_to(l.name, dashboard_program_path(l.program)) }.join(', ').html_safe %></td>
-      <% if can? :update, Cluster %>
-        <td><%= link_to t(:Add_language), edit_cluster_path(cluster) %></td>
-      <% end %>
     </tr>
   <% end %>
 </table>

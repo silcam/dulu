@@ -1,20 +1,20 @@
 class ClustersController < ApplicationController
 
-  before_action :authorize, except: :index
+  before_action :authorize, except: [:index, :show]
 
   def index
     @clusters = Cluster.all.includes(:languages)
     @cluster = Cluster.new
   end
 
-  def new
-    @cluster = Cluster.new
+  def show
+    @cluster = Cluster.find params[:id]
   end
 
   def create
     @cluster = Cluster.new cluster_params
     if @cluster.save
-      redirect_to clusters_path
+      redirect_to cluster_path @cluster
     else
       @clusters = Cluster.all.includes(:languages)
       render :index
@@ -29,7 +29,7 @@ class ClustersController < ApplicationController
     @cluster = Cluster.find params[:id]
     language = Language.find params[:cluster][:language_id]
     @cluster.languages << language
-    redirect_to clusters_path
+    redirect_to cluster_path @cluster
   end
 
   private

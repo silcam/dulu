@@ -1,3 +1,4 @@
+<% @program = @cluster_program %>
 <%= render layout: 'programs/sidebar' do %>
   <h2><%= t :People %></h2>
 
@@ -5,27 +6,6 @@
     <%= link_to t(:Add_a_person), new_program_participant_path(@program), class: 'btn btn-primary' if can? :manage_participants, @program %>
   </p>
 
-  <table class="table">
-    <tr>
-      <th><%= t :Name %></th>
-      <th><%= t :Role %></th>
-      <th><%= t :Joined_program %></th>
-      <th><%= t :Left_program %></th>
-      <% if can? :manage_participants, @program %>
-        <th colspan="2"></th>
-      <% end %>
-    </tr>
-    <% @program.participants.each do |participant| %>
-      <tr>
-        <td><%= participant.person.full_name %></td>
-        <td><%= t(participant.program_role.name) %></td>
-        <td><%= participant.f_start_date.pretty_print %></td>
-        <td><%= participant.f_end_date.try(:pretty_print) %></td>
-        <% if can? :manage_participants, @program %>
-          <td><%= link_to t(:Edit), edit_participant_path(participant) %></td>
-          <td><%= link_to t(:Remove), finish_participant_path(participant) if participant.end_date.nil?%></td>
-        <% end %>
-      </tr>
-    <% end %>
-  </table>
+
+    <%= render 'index'%>
 <% end %>

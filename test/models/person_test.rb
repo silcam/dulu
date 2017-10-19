@@ -69,7 +69,7 @@ class PersonTest < ActiveSupport::TestCase
 
   test "All Sorted" do
     kevin = people :Kevin
-    assert_equal kevin, Person.all_sorted.first
+    assert_equal kevin, Person.first
   end
 
   test "Get Role Params" do
@@ -88,7 +88,7 @@ class PersonTest < ActiveSupport::TestCase
     assert_equal 'Drew Maust', results[0][:title]
     hdi_program = programs :HdiProgram
     assert_includes results[0][:subresults],
-                    {title: 'Hdi', path: "/programs/#{hdi_program.id}",
+                    {title: 'Hdi', model: hdi_program,
                         description: 'Translation Consultant'}
   end
 

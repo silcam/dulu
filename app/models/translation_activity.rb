@@ -45,11 +45,14 @@ class TranslationActivity < Activity
       subresults = []
       activities = TranslationActivity.where bible_book: book
       activities.each do |activity|
-        subresults << {title: activity.program.name, description: I18n.t(activity.stage_name),
-            path: Rails.application.routes.url_helpers.translation_activity_path(activity)}
+        subresults << {title: activity.program.name,
+                       description: I18n.t(activity.stage_name),
+                       model: activity}
       end
       description = activities.empty? ? I18n.t(:No_current_translations) : ''
-      results << {title: book.name, description: description, subresults: subresults}
+      results << {title: book.name,
+                  description: description,
+                  subresults: subresults}
     end
     results
   end

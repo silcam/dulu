@@ -1,10 +1,22 @@
 class Cluster < ApplicationRecord
+  include HasParticipants
+
   has_many :languages
   has_many :programs, through: :languages
+  has_many :participants
+  has_many :people, through: :participants
 
   validates :name, presence: true
 
   default_scope { order(:name) }
+
+  alias all_participants participants
+  alias all_current_participants current_participants
+  alias all_current_people current_people
+
+  def display_name
+    I18n.t(:Cluster_x, name: name)
+  end
 
   def self.search(query)
     clusters = Cluster.where("name ILIKE ?", "%#{query}%")
@@ -13,10 +25,12 @@ class Cluster < ApplicationRecord
       subresults = []
       cluster.programs.each do |program|
         subresults << {title: program.name,
-                       path: Rails.application.routes.url_helpers.dashboard_program_path(program),
+                       model: program,
                        description: I18n.t(:Language_program)}
       end
-      results << {title: I18n.t(:Cluster_x, name: cluster.name), subresults: subresults}
+      results << {title: I18n.t(:Cluster_x, name: cluster.name),
+                  model: cluster,
+                  subresults: subresults}
     end
     results
   end

@@ -159,6 +159,6 @@ class ProgramTest < ActiveSupport::TestCase
     results = Program.search('hdi')
     assert_equal 1, results.count
     assert_equal 'Hdi', results[0][:title]
-    assert_equal "/programs/#{@hdi_program.id}/dashboard", results[0][:path]
+    assert_equal @hdi_program, results[0][:model]
   end
 end

@@ -1,0 +1,14 @@
+<h3><%= t :End_of_participation %></h3>
+
+<%= form_for @participant, url: participant_path, method: :patch do |form| %>
+
+    <div class="form-group">
+      <%= form.label :end_date, "#{@participant.full_name} #{t(:End_of_participation_prompt)}" %><br>
+      <%= render 'shared/fuzzy_date_field', model: 'participant', field: 'end_date' %>
+    </div>
+
+    <p>
+      <%= form.submit t(:Save), class: 'btn btn-primary', data: {'participant_submit' => 1} %>
+    </p>
+
+<% end %>

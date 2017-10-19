@@ -12,6 +12,14 @@ HdiDialect:
   cameroon_region: FarNorth
   parent: Hdi
 
+Bangolan:
+  name: Bangolan
+  cluster: Ndop
+
+Bambalang:
+  name: Bambalang
+  cluster: Ndop
+
 Ewondo:
   name: Ewondo
 

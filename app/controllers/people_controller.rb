@@ -2,7 +2,7 @@ class PeopleController < ApplicationController
   before_action :set_person, only: [:show, :edit, :update]
 
   def index
-    @people = Person.all.order(:last_name, :first_name).includes(:organization)
+    @people = Person.all.includes(:organization)
   end
 
   def show

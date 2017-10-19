@@ -115,6 +115,7 @@ fr:
   Add_cluster: Ajouter un groupe
   Add_language: Ajouter une langue
   Cluster_x: Groupe %{name}
+  View_language_page: Voir page des langues
 
   #Programs Controller
   Program: Programme

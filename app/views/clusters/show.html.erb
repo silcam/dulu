@@ -1,0 +1,46 @@
+<h2><%= t :Cluster_x, name: @cluster.name %></h2>
+
+<p>
+  <%= link_to t(:View_language_page), languages_path(cluster: @cluster) %>
+</p>
+
+<h3><%= t :Languages %></h3>
+<div class="indented">
+  <% if can? :update, @cluster %>
+    <p>
+      <%= link_to t(:Add_language), edit_cluster_path(@cluster), class: 'btn btn-primary' %>
+    </p>
+  <% end %>
+
+  <% percentages = Program.percentages @cluster.programs %>
+  <% t_stages = StageName.translation_stages %>
+  <table class="table">
+    <% @cluster.programs.each do |program| %>
+      <tr>
+        <td>
+          <%= link_to  program.name, program_path(program) %>
+        </td>
+        <td>
+          <% if percentages[program.id] %>
+            <%= render 'shared/percentages',
+                       {percentages: percentages[program.id],
+                        t_stages: t_stages} %>
+          <% end %>
+        </td>
+      </tr>
+    <% end %>
+  </table>
+</div>
+
+<h3><%= t :People %></h3>
+<div class="indented">
+  <% if can? :manage_participants, @cluster %>
+    <p>
+      <%= link_to t(:Add_a_person),
+                  new_cluster_participant_path(@cluster),
+                  class: 'btn btn-primary' %>
+    </p>
+  <% end %>
+
+  <%= render 'participants/index' %>
+</div>

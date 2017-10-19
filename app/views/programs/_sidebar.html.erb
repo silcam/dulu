@@ -23,7 +23,7 @@
     <% if @language.cluster %>
       <h3 class="sidebar-subtitle">
         <%= link_to t(:Cluster_x, name: @language.cluster.name),
-                    languages_path(cluster: @language.cluster),
+                    cluster_path(@language.cluster),
                     class: 'h3 sidebar-subtitle' %>
       </h3>
     <% end %>

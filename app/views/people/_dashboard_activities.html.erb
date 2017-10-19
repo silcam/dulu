@@ -3,12 +3,12 @@
 
     <h2><%= t :My_activities %></h2>
 
-    <% @user.current_participants.each do |participant| %>
+    <% @user.current_participants.where.not(program: nil).each do |participant| %>
         <div class="panel panel-primary">
 
           <div class="panel-heading">
             <h3 class="panel-title">
-              <%= link_to participant.program.name, dashboard_program_path(participant.program) %>
+              <%= link_to participant.cluster_program.name, participant.cluster_program %>
             </h3>
           </div>
 

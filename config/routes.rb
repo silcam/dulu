@@ -17,8 +17,16 @@ Rails.application.routes.draw do
   resources :organizations
   resources :languages
   resources :events
-  resources :clusters
   shallow do
+    resources :clusters do
+      resources :participants do
+        member do
+          get 'finish'
+          patch 'finish'
+        end
+      end
+    end
+
     resources :programs do
       get 'dashboard', on: :member
       resources :translation_activities do

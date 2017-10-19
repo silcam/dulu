@@ -17,11 +17,12 @@ class ParticipantTest < ActiveSupport::TestCase
   end
 
   test 'Participant Validations' do
-    rick = people(:Rick)
-    role = program_roles(:Translator)
-    params = {person: rick, program: @hdi_program,
-              program_role: role, start_date: '2017'}
-    model_validation_hack_test(Participant, params)
+    model_validation_hack_test(Participant, some_valid_params)
+  end
+
+  test 'Valid if belongs to cluster' do
+    params = some_valid_params program: nil, cluster: clusters(:Ndop)
+    assert Participant.new(params).valid?
   end
 
   test 'End Date Validation' do
@@ -77,5 +78,13 @@ class ParticipantTest < ActiveSupport::TestCase
     abanda_hdi = participants :AbandaHdi
     genesis = bible_books :Genesis
     assert_equal genesis, abanda_hdi.sorted_activities.first.bible_book
+  end
+
+  def some_valid_params(merge_params = {})
+    rick = people(:Rick)
+    role = program_roles(:Translator)
+    {person: rick, program: @hdi_program,
+              program_role: role, start_date: '2017'}.merge merge_params
+
   end
 end

@@ -8,6 +8,7 @@ class AccessPolicy
 
     role :program_admin, proc { |u| u.has_role(:role_program_admin)} do
       can [:create_activity, :manage_participants, :manage_surveys], Program
+      can :manage_participants, Cluster
       can :update_activity, Activity
       can :manage, Organization
       can :manage, Language
@@ -24,6 +25,10 @@ class AccessPolicy
 
       can [:manage_participants], Program do |program, user|
         program.current_people.include? user
+      end
+
+      can [:manage_participants], Cluster do |cluster, user|
+        cluster.current_people.include? user
       end
     end
 

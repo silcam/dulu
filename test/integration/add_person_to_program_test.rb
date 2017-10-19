@@ -22,7 +22,7 @@ class AddPersonToProgram < Capybara::Rails::TestCase
   end
 
   def add_drew
-    visit program_path @zulgo_program
+    visit program_participants_path @zulgo_program
     click_link 'Add a person'
     select 'Maust, Drew', from: 'participant_person_id'
     select 'Translation Consultant', from: 'participant_program_role_id'
@@ -37,13 +37,13 @@ class AddPersonToProgram < Capybara::Rails::TestCase
     assert page.has_content? 'Drew Maust'
     visit translation_activity_path @zulgo_ezra
     assert page.has_content? 'Drew Maust'
-    visit program_path @zulgo_program
+    visit program_participants_path @zulgo_program
     assert page.has_content? 'Drew Maust'
-    assert page.has_content? 'SIL'
+    # assert page.has_content? 'SIL'
   end
 
   def modify_drew
-    visit program_path @zulgo_program
+    visit program_participants_path @zulgo_program
     within(:css, 'div#sidebar'){ click_on 'People' }
     click_link_to program_participants_path(@zulgo_program)
     click_link_to edit_participant_path(@drew_zulgo)
@@ -60,7 +60,7 @@ class AddPersonToProgram < Capybara::Rails::TestCase
   end
 
   def remove_drew
-    visit program_path @zulgo_program
+    visit program_participants_path @zulgo_program
     within(:css, 'div#sidebar'){ click_on 'People' }
     click_link_to finish_participant_path(@drew_zulgo)
     fill_in_date('participant_end_date', FuzzyDate.new(2017, 7, 31))
@@ -71,7 +71,5 @@ class AddPersonToProgram < Capybara::Rails::TestCase
     refute_includes @zulgo_program.current_participants, @drew_zulgo
     refute page_has_link?(finish_participant_path(@drew_zulgo)),
                          "Remove link should not show after person is removed"
-    visit program_path @zulgo_program
-    refute page.has_content? 'Drew Maust'
   end
 end
