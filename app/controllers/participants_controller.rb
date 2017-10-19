@@ -38,7 +38,7 @@ class ParticipantsController < ApplicationController
                       program_participants_path(@cluster_program) :
                       cluster_path(@cluster_program)
     else
-      render 'edit'
+      render params[:this_action]
     end
   end
 

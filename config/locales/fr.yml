@@ -237,3 +237,12 @@ fr:
 
   # Surveys
   Surveys: Sondages
+
+  # Error messages
+  not_before_start: ne peut pas être avant le date de commencement.
+
+  # ActiveRecord
+  activerecord:
+    attributes:
+      participant:
+        end_date: Date de fin

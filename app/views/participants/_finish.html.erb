@@ -1,7 +1,9 @@
 <h3><%= t :End_of_participation %></h3>
 
-<%= form_for @participant, url: participant_path, method: :patch do |form| %>
+<%= render 'shared/error_messages', errors: @participant.errors %>
 
+<%= form_for @participant, url: participant_path, method: :patch do |form| %>
+    <%= hidden_field_tag :this_action, 'finish' %>
     <div class="form-group">
       <%= form.label :end_date, "#{@participant.full_name} #{t(:End_of_participation_prompt)}" %><br>
       <%= render 'shared/fuzzy_date_field', model: 'participant', field: 'end_date' %>
