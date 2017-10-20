@@ -198,6 +198,9 @@ en:
   NLPub: Naional Language Publication
   Delete_pub_confirmation: Are you sure you want to delete %{title}?
   One_title_required: At least one title is required.
+  Audio: Audio
+  Video: Video
+  App: App
 
   #Events Controller
   Upcoming_events: Upcoming Events

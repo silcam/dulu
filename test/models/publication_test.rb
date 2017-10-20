@@ -19,6 +19,13 @@ class PublicationTest < ActiveSupport::TestCase
     assert good_pub.save, "Should save valid pub"
   end
 
+  test "Valid Media Kind" do
+    luke_film = Publication.new(english_name: "Luke Film", kind: 'Media', media_kind: 'Video')
+    assert luke_film.valid?
+    luke_film.media_kind = 'Pizza'
+    refute luke_film.valid?
+  end
+
   test "Name" do
     assert_equal "Ewondo New Testament", @ewondo_nt.name
     french_only = Publication.new(kind: 'Scripture', french_name: 'french name')

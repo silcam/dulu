@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171019144749) do
+ActiveRecord::Schema.define(version: 20171019192110) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -226,6 +226,7 @@ ActiveRecord::Schema.define(version: 20171019144749) do
     t.integer  "year"
     t.datetime "created_at",   null: false
     t.datetime "updated_at",   null: false
+    t.string   "media_kind"
     t.index ["program_id"], name: "index_publications_on_program_id", using: :btree
   end
 

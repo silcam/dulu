@@ -198,7 +198,10 @@ fr:
   NLPub: Publication en langue nationale
   Delete_pub_confirmation: Confirmez que vous voulez supprimer %{title}.
   One_title_required: Il faut au moins un titre.
-
+  Audio: Audio
+  Video: Vidéo
+  App: Appli
+  
   #Events Controller
   Upcoming_events: Événements prochains
   Current_events: Événements actuels

@@ -15,13 +15,24 @@
       <h3><%= t kind %></h3>
       <table class="table auto-width" style="margin-left: 20px;">
         <% kind_pubs.each do |pub| %>
+          <% names = pub.names prefer_nl: true %>
           <tr>
             <td>
               <span class="bigger">
-                <%= pub.name %>
-                <%= " - #{pub.year}" if pub.year %>
+                <%= names[0] %>
               </span>
             </td>
+            <td>
+              <%= pub.year %>
+            </td>
+            <td>
+              <%= names[1] %>
+            </td>
+            <% if kind == 'Media' %>
+              <td>
+                <%= t(pub.media_kind) %>
+              </td>
+            <% end %>
             <td>
               <%= link_to t(:Edit), edit_publication_path(pub) if can? :update, pub %>
             </td>
