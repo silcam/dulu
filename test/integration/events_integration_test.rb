@@ -17,7 +17,7 @@ class EventsIntegrationTest < Capybara::Rails::TestCase
     fill_in_date 'event_end_date', FuzzyDate.new(2017)
     click_on 'Save'
     assert_current_path dashboard_program_path(@hdi)
-    event_panel = newest_event_panel
+    event_panel = event_panel_for(Event.find_by name: 'Taco Party')
     assert event_panel.has_content?('Taco Party'), "Expect to see new event name"
     assert event_panel.has_content?('2017'), "Expect to see new event date"
     assert event_panel.has_content?('Hdi'), "Expect to see new event program"
@@ -33,6 +33,10 @@ class EventsIntegrationTest < Capybara::Rails::TestCase
     within newest_program_select_div do
       select 'Ewondo', from: 'event_program_ids_'
     end
+    click_on 'Add Cluster'
+    within newest_cluster_select_div do
+      select 'Ndop', from: 'event_cluster_ids_'
+    end
     within newest_person_select_div do
       select 'Drew Maust', from: 'event_new_event_participants__person_id'
       select 'Translation Consultant', from: 'event_new_event_participants__program_role_id'
@@ -42,9 +46,10 @@ class EventsIntegrationTest < Capybara::Rails::TestCase
       select 'Abanda Dunno', from: 'event_new_event_participants__person_id'
     end
     click_on 'Save'
-    event_panel = newest_event_panel
+    event_panel = event_panel_for(Event.find_by name: 'Taco Party')
     assert event_panel.has_content?('Hdi'), "Should see all programs"
     assert event_panel.has_content?('Ewondo'), "Should see all programs"
+    assert event_panel.has_content?('Ndop'), "Should see cluster"
     assert event_panel.has_content?('Drew Maust'), "Should see all people"
     assert event_panel.has_content?('Abanda'), "Should see all people"
   end
@@ -190,17 +195,17 @@ class EventsIntegrationTest < Capybara::Rails::TestCase
     (action==:edit) ? divs.last : divs[divs.count-2]
   end
 
+  def newest_cluster_select_div(action=:new)
+    divs = find_all(:css, 'div.cluster-select')
+    (action==:edit) ? divs.last : divs[divs.count-2]
+  end
+
   def newest_person_select_div
     find_all(:css, 'div.person-select').last
   end
 
   def event_panel_for event
     find(:css, "div#event-panel-#{event.id}")
-  end
-
-  def newest_event_panel
-    new_event = Event.last
-    event_panel_for new_event
   end
 
 end
