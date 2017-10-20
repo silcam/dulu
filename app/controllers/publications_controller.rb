@@ -1,10 +1,14 @@
 class PublicationsController < ApplicationController
 
   before_action :set_program, only: [:index, :new, :create]
-  before_action :set_publication, only: [:edit, :update, :destroy]
+  before_action :set_publication, only: [:edit, :update, :destroy, :show]
 
   def index
     @publications = @program.publications
+  end
+
+  def show
+    redirect_to program_publications_path(Publication.find(params[:id]).program)
   end
 
   def new

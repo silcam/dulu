@@ -9,7 +9,8 @@ class SearchesController < ApplicationController
       Activity.search(@query) +
       Person.search(@query) +
       Organization.search(@query) +
-      Cluster.search(@query)
+      Cluster.search(@query) +
+      Publication.search(@query)
       if @results.count==1 && @results[0][:model]
         redirect_to @results[0][:model]
       end

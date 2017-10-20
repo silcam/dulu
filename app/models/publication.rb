@@ -42,6 +42,21 @@ class Publication < ApplicationRecord
     names
   end
 
+  def self.search(query)
+    pubs = Publication.where("english_name ILIKE :q OR
+                              french_name ILIKE :q OR
+                              nl_name ILIKE :q",
+                             {q: "%#{query}%"}).includes(:program)
+    results = []
+    pubs.each do |pub|
+      title = "#{pub.name} : #{pub.program.name}"
+      description = I18n.t(pub.kind)
+      description += ' - ' + pub.year.to_s if pub.year
+      results << {title: title, description: description, model: pub}
+    end
+    results
+  end
+
   private
 
   def has_a_name
