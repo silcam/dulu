@@ -247,6 +247,7 @@ en:
   being_translated: of the Bible are being translated.
   in: in
   new_publication: New publication
+  new_publications: New publications
 
   # Error messages
   not_before_start: can't be before start date.

@@ -1,6 +1,6 @@
 class Statistic
 
-  attr_reader :number, :title, :path
+  attr_reader :number, :title, :path, :description, :model
 
   def initialize(stat)
     send(stat)
@@ -9,6 +9,12 @@ class Statistic
   def self.stats_for(domain)
     [Statistic.new(:translations_in_progress),
      Statistic.new(:publications_this_year)]
+  end
+
+  def self.latest
+    [Statistic.new(:latest_published_scripture),
+     Statistic.new(:latest_media),
+     Statistic.new(:latest_translation_started)]
   end
 
   private
@@ -29,8 +35,29 @@ class Statistic
 
   def publications_this_year
     @number = Publication.where(year: Date.today.year).count
-    @title = I18n.t(:new_publication).pluralize(@number) + ' ' + I18n.t(:in) + ' ' + Date.today.year.to_s
+    @title = I18n.t('new_publication'.pluralize(@number)) + ' ' + I18n.t(:in) + ' ' + Date.today.year.to_s
     @path = ''
   end
 
+  # Latest
+
+  def latest_published_scripture
+    @model = Publication.where(kind: 'Scripture').last
+    @title = 'Published Scripture'
+    @description = "#{@model.program.name} #{@model.name}"
+  end
+
+  def latest_media
+    @model = Publication.where(kind: 'Media').last
+    @title = 'Published Media'
+    @description = "#{@model.program.name} #{@model.name}"
+  end
+
+  def latest_translation_started
+    drafting = StageName.find_by(kind: 'translation', level: 2)
+    translation = Stage.order("start_date DESC").find_by(stage_name: drafting).activity
+    @title = 'Translation Started'
+    @model = translation.program
+    @description = "#{@model.name} #{translation.bible_book.name}"
+  end
 end

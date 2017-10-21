@@ -1,6 +1,8 @@
 class Publication < ApplicationRecord
   belongs_to :program, touch: true, required: false
 
+  default_scope{ order(:year, :created_at)}
+
   def self.kinds
     %w[Scripture Linguistic NLPub Media]
   end
