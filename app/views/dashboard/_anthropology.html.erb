@@ -2,11 +2,11 @@
   <% events_hash = Event.events_as_hash %>
   <div class="col-md-6">
 
-    <div id="current-events">
+    <div id="current-events" style="margin-bottom: 36px;">
       <h3>
         <%= t :Current_events %>
       </h3>
-      <%= render 'event_row', events: events_hash[:current] %>
+      <%= render 'event_table', events: events_hash[:current] %>
     </div>
 
     <div id="statistics">
@@ -31,7 +31,7 @@
 
   <div class="col-md-6">
 
-    <div id="upcoming-events">
+    <div id="upcoming-events" style="margin-bottom: 36px;">
       <h3>
         <%= t :Upcoming_events %>
         <% if can? :create, Event %>
@@ -40,7 +40,7 @@
             </small>
         <% end %>
       </h3>
-      <%= render 'event_row', events: events_hash[:future] %>
+      <%= render 'event_table', events: events_hash[:future] %>
     </div>
 
     <div id="latest">

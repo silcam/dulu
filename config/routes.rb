@@ -1,7 +1,8 @@
 Rails.application.routes.draw do
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 
-  root 'people#dashboard'
+  root    'dashboard#dashboard'
+  get     'dashboard/:domain',        to: 'dashboard#dashboard', as: :dashboard
   get     'search',                   to: 'searches#search'
   get     'not_allowed',              to: 'people#not_allowed'
   get     '/login',                   to: 'sessions#new'

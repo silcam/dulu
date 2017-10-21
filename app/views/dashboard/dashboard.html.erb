@@ -8,10 +8,10 @@
 
     <div style="margin-top: 12px;">
       <ul class="list-inline">
-        <% domains = StatusParameter.domains %>
+        <% domains = %w[Literacy Media Mobilization Scripture_use Translation].sort{ |a,b| t(a)<=>t(b) } %>
         <% domains.each do |domain| %>
           <li>
-            <%= link_to t(domain), dashboard_path(dmn: domain), class: 'h4' %>
+            <%= link_to t(domain), dashboard_path(domain), class: 'h4' %>
           </li>
         <% end %>
       </ul>

@@ -12,10 +12,7 @@
           <%= t(event.domain) %>
         </td>
         <td>
-          <%= event.f_start_date.pretty_print(no_relative_dates: true) %>
-        </td>
-        <td>
-          <%= event.f_end_date.pretty_print(no_relative_dates: true) %>
+          <%= event.dates_display_text %>
         </td>
       </tr>
     <% end %>

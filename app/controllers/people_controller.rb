@@ -37,11 +37,6 @@ class PeopleController < ApplicationController
     end
   end
 
-  def dashboard
-    @user = current_user
-    @domain = params[:dmn] ? params[:dmn] : 'Home'
-  end
-
   def not_allowed
 
   end
