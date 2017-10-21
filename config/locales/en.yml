@@ -25,6 +25,7 @@ en:
   'No': No
   History: History
   Other: Other
+  Book: Book
 
   #Dates
   Date: Date
@@ -241,6 +242,11 @@ en:
 
   # Surveys
   Surveys: Surveys
+
+  # Statistics
+  being_translated: of the Bible are being translated.
+  in: in
+  new_publication: New publication
 
   # Error messages
   not_before_start: can't be before start date.

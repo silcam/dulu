@@ -1,0 +1,11 @@
+<% survey = Survey.find_by(open: true) %>
+<% if survey and not @current_programs.empty? and can?(:create, @current_programs.first.domain_updates.new) %>
+    <h2><%= t :Surveys %></h2>
+    <ul class="list-unstyled">
+      <% @current_programs.each do |program| %>
+          <li>
+            <%= link_to "#{program.name} #{survey.name} Survey", program_survey_path(program, survey), class: 'h4' %>
+          </li>
+      <% end %>
+    </ul>
+<% end %>

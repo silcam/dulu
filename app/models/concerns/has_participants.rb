@@ -11,7 +11,8 @@ module HasParticipants
   end
 
   def current_people
-    people.joins(:participants).where(participants: {end_date: nil})
+    current_participants.collect{ |ptcpt| ptcpt.person }
+    # people.joins(:participants).where(participants: {end_date: nil})
   end
 
   def current_organizations

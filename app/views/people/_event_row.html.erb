@@ -1,0 +1,23 @@
+<%= link_to t(:See_all), events_path %>
+<table class="table">
+  <% if events.empty? %>
+    <tr><td><%= t :No_events %></td></tr>
+  <% else %>
+    <% events.each do |event| %>
+      <tr>
+        <td class="bigger">
+          <%= event.name %>
+        </td>
+        <td>
+          <%= t(event.domain) %>
+        </td>
+        <td>
+          <%= event.f_start_date.pretty_print(no_relative_dates: true) %>
+        </td>
+        <td>
+          <%= event.f_end_date.pretty_print(no_relative_dates: true) %>
+        </td>
+      </tr>
+    <% end %>
+  <% end %>
+</table>

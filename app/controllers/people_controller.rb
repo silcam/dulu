@@ -39,7 +39,7 @@ class PeopleController < ApplicationController
 
   def dashboard
     @user = current_user
-    @current_programs = @user.current_programs
+    @domain = params[:dmn] ? params[:dmn] : 'Home'
   end
 
   def not_allowed

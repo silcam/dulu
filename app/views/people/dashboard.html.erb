@@ -1,15 +1,49 @@
 <%= render 'searches/search_form' %>
 
-<% survey = Survey.find_by(open: true) %>
-<% if survey and not @current_programs.empty? and can?(:create, @current_programs.first.domain_updates.new) %>
-  <h2><%= t :Surveys %></h2>
-  <ul class="list-unstyled">
-    <% @current_programs.each do |program| %>
-      <li>
-        <%= link_to "#{program.name} #{survey.name} Survey", program_survey_path(program, survey), class: 'h4' %>
-      </li>
-    <% end %>
-  </ul>
-<% end %>
 
-<%= render 'dashboard_activities' unless @current_programs.empty? %>
+<div class="row">
+  <div class="col-md-8">
+
+    <h2><%= t @domain %></h2>
+
+    <div style="margin-top: 12px;">
+      <ul class="list-inline">
+        <% domains = StatusParameter.domains %>
+        <% domains.each do |domain| %>
+          <li>
+            <%= link_to t(domain), dashboard_path(dmn: domain), class: 'h4' %>
+          </li>
+        <% end %>
+      </ul>
+    </div>
+
+    <%= render "#{@domain.downcase}" %>
+  </div>
+
+  <div class="col-md-4">
+    <h2>
+      <%= t :My_Programs %>
+    </h2>
+    <% participants = @user.current_participants %>
+    <ul class="list-unstyled">
+      <% participants.each do |participant| %>
+        <li style="padding-bottom: 12px;">
+          <% if participant.cluster %>
+            <b><%= link_to t(:Cluster_x, name: participant.cluster.name), participant.cluster, class: 'h3' %></b>
+            <ul class="list-unstyled indented">
+              <% participant.cluster.programs.each do |program| %>
+                <li style="padding-bottom: 12px;">
+                  <%= link_to program.name, program, class: 'h4' %><br>
+                  <%= render 'my_program_summary', program: program %>
+                </li>
+              <% end %>
+            </ul>
+          <% else %>
+            <%= link_to participant.program.name, participant.program, class: 'h4' %><br>
+            <%= render 'my_program_summary', program: participant.program %>
+          <% end %>
+        </li>
+      <% end %>
+    </ul>
+  </div>
+</div>
