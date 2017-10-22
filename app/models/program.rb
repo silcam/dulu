@@ -98,7 +98,7 @@ class Program < ApplicationRecord
   end
 
   def events_as_hash
-    Event.events_as_hash(self)
+    Event.events_as_hash(all_events)
   end
 
   def percentages

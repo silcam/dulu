@@ -1,26 +1,14 @@
 <div class="row">
-  <% events_hash = Event.events_as_hash %>
   <div class="col-md-6">
 
-    <div id="current-events" style="margin-bottom: 36px;">
-      <h3>
-        <%= t :Current_events %>
-      </h3>
-      <%= render 'event_table', events: events_hash[:current] %>
-    </div>
-
-    <div id="statistics">
-      <h3><%= t :Right_now %></h3>
-      <% stats = Statistic.stats_for(:home) %>
+    <div id="translations">
+      <h3><%= t :Translations_by_stage %></h3>
       <table class="table">
-        <% stats.each do |stat| %>
+        <% StageName.translation_stages.each do |stage_name| %>
             <tr>
-              <td class="bigger"><%= stat.number %></td>
+              <td class="bigger"><%= Stage.where(stage_name: stage_name, current: true).count %></td>
               <td>
-                <%= stat.title %>
-              </td>
-              <td>
-                <%= link_to t(:See_all), stat.path unless stat.path.blank? %>
+                <%= t(stage_name.name) %>
               </td>
             </tr>
         <% end %>
@@ -31,30 +19,11 @@
 
   <div class="col-md-6">
 
-    <div id="upcoming-events" style="margin-bottom: 36px;">
-      <h3>
-        <%= t :Upcoming_events %>
-        <% if can? :create, Event %>
-            <small>
-              <%= link_to t(:Add_event), new_event_path %>
-            </small>
-        <% end %>
-      </h3>
-      <%= render 'event_table', events: events_hash[:future] %>
-    </div>
+    <%= render 'domain_events_table' %>
 
-    <div id="latest">
-      <h3><%= t :Latest %></h3>
-      <% stats = Statistic.latest %>
-      <table class="table">
-        <% stats.each do |stat| %>
-          <tr>
-            <td class="bigger"><%= stat.title %></td>
-            <td><%= stat.description %></td>
-            <td><%= link_to t(:View), stat.model if stat.model %></td>
-          </tr>
-        <% end %>
-      </table>
+    <div id="publications">
+      <h3><%= t :Published_scriptures %></h3>
+      <%= render 'publications_table', kind: 'Scripture' %>
     </div>
 
   </div>

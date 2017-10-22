@@ -7,43 +7,56 @@
     <h2><%= t @domain %></h2>
 
     <div style="margin-top: 12px;">
+      <hr>
       <ul class="list-inline">
-        <% domains = %w[Literacy Media Mobilization Scripture_use Translation].sort{ |a,b| t(a)<=>t(b) } %>
+        <% domains = %w[Media Translation].sort{ |a,b| t(a)<=>t(b) } %>
+        <li><%= link_to t(:Home), root_path, class: 'h4' %></li>
         <% domains.each do |domain| %>
           <li>
             <%= link_to t(domain), dashboard_path(domain), class: 'h4' %>
           </li>
         <% end %>
       </ul>
+      <hr>
     </div>
 
     <%= render "#{@domain.downcase}" %>
   </div>
 
   <div class="col-md-4">
-    <h2>
-      <%= t :My_Programs %>
-    </h2>
     <% participants = @user.current_participants %>
-    <ul class="list-unstyled">
-      <% participants.each do |participant| %>
-        <li style="padding-bottom: 12px;">
-          <% if participant.cluster %>
-            <b><%= link_to t(:Cluster_x, name: participant.cluster.name), participant.cluster, class: 'h3' %></b>
-            <ul class="list-unstyled indented">
-              <% participant.cluster.programs.each do |program| %>
-                <li style="padding-bottom: 12px;">
-                  <%= link_to program.name, program, class: 'h4' %><br>
-                  <%= render 'my_program_summary', program: program %>
-                </li>
-              <% end %>
-            </ul>
-          <% else %>
-            <%= link_to participant.program.name, participant.program, class: 'h4' %><br>
-            <%= render 'my_program_summary', program: participant.program %>
-          <% end %>
-        </li>
-      <% end %>
-    </ul>
+    <% unless participants.empty? %>
+      <h2>
+        <%= t :My_programs %>
+      </h2>
+      <ul class="list-unstyled">
+        <% participants.each do |participant| %>
+          <li style="padding-bottom: 12px;">
+            <% if participant.cluster %>
+              <b><%= link_to t(:Cluster_x, name: participant.cluster.name), participant.cluster, class: 'h3' %></b>
+              <br>
+              <%= render 'my_cluster_summary', cluster: participant.cluster %>
+              <ul class="list-unstyled indented" style="padding-top: 8px;">
+                <% participant.cluster.programs.each do |program| %>
+                  <li style="padding-bottom: 12px;">
+                    <%= link_to program.name, program, class: 'h4' %>
+                    <span class="small" style="font-style: italic; margin-left: 8px; float: right;">
+                      <%= t(:Updated) %> <%= l(program.updated_at.to_date, format: :std) %>
+                    </span><hr style="margin: 0;">
+                    <%= render 'my_program_summary', program: program %>
+                  </li>
+                <% end %>
+              </ul>
+            <% else %>
+              <%= link_to participant.program.name, participant.program, class: 'h4' %>
+              <span class="small" style="font-style: italic; margin-left: 8px; float: right;">
+                <%= t(:Updated) %> <%= l(participant.program.updated_at.to_date, format: :std) %>
+              </span><hr style="margin: 0;">
+              <%= render 'my_program_summary', program: participant.program %>
+            <% end %>
+          </li>
+        <% end %>
+      </ul>
+    <% end %>
   </div>
 </div>

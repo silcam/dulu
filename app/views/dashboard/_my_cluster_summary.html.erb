@@ -1,0 +1,20 @@
+<% languages = cluster.languages.count %>
+<% people = cluster.current_people.count %>
+<% events = cluster.events.upcoming.count %>
+
+<% unless languages == 0 %>
+    <span class="bigger"><%= languages %></span>
+    <%= t('Language'.pluralize(languages)) %>
+    <%= '|' unless people == 0 and events == 0 %>
+<% end %>
+
+<% unless people == 0 %>
+    <span class="bigger"><%= people %></span>
+    <%= t('Person'.pluralize( people)) %>
+    <%= '|' unless events == 0 %>
+<% end %>
+
+<% unless events == 0 %>
+    <span class="bigger"><%= events %></span>
+    <%= t('Upcoming_event'.pluralize(events)) %>
+<% end %>

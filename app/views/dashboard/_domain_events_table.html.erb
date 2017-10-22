@@ -1,0 +1,12 @@
+<div id="events" style="margin-bottom: 36px;">
+  <% events_hash = Event.events_as_hash Event.where(domain: @domain) %>
+  <h3>
+    <%= t :Events %>
+    <% if can? :create, Event %>
+        <small>
+          <%= link_to t(:Add_event), new_event_path %>
+        </small>
+    <% end %>
+  </h3>
+  <%= render 'event_table', events: events_hash[:current] + events_hash[:future] %>
+</div>

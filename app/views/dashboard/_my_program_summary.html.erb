@@ -1,20 +1,20 @@
-<% activities = program.activities.count %>
+<% activities = program.translation_activities.in_progress.count %>
 <% people = program.current_people.count %>
-<% events = program.events.count %>
+<% events = program.events.upcoming.count %>
 
 <% unless activities == 0 %>
-  <%= activities %>
-  <%= link_to t('Activity'.pluralize(activities)), program %>
+    <span class="bigger"><%= activities %></span>
+  <%= t('Activity'.pluralize(activities)) %>
   <%= '|' unless people == 0 and events == 0 %>
 <% end %>
 
 <% unless people == 0 %>
-  <%= people %>
-  <%= link_to t('Person'.pluralize( people)), program_participants_path(program) %>
+    <span class="bigger"><%= people %></span>
+  <%= t('Person'.pluralize( people)) %>
   <%= '|' unless events == 0 %>
 <% end %>
 
 <% unless events == 0 %>
-  <%= events %>
-  <%= link_to t('Event'.pluralize(events)), program_events_path(program) %>
+    <span class="bigger"><%= events %></span>
+  <%= t('Upcoming_event'.pluralize(events)) %>
 <% end %>

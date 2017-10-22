@@ -20,15 +20,7 @@ class Statistic
   private
 
   def translations_in_progress
-    planning_id = StageName.first_stage('translation').id
-    published_id = StageName.last_stage('translation').id
-    @number = TranslationActivity.joins(:stages)
-                                  .where("stages.current AND
-                                          stages.stage_name_id != ? AND
-                                          stages.stage_name_id != ?",
-                                          planning_id,
-                                          published_id)
-                                  .count
+    @number = TranslationActivity.in_progress.count
     @title = I18n.t(:Book).pluralize(@number) + ' ' + I18n.t(:being_translated)
     @path = ''
   end
@@ -42,21 +34,21 @@ class Statistic
   # Latest
 
   def latest_published_scripture
-    @model = Publication.where(kind: 'Scripture').last
-    @title = 'Published Scripture'
+    @model = Publication.where("kind='Scripture' and year IS NOT NULL").last
+    @title = I18n.t(:Published_scripture)
     @description = "#{@model.program.name} #{@model.name}"
   end
 
   def latest_media
-    @model = Publication.where(kind: 'Media').last
-    @title = 'Published Media'
+    @model = Publication.where("kind='Media' and year IS NOT NULL").last
+    @title = I18n.t(:Published_media)
     @description = "#{@model.program.name} #{@model.name}"
   end
 
   def latest_translation_started
     drafting = StageName.find_by(kind: 'translation', level: 2)
     translation = Stage.order("start_date DESC").find_by(stage_name: drafting).activity
-    @title = 'Translation Started'
+    @title = I18n.t(:Translation_started)
     @model = translation.program
     @description = "#{@model.name} #{translation.bible_book.name}"
   end

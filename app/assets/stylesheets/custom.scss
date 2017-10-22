@@ -294,6 +294,13 @@ form.inline-button-to {
   border-radius: 3px;
 }
 
+.callout-blue {
+  border-color: #a76610;
+  h1, h2, h3, h4, h5, h6 {
+    color: #a76610;
+  }
+}
+
 // Public pages
 
 div#welcome {

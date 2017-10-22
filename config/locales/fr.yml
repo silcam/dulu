@@ -26,6 +26,7 @@ fr:
   History: Historique
   Other: Autre
   Book: Livre
+  Home: Accueil
 
   #Dates
   Date: Date
@@ -44,10 +45,25 @@ fr:
   Year_error: "Saisez un an valide s'il vous plait"
   Date_error: "Veuillez sélectionner une date valide"
   Fdate_omit: (Jour et mois sont optionnels)
+  Updated: Mis à jour
   date:
     formats:
       month_day: "%e %b"
       full: "%e %b %Y"
+      std: "%e %b %Y"
+
+  # Dashboard
+  My_programs: Mes programmes
+  See_all: Voir tous
+  View: Regarder
+  Right_now: À ce moment
+  Latest: Dernier...
+  Published_scripture: Écriture Publiée
+  Published_scriptures: Écritures Publiées
+  Published_media: Publication Audiovisuelle
+  Published_medias: Publications Audiovisuelles
+  Translation_started: Traduction commencée 
+  Translations_by_stage: Traductions actuelles par étage
 
   #Searches Controller
   Search: Rechercher
@@ -133,6 +149,7 @@ fr:
 
   #Activities Controller
   Activities: Activités
+  Activity: Activité
   My_activities: Mes activités
   Associated_activities: Activités associées
   Bible_translation: Traduction de la Bible
@@ -205,11 +222,13 @@ fr:
   
   #Events Controller
   Upcoming_events: Événements prochains
+  Upcoming_event: Événement prochain
   Current_events: Événements actuels
   Past_events: Événements passés
   No_events: Aucun événement
   No_upcoming_events: Aucun événement
   Events: Événements
+  Event: Événement
   New_event: Nouvel événement
   Add_event: Ajouter un événement
   Delete_event: Supprimer cet événement

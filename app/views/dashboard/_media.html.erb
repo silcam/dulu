@@ -2,60 +2,18 @@
   <% events_hash = Event.events_as_hash %>
   <div class="col-md-6">
 
-    <div id="current-events" style="margin-bottom: 36px;">
+    <div id="publications" style="margin-bottom: 36px;">
       <h3>
-        <%= t :Current_events %>
+        <%= t :Published_medias %>
       </h3>
-      <%= render 'event_table', events: events_hash[:current] %>
-    </div>
-
-    <div id="statistics">
-      <h3><%= t :Right_now %></h3>
-      <% stats = Statistic.stats_for(:home) %>
-      <table class="table">
-        <% stats.each do |stat| %>
-            <tr>
-              <td class="bigger"><%= stat.number %></td>
-              <td>
-                <%= stat.title %>
-              </td>
-              <td>
-                <%= link_to t(:See_all), stat.path unless stat.path.blank? %>
-              </td>
-            </tr>
-        <% end %>
-      </table>
+      <%= render 'publications_table', kind: 'Media' %>
     </div>
 
   </div>
 
   <div class="col-md-6">
 
-    <div id="upcoming-events" style="margin-bottom: 36px;">
-      <h3>
-        <%= t :Upcoming_events %>
-        <% if can? :create, Event %>
-            <small>
-              <%= link_to t(:Add_event), new_event_path %>
-            </small>
-        <% end %>
-      </h3>
-      <%= render 'event_table', events: events_hash[:future] %>
-    </div>
-
-    <div id="latest">
-      <h3><%= t :Latest %></h3>
-      <% stats = Statistic.latest %>
-      <table class="table">
-        <% stats.each do |stat| %>
-          <tr>
-            <td class="bigger"><%= stat.title %></td>
-            <td><%= stat.description %></td>
-            <td><%= link_to t(:View), stat.model if stat.model %></td>
-          </tr>
-        <% end %>
-      </table>
-    </div>
+    <%= render 'domain_events_table' %>
 
   </div>
 </div>

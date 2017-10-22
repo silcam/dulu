@@ -26,6 +26,7 @@ en:
   History: History
   Other: Other
   Book: Book
+  Home: Homme
 
   #Dates
   Date: Date
@@ -44,10 +45,25 @@ en:
   Year_error: Please enter a valid year
   Date_error: Please choose a date that falls in the selected month
   Fdate_omit: (Day and month are optional)
+  Updated: Updated
   date:
     formats:
       month_day: "%b %e"
       full: "%b %e, %Y"
+      std: "%e %b %Y"
+
+  # Dashboard
+  My_programs: My Programs
+  See_all: See All
+  View: View
+  Right_now: Right Now
+  Latest: Latest...
+  Published_scripture: Published Scripture
+  Published_scriptures: Published Scripture
+  Published_media: Published Media
+  Published_medias: Published Media
+  Translation_started: Translation Started
+  Translations_by_stage: Current Translations by Stage
 
   #Searches Controller
   Search: Search
@@ -133,6 +149,7 @@ en:
 
   #Activities Controller
   Activities: Activities
+  Activity: Activity
   My_activities: My Activities
   Associated_activities: Associated Activities
   Bible_translation: Bible Translation
@@ -205,11 +222,13 @@ en:
 
   #Events Controller
   Upcoming_events: Upcoming Events
+  Upcoming_event: Upcoming Event
   Current_events: Current Events
   Past_events: Past Events
   No_events: No Events
   No_upcoming_events: No Upcoming Events
   Events: Events
+  Event: Event
   New_event: New Event
   Add_event: Add Event
   Delete_event: Delete this event

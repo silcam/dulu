@@ -74,8 +74,12 @@ class Event < ApplicationRecord
     return false
   end
 
-  def self.events_as_hash(program=nil)
-    events = program ? program.all_events : Event.all
+  def self.upcoming
+    where("start_date > ?", Date.today.to_s)
+  end
+
+  def self.events_as_hash(events=nil)
+    events = Event.all if events.nil?
     event_hash = {past: [], current: [], future: []}
     events.each do |event|
       if event.f_end_date.past?
