@@ -65,7 +65,7 @@ class ProgramTest < ActiveSupport::TestCase
   test 'Sorted Pubs' do
     ewondo_program = programs :EwondoProgram
     ewondo_nt = publications :EwondoNT
-    assert_includes ewondo_program.sorted_pubs('Bible'), ewondo_nt
+    assert_includes ewondo_program.sorted_pubs('Scripture'), ewondo_nt
   end
 
   test "Is translating" do

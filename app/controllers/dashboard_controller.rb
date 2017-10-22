@@ -1,7 +1,7 @@
 class DashboardController < ApplicationController
 
   def dashboard
-    @domain = params[:domain] ? params[:domain] : 'Home'
+    @domain = params[:dmn] ? params[:dmn] : 'Home'
     @user = current_user
   end
 
