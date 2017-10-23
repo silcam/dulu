@@ -202,6 +202,9 @@ en:
   LanguageProgramFacilitator: Language Program Facilitator
   Exegete: Exegete
   Cluster_coordinator: Cluster Coordinator
+  Cluster_facilitator: Cluster Facilitator
+  Literacy_specialist: Literacy Specialist
+  Scripture_engagement_specialist: Scripture Engagement Specialist
 
   #Publications Controller
   Publications: Publications

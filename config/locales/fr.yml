@@ -4,7 +4,7 @@ fr:
   Start_date: Date de commencement
   End_date: Date de fin
   Name: Nom
-  Update: Mettre au jour
+  Update: Mettre à jour
   Save: Enregistrer
   Cancel: Annuler
   Delete: Supprimer
@@ -202,6 +202,9 @@ fr:
   LanguageProgramFacilitator: Facilitateur du programme de langue
   Exegete: Exégète
   Cluster_coordinator: Coordonnateur de groupe
+  Cluster_facilitator: Facilitateur de groupe
+  Literacy_specialist: Spécialiste en alphabétisation 
+  Scripture_engagement_specialist: Spécialiste en promotion des Saintes Écritures
 
   #Publications Controller
   Publications: Publications
