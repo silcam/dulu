@@ -14,6 +14,7 @@ class SessionsController < ApplicationController
     @gmail = request.env['omniauth.auth']['info']['email']
     person = Person.find_by(email: @gmail)
     if person.try :has_login
+      reset_user_session
       log_in person
       send_to_correct_page
     else
@@ -36,6 +37,12 @@ class SessionsController < ApplicationController
     else
       redirect_to root_path
     end
+  end
+
+  def reset_user_session
+    old = session.to_hash
+    reset_session
+    session.merge! old
   end
 
 end

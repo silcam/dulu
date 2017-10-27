@@ -9,7 +9,10 @@ class ApplicationController < ActionController::Base
   private
 
   def require_login
-    return if logged_in?
+    if logged_in?
+      # renew_aging_session ?
+      return
+    end
 
     if request.path == root_path
       @failed_login_email = session[:failed_login]
