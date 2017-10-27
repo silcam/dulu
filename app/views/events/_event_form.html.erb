@@ -80,7 +80,7 @@
                                           {}, style: 'display: inline-block',
                                           class: 'form-control' %>
             <%= t :with_a_role_of %>
-            <%= ep_form.collection_select :program_role_id, ProgramRole.all, :id, :t_name,
+            <%= ep_form.collection_select :program_role_id, ProgramRole.sorted, :id, :t_name,
                                           {include_blank: true},
                                           style: 'display: inline-block',
                                           class: 'form-control' %>
@@ -100,7 +100,7 @@
                                           style: 'display: inline-block',
                                           class:'form-control' %>
             <%= t :with_a_role_of %>
-            <%= ep_form.collection_select :program_role_id, ProgramRole.all, :id, :t_name,
+            <%= ep_form.collection_select :program_role_id, ProgramRole.sorted, :id, :t_name,
                                           {include_blank: true},
                                           style: 'display: inline-block',
                                           class: 'form-control' %>

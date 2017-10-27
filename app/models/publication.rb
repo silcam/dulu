@@ -4,7 +4,7 @@ class Publication < ApplicationRecord
   default_scope{ order(:year, :created_at)}
 
   def self.kinds
-    %w[Scripture Linguistic NLPub Media]
+    %w[Scripture Linguistic NLPub Media Literacy]
   end
 
   def self.media_kinds

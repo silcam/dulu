@@ -8,4 +8,8 @@ class ProgramRole < ApplicationRecord
   def t_name
     I18n.t name
   end
+
+  def self.sorted
+    ProgramRole.all.sort{ |a,b| a.t_name <=> b.t_name }
+  end
 end
