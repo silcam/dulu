@@ -25,23 +25,23 @@ class AccessPolicy
       end
 
       can [:manage_participants], Program do |program, user|
-        program.current_people.include? user
+        program.all_current_people.include? user
       end
 
       can [:manage_participants], Cluster do |cluster, user|
-        cluster.current_people.include? user
+        cluster.all_current_people.include? user
       end
 
       can [:create_activity, :manage_surveys], Program do |program, user|
-        program.current_people.include? user
+        program.all_current_people.include? user
       end
 
       can :manage, Language do |language, user|
-        language.program.current_people.include? user
+        language.program.all_current_people.include? user
       end
 
       can :update_activity, Activity do |activity, user|
-        activity.program.current_people.include? user
+        activity.program.all_current_people.include? user
       end
 
       can [:update, :destroy], Event do |event, user|
@@ -51,11 +51,11 @@ class AccessPolicy
       can :create, Event
 
       can :manage, Publication do |pub, user|
-        pub.program.current_people.include? user
+        pub.program.all_current_people.include? user
       end
 
       can :manage, DomainUpdate do |domain_update, user|
-        domain_update.program.current_people.include? user
+        domain_update.program.all_current_people.include? user
       end
 
       can :manage, Cluster
@@ -63,15 +63,15 @@ class AccessPolicy
 
     role :program_responsable, proc { |u| u.has_role(:role_program_responsable) } do
       can [:create_activity, :manage_surveys], Program do |program, user|
-        program.current_people.include? user
+        program.all_current_people.include? user
       end
 
       can :manage, Language do |language, user|
-        language.program.current_people.include? user
+        language.program.all_current_people.include? user
       end
 
       can :update_activity, Activity do |activity, user|
-        activity.program.current_people.include? user
+        activity.program.all_current_people.include? user
       end
 
       can [:update, :destroy], Event do |event, user|
@@ -81,11 +81,11 @@ class AccessPolicy
       can :create, Event
 
       can :manage, Publication do |pub, user|
-        pub.program.current_people.include? user
+        pub.program.all_current_people.include? user
       end
 
       can :manage, DomainUpdate do |domain_update, user|
-        domain_update.program.current_people.include? user
+        domain_update.program.all_current_people.include? user
       end
       
       can :manage, Cluster
