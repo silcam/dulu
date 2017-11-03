@@ -9,6 +9,7 @@ Rails.application.routes.draw do
   delete  '/logout',                  to: 'sessions#destroy'
   get     '/auth/:provider/callback', to: 'sessions#create'
   get     '/auth/failure',            to: redirect('/')
+  get     '/login_as/:id',            to: 'sessions#login_as'
   get     '/programs/:program_id/surveys/:survey_id', to: 'survey_completions#new', as: :program_survey
   post    '/programs/:program_id/surveys/:survey_id', to: 'survey_completions#create'
   delete  '/programs/:program_id/surveys/:survey_id', to: 'survey_completions#destroy'

@@ -28,6 +28,13 @@ class SessionsController < ApplicationController
     redirect_to root_path
   end
 
+  def login_as
+    new_user = Person.find params[:id]
+    authorize! :login_as_others, new_user
+    log_in new_user
+    redirect_to root_path
+  end
+
   private
 
   def send_to_correct_page
