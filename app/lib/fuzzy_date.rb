@@ -112,6 +112,7 @@ class FuzzyDate
   end
 
   def pretty_print(options={})
+    options[:always_year] = true unless options[:not_always_year]
     if @month.nil?
       I18n.l to_date, format: "%Y"
     elsif @day.nil?
@@ -137,8 +138,7 @@ class FuzzyDate
     daydiff = (to_date - Date.today).to_i
     if (-4..4) === daydiff and not options[:no_relative_dates]
       pretty_print_close_date daydiff
-    elsif Date.today.year == @year ||
-          (Date.today .. Date.today>>2) === to_date
+    elsif !options[:always_year] && (Date.today.year == @year || (Date.today .. Date.today>>2) === to_date)
       I18n.l to_date, format: :month_day
     else
       I18n.l to_date, format: :full
