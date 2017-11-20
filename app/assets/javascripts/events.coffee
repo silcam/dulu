@@ -21,7 +21,8 @@ $(document).ready ->
     hidden_select.find('select').removeProp('disabled')
     hidden_select.fadeIn('fast')
 
-  $('div.select-collection').on('click', 'a[data-remove-select]', ->
+  $('div.select-collection').on('click', 'a[data-remove-select]', (e) ->
+    e.preventDefault()
     delete_me = $(this).closest('div.select')
     delete_me.fadeOut('fast', ->
       delete_me.remove()
