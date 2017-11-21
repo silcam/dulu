@@ -1,7 +1,7 @@
 class SurveyCompletionsController < ApplicationController
 
-  before_action :set_program_and_survey
-  before_action :authorize
+  before_action :set_program_and_survey, only: [:new, :create, :destroy]
+  before_action :authorize, only: [:new, :create, :destroy]
 
   def new
   end
@@ -9,6 +9,10 @@ class SurveyCompletionsController < ApplicationController
   def create
     SurveyCompletion.create(survey: @survey, program: @program, person: current_user)
     redirect_to dashboard_program_path(@program)
+  end
+
+  def show
+    @survey = Survey.find params[:id]
   end
 
   def destroy

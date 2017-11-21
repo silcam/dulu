@@ -60,6 +60,14 @@ class Event < ApplicationRecord
     end
   end
 
+  def all_programs
+    all = programs
+    clusters.each do |c|
+      all += c.programs
+    end
+    all
+  end
+
   def role_of(person)
     self.event_participants.where(person: person).first.try(:program_role)
   end
