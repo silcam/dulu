@@ -42,7 +42,7 @@ fr:
   Month: Mois
   Day: Jour
   Year: An
-  Year_error: "Saisez un an valide s'il vous plait"
+  Year_error: "Saisissez un an valide s'il vous plait"
   Date_error: "Veuillez sélectionner une date valide"
   Fdate_omit: (Jour et mois sont optionnels)
   Updated: Mis à jour
@@ -54,8 +54,8 @@ fr:
 
   # Dashboard
   My_programs: Mes programmes
-  See_all: Voir tous
-  View: Regarder
+  See_all: Afficher tous
+  View: Afficher
   Right_now: À ce moment
   Latest: Dernier...
   Published_scripture: Écriture Publiée
@@ -63,7 +63,7 @@ fr:
   Published_media: Publication Audiovisuelle
   Published_medias: Publications Audiovisuelles
   Translation_started: Traduction commencée 
-  Translations_by_stage: Traductions actuelles par étage
+  Translations_by_stage: Traductions actuelles par étape
 
   #Searches Controller
   Search: Rechercher
@@ -225,8 +225,8 @@ fr:
   App: Appli
   
   #Events Controller
-  Upcoming_events: Événements prochains
-  Upcoming_event: Événement prochain
+  Upcoming_events: Événements à venir
+  Upcoming_event: Événement à venir
   Current_events: Événements actuels
   Past_events: Événements passés
   No_events: Aucun événement
@@ -245,7 +245,7 @@ fr:
   Domain: Domaine
   Domains: Domaines
   Domain_updates: Statut des domaines
-  New_domain_update: Mettre au jour le statut du domaine
+  New_domain_update: Mettre à jour le statut du domaine
   Explanation_analysis: Explication ou analyse
   Media: Audiovisuel
   Mobilization: Mobilisation
