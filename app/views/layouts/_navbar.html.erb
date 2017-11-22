@@ -33,6 +33,10 @@
                 <li><%= link_to t(:Languages), languages_path %></li>
                 <li><%= link_to t(:Clusters), clusters_path %></li>
                 <li><%= link_to t(:Programs), programs_path %></li>
+                <% survey = Survey.find_by(open: true) %>
+                <% if survey %>
+                  <li><%= link_to survey.display_name, survey_path(survey) %></li>
+                <% end %>
               </ul>
             </div>
           </li>

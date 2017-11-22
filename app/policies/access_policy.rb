@@ -16,6 +16,7 @@ class AccessPolicy
       can :manage, Event
       can :manage, Publication
       can :manage, DomainUpdate
+      can :manage, SurveyCompletion
     end
 
     role :program_supervisor, proc { |u| u.has_role(:role_program_supervisor) } do

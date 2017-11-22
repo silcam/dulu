@@ -3,14 +3,19 @@
     <table class="table">
       <% updates.each do |update| %>
           <tr>
+            <% if defined? display_program and display_program %>
+              <td style="width: 140px">
+                <%= update.program.name %>
+              </td>
+            <% end %>
             <td style="width: 140px">
               <%= update.f_date.pretty_print(always_year: true) %>
             </td>
             <td style="width: 280px">
-              <%= render 'status', update: update %>
+              <%= render 'domain_updates/status', update: update %>
             </td>
             <td><%= update.note %></td>
-            <% if can? :update, update %>
+            <% if !defined? hide_edit and can? :update, update %>
               <td style="width: 140px;"><%= link_to t(:Edit), edit_domain_update_path(update) %></td>
             <% end %>
           </tr>

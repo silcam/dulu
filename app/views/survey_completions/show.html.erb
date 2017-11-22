@@ -1,0 +1,121 @@
+<h2><%= @survey.display_name %></h2>
+
+<div class="row">
+  <% if can? :read, SurveyCompletion %>
+    <div class="col-md-6">
+      <h3><%= @survey.survey_completions.count %> Survey Completions</h3>
+      <table class="table">
+        <tr>
+          <th><%= t :Language %></th>
+          <th><%= t :Person %></th>
+          <th><%= t :Date %></th>
+        </tr>
+        <% @survey.survey_completions.each do |completion| %>
+          <tr>
+            <td><%= link_to completion.program.name, program_survey_path(completion.program, @survey) %></td>
+            <td><%= completion.person.full_name %></td>
+            <td><%= l(completion.created_at.to_date, format: :full) %></td>
+          </tr>
+        <% end %>
+      </table>
+    </div>
+  <% end %>
+
+  <div class="col-md-6">
+    <h3>2015-2017</h3>
+    <table class="table">
+      <tr>
+        <th colspan="2"></th>
+        <th>Number</th>
+        <th>Languages</th>
+      </tr>
+      <tr>
+        <% pubs = Publication.where(year: (2015 .. 2017)) %>
+        <% programs = pubs.collect{ |pub| pub.program_id }.uniq %>
+        <td><%= t :Publications %></td>
+        <td><%= t :All %></td>
+        <td><%= pubs.count %></td>
+        <td><%= programs.count %></td>
+      </tr>
+      <% Publication.kinds.each do |kind| %>
+        <% kpubs = pubs.select{ |p| p.kind == kind } %>
+        <% kprograms = kpubs.collect{ |p| p.program_id }.uniq %>
+        <% unless kpubs.empty? %>
+          <tr>
+            <td></td>
+            <td><%= t kind %></td>
+            <td><%= kpubs.count %></td>
+            <td><%= kprograms.count %></td>
+          </tr>
+        <% end %>
+      <% end %>
+
+      <% events = Event.where("start_date BETWEEN '2015' AND '2017-12-31' OR end_date BETWEEN '2015' AND '2017-12-31'") %>
+      <% programs = events.collect{ |e| e.all_programs }.flatten.uniq %>
+      <tr>
+        <td><%= t :Events %></td>
+        <td><%= t :All %></td>
+        <td><%= events.count %></td>
+        <td><%= programs.count %></td>
+      </tr>
+      <% StatusParameter.domains.each do |domain| %>
+        <% devents = events.select{ |e| e.domain==domain } %>
+        <% dprograms = devents.collect{ |e| e.all_programs }.flatten.uniq %>
+        <% unless devents.empty? %>
+          <tr>
+            <td></td>
+            <td><%= t domain %></td>
+            <td><%= devents.count %></td>
+            <td><%= dprograms.count %></td>
+          </tr>
+        <% end %>
+      <% end %>
+    </table>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-6">
+    <h3><%= t :Publications %></h3>
+    <table class="table">
+      <% pubs.each do |pub| %>
+        <tr>
+          <td><%= pub.name %></td>
+          <td><%= t pub.kind %></td>
+          <td><%= pub.year %></td>
+          <td><%= pub.program.name %></td>
+        </tr>
+      <% end %>
+    </table>
+
+    <h3><%= t :Events %></h3>
+    <table class="table">
+      <% events.each do |event| %>
+        <tr>
+          <td><%= event.display_name %></td>
+          <td><%= t event.domain %></td>
+          <td><%= event.dates_display_text %></td>
+          <td><%= (event.clusters + event.programs).collect{ |i| i.name }.join(', ') %></td>
+        </tr>
+      <% end %>
+    </table>
+  </div>
+
+  <div class="col-md-6">
+    <h3><%= t :Domain_updates %></h3>
+    <% domains = StatusParameter.domains %>
+    <% items = @survey.status_parameters %>
+    <% domains.each do |domain| %>
+      <% domain_items = items.select{ |i| i.domain==domain } %>
+      <% unless domain_items.empty? %>
+        <h3><%= t domain %></h3>
+        <% domain_items.each do |item| %>
+          <% updates = DomainUpdate.where(status_parameter: item, date: ('2015' .. '2017-12-31')) %>
+          <%= render 'domain_updates/domain_updates_table', status_parameter: item, updates: updates, display_program: true, hide_edit: true %>
+        <% end %>
+        <% updates = DomainUpdate.where(domain: domain, status_parameter: nil, date: ('2015'..'2017-12-31')) %>
+        <%= render 'domain_updates/domain_updates_table', status_parameter: StatusParameter.other_parameter(domain), updates: updates, display_program: true, hide_edit: true %>
+      <% end %>
+    <% end %>
+  </div>
+</div>
