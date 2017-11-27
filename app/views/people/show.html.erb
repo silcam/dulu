@@ -1,10 +1,29 @@
 <h2><%= @person.full_name %></h2>
 <h4><%= @person.organization.try(:name) %></h4>
+
 <% if can? :update, @person %>
-  <div class="padded">
-    <%= link_to t(:Edit_person), edit_person_path(@person) %>
-  </div>
+    <div>
+      <%= link_to t(:Edit_person), edit_person_path(@person) %>
+    </div>
 <% end %>
+
+<table class="table" style="width:auto;">
+  <tr>
+    <th><%= t :Home_Country %></th>
+    <td><%= @person.country.name %></td>
+  </tr>
+  <tr>
+    <th><%= t :Email %></th>
+    <td><%= @person.email %></td>
+  </tr>
+  <% if can? :update, @person %>
+    <tr>
+      <th><%= t :User_role %></th>
+      <td><%= t @person.role_text %></td>
+    </tr>
+  <% end %>
+</table>
+
 <table class="table">
   <% @person.participants.each do |participant| %>
     <tr>

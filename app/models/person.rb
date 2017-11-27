@@ -27,6 +27,12 @@ class Person < ApplicationRecord
     SITE_ROLES.each_with_index do |role, i|
       return i if self.send(role)
     end
+    nil
+  end
+
+  def role_text
+    r = role
+    r.nil? ? :role_none : SITE_ROLES[r]
   end
 
   def has_role(role)
@@ -60,7 +66,7 @@ class Person < ApplicationRecord
   end
 
   def self.roles_for_select(include_admin = false)
-    roles = [[I18n.t(:role_none), '']]
+    roles = [[I18n.t(:role_none), '-1']]
     SITE_ROLES.each_with_index do |role, i|
       roles << [I18n.t(role), i] unless(role==:role_site_admin && !include_admin)
     end
