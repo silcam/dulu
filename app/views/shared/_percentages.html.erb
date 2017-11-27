@@ -12,7 +12,9 @@
     <% item = 1 %>
     <% t_stages.each do |stage| %>
       <% if percentages[testament][stage.name] %>
-        <%= percentages[testament][stage.name].round %>%
+        <% percent = percentages[testament][stage.name].round %>
+        <% percent = '<1' if percent == 0 %>
+        <%=  percent %>%
         <%= t(stage.name) %><% unless item==nocomma %>&nbsp;&nbsp;<% end %>
         <% item += 1 %>
       <% end %>
