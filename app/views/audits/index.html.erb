@@ -1,0 +1,52 @@
+<h1><%= t :Activity_log %></h1>
+
+<ul class="list-inline">
+  <% (1..@pages).each do |page| %>
+    <li>
+      <% if page == @page %>
+        <%= page %>
+      <% else %>
+        <%= link_to page, audits_path(page: page) %>
+      <% end %>
+    </li>
+  <% end %>
+</ul>
+
+<table class="table">
+  <% @audits.each do |audit| %>
+    <tr>
+      <td><%= audit.created_at %></td>
+      <td>
+        <% user = Person.find audit.user %>
+        <%= user.full_name %>
+        <% case audit.action %>
+          <% when 'create' %>
+            added a new <%= audit.auditable_type %>
+            <% if audit.associated_type == 'Program' %>
+              for the <%= Program.find(audit.associated_id).name %> program
+            <% elsif audit.associated_type == 'Event' %>
+              for the <%= Event.find(audit.associated_id).name %> event
+            <% end %>
+          <% when 'update' %>
+            updated a <%= audit.auditable_type %>
+            <% if audit.associated_type == 'Program' %>
+                for the <%= Program.find(audit.associated_id).name %> program
+            <% elsif audit.associated_type == 'Event' %>
+                for the <%= Event.find(audit.associated_id).name %> event
+            <% end %>
+            : Params: <%= audit.audited_changes %>
+          <% when 'destroy' %>
+            deleted a <%= audit.auditable_type %>
+            <% if audit.associated_type == 'Program' %>
+                for the <%= Program.find(audit.associated_id).name %> program
+            <% elsif audit.associated_type == 'Event' %>
+                for the <%= Event.find(audit.associated_id).name %> event
+            <% end %>
+        <% end %>
+      </td>
+      <td>
+        <%= link_to t(:View), audit_path(audit) %>
+      </td>
+    </tr>
+  <% end %>
+</table>

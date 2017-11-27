@@ -6,6 +6,8 @@ class Activity < ApplicationRecord
   has_and_belongs_to_many :participants
   has_many :people, through: :participants
 
+  audited associated_with: :program
+
   validates :type, presence: true
 
   after_touch :update_current_stage

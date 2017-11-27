@@ -7,6 +7,8 @@ class Cluster < ApplicationRecord
   has_many :people, through: :participants
   has_and_belongs_to_many :events
 
+  audited
+
   validates :name, presence: true, uniqueness: true
 
   default_scope { order(:name) }

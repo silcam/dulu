@@ -1,6 +1,8 @@
 class Publication < ApplicationRecord
   belongs_to :program, touch: true, required: false
 
+  audited associated_with: :program
+
   default_scope{ order(:year, :created_at)}
 
   def self.kinds

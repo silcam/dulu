@@ -5,6 +5,8 @@ class Participant < ApplicationRecord
   belongs_to :program_role
   has_and_belongs_to_many :activities
 
+  audited associated_with: :program
+
   validates :start_date, :end_date, fuzzy_date: true
   validates :start_date, presence: true, allow_blank: false
   validate :belongs_to_program_or_cluster

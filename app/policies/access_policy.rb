@@ -5,6 +5,7 @@ class AccessPolicy
     role :site_admin, proc { |u| u.has_role(:role_site_admin) } do
       can [:change_role, :grant_admin], Person
       can :login_as_others, Person
+      can :read, Audited::Audit
     end
 
     role :program_admin, proc { |u| u.has_role(:role_program_admin)} do

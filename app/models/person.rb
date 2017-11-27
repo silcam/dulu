@@ -7,6 +7,8 @@ class Person < ApplicationRecord
   has_many :participants
   has_many :programs, through: :participants
 
+  audited
+
   validates :last_name, presence: true, allow_blank: false
   validates :first_name, presence: true, allow_blank: false
   validates :gender, inclusion: { in: %w(M F)}

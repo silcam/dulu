@@ -4,6 +4,8 @@ class Event < ApplicationRecord
   has_many :event_participants, autosave: true, dependent: :destroy
   has_many :people, through: :event_participants
 
+  audited
+
   default_scope{ order(:start_date) }
 
   # NB: The kind field is being deprecated

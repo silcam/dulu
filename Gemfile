@@ -38,6 +38,8 @@ gem 'rails-i18n', '~> 5.0.4'
 gem 'omniauth-google-oauth2', '~> 0.5.0'
 # User roles
 gem 'access-granted', '~> 1.2.0'
+# Activity Log
+gem 'audited', '~> 4.5'
 
 group :development, :test do
   gem 'puma', '~>3.0'

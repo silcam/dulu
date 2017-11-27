@@ -2,6 +2,8 @@ class Organization < ApplicationRecord
 
   has_many :people
 
+  audited
+
   validates :name, presence: true, allow_blank: false, uniqueness: true
 
   def self.all_in_order

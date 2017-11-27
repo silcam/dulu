@@ -3,6 +3,8 @@ class DomainUpdate < ApplicationRecord
   belongs_to :program, touch: true
   belongs_to :status_parameter, required: false
 
+  audited associated_with: :program
+
   validates :number, numericality: true, allow_nil: true
   validates :date, presence: true
   validates :date, fuzzy_date: true

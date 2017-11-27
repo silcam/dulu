@@ -2,4 +2,6 @@ class EventParticipant < ApplicationRecord
   belongs_to :event
   belongs_to :person
   belongs_to :program_role, required: false
+
+  audited associated_with: :event
 end

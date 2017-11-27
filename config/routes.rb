@@ -24,6 +24,7 @@ Rails.application.routes.draw do
   resources :organizations
   resources :languages
   resources :events
+  resources :audits, only: [:index, :show]
   shallow do
     resources :clusters do
       resources :participants do

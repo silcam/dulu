@@ -6,6 +6,8 @@ class Language < ApplicationRecord
   belongs_to :parent, class_name: 'Language', required: false
   has_one :program
 
+  audited
+
   validates :name, presence: true, allow_blank: false
   validate :parent_cannot_be_dialect
 
