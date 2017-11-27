@@ -4,6 +4,7 @@ class PersonIntTest < Capybara::Rails::TestCase
   def setup
     @kevin = people :Kevin
     @rick = people :Rick
+    @olga = people :Olga
 
   end
 
@@ -37,6 +38,17 @@ class PersonIntTest < Capybara::Rails::TestCase
 
     log_in @william
     assert page.has_content? 'William'
+  end
+
+  test 'Editing does not accidentally delete role' do
+    log_in @olga
+    visit edit_person_path @olga
+    refute page.has_css? 'select#person_role'
+    # fill_in 'First Name', with: 'OLGA!'
+    click_button 'Save'
+    assert_current_path people_path
+    @olga.reload
+    assert @olga.role_program_supervisor # This should not have changed
   end
 
   def fill_in_william

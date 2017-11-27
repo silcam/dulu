@@ -167,18 +167,18 @@ class FuzzyDateTest < ActiveSupport::TestCase
 
   test 'FDate Pretty Print! No Day' do
     I18n.locale = :en
-    assert_equal 'Jan', FuzzyDate.new(Date.today.year, 1).pretty_print
+    assert_equal 'Jan 2017', FuzzyDate.new(Date.today.year, 1).pretty_print
     Date.stub :today, Date.new(2017, 12, 1) do
-      assert_equal 'Feb', FuzzyDate.new(2018, 2).pretty_print
+      assert_equal 'Feb 2018', FuzzyDate.new(2018, 2).pretty_print
     end
     assert_equal 'Jan 2016', FuzzyDate.new(2016, 1).pretty_print
   end
 
   test 'FDate Pretty Print! With Day' do
     I18n.locale = :en
-    assert_equal 'Dec 31', FuzzyDate.new(Date.today.year, 12, 31).pretty_print
+    assert_equal 'Dec 31, 2017', FuzzyDate.new(Date.today.year, 12, 31).pretty_print
     Date.stub :today, Date.new(2017, 11, 15) do
-      assert_equal 'Jan 15', FuzzyDate.new(2018, 1, 15).pretty_print
+      assert_equal 'Jan 15, 2018', FuzzyDate.new(2018, 1, 15).pretty_print
     end
     assert_equal 'Sep 25, 2010', FuzzyDate.new(2010, 9, 25).pretty_print
   end
