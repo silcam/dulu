@@ -1,8 +1,8 @@
 class Participant < ApplicationRecord
-  belongs_to :person
+  belongs_to :person, required: true
   belongs_to :program, required: false
   belongs_to :cluster, required: false
-  belongs_to :program_role
+  belongs_to :program_role, required: true
   has_and_belongs_to_many :activities
 
   audited associated_with: :program
