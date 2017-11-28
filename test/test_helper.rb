@@ -52,3 +52,13 @@ class ActiveSupport::TestCase
     find(:css, 'div#error-explanation').has_content? content
   end
 end
+
+# Some kind of hack to avoid SQLite::BusyExceptions
+class ActiveRecord::Base
+  mattr_accessor :shared_connection
+  @@shared_connection = nil
+  def self.connection
+    @@shared_connection || retrieve_connection
+  end
+end
+ActiveRecord::Base.shared_connection = ActiveRecord::Base.connection

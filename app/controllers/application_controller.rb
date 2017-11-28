@@ -4,7 +4,7 @@ class ApplicationController < ActionController::Base
   include ApplicationHelper
 	include RedirectToReferrer
 
-  before_action :require_login, :set_locale, :store_redirect
+  before_action :require_login, :log_access, :set_locale, :store_redirect
 
   private
 
@@ -21,6 +21,12 @@ class ApplicationController < ActionController::Base
     else
       session[:original_request] = request.path
       redirect_to '/auth/google_oauth2'
+    end
+  end
+
+  def log_access
+    unless current_user.nil?
+      current_user.update(last_access: Date.today)
     end
   end
 

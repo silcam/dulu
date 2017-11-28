@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171127141624) do
+ActiveRecord::Schema.define(version: 20171128133743) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -215,6 +215,7 @@ ActiveRecord::Schema.define(version: 20171127141624) do
     t.boolean  "role_program_supervisor",            default: false
     t.boolean  "role_program_admin",                 default: false
     t.boolean  "role_site_admin",                    default: false
+    t.date     "last_access"
     t.index ["country_id"], name: "index_people_on_country_id", using: :btree
     t.index ["organization_id"], name: "index_people_on_organization_id", using: :btree
   end
