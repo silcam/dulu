@@ -1,8 +1,7 @@
 module AuditsHelper
 
   def audit_message(audit)
-    user = audit.user
-    m = user.full_name
+    m = audit.user.full_name
     m2 = specific_audit_message(audit)
     m2 = generic_audit_message(audit) if m2.blank?
     "#{m} #{m2}"
@@ -15,8 +14,7 @@ module AuditsHelper
           "logged in."
         elsif audit.user == Person.find(audit.auditable_id)
           m = "updated #{audit.user.gender == 'M' ? 'his' : 'her'} own "
-          m+= audit.audited_changes.keys.collect{ |k| I18n.t(k, default: k)}.join(', ')
-          m[m.rindex(',')] = 'and' if m.include?(',')
+          m += changelist(audit)
           m
         end
       end
@@ -28,33 +26,54 @@ module AuditsHelper
     case audit.action
       when 'create'
         m += "added a new #{audit.auditable_type}"
-        if audit.associated_type == 'Program'
-          m += " for the #{Program.find(audit.associated_id).name} program."
-        elsif audit.associated_type == 'Event'
-          m += " for #{Event.find(audit.associated_id).name}."
-        else
-          m += '.'
-        end
+        name = object_name(audited_object(audit))
+        m += ", #{name}," unless name.blank?
+        m += for_a_program_event_or_cluster(audit) + '.'
+
       when 'update'
         m += "updated a #{audit.auditable_type}"
-        if audit.associated_type == 'Program'
-          m += " for the #{Program.find(audit.associated_id).name} program."
-        elsif audit.associated_type == 'Event'
-          m += " for #{Event.find(audit.associated_id).name}."
-        else
-          m += '.'
-        end
-        m += " Params: #{audit.audited_changes}"
+        name = object_name(audited_object(audit))
+        m += ", #{name}," unless name.blank?
+        m += for_a_program_event_or_cluster(audit) + '.'
+        m += " changing #{changelist(audit)}."
       when 'destroy'
         m += "deleted a #{audit.auditable_type}"
-        if audit.associated_type == 'Program'
-          m += " for the #{Program.find(audit.associated_id).name} program."
-        elsif audit.associated_type == 'Event'
-          m += " for #{Event.find(audit.associated_id).name}."
-        else
-          m += '.'
-        end
+        m += for_a_program_event_or_cluster(audit) + '.'
     end
     m
+  end
+
+  def for_a_program_event_or_cluster(audit)
+    object = audited_object(audit)
+    if audit.associated_type == 'Program'
+      return " for the #{Program.find(audit.associated_id).name} program"
+    elsif audit.associated_type == 'Event'
+      return " for the #{Event.find(audit.associated_id).name} event"
+    elsif object.respond_to?(:cluster)
+      cluster = object.cluster
+      return " for the #{cluster.display_name}" unless cluster.nil?
+    end
+    ''
+  end
+
+  def audited_object(audit)
+    audit.auditable_type.camelize.safe_constantize.try(:find, audit.auditable_id)
+  end
+
+  def changelist(audit)
+    s = audit.audited_changes.keys
+            .collect{ |k| "#{I18n.t(k, default: k)} to #{I18n.t(audit.audited_changes[k][1], default: audit.audited_changes[k][1])}"}
+            .join(', ')
+    s[s.rindex(',')] = 'and' if s.include?(',')
+    s
+  end
+
+  def object_name(object)
+    if object.respond_to?(:name)
+      return object.name
+    elsif object.respond_to?(:full_name)
+      return object.full_name
+    end
+    ''
   end
 end
