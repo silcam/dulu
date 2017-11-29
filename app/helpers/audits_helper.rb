@@ -31,13 +31,13 @@ module AuditsHelper
         m += for_a_program_event_or_cluster(audit) + '.'
 
       when 'update'
-        m += "updated a #{audit.auditable_type}"
+        m += "updated #{indef_articlize(audit.auditable_type)}"
         name = object_name(audited_object(audit))
         m += ", #{name}," unless name.blank?
         m += for_a_program_event_or_cluster(audit) + '.'
         m += " changing #{changelist(audit)}."
       when 'destroy'
-        m += "deleted a #{audit.auditable_type}"
+        m += "deleted #{indef_articlize(audit.auditable_type)}"
         m += for_a_program_event_or_cluster(audit) + '.'
     end
     m
@@ -57,7 +57,7 @@ module AuditsHelper
   end
 
   def audited_object(audit)
-    audit.auditable_type.camelize.safe_constantize.try(:find, audit.auditable_id)
+    audit.auditable_type.camelize.safe_constantize.try(:find_by, id: audit.auditable_id)
   end
 
   def changelist(audit)
@@ -75,5 +75,12 @@ module AuditsHelper
       return object.full_name
     end
     ''
+  end
+
+  def indef_articlize(word)
+    return word if word.blank?
+    s = 'a'
+    s += 'n' if %w[A E I O U a e i o u].include? word[0]
+    s + ' ' + word
   end
 end
