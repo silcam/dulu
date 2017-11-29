@@ -15,7 +15,9 @@ module AuditsHelper
           "logged in."
         elsif audit.user == Person.find(audit.auditable_id)
           m = "updated #{audit.user.gender == 'M' ? 'his' : 'her'} own "
-          m+= audit.audited_changes.keys.collect{ |k| I18n.t(k, default: k)}.join(', ')
+          m+= audit.audited_changes.keys
+                  .collect{ |k| "#{I18n.t(k, default: k)} to #{I18n.t(audit.audited_changes[k][1], default: audit.audited_changes[k][1])}"}
+                  .join(', ')
           m[m.rindex(',')] = 'and' if m.include?(',')
           m
         end
