@@ -10,7 +10,7 @@
 <table class="table" style="width:auto;">
   <tr>
     <th><%= t :Home_Country %></th>
-    <td><%= @person.country.name %></td>
+    <td><%= @person.country.try(:name) %></td>
   </tr>
   <tr>
     <th><%= t :Email %></th>
