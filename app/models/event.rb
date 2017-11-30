@@ -77,11 +77,13 @@ class Event < ApplicationRecord
   def associated_with?(user)
     return true if self.people.include? user
 
-    event_programs_list = self.programs.collect{|p| p.id}
-    assocs = Participant.where("person_id=? AND program_id IN (?)", user.id, event_programs_list)
-    return true unless assocs.empty?
+    person_programs_list = user.current_programs
+    self.programs.each{ |p| return true if person_programs_list.include? p }
+    self.clusters.each do |c|
+      c.programs.each{ |p| return true if person_programs_list.include? p }
+    end
 
-    return false
+    false
   end
 
   def self.upcoming
