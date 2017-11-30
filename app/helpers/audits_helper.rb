@@ -48,7 +48,8 @@ module AuditsHelper
     if audit.associated_type == 'Program'
       return " for the #{Program.find(audit.associated_id).name} program"
     elsif audit.associated_type == 'Event'
-      return " for the #{Event.find(audit.associated_id).name} event"
+      event = Event.find_by id: audit.associated_id
+      return " for the #{event.name} event" unless event.nil?
     elsif object.respond_to?(:cluster)
       cluster = object.cluster
       return " for the #{cluster.display_name}" unless cluster.nil?
