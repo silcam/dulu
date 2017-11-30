@@ -34,7 +34,7 @@ module AuditsHelper
         m += "updated #{indef_articlize(audit.auditable_type)}"
         name = object_name(audited_object(audit))
         m += ", #{name}," unless name.blank?
-        m += for_a_program_event_or_cluster(audit) + '.'
+        m += for_a_program_event_or_cluster(audit)
         m += " changing #{changelist(audit)}."
       when 'destroy'
         m += "deleted #{indef_articlize(audit.auditable_type)}"
@@ -64,7 +64,7 @@ module AuditsHelper
     s = audit.audited_changes.keys
             .collect{ |k| "#{I18n.t(k, default: k)} to #{I18n.t(audit.audited_changes[k][1], default: audit.audited_changes[k][1])}"}
             .join(', ')
-    s[s.rindex(',')] = 'and' if s.include?(',')
+    s[s.rindex(',')] = 'and' if audit.audited_changes.count > 1
     s
   end
 
