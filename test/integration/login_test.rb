@@ -2,7 +2,6 @@ require 'test_helper'
 
 class LoginTest < Capybara::Rails::TestCase
   def setup
-    Capybara.current_driver = :selenium  # Don't change!
     @auth_user = people(:Rick)
     @unauth_user = people(:Abanda)
   end
@@ -22,7 +21,7 @@ class LoginTest < Capybara::Rails::TestCase
     visit root_path
     click_link 'google-signin-link'
     assert_current_path root_path
-    assert page.must_have_selector('#error-explanation'), "Expect to see error message for failed log in"
+    assert page.must_have_selector('.callout-red'), "Expect to see error message for failed log in"
   end
 
   test "login redirect" do
