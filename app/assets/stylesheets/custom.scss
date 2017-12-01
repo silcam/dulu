@@ -300,37 +300,3 @@ form.inline-button-to {
     color: #a76610;
   }
 }
-
-// Public pages
-
-div#welcome {
-  //text-align: center;
-  padding-left: 50px;
-  padding-top: 50px;
-  width: 800px;
-  height: 100%;
-}
-
-.welcome {
-  padding-top: 15px;
-  padding-bottom: 20px;
-}
-
-#google-signin:hover {
-  box-shadow: 0 0 3px 3px rgba(66, 133, 244, .3);
-}
-
-footer {
-  margin-top: 60px;
-  padding-top: 18px;
-  border-top: solid 1px lightgray;
-  position: absolute;
-  bottom: 20px;
-
-  ul.list-inline {
-    li {
-      padding-left: 18px;
-      padding-right: 18px;
-    }
-  }
-}

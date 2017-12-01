@@ -1,27 +1,31 @@
+<table id="welcome">
+  <tr><td valign="top">
+      <h1 class="welcome"><strong>Welcome to Dulu</strong></h1>
 
-<div id="welcome">
-  <h1 class="welcome"><strong>Welcome to Dulu</strong></h1>
+      <p class="lead welcome">Dulu is a tool developed by SIL Cameroon for tracking and managing the many language development programs in Cameroon. To gain access, contact the Cameroon Branch Computer Services Department.</p>
 
-  <p class="lead welcome">Dulu is a tool developed by SIL Cameroon for tracking and managing the many language development programs in Cameroon. To gain access, contact the Cameroon Branch Computer Services Department.</p>
+      <p class="welcome">
+        <a id='google-signin-link' href="/auth/google_oauth2">
+          <%= image_tag 'btn_google_signin_light_normal_web@2x.png', class: 'img-normal', size: '287x69' %>
+          <%= image_tag 'btn_google_signin_light_focus_web@2x.png', class: 'img-focus', size: '287x69' %>
+          <%= image_tag 'btn_google_signin_light_pressed_web@2x.png', class: 'img-pressed', size: '287x69' %>
+        </a>
+      </p>
 
-  <p class="welcome">
-    <a id='google-signin-link' href="/auth/google_oauth2">
-      <%= image_tag 'btn_google_signin_light_normal_web.png', id: 'google-signin', size: '287x69' %>
-    </a>
-  </p>
+      <% if @failed_login_email %>
+        <p class="lead" id="error-explanation">
+          Sorry, but no one is authorized to log in to Dulu with the address <%= @failed_login_email %>. Are you using the correct SIL email address?
+        </p>
+      <% end %>
 
-  <% if @failed_login_email %>
-    <p class="lead" id="error-explanation">
-      Sorry, but no one is authorized to log in to Dulu with the address <%= @failed_login_email %>. Are you using the correct SIL email address?
-    </p>
-  <% end %>
 
-  <footer>
-    <ul class="list-inline">
-      <li class="lead"><%= link_to 'SIL Cameroon', 'http://silcam.org' %></li>
-      <li class="lead"><%= link_to 'SIL International', 'http://sil.org' %></li>
-      <li class="lead"><%= link_to 'Wycliffe Global Alliance', 'http://wycliffe.net' %></li>
-      <li class="lead"><%= link_to 'Ethnologue', 'http://ethnologue.com' %></li>
-    </ul>
-  </footer>
-</div>
+  </td></tr>
+  <tr><td valign="bottom">
+        <ul class="list-inline">
+          <li class="lead"><%= link_to 'SIL Cameroon', 'http://silcam.org' %></li>
+          <li class="lead"><%= link_to 'SIL International', 'http://sil.org' %></li>
+          <li class="lead"><%= link_to 'Wycliffe Global Alliance', 'http://wycliffe.net' %></li>
+          <li class="lead"><%= link_to 'Ethnologue', 'http://ethnologue.com' %></li>
+        </ul>
+  </td></tr>
+</table>

@@ -1,0 +1,51 @@
+html, body, table {
+  height: 100%;
+}
+div.container-fluid {
+  height: 100%;
+}
+
+#welcome {
+  margin-left: 50px;
+  margin-right: 50px;
+  max-width: 800px;
+  width: 100%;
+  height: 100%;
+
+
+  .list-inline li {
+    padding-left: 18px;
+    padding-right: 18px;
+  }
+}
+
+.welcome {
+  padding-top: 15px;
+  padding-bottom: 20px;
+}
+
+#google-signin-link {
+  .img-normal {
+    display: block;
+  }
+  .img-pressed, .img-focus {
+    display: none;
+  }
+}
+
+#google-signin-link:hover, #google-signin-link:focus{
+  .img-focus {
+    display: block;
+  }
+  .img-normal, .img-pressed {
+    display: none;
+  }
+}
+#google-signin-link:active{
+  .img-pressed {
+    display: block;
+  }
+  .img-normal, .img-focus {
+    display: none;
+  }
+}
