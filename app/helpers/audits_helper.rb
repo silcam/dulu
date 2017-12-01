@@ -63,7 +63,7 @@ module AuditsHelper
 
   def changelist(audit)
     s = audit.audited_changes.keys
-            .collect{ |k| "#{I18n.t(k, default: k)} to #{I18n.t(audit.audited_changes[k][1], default: audit.audited_changes[k][1])}"}
+            .collect{ |k| "#{I18n.t(k, default: k)} to #{audit.audited_changes[k][1]}"}
             .join(', ')
     s[s.rindex(',')] = 'and' if audit.audited_changes.count > 1
     s
