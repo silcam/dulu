@@ -15,4 +15,12 @@ module ApplicationHelper
       end
     end
   end
+
+  def safe_t(*args)
+    begin
+      I18n.t(*args)
+    rescue Exception
+      ''
+    end
+  end
 end

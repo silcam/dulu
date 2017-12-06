@@ -15,6 +15,13 @@ class SurveyCompletionsController < ApplicationController
     @survey = Survey.find params[:id]
   end
 
+  def report
+    authorize! :read, SurveyCompletion
+    @survey = Survey.find params[:id]
+    report_data = @survey.report(params[:report])
+    send_data(report_data, filename: "#{params[:report]} report.csv")
+  end
+
   def destroy
     SurveyCompletion.find_by(survey: @survey, program: @program).try(:destroy)
     render :new

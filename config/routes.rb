@@ -19,6 +19,7 @@ Rails.application.routes.draw do
   post    '/programs/:program_id/surveys/:survey_id', to: 'survey_completions#create'
   delete  '/programs/:program_id/surveys/:survey_id', to: 'survey_completions#destroy'
   get     '/surveys/:id',                             to: 'survey_completions#show', as: :survey
+  get     '/surveys/:id/report/:report',              to: 'survey_completions#report', as: :survey_report
 
   resources :people
   resources :organizations

@@ -26,6 +26,15 @@ class DomainUpdate < ApplicationRecord
     s
   end
 
+  def previous
+    DomainUpdate.where("program_id=? AND domain=? AND status_parameter_id=? AND date<?",
+                       program.id,
+                       domain,
+                       status_parameter.id,
+                       date)
+                .first
+  end
+
   private
 
   def number_or_status
