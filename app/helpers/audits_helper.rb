@@ -1,7 +1,7 @@
 module AuditsHelper
 
   def audit_message(audit)
-    m = audit.user.full_name
+    m = audit.user.try(:full_name)
     m2 = specific_audit_message(audit)
     m2 = generic_audit_message(audit) if m2.blank?
     "#{m} #{m2}"
