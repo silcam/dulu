@@ -12,7 +12,7 @@ module AuditsHelper
       if audit.action == 'update'
         if audit.audited_changes.keys[0] == 'last_access'
           "logged in."
-        elsif audit.user == Person.find(audit.auditable_id)
+        elsif audit.user == Person.find_by(id: audit.auditable_id)
           m = "updated #{audit.user.gender == 'M' ? 'his' : 'her'} own "
           m += changelist(audit)
           m

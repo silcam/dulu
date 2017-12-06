@@ -27,11 +27,11 @@ class DomainUpdate < ApplicationRecord
   end
 
   def previous
-    DomainUpdate.where("program_id=? AND domain=? AND status_parameter_id=? AND date<?",
-                       program.id,
-                       domain,
-                       status_parameter.id,
-                       date)
+    DomainUpdate.where("program_id=:p AND " +
+                           "domain=:d AND " +
+                           "status_parameter_id#{status_parameter.nil? ? ' IS NULL':'=:sp'} AND " +
+                           "date<:date",
+                       {p: program.id, d: domain, sp: status_parameter.try(:id), date: date})
                 .first
   end
 
