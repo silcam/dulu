@@ -4,6 +4,7 @@ lock '~> 3.8'
 set :application, "dulu"
 set :repo_url, "https://github.com/silcam/dulu.git"
 set :deploy_via, :remote_cache
+set :bundle_flags, '--deployment'
 # set :branch, "postgres"
 
 append :linked_files, "config/secrets.yml", "config/initializers/omniauth.rb"
