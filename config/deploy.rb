@@ -6,7 +6,7 @@ set :repo_url, "https://github.com/silcam/dulu.git"
 set :deploy_via, :remote_cache
 # set :branch, "postgres"
 
-append :linked_files, "config/secrets.yml", "db/production.sqlite3", "config/initializers/omniauth.rb"
+append :linked_files, "config/secrets.yml", "config/initializers/omniauth.rb"
 
 # task :bundle_install do
 #   on roles(:app) do
