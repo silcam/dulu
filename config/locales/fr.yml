@@ -28,6 +28,7 @@ fr:
   Book: Livre
   Home: Accueil
   Download_report: Télécharger le rapport
+  Sorry: Désolé
 
   #Dates
   Date: Date
@@ -207,7 +208,7 @@ fr:
   LanguageProgramFacilitator: Facilitateur du programme de langue
   Exegete: Exégète
   Cluster_coordinator: Coordonnateur de groupe
-  Cluster_facilitator: Facilitateur de groupe
+  Cluster_facilitator: Facilitateur de groupenot
   Literacy_specialist: Spécialiste en alphabétisation
   Literacy_consultant: Conseiller en alphabétisation
   Scripture_engagement_specialist: Spécialiste en promotion des Saintes Écritures
