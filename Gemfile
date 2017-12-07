@@ -40,6 +40,9 @@ gem 'omniauth-google-oauth2', '~> 0.5.0'
 gem 'access-granted', '~> 1.2.0'
 # Activity Log
 gem 'audited', '~> 4.5'
+# xlsx Export
+gem 'axlsx', '~> 2.0.1'
+gem 'axlsx_rails', '~> 0.5.1'
 
 group :development, :test do
   gem 'puma', '~>3.0'

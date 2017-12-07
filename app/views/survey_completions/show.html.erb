@@ -78,7 +78,7 @@
   <div class="col-md-6">
     <h3><%= t :Publications %></h3>
     <% if can? :read, SurveyCompletion %>
-      <%= link_to t(:Download_report), survey_report_path(@survey, 'publications') %>
+      <%= link_to t(:Download_report), survey_report_path(@survey, 'publications', format: 'xlsx') %>
     <% end %>
     <table class="table">
       <% pubs.each do |pub| %>
@@ -93,7 +93,7 @@
 
     <h3><%= t :Events %></h3>
     <% if can? :read, SurveyCompletion %>
-        <%= link_to t(:Download_report), survey_report_path(@survey, 'events') %>
+        <%= link_to t(:Download_report), survey_report_path(@survey, 'events', format: 'xlsx') %>
     <% end %>
     <table class="table">
       <% events.each do |event| %>
@@ -110,7 +110,7 @@
   <div class="col-md-6">
     <h3><%= t :Domain_updates %></h3>
     <% if can? :read, SurveyCompletion %>
-        <%= link_to t(:Download_report), survey_report_path(@survey, 'domain_updates') %>
+        <%= link_to t(:Download_report), survey_report_path(@survey, 'domain_updates', format: 'xlsx') %>
     <% end %>
     <% domains = StatusParameter.domains %>
     <% items = @survey.status_parameters %>
