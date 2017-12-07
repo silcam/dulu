@@ -41,7 +41,8 @@ gem 'access-granted', '~> 1.2.0'
 # Activity Log
 gem 'audited', '~> 4.5'
 # xlsx Export
-gem 'axlsx', '~> 2.0.1'
+gem 'rubyzip', '>= 1.2.1'
+gem 'axlsx', git: 'https://github.com/randym/axlsx.git', ref: '776037c0fc799bb09da8c9ea47980bd3bf296874'
 gem 'axlsx_rails', '~> 0.5.1'
 
 group :development, :test do
