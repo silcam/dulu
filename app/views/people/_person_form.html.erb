@@ -1,14 +1,34 @@
+<% duplicate_check = false unless defined? duplicate_check %>
+
 <%= render 'shared/error_messages', errors: @person.errors %>
 
 <%= form_for @person, html: {class: 'auto-width'} do |f| %>
-  <div class="form-group">
-    <%= f.label :first_name, t(:First_Name) %>
-    <%= f.text_field :first_name, class: 'form-control', autofocus: true %>
-  </div>
-  
-  <div class="form-group">
-    <%= f.label :last_name, t(:Last_Name) %>
-    <%= f.text_field :last_name, class: 'form-control' %>
+  <div <%= "id='duplicate-check'".html_safe if duplicate_check %>>
+    <div class="form-group">
+      <%= f.label :first_name, t(:First_Name) %>
+      <%= f.text_field :first_name, class: 'form-control title-cased', autofocus: true %>
+    </div>
+
+    <div class="form-group">
+      <%= f.label :last_name, t(:Last_Name) %>
+      <%= f.text_field :last_name, class: 'form-control title-cased' %>
+    </div>
+
+    <div id='duplicate-warning' class="bs-callout callout-red" style="display: none; margin-bottom: 12px;">
+      <h4><span class="duplicate-name"></span> <%= t :already_exists %></h4>
+      <p>
+        <%= t :duplicate_warning_start %>
+        <span class="duplicate-name"></span>
+        <span class="duplicate-email"></span>
+        <%= t :duplicate_warning_end %>
+      </p>
+      <div>
+        <label>
+          <%= check_box_tag :confirm_not_duplicate %>
+          <%= t :confirm_different_person %>
+        </label>
+      </div>
+    </div>
   </div>
 
   <div class="form-group">
@@ -61,6 +81,8 @@
     </label>
   </div>
 
-  <%= f.submit t(:Save), class: 'btn btn-primary btn-lg' %>
+  <p>
+    <%= f.submit t(:Save), class: 'btn btn-primary btn-lg' %>
+  </p>
 
 <% end %>

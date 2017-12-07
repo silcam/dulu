@@ -100,6 +100,10 @@ fr:
   role_program_supervisor: Gérer des programmes et personnel
   role_program_admin: Gérer tout
   role_site_admin: Administrateur du site
+  already_exists: existe déjà
+  duplicate_warning_start: Il y a déjà une personne qui s'appelle
+  duplicate_warning_end: en Dulu. Êtes-vous sûr que celle-ci est une personne différente ?
+  confirm_different_person: C'est une personne différente.
 
   #Organizations Controller
   Organization: Organisation

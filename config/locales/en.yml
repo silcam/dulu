@@ -100,6 +100,10 @@ en:
   role_program_supervisor: Manage Programs and People
   role_program_admin: Manage All
   role_site_admin: Site Administrator
+  already_exists: already exists
+  duplicate_warning_start: There is already a person named
+  duplicate_warning_end: in Dulu. Are you sure this is a different person?
+  confirm_different_person: This is a different person.
 
   #Organizations Controller
   Organization: Organization

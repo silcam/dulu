@@ -41,6 +41,12 @@ class PeopleController < ApplicationController
 
   end
 
+  def find
+    @match = Person.find_by("first_name ILIKE ? AND last_name ILIKE ?", params[:first], params[:last])
+    response = @match.nil? ? {match: false} : {match: true, name: @match.full_name, email: @match.email}
+    render json: response
+  end
+
 private
   def person_params
     p_params = params.require(:person).permit(:first_name, :last_name ,:email, :birth_date,
