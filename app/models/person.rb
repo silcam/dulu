@@ -6,6 +6,7 @@ class Person < ApplicationRecord
   belongs_to :country, required: false, counter_cache: true
   has_many :participants
   has_many :programs, through: :participants
+  has_many :person_roles
 
   audited
 
@@ -23,6 +24,24 @@ class Person < ApplicationRecord
 
   def full_name_rev
     "#{last_name}, #{first_name}"
+  end
+
+  def roles
+    Role.roles_from_field(roles_field)
+  end
+
+  def add_role(new_role)
+    transaction do
+      person_roles.create(role: new_role, start_date: Date.today)
+      update(roles_field: Role.roles_field_with(roles_field, new_role))
+    end
+  end
+
+  def remove_role(role)
+    transaction do
+      person_roles.find_by(role: role, end_date: nil).try(:update, {end_date: Date.today})
+      update(roles_field: Role.roles_field_without(roles_field, role))
+    end
   end
 
   def role

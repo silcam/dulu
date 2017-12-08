@@ -3,7 +3,7 @@ class AccessPolicy
 
   def configure
     role :site_admin, proc { |u| u.has_role(:role_site_admin) } do
-      can [:change_role, :grant_admin], Person
+      can [:edit_roles, :grant_admin], Person
       can :login_as_others, Person
       can :read, Audited::Audit
     end
@@ -22,7 +22,7 @@ class AccessPolicy
 
     role :program_supervisor, proc { |u| u.has_role(:role_program_supervisor) } do
       can [:create, :read, :update], Person
-      can [:change_role], Person do |person, user|
+      can [:edit_roles], Person do |person, user|
         person != user
       end
 

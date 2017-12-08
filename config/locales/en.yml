@@ -169,6 +169,8 @@ en:
 
   #Participants Controller
   Role: Role
+  Roles: Roles
+  Add_role: Add Role
   Joined_program: Joined Program
   Left_program: Left Program
   End_of_participation: End of Participation
