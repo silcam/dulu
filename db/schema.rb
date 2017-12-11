@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171208133220) do
+ActiveRecord::Schema.define(version: 20171211084110) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -190,6 +190,7 @@ ActiveRecord::Schema.define(version: 20171208133220) do
     t.datetime "created_at",      null: false
     t.datetime "updated_at",      null: false
     t.integer  "cluster_id"
+    t.string   "roles_field"
     t.index ["cluster_id"], name: "index_participants_on_cluster_id", using: :btree
     t.index ["person_id"], name: "index_participants_on_person_id", using: :btree
     t.index ["program_id"], name: "index_participants_on_program_id", using: :btree

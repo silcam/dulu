@@ -1,14 +1,17 @@
 class Role
   ROLES = %i( Translator TranslationConsultant TranslationConsultantTraining Exegete
               LinguisticConsultant LinguisticConsultantTraining
-              LanguageProgramCommittee LanguageProgramFacilitator ClusterCoordinator ClusterFacilitator
-              LiteracySpecialist LiteracyConsultant
-              ScriptureEngagementSpecialist
+              LanguageProgramCommittee LanguageProgramFacilitator Cluster_coordinator Cluster_facilitator
+              Literacy_specialist Literacy_consultant
+              Scripture_engagement_specialist
               Administration
-              SiteAdmin
             )
 
   EVENT_ROLES = %i( Facilitator Student )
+
+  def self.program_roles
+    ROLES - [:Administration]
+  end
 
   def self.roles_field(roles)
     return '' if roles.nil?
@@ -31,11 +34,24 @@ class Role
     roles_field roles
   end
 
-  def self.not_held_by(person)
-    ROLES - person.roles
+  def self.available(assign_to, source=ROLES)
+    source - assign_to.roles
   end
 
   def self.is_a_role?(role)
     ROLES.include? role.to_sym
+  end
+
+  def self.has_a_program_role?(person)
+    arrays_overlap? program_roles, person.roles
+  end
+
+  private
+
+  def arrays_overlap?(a1, a2)
+    a1.each do |item|
+      return true if a2.include? item
+    end
+    false
   end
 end

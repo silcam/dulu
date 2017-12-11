@@ -1,0 +1,10 @@
+<%=
+  if @cluster_program.is_a? Program
+    @program = @cluster_program
+    render 'programs/sidebar' do
+      render 'show'
+    end
+  else
+    render 'show'
+  end
+%>

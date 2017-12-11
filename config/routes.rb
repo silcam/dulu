@@ -38,6 +38,8 @@ Rails.application.routes.draw do
         member do
           get 'finish'
           patch 'finish'
+          post 'add_role'
+          delete 'remove_role'
         end
       end
     end
@@ -54,6 +56,8 @@ Rails.application.routes.draw do
         member do
           get 'finish'
           patch 'finish'
+          post 'add_role'
+          delete 'remove_role'
         end
       end
       resources :events

@@ -2,7 +2,7 @@ class Participant < ApplicationRecord
   belongs_to :person, required: true
   belongs_to :program, required: false
   belongs_to :cluster, required: false
-  belongs_to :program_role, required: true
+  belongs_to :program_role, required: false
   has_and_belongs_to_many :activities
 
   audited associated_with: :program
@@ -51,6 +51,18 @@ class Participant < ApplicationRecord
   def sorted_activities
     activities.joins(:bible_book).order(
         'activities.type, bible_books.usfm_number')
+  end
+
+  def roles
+    Role.roles_from_field roles_field
+  end
+
+  def add_role(new_role)
+    update roles_field: Role.roles_field_with(roles_field, new_role)
+  end
+
+  def remove_role(role)
+    update roles_field: Role.roles_field_without(roles_field, role)
   end
 
   private

@@ -1,0 +1,32 @@
+
+<h2><%= @participant.full_name %></h2>
+
+<h4><%= t :Roles %></h4>
+<% unless @participant.roles_field.blank? %>
+    <table class="table" style="width: auto;">
+      <% @participant.roles.each do |role| %>
+          <tr>
+            <td><%= t role %></td>
+            <td>
+              <% if can? :manage_participants, @cluster_program %>
+                  <%= link_to t(:Remove), remove_role_participant_path(@participant, role: role), method: :delete %>
+              <% end %>
+            </td>
+          </tr>
+      <% end %>
+    </table>
+<% end %>
+
+<p>
+  <% available_roles = Role.available @participant, @participant.person.roles %>
+  <% if can? :manage_participants, @cluster_program and not available_roles.empty? %>
+      <%= form_tag(add_role_participant_path(@participant), {class: 'form-inline'}) %>
+    <div class="form-group">
+      <label><%= t :Add_role %></label>
+      <%= select_tag :role, options_for_select(available_roles.collect{ |role| [t(role), role] }), class: 'form-control'  %>
+    </div>
+    <div class="form-group">
+      <%= submit_tag t(:Add), class: 'btn btn-primary' %>
+    </div>
+<% end %>
+</p>

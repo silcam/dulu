@@ -4,11 +4,6 @@
     <%= hidden_field_tag :this_action, 'edit' %>
 
     <div class="form-group">
-      <%= form.label :program_role_id, t(:Role) %>
-      <%= form.collection_select :program_role_id, ProgramRole.sorted, :id, :t_name, {}, {class: 'form-control'} %>
-    </div>
-
-    <div class="form-group">
       <%= form.label :start_date, t(:Start_date) %>
       <%= render 'shared/fuzzy_date_field', model: 'participant',
                  field: 'start_date', fdate: @participant.f_start_date %>

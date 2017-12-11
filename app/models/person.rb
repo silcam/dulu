@@ -44,6 +44,10 @@ class Person < ApplicationRecord
     end
   end
 
+  def has_role?(role)
+    roles.include? role.to_sym
+  end
+
   def role
     SITE_ROLES.each_with_index do |role, i|
       return i if self.send(role)
@@ -61,6 +65,10 @@ class Person < ApplicationRecord
       return true if self.send(SITE_ROLES[i])
     end
     return false
+  end
+
+  def has_program_role?
+    Role.has_a_program_role? self
   end
 
   def has_login

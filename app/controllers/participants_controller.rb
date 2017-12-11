@@ -1,6 +1,6 @@
 class ParticipantsController < ApplicationController
 
-  before_action :set_participant, only: [:edit, :update, :finish]
+  before_action :set_participant, only: [:edit, :update, :finish, :show, :add_role, :remove_role]
   before_action :set_cluster_program, only: [:index, :new, :create]
   before_action :authorize_user, only: [:new, :edit, :create, :update, :finish]
 
@@ -23,20 +23,20 @@ class ParticipantsController < ApplicationController
     @participant = @cluster_program.participants.new(participant_params)
     if @participant.save
       @participant.associate_activities(params[:assoc_activities])
-      redirect_to @cluster_program.is_a?(Program) ?
-                      program_participants_path(@cluster_program) :
-                      cluster_path(@cluster_program)
+      redirect_to @participant
     else
       render 'new'
     end
   end
 
+  def show
+
+  end
+
   def update
     if @participant.update participant_params
       @participant.associate_activities params[:assoc_activities]
-      redirect_to @cluster_program.is_a?(Program) ?
-                      program_participants_path(@cluster_program) :
-                      cluster_path(@cluster_program)
+      redirect_to @participant
     else
       render params[:this_action]
     end
@@ -44,6 +44,18 @@ class ParticipantsController < ApplicationController
 
   def finish
 
+  end
+
+  def add_role
+    authorize! :manage_participants, @cluster_program
+    @participant.add_role(params[:role]) if @participant.person.has_role?(params[:role])
+    redirect_to @participant
+  end
+
+  def remove_role
+    authorize! :manage_participants, @cluster_program
+    @participant.remove_role(params[:role])
+    redirect_to @participant
   end
 
   private
