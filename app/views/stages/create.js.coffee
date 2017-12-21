@@ -1,4 +1,4 @@
-if $(location).attr('href').includes('translation_activities')
+if $(location).attr('href').indexOf('translation_activities') >= 0
   $('#current-stage').html("<%= t(@stage.name) %>")
   $('#update-stage-form').fadeOut('fast', ->
     $('#show-update-form').fadeIn('fast'))

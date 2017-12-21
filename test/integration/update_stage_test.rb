@@ -2,7 +2,8 @@ require 'test_helper'
 
 class UpdateStageTest < Capybara::Rails::TestCase
   def setup
-    Capybara.current_driver = :selenium
+    Capybara.current_driver = :webkit
+    # page.driver.enable_logging
     I18n.locale = :en
     @hdi_ezra = translation_activities(:HdiEzraActivity)
     @fdate = FuzzyDate.new(2017, 7)
@@ -11,12 +12,18 @@ class UpdateStageTest < Capybara::Rails::TestCase
   end
 
   test "Add stage" do
+    assert page.has_button? 'Update'
     click_button 'Update'
     fill_in_date 'stage_start_date', @fdate
     click_button 'Save'
-    assert_equal(stage_names(:ConsultantCheck),
-              @hdi_ezra.current_stage.stage_name)
-    assert_equal( @fdate, @hdi_ezra.current_stage.f_start_date)
+    sleep 5
+    assert find_button('Update')
+    assert page.has_content? "Current stage: #{I18n.t(:Consultant_check)}"
+    within(:css, '#dulutable') do
+      new_row = first(:css, 'tr')
+      assert new_row.has_content? I18n.t(:Consultant_check)
+      assert new_row.has_content? @fdate.pretty_print
+    end
   end
 
   test "Modify Stage" do
@@ -24,21 +31,21 @@ class UpdateStageTest < Capybara::Rails::TestCase
     find(:css, "button[data-edit-stage-id='#{hdi_drafting.id}']").click
     fill_in_date 'stage_start_date', @fdate
     click_button 'Save'
-    assert_equal( @fdate, @hdi_ezra.current_stage.f_start_date)
+    within(:css, "tr#stage-row-view-#{hdi_drafting.id}") do
+      assert has_content?(@fdate.pretty_print)
+    end
   end
 
   test "Remove Stage" do
     hdi_drafting = @hdi_ezra.current_stage
     within(:css, "form[action='#{stage_path(hdi_drafting)}']") do
       click_button 'Delete'
-      page.accept_alert
+      page.driver.browser.accept_js_confirms
     end
 
-    # This takes forever
-    # sleep 1.4
-    # refute page.has_content?('Drafting'),
-    #        "Should not see Drafting stage anymore"
-    # assert_equal(stage_names(:Planned),
-    #              @hdi_ezra.current_stage.stage_name)
+    within(:css, 'span#current-stage') do
+      assert_text 'Planned'
+      assert_no_text 'Drafting'
+    end
   end
 end
