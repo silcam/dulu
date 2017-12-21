@@ -46,7 +46,9 @@ class Survey < ApplicationRecord
         return data
 
       when 'domain_updates'
-        updates = DomainUpdate.where(date: ('2015'..'2017-12-31')).order("domain, status_parameter_id, date")
+        updates = DomainUpdate.where(date: ('2015'..'2017-12-31'))
+                              .unscope(:order)
+                              .order("domain, status_parameter_id, date")
         data = [['Language', 'Domain', 'Item', 'Date', 'Previous Date', 'Quantity', 'Previous Quantity', 'Status', 'Previous Status', 'Description', 'Previous Description']]
         updates.each do |update|
           prev_update = update.previous
