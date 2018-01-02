@@ -7,6 +7,12 @@ $(document).ready ->
     unless window.validate_fuzzy_date_form($(this.closest('form')))
       e.preventDefault()
 
+  $('a[data-end-same-as-start-date]').click (e) ->
+    e.preventDefault()
+    $('#event_end_date_m').val($('#event_start_date_m').val())
+    $('#event_end_date_d').val($('#event_start_date_d').val())
+    $('#event_end_date_y').val($('#event_start_date_y').val())
+
   $('a[data-add-program-select]').click (e) ->
     e.preventDefault()
     hidden_select = $('div.program-select').last()
