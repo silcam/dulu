@@ -1,0 +1,53 @@
+<h2>
+  <%= @event.display_name %>
+  <% if can? :update, @event %>
+    <%= link_to t(:Edit),
+                (@program ? edit_program_event_path(@program, @event, referred_by: request.path) : edit_event_path(@event, referred_by: request.path)),
+                class: 'btn btn-warning',
+                style: 'margin-left: 40px'%>
+  <% end %>
+  <br />
+  <small>
+    <%= @event.dates_display_text %>
+  </small>
+</h2>
+
+<% unless @event.clusters.empty? %>
+  <h3><%= t :Clusters %></h3>
+  <ul class="list-unstyled">
+    <% @event.clusters.each do |cluster| %>
+      <li>
+        <%= link_to cluster.name, cluster %>
+      </li>
+    <% end %>
+  </ul>
+<% end %>
+
+<% unless @event.programs.empty? %>
+  <h3><%= t :Programs %></h3>
+  <ul class="list-unstyled">
+    <% @event.programs.each do |program| %>
+      <li>
+        <%= link_to program.name, program %>
+      </li>
+    <% end %>
+  </ul>
+<% end %>
+
+<% unless @event.people.empty? %>
+  <h3><%= t :People %></h3>
+  <ul class="list-unstyled">
+    <% @event.people.each do |person| %>
+      <li>
+        <%= link_to person.full_name, person %>
+      </li>
+    <% end %>
+  </ul>
+<% end %>
+
+<p>
+  <%= @event.note %>
+</p>
+
+
+

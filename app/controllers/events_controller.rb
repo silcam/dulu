@@ -29,13 +29,20 @@ class EventsController < ApplicationController
                                         events_path
       follow_redirect default_redirect
     else
-      render 'new'
+      @program = Program.find(params[:program_id]) if params[:program_id]
+      render (@program ? 'new_for_program' : 'new')
     end
+  end
+
+  def show
+    @event = Event.find params[:id]
+    @program = Program.find params[:program_id] if params[:program_id]
   end
 
   def edit
     @event = Event.find params[:id]
     authorize! :update, @event
+    @program = Program.find(params[:program_id]) if params[:program_id]
   end
 
   def update
@@ -52,7 +59,11 @@ class EventsController < ApplicationController
     @event = Event.find params[:id]
     authorize! :destroy, @event
     @event.destroy
-    follow_redirect events_path
+    if params[:program_id]
+      redirect_to program_events_path(params[:program_id])
+    else
+      redirect_to events_path
+    end
   end
 
   private

@@ -24,7 +24,7 @@
 
     <div class="form-group select-collection" id="program-ids">
       <%= form.label :program_ids, t(:Programs), style: 'display: block;' %>
-      <% if @program %>
+      <% if @program && @event.programs.empty? %>
         <%= select_tag 'event[program_ids][]', options_for_select([[@program.name, @program.id]]),
                        class: 'form-control' %>
       <% end %>

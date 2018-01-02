@@ -104,4 +104,17 @@ class Event < ApplicationRecord
     end
     event_hash
   end
+
+  def self.search(query)
+    events = Event.where "name ILIKE :q", q: "%#{query}%"
+    results = []
+    events.each do |event|
+      title = "#{event.name}"
+      description = event.dates_display_text
+      description_cluster_progs = (event.clusters + event.programs).collect{ |cp| cp.display_name }.join(', ')
+      description += ' - ' + description_cluster_progs unless description_cluster_progs.blank?
+      results << {title: title, description: description, model: event}
+    end
+    results
+  end
 end

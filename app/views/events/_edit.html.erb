@@ -1,0 +1,15 @@
+<h2>
+  <%= @event.display_name %>
+  <%= link_to t(:Delete_event),
+              (@program ? program_event_path(@program, @event) : event_path(@event)),
+              method: :delete,
+              data: {confirm: t(:Delete_event_confirmation, event: @event.display_name)},
+              class: 'btn btn-danger',
+              style: 'margin-left: 40px' %>
+</h2>
+
+<%= form_for @event, html: {class: 'auto-width'} do |form| %>
+
+  <%= render 'events/event_form', form: form %>
+
+<% end %>

@@ -6,7 +6,7 @@
     <% events.each do |event| %>
       <tr>
         <td class="bigger">
-          <%= event.name %>
+          <%= link_to event.name, event %>
         </td>
         <td>
           <%= t(event.domain) %>
