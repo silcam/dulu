@@ -2,7 +2,7 @@ require 'test_helper'
 
 class EventsIntegrationTest < Capybara::Rails::TestCase
   def my_setup(need_js=false, user=:Drew)
-    Capybara.current_driver = :selenium if need_js
+    Capybara.current_driver = :webkit if need_js
     log_in people(user)
     @hdi = programs :HdiProgram
     @genesis_consult = events :HdiGenesisChecking
@@ -46,6 +46,7 @@ class EventsIntegrationTest < Capybara::Rails::TestCase
       select 'Abanda Dunno', from: 'event_new_event_participants__person_id'
     end
     click_on 'Save'
+    assert_current_path dashboard_program_path(@hdi)
     event_panel = event_panel_for(Event.find_by name: 'Taco Party')
     assert event_panel.has_content?('Hdi'), "Should see all programs"
     assert event_panel.has_content?('Ewondo'), "Should see all programs"
@@ -155,7 +156,7 @@ class EventsIntegrationTest < Capybara::Rails::TestCase
     assert page.has_content?('Hdi Genesis Checking'), "Should see the event before deletion"
     click_edit_for @genesis_consult
     click_button 'Delete this event'
-    page.accept_alert
+    page.driver.browser.accept_js_confirms
     assert_current_path program_events_path(@hdi)
     refute page.has_content?('Hdi Genesis Checking'), "Should no longer see deleted event"
   end
