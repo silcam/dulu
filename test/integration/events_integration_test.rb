@@ -16,11 +16,11 @@ class EventsIntegrationTest < Capybara::Rails::TestCase
     fill_in_date 'event_start_date', FuzzyDate.new(2017)
     fill_in_date 'event_end_date', FuzzyDate.new(2017)
     click_on 'Save'
-    assert_current_path dashboard_program_path(@hdi)
-    event_panel = event_panel_for(Event.find_by name: 'Taco Party')
-    assert event_panel.has_content?('Taco Party'), "Expect to see new event name"
-    assert event_panel.has_content?('2017'), "Expect to see new event date"
-    assert event_panel.has_content?('Hdi'), "Expect to see new event program"
+    within :css, 'div.main' do
+      assert_text 'Taco Party'
+      assert_text '2017'
+      assert_text 'Hdi'
+    end
   end
 
   test "New Event with Bells and Whistles" do
@@ -46,13 +46,12 @@ class EventsIntegrationTest < Capybara::Rails::TestCase
       select 'Abanda Dunno', from: 'event_new_event_participants__person_id'
     end
     click_on 'Save'
-    assert_current_path dashboard_program_path(@hdi)
-    event_panel = event_panel_for(Event.find_by name: 'Taco Party')
-    assert event_panel.has_content?('Hdi'), "Should see all programs"
-    assert event_panel.has_content?('Ewondo'), "Should see all programs"
-    assert event_panel.has_content?('Ndop'), "Should see cluster"
-    assert event_panel.has_content?('Drew Maust'), "Should see all people"
-    assert event_panel.has_content?('Abanda'), "Should see all people"
+
+    assert page.has_content?('Hdi'), "Should see all programs"
+    assert page.has_content?('Ewondo'), "Should see all programs"
+    assert page.has_content?('Ndop'), "Should see cluster"
+    assert page.has_content?('Drew Maust'), "Should see all people"
+    assert page.has_content?('Abanda'), "Should see all people"
   end
 
   def setup_edit(need_js=false)
@@ -79,9 +78,12 @@ class EventsIntegrationTest < Capybara::Rails::TestCase
 
   test "Remove Event Program" do
     setup_edit true
-    within(:css, 'div#program-ids'){ click_on 'Remove'}
     fill_in 'Name', with: 'Genesis Consult'
-    sleep 0.3
+    within(:css, 'div#program-ids') do
+      assert_selector :css, 'select'
+      click_on 'Remove'
+      assert_no_selector :css, 'select'
+    end
     click_on 'Save'
     visit program_events_path(@hdi)
     refute page.has_content?('Genesis Consult'), "Should no longer see dissassociated event"
@@ -109,9 +111,10 @@ class EventsIntegrationTest < Capybara::Rails::TestCase
       select 'Ewondo', from: 'event_program_ids_'
     end
     click_on 'Save'
-    # event_panel = event_panel_for @genesis_consult
-    assert page.has_content?('Ewondo'), "SHould see new program name"
-    assert page.has_content?('Hdi'), "Should see noew program name"
+    within(:css, 'div.main') do
+      assert_text 'Ewondo'
+      assert_text 'Hdi'
+    end
   end
 
   test "Remove Abanda" do
@@ -119,11 +122,13 @@ class EventsIntegrationTest < Capybara::Rails::TestCase
     within(:css, "div#person-select-#{@abanda.id}") do
       click_on 'Remove'
     end
-    sleep 0.3 # Give time for the form element to be deleted
+    assert_no_selector :css, "div#person-select-#{@abanda.id}"
     click_on 'Save'
-    # event_panel = event_panel_for @genesis_consult
-    assert page.has_content?('Drew'), "SHould still see Drew"
-    refute page.has_content?('Abanda'), "SHouldn't see Abanda's name"
+
+    within(:css, 'div.main') do
+      assert_text 'Drew'
+      assert_no_text 'Abanda'
+    end
   end
 
   test "Change Abanda's Role" do
@@ -138,9 +143,10 @@ class EventsIntegrationTest < Capybara::Rails::TestCase
     setup_edit
     select 'Rick Conrad', from: "event_event_participant_#{@abanda.id}_person_id"
     click_on 'Save'
-    # event_panel = event_panel_for @genesis_consult
-    assert page.has_content?('Rick'), "SHould see Rick now"
-    refute page.has_content?('Abanda'), "SHouldn't see Abanda's name"
+    within :css, 'div.main' do
+      assert_text 'Rick'
+      assert_no_text 'Abanda'
+    end
   end
 
   test "Add Rick" do
@@ -150,7 +156,9 @@ class EventsIntegrationTest < Capybara::Rails::TestCase
       select 'Rick Conrad', from: 'event_new_event_participants__person_id'
     end
     click_on 'Save'
-    assert page.has_content?('Rick'), "Should see Rick now"
+    within :css, 'div.main' do
+      assert_text 'Rick'
+    end
   end
 
   test "Delete Event" do
