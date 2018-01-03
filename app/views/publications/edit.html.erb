@@ -7,12 +7,13 @@
       }
     </style>
     <%= @publication.name %>
-    <%= button_to t(:Delete),
+    <%= link_to t(:Delete),
                   publication_path(@publication),
                   method: :delete,
                   data: {confirm: t(:Delete_pub_confirmation,
                                     title: @publication.name)},
-                  class: 'btn btn-danger' %>
+                  class: 'btn btn-danger',
+                  style: 'margin-left: 40px' %>
   </h2>
 
   <%= form_for @publication, html: {class: 'auto-width'} do |form| %>

@@ -32,37 +32,36 @@ Rails.application.routes.draw do
   resources :languages
   resources :events
   resources :audits, only: [:index, :show]
-  shallow do
-    resources :clusters do
-      resources :participants do
-        member do
-          get 'finish'
-          patch 'finish'
-          post 'add_role'
-          delete 'remove_role'
-        end
-      end
-    end
 
-    resources :programs do
-      get 'dashboard', on: :member
-      resources :translation_activities do
-        resources :stages, only: [:new, :create, :update, :destroy]
+  resources :clusters do
+    resources :participants, shallow: true do
+      member do
+        get 'finish'
+        patch 'finish'
+        post 'add_role'
+        delete 'remove_role'
       end
-      resources :activities do
-        resources :stages, only: [:new, :create, :update, :destroy]
-      end
-      resources :participants do
-        member do
-          get 'finish'
-          patch 'finish'
-          post 'add_role'
-          delete 'remove_role'
-        end
-      end
-      resources :events
-      resources :publications
-      resources :domain_updates
     end
+  end
+
+  resources :programs do
+    get 'dashboard', on: :member
+    resources :translation_activities, shallow: true do
+      resources :stages, only: [:new, :create, :update, :destroy], shallow: true
+    end
+    resources :activities, shallow: true do
+      resources :stages, only: [:new, :create, :update, :destroy], shallow: true
+    end
+    resources :participants, shallow: true do
+      member do
+        get 'finish'
+        patch 'finish'
+        post 'add_role'
+        delete 'remove_role'
+      end
+    end
+    resources :events
+    resources :publications, shallow: true
+    resources :domain_updates, shallow: true
   end
 end

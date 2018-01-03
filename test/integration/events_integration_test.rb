@@ -57,7 +57,8 @@ class EventsIntegrationTest < Capybara::Rails::TestCase
 
   def setup_edit(need_js=false)
     my_setup need_js
-    click_edit_for @genesis_consult
+    click_link @genesis_consult.display_name
+    click_link 'Edit'
     @abanda = event_participants :AbandaHdiGenesis
   end
 
@@ -65,7 +66,7 @@ class EventsIntegrationTest < Capybara::Rails::TestCase
     setup_edit
     fill_in 'Name', with: 'Taco Party'
     click_on 'Save'
-    assert event_panel_for(@genesis_consult).has_content?('Taco Party'), "Should see new name"
+    assert page.has_content?('Taco Party'), "Should see new name"
   end
 
   test "Edit Event Dates" do
@@ -73,7 +74,7 @@ class EventsIntegrationTest < Capybara::Rails::TestCase
     fill_in_date 'event_start_date', FuzzyDate.new(2017, 2)
     fill_in_date 'event_end_date', FuzzyDate.new(2017, 2)
     click_on 'Save'
-    assert event_panel_for(@genesis_consult).has_content?('Feb'), "Should see event's new date"
+    assert page.has_content?('Feb'), "Should see event's new date"
   end
 
   test "Remove Event Program" do
@@ -82,6 +83,7 @@ class EventsIntegrationTest < Capybara::Rails::TestCase
     fill_in 'Name', with: 'Genesis Consult'
     sleep 0.3
     click_on 'Save'
+    visit program_events_path(@hdi)
     refute page.has_content?('Genesis Consult'), "Should no longer see dissassociated event"
     visit events_path
     refute event_panel_for(@genesis_consult).has_content?('Hdi'), "Should not see Hdi listed for event"
@@ -107,9 +109,9 @@ class EventsIntegrationTest < Capybara::Rails::TestCase
       select 'Ewondo', from: 'event_program_ids_'
     end
     click_on 'Save'
-    event_panel = event_panel_for @genesis_consult
-    assert event_panel.has_content?('Ewondo'), "SHould see new program name"
-    assert event_panel.has_content?('Hdi'), "Should see noew program name"
+    # event_panel = event_panel_for @genesis_consult
+    assert page.has_content?('Ewondo'), "SHould see new program name"
+    assert page.has_content?('Hdi'), "Should see noew program name"
   end
 
   test "Remove Abanda" do
@@ -119,9 +121,9 @@ class EventsIntegrationTest < Capybara::Rails::TestCase
     end
     sleep 0.3 # Give time for the form element to be deleted
     click_on 'Save'
-    event_panel = event_panel_for @genesis_consult
-    assert event_panel.has_content?('Drew'), "SHould still see Drew"
-    refute event_panel.has_content?('Abanda'), "SHouldn't see Abanda's name"
+    # event_panel = event_panel_for @genesis_consult
+    assert page.has_content?('Drew'), "SHould still see Drew"
+    refute page.has_content?('Abanda'), "SHouldn't see Abanda's name"
   end
 
   test "Change Abanda's Role" do
@@ -136,9 +138,9 @@ class EventsIntegrationTest < Capybara::Rails::TestCase
     setup_edit
     select 'Rick Conrad', from: "event_event_participant_#{@abanda.id}_person_id"
     click_on 'Save'
-    event_panel = event_panel_for @genesis_consult
-    assert event_panel.has_content?('Rick'), "SHould see Rick now"
-    refute event_panel.has_content?('Abanda'), "SHouldn't see Abanda's name"
+    # event_panel = event_panel_for @genesis_consult
+    assert page.has_content?('Rick'), "SHould see Rick now"
+    refute page.has_content?('Abanda'), "SHouldn't see Abanda's name"
   end
 
   test "Add Rick" do
@@ -148,14 +150,15 @@ class EventsIntegrationTest < Capybara::Rails::TestCase
       select 'Rick Conrad', from: 'event_new_event_participants__person_id'
     end
     click_on 'Save'
-    assert event_panel_for(@genesis_consult).has_content?('Rick'), "Should see Rick now"
+    assert page.has_content?('Rick'), "Should see Rick now"
   end
 
   test "Delete Event" do
     my_setup true
     assert page.has_content?('Hdi Genesis Checking'), "Should see the event before deletion"
-    click_edit_for @genesis_consult
-    click_button 'Delete this event'
+    click_link 'Hdi Genesis Checking'
+    click_link 'Edit'
+    click_link 'Delete this event'
     page.driver.browser.accept_js_confirms
     assert_current_path program_events_path(@hdi)
     refute page.has_content?('Hdi Genesis Checking'), "Should no longer see deleted event"
@@ -174,21 +177,19 @@ class EventsIntegrationTest < Capybara::Rails::TestCase
   test "Valid User" do
     my_setup
     assert page.has_content?('Add Event'), "Drew should see New Event link"
+    click_link 'Hdi Genesis Checking'
     assert page.has_content?('Edit'), "Drew should see Edit links"
   end
 
   test "Invalid User" do
     my_setup false, :Kevin
     refute page.has_content?('New Event'), "Kevin should see New Event link"
+    click_link 'Hdi Genesis Checking'
     refute page.has_content?('Edit'), "Kevin should not see edit links"
     visit new_program_event_path(@hdi)
     assert_current_path not_allowed_path
     visit edit_event_path(@genesis_consult)
     assert_current_path not_allowed_path
-  end
-
-  def click_edit_for event
-    within(:css, "div#event-panel-#{event.id}") {click_on 'Edit'}
   end
 
   def newest_program_select_div(action=:new)

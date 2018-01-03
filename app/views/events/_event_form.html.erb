@@ -1,14 +1,14 @@
     <%= render 'shared/error_messages', errors: @event.errors %>
 
     <div class="form-group">
-      <%= form.label :domain, t(:Type_of_event) %>
-      <%= form.select :domain, StatusParameter.sorted_domains.collect{ |d| [t(d), d]},
-                      {}, class: 'form-control', autofocus: true %>
+      <%= form.label :name, t(:Name) %>
+      <%= form.text_field :name, class: 'form-control', autofocus: true %>
     </div>
 
     <div class="form-group">
-      <%= form.label :name, t(:Name) %>
-      <%= form.text_field :name, class: 'form-control' %>
+      <%= form.label :domain, t(:Type_of_event) %>
+      <%= form.select :domain, StatusParameter.sorted_domains.collect{ |d| [t(d), d]},
+                      {}, class: 'form-control' %>
     </div>
 
     <div class="form-group">
@@ -17,13 +17,14 @@
     </div>
 
     <div class="form-group">
-      <%= form.label :end_date, t(:End_date) %>
+      <%= form.label :end_date, t(:End_date) %><br />
+      <a href="#" data-end-same-as-start-date><%= t :Same_as_start_date %></a>
       <%= render 'shared/fuzzy_date_field', model: 'event', field: 'end_date', fdate: @event.f_end_date%>
     </div>
 
     <div class="form-group select-collection" id="program-ids">
       <%= form.label :program_ids, t(:Programs), style: 'display: block;' %>
-      <% if @program %>
+      <% if @program && @event.programs.empty? %>
         <%= select_tag 'event[program_ids][]', options_for_select([[@program.name, @program.id]]),
                        class: 'form-control' %>
       <% end %>
