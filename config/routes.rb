@@ -30,7 +30,12 @@ Rails.application.routes.draw do
   end
   resources :organizations
   resources :languages
-  resources :events
+  resources :events do
+    member do
+      patch 'add_update'
+      patch 'remove_update'
+    end
+  end
   resources :audits, only: [:index, :show]
 
   resources :clusters do
@@ -60,7 +65,12 @@ Rails.application.routes.draw do
         delete 'remove_role'
       end
     end
-    resources :events
+    resources :events do
+      member do
+        patch 'add_update'
+        patch 'remove_update'
+      end
+    end
     resources :publications, shallow: true
     resources :domain_updates, shallow: true
   end

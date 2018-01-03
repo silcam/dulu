@@ -1,6 +1,19 @@
-<h2><%= t :Add_event %></h2>
+<% if @program %>
 
-<%= form_for @event, url: events_path,
-               html: {class: 'auto-width'} do |form| %>
-  <%= render 'events/event_form', form: form %>
+  <%= render 'programs/sidebar' do %>
+    <h2><%= t :Add_event %></h2>
+    <%= form_for @event, url: program_events_path(@program),
+                 html: {class: 'auto-width'} do |form| %>
+      <%= render 'events/event_form', form: form %>
+    <% end %>
+  <% end %>
+
+<% else %>
+
+  <h2><%= t :Add_event %></h2>
+  <%= form_for @event, url: events_path,
+                 html: {class: 'auto-width'} do |form| %>
+    <%= render 'events/event_form', form: form %>
+  <% end %>
+
 <% end %>

@@ -13,6 +13,16 @@ $(document).ready ->
     $('#event_end_date_d').val($('#event_start_date_d').val())
     $('#event_end_date_y').val($('#event_start_date_y').val())
 
+  $('a[data-event-enable-edits]').click (e) ->
+    e.preventDefault()
+    $(this).closest('div').find('.not-shown').fadeIn 'fast'
+    $(this).closest('small').fadeOut 'fast'
+
+  $('a[data-event-cancel-form]').click (e) ->
+    e.preventDefault()
+    $(this).closest('div').find('.not-shown').fadeOut 'fast'
+    $(this).closest('div').find('small').first().fadeIn 'fast'
+
   $('a[data-add-program-select]').click (e) ->
     e.preventDefault()
     hidden_select = $('div.program-select').last()
