@@ -16,7 +16,7 @@
   <%= @event.note %>
 </p>
 
-<div>
+<div class="event-page-section">
   <h3>
     <%= t :Clusters %>
     <% if can? :update, @event %>
@@ -30,7 +30,7 @@
       <li>
         <span class="bigger"><%= link_to cluster.name, cluster %></span>
         <span class="not-shown">
-           -
+           |
           <% link_path = @program ?
                              remove_update_program_event_path(@program, @event, cluster_id: cluster.id) :
                              remove_update_event_path(@event, cluster_id: cluster.id) %>
@@ -42,13 +42,13 @@
 
   <% form_route = @program ? add_update_program_event_path(@program, @event) : add_update_event_path(@event) %>
   <%= form_tag form_route, method: :patch, class: 'form-inline not-shown' do %>
-    <%= select_tag :event_cluster, options_from_collection_for_select(Cluster.all, :id, :name), class: 'form-control' %>
+    <%= select_tag :event_cluster, options_from_collection_for_select(@event.unassoc_clusters, :id, :name), class: 'form-control' %>
     <%= submit_tag t(:Add), class: 'btn btn-primary' %>
     <a href="#" data-event-cancel-form class="btn btn-danger"><%= t :Cancel %></a>
   <% end %>
 </div>
 
-<div>
+<div class="event-page-section">
   <h3>
     <%= t :Programs %>
     <% if can? :update, @event %>
@@ -62,7 +62,7 @@
       <li>
         <span class="bigger"><%= link_to program.name, program %></span>
         <span class="not-shown">
-           -
+           |
           <% link_path = @program ?
                              remove_update_program_event_path(@program, @event, remove_program: program.id) :
                              remove_update_event_path(@event, remove_program: program.id) %>
@@ -74,22 +74,58 @@
 
   <% form_route = @program ? add_update_program_event_path(@program, @event) : add_update_event_path(@event) %>
   <%= form_tag form_route, method: :patch, class: 'form-inline not-shown' do %>
-    <%= select_tag :event_program, options_from_collection_for_select(Program.all, :id, :name), class: 'form-control' %>
+    <%= select_tag :event_program, options_from_collection_for_select(@event.unassoc_programs, :id, :name), class: 'form-control' %>
     <%= submit_tag t(:Add), class: 'btn btn-primary' %>
     <a href="#" data-event-cancel-form class="btn btn-danger"><%= t :Cancel %></a>
   <% end %>
 </div>
 
-<% unless @event.people.empty? %>
-  <h3><%= t :People %></h3>
+<div class="event-page-section">
+  <h3>
+    <%= t :People %>
+    <% if can? :update, @event %>
+      <small>
+        <a href="#" data-event-enable-edits><%= t :Edit %></a>
+      </small>
+    <% end %>
+  </h3>
   <ul class="list-unstyled">
-    <% @event.people.each do |person| %>
-      <li class="bigger">
-        <%= link_to person.full_name, person %>
+    <% @event.event_participants.each do |participant| %>
+      <li>
+        <span class="bigger">
+          <%= link_to participant.full_name, participant.person %>
+        </span>
+        <%= participant.roles.collect{ |r| t(r) }.join(', ') %>
+        <span class="not-shown">
+          |
+          <% link_path = @program ?
+                             remove_update_program_event_path(@program, @event, remove_participant: participant) :
+                             remove_update_event_path(@event, remove_participant: participant) %>
+          <%= link_to t(:Remove), link_path, method: :patch %>
+        </span>
       </li>
     <% end %>
   </ul>
-<% end %>
+
+  <% form_route = @program ? add_update_program_event_path(@program, @event) : add_update_event_path(@event) %>
+  <%= form_tag form_route, method: :patch, class: 'auto-width not-shown' do %>
+    <div class="form-group">
+      <%= select_tag 'event_person[id]', options_from_collection_for_select(@event.unassoc_people, :id, :full_name_rev), class: 'form-control' %>
+    </div>
+    <div class="form-group">
+      <label><%= t :Roles %></label><br />
+      <% Role::EVENT_ROLES.each do |role| %>
+        <label class="checkbox-inline">
+          <%= check_box_tag 'event_person[roles][]', role %>
+          <%= t role %>
+        </label>
+      <% end %>
+      <div id="event_person_roles"></div>
+    </div>
+    <%= submit_tag t(:Add), class: 'btn btn-primary' %>
+    <a href="#" data-event-cancel-form class="btn btn-danger"><%= t :Cancel %></a>
+  <% end %>
+</div>
 
 
 

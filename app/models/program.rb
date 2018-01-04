@@ -15,6 +15,7 @@ class Program < ApplicationRecord
   belongs_to :language
   has_one :cluster, through: :language
 
+  default_scope { includes(:language).order('languages.name') }
 
   def name
     language.name
@@ -130,6 +131,7 @@ class Program < ApplicationRecord
     percentages
   end
 
+  # TODO Deprecate. This is now covered by default scope
   def self.all_sorted
     Program.joins(:language).order('languages.name').includes(:language)
   end

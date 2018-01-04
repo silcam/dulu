@@ -30,6 +30,7 @@ fr:
   Download_report: Télécharger le rapport
   Sorry: Désolé
   as: comme
+  Select: Choisier...
 
   #Dates
   Date: Date
@@ -215,6 +216,8 @@ fr:
   Literacy_specialist: Spécialiste en alphabétisation
   Literacy_consultant: Conseiller en alphabétisation
   Scripture_engagement_specialist: Spécialiste en promotion des Saintes Écritures
+  Facilitator: Facilitateur
+  Student: Étudiant
 
   #Publications Controller
   Publications: Publications

@@ -30,6 +30,7 @@ en:
   Download_report: Download Report
   Sorry: Sorry
   as: as
+  Select: Please select...
 
   #Dates
   Date: Date
@@ -215,6 +216,8 @@ en:
   Literacy_specialist: Literacy Specialist
   Literacy_consultant: Literacy Consultant
   Scripture_engagement_specialist: Scripture Engagement Specialist
+  Facilitator: Facilitator
+  Student: Student
 
   #Publications Controller
   Publications: Publications

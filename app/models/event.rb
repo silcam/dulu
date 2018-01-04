@@ -70,6 +70,18 @@ class Event < ApplicationRecord
     all
   end
 
+  def unassoc_programs
+    Program.where.not(id: programs)
+  end
+
+  def unassoc_clusters
+    Cluster.where.not(id: clusters)
+  end
+
+  def unassoc_people
+    Person.where.not(id: people)
+  end
+
   def role_of(person)
     self.event_participants.where(person: person).first.try(:program_role)
   end

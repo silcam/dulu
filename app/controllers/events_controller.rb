@@ -54,8 +54,11 @@ class EventsController < ApplicationController
 
   def add_update
     @event = Event.find params[:id]
+    authorize! :update, @event
     @event.clusters << Cluster.find(params[:event_cluster]) if params[:event_cluster]
     @event.programs << Program.find(params[:event_program]) if params[:event_program]
+    EventParticipant.build(@event, params[:event_person]) if params[:event_person]
+
     redirect_to (params[:program_id] ?
                      program_event_path(params[:program_id], @event) :
                      event_path(@event)
@@ -64,8 +67,10 @@ class EventsController < ApplicationController
 
   def remove_update
     @event = Event.find params[:id]
+    authorize! :update, @event
     @event.clusters.delete(params[:cluster_id]) if params[:cluster_id]
     @event.programs.delete(params[:remove_program]) if params[:remove_program]
+    EventParticipant.find(params[:remove_participant]).delete if params[:remove_participant]
     redirect_to (params[:program_id] ?
                      program_event_path(params[:program_id], @event) :
                      event_path(@event)

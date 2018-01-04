@@ -20,4 +20,8 @@ class EventParticipant < ApplicationRecord
   def remove_role(role)
     update roles_field: Role.roles_field_without(roles_field, role)
   end
+
+  def self.build(event, person_params)
+    create! event: event, person_id: person_params[:id], roles_field: Role.roles_field(person_params[:roles])
+  end
 end

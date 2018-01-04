@@ -94,6 +94,16 @@ class Person < ApplicationRecord
     programs
   end
 
+  def to_hash
+    roles = self.roles.collect{ |r| {role: r, t_role: I18n.t(r)}}
+    {
+        id: id,
+        first_name: first_name,
+        last_name: last_name,
+        roles: roles
+    }
+  end
+
   def self.roles_for_select(include_admin = false)
     roles = [[I18n.t(:role_none), '-1']]
     SITE_ROLES.each_with_index do |role, i|
