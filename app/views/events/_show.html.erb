@@ -16,7 +16,7 @@
   <%= @event.note %>
 </p>
 
-<div class="event-page-section">
+<div class="event-page-section" id="cluster-section">
   <h3>
     <%= t :Clusters %>
     <% if can? :update, @event %>
@@ -48,7 +48,7 @@
   <% end %>
 </div>
 
-<div class="event-page-section">
+<div class="event-page-section" id="program-section">
   <h3>
     <%= t :Programs %>
     <% if can? :update, @event %>
@@ -80,7 +80,7 @@
   <% end %>
 </div>
 
-<div class="event-page-section">
+<div class="event-page-section" id="people-section">
   <h3>
     <%= t :People %>
     <% if can? :update, @event %>

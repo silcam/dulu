@@ -5,7 +5,7 @@ HdiGenesisChecking:
   end_date: 2018-01-30
   domain: Translation
   programs: HdiProgram
-  name: Hdi Genesis Checking
+  name: Genesis Checking
 
 HdiPastChecking:
   start_date: 2017-01

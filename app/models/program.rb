@@ -137,7 +137,7 @@ class Program < ApplicationRecord
   end
 
   def self.all_sorted_by_recency
-    Program.all.order('updated_at DESC').includes(:language)
+    Program.all.unscope(:order).order('programs.updated_at DESC')
   end
 
   def self.search(query)
