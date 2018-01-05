@@ -1,6 +1,4 @@
 class Person < ApplicationRecord
-  SITE_ROLES = [:role_user, :role_program_responsable, :role_program_supervisor,
-                :role_program_admin, :role_site_admin]
 
   belongs_to :organization, required: false
   belongs_to :country, required: false, counter_cache: true
@@ -30,6 +28,14 @@ class Person < ApplicationRecord
     Role.roles_from_field(roles_field)
   end
 
+  def program_roles
+    Role.program_roles(roles)
+  end
+
+  def roles_text
+    Role.roles_text roles_field
+  end
+
   def add_role(new_role)
     transaction do
       person_roles.create(role: new_role, start_date: Date.today)
@@ -48,35 +54,13 @@ class Person < ApplicationRecord
     roles.include? role.to_sym
   end
 
-  def role
-    SITE_ROLES.each_with_index do |role, i|
-      return i if self.send(role)
-    end
-    nil
+  def has_role_among?(roles)
+    Role.roles_overlap?(self.roles, roles)
   end
 
-  def role_text
-    r = role
-    r.nil? ? :role_none : SITE_ROLES[r]
-  end
-
-  def has_role(role)
-    (SITE_ROLES.index(role) .. SITE_ROLES.count-1).each do |i|
-      return true if self.send(SITE_ROLES[i])
-    end
-    return false
-  end
-
-  def has_program_role?
-    Role.has_a_program_role? self
-  end
-
-  def has_login
-    SITE_ROLES.each do |role|
-      return true if self.send(role)
-    end
-    return false
-  end
+  # def has_program_role?
+  #   Role.has_a_program_role? self
+  # end
 
   def current_participants
     participants.where(end_date: nil)
@@ -104,22 +88,6 @@ class Person < ApplicationRecord
     }
   end
 
-  def self.roles_for_select(include_admin = false)
-    roles = [[I18n.t(:role_none), '-1']]
-    SITE_ROLES.each_with_index do |role, i|
-      roles << [I18n.t(role), i] unless(role==:role_site_admin && !include_admin)
-    end
-    roles
-  end
-
-  def self.get_role_params(role_index_str)
-    role_params = {}
-    SITE_ROLES.each_with_index do |role, i|
-      role_params[role] = (i.to_s==role_index_str) ? true : false
-    end
-    return role_params
-  end
-
   def self.search(query)
     people = Person.where("first_name || ' ' || last_name ILIKE ?", "%#{query}%")
     results = []
@@ -128,7 +96,7 @@ class Person < ApplicationRecord
       person.current_participants.each do |participant|
         subresults << {title: participant.cluster_program.display_name,
                        model: participant.cluster_program,
-                       description: I18n.t(participant.program_role.name)}
+                       description: participant.roles_text}
       end
       results << {title: person.name,
                   model: person,

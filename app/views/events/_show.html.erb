@@ -95,7 +95,7 @@
         <span class="bigger">
           <%= link_to participant.full_name, participant.person %>
         </span>
-        <%= participant.roles.collect{ |r| t(r) }.join(', ') %>
+        <%= participant.roles_text %>
         <span class="not-shown">
           |
           <% link_path = @program ?

@@ -5,7 +5,8 @@ Rick:
   last_name: Conrad
   email: rick_conrad@sil.org
   organization: SIL
-  role_site_admin: true
+  has_login: true
+  roles_field: DuluAdmin
 
 Drew:
   first_name: Drew
@@ -13,27 +14,31 @@ Drew:
   email: drew_maust@sil.org
   organization: SIL
   country: USA
-  role_program_responsable: true
+  has_login: true
+  roles_field: TranslationConsultant
 
 Abanda:
   first_name: Abanda
   last_name: Dunno
   email: abanda@dunno.org
+  roles_field: Translator
 
 Olga:
   first_name: Olga
   last_name: Nka
   email: olga_nka@sil.org
   organization: SIL
-  role_program_supervisor: true
+  has_login: true
+  roles_field: LPF
 
 FormerHdiTranslator:
   first_name: Former
   last_name: Translator
+  roles_field: Translator
 
 Kevin:
   first_name: Kevin
   last_name: Bradford
   organization: SIL
-  role_user: true
   email: kevin_bradford@sil.org
+  has_login: true

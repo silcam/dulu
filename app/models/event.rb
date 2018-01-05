@@ -82,10 +82,6 @@ class Event < ApplicationRecord
     Person.where.not(id: people)
   end
 
-  def role_of(person)
-    self.event_participants.where(person: person).first.try(:program_role)
-  end
-
   def associated_with?(user)
     return true if self.people.include? user
 

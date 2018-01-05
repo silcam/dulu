@@ -3,7 +3,7 @@
 
 <% if can? :update, @person %>
     <div>
-      <%= link_to t(:Edit_person), edit_person_path(@person) %>
+      <%= link_to t(:Edit_person), edit_person_path(@person, referred_by: request.path) %>
     </div>
 <% end %>
 
@@ -16,12 +16,6 @@
     <th><%= t :Email %></th>
     <td><%= @person.email %></td>
   </tr>
-  <% if can? :update, @person %>
-    <tr>
-      <th><%= t :User_role %></th>
-      <td><%= t @person.role_text %></td>
-    </tr>
-  <% end %>
 </table>
 
 <h4><%= t :Roles %></h4>
@@ -48,11 +42,12 @@
 <% end %>
 
 <p>
-  <% if can? :edit_roles, @person %>
+  <% grantable_roles = Role.grantable_roles(current_user, @person) %>
+  <% unless grantable_roles.empty? %>
     <%= form_for :person_role, url: person_person_roles_path(@person), html: {class: 'form-inline'} do |form| %>
       <div class="form-group">
         <label><%= t :Add_role %></label>
-        <%= form.select :role, Role.available(@person).collect{ |role| [t(role), role] }, {}, class: 'form-control'  %>
+        <%= form.select :role, grantable_roles.collect{ |role| [t(role), role] }.sort, {}, class: 'form-control'  %>
       </div>
       <div class="form-group">
         <%= form.submit t(:Add), class: 'btn btn-primary' %>
@@ -66,7 +61,7 @@
     <tr>
       <td>
         <%= link_to participant.cluster_program.display_name, participant.cluster_program %>
-         - <%= t(participant.program_role.name) %>
+         - <%= participant.roles_text %>
       </td>
     </tr>
   <% end %>

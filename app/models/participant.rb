@@ -57,6 +57,10 @@ class Participant < ApplicationRecord
     Role.roles_from_field roles_field
   end
 
+  def roles_text
+    Role.roles_text roles_field
+  end
+
   def add_role(new_role)
     update roles_field: Role.roles_field_with(roles_field, new_role)
   end

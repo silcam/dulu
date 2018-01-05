@@ -18,7 +18,7 @@
 <% end %>
 
 <p>
-  <% available_roles = Role.available @participant, @participant.person.roles %>
+  <% available_roles = Role.available @participant, @participant.person.program_roles %>
   <% if can? :manage_participants, @cluster_program and not available_roles.empty? %>
       <%= form_tag(add_role_participant_path(@participant), {class: 'form-inline'}) %>
     <div class="form-group">

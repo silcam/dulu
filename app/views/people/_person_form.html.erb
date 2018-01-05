@@ -59,13 +59,12 @@
     <%= f.text_field :email, class: 'form-control' %>
   </div>
 
-  <% if can? :change_role, @person %>
+  <% if can? :grant_login, Person %>
     <div class="form-group">
-      <%= f.label :role, t(:User_role) %>
-      <%= f.select :role,
-                   options_for_select(Person.roles_for_select(can?(:grant_admin, Person)),
-                                      @person.role),
-                   {}, {class: 'form-control'}  %>
+      <label>
+        <%= f.check_box :has_login %>
+        <%= t :Can_log_in %>
+      </label>
     </div>
   <% end %>
 

@@ -20,7 +20,7 @@
               (<%= t :Cluster_x, name: participant.cluster.name %>)
             <% end %>
           </td>
-          <td><%= participant.roles.collect{|r| t(r)}.join(', ') %></td>
+          <td><%= participant.roles_text %></td>
           <td><%= participant.f_start_date.pretty_print %></td>
           <td><%= participant.f_end_date.try(:pretty_print) %></td>
           <% if can? :manage_participants, program_cluster %>
