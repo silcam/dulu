@@ -1,24 +1,39 @@
 # README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+## Warning
+The Readme is still a work in progress. It actually won't get you very far, because there's a lot of seed data you need to get going, and I don't have that in a useful format right now. So if you're trying to setup Dulu for whatever reason, let me know so I can help you out.
 
-Things you may want to cover:
+## For Development
 
-* Ruby version
+### Prerequisites
+* [Ruby](https://www.ruby-lang.org/en/downloads/) - We're using rbenv and ruby 2.3.3.
+* [PostGreSQL](https://www.postgresql.org/)
 
-* System dependencies
+### Setup
+1. Clone the repo.
 
-* Configuration
+    ```shell
+    git clone https://github.com/silcam/dulu.git
 
-* Database creation
+2. Create databases dulu_dev and dulu_test. See database.yml for the username and password to use.
 
-* Database initialization
+3. Install bundler if you don't already have it
 
-* How to run the test suite
+    ```shell
+    gem install bundler
 
-* Services (job queues, cache servers, search engines, etc.)
+4. Install the necessary gems
 
-* Deployment instructions
+    ```shell
+    cd dulu
+    bundle install
 
-* ...
+5. Initialize the development database
+
+    ```shell
+    rails db:schema:load
+
+6. Start the server. Access Dulu at http://localhost:3000
+
+    ```shell
+    rails s
