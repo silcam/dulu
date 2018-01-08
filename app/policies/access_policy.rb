@@ -8,8 +8,7 @@ class AccessPolicy
       can :read, Audited::Audit
     end
 
-    roles = Role::SUPERVISOR_ROLES
-    role :supervisor, proc{ |u| u.has_role_among?(roles) } do
+    role :supervisor, proc{ |u| u.has_role_among?(Role::SUPERVISOR_ROLES) } do
       can [:grant_login], Person
       can [:create_activity, :manage_participants, :manage_surveys], Program
       can [:manage, :manage_participants], Cluster
@@ -22,8 +21,8 @@ class AccessPolicy
       can :manage, SurveyCompletion
     end
 
-    roles += Role::PARTICIPANT_ROLES
-    role :participant, proc{ |u| u.has_role_among? roles } do
+    part_roles = Role::SUPERVISOR_ROLES + Role::PARTICIPANT_ROLES
+    role :participant, proc{ |u| u.has_role_among? part_roles } do
       can [:create, :read, :update], Person
 
       can [:manage_participants, :create_activity, :manage_surveys], Program do |program, user|

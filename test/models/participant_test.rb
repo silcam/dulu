@@ -8,11 +8,9 @@ class ParticipantTest < ActiveSupport::TestCase
   end
 
   test 'Relations' do
-    consultant = program_roles :TranslationConsultant
     hdi_ezra = translation_activities :HdiEzraActivity
     assert_equal @drew, @drew_hdi.person
     assert_equal @hdi_program, @drew_hdi.program
-    assert_equal consultant, @drew_hdi.program_role
     assert_includes @drew_hdi.activities, hdi_ezra
   end
 
@@ -84,7 +82,7 @@ class ParticipantTest < ActiveSupport::TestCase
     rick = people(:Rick)
     role = program_roles(:Translator)
     {person: rick, program: @hdi_program,
-              program_role: role, start_date: '2017'}.merge merge_params
+              start_date: '2017'}.merge merge_params
 
   end
 end

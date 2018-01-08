@@ -46,14 +46,6 @@ class EventTest < ActiveSupport::TestCase
     assert_nil Event.new.f_end_date
   end
 
-  test "Role Of" do
-    drew = people :Drew
-    rick = people :Rick
-    consultant = program_roles :TranslationConsultant
-    assert_equal consultant, @genesis_check.role_of(drew)
-    assert_nil @genesis_check.role_of(rick)
-  end
-
   test "User Not Associated With Event" do
     rick = people :Rick
     refute @genesis_check.associated_with?(rick), "Rick is not associated with the event"

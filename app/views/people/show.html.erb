@@ -20,7 +20,7 @@
 
 <h4><%= t :Roles %></h4>
 <% unless @person.roles_field.blank? %>
-  <table class="table" style="width: auto;">
+  <table class="table" style="width: auto;" id="roles-table">
     <tr>
       <th><%= t :Role %></th>
       <th><%= t :As_of %></th>
@@ -32,7 +32,7 @@
         <td><%= t person_role.role %></td>
         <td><%= l(person_role.start_date, format: :long) %></td>
         <td>
-          <% if can? :edit_roles, @person %>
+          <% if can? :update, @person %>
               <%= link_to t(:Remove), finish_person_person_role_path(@person, person_role.role), method: :post %>
           <% end %>
         </td>

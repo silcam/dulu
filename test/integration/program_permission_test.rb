@@ -17,12 +17,13 @@ class ProgramPermissionTest < Capybara::Rails::TestCase
     assert_current_path not_allowed_path
   end
 
-  test "Drew can't manage people" do
-    log_in @drew
-    visit program_participants_path @hdi_program
-    refute page_has_link?(new_program_participant_path(@hdi_program)),
-           "Drew shouldn't see manage participants link"
-    visit new_program_participant_path(@hdi_program)
-    assert_current_path not_allowed_path
-  end
+  # Yes he can
+  # test "Drew can't manage people" do
+  #   log_in @drew
+  #   visit program_participants_path @hdi_program
+  #   refute page_has_link?(new_program_participant_path(@hdi_program)),
+  #          "Drew shouldn't see manage participants link"
+  #   visit new_program_participant_path(@hdi_program)
+  #   assert_current_path not_allowed_path
+  # end
 end

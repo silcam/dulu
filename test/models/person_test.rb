@@ -43,9 +43,9 @@ class PersonTest < ActiveSupport::TestCase
   test "Has Role" do
     kevin = people :Kevin
     rick = people :Rick
-    assert rick.has_role(:role_program_responsable), "Rick should be program responsable"
-    assert @drew.has_role(:role_program_responsable), "Drew should be program responsable"
-    refute kevin.has_role(:role_program_responsable), "Kevin should not be program responsable"
+    assert rick.has_role?(:DuluAdmin)
+    assert @drew.has_role?(:TranslationConsultant)
+    refute kevin.has_role?(:TranslationConsultant)
   end
 
   test "Has Login" do
@@ -62,24 +62,9 @@ class PersonTest < ActiveSupport::TestCase
     assert_not_empty participants
   end
 
-  test "Roles List" do
-    assert_equal 5, Person.roles_for_select.count
-    assert_equal 6, Person.roles_for_select(true).count
-  end
-
   test "All Sorted" do
     kevin = people :Kevin
     assert_equal kevin, Person.first
-  end
-
-  test "Get Role Params" do
-    all_false = {}
-    Person::SITE_ROLES.each{|role| all_false[role] = false}
-    user = all_false.clone
-    user[:role_user] = true
-
-    assert_equal all_false, Person.get_role_params('')
-    assert_equal user, Person.get_role_params('0')
   end
 
   test "Search" do

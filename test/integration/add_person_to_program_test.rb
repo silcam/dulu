@@ -25,21 +25,24 @@ class AddPersonToProgram < Capybara::Rails::TestCase
     visit program_participants_path @zulgo_program
     click_link 'Add a person'
     select 'Maust, Drew', from: 'participant_person_id'
-    select 'Translation Consultant', from: 'participant_program_role_id'
+    # select 'Translation Consultant', from: 'participant_program_role_id'
     fill_in_date('participant_start_date', FuzzyDate.new(2016, 7, 31))
     check 'Ezra'
     click_button 'Save'
 
     @drew_zulgo = Participant.find_by(person: @drew, program: @zulgo_program)
-    refute_nil @drew_zulgo
-    assert_equal program_roles(:TranslationConsultant), @drew_zulgo.program_role
+    assert_current_path participant_path(@drew_zulgo)
+    select 'Translation Consultant', from: 'role'
+    click_button 'Add'
+
+    @drew_zulgo.reload
+    assert_equal 'TranslationConsultant', @drew_zulgo.roles_field
     assert_equal '2016-07-31', @drew_zulgo.start_date
     assert page.has_content? 'Drew Maust'
     visit translation_activity_path @zulgo_ezra
     assert page.has_content? 'Drew Maust'
     visit program_participants_path @zulgo_program
     assert page.has_content? 'Drew Maust'
-    # assert page.has_content? 'SIL'
   end
 
   def modify_drew
@@ -47,13 +50,11 @@ class AddPersonToProgram < Capybara::Rails::TestCase
     within(:css, 'div#sidebar'){ click_on 'People' }
     click_link_to program_participants_path(@zulgo_program)
     click_link_to edit_participant_path(@drew_zulgo)
-    select 'Translator', from: 'participant_program_role_id'
     select 'Aug', from: 'participant_start_date_m'
     uncheck 'Ezra'
     click_button 'Save'
 
     @drew_zulgo.reload
-    assert_equal program_roles(:Translator), @drew_zulgo.program_role
     assert_equal '2016-08-31', @drew_zulgo.start_date
     visit translation_activity_path @zulgo_ezra
     refute page.has_content? 'Drew Maust'

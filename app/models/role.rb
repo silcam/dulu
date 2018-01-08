@@ -57,7 +57,7 @@ class Role
     source - assign_to.roles
   end
 
-  def self.grantable_roles(user, person)
+  def self.grantable_roles(user, person=nil)
     if user.has_role? :DuluAdmin
       roles = ROLES
     elsif user.has_role_among? SUPERVISOR_ROLES
@@ -67,6 +67,7 @@ class Role
     else
       roles = []
     end
+    return roles if person.nil?
     available(person, roles)
   end
 

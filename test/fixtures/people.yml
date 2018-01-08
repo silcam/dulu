@@ -29,7 +29,7 @@ Olga:
   email: olga_nka@sil.org
   organization: SIL
   has_login: true
-  roles_field: LPF
+  roles_field: LanguageProgramFacilitator
 
 FormerHdiTranslator:
   first_name: Former

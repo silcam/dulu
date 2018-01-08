@@ -30,26 +30,27 @@ class PersonIntTest < Capybara::Rails::TestCase
 
     visit people_path
     click_link_to person_path(@william)
-    click_link 'Edit Person'
-    select 'Site Administrator', from: 'person_role'
-    click_button 'Save'
-    @william.reload
-    assert @william.has_role(:role_site_admin), "William should be site admin"
+    # click_link 'Edit Person'
+    select 'Dulu Admin', from: 'person_role_role'
+    click_button 'Add'
+    assert_current_path person_path(@william)
+    find('#roles-table').assert_text('Dulu Admin')
 
     log_in @william
-    assert page.has_content? 'William'
+    find('#navbar').assert_text 'William'
   end
 
-  test 'Editing does not accidentally delete role' do
-    log_in @olga
-    visit edit_person_path @olga
-    refute page.has_css? 'select#person_role'
-    # fill_in 'First Name', with: 'OLGA!'
-    click_button 'Save'
-    assert_current_path people_path
-    @olga.reload
-    assert @olga.role_program_supervisor # This should not have changed
-  end
+  # Edit page no longer has any effect on role. Deprecating this test
+  # test 'Editing does not accidentally delete role' do
+  #   log_in @olga
+  #   visit edit_person_path @olga
+  #   refute page.has_css? 'select#person_role'
+  #   # fill_in 'First Name', with: 'OLGA!'
+  #   click_button 'Save'
+  #   assert_current_path people_path
+  #   @olga.reload
+  #   assert @olga.role_program_supervisor # This should not have changed
+  # end
 
   def fill_in_william
     fill_in 'First Name', with: 'William'
@@ -58,7 +59,7 @@ class PersonIntTest < Capybara::Rails::TestCase
     select 'Cameroon', from: 'person_country_id'
     select 'AAA', from: 'person_organization_id'
     fill_in 'Email', with: 'scotland_forever@aol.com'
-    select 'User', from: 'person_role'
+    check 'Able to log in'
     choose 'Français'
   end
 
@@ -66,7 +67,7 @@ class PersonIntTest < Capybara::Rails::TestCase
     {first_name: 'William', last_name: 'Wallace',
     gender: 'M', country: countries(:Cameroon),
     organization: organizations(:AAA),
-    email: 'scotland_forever@aol.com', role_user: true,
+    email: 'scotland_forever@aol.com',
     ui_language: 'fr'}.each_pair do |key, value|
       assert_equal value, @william.send(key)
     end
