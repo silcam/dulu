@@ -3,8 +3,7 @@
   <% if can? :update, @event %>
     <%= link_to t(:Edit),
                 (@program ? edit_program_event_path(@program, @event, referred_by: request.path) : edit_event_path(@event, referred_by: request.path)),
-                class: 'btn btn-warning',
-                style: 'margin-left: 40px'%>
+                class: 'btn btn-warning hdr-btn' %>
   <% end %>
   <br />
   <small>
@@ -16,12 +15,12 @@
   <%= @event.note %>
 </p>
 
-<div class="event-page-section" id="cluster-section">
+<div class="showable-form-section" id="cluster-section">
   <h3>
     <%= t :Clusters %>
     <% if can? :update, @event %>
       <small>
-        <a href="#" data-event-enable-edits><%= t :Edit %></a>
+        <a href="#" data-showable-form-show><%= t :Edit %></a>
       </small>
     <% end %>
   </h3>
@@ -44,16 +43,16 @@
   <%= form_tag form_route, method: :patch, class: 'form-inline not-shown' do %>
     <%= select_tag :event_cluster, options_from_collection_for_select(@event.unassoc_clusters, :id, :name), class: 'form-control' %>
     <%= submit_tag t(:Add), class: 'btn btn-primary' %>
-    <a href="#" data-event-cancel-form class="btn btn-danger"><%= t :Cancel %></a>
+    <a href="#" data-showable-form-hide class="btn btn-danger"><%= t :Cancel %></a>
   <% end %>
 </div>
 
-<div class="event-page-section" id="program-section">
+<div class="showable-form-section" id="program-section">
   <h3>
     <%= t :Programs %>
     <% if can? :update, @event %>
       <small>
-        <a href="#" data-event-enable-edits><%= t :Edit %></a>
+        <a href="#" data-showable-form-show><%= t :Edit %></a>
       </small>
     <% end %>
   </h3>
@@ -76,16 +75,16 @@
   <%= form_tag form_route, method: :patch, class: 'form-inline not-shown' do %>
     <%= select_tag :event_program, options_from_collection_for_select(@event.unassoc_programs, :id, :name), class: 'form-control' %>
     <%= submit_tag t(:Add), class: 'btn btn-primary' %>
-    <a href="#" data-event-cancel-form class="btn btn-danger"><%= t :Cancel %></a>
+    <a href="#" data-showable-form-hide class="btn btn-danger"><%= t :Cancel %></a>
   <% end %>
 </div>
 
-<div class="event-page-section" id="people-section">
+<div class="showable-form-section" id="people-section">
   <h3>
     <%= t :People %>
     <% if can? :update, @event %>
       <small>
-        <a href="#" data-event-enable-edits><%= t :Edit %></a>
+        <a href="#" data-showable-form-show><%= t :Edit %></a>
       </small>
     <% end %>
   </h3>
@@ -110,6 +109,7 @@
   <% form_route = @program ? add_update_program_event_path(@program, @event) : add_update_event_path(@event) %>
   <%= form_tag form_route, method: :patch, class: 'auto-width not-shown' do %>
     <div class="form-group">
+      <label><%= t :Add %></label>
       <%= select_tag 'event_person[id]', options_from_collection_for_select(@event.unassoc_people, :id, :full_name_rev), class: 'form-control' %>
     </div>
     <div class="form-group">
@@ -123,7 +123,7 @@
       <div id="event_person_roles"></div>
     </div>
     <%= submit_tag t(:Add), class: 'btn btn-primary' %>
-    <a href="#" data-event-cancel-form class="btn btn-danger"><%= t :Cancel %></a>
+    <a href="#" data-showable-form-hide class="btn btn-danger"><%= t :Cancel %></a>
   <% end %>
 </div>
 

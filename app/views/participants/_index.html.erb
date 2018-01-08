@@ -8,9 +8,6 @@
       <th><%= t :Role %></th>
       <th><%= t :Joined_program %></th>
       <th><%= t :Left_program %></th>
-      <% if can? :manage_participants, program_cluster %>
-          <th colspan="2"></th>
-      <% end %>
     </tr>
     <% program_cluster.all_participants.each do |participant| %>
         <tr>
@@ -23,10 +20,6 @@
           <td><%= participant.roles_text %></td>
           <td><%= participant.f_start_date.pretty_print %></td>
           <td><%= participant.f_end_date.try(:pretty_print) %></td>
-          <% if can? :manage_participants, program_cluster %>
-              <td><%= link_to t(:Edit), edit_participant_path(participant) %></td>
-              <td><%= link_to t(:Remove), finish_participant_path(participant) if participant.end_date.nil?%></td>
-          <% end %>
         </tr>
     <% end %>
   </table>

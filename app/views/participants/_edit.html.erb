@@ -17,9 +17,22 @@
         </div>
     <% end %>
 
-    <% if defined? @program and !@program.activities.empty? %>
-      <%= render 'associated_activities', associated_activities: @participant.activities %>
+    <% activities = @cluster_program.sorted_activities %>
+    <% unless activities.empty? %>
+      <h3><%= t :Associated_activities %></h3>
+      <% if @program %>
+        <%= render 'associated_activities', activities: activities, associated_activities: @participant.activities %>
+      <% else %>
+        <% program_activities = activities.group_by{ |a| a.program_id } %>
+        <% program_activities.each do |program_id, p_activities| %>
+          <label class="bigger"><%= Program.find(program_id).name %></label>
+          <%= render 'associated_activities', activities: p_activities, associated_activities: @participant.activities %>
+        <% end %>
+      <% end %>
     <% end %>
 
-    <%= form.submit t(:Save), class: 'btn btn-primary btn-lg', data: {'participant_submit' => 1} %>
+    <p>
+      <%= form.submit t(:Save), class: 'btn btn-primary btn-lg', data: {'participant_submit' => 1} %>
+      <%= link_to t(:Cancel), @participant, class: 'btn btn-danger btn-lg' %>
+    </p>
 <% end %>

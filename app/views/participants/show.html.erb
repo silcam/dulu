@@ -5,6 +5,9 @@
       render 'show'
     end
   else
-    render 'show'
+    @cluster = @cluster_program
+    render 'clusters/cluster_header' do
+      render 'show'
+    end
   end
 %>

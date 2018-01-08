@@ -1,8 +1,8 @@
 class ParticipantsController < ApplicationController
 
-  before_action :set_participant, only: [:edit, :update, :finish, :show, :add_role, :remove_role]
+  before_action :set_participant, only: [:edit, :update, :finish, :show, :add_update, :remove_update]
   before_action :set_cluster_program, only: [:index, :new, :create]
-  before_action :authorize_user, only: [:new, :edit, :create, :update, :finish]
+  before_action :authorize_user, only: [:new, :edit, :create, :update, :finish, :add_update, :remove_update]
 
   def index
   end
@@ -46,15 +46,21 @@ class ParticipantsController < ApplicationController
 
   end
 
-  def add_role
-    authorize! :manage_participants, @cluster_program
-    @participant.add_role(params[:role]) if @participant.person.has_role?(params[:role])
+  def add_update
+    if params[:role]
+      @participant.add_role(params[:role]) if @participant.person.has_role?(params[:role])
+    elsif params[:activity_id]
+      @participant.activities << Activity.find(params[:activity_id])
+    end
     redirect_to @participant
   end
 
-  def remove_role
-    authorize! :manage_participants, @cluster_program
-    @participant.remove_role(params[:role])
+  def remove_update
+    if params[:role]
+      @participant.remove_role(params[:role])
+    elsif params[:activity_id]
+      @participant.activities.delete(params[:activity_id])
+    end
     redirect_to @participant
   end
 

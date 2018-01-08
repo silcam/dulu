@@ -16,16 +16,6 @@ $(document).ready ->
         $('#event_end_date_y').val($('#event_start_date_y').val())
 
     when 'events#show'
-      $('a[data-event-enable-edits]').click (e) ->
-        e.preventDefault()
-        $(this).closest('div.event-page-section').find('.not-shown').fadeIn 'fast'
-        $(this).closest('small').fadeOut 'fast'
-
-      $('a[data-event-cancel-form]').click (e) ->
-        e.preventDefault()
-        $(this).closest('div.event-page-section').find('.not-shown').fadeOut 'fast'
-        $(this).closest('div.event-page-section').find('small').first().fadeIn 'fast'
-
-      window.update_person_roles($('select#event_person_id'), $('#event_person_roles'))
+      window.update_participant_roles($('select#event_person_id'), $('#event_person_roles'))
       $('select#event_person_id').change ->
-        update_person_roles($(this), $('#event_person_roles'))
+        window.update_participant_roles($(this), $('#event_person_roles'))

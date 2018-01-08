@@ -1,32 +1,97 @@
 
-<h2><%= @participant.full_name %></h2>
+<h2>
+  <%= @participant.full_name %>
+  <% if can? :manage_participants, @cluster_program %>
+    <%= link_to t(:Edit), edit_participant_path(@participant), class: 'btn btn-warning hdr-btn' %>
+    <% if @participant.end_date.blank? %>
+      <%= link_to t(:Left_program), finish_participant_path(@participant), class: 'btn btn-danger hdr-btn' %>
+    <% end %>
+  <% end %>
+</h2>
 
-<h4><%= t :Roles %></h4>
-<% unless @participant.roles_field.blank? %>
+<div class="showable-form-section">
+  <% roles = @participant.roles %>
+  <h3>
+    <%= t :Roles %>
+    <small>
+      <% if can? :manage_participants, @cluster_program %>
+        <a href="#" data-showable-form-show><%= roles.empty? ? t(:Add) : t(:Edit) %></a>
+      <% end %>
+    </smalL>
+  </h3>
+  <% if roles.empty? %>
+    <p class="shown">None</p>
+  <% else %>
     <table class="table" style="width: auto;">
-      <% @participant.roles.each do |role| %>
-          <tr>
-            <td><%= t role %></td>
-            <td>
-              <% if can? :manage_participants, @cluster_program %>
-                  <%= link_to t(:Remove), remove_role_participant_path(@participant, role: role), method: :delete %>
-              <% end %>
-            </td>
-          </tr>
+      <% roles.each do |role| %>
+        <tr>
+          <td><%= t role %></td>
+          <td class="not-shown">
+            <%= link_to t(:Remove), remove_update_participant_path(@participant, role: role), method: :patch %>
+          </td>
+        </tr>
       <% end %>
     </table>
-<% end %>
+  <% end %>
 
-<p>
-  <% available_roles = Role.available @participant, @participant.person.program_roles %>
-  <% if can? :manage_participants, @cluster_program and not available_roles.empty? %>
-      <%= form_tag(add_role_participant_path(@participant), {class: 'form-inline'}) %>
-    <div class="form-group">
-      <label><%= t :Add_role %></label>
-      <%= select_tag :role, options_for_select(available_roles.collect{ |role| [t(role), role] }), class: 'form-control'  %>
-    </div>
-    <div class="form-group">
-      <%= submit_tag t(:Add), class: 'btn btn-primary' %>
-    </div>
+  <p>
+    <% available_roles = Role.available @participant, @participant.person.program_roles %>
+    <% unless available_roles.empty? %>
+      <%= form_tag(add_update_participant_path(@participant), method: :patch, class: 'form-inline not-shown') do %>
+        <div class="form-group">
+          <label><%= t :Add_role %></label>
+          <%= select_tag :role, options_for_select(available_roles.collect{ |role| [t(role), role] }), class: 'form-control'  %>
+        </div>
+        <div class="form-group">
+          <%= submit_tag t(:Add), class: 'btn btn-primary' %>
+          <a href="#" data-showable-form-hide class="btn btn-danger"><%= t :Cancel %></a>
+        </div>
+      <% end %>
+  <% end %>
+  </p>
+</div>
+
+<% if @program # This section not applicable to clusters %>
+  <div class="showable-form-section">
+    <% activities = @participant.sorted_activities %>
+    <h3>
+      <%= t :Activities %>
+      <small>
+        <% if can? :manage_participants, @cluster_program %>
+          <a href="#" data-showable-form-show><%= activities.empty? ? t(:Add) : t(:Edit) %></a>
+        <% end %>
+      </small>
+    </h3>
+
+    <% unassoc_activities = @participant.unassoc_activities %>
+    <% unless unassoc_activities.empty? %>
+      <p>
+        <%= form_tag add_update_participant_path(@participant), method: :patch, class: 'form-inline not-shown' do %>
+          <label><%= t :Add %></label>
+          <%= select_tag :activity_id, options_from_collection_for_select(unassoc_activities, :id, :name), class: 'form-control' %>
+          <%= submit_tag t(:Add), class: 'btn btn-primary' %>
+          <a href="#" data-showable-form-hide class="btn btn-danger"><%= t :Cancel %></a>
+        <% end %>
+      </p>
+    <% end %>
+
+    <% if activities.empty? %>
+      <p class="shown"><%= t :None %></p>
+    <% else %>
+      <table class="table">
+        <% activities.each do |activity| %>
+          <tr>
+            <td><%= activity.name %></td>
+            <td><%= t activity.current_stage.name %></td>
+            <td><%= activity.participants.collect{ |p| p.full_name }.join(', ') %></td>
+            <td class="not-shown">
+              <%= link_to "#{t(:Remove)} #{@participant.full_name}",
+                          remove_update_participant_path(@participant, activity_id: activity),
+                          method: :patch %>
+            </td>
+          </tr>
+        <% end %>
+      </table>
+    <% end %>
+  </div>
 <% end %>
-</p>

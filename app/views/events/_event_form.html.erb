@@ -2,7 +2,7 @@
 
     <div class="form-group">
       <%= form.label :name, t(:Name) %>
-      <%= form.text_field :name, class: 'form-control', autofocus: true %>
+      <%= form.text_field :name, class: 'form-control', autofocus: true, size: 50 %>
     </div>
 
     <div class="form-group">
@@ -28,3 +28,12 @@
     </div>
 
     <%= form.submit t(:Save), data: {'events-form-submit' => 1}, class: 'btn btn-primary btn-lg' %>
+
+    <%
+      if @event.persisted?
+        return_path = @program ? program_event_path(@program, @event) : event_path(@event)
+      else
+        return_path = @program ? program_events_path(@program) : events_path
+      end
+    %>
+    <%= link_to  t(:Cancel), return_path, class: 'btn btn-danger btn-lg' %>
