@@ -28,7 +28,7 @@ class Cluster < ApplicationRecord
   end
 
   def sorted_translation_activities
-    TranslationActivity.where(program_id: self.programs).joins(:bible_book).order('program_id, bible_books.usfm_number')
+    TranslationActivity.where(program_id: self.programs).joins(:bible_book).order('activities.program_id, bible_books.usfm_number')
   end
 
   def self.search(query)

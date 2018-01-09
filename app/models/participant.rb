@@ -36,11 +36,11 @@ class Participant < ApplicationRecord
 
   def sorted_activities
     activities.joins(:bible_book).order(
-        'activities.type, bible_books.usfm_number')
+        'activities.program_id, activities.type, bible_books.usfm_number')
   end
 
   def unassoc_activities
-    program.sorted_activities.where.not(id: self.activities)
+    cluster_program.sorted_activities.where.not(id: self.activities)
   end
 
   def roles

@@ -15,19 +15,7 @@
       <%= render 'shared/fuzzy_date_field', model: 'participant', field: 'start_date' %>
     </div>
 
-    <% activities = @cluster_program.sorted_activities %>
-    <% unless activities.empty? %>
-      <h3><%= t :Associated_activities %></h3>
-      <% if @program %>
-        <%= render 'associated_activities', activities: activities %>
-      <% else %>
-        <% program_activities = activities.group_by{ |a| a.program_id } %>
-        <% program_activities.each do |program_id, p_activities| %>
-          <label class="bigger"><%= Program.find(program_id).name %></label>
-          <%= render 'associated_activities', activities: p_activities %>
-        <% end %>
-      <% end %>
-    <% end %>
+    <%= render 'associated_activities_section' %>
 
     <p>
       <%= form.submit t(:Save), class: 'btn btn-primary btn-lg', data: {'participant_submit' => 1} %>

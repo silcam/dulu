@@ -1,0 +1,13 @@
+<% activities = @cluster_program.sorted_activities %>
+<% unless activities.empty? %>
+  <h3><%= t :Associated_activities %></h3>
+  <% if @program %>
+    <%= render 'associated_activities', activities: activities, associated_activities: @participant.activities %>
+  <% else %>
+    <% program_activities = activities.group_by{ |a| a.program_id } %>
+    <% program_activities.each do |program_id, p_activities| %>
+      <label class="bigger"><%= Program.find(program_id).name %></label>
+      <%= render 'associated_activities', activities: p_activities, associated_activities: @participant.activities %>
+    <% end %>
+  <% end %>
+<% end %>
