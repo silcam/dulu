@@ -49,7 +49,8 @@ class AddPersonToProgram < Capybara::Rails::TestCase
     visit program_participants_path @zulgo_program
     within(:css, 'div#sidebar'){ click_on 'People' }
     click_link_to program_participants_path(@zulgo_program)
-    click_link_to edit_participant_path(@drew_zulgo)
+    click_link 'Drew Maust'
+    find('h2').click_link 'Edit'
     select 'Aug', from: 'participant_start_date_m'
     uncheck 'Ezra'
     click_button 'Save'
@@ -63,7 +64,8 @@ class AddPersonToProgram < Capybara::Rails::TestCase
   def remove_drew
     visit program_participants_path @zulgo_program
     within(:css, 'div#sidebar'){ click_on 'People' }
-    click_link_to finish_participant_path(@drew_zulgo)
+    click_link 'Drew Maust'
+    find('h2').click_link 'Left Program'
     fill_in_date('participant_end_date', FuzzyDate.new(2017, 7, 31))
     click_button 'Save'
 
