@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180105095703) do
+ActiveRecord::Schema.define(version: 20180109110600) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -294,6 +294,8 @@ ActiveRecord::Schema.define(version: 20180105095703) do
     t.datetime "updated_at",                    null: false
     t.string   "start_date"
     t.boolean  "current",       default: false
+    t.string   "name"
+    t.string   "kind"
     t.index ["activity_id"], name: "index_stages_on_activity_id", using: :btree
     t.index ["stage_name_id"], name: "index_stages_on_stage_name_id", using: :btree
   end

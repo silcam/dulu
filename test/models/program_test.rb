@@ -81,8 +81,8 @@ class ProgramTest < ActiveSupport::TestCase
   end
 
   def percentage_assertions(percents)
-    assert_in_delta 1.2, percents[:ot]['Drafting'], 0.1
-    assert_in_delta 6.6, percents[:ot]['Consultant_check'], 0.1
+    assert_in_delta 1.2, percents[:ot][:Drafting], 0.1
+    assert_in_delta 6.6, percents[:ot][:Consultant_check], 0.1
   end
 
   # test "Current Events" do

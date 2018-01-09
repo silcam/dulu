@@ -8,16 +8,12 @@ class StageTest < ActiveSupport::TestCase
   end
 
   test 'Relations' do
-    translator = program_roles :Translator
-
     assert_equal @hdi_ezra, @hdi_drafting.activity
-    assert_equal @drafting, @hdi_drafting.stage_name
-    assert_includes @hdi_drafting.program_roles, translator
   end
 
   test 'Validation' do
     consultant_check = stage_names :ConsultantCheck
-    params = {activity: @hdi_ezra, stage_name: consultant_check, start_date: Date.today}
+    params = {activity: @hdi_ezra, name: 'Consultant_check', start_date: Date.today, kind: 'Translation'}
     model_validation_hack_test Stage, params
 
     new_stage = Stage.new(activity: @hdi_ezra, stage_name: consultant_check)
@@ -30,9 +26,9 @@ class StageTest < ActiveSupport::TestCase
   end
 
   test 'New For Activity' do
-    consultant_check = stage_names :ConsultantCheck
     new_stage = Stage.new_for @hdi_ezra
-    assert_equal consultant_check, new_stage.stage_name
+    assert_equal :Testing, new_stage.name
+    assert_equal :Translation, new_stage.kind
     assert_equal Date.today.to_s, new_stage.start_date
   end
 
@@ -50,7 +46,7 @@ class StageTest < ActiveSupport::TestCase
   end
 
   test 'Name' do
-    assert_equal 'Drafting', @hdi_drafting.name
+    assert_equal :Drafting, @hdi_drafting.name
   end
 
   test 'f_start_date' do

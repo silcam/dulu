@@ -38,7 +38,6 @@ class EditLanguageTest < Capybara::Rails::TestCase
   test "Drew can't edit other languages" do
     ewondo = languages :Ewondo
     visit language_path ewondo
-    # save_and_open_page
     # refute page.has_content? 'Language Management'
     visit edit_language_path ewondo
     assert_current_path not_allowed_path

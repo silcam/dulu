@@ -1,9 +1,8 @@
 <%= form_for(@stage,
              url: translation_activity_stages_path(@translation_activity)) do |f| %>
   <p>
-    <%= f.label :stage_name, t(:Stage) %>
-    <%= f.collection_select(:stage_name_id, StageName.all.order(:id),
-          :id, :translated_name) %>
+    <%= f.label :name, t(:Stage) %>
+    <%= f.select(:name, options_for_select(Stage::TRANSLATION_STAGES.collect{ |s| [t(s), s]})) %>
   </p>
   <p>
     <%= f.label :start_date, t(:Start_date) %>

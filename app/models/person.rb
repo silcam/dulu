@@ -1,4 +1,9 @@
 class Person < ApplicationRecord
+  include HasRoles
+
+  # DEPRECATED
+  SITE_ROLES = [:role_user, :role_program_responsable, :role_program_supervisor,
+                :role_program_admin, :role_site_admin]
 
   belongs_to :organization, required: false
   belongs_to :country, required: false, counter_cache: true
@@ -15,6 +20,14 @@ class Person < ApplicationRecord
 
   default_scope{ order(:last_name, :first_name) }
 
+  # DEPRECATED
+  def role
+    SITE_ROLES.each_with_index do |role, i|
+      return i if self.send(role)
+    end
+    nil
+  end
+
   def full_name
     "#{first_name} #{last_name}"
   end
@@ -22,18 +35,6 @@ class Person < ApplicationRecord
 
   def full_name_rev
     "#{last_name}, #{first_name}"
-  end
-
-  def roles
-    Role.roles_from_field(roles_field)
-  end
-
-  def program_roles
-    Role.program_roles(roles)
-  end
-
-  def roles_text
-    Role.roles_text roles_field
   end
 
   def add_role(new_role)
@@ -49,18 +50,6 @@ class Person < ApplicationRecord
       update(roles_field: Role.roles_field_without(roles_field, role))
     end
   end
-
-  def has_role?(role)
-    roles.include? role.to_sym
-  end
-
-  def has_role_among?(roles)
-    Role.roles_overlap?(self.roles, roles)
-  end
-
-  # def has_program_role?
-  #   Role.has_a_program_role? self
-  # end
 
   def current_participants
     participants.where(end_date: nil)

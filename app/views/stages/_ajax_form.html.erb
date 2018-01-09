@@ -6,9 +6,8 @@
                remote: true) do |f| %>
     <div class="col-md-3">
       <p>
-        <%= f.label :stage_name, t(:Update_stage) %>
-        <%= f.collection_select(:stage_name_id, StageName.all.order(:id),
-              :id, :translated_name, {}, class: 'form-control') %>
+        <%= f.label :name, t(:Update_stage) %>
+        <%= f.select(:name, options_for_select(Stage::TRANSLATION_STAGES.collect{ |s| [t(s), s]}, @stage.name), {}, class: 'form-control') %>
       </p>
     </div>
     <div class="col-md-5">

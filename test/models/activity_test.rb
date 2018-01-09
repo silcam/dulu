@@ -52,7 +52,7 @@ class ActivityTest < ActiveSupport::TestCase
   end
 
   test 'stage_name' do
-    assert_equal 'Drafting', @hdi_ezra.stage_name
+    assert_equal :Drafting, @hdi_ezra.stage_name
   end
 
   test 'participants for my stage' do

@@ -105,12 +105,12 @@ class Program < ApplicationRecord
   def percentages
     percents = {}
     translations = translation_activities.loaded? ? translation_activities :
-                    translation_activities.includes([:bible_book, :stages => :stage_name]).where(stages: {current: true})
+                    translation_activities.includes([:bible_book, :stages]).where(stages: {current: true})
     translations.each do |translation|
-      unless translation.stages.first.stage_name == StageName.first_translation_stage
+      unless translation.stages.first.name == Stage.first_stage(:Translation)
         bible_book = translation.bible_book
         testament = bible_book.testament
-        stage_name = translation.stages.first.stage_name.name
+        stage_name = translation.stages.first.name
         percents[testament] ||= {}
         percents[testament][stage_name] ||= 0.0;
         percents[testament][stage_name] += bible_book.percent_of_testament
@@ -122,11 +122,11 @@ class Program < ApplicationRecord
   def self.percentages(programs=nil)
     percentages = {}
     unless programs
-      programs = Program.includes(:translation_activities => [:bible_book, :stages => :stage_name])
+      programs = Program.includes(:translation_activities => [:bible_book, :stages])
                         .where(stages: {current: true})
     end
     programs.each do |program|
-      percentages[program.id] = program.percentages()
+      percentages[program.id] = program.percentages
     end
     percentages
   end

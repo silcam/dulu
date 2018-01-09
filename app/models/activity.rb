@@ -14,7 +14,7 @@ class Activity < ApplicationRecord
 
   def current_stage
     self.stages.find_by(current: true) or
-        stages.new(stage_name: StageName.first_stage(kind))
+        stages.new(name: Stage.first_stage(kind), kind: kind)
   end
 
   def update_current_stage
@@ -26,7 +26,7 @@ class Activity < ApplicationRecord
   end
 
   def kind
-    type.gsub('Activity', '').downcase
+    type.gsub('Activity', '').to_sym
   end
 
   def progress
@@ -38,7 +38,8 @@ class Activity < ApplicationRecord
   end
 
   def participants_for_my_stage
-    current_participants.where(program_role: current_stage.program_roles)
+    roles = current_stage.roles
+    current_participants.where_has_role_among roles
   end
 
   def current_participants

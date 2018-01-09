@@ -1,4 +1,6 @@
 class Participant < ApplicationRecord
+  include HasRoles
+
   belongs_to :person, required: true
   belongs_to :program, required: false
   belongs_to :cluster, required: false
@@ -41,22 +43,6 @@ class Participant < ApplicationRecord
 
   def unassoc_activities
     cluster_program.sorted_activities.where.not(id: self.activities)
-  end
-
-  def roles
-    Role.roles_from_field roles_field
-  end
-
-  def roles_text
-    Role.roles_text roles_field
-  end
-
-  def add_role(new_role)
-    update roles_field: Role.roles_field_with(roles_field, new_role)
-  end
-
-  def remove_role(role)
-    update roles_field: Role.roles_field_without(roles_field, role)
   end
 
   private

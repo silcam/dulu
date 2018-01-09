@@ -4,11 +4,11 @@
     <div id="translations">
       <h3><%= t :Translations_by_stage %></h3>
       <table class="table">
-        <% StageName.translation_stages.each do |stage_name| %>
+        <% Stage::TRANSLATION_STAGES.each do |stage_name| %>
             <tr>
-              <td class="bigger"><%= Stage.where(stage_name: stage_name, current: true).count %></td>
+              <td class="bigger"><%= Stage.where(name: stage_name, current: true).count %></td>
               <td>
-                <%= t(stage_name.name) %>
+                <%= t(stage_name) %>
               </td>
             </tr>
         <% end %>

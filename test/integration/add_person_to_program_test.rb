@@ -36,7 +36,7 @@ class AddPersonToProgram < Capybara::Rails::TestCase
     click_button 'Add'
 
     @drew_zulgo.reload
-    assert_equal 'TranslationConsultant', @drew_zulgo.roles_field
+    assert_equal '|TranslationConsultant|', @drew_zulgo.roles_field
     assert_equal '2016-07-31', @drew_zulgo.start_date
     assert page.has_content? 'Drew Maust'
     visit translation_activity_path @zulgo_ezra

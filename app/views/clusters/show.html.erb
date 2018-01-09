@@ -13,7 +13,7 @@
   <% end %>
 
   <% percentages = Program.percentages @cluster.programs %>
-  <% t_stages = StageName.translation_stages %>
+  <% t_stages = Stage::TRANSLATION_STAGES %>
   <table class="table">
     <% @cluster.programs.each do |program| %>
       <tr>
