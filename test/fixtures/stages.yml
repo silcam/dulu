@@ -1,48 +1,57 @@
 HdiOne:
-  activity: HdiEzraActivity
-  stage_name: Planned
+  activity: HdiEzra
+  name: Planned
+  kind: Translation
   start_date: 2017-01
 
 HdiTwo:
-  activity: HdiEzraActivity
-  stage_name: Drafting
+  activity: HdiEzra
+  name: Drafting
+  kind: Translation
   start_date: 2017-02
   current: true
 
 HdiGenesisOne:
-  activity: HdiGenesisActivity
-  stage_name: Planned
+  activity: HdiGenesis
+  name: Planned
+  kind: Translation
   start_date: 2015
 
 HdiGenesisTwo:
-  activity: HdiGenesisActivity
-  stage_name: Drafting
+  activity: HdiGenesis
+  name: Drafting
+  kind: Translation
   start_date: 2016-05
 
 HdiGenesisThree:
-  activity: HdiGenesisActivity
-  stage_name: ConsultantCheck
+  activity: HdiGenesis
+  name: Consultant_check
+  kind: Translation
   start_date: 2017-05-29
   current: true
 
 ZulgoEzraOne:
-  activity: ZulgoEzraActivity
-  stage_name: Planned
+  activity: ZulgoEzra
+  name: Planned
+  kind: Translation
   start_date: 2015
 
 ZulgoEzraTwo:
-  activity: ZulgoEzraActivity
-  stage_name: Drafting
+  activity: ZulgoEzra
+  name: Drafting
+  kind: Translation
   start_date: 2016-05
 
 ZulgoEzraThree:
-  activity: ZulgoEzraActivity
-  stage_name: ConsultantCheck
+  activity: ZulgoEzra
+  name: Consultant_check
+  kind: Translation
   start_date: 2017-05-29
   current: true
 
 ReallyOldOne:
   activity: ReallyOldActivity
-  stage_name: Planned
+  name: Planned
+  kind: Translation
   start_date: 1950
   current: true

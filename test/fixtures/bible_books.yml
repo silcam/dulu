@@ -5,6 +5,13 @@ Genesis:
   number_of_chapters: 50
   number_of_verses: 1533
 
+Exodus:
+  english_name: 'Exodus'
+  french_name: 'Exode'
+  usfm_number: 2
+  number_of_chapters: 40
+  number_of_verses: 1000
+
 Ezra:
   english_name: 'Ezra'
   french_name: 'Esdras'

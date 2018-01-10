@@ -4,11 +4,6 @@
     <%= hidden_field_tag :this_action, 'edit' %>
 
     <div class="form-group">
-      <%= form.label :program_role_id, t(:Role) %>
-      <%= form.collection_select :program_role_id, ProgramRole.sorted, :id, :t_name, {}, {class: 'form-control'} %>
-    </div>
-
-    <div class="form-group">
       <%= form.label :start_date, t(:Start_date) %>
       <%= render 'shared/fuzzy_date_field', model: 'participant',
                  field: 'start_date', fdate: @participant.f_start_date %>
@@ -22,9 +17,10 @@
         </div>
     <% end %>
 
-    <% if defined? @program and !@program.activities.empty? %>
-      <%= render 'associated_activities', associated_activities: @participant.activities %>
-    <% end %>
+    <%= render 'associated_activities_section' %>
 
-    <%= form.submit t(:Save), class: 'btn btn-primary btn-lg', data: {'participant_submit' => 1} %>
+    <p>
+      <%= form.submit t(:Save), class: 'btn btn-primary btn-lg', data: {'participant_submit' => 1} %>
+      <%= link_to t(:Cancel), @participant, class: 'btn btn-danger btn-lg' %>
+    </p>
 <% end %>

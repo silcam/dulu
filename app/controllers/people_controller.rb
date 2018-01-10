@@ -6,6 +6,10 @@ class PeopleController < ApplicationController
   end
 
   def show
+    respond_to do |format|
+      format.html
+      format.json { render json: @person.to_hash }
+    end
   end
 
   # noinspection RubyArgCount
@@ -49,12 +53,9 @@ class PeopleController < ApplicationController
 
 private
   def person_params
-    p_params = params.require(:person).permit(:first_name, :last_name ,:email, :birth_date,
-                                  :organization_id, :gender, :country_id,
-                                  :ui_language)
-    p_params.merge!(Person.get_role_params(params[:person][:role])) unless params[:person][:role].blank?
-    authorize!(:grant_admin, Person) if p_params[:role_site_admin]
-    return p_params
+    permitted = %i( first_name last_name email birth_date organization_id gender country_id ui_language )
+    permitted << :has_login if can? :grant_login, Person
+    params.require(:person).permit(permitted)
   end
 
   def set_person

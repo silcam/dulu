@@ -26,7 +26,7 @@ $(document).ready ->
     e.preventDefault()
     $(this).fadeOut('fast', ->
       $('#update-stage-form').fadeIn('fast', ->
-        $('select#stage_stage_name_id').focus()
+        $('select#stage_name').focus()
       )
     )
 

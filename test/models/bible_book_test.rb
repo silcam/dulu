@@ -8,7 +8,7 @@ class BibleBookTest < ActiveSupport::TestCase
   end
 
   test 'Relations' do
-    @hdi_ezra = translation_activities(:HdiEzraActivity)
+    @hdi_ezra = translation_activities(:HdiEzra)
     @ezra = bible_books(:Ezra)
     assert_includes @ezra.translation_activities, @hdi_ezra
   end
@@ -43,14 +43,14 @@ class BibleBookTest < ActiveSupport::TestCase
   end
 
   test "Options for Select All" do
-    options = BibleBook.options_for_select(programs :EwondoProgram)
+    options = BibleBook.options_for_select(programs :Ewondo)
     assert_equal(['New Testament', 'nt'], options[0])
     assert_equal('Genesis', options[2][0])
     assert_equal(BibleBook.all.count + 2, options.count)
   end
 
   test "Options for Select Limited" do
-    options = BibleBook.options_for_select(programs :HdiProgram)
+    options = BibleBook.options_for_select(programs :Hdi)
     genesis = bible_books :Genesis
     john = bible_books :John
     refute_includes options, ['Old Testament', 'ot']

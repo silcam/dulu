@@ -3,8 +3,8 @@ require 'test_helper'
 class ActivityPermissionTest < Capybara::Rails::TestCase
   def setup
     @kevin = people :Kevin
-    @hdi_program = programs :HdiProgram
-    @hdi_ezra = translation_activities :HdiEzraActivity
+    @hdi_program = programs :Hdi
+    @hdi_ezra = translation_activities :HdiEzra
 
     #Capybara.current_driver = :selenium
   end

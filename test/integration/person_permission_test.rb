@@ -25,15 +25,13 @@ class PersonPermissionTest < Capybara::Rails::TestCase
 
   test "Olga can't make Admin or change own role" do
     log_in @rick
-    visit edit_person_path @rick
-    assert page.has_content?('Role'), "Rick should see role select"
-    assert page.has_content?('Site Administrator'), "Rick should have Site Admin option"
+    visit person_path @olga
+    assert page.has_selector?('#person_role_role'), "Rick should see role select"
+    assert page.has_content?('Dulu Admin'), "Rick should have Site Admin option"
     log_in @olga
-    visit edit_person_path @olga
-    refute page.has_content?('Role'), "Olga should not see her own Role selector"
-    visit edit_person_path @kevin
-    assert page.has_content?('Role'), "Olga should see role select for Kevin"
-    refute page.has_content?('Site Administrator'), "Olga should not see Site Admin option for kevin"
+    visit person_path @kevin
+    assert page.has_selector?('#person_role_role'), "Olga should see role select"
+    refute page.has_content?('Dulu Admin'), "Olga can't make Kevin a Dulu Admin"
     #
     # select 'Site Administrator', from: 'person_role'
     # click_button 'Update Person'

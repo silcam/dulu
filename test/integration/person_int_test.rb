@@ -2,6 +2,7 @@ require 'test_helper'
 
 class PersonIntTest < Capybara::Rails::TestCase
   def setup
+    Capybara.current_driver = :webkit
     @kevin = people :Kevin
     @rick = people :Rick
     @olga = people :Olga
@@ -14,9 +15,8 @@ class PersonIntTest < Capybara::Rails::TestCase
     fill_in 'First Name', with: 'William'
     fill_in 'Last Name', with: 'Wallace'
     click_button 'Save'
-    @kevin.reload
-    assert_equal 'William', @kevin.first_name
-    assert_equal 'Wallace', @kevin.last_name
+
+    find('#navbar').assert_text 'William'
   end
 
   test 'Rick create William Wallace' do
@@ -25,31 +25,52 @@ class PersonIntTest < Capybara::Rails::TestCase
     click_link 'Add Person'
     fill_in_william
     click_button 'Save'
-    @william = Person.find_by last_name: 'Wallace'
-    check_william
 
-    visit people_path
-    click_link_to person_path(@william)
-    click_link 'Edit Person'
-    select 'Site Administrator', from: 'person_role'
-    click_button 'Save'
-    @william.reload
-    assert @william.has_role(:role_site_admin), "William should be site admin"
+    click_link 'Wallace, William'
+    assert_text 'William Wallace'
+    assert_text 'AAA'
+    assert_text 'scotland_forever@aol.com'
 
+    @william = Person.find_by first_name: 'William'
     log_in @william
-    assert page.has_content? 'William'
+    find('#navbar').assert_text 'William'
   end
 
-  test 'Editing does not accidentally delete role' do
-    log_in @olga
-    visit edit_person_path @olga
-    refute page.has_css? 'select#person_role'
-    # fill_in 'First Name', with: 'OLGA!'
-    click_button 'Save'
-    assert_current_path people_path
-    @olga.reload
-    assert @olga.role_program_supervisor # This should not have changed
+  test "Add Role" do
+    log_in @rick
+    visit person_path @kevin
+    find('h4', text: 'Roles').click_on 'Add'
+    select 'Dulu Admin', from: 'person_role_role'
+    click_on 'Add'
+    within('div.showable-form-section') do
+      assert_text 'Dulu Admin'
+    end
   end
+
+  test "Remove Role" do
+    log_in @rick
+    visit person_path @olga
+    find('h4', text: 'Roles').click_on 'Edit'
+    within('div.showable-form-section') do
+      find('tr', text: 'Language Program Facilitator').click_on 'Remove'
+    end
+    within('div.showable-form-section') do
+      assert_no_text 'Language Program Facilitator'
+      assert_text 'None'
+    end
+  end
+
+  # Edit page no longer has any effect on role. Deprecating this test
+  # test 'Editing does not accidentally delete role' do
+  #   log_in @olga
+  #   visit edit_person_path @olga
+  #   refute page.has_css? 'select#person_role'
+  #   # fill_in 'First Name', with: 'OLGA!'
+  #   click_button 'Save'
+  #   assert_current_path people_path
+  #   @olga.reload
+  #   assert @olga.role_program_supervisor # This should not have changed
+  # end
 
   def fill_in_william
     fill_in 'First Name', with: 'William'
@@ -58,17 +79,17 @@ class PersonIntTest < Capybara::Rails::TestCase
     select 'Cameroon', from: 'person_country_id'
     select 'AAA', from: 'person_organization_id'
     fill_in 'Email', with: 'scotland_forever@aol.com'
-    select 'User', from: 'person_role'
+    check 'Able to log in'
     choose 'Français'
   end
 
-  def check_william
-    {first_name: 'William', last_name: 'Wallace',
-    gender: 'M', country: countries(:Cameroon),
-    organization: organizations(:AAA),
-    email: 'scotland_forever@aol.com', role_user: true,
-    ui_language: 'fr'}.each_pair do |key, value|
-      assert_equal value, @william.send(key)
-    end
-  end
+  # def check_william
+  #   {first_name: 'William', last_name: 'Wallace',
+  #   gender: 'M', country: countries(:Cameroon),
+  #   organization: organizations(:AAA),
+  #   email: 'scotland_forever@aol.com',
+  #   ui_language: 'fr'}.each_pair do |key, value|
+  #     assert_equal value, @william.send(key)
+  #   end
+  # end
 end

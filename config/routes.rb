@@ -21,12 +21,21 @@ Rails.application.routes.draw do
   get     '/surveys/:id',                             to: 'survey_completions#show', as: :survey
   get     '/surveys/:id/report/:report',              to: 'survey_completions#report', as: :survey_report
 
+
   resources :people do
     get 'find', on: :collection
+    resources :person_roles do
+      post 'finish', on: :member
+    end
   end
   resources :organizations
   resources :languages
-  resources :events
+  resources :events do
+    member do
+      patch 'add_update'
+      patch 'remove_update'
+    end
+  end
   resources :audits, only: [:index, :show]
 
   resources :clusters do
@@ -34,6 +43,8 @@ Rails.application.routes.draw do
       member do
         get 'finish'
         patch 'finish'
+        patch 'add_update'
+        patch 'remove_update'
       end
     end
   end
@@ -50,9 +61,16 @@ Rails.application.routes.draw do
       member do
         get 'finish'
         patch 'finish'
+        patch 'add_update'
+        patch 'remove_update'
       end
     end
-    resources :events
+    resources :events do
+      member do
+        patch 'add_update'
+        patch 'remove_update'
+      end
+    end
     resources :publications, shallow: true
     resources :domain_updates, shallow: true
   end

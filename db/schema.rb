@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171128133743) do
+ActiveRecord::Schema.define(version: 20180109110600) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -118,6 +118,7 @@ ActiveRecord::Schema.define(version: 20171128133743) do
     t.integer  "program_role_id"
     t.datetime "created_at",      null: false
     t.datetime "updated_at",      null: false
+    t.string   "roles_field"
     t.index ["event_id"], name: "index_event_participants_on_event_id", using: :btree
     t.index ["person_id"], name: "index_event_participants_on_person_id", using: :btree
     t.index ["program_role_id"], name: "index_event_participants_on_program_role_id", using: :btree
@@ -190,6 +191,7 @@ ActiveRecord::Schema.define(version: 20171128133743) do
     t.datetime "created_at",      null: false
     t.datetime "updated_at",      null: false
     t.integer  "cluster_id"
+    t.string   "roles_field"
     t.index ["cluster_id"], name: "index_participants_on_cluster_id", using: :btree
     t.index ["person_id"], name: "index_participants_on_person_id", using: :btree
     t.index ["program_id"], name: "index_participants_on_program_id", using: :btree
@@ -216,8 +218,20 @@ ActiveRecord::Schema.define(version: 20171128133743) do
     t.boolean  "role_program_admin",                 default: false
     t.boolean  "role_site_admin",                    default: false
     t.date     "last_access"
+    t.string   "roles_field"
+    t.boolean  "has_login",                          default: false
     t.index ["country_id"], name: "index_people_on_country_id", using: :btree
     t.index ["organization_id"], name: "index_people_on_organization_id", using: :btree
+  end
+
+  create_table "person_roles", force: :cascade do |t|
+    t.integer  "person_id"
+    t.string   "role"
+    t.date     "start_date"
+    t.date     "end_date"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["person_id"], name: "index_person_roles_on_person_id", using: :btree
   end
 
   create_table "program_roles", force: :cascade do |t|
@@ -280,6 +294,8 @@ ActiveRecord::Schema.define(version: 20171128133743) do
     t.datetime "updated_at",                    null: false
     t.string   "start_date"
     t.boolean  "current",       default: false
+    t.string   "name"
+    t.string   "kind"
     t.index ["activity_id"], name: "index_stages_on_activity_id", using: :btree
     t.index ["stage_name_id"], name: "index_stages_on_stage_name_id", using: :btree
   end

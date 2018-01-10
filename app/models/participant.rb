@@ -1,8 +1,10 @@
 class Participant < ApplicationRecord
+  include HasRoles
+
   belongs_to :person, required: true
   belongs_to :program, required: false
   belongs_to :cluster, required: false
-  belongs_to :program_role, required: true
+  belongs_to :program_role, required: false
   has_and_belongs_to_many :activities
 
   audited associated_with: :program
@@ -18,21 +20,7 @@ class Participant < ApplicationRecord
 
   def associate_activities(activity_ids)
     activity_ids ||= []
-    remove_deleted_associations activity_ids
-    add_new_associations activity_ids
-  end
-
-  def remove_deleted_associations(activity_ids)
-    self.activities.each do |activity|
-      self.activities.delete(activity) unless activity_ids.include? activity.id
-    end
-  end
-
-  def add_new_associations(activity_ids)
-    activity_ids.each do |activity_id|
-      activity = Activity.find activity_id
-      self.activities << activity unless self.activities.include? activity
-    end
+    self.activities = Activity.where(id: activity_ids)
   end
 
   def full_name
@@ -50,7 +38,11 @@ class Participant < ApplicationRecord
 
   def sorted_activities
     activities.joins(:bible_book).order(
-        'activities.type, bible_books.usfm_number')
+        'activities.program_id, activities.type, bible_books.usfm_number')
+  end
+
+  def unassoc_activities
+    cluster_program.sorted_activities.where.not(id: self.activities)
   end
 
   private

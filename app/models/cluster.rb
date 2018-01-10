@@ -22,6 +22,15 @@ class Cluster < ApplicationRecord
     I18n.t(:Cluster_x, name: name)
   end
 
+
+  def sorted_activities
+    sorted_translation_activities
+  end
+
+  def sorted_translation_activities
+    TranslationActivity.where(program_id: self.programs).joins(:bible_book).order('activities.program_id, bible_books.usfm_number')
+  end
+
   def self.search(query)
     clusters = Cluster.where("name ILIKE ?", "%#{query}%")
     results = []

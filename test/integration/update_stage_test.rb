@@ -5,7 +5,7 @@ class UpdateStageTest < Capybara::Rails::TestCase
     Capybara.current_driver = :webkit
     # page.driver.enable_logging
     I18n.locale = :en
-    @hdi_ezra = translation_activities(:HdiEzraActivity)
+    @hdi_ezra = translation_activities(:HdiEzra)
     @fdate = FuzzyDate.new(2017, 7)
     log_in(people(:Drew))
     visit translation_activity_path(@hdi_ezra)
@@ -16,12 +16,11 @@ class UpdateStageTest < Capybara::Rails::TestCase
     click_button 'Update'
     fill_in_date 'stage_start_date', @fdate
     click_button 'Save'
-    sleep 5
     assert find_button('Update')
-    assert page.has_content? "Current stage: #{I18n.t(:Consultant_check)}"
+    assert page.has_content? "Current stage: #{I18n.t(:Testing)}"
     within(:css, '#dulutable') do
       new_row = first(:css, 'tr')
-      assert new_row.has_content? I18n.t(:Consultant_check)
+      assert new_row.has_content? I18n.t(:Testing)
       assert new_row.has_content? @fdate.pretty_print
     end
   end

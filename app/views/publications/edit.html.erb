@@ -12,8 +12,7 @@
                   method: :delete,
                   data: {confirm: t(:Delete_pub_confirmation,
                                     title: @publication.name)},
-                  class: 'btn btn-danger',
-                  style: 'margin-left: 40px' %>
+                  class: 'btn btn-danger hdr-btn' %>
   </h2>
 
   <%= form_for @publication, html: {class: 'auto-width'} do |form| %>

@@ -46,8 +46,7 @@ class Statistic
   end
 
   def latest_translation_started
-    drafting = StageName.find_by(kind: 'translation', level: 2)
-    translation = Stage.order("start_date DESC").find_by(stage_name: drafting).activity
+    translation = Stage.order("start_date DESC").find_by(name: 'Drafting').activity
     @title = I18n.t(:Translation_started)
     @model = translation.program
     @description = "#{@model.name} #{translation.bible_book.name}"

@@ -14,19 +14,11 @@ class Activity < ApplicationRecord
 
   def current_stage
     self.stages.find_by(current: true) or
-        stages.new(stage_name: StageName.first_stage(kind))
-  end
-
-  def update_current_stage
-    my_stages = stages.order(start_date: :desc, id: :desc)
-    unless my_stages.empty?
-      my_stages.update(current: false)
-      my_stages.first.update(current: true)
-    end
+        stages.new(name: Stage.first_stage(kind), kind: kind)
   end
 
   def kind
-    type.gsub('Activity', '').downcase
+    type.gsub('Activity', '').to_sym
   end
 
   def progress
@@ -38,7 +30,8 @@ class Activity < ApplicationRecord
   end
 
   def participants_for_my_stage
-    current_participants.where(program_role: current_stage.program_roles)
+    roles = current_stage.roles
+    current_participants.where_has_role_among roles
   end
 
   def current_participants
@@ -70,5 +63,15 @@ class Activity < ApplicationRecord
 
   def self.search(query)
     TranslationActivity.search(query)
+  end
+
+  private
+
+  def update_current_stage
+    my_stages = stages.order(start_date: :desc, id: :desc)
+    unless my_stages.empty?
+      my_stages.update(current: false)
+      my_stages.first.update(current: true)
+    end
   end
 end

@@ -3,7 +3,7 @@
 
 <% if can? :update, @person %>
     <div>
-      <%= link_to t(:Edit_person), edit_person_path(@person) %>
+      <%= link_to t(:Edit_person), edit_person_path(@person, referred_by: request.path) %>
     </div>
 <% end %>
 
@@ -16,21 +16,91 @@
     <th><%= t :Email %></th>
     <td><%= @person.email %></td>
   </tr>
-  <% if can? :update, @person %>
-    <tr>
-      <th><%= t :User_role %></th>
-      <td><%= t @person.role_text %></td>
-    </tr>
-  <% end %>
 </table>
 
-<table class="table">
-  <% @person.participants.each do |participant| %>
-    <tr>
-      <td>
-        <%= link_to participant.cluster_program.display_name, participant.cluster_program %>
-         - <%= t(participant.program_role.name) %>
-      </td>
-    </tr>
+<div class="showable-form-section">
+  <h4>
+    <%= t :Roles %>
+    <% if can? :update, @person %>
+      <small>
+        <a href="#" data-showable-form-show><%= @person.roles_field.blank? ? t(:Add) : t(:Edit) %></a>
+        <a href="#" data-showable-form-hide class="not-shown"><%= t(:Cancel) %></a>
+      </small>
+    <% end %>
+  </h4>
+
+  <% if @person.roles_field.blank? %>
+    <p class="shown">
+      <%= t(:None) %>
+    </p>
+  <% else %>
+    <table class="table" style="width: auto;" id="roles-table">
+      <tr>
+        <th><%= t :Role %></th>
+        <th><%= t :As_of %></th>
+        <th>
+        </th>
+      </tr>
+      <% @person.person_roles.current.each do |person_role| %>
+        <tr>
+          <td><%= t person_role.role %></td>
+          <td><%= l(person_role.start_date, format: :long) %></td>
+          <td class="not-shown">
+            <%= link_to t(:Remove), finish_person_person_role_path(@person, person_role.role), method: :post %>
+          </td>
+        </tr>
+      <% end %>
+    </table>
   <% end %>
-</table>
+
+  <p>
+    <% grantable_roles = Role.grantable_roles(current_user, @person) %>
+    <% unless grantable_roles.empty? %>
+      <%= form_for :person_role, url: person_person_roles_path(@person), html: {class: 'form-inline not-shown'} do |form| %>
+        <div class="form-group">
+          <label><%= t :Add_role %></label>
+          <%= form.select :role, grantable_roles.collect{ |role| [t(role), role] }.sort, {}, class: 'form-control'  %>
+        </div>
+        <div class="form-group">
+          <%= form.submit t(:Add), class: 'btn btn-primary' %>
+          <a href="#" data-showable-form-hide class="btn btn-danger"><%= t :Cancel %></a>
+        </div>
+      <% end %>
+    <% end %>
+  </p>
+</div>
+
+
+<% participants = @person.current_participants %>
+<% unless participants.empty? %>
+  <h4>
+    <%= t :Current_programs %>
+  </h4>
+  <table class="table auto-width">
+    <% participants.each do |participant| %>
+      <tr>
+        <td>
+          <%= link_to participant.cluster_program.display_name, participant.cluster_program %>
+           - <%= participant.roles_text %>
+        </td>
+      </tr>
+    <% end %>
+  </table>
+<% end %>
+
+<% participants = @person.participants.where('end_date IS NOT NULL') %>
+<% unless participants.empty? %>
+  <h4>
+    <%= t :Previous_programs %>
+  </h4>
+  <table class="table auto-width">
+    <% participants.each do |participant| %>
+      <tr>
+        <td>
+          <%= link_to participant.cluster_program.display_name, participant.cluster_program %>
+          - <%= participant.roles_text %>
+        </td>
+      </tr>
+    <% end %>
+  </table>
+<% end %>

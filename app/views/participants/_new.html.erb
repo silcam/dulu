@@ -11,19 +11,13 @@
     </div>
 
     <div class="form-group">
-      <%= form.label :program_role_id, t(:Role) %>
-      <%= form.collection_select :program_role_id, ProgramRole.sorted, :id, :t_name, {},
-                                 {class: 'form-control'} %>
-    </div>
-
-    <div class="form-group">
       <%= form.label :start_date, t(:Start_date) %>
       <%= render 'shared/fuzzy_date_field', model: 'participant', field: 'start_date' %>
     </div>
 
-    <% if defined?(@program) and !@program.activities.empty? %>
-      <%= render 'associated_activities' %>
-    <% end %>
+    <%= render 'associated_activities_section' %>
 
-    <%= form.submit t(:Save), class: 'btn btn-primary btn-lg', data: {'participant_submit' => 1} %>
+    <p>
+      <%= form.submit t(:Save), class: 'btn btn-primary btn-lg', data: {'participant_submit' => 1} %>
+    </p>
 <% end %>

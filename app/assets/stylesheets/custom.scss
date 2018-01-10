@@ -158,6 +158,14 @@ body {
   font-size: 18px;
 }
 
+.hdr-btn {
+  margin-left: 40px;
+}
+
+.not-shown {
+  display: none;
+}
+
 @media (min-width: 768px) {
   .main {
     padding-right: 40px;
@@ -184,6 +192,16 @@ a.h4, a.h3 {
 
 table.auto-width {
   width: auto;
+}
+
+table.table.borderless {
+  tbody{
+    tr{
+      td{
+        border-top: none;
+      }
+    }
+  }
 }
 
 .space-below{

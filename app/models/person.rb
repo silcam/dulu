@@ -1,4 +1,7 @@
 class Person < ApplicationRecord
+  include HasRoles
+
+  # DEPRECATED
   SITE_ROLES = [:role_user, :role_program_responsable, :role_program_supervisor,
                 :role_program_admin, :role_site_admin]
 
@@ -6,6 +9,7 @@ class Person < ApplicationRecord
   belongs_to :country, required: false, counter_cache: true
   has_many :participants
   has_many :programs, through: :participants
+  has_many :person_roles
 
   audited
 
@@ -16,6 +20,14 @@ class Person < ApplicationRecord
 
   default_scope{ order(:last_name, :first_name) }
 
+  # DEPRECATED
+  def role
+    SITE_ROLES.each_with_index do |role, i|
+      return i if self.send(role)
+    end
+    nil
+  end
+
   def full_name
     "#{first_name} #{last_name}"
   end
@@ -25,30 +37,18 @@ class Person < ApplicationRecord
     "#{last_name}, #{first_name}"
   end
 
-  def role
-    SITE_ROLES.each_with_index do |role, i|
-      return i if self.send(role)
+  def add_role(new_role)
+    transaction do
+      person_roles.create(role: new_role, start_date: Date.today)
+      add_to_roles_field(new_role)
     end
-    nil
   end
 
-  def role_text
-    r = role
-    r.nil? ? :role_none : SITE_ROLES[r]
-  end
-
-  def has_role(role)
-    (SITE_ROLES.index(role) .. SITE_ROLES.count-1).each do |i|
-      return true if self.send(SITE_ROLES[i])
+  def remove_role(role)
+    transaction do
+      person_roles.find_by(role: role, end_date: nil).try(:update, {end_date: Date.today})
+      remove_from_roles_field(role)
     end
-    return false
-  end
-
-  def has_login
-    SITE_ROLES.each do |role|
-      return true if self.send(role)
-    end
-    return false
   end
 
   def current_participants
@@ -67,20 +67,14 @@ class Person < ApplicationRecord
     programs
   end
 
-  def self.roles_for_select(include_admin = false)
-    roles = [[I18n.t(:role_none), '-1']]
-    SITE_ROLES.each_with_index do |role, i|
-      roles << [I18n.t(role), i] unless(role==:role_site_admin && !include_admin)
-    end
-    roles
-  end
-
-  def self.get_role_params(role_index_str)
-    role_params = {}
-    SITE_ROLES.each_with_index do |role, i|
-      role_params[role] = (i.to_s==role_index_str) ? true : false
-    end
-    return role_params
+  def to_hash
+    roles = self.roles.collect{ |r| {role: r, t_role: I18n.t(r)}}
+    {
+        id: id,
+        first_name: first_name,
+        last_name: last_name,
+        roles: roles
+    }
   end
 
   def self.search(query)
@@ -91,7 +85,7 @@ class Person < ApplicationRecord
       person.current_participants.each do |participant|
         subresults << {title: participant.cluster_program.display_name,
                        model: participant.cluster_program,
-                       description: I18n.t(participant.program_role.name)}
+                       description: participant.roles_text}
       end
       results << {title: person.name,
                   model: person,

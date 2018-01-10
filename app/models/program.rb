@@ -15,23 +15,12 @@ class Program < ApplicationRecord
   belongs_to :language
   has_one :cluster, through: :language
 
+  default_scope { includes(:language).order('languages.name') }
 
   def name
     language.name
   end
   alias display_name name
-
-  # Do we still use this?
-  # def latest_update
-  #   my_stages = Stage.joins(:activity).where(activities: {program: self})
-  #   return nil if my_stages.empty?
-  #   date = my_stages.first.f_start_date
-  #   my_stages.each do |stage|
-  #     stage_date = stage.f_start_date
-  #     date = stage_date if stage_date.after? date
-  #   end
-  #   return date
-  # end
 
   def all_participants
     cluster.nil? ?
@@ -104,12 +93,12 @@ class Program < ApplicationRecord
   def percentages
     percents = {}
     translations = translation_activities.loaded? ? translation_activities :
-                    translation_activities.includes([:bible_book, :stages => :stage_name]).where(stages: {current: true})
+                    translation_activities.includes([:bible_book, :stages]).where(stages: {current: true})
     translations.each do |translation|
-      unless translation.stages.first.stage_name == StageName.first_translation_stage
+      unless translation.stages.first.name == Stage.first_stage(:Translation)
         bible_book = translation.bible_book
         testament = bible_book.testament
-        stage_name = translation.stages.first.stage_name.name
+        stage_name = translation.stages.first.name
         percents[testament] ||= {}
         percents[testament][stage_name] ||= 0.0;
         percents[testament][stage_name] += bible_book.percent_of_testament
@@ -121,21 +110,22 @@ class Program < ApplicationRecord
   def self.percentages(programs=nil)
     percentages = {}
     unless programs
-      programs = Program.includes(:translation_activities => [:bible_book, :stages => :stage_name])
+      programs = Program.includes(:translation_activities => [:bible_book, :stages])
                         .where(stages: {current: true})
     end
     programs.each do |program|
-      percentages[program.id] = program.percentages()
+      percentages[program.id] = program.percentages
     end
     percentages
   end
 
+  # TODO Deprecate. This is now covered by default scope
   def self.all_sorted
     Program.joins(:language).order('languages.name').includes(:language)
   end
 
   def self.all_sorted_by_recency
-    Program.all.order('updated_at DESC').includes(:language)
+    Program.all.unscope(:order).order('programs.updated_at DESC')
   end
 
   def self.search(query)

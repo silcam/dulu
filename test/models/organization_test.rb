@@ -29,7 +29,7 @@ class OrganizationTest < ActiveSupport::TestCase
   end
 
   test 'Current Programs' do
-    hdi_program = programs :HdiProgram
+    hdi_program = programs :Hdi
     assert_includes @sil.current_programs, hdi_program
   end
 

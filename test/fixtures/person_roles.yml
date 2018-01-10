@@ -1,0 +1,15 @@
+DrewTranslationConsultant:
+  role: TranslationConsultant
+  start_date: '2017-07-01'
+  person: Drew
+
+DrewTCTraining:
+  role: TranslationConsultantTraining
+  start_date: '2014-01-01'
+  end_date: '2017-07-01'
+  person: Drew
+
+OlgaLPF:
+  role: LanguageProgramFacilitator
+  start_date: '2010-01-01'
+  person: Olga

@@ -29,6 +29,8 @@ fr:
   Home: Accueil
   Download_report: Télécharger le rapport
   Sorry: Désolé
+  as: comme
+  Select: Choisier...
 
   #Dates
   Date: Date
@@ -169,8 +171,10 @@ fr:
 
   #Participants Controller
   Role: Rôle
-  Joined_program: Commencement
-  Left_program: Fin
+  Roles: Rôles
+  Add_role: Ajouter un rôle
+  Joined_program: Rejoint le programme
+  Left_program: Sorti(e) du programme
   End_of_participation: Fin de relation
   End_of_participation_prompt: a quitté le programme le 
 
@@ -212,6 +216,10 @@ fr:
   Literacy_specialist: Spécialiste en alphabétisation
   Literacy_consultant: Conseiller en alphabétisation
   Scripture_engagement_specialist: Spécialiste en promotion des Saintes Écritures
+  Administration: Administration
+  DuluAdmin: Dulu Admin
+  Facilitator: Facilitateur
+  Student: Étudiant
 
   #Publications Controller
   Publications: Publications

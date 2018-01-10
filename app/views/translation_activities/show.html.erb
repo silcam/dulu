@@ -85,7 +85,7 @@
           <tr>
             <td><%= link_to participant.person.full_name,
                             person_path(participant.person) %></td>
-            <td><%= t(participant.program_role.name) %></td>
+            <td><%= participant.roles_text %></td>
           </tr>
         <% end %>
       </table>

@@ -2,7 +2,7 @@
 
     <div class="form-group">
       <%= form.label :name, t(:Name) %>
-      <%= form.text_field :name, class: 'form-control', autofocus: true %>
+      <%= form.text_field :name, class: 'form-control', autofocus: true, size: 50 %>
     </div>
 
     <div class="form-group">
@@ -22,99 +22,18 @@
       <%= render 'shared/fuzzy_date_field', model: 'event', field: 'end_date', fdate: @event.f_end_date%>
     </div>
 
-    <div class="form-group select-collection" id="program-ids">
-      <%= form.label :program_ids, t(:Programs), style: 'display: block;' %>
-      <% if @program && @event.programs.empty? %>
-        <%= select_tag 'event[program_ids][]', options_for_select([[@program.name, @program.id]]),
-                       class: 'form-control' %>
-      <% end %>
-
-      <% @event.programs.each do |program| %>
-        <div class="program-select select">
-          <%= select_tag 'event[program_ids][]',
-                         options_from_collection_for_select(Program.all_sorted, :id, :name, program.id),
-                         style: 'display: inline-block', class: 'form-control' %>
-          <a href="#" data-remove-select><%= t :Remove %></a>
-        </div>
-      <% end %>
-
-      <div class="program-select select" style="display: none">
-        <%= select_tag 'event[program_ids][]',
-                       options_from_collection_for_select(Program.all_sorted, :id, :name),
-                       style: 'display: inline-block', class: 'form-control', disabled: true %>
-        <a href="#" data-remove-select><%= t :Remove %></a>
-      </div>
-      <a href="#" data-add-program-select><%= t(:Add_a_program) %></a>
-    </div>
-
-    <div class="form-group select-collection" id="cluster-ids">
-      <%= form.label :cluster_ids, t(:Language_clusters), style: 'display: block;' %>
-
-      <% @event.clusters.each do |cluster| %>
-        <div class="cluster-select select">
-          <%= select_tag 'event[cluster_ids][]',
-                         options_from_collection_for_select(Cluster.all, :id, :name, cluster.id),
-                         style: 'display: inline-block',
-                         class: 'form-control' %>
-          <a href="#" data-remove-select><%= t :Remove %></a>
-        </div>
-      <% end %>
-
-      <div class="cluster-select select" style="display: none;">
-        <%= select_tag 'event[cluster_ids][]',
-                       options_from_collection_for_select(Cluster.all, :id, :name),
-                       style: 'display: inline-block;',
-                       class: 'form-control',
-                       disabled: true %>
-        <a href="#" data-remove-select><%= t :Remove %></a>
-      </div>
-      <a href="#" data-add-cluster-select><%= t :Add_cluster %></a>
-    </div>
-
-    <div class="form-group select-collection" id="event-participants">
-      <%= form.label :people, t(:People), style: 'display: block' %>
-
-      <% @event.event_participants.each do |ep| %>
-        <%= form.fields_for ep, index: ep.id do |ep_form| %>
-          <div class="person-select select" id="person-select-<%= ep.id %>">
-            <%= ep_form.collection_select :person_id, Person.all, :id, :full_name,
-                                          {}, style: 'display: inline-block',
-                                          class: 'form-control' %>
-            <%= t :with_a_role_of %>
-            <%= ep_form.collection_select :program_role_id, ProgramRole.sorted, :id, :t_name,
-                                          {include_blank: true},
-                                          style: 'display: inline-block',
-                                          class: 'form-control' %>
-            <a href="#" data-remove-select><%= t :Remove %></a>
-          </div>
-        <% end %>
-      <% end %>
-
-      <%= form.fields_for :new_event_participants, index: nil do |ep_form| %>
-          <div class="person-select select"
-            <% unless @event.event_participants.empty? %>
-              style="display: none"
-            <% end %>
-          >
-            <%= ep_form.collection_select :person_id, Person.all, :id, :full_name,
-                                          {include_blank: true},
-                                          style: 'display: inline-block',
-                                          class:'form-control' %>
-            <%= t :with_a_role_of %>
-            <%= ep_form.collection_select :program_role_id, ProgramRole.sorted, :id, :t_name,
-                                          {include_blank: true},
-                                          style: 'display: inline-block',
-                                          class: 'form-control' %>
-            <a href="#" data-remove-select style="display: none"><%= t :Remove %></a>
-          </div>
-
-          <a href="#" data-add-person-select style="display: block"><%= t(:Add_a_person) %></a>
-      <% end %>
-    </div>
-
     <div class="form-group">
       <%= form.label :note, t(:Notes) %>
       <%= form.text_area :note, class: 'form-control', rows: 4, cols: 50 %>
     </div>
 
     <%= form.submit t(:Save), data: {'events-form-submit' => 1}, class: 'btn btn-primary btn-lg' %>
+
+    <%
+      if @event.persisted?
+        return_path = @program ? program_event_path(@program, @event) : event_path(@event)
+      else
+        return_path = @program ? program_events_path(@program) : events_path
+      end
+    %>
+    <%= link_to  t(:Cancel), return_path, class: 'btn btn-danger btn-lg' %>

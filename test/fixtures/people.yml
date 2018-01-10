@@ -3,37 +3,63 @@
 Rick:
   first_name: Rick
   last_name: Conrad
+  gender: M
   email: rick_conrad@sil.org
   organization: SIL
-  role_site_admin: true
+  has_login: true
+  roles_field: '|DuluAdmin|'
+  ui_language: en
 
 Drew:
   first_name: Drew
   last_name: Maust
+  gender: M
   email: drew_maust@sil.org
   organization: SIL
   country: USA
-  role_program_responsable: true
+  has_login: true
+  roles_field: '|TranslationConsultant|'
 
 Abanda:
   first_name: Abanda
   last_name: Dunno
+  gender: M
   email: abanda@dunno.org
+  roles_field: '|Translator|'
+
+Freddie:
+  first_name: Freddie
+  last_name: Translator
+  gender: M
+  roles_field: '|Translator|'
 
 Olga:
   first_name: Olga
   last_name: Nka
+  gender: F
   email: olga_nka@sil.org
   organization: SIL
-  role_program_supervisor: true
+  has_login: true
+  roles_field: '|LanguageProgramFacilitator|'
 
 FormerHdiTranslator:
   first_name: Former
   last_name: Translator
+  gender: M
+  roles_field: '|Translator|'
 
 Kevin:
   first_name: Kevin
   last_name: Bradford
+  gender: M
   organization: SIL
-  role_user: true
   email: kevin_bradford@sil.org
+  has_login: true
+
+Lance:
+  first_name: Lance
+  last_name: Freeland
+  gender: M
+  email: lance_freeland@sil.org
+  has_login: true
+  roles_field: '|TranslationConsultantTraining|'

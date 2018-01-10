@@ -13,6 +13,7 @@
         <tr>
           <td><%= link_to activity.name, activity %></td>
           <td><%= t(activity.current_stage.name) %></td>
+          <td><%= activity.participants.collect{ |p| p.full_name }.join(', ') %></td>
         </tr>
     <% end %>
   </table>

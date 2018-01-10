@@ -39,13 +39,11 @@ class TranslationActivity < Activity
   end
 
   def self.in_progress
-    planning_id = StageName.first_stage('translation').id
-    published_id = StageName.last_stage('translation').id
     joins(:stages).where("stages.current AND
-                          stages.stage_name_id != ? AND
-                          stages.stage_name_id != ?",
-                         planning_id,
-                         published_id)
+                          stages.name != ? AND
+                          stages.name != ?",
+                         'Planned',
+                         'Published')
   end
 
   def self.search(query)

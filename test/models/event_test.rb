@@ -3,21 +3,21 @@ require 'test_helper'
 class EventTest < ActiveSupport::TestCase
   def setup
     @genesis_check = events :HdiGenesisChecking
+    @hdi = programs :Hdi
     I18n.locale = :en
   end
 
   test "Relations" do
-    hdi_program = programs :HdiProgram
     drew_genesis_check = event_participants :DrewHdiGenesis
     drew = people :Drew
 
-    assert_includes @genesis_check.programs, hdi_program
+    assert_includes @genesis_check.programs, @hdi
     assert_includes @genesis_check.event_participants, drew_genesis_check
     assert_includes @genesis_check.people, drew
   end
 
   test "Presence Validation" do
-    params = {domain: 'Translation', name: 'Taco Pary', start_date: '2019-04', end_date: '2019-04'}
+    params = {domain: 'Translation', name: 'Taco Party', start_date: '2019-04', end_date: '2019-04'}
     model_validation_hack_test Event, params
   end
 
@@ -46,12 +46,26 @@ class EventTest < ActiveSupport::TestCase
     assert_nil Event.new.f_end_date
   end
 
-  test "Role Of" do
-    drew = people :Drew
+  test "Unassoc Programs" do
+    ewondo = programs :Ewondo
+    unassoc = @genesis_check.unassoc_programs
+    assert_includes unassoc, ewondo
+    refute_includes unassoc, @hdi
+  end
+
+  test "Unassoc Clusters" do
+    ndop = clusters :Ndop
+    assert_includes @genesis_check.unassoc_clusters, ndop
+    @genesis_check.clusters << ndop
+    refute_includes @genesis_check.unassoc_clusters, ndop
+  end
+
+  test "Unassoc People" do
     rick = people :Rick
-    consultant = program_roles :TranslationConsultant
-    assert_equal consultant, @genesis_check.role_of(drew)
-    assert_nil @genesis_check.role_of(rick)
+    drew = people :Drew
+    unassoc = @genesis_check.unassoc_people
+    assert_includes unassoc, rick
+    refute_includes unassoc, drew
   end
 
   test "User Not Associated With Event" do
@@ -68,9 +82,22 @@ class EventTest < ActiveSupport::TestCase
 
   test "User Program Association" do
     rick = people :Rick
-    tc = program_roles :TranslationConsultant
-    hdi = programs :HdiProgram
-    Participant.create(person: rick, program: hdi, program_role: tc, start_date: '2017')
+    Participant.create(person: rick, program: @hdi, start_date: '2017')
     assert @genesis_check.associated_with?(rick), "Rick is associated with Event program"
+  end
+
+  test "Search" do
+    results = Event.search 'genesis'
+    exp = {
+            title: 'Genesis Checking',
+            description: 'Jan 15, 2018 to Jan 30, 2018 - Hdi',
+            model: @genesis_check
+          }
+    assert_includes results, exp
+  end
+
+  test "Search query words separately" do
+    results = Event.search 'checking genesis'
+    assert results.any?{ |r| r[:title] == 'Genesis Checking' }
   end
 end

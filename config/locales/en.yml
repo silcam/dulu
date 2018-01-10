@@ -29,6 +29,8 @@ en:
   Home: Home
   Download_report: Download Report
   Sorry: Sorry
+  as: as
+  Select: Please select...
 
   #Dates
   Date: Date
@@ -169,6 +171,8 @@ en:
 
   #Participants Controller
   Role: Role
+  Roles: Roles
+  Add_role: Add Role
   Joined_program: Joined Program
   Left_program: Left Program
   End_of_participation: End of Participation
@@ -212,6 +216,10 @@ en:
   Literacy_specialist: Literacy Specialist
   Literacy_consultant: Literacy Consultant
   Scripture_engagement_specialist: Scripture Engagement Specialist
+  Administration: Administration
+  DuluAdmin: Dulu Admin
+  Facilitator: Facilitator
+  Student: Student
 
   #Publications Controller
   Publications: Publications
