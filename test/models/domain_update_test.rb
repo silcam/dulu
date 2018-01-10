@@ -2,7 +2,7 @@ require 'test_helper'
 
 class DomainUpdateTest < ActiveSupport::TestCase
   def setup
-    @hdi = programs :HdiProgram
+    @hdi = programs :Hdi
   end
 
   test "Required fields Validation" do

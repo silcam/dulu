@@ -9,7 +9,7 @@ class LanguageTest < ActiveSupport::TestCase
     developing = language_statuses :Developing
     cameroon = countries :Cameroon
     far_north = cameroon_regions :FarNorth
-    hdi_program = programs :HdiProgram
+    hdi_program = programs :Hdi
     hdi_dialect = languages :HdiDialect
 
     assert_equal developing, @hdi.language_status

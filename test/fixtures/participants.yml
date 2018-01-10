@@ -1,26 +1,38 @@
 DrewHdi:
   person: Drew
-  program: HdiProgram
+  program: Hdi
   roles_field: '|TranslationConsultant|'
   start_date: '2017-01-01'
-  activities: HdiEzraActivity
+  activities: HdiEzra
+
+DrewNdop:
+  person: Drew
+  cluster: Ndop
+  roles_field: '|TranslationConsultant|'
+  start_date: '2017'
 
 OlgaHdi:
   person: Olga
-  program: HdiProgram
+  program: Hdi
   roles_field: '|LanguageProgramFacilitator|'
   start_date: 2010
 
 AbandaHdi:
   person: Abanda
-  program: HdiProgram
+  program: Hdi
   roles_field: '|Translator|'
   start_date: 2015-05
-  activities: HdiEzraActivity, HdiGenesisActivity
+  activities: HdiEzra, HdiGenesis
+
+Freddie:
+  person: Freddie
+  program: Bangolan
+  roles_field: '|Translator|'
+  start_date: 2010
 
 FormerHdiTranslator:
   person: FormerHdiTranslator
-  program: HdiProgram
+  program: Hdi
   roles_field: '|Translator|'
   start_date: 2013
   end_date: 2015-03

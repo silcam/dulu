@@ -5,7 +5,7 @@ class UpdateStageTest < Capybara::Rails::TestCase
     Capybara.current_driver = :webkit
     # page.driver.enable_logging
     I18n.locale = :en
-    @hdi_ezra = translation_activities(:HdiEzraActivity)
+    @hdi_ezra = translation_activities(:HdiEzra)
     @fdate = FuzzyDate.new(2017, 7)
     log_in(people(:Drew))
     visit translation_activity_path(@hdi_ezra)

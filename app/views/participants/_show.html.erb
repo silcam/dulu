@@ -16,6 +16,7 @@
     <small>
       <% if can? :manage_participants, @cluster_program %>
         <a href="#" data-showable-form-show><%= roles.empty? ? t(:Add) : t(:Edit) %></a>
+        <a href="#" data-showable-form-hide class="not-shown"><%= t(:Cancel) %></a>
       <% end %>
     </smalL>
   </h3>
@@ -58,6 +59,7 @@
     <small>
       <% if can? :manage_participants, @cluster_program %>
         <a href="#" data-showable-form-show><%= activities.empty? ? t(:Add) : t(:Edit) %></a>
+        <a href="#" data-showable-form-hide class="not-shown"><%= t(:Cancel) %></a>
       <% end %>
     </small>
   </h3>

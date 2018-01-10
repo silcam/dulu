@@ -3,12 +3,12 @@ require 'test_helper'
 class ParticipantTest < ActiveSupport::TestCase
   def setup
     @drew_hdi = participants :DrewHdi
-    @hdi_program = programs(:HdiProgram)
+    @hdi_program = programs(:Hdi)
     @drew = people :Drew
   end
 
   test 'Relations' do
-    hdi_ezra = translation_activities :HdiEzraActivity
+    hdi_ezra = translation_activities :HdiEzra
     assert_equal @drew, @drew_hdi.person
     assert_equal @hdi_program, @drew_hdi.program
     assert_includes @drew_hdi.activities, hdi_ezra
@@ -21,6 +21,11 @@ class ParticipantTest < ActiveSupport::TestCase
   test 'Valid if belongs to cluster' do
     params = some_valid_params program: nil, cluster: clusters(:Ndop)
     assert Participant.new(params).valid?
+  end
+
+  test 'Invalid if neither program nor cluster' do
+    params = some_valid_params program: nil
+    refute Participant.new(params).valid?
   end
 
   test 'End Date Validation' do
@@ -41,8 +46,8 @@ class ParticipantTest < ActiveSupport::TestCase
   end
 
   test 'Associate Activities' do
-    hdi_ezra = translation_activities :HdiEzraActivity
-    hdi_genesis = translation_activities :HdiGenesisActivity
+    hdi_ezra = translation_activities :HdiEzra
+    hdi_genesis = translation_activities :HdiGenesis
     assert_includes @drew_hdi.activities, hdi_ezra
     refute_includes @drew_hdi.activities, hdi_genesis
 
@@ -78,11 +83,16 @@ class ParticipantTest < ActiveSupport::TestCase
     assert_equal genesis, abanda_hdi.sorted_activities.first.bible_book
   end
 
+  test 'Unassoc Activities' do
+    unassoc = @drew_hdi.unassoc_activities
+    assert_includes unassoc, translation_activities(:HdiGenesis)
+    refute_includes unassoc, translation_activities(:HdiEzra)
+  end
+
   def some_valid_params(merge_params = {})
     rick = people(:Rick)
     role = program_roles(:Translator)
     {person: rick, program: @hdi_program,
               start_date: '2017'}.merge merge_params
-
   end
 end

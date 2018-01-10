@@ -28,31 +28,6 @@ class Role
     source - NON_PROGRAM_ROLES
   end
 
-  def self.roles_field(roles)
-    return '' if roles.nil?
-    '|' + roles.join('|') + '|'
-  end
-
-  def self.roles_text(roles_field)
-    roles_from_field(roles_field).collect{ |r| I18n.t(r) }.join(', ')
-  end
-
-  def self.roles_from_field(roles_field)
-    return [] if roles_field.blank?
-    roles_field[1..-1].split('|').collect{ |r| r.to_sym }
-  end
-
-  def self.roles_field_with(roles_field, new_role)
-    return "|#{new_role}|" if roles_field.blank?
-    roles_field + new_role.to_s + '|'
-  end
-
-  def self.roles_field_without(roles_field, role)
-    roles = roles_from_field roles_field
-    roles.delete role.to_sym
-    roles_field roles
-  end
-
   def self.available(assign_to, source=ROLES)
     source - assign_to.roles
   end
@@ -86,9 +61,6 @@ class Role
   private
 
   def self.arrays_overlap?(a1, a2)
-    a1.each do |item|
-      return true if a2.include? item
-    end
-    false
+    a1.any?{ |item1| a2.any?{ |item2| item1.to_sym == item2.to_sym} }
   end
 end

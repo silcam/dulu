@@ -2,7 +2,8 @@ module HasRoles
   extend ActiveSupport::Concern
 
   def roles
-    Role.roles_from_field(roles_field)
+    return [] if roles_field.blank?
+    roles_field[1..-1].split('|').collect{ |r| r.to_sym }
   end
 
   def program_roles
@@ -10,7 +11,7 @@ module HasRoles
   end
 
   def roles_text
-    Role.roles_text roles_field
+    roles.collect{ |r| I18n.t(r) }.join(', ')
   end
 
   def has_role?(role)
@@ -21,15 +22,30 @@ module HasRoles
     Role.roles_overlap?(self.roles, roles)
   end
 
-  def add_role(new_role)
-    update roles_field: Role.roles_field_with(roles_field, new_role)
+  def add_to_roles_field(new_role)
+    r_field = roles_field.blank? ? '|' : roles_field
+    r_field += new_role.to_s + '|'
+    update! roles_field: r_field
   end
+  alias add_role add_to_roles_field
 
-  def remove_role(role)
-    update roles_field: Role.roles_field_without(roles_field, role)
+  def remove_from_roles_field(role)
+    roles = self.roles
+    roles.delete role.to_sym
+    update roles_field: make_roles_field(roles)
+  end
+  alias remove_role remove_from_roles_field
+
+  def make_roles_field(roles)
+    self.class.make_roles_field(roles)
   end
 
   class_methods do
+    def make_roles_field(roles)
+      return '' if roles.nil? || roles.empty?
+      '|' + roles.join('|') + '|'
+    end
+
     def where_has_role(role)
       where('roles_field LIKE ?', "%|#{role}|%")
     end

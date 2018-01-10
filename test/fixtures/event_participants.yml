@@ -3,9 +3,9 @@
 DrewHdiGenesis:
   person: Drew
   event: HdiGenesisChecking
-  roles_field: TranslationConsultant
+  roles_field: '|TranslationConsultant|'
 
 AbandaHdiGenesis:
   person: Abanda
   event: HdiGenesisChecking
-  roles_field: Translator
+  roles_field: '|Translator|'

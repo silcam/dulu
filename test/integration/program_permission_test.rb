@@ -4,7 +4,7 @@ class ProgramPermissionTest < Capybara::Rails::TestCase
   def setup
     @kevin = people :Kevin
     @drew = people :Drew
-    @hdi_program = programs :HdiProgram
+    @hdi_program = programs :Hdi
   end
 
   test "Kevin can't create activity" do

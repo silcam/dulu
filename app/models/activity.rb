@@ -17,14 +17,6 @@ class Activity < ApplicationRecord
         stages.new(name: Stage.first_stage(kind), kind: kind)
   end
 
-  def update_current_stage
-    my_stages = stages.order(start_date: :desc, id: :desc)
-    unless my_stages.empty?
-      my_stages.update(current: false)
-      my_stages.first.update(current: true)
-    end
-  end
-
   def kind
     type.gsub('Activity', '').to_sym
   end
@@ -71,5 +63,15 @@ class Activity < ApplicationRecord
 
   def self.search(query)
     TranslationActivity.search(query)
+  end
+
+  private
+
+  def update_current_stage
+    my_stages = stages.order(start_date: :desc, id: :desc)
+    unless my_stages.empty?
+      my_stages.update(current: false)
+      my_stages.first.update(current: true)
+    end
   end
 end

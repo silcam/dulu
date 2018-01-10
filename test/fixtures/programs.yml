@@ -1,11 +1,11 @@
-HdiProgram:
+Hdi:
   language: Hdi
   updated_at: 2017-07-01 08:00:00.000000
 
-EwondoProgram:
+Ewondo:
   language: Ewondo
 
-ZulgoProgram:
+Zulgo:
   language: Zulgo
 
 NoActivityProgram:
@@ -15,3 +15,9 @@ NoActivityProgram:
 ReallyOldProgram:
   language: ReallyOld
   updated_at: 2017-06-01 08:00:00.000000
+
+Bangolan:
+  language: Bangolan
+
+Bambalang:
+  language: Bambalang

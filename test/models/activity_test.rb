@@ -3,35 +3,38 @@ require 'test_helper'
 class ActivityTest < ActiveSupport::TestCase
 
   def setup
-    @hdi_ezra = translation_activities(:HdiEzraActivity)
+    @hdi_ezra = translation_activities(:HdiEzra)
   end
 
   test 'relations' do
-    assert_equal(programs(:HdiProgram),
+    assert_equal(programs(:Hdi),
                  @hdi_ezra.program)
     assert_equal(stages(:HdiOne),
                  @hdi_ezra.stages.first)
     assert(@hdi_ezra.participants.include?(participants(:DrewHdi)),
-           'expected DrewHdi to be participant to HdiEzraActivity')
+           'expected DrewHdi to be participant to HdiEzra')
     assert(@hdi_ezra.people.include?(people(:Drew)),
-           'expected Drew to be in HdiEzraActivity.people')
+           'expected Drew to be in HdiEzra.people')
   end
 
   test 'validations' do
     no_program = Activity.new(type: 'TranslationActivity')
-    no_type = Activity.new(program: programs(:HdiProgram))
+    no_type = Activity.new(program: programs(:Hdi))
     # TODO - Test that we can create an activity with no BibleBook
     # once we have an activity that doesn't require it
-    # good = Activity.new(type: 'OtherActivity', program: programs(:HdiProgram))
+    # good = Activity.new(type: 'OtherActivity', program: programs(:Hdi))
     refute(no_program.save, 'Should not save activity with no program')
     refute(no_type.save, 'Should not save activity with no type')
-    assert_raises (Exception) {Activity.new(program: programs(:HdiProgram), type: 'FakeActivity')}
+    assert_raises (Exception) {Activity.new(program: programs(:Hdi), type: 'FakeActivity')}
     # assert(good.save, 'Should save valid Activity')
   end
 
   test 'current stage' do
     assert_equal(stages(:HdiTwo),
                   @hdi_ezra.current_stage)
+    planning = translation_activities(:HdiExodus).current_stage
+    assert_equal :Planned, planning.name
+    assert_equal :Translation, planning.kind
   end
 
   test 'update_current_stage' do
@@ -44,6 +47,15 @@ class ActivityTest < ActiveSupport::TestCase
     drafting.reload
     refute planned.current, "Planned should no longer be current"
     assert drafting.current, "Drafting shoulde be current"
+
+    # Verify function with no stages
+    hdi_exodus = translation_activities(:HdiExodus)
+    hdi_exodus.touch
+    assert_equal :Planned, hdi_exodus.current_stage.name
+  end
+
+  test 'kind' do
+    assert_equal :Translation, @hdi_ezra.kind
   end
 
   test 'progress' do
@@ -79,7 +91,7 @@ class ActivityTest < ActiveSupport::TestCase
 
   # See Build test in TranslationActivityTest
 
-  test 'try to destroy the last stage' do
+  test 'destroy the last stage' do
     @hdi_ezra.stages.each { |s| s.destroy }
     assert_equal(0, @hdi_ezra.stages.count)
   end

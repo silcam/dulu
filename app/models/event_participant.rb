@@ -12,6 +12,6 @@ class EventParticipant < ApplicationRecord
   end
 
   def self.build(event, person_params)
-    create! event: event, person_id: person_params[:id], roles_field: Role.roles_field(person_params[:roles])
+    create! event: event, person_id: person_params[:id], roles_field: make_roles_field(person_params[:roles])
   end
 end

@@ -7,7 +7,7 @@ class PublicationTest < ActiveSupport::TestCase
   end
 
   test 'Relations' do
-    assert_equal programs(:EwondoProgram), @ewondo_nt.program
+    assert_equal programs(:Ewondo), @ewondo_nt.program
   end
 
   test 'Validations' do

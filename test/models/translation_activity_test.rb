@@ -2,7 +2,7 @@ require 'test_helper'
 
 class TranslationActivityTest < ActiveSupport::TestCase
   def setup
-    @hdi_ezra = translation_activities :HdiEzraActivity
+    @hdi_ezra = translation_activities :HdiEzra
     I18n.locale = :en
   end
 
@@ -12,20 +12,21 @@ class TranslationActivityTest < ActiveSupport::TestCase
   end
 
   test "Next" do
-    hdi_genesis = translation_activities :HdiGenesisActivity
-    assert_equal @hdi_ezra, hdi_genesis.next
+    hdi_exodus = translation_activities :HdiExodus
+    assert_equal @hdi_ezra, hdi_exodus.next
     assert_nil @hdi_ezra.next, "Next should return nil if there is no Next"
   end
 
   test "Prev" do
-    hdi_genesis = translation_activities :HdiGenesisActivity
-    assert_equal hdi_genesis, @hdi_ezra.prev
+    hdi_genesis = translation_activities :HdiGenesis
+    hdi_exodus = translation_activities :HdiExodus
+    assert_equal hdi_exodus, @hdi_ezra.prev
     assert_nil hdi_genesis.prev, "Prev should return nil if there is no Prev"
   end
 
   test "Valid Build" do
     john = bible_books :John
-    hdi_program = programs :HdiProgram
+    hdi_program = programs :Hdi
     drew_hdi = participants :DrewHdi
     params = {type: 'TranslationActivity', bible_book: john.id.to_s,
               participant_ids: [drew_hdi.id.to_s]}
@@ -37,7 +38,7 @@ class TranslationActivityTest < ActiveSupport::TestCase
 
   test "Repeat Build" do
     genesis = bible_books :Genesis
-    hdi_program = programs :HdiProgram
+    hdi_program = programs :Hdi
     planned = stage_names :Planned
     params = {type: 'TranslationActivity', bible_book: genesis.id.to_s,
               stage_name_id: planned.id.to_s, stage_start_date: '2017'}
@@ -49,7 +50,7 @@ class TranslationActivityTest < ActiveSupport::TestCase
   end
 
   test "Build All" do
-    ewondo_program = programs :EwondoProgram
+    ewondo_program = programs :Ewondo
     drafting = stage_names :Drafting
     params = {type: 'TranslationActivity', bible_book: 'ot',
               stage_name_id: drafting.id.to_s, stage_start_date: ''}

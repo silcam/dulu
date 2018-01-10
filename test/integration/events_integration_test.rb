@@ -4,7 +4,7 @@ class EventsIntegrationTest < Capybara::Rails::TestCase
   def my_setup(need_js=false, user=:Drew)
     Capybara.current_driver = :webkit if need_js
     log_in people(user)
-    @hdi = programs :HdiProgram
+    @hdi = programs :Hdi
     @genesis_consult = events :HdiGenesisChecking
     visit program_events_path(@hdi)
   end

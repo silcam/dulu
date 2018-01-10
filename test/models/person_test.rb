@@ -40,18 +40,52 @@ class PersonTest < ActiveSupport::TestCase
     assert_equal 'Maust, Drew', @drew.full_name_rev
   end
 
-  test "Has Role" do
+  test "Default Scope" do
     kevin = people :Kevin
-    rick = people :Rick
-    assert rick.has_role?(:DuluAdmin)
-    assert @drew.has_role?(:TranslationConsultant)
-    refute kevin.has_role?(:TranslationConsultant)
+    assert_equal kevin, Person.first
   end
 
   test "Has Login" do
     abanda = people :Abanda
     assert @drew.has_login, "Drew should have a login"
     refute abanda.has_login, "Abanda does not have a login"
+  end
+
+  test "Add Role" do
+    @drew.add_role('DuluAdmin')
+    exp = '|TranslationConsultant|DuluAdmin|'
+    assert_equal exp, @drew.roles_field
+    assert PersonRole.current.find_by(person: @drew, role: 'DuluAdmin')
+
+    @drew.add_role(:Exegete)
+    assert @drew.has_role? :Exegete
+
+    kevin = people(:Kevin)
+    kevin.add_role(:Administration)
+    assert kevin.has_role? :Administration
+    assert PersonRole.current.find_by(person: kevin, role: :Administration)
+  end
+
+  test "Remove Role" do
+    @drew.remove_role('TranslationConsultant')
+    assert_empty @drew.roles
+    assert_equal '', @drew.roles_field
+    assert_equal Date.today,
+                 PersonRole.find_by(person: @drew, role: :TranslationConsultant).end_date
+    refute PersonRole.current.find_by(person: @drew, role: :TranslationConsultant)
+
+    @drew.add_role :DuluAdmin
+    @drew.add_role :Translator
+    @drew.add_role :Exegete
+
+    @drew.remove_role :Translator
+    exp = '|DuluAdmin|Exegete|'
+    assert_equal exp, @drew.roles_field
+    assert_equal 2, @drew.person_roles.current.count
+
+    @drew.remove_role 'Exegete'
+    exp = '|DuluAdmin|'
+    assert_equal exp, @drew.roles_field
   end
 
   test "Current Participants" do
@@ -62,16 +96,38 @@ class PersonTest < ActiveSupport::TestCase
     assert_not_empty participants
   end
 
-  test "All Sorted" do
-    kevin = people :Kevin
-    assert_equal kevin, Person.first
+  test "Current Programs" do
+    ndop = clusters :Ndop
+    drew_programs = @drew.current_programs
+    assert_includes drew_programs, programs(:Hdi)
+    assert_includes drew_programs, programs(:Bangolan)
+
+    assert_empty people(:Kevin).current_programs
+  end
+
+  test "To Hash" do
+    @drew.add_role :DuluAdmin
+    exp = {
+            id: @drew.id,
+            first_name: 'Drew',
+            last_name: 'Maust',
+            roles: [{
+                      role: :TranslationConsultant,
+                      t_role: 'Translation Consultant'
+                    },
+                    {
+                      role: :DuluAdmin,
+                      t_role: 'Dulu Admin'
+                    }]
+          }
+    assert_equal exp, @drew.to_hash
   end
 
   test "Search" do
     results = Person.search 'drew'
     assert_equal 1, results.count
     assert_equal 'Drew Maust', results[0][:title]
-    hdi_program = programs :HdiProgram
+    hdi_program = programs :Hdi
     assert_includes results[0][:subresults],
                     {title: 'Hdi', model: hdi_program,
                         description: 'Translation Consultant'}

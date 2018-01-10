@@ -15,6 +15,7 @@ $(document).ready ->
           e.preventDefault()
 
     when 'participants#show'
-      show_hide_activity_selects()
-      $('#activity_program_id').change ->
+      if $('select#activity_program_id').length == 1
         show_hide_activity_selects()
+        $('#activity_program_id').change ->
+          show_hide_activity_selects()

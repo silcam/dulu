@@ -2,68 +2,86 @@ require 'test_helper'
 
 class ProgramTest < ActiveSupport::TestCase
   def setup
-    @hdi_program = programs :HdiProgram
+    @hdi = programs :Hdi
+    @drew_hdi = participants :DrewHdi
+
+    @bangolan = programs :Bangolan
+    @drew_ndop = participants :DrewNdop
+    @freddie = participants :Freddie
   end
 
   test 'Relations' do
-    hdi_ezra = translation_activities :HdiEzraActivity
+    hdi_ezra = translation_activities :HdiEzra
     ezra = bible_books :Ezra
     drew_hdi = participants :DrewHdi
     drew = people :Drew
     hdi = languages :Hdi
     genesis_check = events :HdiGenesisChecking
-    ewondo_program = programs :EwondoProgram
+    ewondo_program = programs :Ewondo
     ewondo_nt = publications :EwondoNT
 
-    assert_includes @hdi_program.translation_activities, hdi_ezra
-    assert_includes @hdi_program.bible_books, ezra
-    assert_includes @hdi_program.participants, drew_hdi
-    assert_includes @hdi_program.people, drew
-    assert_equal hdi, @hdi_program.language
-    assert_includes @hdi_program.events, genesis_check
+    assert_includes @hdi.translation_activities, hdi_ezra
+    assert_includes @hdi.bible_books, ezra
+    assert_includes @hdi.participants, drew_hdi
+    assert_includes @hdi.people, drew
+    assert_equal hdi, @hdi.language
+    assert_includes @hdi.events, genesis_check
 
     assert_includes ewondo_program.publications, ewondo_nt
   end
 
-  test 'Unassociated People' do
-    drew = people :Drew
-    rick = people :Rick
-    unassoc = @hdi_program.unassociated_people
-    assert_includes unassoc, rick
-    refute_includes unassoc, drew
-  end
-
   test 'Name' do
-    assert_equal 'Hdi', @hdi_program.name
+    assert_equal 'Hdi', @hdi.name
   end
 
-  # test 'Latest Update' do
-  #   assert_equal FuzzyDate.new(2017, 5, 29),
-  #                @hdi_program.latest_update
-  # end
+  test 'All Participants' do
+    ptcpts = @hdi.all_participants
+    assert_includes ptcpts, @drew_hdi
+    assert_includes ptcpts, participants(:FormerHdiTranslator)
 
-  test 'Current Participants and People and Orgs' do
-    drew_hdi = participants :DrewHdi
-    drew = people :Drew
-    former_hdi = participants :FormerHdiTranslator
-    former = people :FormerHdiTranslator
-    sil = organizations :SIL
-    assert_includes @hdi_program.current_participants, drew_hdi
-    refute_includes @hdi_program.current_participants, former_hdi
-    assert_includes @hdi_program.current_people, drew
-    refute_includes @hdi_program.current_people, former
-    assert_includes @hdi_program.current_organizations, sil
-    refute_includes @hdi_program.current_organizations, nil
+    ptpcts = @bangolan.all_participants
+    assert_includes ptpcts, @drew_ndop
+    assert_includes ptpcts, @freddie
+  end
+
+  test 'All Current Participants' do
+    ptcpts = @hdi.all_current_participants
+    assert_includes ptcpts, @drew_hdi
+    refute_includes ptcpts, participants(:FormerHdiTranslator)
+
+    ptpcts = @bangolan.all_current_participants
+    assert_includes ptpcts, @drew_ndop
+    assert_includes ptpcts, @freddie
+  end
+
+  test 'All People' do
+    ptcpts = @hdi.all_people
+    assert_includes ptcpts, @drew_hdi.person
+    assert_includes ptcpts, people(:FormerHdiTranslator)
+
+    ptpcts = @bangolan.all_people
+    assert_includes ptpcts, @drew_ndop.person
+    assert_includes ptpcts, @freddie.person
+  end
+
+  test 'All Current People' do
+    ptcpts = @hdi.all_current_people
+    assert_includes ptcpts, @drew_hdi.person
+    refute_includes ptcpts, people(:FormerHdiTranslator)
+
+    ptpcts = @bangolan.all_current_people
+    assert_includes ptpcts, @drew_ndop.person
+    assert_includes ptpcts, @freddie.person
   end
 
   test 'Sorted Activities' do
     ewondo_nt = publications :EwondoNT
-    hdi_genesis = translation_activities :HdiGenesisActivity
-    assert_equal hdi_genesis, @hdi_program.sorted_activities.first
+    hdi_genesis = translation_activities :HdiGenesis
+    assert_equal hdi_genesis, @hdi.sorted_activities.first
   end
 
   test 'Sorted Pubs' do
-    ewondo_program = programs :EwondoProgram
+    ewondo_program = programs :Ewondo
     ewondo_nt = publications :EwondoNT
     assert_includes ewondo_program.sorted_pubs('Scripture'), ewondo_nt
   end
@@ -71,12 +89,12 @@ class ProgramTest < ActiveSupport::TestCase
   test "Is translating" do
     ezra = bible_books :Ezra
     john = bible_books :John
-    assert @hdi_program.is_translating?(ezra.id), "Hdi are translating Ezra"
-    refute @hdi_program.is_translating?(john.id), "Hdi are not translating John"
+    assert @hdi.is_translating?(ezra.id), "Hdi are translating Ezra"
+    refute @hdi.is_translating?(john.id), "Hdi are not translating John"
   end
 
   test "Percentages" do
-    percents = @hdi_program.percentages
+    percents = @hdi.percentages
     percentage_assertions percents
   end
 
@@ -88,34 +106,34 @@ class ProgramTest < ActiveSupport::TestCase
   # test "Current Events" do
   #   event_test_setup
   #   Date.stub(:today, Date.new(2017, 7, 26)) do
-  #     refute_includes @hdi_program.current_events, @future_event
-  #     refute_includes @hdi_program.current_events, @past_event
-  #     assert_includes @hdi_program.current_events, @current_event
+  #     refute_includes @hdi.current_events, @future_event
+  #     refute_includes @hdi.current_events, @past_event
+  #     assert_includes @hdi.current_events, @current_event
   #   end
   # end
   #
   # test "Upcoming Events" do
   #   event_test_setup
   #   Date.stub(:today, Date.new(2017, 7, 26)) do
-  #     assert_includes @hdi_program.upcoming_events, @future_event
-  #     refute_includes @hdi_program.upcoming_events, @past_event
-  #     refute_includes @hdi_program.upcoming_events, @current_event
+  #     assert_includes @hdi.upcoming_events, @future_event
+  #     refute_includes @hdi.upcoming_events, @past_event
+  #     refute_includes @hdi.upcoming_events, @current_event
   #   end
   # end
   #
   # test "Past Events" do
   #   event_test_setup
   #   Date.stub(:today, Date.new(2017, 7, 26)) do
-  #     assert_includes @hdi_program.past_events, @past_event
-  #     refute_includes @hdi_program.past_events, @future_event
-  #     refute_includes @hdi_program.past_events, @current_event
+  #     assert_includes @hdi.past_events, @past_event
+  #     refute_includes @hdi.past_events, @future_event
+  #     refute_includes @hdi.past_events, @current_event
   #   end
   # end
 
   test "Events as hash" do
     event_test_setup
     Date.stub(:today, Date.new(2017, 7, 26)) do
-      event_hash = @hdi_program.events_as_hash
+      event_hash = @hdi.events_as_hash
       assert_includes event_hash[:future], @future_event
       assert_includes event_hash[:past], @past_event
       assert_includes event_hash[:current], @current_event
@@ -133,12 +151,12 @@ class ProgramTest < ActiveSupport::TestCase
 
   test "All Percentages" do
     percentages = Program.percentages
-    percentage_assertions percentages[@hdi_program.id]
+    percentage_assertions percentages[@hdi.id]
   end
 
   test "All Sorted" do
-    ewondo = programs :EwondoProgram
-    assert_equal ewondo, Program.all_sorted.first
+    first = programs :Bambalang
+    assert_equal first, Program.all_sorted.first
   end
 
   test 'Programs Sorted by Recency' do
@@ -146,10 +164,10 @@ class ProgramTest < ActiveSupport::TestCase
     really_old = programs :ReallyOldProgram
 
     programs = Program.all_sorted_by_recency
-    assert_includes programs, @hdi_program
+    assert_includes programs, @hdi
     assert_includes programs, no_activity
     assert_includes programs, really_old
-    assert programs.index(@hdi_program) < programs.index(really_old),
+    assert programs.index(@hdi) < programs.index(really_old),
            "Recent activity should come before old activity"
     assert programs.index(really_old) < programs.index(no_activity),
            "Old activity comes before no activity"
@@ -159,6 +177,6 @@ class ProgramTest < ActiveSupport::TestCase
     results = Program.search('hdi')
     assert_equal 1, results.count
     assert_equal 'Hdi', results[0][:title]
-    assert_equal @hdi_program, results[0][:model]
+    assert_equal @hdi, results[0][:model]
   end
 end

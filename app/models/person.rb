@@ -40,14 +40,14 @@ class Person < ApplicationRecord
   def add_role(new_role)
     transaction do
       person_roles.create(role: new_role, start_date: Date.today)
-      update(roles_field: Role.roles_field_with(roles_field, new_role))
+      add_to_roles_field(new_role)
     end
   end
 
   def remove_role(role)
     transaction do
       person_roles.find_by(role: role, end_date: nil).try(:update, {end_date: Date.today})
-      update(roles_field: Role.roles_field_without(roles_field, role))
+      remove_from_roles_field(role)
     end
   end
 

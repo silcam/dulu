@@ -4,7 +4,7 @@ class NewTranslationActivityTest < Capybara::Rails::TestCase
   def setup
     # Capybara.current_driver = :selenium
     @olga = people :Olga
-    @hdi_program = programs :HdiProgram
+    @hdi_program = programs :Hdi
     @john = bible_books :John
     log_in @olga
     visit program_activities_path(@hdi_program)
