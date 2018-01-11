@@ -11,7 +11,8 @@ class AccessPolicy
     role :supervisor, proc{ |u| u.has_role_among?(Role::SUPERVISOR_ROLES) } do
       can [:grant_login], Person
       can [:create_activity, :manage_participants, :manage_surveys], Program
-      can [:manage, :manage_participants], Cluster
+      can :manage, Cluster # :manage cannot be part of an array
+      can :manage_participants, Cluster
       can :update_activity, Activity
       can :manage, Organization
       can :manage, Language

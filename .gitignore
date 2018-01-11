@@ -9,6 +9,8 @@
 /db/development-with-clasp-people-orgs.sqlite3.bak
 config/secrets.yml
 config/initializers/omniauth.rb
+db/*.sql
+db/*.sql.gz
 
 # Ignore bundler config.
 /.bundle

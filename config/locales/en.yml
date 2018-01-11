@@ -107,6 +107,8 @@ en:
   duplicate_warning_start: There is already a person named
   duplicate_warning_end: in Dulu. Are you sure this is a different person?
   confirm_different_person: This is a different person.
+  Current_programs: Current Programs
+  Previous_programs: Previous Programs
 
   #Organizations Controller
   Organization: Organization

@@ -107,6 +107,8 @@ fr:
   duplicate_warning_start: Il y a déjà une personne qui s'appelle
   duplicate_warning_end: en Dulu. Êtes-vous sûr que celle-ci est une personne différente ?
   confirm_different_person: C'est une personne différente.
+  Current_programs: Programmes actuels
+  Previous_programs: Anciens programmes
 
   #Organizations Controller
   Organization: Organisation
