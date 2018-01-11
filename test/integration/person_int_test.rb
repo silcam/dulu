@@ -39,7 +39,7 @@ class PersonIntTest < Capybara::Rails::TestCase
   test "Add Role" do
     log_in @rick
     visit person_path @kevin
-    find('h4', text: 'Roles').click_on 'Add'
+    find('h3', text: 'Roles').click_on 'Add'
     select 'Dulu Admin', from: 'person_role_role'
     click_on 'Add'
     within('div.showable-form-section') do
@@ -50,7 +50,7 @@ class PersonIntTest < Capybara::Rails::TestCase
   test "Remove Role" do
     log_in @rick
     visit person_path @olga
-    find('h4', text: 'Roles').click_on 'Edit'
+    find('h3', text: 'Roles').click_on 'Edit'
     within('div.showable-form-section') do
       find('tr', text: 'Language Program Facilitator').click_on 'Remove'
     end

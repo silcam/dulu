@@ -19,7 +19,7 @@
 </table>
 
 <div class="showable-form-section">
-  <h4>
+  <h3>
     <%= t :Roles %>
     <% if can? :update, @person %>
       <small>
@@ -27,7 +27,7 @@
         <a href="#" data-showable-form-hide class="not-shown"><%= t(:Cancel) %></a>
       </small>
     <% end %>
-  </h4>
+  </h3>
 
   <% if @person.roles_field.blank? %>
     <p class="shown">
@@ -73,9 +73,9 @@
 
 <% participants = @person.current_participants %>
 <% unless participants.empty? %>
-  <h4>
+  <h3>
     <%= t :Current_programs %>
-  </h4>
+  </h3>
   <table class="table auto-width">
     <% participants.each do |participant| %>
       <tr>
@@ -90,9 +90,9 @@
 
 <% participants = @person.participants.where('end_date IS NOT NULL') %>
 <% unless participants.empty? %>
-  <h4>
+  <h3>
     <%= t :Previous_programs %>
-  </h4>
+  </h3>
   <table class="table auto-width">
     <% participants.each do |participant| %>
       <tr>
