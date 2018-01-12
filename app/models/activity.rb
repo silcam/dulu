@@ -61,6 +61,13 @@ class Activity < ApplicationRecord
     ]
   end
 
+  def self.subclass_from_text(str)
+    case str
+      when 'TranslationActivity'
+        TranslationActivity
+    end
+  end
+
   def self.search(query)
     TranslationActivity.search(query)
   end

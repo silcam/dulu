@@ -38,7 +38,7 @@ class ParticipantsController < ApplicationController
       @participant.associate_activities params[:assoc_activities]
       redirect_to @participant
     else
-      render params[:this_action]
+      render action_from_params
     end
   end
 
@@ -84,5 +84,16 @@ class ParticipantsController < ApplicationController
 
   def authorize_user
     authorize! :manage_participants, @cluster_program
+  end
+
+  def action_from_params
+    case params[:this_action]
+      when 'edit'
+        'edit'
+      when 'finish'
+        'finish'
+      else
+        redirect_to not_allowed_path
+    end
   end
 end
