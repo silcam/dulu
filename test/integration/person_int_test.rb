@@ -26,7 +26,6 @@ class PersonIntTest < Capybara::Rails::TestCase
     fill_in_william
     click_button 'Save'
 
-    click_link 'Wallace, William'
     assert_text 'William Wallace'
     assert_text 'AAA'
     assert_text 'scotland_forever@aol.com'

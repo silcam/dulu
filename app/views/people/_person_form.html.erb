@@ -84,4 +84,14 @@
     <%= f.submit t(:Save), class: 'btn btn-primary btn-lg' %>
   </p>
 
+  <% if @person.persisted? and can?(:destroy, @person) %>
+    <p>--</p>
+    <p>
+      <%= button_to "#{t(:Delete)} #{@person.full_name}",
+                    @person,
+                    method: :delete,
+                    data: {confirm: t(:Delete_person_confirmation, person: @person.full_name)},
+                    class: 'btn btn-danger' %>
+    </p>
+  <% end %>
 <% end %>

@@ -3,8 +3,7 @@ class AccessPolicy
 
   def configure
     role :site_admin, proc{ |u| u.has_role?(:DuluAdmin) } do
-      can [:grant_admin], Person
-      can :login_as_others, Person
+      can [:grant_admin, :login_as_others, :destroy], Person
       can :read, Audited::Audit
     end
 

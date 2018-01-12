@@ -87,6 +87,7 @@ fr:
   Home_Country: Pays d'origine
   Email: Adresse mail
   Can_log_in: Compte de connexion
+  No_login: Pas de compte de connexion
   dulu_preferred_language: Langue
   English: English
   French: Français
@@ -109,6 +110,7 @@ fr:
   confirm_different_person: C'est une personne différente.
   Current_programs: Programmes actuels
   Previous_programs: Anciens programmes
+  Delete_person_confirmation: Confirmez que vous voulez supprimer %{person}.
 
   #Organizations Controller
   Organization: Organisation

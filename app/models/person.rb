@@ -7,9 +7,9 @@ class Person < ApplicationRecord
 
   belongs_to :organization, required: false
   belongs_to :country, required: false, counter_cache: true
-  has_many :participants
+  has_many :participants, dependent: :destroy
   has_many :programs, through: :participants
-  has_many :person_roles
+  has_many :person_roles, dependent: :destroy
 
   audited
 

@@ -16,7 +16,7 @@ class RedirectTest < Capybara::Rails::TestCase
     log_in @rick
     visit edit_person_path(@rick)
     click_on 'Save'
-    assert_current_path people_path
+    assert_current_path person_path(@rick)
   end
 
   test "Does not use expired redirects" do

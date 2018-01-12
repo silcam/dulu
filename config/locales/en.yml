@@ -87,6 +87,7 @@ en:
   Home_Country: Home Country
   Email: Email
   Can_log_in: Able to log in
+  No_login: No login
   dulu_preferred_language: Preferred language for using Dulu
   English: English
   French: Français
@@ -109,6 +110,7 @@ en:
   confirm_different_person: This is a different person.
   Current_programs: Current Programs
   Previous_programs: Previous Programs
+  Delete_person_confirmation: Are you sure you want to delete %{person}?
 
   #Organizations Controller
   Organization: Organization

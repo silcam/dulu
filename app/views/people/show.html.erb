@@ -1,11 +1,10 @@
-<h2><%= @person.full_name %></h2>
+<h2>
+  <%= @person.full_name %>
+  <% if can? :update, @person %>
+    <%= link_to t(:Edit), edit_person_path(@person), class: 'btn btn-warning hdr-btn' %>
+  <% end %>
+</h2>
 <h4><%= @person.organization.try(:name) %></h4>
-
-<% if can? :update, @person %>
-    <div>
-      <%= link_to t(:Edit_person), edit_person_path(@person, referred_by: request.path) %>
-    </div>
-<% end %>
 
 <table class="table" style="width:auto;">
   <tr>
@@ -15,6 +14,10 @@
   <tr>
     <th><%= t :Email %></th>
     <td><%= @person.email %></td>
+  </tr>
+  <tr>
+    <th>Dulu</th>
+    <td><%= @person.has_login ? t(:Can_log_in) : t(:No_login) %></td>
   </tr>
 </table>
 
@@ -81,7 +84,9 @@
       <tr>
         <td>
           <%= link_to participant.cluster_program.display_name, participant.cluster_program %>
-           - <%= participant.roles_text %>
+          <% unless participant.roles_text.blank? %>
+            - <%= participant.roles_text %>
+          <% end %>
         </td>
       </tr>
     <% end %>
@@ -98,7 +103,9 @@
       <tr>
         <td>
           <%= link_to participant.cluster_program.display_name, participant.cluster_program %>
-          - <%= participant.roles_text %>
+          <% unless participant.roles_text.blank? %>
+            - <%= participant.roles_text %>
+          <% end %>
         </td>
       </tr>
     <% end %>
