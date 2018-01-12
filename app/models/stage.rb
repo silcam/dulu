@@ -6,6 +6,8 @@ class Stage < ApplicationRecord
 
   TRANSLATION_STAGES = %i( Planned Drafting Testing Review_committee Back_translating Ready_for_consultant_check
                             Consultant_check Consultant_checked Published )
+  MEDIA_STAGES = %i( Planned Application Script Recording Mastering Published )
+  LINGUISTIC_STAGES = %i( Planned Research Drafting Review Published )
 
   TRANSLATION_STAGE_ROLES = {
                               Drafting: [:Translator],
@@ -18,7 +20,6 @@ class Stage < ApplicationRecord
 
   audited associated_with: :activity
 
-  #TODO Localize error message
   validates :start_date, presence: {message: "year can't be blank"}, allow_blank: false
   validates :start_date, fuzzy_date: true
   validates :kind, inclusion: [:Translation]

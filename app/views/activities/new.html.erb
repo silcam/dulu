@@ -9,9 +9,21 @@
                         {}, {class: 'form-control', autofocus: true}) %>
       </div>
 
-      <div class="type-specific-part" id="translation-activity-part">
-        <%= render "new_translation_activity", form: form %>
+      <% hidden = 'style="display: none;"'.html_safe %>
+      <% activity_kind  = @activity.type.nil? ? :Translation : @activity.kind %>
+      <div class="type-specific-part" id="section-TranslationActivity" <%= hidden unless activity_kind==:Translation %>>
+        <%= render 'new_translation_activity', form: form %>
       </div>
+
+      <div class="type-specific-part" id="section-LinguisticActivity" <%= hidden unless activity_kind==:Linguistic %>>
+        <%= render 'new_linguistic_activity', form: form %>
+      </div>
+
+      <div class="type-specific-part" id="section-MediaActivity" <%= hidden unless activity_kind==:Media %>>
+        <%= render 'new_media_activity', form: form %>
+      </div>
+
+
 
       <% unless @program.participants.empty? %>
         <div class="form-group">

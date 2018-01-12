@@ -1,7 +1,7 @@
 class Activity < ApplicationRecord
 
   belongs_to :program, required: true, touch: true
-  belongs_to :bible_book, required: false
+  # belongs_to :bible_book, required: false
   has_many :stages
   has_and_belongs_to_many :participants
   has_many :people, through: :participants
@@ -57,7 +57,10 @@ class Activity < ApplicationRecord
   end
 
   def self.types_for_select
-    [[I18n.t(:Bible_translation), 'TranslationActivity']
+    [
+        [I18n.t(:Bible_translation), 'TranslationActivity'],
+        [I18n.t(:Linguistic), 'LinguisticActivity'],
+        [I18n.t(:Media), 'MediaActivity']
     ]
   end
 
@@ -65,11 +68,17 @@ class Activity < ApplicationRecord
     case str
       when 'TranslationActivity'
         TranslationActivity
+      when 'MediaActivity'
+        MediaActivity
+      when 'LinguisticActivity'
+        LinguisticActivity
     end
   end
 
   def self.search(query)
-    TranslationActivity.search(query)
+    TranslationActivity.search(query) +
+        MediaActivity.search(query) +
+        LinguisticActivity.search(query)
   end
 
   private

@@ -23,4 +23,8 @@ module ApplicationHelper
       ''
     end
   end
+
+  def t_select_options(array)
+    options_for_select(array.collect{ |item| [t(item), item]})
+  end
 end

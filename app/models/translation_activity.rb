@@ -1,7 +1,7 @@
 class TranslationActivity < Activity
 
   belongs_to :bible_book
-  has_many :book_translation_consultants
+  # has_many :book_translation_consultants TODO Delete this line
 
   def name
     self.bible_book.name
