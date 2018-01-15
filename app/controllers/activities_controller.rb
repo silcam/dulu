@@ -1,6 +1,6 @@
 class ActivitiesController < ApplicationController
-  # before_action :set_activity, only: []
-  before_action :set_program
+  before_action :set_activity, only: [:show, :update]
+  before_action :set_program, only: [:index, :new, :create]
   before_action :authorize_user, only: [:new, :create]
 
   def index
@@ -12,8 +12,22 @@ class ActivitiesController < ApplicationController
   end
 
   def create
-    Activity.subclass_from_text(params[:activity][:type]).build_all(@program, params[:activity])
-    redirect_to dashboard_program_path @program
+    participants = Participant.where(program: @program, id: params[:activity][:participant_ids])
+    @activity = Activity.subclass_from_text(params[:activity][:type]).build(params[:activity], @program, participants)
+    if @activity.persisted?
+      redirect_to dashboard_program_path @program
+    else
+      render :new
+    end
+  end
+
+  def show
+  end
+
+  def update
+    authorize! :update_activity, @activity
+    @activity.update activity_params
+    redirect_to activity_path(@activity)
   end
 
   private
@@ -22,7 +36,16 @@ class ActivitiesController < ApplicationController
     @program = Program.find params[:program_id]
   end
 
+  def set_activity
+    @activity = Activity.find(params[:id])
+    @program = @activity.program
+  end
+
   def authorize_user
     authorize! :create_activity, @program
+  end
+
+  def activity_params
+    params.require(:activity).permit(:note)
   end
 end

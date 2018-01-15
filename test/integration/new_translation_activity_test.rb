@@ -12,7 +12,7 @@ class NewTranslationActivityTest < Capybara::Rails::TestCase
   end
 
   test "Add John Translation" do
-    select 'John', from: 'activity_bible_book'
+    select 'John', from: 'activity_bible_book_id'
     check 'Drew Maust'
     click_button 'Save'
     assert_current_path dashboard_program_path @hdi_program
@@ -24,7 +24,7 @@ class NewTranslationActivityTest < Capybara::Rails::TestCase
   end
 
   test "Add a whole Testament" do
-    select 'New Testament', from: 'activity_bible_book'
+    select 'New Testament', from: 'activity_bible_book_id'
     check 'Drew Maust'
     click_button 'Save'
     assert_current_path dashboard_program_path @hdi_program

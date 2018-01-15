@@ -3,16 +3,16 @@ class StagesController < ApplicationController
   before_action :set_activity, only: [:new, :create]
   before_action :authorize_user
   
-  def new
-    @stage = Stage.new_for @translation_activity
-  end
+  # def new
+  #   @stage = Stage.new_for @translation_activity
+  # end
 
   def create
-    @stage = @translation_activity.stages.create(stage_params.merge(kind: :Translation))
+    @stage = @activity.stages.create(stage_params.merge(kind: @activity.kind))
     unless @stage.new_record?
       respond_to do |format|
         format.js
-        format.html { redirect_to(@translation_activity.program) }
+        format.html { redirect_to(@activity.program) }
       end
     else
       respond_to do |format|
@@ -37,11 +37,11 @@ class StagesController < ApplicationController
     respond_to do |format|
       if @stage.destroyed?
         format.js
-        format.html { redirect_to(@stage.translation_activity) }
+        format.html { redirect_to(@stage.activity) }
       else
         @error = "Unable to delete this stage from the history."
         format.js { render 'shared/error_popup' }
-        format.html { redirect_to(@stage.translation_activity)}
+        format.html { redirect_to(@stage.activity)}
       end
     end
   end
@@ -55,14 +55,14 @@ class StagesController < ApplicationController
 
   def set_stage
     @stage = Stage.find params[:id]
-    @translation_activity = @stage.activity
+    @activity = @stage.activity
   end
 
   def set_activity
-    @translation_activity = Activity.find params[:translation_activity_id]
+    @activity = Activity.find params[:activity_id]
   end
 
   def authorize_user
-    authorize! :update_activity, @translation_activity
+    authorize! :update_activity, @activity
   end
 end

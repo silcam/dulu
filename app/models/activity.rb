@@ -46,16 +46,6 @@ class Activity < ApplicationRecord
     stages.order 'start_date ASC, id ASC'
   end
 
-  def build(params)
-    # Type specific implementation runs first
-    save!
-    return if params[:participant_ids].nil?
-
-    params[:participant_ids].each do |participant_id|
-      participants << Participant.find(participant_id)
-    end
-  end
-
   def self.types_for_select
     [
         [I18n.t(:Bible_translation), 'TranslationActivity'],

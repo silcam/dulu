@@ -1,7 +1,7 @@
 <%= render 'programs/sidebar' do %>
     <%= render 'shared/error_messages', errors: (@errors || []) %>
     <h2><%= t :Add_activity %></h2>
-    <%= form_for @activity, url: program_activities_path(@program),
+    <%= form_for @activity, as: :activity, url: program_activities_path(@program),
                 html: {class: 'auto-width'} do |form| %>
       <div class="form-group">
         <%= form.label :type, t(:Activity_type) %>

@@ -1,0 +1,22 @@
+<%= form_for(stage, remote: true) do |f| %>
+  <div class="row">
+    <div class="col-md-2">
+      <h4>
+        <%= t stage.name %>
+      </h4>
+    </div>
+    <div class="col-md-6">
+      <%= render 'shared/fuzzy_date_field',
+                 model: 'stage', field: 'start_date',
+                 fdate: stage.f_start_date,
+                 horizontal_form: true %>
+    </div>
+    <div class="col-md-2">
+      <%= f.submit t(:Save), class: 'btn btn-primary' %>
+    </div>
+    <div class="col-md-2">
+      <%= button_tag t(:Cancel), class: 'btn btn-danger',
+                     data: {'cancel-edit-stage-id' => stage.id} %>
+    </div>
+  </div>
+<% end %>

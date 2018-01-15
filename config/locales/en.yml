@@ -31,6 +31,7 @@ en:
   Sorry: Sorry
   as: as
   Select: Please select...
+  Category: Category
 
   #Dates
   Date: Date
@@ -159,7 +160,7 @@ en:
   Add_books: Add books to translate
   Active: Active
 
-  #Activities Controller
+  # Activities Controller
   Activities: Activities
   Activity: Activity
   My_activities: My Activities
@@ -172,6 +173,16 @@ en:
   new_activity: new activity
   Multiple_stages_hint: "If the books are at different stages, set the stage to Planned and the date to the beginning of the project. Then update each book to it's current stage on the Project Dashboard."
   No_current_activites: No Current Activities
+  # Meda Activities
+  AudioScripture: Audio Scripture
+  Audio_x: Audio %{x}
+  JesusFilm: Jesus Film
+  LukeFilm: Luke Film
+  ActsFilm: Acts Film
+  # Linguistic Activities
+  Grammar: Grammar
+  Dictionary: Dictionary
+  Phonology: Phonology
 
   #Participants Controller
   Role: Role
@@ -182,7 +193,15 @@ en:
   End_of_participation: End of Participation
   End_of_participation_prompt: 'left the program: '
 
-  #Translation Stages Controller
+  # Stages Controller
+  Current_stage: 'Current stage'
+  Update_stage: Update stage to
+  As_of: As of
+  Stage: Stage
+  Modify_Date: Modify Date
+  Delete_stage_confirmation: Do you want to delete this stage from the history?
+  Translate: Translate
+  #   Translation Stages
   Planned: Planned
   Drafting: Drafting
   Testing: Testing
@@ -192,13 +211,14 @@ en:
   Consultant_check: Consultant Check in Progress
   Consultant_checked: Consultant Checked
   Published: Published
-  Current_stage: 'Current stage'
-  Update_stage: Update stage to
-  As_of: As of
-  Stage: Stage
-  Modify_Date: Modify Date
-  Delete_stage_confirmation: Do you want to delete this stage from the history?
-  Translate: Translate
+  #   Media Stages
+  Application: Application
+  Script: Script
+  Recording: Recording
+  Mastering: Mastering
+  #   Linguistic Stages
+  Reserach: Research
+  Review: Review
 
   #Sessions Controller
   Log_out: Log out

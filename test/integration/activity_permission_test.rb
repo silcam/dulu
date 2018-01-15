@@ -11,7 +11,7 @@ class ActivityPermissionTest < Capybara::Rails::TestCase
 
   test "Kevin can't update Hdi Ezra" do
     log_in @kevin
-    visit translation_activity_path @hdi_ezra
+    visit activity_path @hdi_ezra
     refute page.has_css?('button#show-update-form'),
            "Kevin shouldn't see Update button"
     refute page.has_content?('Modify Date'),

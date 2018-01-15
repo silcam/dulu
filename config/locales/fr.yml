@@ -31,6 +31,7 @@ fr:
   Sorry: Désolé
   as: comme
   Select: Choisier...
+  Category: Catégorie
 
   #Dates
   Date: Date
@@ -172,6 +173,16 @@ fr:
   new_activity: nouvelle activité
   Multiple_stages_hint: "Si les livres sont à des differentes étapes, choisissez Prévue et fixez le date au commencement de la traduction. Puis, mettez à jour chaque livre sur le Tableau de bord."
   No_current_activities: Aucune activité actuelle
+  # Meda Activities
+  AudioScripture: Écriture Audio
+  Audio_x: "%{x} Audio"
+  JesusFilm: Film Jésus
+  LukeFilm: Film Luc
+  ActsFilm: Film Actes
+  # Linguistic Activities
+  Grammar: Grammaire
+  Dictionary: Dictionaire
+  Phonology: Phonologie
 
   #Participants Controller
   Role: Rôle
@@ -182,7 +193,15 @@ fr:
   End_of_participation: Fin de relation
   End_of_participation_prompt: a quitté le programme le 
 
-  #Translation Stages Controller
+  # Stages Controller
+  Current_stage: 'Étape actuelle '
+  Update_stage: Étape actuelle
+  As_of: Depuis
+  Stage: Étape
+  Modify_Date: Modifier le date
+  Delete_stage_confirmation: Confirmez que vous voulez supprimer cette étape de l'historique.
+  Translate: Traduire
+  #   Translation Stages
   Planned: Prévue
   Drafting: Ébauche
   Testing: Testing
@@ -192,13 +211,14 @@ fr:
   Consultant_check: Vérification du conseiller
   Consultant_checked: Vérifié par conseiller
   Published: Publié
-  Current_stage: 'Étape actuelle '
-  Update_stage: Étape actuelle
-  As_of: Depuis
-  Stage: Étape
-  Modify_Date: Modifier le date
-  Delete_stage_confirmation: Confirmez que vous voulez supprimer cette étape de l'historique.
-  Translate: Traduire
+  #   Media Stages
+  Application: Application
+  Script: Script
+  Recording: Enregistrement
+  Mastering: Mastérisation
+  #   Linguistic Stages
+  Reserach: Recherche
+  Review: Révision
 
   #Sessions Controller
   Log_out: Déconnexion

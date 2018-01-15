@@ -19,22 +19,22 @@ class TranslationActivity < Activity
     return index==0 ? nil : list[index - 1]
   end
 
-  def build(params)
-    return if program.is_translating? params[:bible_book]
-    self.bible_book_id = params[:bible_book]
-    super
+  def self.stages
+    Stage.stages(:Translation)
   end
 
-  def self.build_all(program, params)
-    if ['nt', 'ot'].include? params[:bible_book]
-      books = BibleBook.get_new_testament if params[:bible_book] == 'nt'
-      books = BibleBook.get_old_testament if params[:bible_book] == 'ot'
+  def self.build(params, program, participants)
+    activity = nil
+    if ['nt', 'ot'].include? params[:bible_book_id]
+      books = (params[:bible_book_id] == 'nt') ? BibleBook.get_new_testament : BibleBook.get_old_testament
       books.each do |book|
-        params[:bible_book] = book.id
-        TranslationActivity.new(program: program).build(params)
+        unless program.is_translating? book
+          activity = TranslationActivity.create! program: program, participants: participants, bible_book: book
+        end
       end
+      activity
     else
-      TranslationActivity.new(program: program).build(params)
+      TranslationActivity.create! program: program, participants: participants, bible_book_id: params[:bible_book_id]
     end
   end
 

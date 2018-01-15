@@ -5,6 +5,7 @@
 $(document).ready ->
   $("a[data-slide-form-id]").click (e) ->
     e.preventDefault()
+    $(this).blur()
     slide_form = $('#update-stage-form-'+$(this).data("slide-form-id"))
     slide_form.slideToggle(350, ->
       if(slide_form.is(':visible'))

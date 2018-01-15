@@ -1,6 +1,6 @@
 <tr id="activity-row-<%= activity.id %>">
   <td>
-    <%= link_to activity.name, activity %>
+    <%= link_to activity.name, activity_path(activity) %>
   </td>
 
   <td class="progress-cell" id="activity-progress-<%= activity.id %>">

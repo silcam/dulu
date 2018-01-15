@@ -51,9 +51,6 @@ Rails.application.routes.draw do
 
   resources :programs do
     get 'dashboard', on: :member
-    resources :translation_activities, shallow: true do
-      resources :stages, only: [:new, :create, :update, :destroy], shallow: true
-    end
     resources :activities, shallow: true do
       resources :stages, only: [:new, :create, :update, :destroy], shallow: true
     end

@@ -47,7 +47,7 @@ class Program < ApplicationRecord
   end
 
   def sorted_activities
-    sorted_translation_activities
+    activities.order('type DESC, bible_book_id')
   end
 
   def sorted_translation_activities

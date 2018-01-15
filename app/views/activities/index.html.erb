@@ -11,7 +11,7 @@
   <table class='table'>
     <% @program.sorted_translation_activities.each do |activity| %>
         <tr>
-          <td><%= link_to activity.name, activity %></td>
+          <td><%= link_to activity.name, activity_path(activity) %></td>
           <td><%= t(activity.current_stage.name) %></td>
           <td><%= activity.participants.collect{ |p| p.full_name }.join(', ') %></td>
         </tr>
