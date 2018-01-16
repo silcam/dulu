@@ -10,7 +10,7 @@ class LinguisticActivity < Activity
   end
 
   def name
-    title
+    "#{title} - #{I18n.t(category)}"
   end
 
   def self.stages
@@ -23,7 +23,15 @@ class LinguisticActivity < Activity
   end
 
   def self.search(query)
-    []
+    activities = LinguisticActivity.where("title ILIKE :q OR category ILIKE :q", {q: "%#{query}%"})
+    results = []
+    activities.each do |activity|
+      results << {
+          title: activity.name,
+          description: "#{activity.program.name} - #{activity.current_stage.name}",
+          route: "/activities/#{activity.id}"}
+    end
+    results
   end
 
 end

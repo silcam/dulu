@@ -5,22 +5,22 @@
                 html: {class: 'auto-width'} do |form| %>
       <div class="form-group">
         <%= form.label :type, t(:Activity_type) %>
-        <%= form.select(:type, options_for_select(Activity.types_for_select),
+        <%= form.select(:type, options_for_select(Activity.types_for_select, @activity.type),
                         {}, {class: 'form-control', autofocus: true}) %>
       </div>
 
       <% hidden = 'style="display: none;"'.html_safe %>
       <% activity_kind  = @activity.type.nil? ? :Translation : @activity.kind %>
       <div class="type-specific-part" id="section-TranslationActivity" <%= hidden unless activity_kind==:Translation %>>
-        <%= render 'new_translation_activity', form: form %>
+        <%= render 'new_translation_activity', form: form, activity_kind: activity_kind %>
       </div>
 
       <div class="type-specific-part" id="section-LinguisticActivity" <%= hidden unless activity_kind==:Linguistic %>>
-        <%= render 'new_linguistic_activity', form: form %>
+        <%= render 'new_linguistic_activity', form: form, activity_kind: activity_kind  %>
       </div>
 
       <div class="type-specific-part" id="section-MediaActivity" <%= hidden unless activity_kind==:Media %>>
-        <%= render 'new_media_activity', form: form %>
+        <%= render 'new_media_activity', form: form, activity_kind: activity_kind  %>
       </div>
 
 

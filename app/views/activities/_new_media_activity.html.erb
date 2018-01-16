@@ -1,9 +1,16 @@
+<% disabled = (activity_kind != :Media) %>
 <div class="form-group">
   <label><%= t :Category %></label>
-  <%= form.select :category, t_select_options(MediaActivity::CATEGORIES), {}, class: 'form-control', data: {'media-category' => 1} %>
+  <%= form.select :category, t_select_options(MediaActivity::CATEGORIES), {}, class: 'form-control', data: {'media-category' => 1}, disabled: disabled %>
 </div>
 
 <div class="form-group" id="form-group-scripture">
   <label><%= t :Scripture %></label>
-  <%= form.select :scripture, t_select_options(MediaActivity::SCRIPTURE), {}, class: 'form-control' %>
+  <%= form.select :scripture, t_select_options(MediaActivity::SCRIPTURE), {}, class: 'form-control', disabled: disabled %>
+</div>
+
+<div class="form-group" id="form-group-books">
+  <label><%= t :Select_books %></label>
+  <% books = BibleBook.all.collect{ |b| {value: b.id, label: b.name, selected: false} } %>
+  <%= render 'shared/checkbox_group', items: books, options: {name: 'activity[bible_book_ids][]', no_allnone: true} %>
 </div>

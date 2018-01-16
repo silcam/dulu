@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180112144437) do
+ActiveRecord::Schema.define(version: 20180116144838) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -27,6 +27,13 @@ ActiveRecord::Schema.define(version: 20180112144437) do
     t.string   "scripture"
     t.index ["bible_book_id"], name: "index_activities_on_bible_book_id", using: :btree
     t.index ["program_id"], name: "index_activities_on_program_id", using: :btree
+  end
+
+  create_table "activities_bible_books", force: :cascade do |t|
+    t.integer "media_activity_id"
+    t.integer "bible_book_id"
+    t.index ["bible_book_id"], name: "index_activities_bible_books_on_bible_book_id", using: :btree
+    t.index ["media_activity_id"], name: "index_activities_bible_books_on_media_activity_id", using: :btree
   end
 
   create_table "activities_participants", force: :cascade do |t|

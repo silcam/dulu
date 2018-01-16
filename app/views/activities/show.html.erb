@@ -4,6 +4,9 @@
     <% if @activity.is_a?(LinguisticActivity) && (@activity.category != :Other) %>
       <br />
       <small><%= t @activity.category %></small>
+    <% elsif @activity.respond_to?(:bible_books) && !@activity.bible_books.empty? %>
+      <br />
+      <small><%= @activity.bible_books.collect{ |b| b.name }.join(', ') %></small>
     <% end %>
   </h2>
 

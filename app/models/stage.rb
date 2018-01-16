@@ -4,10 +4,23 @@ class Stage < ApplicationRecord
   belongs_to :stage_name, required: false
   # has_many :program_roles, through: :stage_name
 
+  LINGUISTIC_STAGES = %i( Planned Research Drafting Review Published )
+  MEDIA_STAGES = %i( Planned Application Script Recording Mastering Published )
   TRANSLATION_STAGES = %i( Planned Drafting Testing Review_committee Back_translating Ready_for_consultant_check
                             Consultant_check Consultant_checked Published )
-  MEDIA_STAGES = %i( Planned Application Script Recording Mastering Published )
-  LINGUISTIC_STAGES = %i( Planned Research Drafting Review Published )
+
+  LINGUISTIC_STAGE_ROLES = {
+                        Research: [:LinguisticConsultant, :LinguisticConsultantTraining],
+                        Drafting:  [:LinguisticConsultant, :LinguisticConsultantTraining],
+                        Review:  [:LinguisticConsultant, :LinguisticConsultantTraining]
+  }
+
+  MEDIA_STAGE_ROLES = {
+                    Application: [:MediaConsultant, :MediaSpecialist],
+                    Script:  [:MediaConsultant, :MediaSpecialist],
+                    Recording:  [:MediaConsultant, :MediaSpecialist],
+                    Mastering:  [:MediaConsultant, :MediaSpecialist]
+  }
 
   TRANSLATION_STAGE_ROLES = {
                               Drafting: [:Translator],
@@ -17,6 +30,7 @@ class Stage < ApplicationRecord
                               Consultant_check: [:TranslationConsultant, :TranslationConsultantTraining, :Exegete],
                               Consultant_checked: [:TranslationConsultant, :TranslationConsultantTraining, :Exegete]
                             }
+
 
   audited associated_with: :activity
 
@@ -69,9 +83,9 @@ class Stage < ApplicationRecord
       when :Translation
         TRANSLATION_STAGE_ROLES[name] || []
       when :Linguistic
-        []
+        LINGUISTIC_STAGE_ROLES[name] || []
       when :Media
-        []
+        MEDIA_STAGE_ROLES[name] || []
     end
   end
 

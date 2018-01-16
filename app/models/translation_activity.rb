@@ -55,7 +55,7 @@ class TranslationActivity < Activity
       activities.each do |activity|
         subresults << {title: activity.program.name,
                        description: I18n.t(activity.stage_name),
-                       model: activity}
+                       route: "/activities/#{activity.id}"}
       end
       description = activities.empty? ? I18n.t(:No_current_translations) : ''
       results << {title: book.name,

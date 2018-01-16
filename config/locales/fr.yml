@@ -173,6 +173,7 @@ fr:
   new_activity: nouvelle activité
   Multiple_stages_hint: "Si les livres sont à des differentes étapes, choisissez Prévue et fixez le date au commencement de la traduction. Puis, mettez à jour chaque livre sur le Tableau de bord."
   No_current_activities: Aucune activité actuelle
+  Select_books: Choisissez des livres
   # Meda Activities
   AudioScripture: Écriture Audio
   Audio_x: "%{x} Audio"

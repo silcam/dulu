@@ -25,12 +25,20 @@ class MediaActivity < Activity
   end
 
   def self.build(params, program, participants)
-    ma_params = params.permit(:category, :scripture).merge(program: program, participants: participants)
+    bible_books = params[:bible_book_ids].nil? ? [] : BibleBook.where(id: params[:bible_book_ids])
+    ma_params = params.permit(:category, :scripture).merge(program: program, participants: participants, bible_books: bible_books)
     MediaActivity.create(ma_params)
   end
 
   def self.search(query)
-    []
+    activities = MediaActivity.where("category ILIKE :q", {q: "%#{query}%"})
+    activities.collect do |activity|
+      {
+          title: activity.name,
+          description: "#{activity.program.name} - #{activity.current_stage.name}",
+          route: "activities/#{activity.id}"
+      }
+    end
   end
 
   private
