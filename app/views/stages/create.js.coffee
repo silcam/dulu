@@ -1,5 +1,5 @@
 if $(location).attr('href').indexOf('activities') >= 0
-  $('#current-stage').html("<%= t(@stage.name) %>")
+  $('#current-stage').html("<%= t(@stage.name, default: @stage.name.to_s) %>")
   $('#update-stage-form').fadeOut('fast', ->
     $('#show-update-form').fadeIn('fast'))
   $('#dulutable').find('tbody').prepend(
@@ -14,7 +14,7 @@ else
   $('#activity-progress-<%= id %>').html(
     " <%= j(render 'programs/progress_bar', activity: @activity) %>")
   $('a[data-slide-form-id=<%= id %>]').html(
-    " <%= t(@activity.stage_name) %>")
+    " <%= t(@activity.stage_name, default: @activity.stage_name.to_s) %>")
   $('#activity-stage-date-<%= id %>').html(
     " (<%= @activity.current_stage.f_start_date.try(:pretty_print) %>)")
   $('#activity-participants-<%= id %>').html(

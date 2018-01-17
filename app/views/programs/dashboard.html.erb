@@ -4,7 +4,7 @@
       <div id="activities-table-div" class="bottom-border">
         <h2><%= t :Current_activities %></h2>
         <% if can?(:create_activity, @program) and not @program.sorted_activities.empty? %>
-          <%= button_to t(:Add_activity), new_program_activity_path(@program), method: :get, class: 'btn btn-primary' %>
+          <%= link_to t(:Add_activity), new_program_activity_path(@program), class: 'btn btn-primary' %>
         <% end %>
         <% if @program.sorted_activities.empty? %>
           <h3><%= t :No_current_activities %></h3>
@@ -14,7 +14,7 @@
           <% activities_hash.keys.sort.reverse_each do |kind| %>
             <div class="minimizable-parent">
               <h3>
-                <%= kind %> <%= t :Activities %>
+                <%= t "#{kind}_activities" %>
                 <a href="#" data-minimize class="btn btn-default btn-sm">-</a>
               </h3>
               <div class="minimizable">

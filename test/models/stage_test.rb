@@ -12,7 +12,9 @@ class StageTest < ActiveSupport::TestCase
   end
 
   test 'Validation Required Params' do
-    model_validation_hack_test Stage, valid_params
+    min_params = valid_params
+    min_params.delete(:name)
+    model_validation_hack_test Stage, min_params
   end
 
   test 'Validation Start Date' do
@@ -27,10 +29,6 @@ class StageTest < ActiveSupport::TestCase
 
   test 'Validation Kind' do
     refute Stage.new(valid_params(kind: 'Pizza')).valid?
-  end
-
-  test 'Validation Name' do
-    refute Stage.new(valid_params(name: 'Pepperoni Pizza')).valid?
   end
 
   test 'New For Activity' do

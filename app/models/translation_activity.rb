@@ -19,7 +19,7 @@ class TranslationActivity < Activity
     return index==0 ? nil : list[index - 1]
   end
 
-  def self.stages
+  def available_stages
     Stage.stages(:Translation)
   end
 

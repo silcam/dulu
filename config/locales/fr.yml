@@ -32,6 +32,7 @@ fr:
   as: comme
   Select: Choisier...
   Category: Catégorie
+  Topic: Sujet
 
   #Dates
   Date: Date
@@ -166,6 +167,9 @@ fr:
   My_activities: Mes activités
   Associated_activities: Activités associées
   Bible_translation: Traduction de la Bible
+  Translation_activities: Activités de traduction
+  Linguistic_activities: Activités linguistique
+  Media_activities: Activités audiovisuelles
   Add_activity: Ajouter une activité
   Activity_type: Type d'activité
   Associate_people: "Associer %{activity} avec:"
@@ -174,13 +178,20 @@ fr:
   Multiple_stages_hint: "Si les livres sont à des differentes étapes, choisissez Prévue et fixez le date au commencement de la traduction. Puis, mettez à jour chaque livre sur le Tableau de bord."
   No_current_activities: Aucune activité actuelle
   Select_books: Choisissez des livres
-  # Meda Activities
+  # Media Activities
   AudioScripture: Écriture Audio
   Audio_x: "%{x} Audio"
+  Film: Film
   JesusFilm: Film Jésus
   LukeFilm: Film Luc
   ActsFilm: Film Actes
+  GenesisFilm: Film Genèse
+  StoryOfGenesisFilm: L'histoire de Genèse
+  BookOfJohn: Livre de Jean
+  MagdalenaFilm: Film Magdalena
   # Linguistic Activities
+  Workshop: Atelier
+  Workshops: Atelier
   Grammar: Grammaire
   Dictionary: Dictionaire
   Phonology: Phonologie
@@ -203,7 +214,7 @@ fr:
   Delete_stage_confirmation: Confirmez que vous voulez supprimer cette étape de l'historique.
   Translate: Traduire
   #   Translation Stages
-  Planned: Prévue
+  Planned: Prévu
   Drafting: Ébauche
   Testing: Testing
   Review_committee: Comité de révision
@@ -215,10 +226,11 @@ fr:
   #   Media Stages
   Application: Application
   Script: Script
+  Scheduled: Programmé
   Recording: Enregistrement
   Mastering: Mastérisation
   #   Linguistic Stages
-  Reserach: Recherche
+  Research: Recherche
   Review: Révision
 
   #Sessions Controller

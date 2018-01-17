@@ -29,6 +29,14 @@ class Activity < ApplicationRecord
     self.current_stage.name
   end
 
+  def next_stage
+    Stage.new(
+      name: Stage.stage_after(current_stage.name, current_stage.kind),
+      kind: kind,
+      start_date: Date.today
+    )
+  end
+
   def participants_for_my_stage
     roles = current_stage.roles
     current_participants.where_has_role_among roles

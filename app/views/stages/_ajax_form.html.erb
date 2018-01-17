@@ -1,4 +1,4 @@
- <% stage = Stage.new_for(activity) %>
+ <% stage = activity.next_stage %>
  
   <%= form_for(stage,
                url: activity_stages_path(activity),
@@ -6,7 +6,7 @@
     <div class="col-md-3">
       <p>
         <%= f.label :name, t(:Update_stage) %>
-        <%= f.select(:name, t_select_options(activity.class.stages, stage.name), {}, class: 'form-control') %>
+        <%= f.select(:name, t_select_options(activity.available_stages, stage.name), {}, class: 'form-control') %>
       </p>
     </div>
     <div class="col-md-5">

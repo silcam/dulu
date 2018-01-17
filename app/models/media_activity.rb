@@ -2,7 +2,8 @@ class MediaActivity < Activity
 
   has_and_belongs_to_many :bible_books
 
-  CATEGORIES = %i( AudioScripture JesusFilm LukeFilm ActsFilm )
+  CATEGORIES = %i( AudioScripture Film )
+  FILMS = %i( JesusFilm LukeFilm ActsFilm GenesisFilm StoryOfGenesisFilm BookOfJohn MagdalenaFilm )
   SCRIPTURE = %i( Bible Old_testament New_testament Other )
 
   validates :category, inclusion: CATEGORIES
@@ -12,21 +13,25 @@ class MediaActivity < Activity
     attributes['category'].try(:to_sym)
   end
 
+  def film
+    attributes['film'].try(:to_sym)
+  end
+
   def scripture
     attributes['scripture'].try(:to_sym)
   end
 
   def name
-    category == :AudioScripture ? audio_scripture_name : I18n.t(category)
+    category == :AudioScripture ? audio_scripture_name : I18n.t(film)
   end
 
-  def self.stages
+  def available_stages
     Stage.stages(:Media)
   end
 
   def self.build(params, program, participants)
     bible_books = params[:bible_book_ids].nil? ? [] : BibleBook.where(id: params[:bible_book_ids])
-    ma_params = params.permit(:category, :scripture).merge(program: program, participants: participants, bible_books: bible_books)
+    ma_params = params.permit(:category, :scripture, :film).merge(program: program, participants: participants, bible_books: bible_books)
     MediaActivity.create(ma_params)
   end
 

@@ -5,7 +5,7 @@ class Stage < ApplicationRecord
   # has_many :program_roles, through: :stage_name
 
   LINGUISTIC_STAGES = %i( Planned Research Drafting Review Published )
-  MEDIA_STAGES = %i( Planned Application Script Recording Mastering Published )
+  MEDIA_STAGES = %i( Planned Application Script Scheduled Recording Mastering Published )
   TRANSLATION_STAGES = %i( Planned Drafting Testing Review_committee Back_translating Ready_for_consultant_check
                             Consultant_check Consultant_checked Published )
 
@@ -18,6 +18,7 @@ class Stage < ApplicationRecord
   MEDIA_STAGE_ROLES = {
                     Application: [:MediaConsultant, :MediaSpecialist],
                     Script:  [:MediaConsultant, :MediaSpecialist],
+                    Scheduled:  [:MediaConsultant, :MediaSpecialist],
                     Recording:  [:MediaConsultant, :MediaSpecialist],
                     Mastering:  [:MediaConsultant, :MediaSpecialist]
   }
@@ -37,15 +38,15 @@ class Stage < ApplicationRecord
   validates :start_date, presence: {message: "year can't be blank"}, allow_blank: false
   validates :start_date, fuzzy_date: true
   validates :kind, inclusion: [:Translation, :Linguistic, :Media]
-  validate :name_is_on_the_list
+  # validate :name_is_on_the_list
 
-  def self.new_for activity
-    existing = activity.current_stage
-    Stage.new({
-      name: stage_after(existing.name, existing.kind),
-      kind: existing.kind,
-      start_date: Date.today})
-  end
+  # def self.new_for activity
+  #   existing = activity.current_stage
+  #   Stage.new({
+  #     name: stage_after(existing.name, existing.kind),
+  #     kind: existing.kind,
+  #     start_date: Date.today})
+  # end
   
   # def name
   #   self.stage_name.name
@@ -156,7 +157,9 @@ class Stage < ApplicationRecord
       when :Application
         return 20, :red
       when :Script
-        return 40, :yellow
+        return 40, :orange
+      when :Scheduled
+        return 50, :yellow
       when :Recording
         return 60, :light_green
       when :Mastering
