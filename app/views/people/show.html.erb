@@ -22,9 +22,10 @@
 </table>
 
 <div class="showable-form-section">
+  <% grantable_roles = Role.grantable_roles(current_user, @person) %>
   <h3>
     <%= t :Roles %>
-    <% if can? :update, @person %>
+    <% if can?(:update, @person) && !grantable_roles.empty? %>
       <small>
         <a href="#" data-showable-form-show><%= @person.roles_field.blank? ? t(:Add) : t(:Edit) %></a>
         <a href="#" data-showable-form-hide class="not-shown"><%= t(:Cancel) %></a>
@@ -57,7 +58,6 @@
   <% end %>
 
   <p>
-    <% grantable_roles = Role.grantable_roles(current_user, @person) %>
     <% unless grantable_roles.empty? %>
       <%= form_for :person_role, url: person_person_roles_path(@person), html: {class: 'form-inline not-shown'} do |form| %>
         <div class="form-group">
