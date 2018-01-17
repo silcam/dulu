@@ -80,6 +80,13 @@ class PersonIntTest < Capybara::Rails::TestCase
     assert_no_selector('input[value="Delete Kevin Bradford"]')
   end
 
+  test "Edit does not delete!" do
+    log_in @rick
+    visit edit_person_path(@kevin)
+    click_button 'Save'
+    assert_current_path person_path(@kevin)
+  end
+
   # Edit page no longer has any effect on role. Deprecating this test
   # test 'Editing does not accidentally delete role' do
   #   log_in @olga
