@@ -9,9 +9,9 @@
 
   <td id="activity-stage-name-<%= activity.id %>">
     <% if can? :update_activity, activity %>
-        <%= link_to t(activity.stage_name, default: activity.stage_name), '#', {'data-slide-form-id' => activity.id} %>
+        <%= link_to t(activity.stage_name, default: activity.stage_name.to_s), '#', {'data-slide-form-id' => activity.id} %>
     <% else %>
-      <%= t(activity.stage_name) %>
+      <%= t(activity.stage_name, default: activity.stage_name.to_s) %>
     <% end %>
     <span id="activity-stage-date-<%= activity.id %>">
       <% date = activity.current_stage.f_start_date.try(:pretty_print) %>
@@ -34,7 +34,14 @@
   <tr>
     <td colspan="6" class="update-stage-form" id="update-stage-form-cell-<%= activity.id %>">
       <div class="row" id="update-stage-form-<%= activity.id %>" style="display: none;">
-        <%= render 'stages/ajax_form', activity: activity %>
+        <% if activity.category == :Workshops %>
+          <% @activity = activity %>
+          <div style="margin-left: 40px;">
+            <%= render 'workshops/table' %>
+          </div>
+        <% else %>
+          <%= render 'stages/ajax_form', activity: activity %>
+        <% end %>
       </div>
     </td>
   </tr>

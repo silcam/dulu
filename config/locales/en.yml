@@ -233,6 +233,10 @@ en:
   Research: Research
   Review: Review
 
+  # Workshops Controller
+  Completed: Completed
+  Mark_completed: Mark Completed
+
   #Sessions Controller
   Log_out: Log out
   Logout_message: Thank you for using Dulu.

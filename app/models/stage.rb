@@ -68,6 +68,13 @@ class Stage < ApplicationRecord
     end
   end
 
+  # Only applies to stages for Linguistic Workshops Activities
+  def workshop
+    if activity.respond_to? :workshops
+      activity.workshops.find_by(name: name)
+    end
+  end
+
   def progress
     case kind
       when :Translation

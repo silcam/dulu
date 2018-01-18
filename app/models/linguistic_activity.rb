@@ -27,6 +27,7 @@ class LinguisticActivity < Activity
 
   def next_workshop
     cw = current_workshop
+    return workshops.first if cw.nil?
     workshops.find_by(number: (cw.number + 1)) || cw
   end
 
@@ -46,6 +47,15 @@ class LinguisticActivity < Activity
     (category == :Workshops) ?
         workshop_progress :
         current_stage.progress
+  end
+
+  def ws_stages
+    workshops.collect do |ws|
+      {
+          workshop: ws,
+          stage: stages.find_by(name: ws.name)
+      }
+    end
   end
 
   def self.build(params, program, participants)
@@ -79,7 +89,8 @@ class LinguisticActivity < Activity
   private
 
   def workshop_progress
-    percent = (100 * current_workshop.number) / workshops.count
+    number = current_workshop.try(:number) || 0
+    percent = (100 * number) / workshops.count
     color = (percent == 100) ? :purple : :yellow
     return percent, color
   end
