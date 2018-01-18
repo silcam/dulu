@@ -3,7 +3,7 @@ if $(location).attr('href').indexOf('activities') >= 0
   $('#update-stage-form').fadeOut('fast', ->
     $('#show-update-form').fadeIn('fast'))
   $('#dulutable').find('tbody').prepend(
-      " <%= j (render 'translation_activities/stage_rows',
+      " <%= j (render 'activities/stage_rows',
                 stage: @stage) %> "
   )
   window.add_edit_stage_click_handlers()
