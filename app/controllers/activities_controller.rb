@@ -1,5 +1,5 @@
 class ActivitiesController < ApplicationController
-  before_action :set_activity, only: [:show, :update]
+  before_action :set_activity, only: [:show, :update, :update_workshops]
   before_action :set_program, only: [:index, :new, :create]
   before_action :authorize_user, only: [:new, :create]
 
@@ -12,7 +12,7 @@ class ActivitiesController < ApplicationController
   end
 
   def create
-    participants = Participant.where(program: @program, id: params[:activity][:participant_ids])
+    participants = Participant.where(id: params[:activity][:participant_ids])
     @activity = Activity.subclass_from_text(params[:activity][:type]).build(params[:activity], @program, participants)
     if @activity.persisted?
       redirect_to dashboard_program_path @program
@@ -27,6 +27,11 @@ class ActivitiesController < ApplicationController
   def update
     authorize! :update_activity, @activity
     @activity.update activity_params
+    redirect_to activity_path(@activity)
+  end
+
+  def update_workshops
+    @activity.update_workshops(params)
     redirect_to activity_path(@activity)
   end
 

@@ -5,7 +5,7 @@ class WorkshopsController < ApplicationController
   def complete
     authorize! :update_activity, @activity
     @workshop.complete(workshop_params)
-    follow_redirect activity_path(@activity)
+    render json: @workshop.to_hash.merge(action: 'workshops#complete')
   end
 
   private

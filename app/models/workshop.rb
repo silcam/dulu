@@ -11,11 +11,25 @@ class Workshop < ApplicationRecord
     linguistic_activity.stages.find_by(name: name)
   end
 
+  def f_date
+    if event
+      event.f_end_date
+    elsif stage
+      stage.f_start_date
+    else
+      nil
+    end
+  end
+
   def set_event_defaults(event)
     event.assign_attributes(
          name: "#{I18n.t(:Workshop)}: #{name}",
          domain: :Linguistics
     )
+  end
+
+  def completed?
+    !stage.nil?
   end
 
   def complete(params)
@@ -27,5 +41,15 @@ class Workshop < ApplicationRecord
         name: name,
         start_date: date
     )
+  end
+
+  def to_hash
+    {
+        id: id,
+        complete: !stage.nil?,
+        completed_text: I18n.t(:Completed),
+        date: f_date.try(:pretty_print),
+        activity: linguistic_activity.to_hash
+    }
   end
 end

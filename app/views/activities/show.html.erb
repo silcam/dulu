@@ -74,10 +74,23 @@
   </div>
 
   <div class="row">
-    <div class="col-md-6">
+    <div class="col-md-6 showable-form-section">
       <% if @activity.category == :Workshops %>
-        <h3><%= t :Workshops %></h3>
-        <%= render 'workshops/table' %>
+        <h3>
+          <%= t :Workshops %>
+          <% if can? :update_activity, @activity %>
+            <small>
+              <a href="#" data-showable-form-show><%= t :Edit %></a>
+              <a href="#" data-showable-form-hide class="not-shown"><%= t :Cancel %></a>
+            </small>
+          <% end %>
+        </h3>
+        <div class="shown">
+          <%= render 'workshops/table' %>
+        </div>
+        <div class="not-shown">
+          <%= render 'workshops/edit_table' %>
+        </div>
       <% else %>
         <h3><%= t :History %></h3>
         <table class="table" id="dulutable" >

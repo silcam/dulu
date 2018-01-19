@@ -58,6 +58,24 @@ class LinguisticActivity < Activity
     end
   end
 
+  def update_workshops(params)
+    workshops.each do |workshop|
+      ws_params = params[:workshops][workshop.id.to_s]
+      if ws_params.nil?
+        workshop.destroy
+      else
+        workshop.update(name: ws_params[:name], number: ws_params[:number])
+        if workshop.completed? && !ws_params[:completed]
+          workshop.stage.destroy
+        end
+      end
+    end
+    params[:new_workshops].try(:each_with_index) do |name, i|
+      number = params[:new_workshop_numbers][i]
+      workshops.create(name: name, number: number)
+    end
+  end
+
   def self.build(params, program, participants)
     activity = LinguisticActivity.new
     LinguisticActivity.transaction do
@@ -66,8 +84,10 @@ class LinguisticActivity < Activity
       if activity.category == :Workshops
         n = 1
         params[:workshops].each do |name|
-          activity.workshops.create(number: n, name: name)
-          n += 1
+          unless name.blank?
+            activity.workshops.create(number: n, name: name)
+            n += 1
+          end
         end
       end
     end

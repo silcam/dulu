@@ -25,7 +25,8 @@
 
 
 
-      <% unless @program.participants.empty? %>
+      <% participants = @program.all_current_participants %>
+      <% unless participants.empty? %>
         <div class="form-group">
           <%= label_tag :participants do %>
             <% activity_name = "<span class='activity-name'>#{t(:new_activity)}</span>" %>
@@ -37,7 +38,7 @@
             <li><a href="#" data-check-none><%= t :None %></a></li>
           </ul>
 
-          <% @program.participants.each do |participant| %>
+          <% participants.each do |participant| %>
             <div class="checkbox">
               <label>
                 <%= check_box_tag('activity[participant_ids][]', participant.id) %>

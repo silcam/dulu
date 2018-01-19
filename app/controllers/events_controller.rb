@@ -35,7 +35,7 @@ class EventsController < ApplicationController
       @event.programs << @program if @program
       if workshop
         @event.workshop = workshop
-        redirect_to activity_path(workshop.linguistic_activity)
+        follow_redirect activity_path(workshop.linguistic_activity)
       else
         redirect_to (@program ? program_event_path(@program, @event) : event_path(@event))
       end

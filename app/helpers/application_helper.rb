@@ -27,4 +27,25 @@ module ApplicationHelper
   def t_select_options(array, selected=nil)
     options_for_select(array.collect{ |item| [t(item), item]}, selected)
   end
+
+  def color_from_sym(color)
+    case color
+      when :red
+        '#A93226'
+      when :orange
+        '#CA6F1E'
+      when :yellow
+        '#F4D03F'
+      when :light_green
+        '#58D68D'
+      when :dark_green
+        '#1E8449'
+      when :light_blue
+        '#5DADE2'
+      when :dark_blue
+        '#21618C'
+      when :purple
+        '#6C3483'
+    end
+  end
 end

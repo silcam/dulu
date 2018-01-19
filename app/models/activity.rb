@@ -1,4 +1,5 @@
 class Activity < ApplicationRecord
+  include ApplicationHelper
 
   belongs_to :program, required: true, touch: true
   # belongs_to :bible_book, required: false
@@ -52,6 +53,21 @@ class Activity < ApplicationRecord
 
   def stages_ordered_asc
     stages.order 'start_date ASC, id ASC'
+  end
+
+  def to_hash
+    percent, color = progress
+    color = color_from_sym(color)
+    {
+        id: id,
+        stage_name: stage_name,
+        progress:
+            {
+                percent: percent,
+                color: color
+            }
+
+    }
   end
 
   def self.types_for_select
