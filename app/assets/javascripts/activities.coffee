@@ -88,6 +88,14 @@ $(document).ready ->
         remove_button.show()
         new_workshop.insertAfter(latest_workshop)
 
+      $('input[type=submit]').click (e) ->
+        if $('#activity_type').val() == 'LinguisticActivity'
+          if $('#activity_title').val() == ''
+            form_group = $('#activity_title').closest('div.form-group')
+            form_group.attr('class', 'form-group has-error')
+            form_group.find('.help-block').show()
+            e.preventDefault()
+
     when 'activities#show'
       $('.edit_stage').on('ajax:before', () ->
         return window.validate_fuzzy_date_form($(this))

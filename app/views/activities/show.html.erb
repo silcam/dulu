@@ -1,6 +1,9 @@
 <%= render layout: 'programs/sidebar' do %>
   <h2>
     <%= @activity.name %>
+    <% if @activity.is_a?(LinguisticActivity) && can?(:update_activity, @activity) %>
+      <small><%= link_to t(:Edit), edit_activity_path %></small>
+    <% end %>
     <% if @activity.respond_to?(:bible_books) && !@activity.bible_books.empty? %>
       <br />
       <small><%= @activity.bible_books.collect{ |b| b.name }.join(', ') %></small>

@@ -2,6 +2,7 @@ class Stage < ApplicationRecord
 
   belongs_to :activity, required: true, touch: true
   belongs_to :stage_name, required: false
+  has_one :workshop # For Workshop type Linguistic Activities
   # has_many :program_roles, through: :stage_name
 
   LINGUISTIC_STAGES = %i( Planned Research Drafting Review Published )
@@ -65,13 +66,6 @@ class Stage < ApplicationRecord
       FuzzyDate.from_string start_date
     rescue FuzzyDateException
       nil
-    end
-  end
-
-  # Only applies to stages for Linguistic Workshops Activities
-  def workshop
-    if activity.respond_to? :workshops
-      activity.workshops.find_by(name: name)
     end
   end
 

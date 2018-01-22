@@ -12,8 +12,8 @@ remove_workshop = (btn) ->
   row.find('input').prop('disabled', true)
   row.css('text-decoration', 'line-through')
   row.find('label').fadeOut('fast')
-  $(btn).fadeOut('fast', ->
-    $(btn).remove()
+  row.find('a').fadeOut('fast', ->
+    $(this).remove()
     check_for_last_row()
   )
   row.nextAll('tr.workshop').each ->
@@ -30,10 +30,8 @@ remove_added_workshop = (btn) ->
 
 add_workshop = (btn) ->
   tbody = $(btn).closest('form').find('tbody').first()
-  new_tr = tbody.find('tr#new-workshop-row').clone()
-  new_tr.removeAttr('id')
-  new_tr.attr('class', 'workshop')
-  number = tbody.find('tr:visible').length + 1
+  new_tr = $('#components').find('tr.workshop').clone()
+  number = tbody.find('tr.workshop').length + 1
   new_tr.find("input[name='new_workshop_numbers[]']").val(number)
   new_tr.find('a[data-move-workshop-up]').click (e) ->
     e.preventDefault()
@@ -51,7 +49,7 @@ plus_equals = (node, increment) ->
 
 move_workshop_up = (btn) ->
   move_row = $(btn).closest('tr')
-  move_row.insertBefore(move_row.prev())
+  move_row.insertBefore(move_row.prevAll('.workshop').first())
   plus_equals(move_row.find('input[type=hidden]'), -1)
   plus_equals(move_row.next().find('input[type=hidden]'), 1)
   if move_row.find('input[type=hidden]').val() == '1'
@@ -100,9 +98,15 @@ $(document).ready ->
             bar.css('width', "#{data.activity.progress.percent}%")
             bar.css('background-color', data.activity.progress.color)
             dash_row.find('a[data-slide-form-id]').html(data.activity.stage_name)
-            dash_row.find('#activity-stage-date-'+data.activity.id).html(
-              "(#{data.date}")
-            )
+            dash_row.find('#activity-stage-date-'+data.activity.id).html("(#{data.date})")
+          else
+            td = $('tr#edit-workshop-'+data.id).find('td.workshop-completed-cell')
+            label = $('#components').find('label.workshop-completed-check').clone()
+            name = label.find('input').attr('name')
+            name = name.replace('0', data.id)
+            label.find('input').attr('name', name)
+            td.html(label)
+      )
 
       # Edit workshops form
       $('a[data-remove-workshop]').click (e) ->

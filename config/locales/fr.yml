@@ -178,6 +178,7 @@ fr:
   Multiple_stages_hint: "Si les livres sont à des differentes étapes, choisissez Prévue et fixez le date au commencement de la traduction. Puis, mettez à jour chaque livre sur le Tableau de bord."
   No_current_activities: Aucune activité actuelle
   Select_books: Choisissez des livres
+  Title_error: Saisissez un titre s'il vous plait
   # Media Activities
   AudioScripture: Écriture Audio
   Audio_x: "%{x} Audio"

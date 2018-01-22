@@ -59,6 +59,7 @@ class LinguisticActivity < Activity
   end
 
   def update_workshops(params)
+    params[:workshops] ||= {}
     workshops.each do |workshop|
       ws_params = params[:workshops][workshop.id.to_s]
       if ws_params.nil?
@@ -109,8 +110,9 @@ class LinguisticActivity < Activity
   private
 
   def workshop_progress
-    number = current_workshop.try(:number) || 0
-    percent = (100 * number) / workshops.count
+    return 0 if workshops.count == 0  # Unlikely case
+    complete = stages.count
+    percent = (100 * complete) / workshops.count
     color = (percent == 100) ? :purple : :yellow
     return percent, color
   end

@@ -1,15 +1,16 @@
 class Workshop < ApplicationRecord
   belongs_to :linguistic_activity, required: true
-  belongs_to :event, required: false
+  belongs_to :event, required: false, dependent: :destroy
+  belongs_to :stage, required: false, dependent: :destroy
 
   validates :number, numericality: {only_integer: true}
   validates :name, presence: true, allow_blank: false
 
   default_scope { order :number }
 
-  def stage
-    linguistic_activity.stages.find_by(name: name)
-  end
+  # def stage
+  #   linguistic_activity.stages.find_by(name: name)
+  # end
 
   def f_date
     if event
@@ -31,16 +32,18 @@ class Workshop < ApplicationRecord
   def completed?
     !stage.nil?
   end
+  alias complete? completed?
 
   def complete(params)
     date = (event.nil?) ?
                params[:date] :
                event.end_date
-    linguistic_activity.stages.create!(
+    stage = linguistic_activity.stages.create!(
         kind: :Linguistic,
         name: name,
         start_date: date
     )
+    update(stage: stage)
   end
 
   def to_hash
