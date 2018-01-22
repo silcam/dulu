@@ -105,6 +105,7 @@ class EventsController < ApplicationController
 
   def event_params
     assemble_dates params, 'event', 'start_date', 'end_date'
-    params.require(:event).permit(:domain, :name, :start_date, :end_date, :note)
+    params[:event][:creator_id] = current_user.id
+    params.require(:event).permit(:domain, :name, :start_date, :end_date, :note, :creator_id)
   end
 end
