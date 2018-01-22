@@ -63,3 +63,11 @@ Lance:
   email: lance_freeland@sil.org
   has_login: true
   roles_field: '|TranslationConsultantTraining|'
+
+Kendall:
+  first_name: Kendall
+  last_name: Isaac
+  gender: M
+  email: kendall_isaac@sil.org
+  has_login: true
+  roles_field: '|LinguisticConsultantTraining|'

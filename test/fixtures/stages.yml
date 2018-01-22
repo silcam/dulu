@@ -55,3 +55,17 @@ ReallyOldOne:
   kind: Translation
   start_date: 1950
   current: true
+
+EwondoGrammarNoun:
+  activity: EwondoGrammarIntro
+  name: Noun
+  kind: Linguistic
+  start_date: 2018-01-21
+  current: true
+
+LePaperResearch:
+  activity: LePaper
+  name: Research
+  kind: Linguistic
+  start_date: 2017-12
+  current: true
