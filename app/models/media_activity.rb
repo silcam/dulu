@@ -7,6 +7,7 @@ class MediaActivity < Activity
   SCRIPTURE = %i( Bible Old_testament New_testament Other )
 
   validates :category, inclusion: CATEGORIES
+  validates :film, inclusion: FILMS, allow_nil: true
   validates :scripture, inclusion: SCRIPTURE, allow_nil: true
 
   def category

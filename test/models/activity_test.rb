@@ -96,6 +96,15 @@ class ActivityTest < ActiveSupport::TestCase
     assert_equal(0, @hdi_ezra.stages.count)
   end
 
+  test "To Hash" do
+    exp = {
+        id: @hdi_ezra.id,
+        stage_name: :Drafting,
+        progress: {percent: 10, color: '#A93226'}
+    }
+    assert_equal exp, @hdi_ezra.to_hash
+  end
+
   test "Types for select" do
     types = Activity.types_for_select
     assert_equal(3, types.count)

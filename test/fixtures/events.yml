@@ -6,6 +6,7 @@ HdiGenesisChecking:
   domain: Translation
   programs: Hdi
   name: Genesis Checking
+  # creator: Olga
 
 HdiPastChecking:
   start_date: 2017-01
@@ -20,3 +21,17 @@ HdiCurrentChecking:
   domain: Translation
   programs: Hdi
   name: Check a book now
+
+EwondoNounWS:
+  start_date: 2018-01-05
+  end_date: 2018-01-21
+  domain: Linguistic
+  programs: Ewondo
+  name: 'Workshop: Noun'
+
+EwondoVerbWS:
+  start_date: 2018-03
+  end_date: 2018-03
+  domain: Linguistic
+  programs: Ewondo
+  name: 'Workshop: Verb'

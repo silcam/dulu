@@ -14,6 +14,7 @@ class EventTest < ActiveSupport::TestCase
     assert_includes @genesis_check.programs, @hdi
     assert_includes @genesis_check.event_participants, drew_genesis_check
     assert_includes @genesis_check.people, drew
+    # TODO assert_equal people(:Olga), @genesis_check.creator
   end
 
   test "Presence Validation" do
