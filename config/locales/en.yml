@@ -205,6 +205,8 @@ en:
   Left_program: Left Program
   End_of_participation: End of Participation
   End_of_participation_prompt: 'left the program: '
+  Delete_from: Delete %{person} from %{program}
+  Delete_participant_confirmation: Are you sure you want to completely remove this person from the program? If you are trying to say that this person was in the program and left, go back to their page and click 'Left Program'.
 
   # Stages Controller
   Current_stage: 'Current stage'

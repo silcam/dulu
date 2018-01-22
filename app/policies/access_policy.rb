@@ -4,6 +4,7 @@ class AccessPolicy
   def configure
     role :site_admin, proc{ |u| u.has_role?(:DuluAdmin) } do
       can [:grant_admin, :login_as_others, :destroy], Person
+      can :destroy, Participant
       can :read, Audited::Audit
     end
 

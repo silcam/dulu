@@ -205,6 +205,8 @@ fr:
   Left_program: Sorti(e) du programme
   End_of_participation: Fin de relation
   End_of_participation_prompt: a quitté le programme le 
+  Delete_from: Supprimer %{person} de %{program}
+  Delete_participant_confirmation: Confirmez que vous voulez supprimer cette personne du programme. Si cette personne faisait partie du programme et en est quitté, revenez à leur page et cliquez sur 'Sorti(e) du programme'.
 
   # Stages Controller
   Current_stage: 'Étape actuelle '
