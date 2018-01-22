@@ -24,3 +24,14 @@
       <%= link_to t(:Cancel), @participant, class: 'btn btn-danger btn-lg' %>
     </p>
 <% end %>
+
+<% if can?(:destroy, @participant) %>
+  <p>--</p>
+  <p>
+    <%= button_to t(:Delete_from, person: @participant.full_name, program: @cluster_program.name),
+                  @participant,
+                  method: :delete,
+                  data: {confirm: t(:Delete_participant_confirmation)},
+                  class: 'btn btn-danger' %>
+  </p>
+<% end %>
