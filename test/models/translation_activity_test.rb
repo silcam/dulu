@@ -24,13 +24,13 @@ class TranslationActivityTest < ActiveSupport::TestCase
     assert_nil hdi_genesis.prev, "Prev should return nil if there is no Prev"
   end
 
-  test "Valid Build" do
+  test "Build One" do
     john = bible_books :John
-    hdi_program = programs :Hdi
+    hdi = programs :Hdi
     drew_hdi = participants :DrewHdi
-    params = {type: 'TranslationActivity', bible_book: john.id.to_s,
-              participant_ids: [drew_hdi.id.to_s]}
-    TranslationActivity.new(program: hdi_program).build(params)
+    params = {type: 'TranslationActivity', bible_book_id: john.id.to_s}
+    participants = [drew_hdi]
+    TranslationActivity.build(params, hdi, participants)
     hdi_john = TranslationActivity.last
     assert_equal john, hdi_john.bible_book
     assert_includes hdi_john.current_participants, drew_hdi
@@ -38,27 +38,21 @@ class TranslationActivityTest < ActiveSupport::TestCase
 
   test "Repeat Build" do
     genesis = bible_books :Genesis
-    hdi_program = programs :Hdi
-    planned = stage_names :Planned
-    params = {type: 'TranslationActivity', bible_book: genesis.id.to_s,
-              stage_name_id: planned.id.to_s, stage_start_date: '2017'}
-    assert_equal 1, TranslationActivity.where(program: hdi_program, bible_book: genesis).count
-    number_of_stages = Stage.all.count
-    TranslationActivity.new(program: hdi_program).build(params)
-    assert_equal 1, TranslationActivity.where(program: hdi_program, bible_book: genesis).count
-    assert_equal number_of_stages, Stage.all.count
+    hdi = programs :Hdi
+    params = {type: 'TranslationActivity', bible_book_id: 'ot'}
+    assert_equal 1, TranslationActivity.where(program: hdi, bible_book: genesis).count
+    TranslationActivity.build(params, hdi, [])
+    assert_equal 1, TranslationActivity.where(program: hdi, bible_book: genesis).count
   end
 
   test "Build All" do
     ewondo_program = programs :Ewondo
-    drafting = stage_names :Drafting
-    params = {type: 'TranslationActivity', bible_book: 'ot',
-              stage_name_id: drafting.id.to_s, stage_start_date: ''}
-    TranslationActivity.build_all(ewondo_program, params)
+    params = {type: 'TranslationActivity', bible_book_id: 'ot'}
+    TranslationActivity.build(params, ewondo_program,[])
     ezra = bible_books :Ezra
     genesis = bible_books :Genesis
-    refute_nil ewondo_program.activities.find_by(bible_book: ezra), "Should be an Ewondo Ezra Activity"
-    refute_nil ewondo_program.activities.find_by(bible_book: genesis), "Should be an Ewondo Genesis Activty"
+    refute_nil ewondo_program.translation_activities.find_by(bible_book: ezra), "Should be an Ewondo Ezra Activity"
+    refute_nil ewondo_program.translation_activities.find_by(bible_book: genesis), "Should be an Ewondo Genesis Activty"
   end
 
   test "Search" do

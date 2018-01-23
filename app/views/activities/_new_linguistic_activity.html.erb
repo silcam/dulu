@@ -17,6 +17,9 @@
     <label><%= t :Workshop %> <span class="number">1</span> :</label>
     <%= text_field_tag 'activity[workshops][]', '', placeholder: t(:Topic), class: 'form-control form-control-inline' %>
     <a href="#" data-remove-workshop class="btn btn-danger" style="display: none">-</a>
+    <div class="help-block">
+      <%= t(:Name_error) %>
+    </div>
   </div>
   <a href="#" class="btn btn-success" data-add-workshop>+</a>
 </div>

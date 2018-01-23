@@ -16,7 +16,7 @@ class ActivitiesController < ApplicationController
     participants = Participant.where(id: params[:activity][:participant_ids])
     @activity = Activity.subclass_from_text(params[:activity][:type]).build(params[:activity], @program, participants)
     if @activity.persisted?
-      redirect_to dashboard_program_path @program
+      redirect_to program_path @program
     else
       render :new
     end

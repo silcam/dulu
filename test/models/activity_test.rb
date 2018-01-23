@@ -67,6 +67,13 @@ class ActivityTest < ActiveSupport::TestCase
     assert_equal :Drafting, @hdi_ezra.stage_name
   end
 
+  test "Next Stage" do
+    stage = @hdi_ezra.next_stage
+    assert_equal :Testing, stage.name
+    assert_equal :Translation, stage.kind
+    assert_equal Date.today.to_s, stage.start_date
+  end
+
   test 'participants for my stage' do
     stage_participants = @hdi_ezra.participants_for_my_stage
     assert_equal(1, stage_participants.count)

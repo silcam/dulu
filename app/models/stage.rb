@@ -10,19 +10,19 @@ class Stage < ApplicationRecord
   TRANSLATION_STAGES = %i( Planned Drafting Testing Review_committee Back_translating Ready_for_consultant_check
                             Consultant_check Consultant_checked Published )
 
-  LINGUISTIC_STAGE_ROLES = {
-                        Research: [:LinguisticConsultant, :LinguisticConsultantTraining],
-                        Drafting:  [:LinguisticConsultant, :LinguisticConsultantTraining],
-                        Review:  [:LinguisticConsultant, :LinguisticConsultantTraining]
-  }
-
-  MEDIA_STAGE_ROLES = {
-                    Application: [:MediaConsultant, :MediaSpecialist],
-                    Script:  [:MediaConsultant, :MediaSpecialist],
-                    Scheduled:  [:MediaConsultant, :MediaSpecialist],
-                    Recording:  [:MediaConsultant, :MediaSpecialist],
-                    Mastering:  [:MediaConsultant, :MediaSpecialist]
-  }
+  # LINGUISTIC_STAGE_ROLES = {
+  #                       Research: [:LinguisticConsultant, :LinguisticConsultantTraining],
+  #                       Drafting:  [:LinguisticConsultant, :LinguisticConsultantTraining],
+  #                       Review:  [:LinguisticConsultant, :LinguisticConsultantTraining]
+  # }
+  #
+  # MEDIA_STAGE_ROLES = {
+  #                   Application: [:MediaConsultant, :MediaSpecialist],
+  #                   Script:  [:MediaConsultant, :MediaSpecialist],
+  #                   Scheduled:  [:MediaConsultant, :MediaSpecialist],
+  #                   Recording:  [:MediaConsultant, :MediaSpecialist],
+  #                   Mastering:  [:MediaConsultant, :MediaSpecialist]
+  # }
 
   TRANSLATION_STAGE_ROLES = {
                               Drafting: [:Translator],
@@ -40,18 +40,6 @@ class Stage < ApplicationRecord
   validates :start_date, fuzzy_date: true
   validates :kind, inclusion: [:Translation, :Linguistic, :Media]
   # validate :name_is_on_the_list
-
-  # def self.new_for activity
-  #   existing = activity.current_stage
-  #   Stage.new({
-  #     name: stage_after(existing.name, existing.kind),
-  #     kind: existing.kind,
-  #     start_date: Date.today})
-  # end
-  
-  # def name
-  #   self.stage_name.name
-  # end
 
   def kind
     self.attributes['kind'].try(:to_sym)
@@ -85,9 +73,9 @@ class Stage < ApplicationRecord
       when :Translation
         TRANSLATION_STAGE_ROLES[name] || []
       when :Linguistic
-        LINGUISTIC_STAGE_ROLES[name] || []
+        [:LinguisticConsultant, :LinguisticConsultantTraining]
       when :Media
-        MEDIA_STAGE_ROLES[name] || []
+        [:MediaConsultant, :MediaSpecialist]
     end
   end
 
@@ -171,12 +159,6 @@ class Stage < ApplicationRecord
     end
   end
 
-  def name_is_on_the_list
-    return if kind.nil?
-    unless Stage.stages(kind).try(:include?, name)
-      errors.add(:name, "must be on the list of stages")
-    end
-  end
   # def generic_progress
   #   return (100 * level) / StageName.last_stage(kind).level, :blue
   # end

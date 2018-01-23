@@ -179,6 +179,7 @@ en:
   No_current_activites: No Current Activities
   Select_books: Select Books
   Title_error: Please enter a title
+  Name_error: Please enter a name
   # Media Activities
   AudioScripture: Audio Scripture
   Audio_x: Audio %{x}

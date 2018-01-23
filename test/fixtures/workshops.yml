@@ -3,7 +3,7 @@ Noun:
   number: 1
   name: Noun
   event: EwondoNounWS
-  stage: EwondoNounWS
+  stage: EwondoGrammarNoun
 
 Verb:
   linguistic_activity: EwondoGrammarIntro
