@@ -180,6 +180,7 @@ en:
   Select_books: Select Books
   Title_error: Please enter a title
   Name_error: Please enter a name
+  Delete_activity_confirmation: "Are you sure you want to delete this activity?"
   # Media Activities
   AudioScripture: Audio Scripture
   Audio_x: Audio %{x}

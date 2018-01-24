@@ -63,6 +63,6 @@ class StagesController < ApplicationController
   end
 
   def authorize_user
-    authorize! :update_activity, @activity
+    authorize! :update, @activity
   end
 end

@@ -22,7 +22,7 @@ class EventsController < ApplicationController
     if params[:workshop]
       @workshop = Workshop.find(params[:workshop])
       @workshop.set_event_defaults(@event)
-      authorize! :update_activity, @workshop.linguistic_activity
+      authorize! :update, @workshop.linguistic_activity
     end
   end
 

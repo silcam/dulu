@@ -13,7 +13,7 @@ class AccessPolicy
       can [:create_activity, :manage_participants, :manage_surveys], Program
       can :manage, Cluster # :manage cannot be part of an array
       can :manage_participants, Cluster
-      can :update_activity, Activity
+      can :manage, Activity
       can :manage, Organization
       can :manage, Language
       can :manage, Event
@@ -38,7 +38,7 @@ class AccessPolicy
         language.program.all_current_people.include? user
       end
 
-      can :update_activity, Activity do |activity, user|
+      can [:update, :destroy], Activity do |activity, user|
         activity.program.all_current_people.include? user
       end
 

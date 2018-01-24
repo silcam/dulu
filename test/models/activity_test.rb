@@ -96,11 +96,31 @@ class ActivityTest < ActiveSupport::TestCase
     assert_equal(stages(:HdiTwo), stages_desc.first)
   end
 
-  # See Build test in TranslationActivityTest
-
   test 'destroy the last stage' do
     @hdi_ezra.stages.each { |s| s.destroy }
     assert_equal(0, @hdi_ezra.stages.count)
+  end
+
+  def hdi_john
+    hdi = programs(:Hdi)
+    john = bible_books(:John)
+    TranslationActivity.create!(program: hdi, bible_book: john)
+  end
+
+  test "Can delete brand new activity" do
+    assert hdi_john.empty_activity?
+  end
+
+  test "Can't delete if has a stage" do
+    john = hdi_john
+    john.stages << john.next_stage
+    refute john.empty_activity?
+  end
+
+  test "Can't delete if has a participant" do
+    john = hdi_john
+    john.participants << participants(:DrewHdi)
+    refute john.empty_activity?
   end
 
   test "To Hash" do

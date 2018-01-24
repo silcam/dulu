@@ -49,6 +49,14 @@ class LinguisticActivity < Activity
         current_stage.progress
   end
 
+  def empty_activity?
+    if category == :Workshops
+      super && workshops.empty?
+    else
+      super
+    end
+  end
+
   # def ws_stages
   #   workshops.collect do |ws|
   #     {

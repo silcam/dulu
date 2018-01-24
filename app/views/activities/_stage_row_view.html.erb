@@ -6,7 +6,7 @@
   <%= stage.f_start_date.try(:pretty_print) %>
 </td>
 
-<% if can? :update_activity, stage.activity %>
+<% if can? :update, stage.activity %>
   <td>
     <%= button_tag t(:Edit), class: 'btn btn-warning',
                       data: {'edit-stage-id' => stage.id}  %>

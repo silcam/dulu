@@ -35,6 +35,15 @@ class LinguisticActivityTest < ActiveSupport::TestCase
     assert_equal 0, percent
   end
 
+  test "New Research Activity is Empty" do
+    assert LinguisticActivity.create!(program: @ewondo, category: 'Research', title: 'Title').empty_activity?
+  end
+
+  test "Workshop Activity with a workshop is not Empty" do
+    params = ActionController::Parameters.new category: 'Workshops', title: 'T', workshops: ['One']
+    refute LinguisticActivity.build(params, @ewondo, []).empty_activity?
+  end
+
   # test "ws_stages" do
   #   exp = [{workshop: workshops(:Noun), stage: stages(:EwondoGrammarNoun)},
   #          {workshop: workshops(:Verb), stage: nil},

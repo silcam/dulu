@@ -1,5 +1,5 @@
 class ActivitiesController < ApplicationController
-  before_action :set_activity, only: [:show, :edit, :update, :update_workshops]
+  before_action :set_activity, only: [:show, :edit, :update, :update_workshops, :destroy]
   before_action :set_program, only: [:index, :new, :create]
 
   def index
@@ -26,19 +26,25 @@ class ActivitiesController < ApplicationController
   end
 
   def edit
-    authorize! :update_activity, @activity
+    authorize! :update, @activity
   end
 
   def update
-    authorize! :update_activity, @activity
+    authorize! :update, @activity
     @activity.update activity_params
     redirect_to activity_path(@activity)
   end
 
   def update_workshops
-    authorize! :update_activity, @activity
+    authorize! :update, @activity
     @activity.update_workshops(params)
     redirect_to activity_path(@activity)
+  end
+
+  def destroy
+    authorize! :destroy, @activity
+    @activity.destroy
+    redirect_to @program
   end
 
   private
