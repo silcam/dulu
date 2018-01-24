@@ -1,7 +1,6 @@
 class Stage < ApplicationRecord
 
   belongs_to :activity, required: true, touch: true
-  belongs_to :stage_name, required: false
   has_one :workshop # For Workshop type Linguistic Activities
   # has_many :program_roles, through: :stage_name
 

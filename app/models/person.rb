@@ -1,10 +1,6 @@
 class Person < ApplicationRecord
   include HasRoles
 
-  # DEPRECATED
-  SITE_ROLES = [:role_user, :role_program_responsable, :role_program_supervisor,
-                :role_program_admin, :role_site_admin]
-
   belongs_to :organization, required: false
   belongs_to :country, required: false, counter_cache: true
   has_many :participants, dependent: :destroy
@@ -19,14 +15,6 @@ class Person < ApplicationRecord
   validates :email, uniqueness: true, allow_blank: true
 
   default_scope{ order(:last_name, :first_name) }
-
-  # DEPRECATED
-  def role
-    SITE_ROLES.each_with_index do |role, i|
-      return i if self.send(role)
-    end
-    nil
-  end
 
   def full_name
     "#{first_name} #{last_name}"

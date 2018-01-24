@@ -76,8 +76,7 @@ class EventTest < ActiveSupport::TestCase
 
   test "User Direct Association" do
     rick = people :Rick
-    tc = program_roles :TranslationConsultant
-    @genesis_check.event_participants << EventParticipant.new(person: rick, program_role: tc)
+    @genesis_check.event_participants << EventParticipant.new(person: rick)
     assert @genesis_check.associated_with?(rick), "Rick is directly associated with the event"
   end
 
