@@ -19,5 +19,7 @@
 
     <p>
       <%= form.submit t(:Save), class: 'btn btn-primary btn-lg', data: {'participant_submit' => 1} %>
+
+      <a onclick="window.history.back()" class="btn btn-danger btn-lg"><%= t(:Cancel) %></a>
     </p>
 <% end %>
