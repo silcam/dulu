@@ -36,7 +36,7 @@
     <table class="table" style="width: auto;">
       <% @program.all_events.each do |event| %>
         <tr>
-          <td><%= event.name %></td>
+          <td><%= link_to event.name, program_event_path(@program, event) %></td>
           <td><%= event.dates_display_text %></td>
           <td><%= event.note %></td>
           <td><%= link_to t(:Edit), edit_event_path(event) %></td>

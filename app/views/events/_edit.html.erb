@@ -1,7 +1,7 @@
 <h2>
   <%= @event.display_name %>
   <%= link_to t(:Delete_event),
-              (@program ? program_event_path(@program, @event) : event_path(@event)),
+              ctxt_event_path(@program, @event),
               method: :delete,
               data: {confirm: t(:Delete_event_confirmation, event: @event.display_name)},
               class: 'btn btn-danger hdr-btn' %>
