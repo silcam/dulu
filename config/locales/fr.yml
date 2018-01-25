@@ -303,6 +303,7 @@ fr:
   with_a_role_of: dont le rôle est
   Consultation: Vérification du conseiller
   Same_as_start_date: Meme que le date de commencement
+  Event_cluster_hint: Conseil - Ajouter un groupe va associer cet événement avec toutes les langues du groupe.
 
   # Domain Updates
   Domain: Domaine
