@@ -37,7 +37,7 @@ class MediaActivity < Activity
   end
 
   def self.search(query)
-    activities = MediaActivity.where("category ILIKE :q", {q: "%#{query}%"})
+    activities = MediaActivity.where("category ILIKE unaccent(:q)", {q: "%#{query}%"})
     activities.collect do |activity|
       {
           title: activity.name,

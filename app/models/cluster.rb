@@ -1,5 +1,6 @@
 class Cluster < ApplicationRecord
   include HasParticipants
+  include MultiWordSearch
 
   has_many :languages
   has_many :programs, through: :languages
@@ -32,7 +33,7 @@ class Cluster < ApplicationRecord
   end
 
   def self.search(query)
-    clusters = Cluster.where("name ILIKE ?", "%#{query}%")
+    clusters = Cluster.multi_word_where(query, 'name')
     results = []
     clusters.each do |cluster|
       subresults = []

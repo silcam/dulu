@@ -1,4 +1,6 @@
 class Event < ApplicationRecord
+  include MultiWordSearch
+
   has_and_belongs_to_many :programs
   has_and_belongs_to_many :clusters
   has_many :event_participants, autosave: true, dependent: :destroy
@@ -133,10 +135,7 @@ class Event < ApplicationRecord
   end
 
   def self.search(query)
-    q_words = query.split(' ')
-    where_clause = q_words.collect{ |w| "name ILIKE ?"}.join(' AND ')
-    q_words.collect!{ |w| "%#{w}%" }
-    events = Event.where where_clause, *q_words
+    events = Event.multi_word_where(query, 'name')
     results = []
     events.each do |event|
       title = "#{event.name}"

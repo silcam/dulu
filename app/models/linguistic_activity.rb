@@ -104,7 +104,7 @@ class LinguisticActivity < Activity
   end
 
   def self.search(query)
-    activities = LinguisticActivity.where("title ILIKE :q OR category ILIKE :q", {q: "%#{query}%"})
+    activities = LinguisticActivity.where("unaccent(title) ILIKE unaccent(:q) OR category ILIKE :q", {q: "%#{query}%"})
     results = []
     activities.each do |activity|
       results << {

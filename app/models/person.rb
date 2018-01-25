@@ -1,5 +1,6 @@
 class Person < ApplicationRecord
   include HasRoles
+  include MultiWordSearch
 
   belongs_to :organization, required: false
   belongs_to :country, required: false, counter_cache: true
@@ -68,7 +69,7 @@ class Person < ApplicationRecord
   end
 
   def self.search(query)
-    people = Person.where("first_name || ' ' || last_name ILIKE ?", "%#{query}%")
+    people = Person.multi_word_where(query, 'first_name', 'last_name')
     results = []
     people.each do |person|
       subresults = []

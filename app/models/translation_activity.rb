@@ -47,7 +47,7 @@ class TranslationActivity < Activity
   end
 
   def self.search(query)
-    books = BibleBook.where("english_name ILIKE ? OR french_name ILIKE ?", "%#{query}%", "%#{query}%")
+    books = BibleBook.where("english_name ILIKE ? OR unaccent(french_name) ILIKE unaccent(?)", "%#{query}%", "%#{query}%")
     results = []
     books.each do |book|
       subresults = []

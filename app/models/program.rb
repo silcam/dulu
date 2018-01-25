@@ -129,7 +129,9 @@ class Program < ApplicationRecord
   end
 
   def self.search(query)
-    programs = Program.joins(:language).where("languages.name ILIKE ? OR languages.alt_names ILIKE ? OR languages.code=?", "%#{query}%", "%#{query}%", query).includes(:language)
+    programs = Program.joins(:language).where("unaccent(languages.name) ILIKE unaccent(?) OR
+                                               unaccent(languages.alt_names) ILIKE unaccent(?) OR languages.code=?",
+                                              "%#{query}%", "%#{query}%", query).includes(:language)
     results = []
     programs.each do |program|
       description = "#{I18n.t(:Language_program)}"
