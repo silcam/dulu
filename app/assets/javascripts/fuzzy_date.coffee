@@ -26,19 +26,26 @@ window.validate_fuzzy_date_form = (form) ->
       $(this).find('div.fuzzy-error-day').show()
       success = false
   return success
-    
+
+check_fuzzy_year = (field) ->
+  top_div = field.closest('div.fuzzy-div')
+  required = top_div.data('required-date')
+  year = field.val()
+  if (not required and year=='') or valid_year(year)
+    field.closest('span.fd-year').prop('class', 'fd-year')
+    top_div.find('div.fuzzy-error-year').hide()
+  else
+    field.closest('span.fd-year').prop('class', 'fd-year has-error')
+    top_div.find('div.fuzzy-error-year').show()
+
+
 $(document).ready ->    
   $("input.fuzzy-field").blur ->
     # This for changes to year in text box
-    top_div = $(this).closest('div.fuzzy-div')
-    required = top_div.data('required-date')
-    year = $(this).val()
-    if (not required and year=='') or valid_year(year)
-      $(this).closest('span.fd-year').prop('class', 'fd-year')
-      top_div.find('div.fuzzy-error-year').hide()
-    else
-      $(this).closest('span.fd-year').prop('class', 'fd-year has-error')
-      top_div.find('div.fuzzy-error-year').show()
+    field = $(this)
+    setTimeout( ->
+      check_fuzzy_year(field)
+    , 200)
 
   $('.fuzzy-field').change ->
     top_div = $(this).closest('div.fuzzy-div')
