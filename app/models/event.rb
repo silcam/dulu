@@ -3,6 +3,8 @@ class Event < ApplicationRecord
   has_and_belongs_to_many :clusters
   has_many :event_participants, autosave: true, dependent: :destroy
   has_many :people, through: :event_participants
+  belongs_to :creator, required: false, class_name: 'Person'
+  has_one :workshop
 
   audited
 
@@ -83,6 +85,7 @@ class Event < ApplicationRecord
   end
 
   def associated_with?(user)
+    return true if creator == user
     return true if self.people.include? user
 
     person_programs_list = user.current_programs

@@ -2,7 +2,7 @@
              url: translation_activity_stages_path(@translation_activity)) do |f| %>
   <p>
     <%= f.label :name, t(:Stage) %>
-    <%= f.select(:name, options_for_select(Stage::TRANSLATION_STAGES.collect{ |s| [t(s), s]})) %>
+    <%= f.select(:name, t_select_options(Stage::TRANSLATION_STAGES)) %>
   </p>
   <p>
     <%= f.label :start_date, t(:Start_date) %>

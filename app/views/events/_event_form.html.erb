@@ -1,5 +1,9 @@
     <%= render 'shared/error_messages', errors: @event.errors %>
 
+    <% if @workshop %>
+      <%= hidden_field_tag :workshop_id, @workshop.id %>
+    <% end %>
+
     <div class="form-group">
       <%= form.label :name, t(:Name) %>
       <%= form.text_field :name, class: 'form-control', autofocus: true, size: 50 %>

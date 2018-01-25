@@ -25,7 +25,7 @@
 <div class="form-group">
   <%= form.label :kind, t(:Type_of_publication) %>
   <%= form.select(:kind,
-                  options_for_select(Publication.kinds.collect{ |k| [t(k), k]}, @publication.kind),
+                  t_select_options(Publication.kinds, @publication.kind),
                   {},
                   class: 'form-control') %>
 </div>

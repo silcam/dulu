@@ -31,6 +31,8 @@ fr:
   Sorry: Désolé
   as: comme
   Select: Choisier...
+  Category: Catégorie
+  Topic: Sujet
 
   #Dates
   Date: Date
@@ -165,6 +167,9 @@ fr:
   My_activities: Mes activités
   Associated_activities: Activités associées
   Bible_translation: Traduction de la Bible
+  Translation_activities: Activités de traduction
+  Linguistic_activities: Activités linguistique
+  Media_activities: Activités audiovisuelles
   Add_activity: Ajouter une activité
   Activity_type: Type d'activité
   Associate_people: "Associer %{activity} avec:"
@@ -172,6 +177,25 @@ fr:
   new_activity: nouvelle activité
   Multiple_stages_hint: "Si les livres sont à des differentes étapes, choisissez Prévue et fixez le date au commencement de la traduction. Puis, mettez à jour chaque livre sur le Tableau de bord."
   No_current_activities: Aucune activité actuelle
+  Select_books: Choisissez des livres
+  Title_error: Saisissez un titre s'il vous plait
+  # Media Activities
+  AudioScripture: Écriture Audio
+  Audio_x: "%{x} Audio"
+  Film: Film
+  JesusFilm: Film Jésus
+  LukeFilm: Film Luc
+  ActsFilm: Film Actes
+  GenesisFilm: Film Genèse
+  StoryOfGenesisFilm: L'histoire de Genèse
+  BookOfJohn: Livre de Jean
+  MagdalenaFilm: Film Magdalena
+  # Linguistic Activities
+  Workshop: Atelier
+  Workshops: Atelier
+  Grammar: Grammaire
+  Dictionary: Dictionaire
+  Phonology: Phonologie
 
   #Participants Controller
   Role: Rôle
@@ -184,8 +208,16 @@ fr:
   Delete_from: Supprimer %{person} de %{program}
   Delete_participant_confirmation: Confirmez que vous voulez supprimer cette personne du programme. Si cette personne faisait partie du programme et en est quitté, revenez à leur page et cliquez sur 'Sorti(e) du programme'.
 
-  #Translation Stages Controller
-  Planned: Prévue
+  # Stages Controller
+  Current_stage: 'Étape actuelle '
+  Update_stage: Étape actuelle
+  As_of: Depuis
+  Stage: Étape
+  Modify_Date: Modifier le date
+  Delete_stage_confirmation: Confirmez que vous voulez supprimer cette étape de l'historique.
+  Translate: Traduire
+  #   Translation Stages
+  Planned: Prévu
   Drafting: Ébauche
   Testing: Testing
   Review_committee: Comité de révision
@@ -194,13 +226,19 @@ fr:
   Consultant_check: Vérification du conseiller
   Consultant_checked: Vérifié par conseiller
   Published: Publié
-  Current_stage: 'Étape actuelle '
-  Update_stage: Étape actuelle
-  As_of: Depuis
-  Stage: Étape
-  Modify_Date: Modifier le date
-  Delete_stage_confirmation: Confirmez que vous voulez supprimer cette étape de l'historique.
-  Translate: Traduire
+  #   Media Stages
+  Application: Application
+  Script: Script
+  Scheduled: Programmé
+  Recording: Enregistrement
+  Mastering: Mastérisation
+  #   Linguistic Stages
+  Research: Recherche
+  Review: Révision
+
+  # Workshops Controller
+  Completed: Réalisé
+  Mark_completed: Marquer 'Réalisé'
 
   #Sessions Controller
   Log_out: Déconnexion

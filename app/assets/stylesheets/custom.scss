@@ -213,13 +213,18 @@ div.bottom-border{
   margin-bottom: 20px;
 }
 
-#activities-table {
+table.activities-table {
   margin-bottom: 0px;
 
-  td {
-    padding-top: 15px;
-    padding-bottom: 15px;
+  tbody{
+    tr{
+      td {
+        padding-top: 15px;
+        padding-bottom: 15px;
+      }
+    }
   }
+
 
   a:hover {
     text-decoration: none;
@@ -287,6 +292,10 @@ form.auto-width {
   }
 }
 
+.form-control-inline {
+  display: inline-block;
+}
+
 div.select{
   margin-top: 10px;
 }
@@ -302,6 +311,10 @@ form#dulu-search {
 form.inline-button-to {
   display: inline;
   position: relative;
+}
+
+.hidden-workshop-form {
+  display: none;
 }
 
 .bs-callout {
@@ -324,4 +337,8 @@ form.inline-button-to {
   h1, h2, h3, h4, h5, h6 {
     color: #ce4844;
   }
+}
+
+#components {
+  display: none;
 }

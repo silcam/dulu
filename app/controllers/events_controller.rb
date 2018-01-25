@@ -11,11 +11,18 @@ class EventsController < ApplicationController
 
   def new
     authorize! :create, Event
+
     if params[:program_id]
       @program = Program.find params[:program_id]
       @event = @program.events.build
     else
       @event = Event.new
+    end
+
+    if params[:workshop]
+      @workshop = Workshop.find(params[:workshop])
+      @workshop.set_event_defaults(@event)
+      authorize! :update_activity, @workshop.linguistic_activity
     end
   end
 
@@ -23,9 +30,15 @@ class EventsController < ApplicationController
     authorize! :create, Event
     @event = Event.new(event_params)
     @program = Program.find(params[:program_id]) if params[:program_id]
-    @event.programs << @program if @program
+    workshop = Workshop.find_by id: params[:workshop_id]
     if @event.save
-      redirect_to (@program ? program_event_path(@program, @event) : event_path(@event))
+      @event.programs << @program if @program
+      if workshop
+        @event.workshop = workshop
+        follow_redirect activity_path(workshop.linguistic_activity)
+      else
+        redirect_to (@program ? program_event_path(@program, @event) : event_path(@event))
+      end
     else
       render 'new'
     end
@@ -92,6 +105,7 @@ class EventsController < ApplicationController
 
   def event_params
     assemble_dates params, 'event', 'start_date', 'end_date'
-    params.require(:event).permit(:domain, :name, :start_date, :end_date, :note)
+    params[:event][:creator_id] = current_user.id
+    params.require(:event).permit(:domain, :name, :start_date, :end_date, :note, :creator_id)
   end
 end

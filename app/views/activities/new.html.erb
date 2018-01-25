@@ -1,19 +1,32 @@
 <%= render 'programs/sidebar' do %>
     <%= render 'shared/error_messages', errors: (@errors || []) %>
     <h2><%= t :Add_activity %></h2>
-    <%= form_for @activity, url: program_activities_path(@program),
+    <%= form_for @activity, as: :activity, url: program_activities_path(@program),
                 html: {class: 'auto-width'} do |form| %>
       <div class="form-group">
         <%= form.label :type, t(:Activity_type) %>
-        <%= form.select(:type, options_for_select(Activity.types_for_select),
+        <%= form.select(:type, options_for_select(Activity.types_for_select, @activity.type),
                         {}, {class: 'form-control', autofocus: true}) %>
       </div>
 
-      <div class="type-specific-part" id="translation-activity-part">
-        <%= render "new_translation_activity", form: form %>
+      <% hidden = 'style="display: none;"'.html_safe %>
+      <% activity_kind  = @activity.type.nil? ? :Translation : @activity.kind %>
+      <div class="type-specific-part" id="section-TranslationActivity" <%= hidden unless activity_kind==:Translation %>>
+        <%= render 'new_translation_activity', form: form, activity_kind: activity_kind %>
       </div>
 
-      <% unless @program.participants.empty? %>
+      <div class="type-specific-part" id="section-LinguisticActivity" <%= hidden unless activity_kind==:Linguistic %>>
+        <%= render 'new_linguistic_activity', form: form, activity_kind: activity_kind  %>
+      </div>
+
+      <div class="type-specific-part" id="section-MediaActivity" <%= hidden unless activity_kind==:Media %>>
+        <%= render 'new_media_activity', form: form, activity_kind: activity_kind  %>
+      </div>
+
+
+
+      <% participants = @program.all_current_participants %>
+      <% unless participants.empty? %>
         <div class="form-group">
           <%= label_tag :participants do %>
             <% activity_name = "<span class='activity-name'>#{t(:new_activity)}</span>" %>
@@ -25,7 +38,7 @@
             <li><a href="#" data-check-none><%= t :None %></a></li>
           </ul>
 
-          <% @program.participants.each do |participant| %>
+          <% participants.each do |participant| %>
             <div class="checkbox">
               <label>
                 <%= check_box_tag('activity[participant_ids][]', participant.id) %>

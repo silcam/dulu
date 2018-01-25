@@ -136,7 +136,7 @@ class ParticipantIntTest < Capybara::Rails::TestCase
     # assert_equal '|TranslationConsultant|', @drew_zulgo.roles_field
     assert_equal '2016-07-31', @drew_zulgo.start_date
     assert page.has_content? 'Drew Maust'
-    visit translation_activity_path @zulgo_ezra
+    visit activity_path @zulgo_ezra
     assert page.has_content? 'Drew Maust'
     visit program_participants_path @zulgo_program
     assert page.has_content? 'Drew Maust'
@@ -155,7 +155,7 @@ class ParticipantIntTest < Capybara::Rails::TestCase
     visit program_participants_path @zulgo_program
     find('tr', text: 'Drew Maust').assert_text 'Aug 31, 2016'
     # assert_equal '2016-08-31', @drew_zulgo.start_date
-    visit translation_activity_path @zulgo_ezra
+    visit activity_path @zulgo_ezra
     refute page.has_content? 'Drew Maust'
   end
 

@@ -136,6 +136,20 @@ class EventsIntegrationTest < Capybara::Rails::TestCase
     refute page.has_content?('Hdi Genesis Checking'), "Should no longer see deleted event"
   end
 
+  test "Delete Event I created" do
+    my_setup true
+    visit new_event_path
+    fill_in 'Name', with: "Drew's Event!"
+    fill_in 'event_start_date_y', with: '2018'
+    fill_in 'event_end_date_y', with: '2018'
+    click_on 'Save'
+    find('h2').click_on('Edit')
+    find('h2').click_on('Delete this event')
+    page.driver.browser.accept_js_confirms
+    assert_current_path events_path
+    assert_no_text "Drew's Event"
+  end
+
   test "Can't make New Event with End Date before Start Date" do
     my_setup
     click_on 'Add Event'

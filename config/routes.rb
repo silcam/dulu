@@ -51,11 +51,12 @@ Rails.application.routes.draw do
 
   resources :programs do
     get 'dashboard', on: :member
-    resources :translation_activities, shallow: true do
-      resources :stages, only: [:new, :create, :update, :destroy], shallow: true
-    end
     resources :activities, shallow: true do
+      post 'update_workshops', on: :member
       resources :stages, only: [:new, :create, :update, :destroy], shallow: true
+      resources :workshops, shallow: true do
+        post 'complete', on: :member
+      end
     end
     resources :participants, shallow: true do
       member do

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180109110600) do
+ActiveRecord::Schema.define(version: 20180122125431) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -22,8 +22,19 @@ ActiveRecord::Schema.define(version: 20180109110600) do
     t.datetime "updated_at",    null: false
     t.string   "type"
     t.text     "note"
+    t.string   "category"
+    t.string   "title"
+    t.string   "scripture"
+    t.string   "film"
     t.index ["bible_book_id"], name: "index_activities_on_bible_book_id", using: :btree
     t.index ["program_id"], name: "index_activities_on_program_id", using: :btree
+  end
+
+  create_table "activities_bible_books", force: :cascade do |t|
+    t.integer "media_activity_id"
+    t.integer "bible_book_id"
+    t.index ["bible_book_id"], name: "index_activities_bible_books_on_bible_book_id", using: :btree
+    t.index ["media_activity_id"], name: "index_activities_bible_books_on_media_activity_id", using: :btree
   end
 
   create_table "activities_participants", force: :cascade do |t|
@@ -133,6 +144,7 @@ ActiveRecord::Schema.define(version: 20180109110600) do
     t.datetime "updated_at", null: false
     t.string   "domain"
     t.text     "note"
+    t.integer  "creator_id"
   end
 
   create_table "events_programs", force: :cascade do |t|
@@ -333,6 +345,19 @@ ActiveRecord::Schema.define(version: 20180109110600) do
     t.datetime "created_at",                 null: false
     t.datetime "updated_at",                 null: false
     t.boolean  "open",       default: false
+  end
+
+  create_table "workshops", force: :cascade do |t|
+    t.integer  "number"
+    t.string   "name"
+    t.integer  "linguistic_activity_id"
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
+    t.integer  "event_id"
+    t.integer  "stage_id"
+    t.index ["event_id"], name: "index_workshops_on_event_id", using: :btree
+    t.index ["linguistic_activity_id"], name: "index_workshops_on_linguistic_activity_id", using: :btree
+    t.index ["stage_id"], name: "index_workshops_on_stage_id", using: :btree
   end
 
 end

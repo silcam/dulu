@@ -1,0 +1,30 @@
+<%
+  cols = options[:cols] || 3
+%>
+
+<div class="form-group">
+  <% unless options[:no_allnone] %>
+    <ul class="list-inline">
+      <li><a href="#" data-check-all><%= t :All %></a></li>
+      <li><a href="#" data-check-none><%= t :None %></a></li>
+    </ul>
+  <% end %>
+
+  <% count = items.count %>
+  <% colnum = [cols, (count - 1)/10 + 1].min %>
+  <% colcount = (count - 1)/colnum + 1 %>
+  <% (1..colnum).each do |col| %>
+    <div style="display: inline-table;">
+      <% (1..colcount).each do |index| %>
+        <% i = (col-1)*colcount + (index-1) %>
+        <% break if i >= count %>
+        <% item = items[i] %>
+        <label style="font-weight: normal">
+          <%= check_box_tag options[:name], item[:value], item[:selected]%>
+          <%= item[:label] %>
+        </label>
+        <br>
+      <% end %>
+    </div>
+  <% end %>
+</div>

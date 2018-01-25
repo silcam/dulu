@@ -43,7 +43,7 @@
       <%= form_tag(add_update_participant_path(@participant), method: :patch, class: 'form-inline not-shown') do %>
         <div class="form-group">
           <label><%= t :Add_role %></label>
-          <%= select_tag :role, options_for_select(available_roles.collect{ |role| [t(role), role] }), class: 'form-control'  %>
+          <%= select_tag :role, t_select_options(available_roles), class: 'form-control'  %>
         </div>
         <div class="form-group">
           <%= submit_tag t(:Add), class: 'btn btn-primary' %>

@@ -1,0 +1,22 @@
+<% disabled = (activity_kind != :Linguistic) %>
+<div class="form-group">
+  <label><%= t :Category %></label>
+  <%= form.select :category, t_select_options(LinguisticActivity::CATEGORIES), {}, class: 'form-control', data: {ling_category: 1}, disabled: disabled %>
+</div>
+
+<div class="form-group">
+  <label><%= t :Title %></label>
+  <%= form.text_field :title, class: 'form-control', disabled: disabled %>
+  <div class="help-block" style="display: none">
+    <%= t(:Title_error) %>
+  </div>
+</div>
+
+<div class="form-group" id="workshop-section">
+  <div class="form-group workshop-group">
+    <label><%= t :Workshop %> <span class="number">1</span> :</label>
+    <%= text_field_tag 'activity[workshops][]', '', placeholder: t(:Topic), class: 'form-control form-control-inline' %>
+    <a href="#" data-remove-workshop class="btn btn-danger" style="display: none">-</a>
+  </div>
+  <a href="#" class="btn btn-success" data-add-workshop>+</a>
+</div>

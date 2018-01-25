@@ -31,6 +31,8 @@ en:
   Sorry: Sorry
   as: as
   Select: Please select...
+  Category: Category
+  Topic: Topic
 
   #Dates
   Date: Date
@@ -159,12 +161,15 @@ en:
   Add_books: Add books to translate
   Active: Active
 
-  #Activities Controller
+  # Activities Controller
   Activities: Activities
   Activity: Activity
   My_activities: My Activities
   Associated_activities: Associated Activities
   Bible_translation: Bible Translation
+  Translation_activities: Translation Activities
+  Linguistic_activities: Linguistic Activities
+  Media_activities: Media Activities
   Add_activity: Add Program Activity
   Activity_type: Type of Activity
   Associate_people: "Associate %{activity} with:"
@@ -172,6 +177,25 @@ en:
   new_activity: new activity
   Multiple_stages_hint: "If the books are at different stages, set the stage to Planned and the date to the beginning of the project. Then update each book to it's current stage on the Project Dashboard."
   No_current_activites: No Current Activities
+  Select_books: Select Books
+  Title_error: Please enter a title
+  # Media Activities
+  AudioScripture: Audio Scripture
+  Audio_x: Audio %{x}
+  Film: Film
+  JesusFilm: Jesus Film
+  LukeFilm: Luke Film
+  ActsFilm: Acts Film
+  GenesisFilm: Genesis Film
+  StoryOfGenesisFilm: Story of Genesis
+  BookOfJohn: Book of John
+  MagdalenaFilm: Magdalena Film
+  # Linguistic Activities
+  Workshop: Workshop
+  Workshops: Workshops
+  Grammar: Grammar
+  Dictionary: Dictionary
+  Phonology: Phonology
 
   #Participants Controller
   Role: Role
@@ -184,7 +208,15 @@ en:
   Delete_from: Delete %{person} from %{program}
   Delete_participant_confirmation: Are you sure you want to completely remove this person from the program? If you are trying to say that this person was in the program and left, go back to their page and click 'Left Program'.
 
-  #Translation Stages Controller
+  # Stages Controller
+  Current_stage: 'Current stage'
+  Update_stage: Update stage to
+  As_of: As of
+  Stage: Stage
+  Modify_Date: Modify Date
+  Delete_stage_confirmation: Do you want to delete this stage from the history?
+  Translate: Translate
+  #   Translation Stages
   Planned: Planned
   Drafting: Drafting
   Testing: Testing
@@ -194,13 +226,19 @@ en:
   Consultant_check: Consultant Check in Progress
   Consultant_checked: Consultant Checked
   Published: Published
-  Current_stage: 'Current stage'
-  Update_stage: Update stage to
-  As_of: As of
-  Stage: Stage
-  Modify_Date: Modify Date
-  Delete_stage_confirmation: Do you want to delete this stage from the history?
-  Translate: Translate
+  #   Media Stages
+  Application: Application
+  Script: Script
+  Scheduled: Scheduled
+  Recording: Recording
+  Mastering: Mastering
+  #   Linguistic Stages
+  Research: Research
+  Review: Review
+
+  # Workshops Controller
+  Completed: Completed
+  Mark_completed: Mark Completed
 
   #Sessions Controller
   Log_out: Log out

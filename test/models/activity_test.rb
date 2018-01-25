@@ -98,7 +98,7 @@ class ActivityTest < ActiveSupport::TestCase
 
   test "Types for select" do
     types = Activity.types_for_select
-    assert_equal(1, types.count)
+    assert_equal(3, types.count)
     assert_equal('TranslationActivity',types[0][1])
   end
 

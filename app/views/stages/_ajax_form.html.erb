@@ -1,13 +1,12 @@
- <% @translation_activity = activity %>
- <% @stage = Stage.new_for(activity) %>
+ <% stage = activity.next_stage %>
  
-  <%= form_for(@stage,
-               url: translation_activity_stages_path(@translation_activity),
+  <%= form_for(stage,
+               url: activity_stages_path(activity),
                remote: true) do |f| %>
     <div class="col-md-3">
       <p>
         <%= f.label :name, t(:Update_stage) %>
-        <%= f.select(:name, options_for_select(Stage::TRANSLATION_STAGES.collect{ |s| [t(s), s]}, @stage.name), {}, class: 'form-control') %>
+        <%= f.select(:name, t_select_options(activity.available_stages, stage.name), {}, class: 'form-control') %>
       </p>
     </div>
     <div class="col-md-5">

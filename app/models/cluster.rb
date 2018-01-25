@@ -24,7 +24,7 @@ class Cluster < ApplicationRecord
 
 
   def sorted_activities
-    sorted_translation_activities
+    Activity.where(program_id: self.programs).order('type DESC, bible_book_id')
   end
 
   def sorted_translation_activities

@@ -1,7 +1,8 @@
 class Activity < ApplicationRecord
+  include ApplicationHelper
 
   belongs_to :program, required: true, touch: true
-  belongs_to :bible_book, required: false
+  # belongs_to :bible_book, required: false
   has_many :stages
   has_and_belongs_to_many :participants
   has_many :people, through: :participants
@@ -29,6 +30,14 @@ class Activity < ApplicationRecord
     self.current_stage.name
   end
 
+  def next_stage
+    Stage.new(
+      name: Stage.stage_after(current_stage.name, current_stage.kind),
+      kind: kind,
+      start_date: Date.today
+    )
+  end
+
   def participants_for_my_stage
     roles = current_stage.roles
     current_participants.where_has_role_among roles
@@ -46,18 +55,26 @@ class Activity < ApplicationRecord
     stages.order 'start_date ASC, id ASC'
   end
 
-  def build(params)
-    # Type specific implementation runs first
-    save!
-    return if params[:participant_ids].nil?
+  def to_hash
+    percent, color = progress
+    color = color_from_sym(color)
+    {
+        id: id,
+        stage_name: stage_name,
+        progress:
+            {
+                percent: percent,
+                color: color
+            }
 
-    params[:participant_ids].each do |participant_id|
-      participants << Participant.find(participant_id)
-    end
+    }
   end
 
   def self.types_for_select
-    [[I18n.t(:Bible_translation), 'TranslationActivity']
+    [
+        [I18n.t(:Bible_translation), 'TranslationActivity'],
+        [I18n.t(:Linguistic), 'LinguisticActivity'],
+        [I18n.t(:Media), 'MediaActivity']
     ]
   end
 
@@ -65,11 +82,17 @@ class Activity < ApplicationRecord
     case str
       when 'TranslationActivity'
         TranslationActivity
+      when 'MediaActivity'
+        MediaActivity
+      when 'LinguisticActivity'
+        LinguisticActivity
     end
   end
 
   def self.search(query)
-    TranslationActivity.search(query)
+    TranslationActivity.search(query) +
+        MediaActivity.search(query) +
+        LinguisticActivity.search(query)
   end
 
   private
