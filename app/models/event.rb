@@ -48,6 +48,10 @@ class Event < ApplicationRecord
     date_text
   end
 
+  def cluster_programs
+    clusters + programs
+  end
+
   def f_start_date
     begin
       FuzzyDate.from_string self.start_date
@@ -99,6 +103,22 @@ class Event < ApplicationRecord
 
   def self.upcoming
     where("start_date > ?", Date.today.to_s)
+  end
+
+  def self.past
+    today = Date.today.to_s
+    year_month = today[0, 7] # YYYY-MM
+    year = today[0, 4] # YYYY
+    filter = "end_date < '#{today}' AND end_date != '#{year_month}' AND end_date != '#{year}'"
+    where(filter)
+  end
+
+  def self.current
+    today = Date.today.to_s
+    year_month = today[0, 7] # YYYY-MM
+    year = today[0, 4] # YYYY
+    filter = "start_date <= '#{today}' AND (end_date >= '#{today}' OR end_date = '#{year_month}' OR end_date = '#{year}')"
+    where(filter)
   end
 
   def self.events_as_hash(events=nil)

@@ -69,6 +69,49 @@ class EventTest < ActiveSupport::TestCase
     refute_includes unassoc, drew
   end
 
+  def test_event(start, finish)
+    Event.create!(name: 'Test', domain: :Translation, start_date: start, end_date: finish)
+  end
+
+  test "Timely Queries" do
+    current = []
+    current << test_event('1776-07', '1776-07')
+    current << test_event('1776', '1776')
+    current << test_event('1776-07', '1776-07-04')
+    current << test_event('1776-07-03', '1776-07')
+    current << test_event('1776-07-03', '1776')
+
+    past = []
+    past << test_event('1776-07', '1776-07-03')
+
+    future = []
+    future << test_event('1776-07-05', '1777')
+
+    Date.stub(:today, Date.new(1776, 7, 4)) do
+      current_events = Event.current
+      past_events = Event.past
+      future_events = Event.upcoming
+
+      current.each do |e|
+        assert_includes current_events, e
+        refute_includes past_events, e
+        refute_includes future_events, e
+      end
+
+      past.each do |e|
+        assert_includes past_events, e
+        refute_includes current_events, e
+        refute_includes future_events, e
+      end
+
+      future.each do |e|
+        assert_includes future_events, e
+        refute_includes past_events, e
+        refute_includes current_events, e
+      end
+    end
+  end
+
   test "User Not Associated With Event" do
     rick = people :Rick
     refute @genesis_check.associated_with?(rick), "Rick is not associated with the event"

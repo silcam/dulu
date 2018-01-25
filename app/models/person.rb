@@ -6,6 +6,8 @@ class Person < ApplicationRecord
   has_many :participants, dependent: :destroy
   has_many :programs, through: :participants
   has_many :person_roles, dependent: :destroy
+  has_many :event_participants, dependent: :destroy
+  has_many :events, through: :event_participants
 
   audited
 

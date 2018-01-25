@@ -82,11 +82,11 @@
   <table class="table auto-width">
     <% participants.each do |participant| %>
       <tr>
-        <td>
+        <td class="bigger">
           <%= link_to participant.cluster_program.display_name, participant.cluster_program %>
-          <% unless participant.roles_text.blank? %>
-            - <%= participant.roles_text %>
-          <% end %>
+        </td>
+        <td>
+          <%= participant.roles_text %>
         </td>
       </tr>
     <% end %>
@@ -101,13 +101,38 @@
   <table class="table auto-width">
     <% participants.each do |participant| %>
       <tr>
-        <td>
+        <td class="bigger">
           <%= link_to participant.cluster_program.display_name, participant.cluster_program %>
-          <% unless participant.roles_text.blank? %>
-            - <%= participant.roles_text %>
-          <% end %>
+        </td>
+        <td>
+          <%= participant.roles_text %>
         </td>
       </tr>
+    <% end %>
+  </table>
+<% end %>
+
+<%
+  future_events = @person.events.upcoming
+  current_events = @person.events.current
+  past_events = @person.events.past.limit(5)
+%>
+<% unless future_events.empty? and current_events.empty? and past_events.empty? %>
+  <h3><%= t :Events %></h3>
+  <table class="table auto-width">
+    <% [future_events, current_events, past_events].each_with_index do |events, i| %>
+      <% events.reverse_each do |event| %>
+        <% tr_class = (i==2) ? "class='text-muted'".html_safe : "" %>
+        <tr <%= tr_class %>>
+          <td class="bigger"><%= link_to event.name, event %></td>
+          <td><%= event.dates_display_text %></td>
+          <td class="subtle-links">
+            <%= event.cluster_programs.collect do |cp| %>
+              <% link_to(cp.display_name, cp) %>
+            <% end.join(', ').html_safe %>
+          </td>
+        </tr>
+      <% end %>
     <% end %>
   </table>
 <% end %>
