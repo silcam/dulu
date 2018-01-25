@@ -1,3 +1,22 @@
+<% if @event.workshop %>
+  <% activity = @event.workshop.linguistic_activity %>
+  <ul class="list-inline">
+    <li class="h3">
+      <%= link_to activity.name, activity_path(activity) %> |
+    </li>
+    <% activity.workshops.each do |workshop| %>
+      <li class="h4">
+        <% if workshop.event && workshop.event != @event %>
+          <%= link_to workshop.name, ctxt_event_path(@program, workshop.event) %>
+        <% else %>
+          <%= workshop.name %>
+        <% end %>
+      </li>
+    <% end %>
+  </ul>
+  <hr>
+<% end %>
+
 <h2>
   <%= @event.display_name %>
   <% if can? :update, @event %>
@@ -42,6 +61,7 @@
 
   <% form_route = @program ? add_update_program_event_path(@program, @event) : add_update_event_path(@event) %>
   <%= form_tag form_route, method: :patch, class: 'form-inline not-shown' do %>
+    <p class="text-warning"><%= t :Event_cluster_hint %></p>
     <%= select_tag :event_cluster, options_from_collection_for_select(@event.unassoc_clusters, :id, :name), class: 'form-control' %>
     <%= submit_tag t(:Add), class: 'btn btn-primary' %>
     <a href="#" data-showable-form-hide class="btn btn-danger"><%= t :Cancel %></a>

@@ -51,6 +51,10 @@ class ActiveSupport::TestCase
   def error_message_with(content)
     find(:css, 'div#error-explanation').has_content? content
   end
+
+  def accept_js_confirm
+    page.driver.browser.accept_js_confirms
+  end
 end
 
 # Some kind of hack to avoid SQLite::BusyExceptions

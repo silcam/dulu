@@ -55,6 +55,10 @@ class Activity < ApplicationRecord
     stages.order 'start_date ASC, id ASC'
   end
 
+  def empty_activity?
+    stages.count.zero? && participants.count.zero?
+  end
+
   def to_hash
     percent, color = progress
     color = color_from_sym(color)

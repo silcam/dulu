@@ -33,11 +33,4 @@
 
     <%= form.submit t(:Save), data: {'events-form-submit' => 1}, class: 'btn btn-primary btn-lg' %>
 
-    <%
-      if @event.persisted?
-        return_path = @program ? program_event_path(@program, @event) : event_path(@event)
-      else
-        return_path = @program ? program_events_path(@program) : events_path
-      end
-    %>
-    <%= link_to  t(:Cancel), return_path, class: 'btn btn-danger btn-lg' %>
+    <a onclick="window.history.back()" class="btn btn-danger btn-lg"><%= t(:Cancel) %></a>

@@ -14,6 +14,7 @@ class EventTest < ActiveSupport::TestCase
     assert_includes @genesis_check.programs, @hdi
     assert_includes @genesis_check.event_participants, drew_genesis_check
     assert_includes @genesis_check.people, drew
+    # TODO assert_equal people(:Olga), @genesis_check.creator
   end
 
   test "Presence Validation" do
@@ -68,6 +69,49 @@ class EventTest < ActiveSupport::TestCase
     refute_includes unassoc, drew
   end
 
+  def create_test_event(start, finish)
+    Event.create!(name: 'Test', domain: :Translation, start_date: start, end_date: finish)
+  end
+
+  test "Timely Queries" do
+    current = []
+    current << create_test_event('1776-07', '1776-07')
+    current << create_test_event('1776', '1776')
+    current << create_test_event('1776-07', '1776-07-04')
+    current << create_test_event('1776-07-03', '1776-07')
+    current << create_test_event('1776-07-03', '1776')
+
+    past = []
+    past << create_test_event('1776-07', '1776-07-03')
+
+    future = []
+    future << create_test_event('1776-07-05', '1777')
+
+    Date.stub(:today, Date.new(1776, 7, 4)) do
+      current_events = Event.current
+      past_events = Event.past
+      future_events = Event.upcoming
+
+      current.each do |e|
+        assert_includes current_events, e
+        refute_includes past_events, e
+        refute_includes future_events, e
+      end
+
+      past.each do |e|
+        assert_includes past_events, e
+        refute_includes current_events, e
+        refute_includes future_events, e
+      end
+
+      future.each do |e|
+        assert_includes future_events, e
+        refute_includes past_events, e
+        refute_includes current_events, e
+      end
+    end
+  end
+
   test "User Not Associated With Event" do
     rick = people :Rick
     refute @genesis_check.associated_with?(rick), "Rick is not associated with the event"
@@ -75,8 +119,7 @@ class EventTest < ActiveSupport::TestCase
 
   test "User Direct Association" do
     rick = people :Rick
-    tc = program_roles :TranslationConsultant
-    @genesis_check.event_participants << EventParticipant.new(person: rick, program_role: tc)
+    @genesis_check.event_participants << EventParticipant.new(person: rick)
     assert @genesis_check.associated_with?(rick), "Rick is directly associated with the event"
   end
 

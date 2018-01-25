@@ -31,13 +31,6 @@ class StageTest < ActiveSupport::TestCase
     refute Stage.new(valid_params(kind: 'Pizza')).valid?
   end
 
-  test 'New For Activity' do
-    new_stage = Stage.new_for @hdi_ezra
-    assert_equal :Testing, new_stage.name
-    assert_equal :Translation, new_stage.kind
-    assert_equal Date.today.to_s, new_stage.start_date
-  end
-
   test 'Destroy Last Stage for Activity' do
     hdi_planned = stages :HdiOne
     @hdi_drafting.destroy

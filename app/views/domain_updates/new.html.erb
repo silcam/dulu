@@ -35,6 +35,7 @@
 
     <div class="form-group">
       <%= submit_tag t(:Save), class: 'btn btn-primary btn-lg', data: {'domain-updates-form-submit': 1} %>
+      <a onclick="window.history.back()" class="btn btn-danger btn-lg"><%= t(:Cancel) %></a>
     </div>
   <% end %>
 

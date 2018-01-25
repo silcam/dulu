@@ -90,11 +90,12 @@ $(document).ready ->
 
       $('input[type=submit]').click (e) ->
         if $('#activity_type').val() == 'LinguisticActivity'
-          if $('#activity_title').val() == ''
-            form_group = $('#activity_title').closest('div.form-group')
-            form_group.attr('class', 'form-group has-error')
-            form_group.find('.help-block').show()
+          unless window.validate_not_blank($('#activity_title'))
             e.preventDefault()
+          if $('select[data-ling-category]').val() == 'Workshops'
+            ws_names = $('input[name="activity[workshops][]"]')
+            unless window.validate_not_blank(ws_names)
+              e.preventDefault()
 
     when 'activities#show'
       $('.edit_stage').on('ajax:before', () ->

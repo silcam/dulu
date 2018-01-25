@@ -10,10 +10,10 @@ class ParticipantIntTest < Capybara::Rails::TestCase
   end
 
   test "Regression Test: Add to program with no activities" do
-    ewondo_program = programs :Ewondo
-    assert ewondo_program.activities.empty?, "This test is for a program with no activities"
-    visit new_program_participant_path(ewondo_program)
-    assert_current_path new_program_participant_path(ewondo_program)
+    none_program = programs :NoActivityProgram
+    assert none_program.activities.empty?, "This test is for a program with no activities"
+    visit new_program_participant_path(none_program)
+    assert_current_path new_program_participant_path(none_program)
   end
 
   def setup_show_page

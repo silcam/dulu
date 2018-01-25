@@ -36,3 +36,9 @@ FormerHdiTranslator:
   roles_field: '|Translator|'
   start_date: 2013
   end_date: 2015-03
+
+KendallEwondo:
+  person: Kendall
+  program: Ewondo
+  roles_field: '|LinguisticConsultantTraining|'
+  start_date: 2000

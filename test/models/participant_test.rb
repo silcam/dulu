@@ -30,10 +30,8 @@ class ParticipantTest < ActiveSupport::TestCase
 
   test 'End Date Validation' do
     rick = people :Rick
-    role = program_roles :Translator
     participant = Participant.new(person: rick, program: @hdi_program,
-                    program_role: role, start_date: '2017',
-                                  end_date: 'abc')
+                    start_date: '2017', end_date: 'abc')
     refute participant.save, "Should not save with invalid end date"
     participant.end_date = '2017'
     assert participant.save, "Should save with valid end date"
@@ -91,7 +89,6 @@ class ParticipantTest < ActiveSupport::TestCase
 
   def some_valid_params(merge_params = {})
     rick = people(:Rick)
-    role = program_roles(:Translator)
     {person: rick, program: @hdi_program,
               start_date: '2017'}.merge merge_params
   end

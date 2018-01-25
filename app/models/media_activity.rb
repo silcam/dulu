@@ -7,6 +7,7 @@ class MediaActivity < Activity
   SCRIPTURE = %i( Bible Old_testament New_testament Other )
 
   validates :category, inclusion: CATEGORIES
+  validates :film, inclusion: FILMS, allow_nil: true
   validates :scripture, inclusion: SCRIPTURE, allow_nil: true
 
   def category
@@ -36,7 +37,7 @@ class MediaActivity < Activity
   end
 
   def self.search(query)
-    activities = MediaActivity.where("category ILIKE :q", {q: "%#{query}%"})
+    activities = MediaActivity.where("category ILIKE unaccent(:q)", {q: "%#{query}%"})
     activities.collect do |activity|
       {
           title: activity.name,

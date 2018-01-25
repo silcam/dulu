@@ -1,11 +1,18 @@
-# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+Noun:
+  linguistic_activity: EwondoGrammarIntro
+  number: 1
+  name: Noun
+  event: EwondoNounWS
+  stage: EwondoGrammarNoun
 
-# This model initially had no columns defined. If you add columns to the
-# model remove the '{}' from the fixture names and add the columns immediately
-# below each fixture, per the syntax in the comments below
-#
-one: {}
-# column: value
-#
-two: {}
-# column: value
+Verb:
+  linguistic_activity: EwondoGrammarIntro
+  number: 2
+  name: Verb
+  event: EwondoVerbWS
+
+Syntax:
+  linguistic_activity: EwondoGrammarIntro
+  number: 3
+  name: Syntax
+

@@ -2,7 +2,7 @@
   <%= render 'activities/stage_row_view', stage: stage %>
 </tr>
 
-<% if can? :update_activity, stage.activity %>
+<% if can? :update, stage.activity %>
   <tr id="stage-row-form-<%= stage.id %>", style="display: none">
     <td colspan="4">
       <%= render 'activities/stage_row_form', stage: stage %>

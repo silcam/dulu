@@ -1,5 +1,6 @@
 class Cluster < ApplicationRecord
   include HasParticipants
+  include MultiWordSearch
 
   has_many :languages
   has_many :programs, through: :languages
@@ -24,7 +25,7 @@ class Cluster < ApplicationRecord
 
 
   def sorted_activities
-    Activity.where(program_id: self.programs).order('type DESC, bible_book_id')
+    Activity.where(program_id: self.programs).order('program_id, type DESC, bible_book_id')
   end
 
   def sorted_translation_activities
@@ -32,7 +33,7 @@ class Cluster < ApplicationRecord
   end
 
   def self.search(query)
-    clusters = Cluster.where("name ILIKE ?", "%#{query}%")
+    clusters = Cluster.multi_word_where(query, 'name')
     results = []
     clusters.each do |cluster|
       subresults = []

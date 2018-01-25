@@ -21,27 +21,27 @@ class LinguisticActivity < Activity
         Stage.stages(:Linguistic)
   end
 
-  def current_workshop
-    workshops.find_by(name: current_stage.name)
-  end
-
-  def next_workshop
-    cw = current_workshop
-    return workshops.first if cw.nil?
-    workshops.find_by(number: (cw.number + 1)) || cw
-  end
-
-  def next_stage
-    name = (category == :Workshops) ?
-               next_workshop.name :
-               Stage.stage_after(current_stage.name, :Linguistic)
-
-    Stage.new(
-      name: name,
-      kind: kind,
-      start_date: Date.today
-    )
-  end
+  # def current_workshop
+  #   current_stage.workshop
+  # end
+  #
+  # def next_workshop
+  #   cw = current_workshop
+  #   return workshops.first if cw.nil?
+  #   workshops.find_by(number: (cw.number + 1)) || cw
+  # end
+  #
+  # def next_stage
+  #   name = (category == :Workshops) ?
+  #              next_workshop.name :
+  #              Stage.stage_after(current_stage.name, :Linguistic)
+  #
+  #   Stage.new(
+  #     name: name,
+  #     kind: kind,
+  #     start_date: Date.today
+  #   )
+  # end
 
   def progress
     (category == :Workshops) ?
@@ -49,14 +49,22 @@ class LinguisticActivity < Activity
         current_stage.progress
   end
 
-  def ws_stages
-    workshops.collect do |ws|
-      {
-          workshop: ws,
-          stage: stages.find_by(name: ws.name)
-      }
+  def empty_activity?
+    if category == :Workshops
+      super && workshops.empty?
+    else
+      super
     end
   end
+
+  # def ws_stages
+  #   workshops.collect do |ws|
+  #     {
+  #         workshop: ws,
+  #         stage: ws.stage
+  #     }
+  #   end
+  # end
 
   def update_workshops(params)
     params[:workshops] ||= {}
@@ -96,7 +104,7 @@ class LinguisticActivity < Activity
   end
 
   def self.search(query)
-    activities = LinguisticActivity.where("title ILIKE :q OR category ILIKE :q", {q: "%#{query}%"})
+    activities = LinguisticActivity.where("unaccent(title) ILIKE unaccent(:q) OR category ILIKE :q", {q: "%#{query}%"})
     results = []
     activities.each do |activity|
       results << {

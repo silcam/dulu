@@ -3,7 +3,7 @@ class WorkshopsController < ApplicationController
   before_action :set_workshop
 
   def complete
-    authorize! :update_activity, @activity
+    authorize! :update, @activity
     @workshop.complete(workshop_params)
     render json: @workshop.to_hash.merge(action: 'workshops#complete')
   end

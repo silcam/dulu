@@ -67,6 +67,13 @@ class ActivityTest < ActiveSupport::TestCase
     assert_equal :Drafting, @hdi_ezra.stage_name
   end
 
+  test "Next Stage" do
+    stage = @hdi_ezra.next_stage
+    assert_equal :Testing, stage.name
+    assert_equal :Translation, stage.kind
+    assert_equal Date.today.to_s, stage.start_date
+  end
+
   test 'participants for my stage' do
     stage_participants = @hdi_ezra.participants_for_my_stage
     assert_equal(1, stage_participants.count)
@@ -89,11 +96,40 @@ class ActivityTest < ActiveSupport::TestCase
     assert_equal(stages(:HdiTwo), stages_desc.first)
   end
 
-  # See Build test in TranslationActivityTest
-
   test 'destroy the last stage' do
     @hdi_ezra.stages.each { |s| s.destroy }
     assert_equal(0, @hdi_ezra.stages.count)
+  end
+
+  def hdi_john
+    hdi = programs(:Hdi)
+    john = bible_books(:John)
+    TranslationActivity.create!(program: hdi, bible_book: john)
+  end
+
+  test "Can delete brand new activity" do
+    assert hdi_john.empty_activity?
+  end
+
+  test "Can't delete if has a stage" do
+    john = hdi_john
+    john.stages << john.next_stage
+    refute john.empty_activity?
+  end
+
+  test "Can't delete if has a participant" do
+    john = hdi_john
+    john.participants << participants(:DrewHdi)
+    refute john.empty_activity?
+  end
+
+  test "To Hash" do
+    exp = {
+        id: @hdi_ezra.id,
+        stage_name: :Drafting,
+        progress: {percent: 10, color: '#A93226'}
+    }
+    assert_equal exp, @hdi_ezra.to_hash
   end
 
   test "Types for select" do

@@ -1,4 +1,6 @@
 class Event < ApplicationRecord
+  include MultiWordSearch
+
   has_and_belongs_to_many :programs
   has_and_belongs_to_many :clusters
   has_many :event_participants, autosave: true, dependent: :destroy
@@ -10,10 +12,6 @@ class Event < ApplicationRecord
 
   default_scope{ order(:start_date) }
 
-  # NB: The kind field is being deprecated
-  enum kind: [:Consultation]
-
-  # validates :kind, inclusion: { in: Event.kinds }
   validates :domain, inclusion: {in: StatusParameter.domains}
   validates :name, presence: true
   validates :start_date, presence: true
@@ -46,6 +44,10 @@ class Event < ApplicationRecord
       date_text += ' ' + I18n.t(:to) + ' ' + finish.pretty_print(no_relative_dates: true)
     end
     date_text
+  end
+
+  def cluster_programs
+    clusters + programs
   end
 
   def f_start_date
@@ -101,6 +103,22 @@ class Event < ApplicationRecord
     where("start_date > ?", Date.today.to_s)
   end
 
+  def self.past
+    today = Date.today.to_s
+    year_month = today[0, 7] # YYYY-MM
+    year = today[0, 4] # YYYY
+    filter = "end_date < '#{today}' AND end_date != '#{year_month}' AND end_date != '#{year}'"
+    where(filter)
+  end
+
+  def self.current
+    today = Date.today.to_s
+    year_month = today[0, 7] # YYYY-MM
+    year = today[0, 4] # YYYY
+    filter = "start_date <= '#{today}' AND (end_date >= '#{today}' OR end_date = '#{year_month}' OR end_date = '#{year}')"
+    where(filter)
+  end
+
   def self.events_as_hash(events=nil)
     events = Event.all if events.nil?
     event_hash = {past: [], current: [], future: []}
@@ -117,10 +135,7 @@ class Event < ApplicationRecord
   end
 
   def self.search(query)
-    q_words = query.split(' ')
-    where_clause = q_words.collect{ |w| "name ILIKE ?"}.join(' AND ')
-    q_words.collect!{ |w| "%#{w}%" }
-    events = Event.where where_clause, *q_words
+    events = Event.multi_word_where(query, 'name')
     results = []
     events.each do |event|
       title = "#{event.name}"

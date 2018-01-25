@@ -14,7 +14,7 @@
                 link_to(date, program_event_path(@program, workshop.event))
           %>
         </span>
-        <% if can?(:update_activity, @activity) && workshop.event.nil? %>
+        <% if can?(:update, @activity) && workshop.event.nil? %>
           <%= link_to t(:Add_event), new_program_event_path(@program, workshop: workshop, referred_by: request.path) %>
         <% end %>
       </td>
@@ -32,7 +32,7 @@
         <% end %>
       </td>
     </tr>
-    <% if can?(:update_activity, @activity) && !workshop.event %>
+    <% if can?(:update, @activity) && !workshop.event %>
       <tr class="hidden-workshop-form">
         <td class="<%= name_class %>">
           <%= t(workshop.name, default: workshop.name.to_s) %>

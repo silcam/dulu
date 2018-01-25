@@ -1,4 +1,4 @@
-<%= form_tag update_workshops_activity_path(@activity), class: 'auto-width' do %>
+<%= form_tag update_workshops_activity_path(@activity), class: 'auto-width', id: 'edit-workshops' do %>
   <table class="table">
     <tbody>
     <% @activity.workshops.each do |workshop| %>
@@ -11,7 +11,10 @@
           </a>
         </td>
         <td>
-          <%= text_field_tag "workshops[#{workshop.id}][name]", workshop.name, class: 'form-control' %>
+          <div class="form-group">
+            <%= text_field_tag "workshops[#{workshop.id}][name]", workshop.name, class: 'form-control' %>
+            <p class="help-block"><%= t :Name_error %></p>
+          </div>
         </td>
         <td class="workshop-completed-cell">
           <% if workshop.completed? %>
@@ -46,7 +49,10 @@
         <a href="#" data-move-workshop-up class="btn btn-default">▲</a>
       </td>
       <td>
-        <%= text_field_tag "new_workshops[]", '', class: 'form-control' %>
+        <div class="form-group">
+          <%= text_field_tag "new_workshops[]", '', class: 'form-control' %>
+          <p class="help-block"><%= t :Name_error %></p>
+        </div>
       </td>
       <td></td>
       <td>

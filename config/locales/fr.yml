@@ -179,6 +179,8 @@ fr:
   No_current_activities: Aucune activité actuelle
   Select_books: Choisissez des livres
   Title_error: Saisissez un titre s'il vous plait
+  Name_error: Saisessez un nom s'il vous plait
+  Delete_activity_confirmation: Confirmez que vous voulez supprimer cette activité.
   # Media Activities
   AudioScripture: Écriture Audio
   Audio_x: "%{x} Audio"
@@ -301,6 +303,7 @@ fr:
   with_a_role_of: dont le rôle est
   Consultation: Vérification du conseiller
   Same_as_start_date: Meme que le date de commencement
+  Event_cluster_hint: Conseil - Ajouter un groupe va associer cet événement avec toutes les langues du groupe.
 
   # Domain Updates
   Domain: Domaine

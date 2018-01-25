@@ -1,4 +1,5 @@
 class Organization < ApplicationRecord
+  include MultiWordSearch
 
   has_many :people
 
@@ -19,7 +20,7 @@ class Organization < ApplicationRecord
   end
 
   def self.search(query)
-    orgs = Organization.where("name ILIKE ? OR abbreviation ILIKE ?", "%#{query}%", "%#{query}%")
+    orgs = Organization.multi_word_where(query, 'name', 'abbreviation')
     results = []
     orgs.each do |org|
       subresults = []

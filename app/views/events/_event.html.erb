@@ -9,7 +9,7 @@
 
 <div class="panel panel-info" id="event-panel-<%= event.id %>">
   <div class="panel-heading h5 panel-title dulu-panel-title">
-    <%= link_to title, (@program ? program_event_path(@program, event) : event) %>
+    <%= link_to title, ctxt_event_path(@program, event) %>
   </div>
   <div class="panel-body">
     <p><strong><%= event.dates_display_text %></strong></p>

@@ -179,6 +179,8 @@ en:
   No_current_activites: No Current Activities
   Select_books: Select Books
   Title_error: Please enter a title
+  Name_error: Please enter a name
+  Delete_activity_confirmation: "Are you sure you want to delete this activity?"
   # Media Activities
   AudioScripture: Audio Scripture
   Audio_x: Audio %{x}
@@ -301,6 +303,7 @@ en:
   with_a_role_of: with a role of
   Consultation: Consultant Check
   Same_as_start_date: Same as start date
+  Event_cluster_hint: Hint - Adding a cluster will associate the event with all languages in that cluster.
 
   # Domain Updates
   Domain: Domain

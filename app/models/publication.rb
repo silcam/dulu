@@ -1,4 +1,6 @@
 class Publication < ApplicationRecord
+  include MultiWordSearch
+
   belongs_to :program, touch: true, required: false
 
   audited associated_with: :program
@@ -47,10 +49,7 @@ class Publication < ApplicationRecord
   end
 
   def self.search(query)
-    pubs = Publication.where("english_name ILIKE :q OR
-                              french_name ILIKE :q OR
-                              nl_name ILIKE :q",
-                             {q: "%#{query}%"}).includes(:program)
+    pubs = Publication.multi_word_where(query, 'english_name', 'french_name', 'nl_name').includes(:program)
     results = []
     pubs.each do |pub|
       title = "#{pub.name} : #{pub.program.name}"

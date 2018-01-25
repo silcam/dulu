@@ -1,4 +1,5 @@
 class EventsController < ApplicationController
+  include EventsHelper
 
   def index
     if params[:program_id]
@@ -22,7 +23,7 @@ class EventsController < ApplicationController
     if params[:workshop]
       @workshop = Workshop.find(params[:workshop])
       @workshop.set_event_defaults(@event)
-      authorize! :update_activity, @workshop.linguistic_activity
+      authorize! :update, @workshop.linguistic_activity
     end
   end
 
@@ -37,7 +38,7 @@ class EventsController < ApplicationController
         @event.workshop = workshop
         follow_redirect activity_path(workshop.linguistic_activity)
       else
-        redirect_to (@program ? program_event_path(@program, @event) : event_path(@event))
+        redirect_to ctxt_event_path(@program, @event)
       end
     else
       render 'new'
@@ -71,11 +72,7 @@ class EventsController < ApplicationController
     @event.clusters << Cluster.find(params[:event_cluster]) if params[:event_cluster]
     @event.programs << Program.find(params[:event_program]) if params[:event_program]
     EventParticipant.build(@event, params[:event_person]) if params[:event_person]
-
-    redirect_to (params[:program_id] ?
-                     program_event_path(params[:program_id], @event) :
-                     event_path(@event)
-                )
+    redirect_to ctxt_event_path(params[:program_id], @event)
   end
 
   def remove_update
@@ -84,21 +81,14 @@ class EventsController < ApplicationController
     @event.clusters.delete(params[:cluster_id]) if params[:cluster_id]
     @event.programs.delete(params[:remove_program]) if params[:remove_program]
     EventParticipant.find(params[:remove_participant]).delete if params[:remove_participant]
-    redirect_to (params[:program_id] ?
-                     program_event_path(params[:program_id], @event) :
-                     event_path(@event)
-                )
+    redirect_to ctxt_event_path(params[:program_id], @event)
   end
 
   def destroy
     @event = Event.find params[:id]
     authorize! :destroy, @event
     @event.destroy
-    if params[:program_id]
-      redirect_to program_events_path(params[:program_id])
-    else
-      redirect_to events_path
-    end
+    redirect_to ctxt_events_path(params[:program_id])
   end
 
   private
