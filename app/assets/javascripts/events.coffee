@@ -11,6 +11,7 @@ $(document).ready ->
 
       $('a[data-end-same-as-start-date]').click (e) ->
         e.preventDefault()
+        $(this).blur()
         $('#event_end_date_m').val($('#event_start_date_m').val())
         $('#event_end_date_d').val($('#event_start_date_d').val())
         $('#event_end_date_y').val($('#event_start_date_y').val())
