@@ -32,6 +32,7 @@ server 'dulu', user: 'dulu', roles: %w{web app db}
 # http://capistranorb.com/documentation/getting-started/configuration/
 # Feel free to add new variables to customise your setup.
 
+set :branch, 'master'
 
 
 # Custom SSH Options

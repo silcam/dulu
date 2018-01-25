@@ -84,7 +84,7 @@ class EventsIntegrationTest < Capybara::Rails::TestCase
   test "Add and Remove Cluster" do
     go_to_genesis_consult_event true
     within('div#cluster-section') do
-      click_on 'Edit'
+      click_on 'Add'
       select 'Ndop', from: 'event_cluster'
       click_on 'Add'
     end

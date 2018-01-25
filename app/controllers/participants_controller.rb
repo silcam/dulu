@@ -1,6 +1,6 @@
 class ParticipantsController < ApplicationController
 
-  before_action :set_participant, only: [:edit, :update, :finish, :show, :add_update, :remove_update]
+  before_action :set_participant, only: [:edit, :update, :finish, :show, :destroy, :add_update, :remove_update]
   before_action :set_cluster_program, only: [:index, :new, :create]
   before_action :authorize_user, only: [:new, :edit, :create, :update, :finish, :add_update, :remove_update]
 
@@ -38,12 +38,20 @@ class ParticipantsController < ApplicationController
       @participant.associate_activities params[:assoc_activities]
       redirect_to @participant
     else
-      render params[:this_action]
+      render action_from_params
     end
   end
 
   def finish
 
+  end
+
+  def destroy
+    authorize! :destroy, @participant
+    @participant.destroy
+    redirect_to (@cluster_program.is_a? Program) ?
+               program_participants_path(@cluster_program) :
+               cluster_path(@cluster_program)
   end
 
   def add_update
@@ -84,5 +92,16 @@ class ParticipantsController < ApplicationController
 
   def authorize_user
     authorize! :manage_participants, @cluster_program
+  end
+
+  def action_from_params
+    case params[:this_action]
+      when 'edit'
+        'edit'
+      when 'finish'
+        'finish'
+      else
+        redirect_to not_allowed_path
+    end
   end
 end

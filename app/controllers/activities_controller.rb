@@ -12,7 +12,7 @@ class ActivitiesController < ApplicationController
   end
 
   def create
-    params[:activity][:type].constantize.build_all(@program, params[:activity])
+    Activity.subclass_from_text(params[:activity][:type]).build_all(@program, params[:activity])
     redirect_to dashboard_program_path @program
   end
 

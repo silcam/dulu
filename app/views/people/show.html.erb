@@ -1,11 +1,10 @@
-<h2><%= @person.full_name %></h2>
+<h2>
+  <%= @person.full_name %>
+  <% if can? :update, @person %>
+    <%= link_to t(:Edit), edit_person_path(@person), class: 'btn btn-warning hdr-btn' %>
+  <% end %>
+</h2>
 <h4><%= @person.organization.try(:name) %></h4>
-
-<% if can? :update, @person %>
-    <div>
-      <%= link_to t(:Edit_person), edit_person_path(@person, referred_by: request.path) %>
-    </div>
-<% end %>
 
 <table class="table" style="width:auto;">
   <tr>
@@ -16,18 +15,23 @@
     <th><%= t :Email %></th>
     <td><%= @person.email %></td>
   </tr>
+  <tr>
+    <th>Dulu</th>
+    <td><%= @person.has_login ? t(:Can_log_in) : t(:No_login) %></td>
+  </tr>
 </table>
 
 <div class="showable-form-section">
-  <h4>
+  <% grantable_roles = Role.grantable_roles(current_user, @person) %>
+  <h3>
     <%= t :Roles %>
-    <% if can? :update, @person %>
+    <% if can?(:update, @person) && !grantable_roles.empty? %>
       <small>
         <a href="#" data-showable-form-show><%= @person.roles_field.blank? ? t(:Add) : t(:Edit) %></a>
         <a href="#" data-showable-form-hide class="not-shown"><%= t(:Cancel) %></a>
       </small>
     <% end %>
-  </h4>
+  </h3>
 
   <% if @person.roles_field.blank? %>
     <p class="shown">
@@ -54,7 +58,6 @@
   <% end %>
 
   <p>
-    <% grantable_roles = Role.grantable_roles(current_user, @person) %>
     <% unless grantable_roles.empty? %>
       <%= form_for :person_role, url: person_person_roles_path(@person), html: {class: 'form-inline not-shown'} do |form| %>
         <div class="form-group">
@@ -73,15 +76,17 @@
 
 <% participants = @person.current_participants %>
 <% unless participants.empty? %>
-  <h4>
+  <h3>
     <%= t :Current_programs %>
-  </h4>
+  </h3>
   <table class="table auto-width">
     <% participants.each do |participant| %>
       <tr>
         <td>
           <%= link_to participant.cluster_program.display_name, participant.cluster_program %>
-           - <%= participant.roles_text %>
+          <% unless participant.roles_text.blank? %>
+            - <%= participant.roles_text %>
+          <% end %>
         </td>
       </tr>
     <% end %>
@@ -90,15 +95,17 @@
 
 <% participants = @person.participants.where('end_date IS NOT NULL') %>
 <% unless participants.empty? %>
-  <h4>
+  <h3>
     <%= t :Previous_programs %>
-  </h4>
+  </h3>
   <table class="table auto-width">
     <% participants.each do |participant| %>
       <tr>
         <td>
           <%= link_to participant.cluster_program.display_name, participant.cluster_program %>
-          - <%= participant.roles_text %>
+          <% unless participant.roles_text.blank? %>
+            - <%= participant.roles_text %>
+          <% end %>
         </td>
       </tr>
     <% end %>

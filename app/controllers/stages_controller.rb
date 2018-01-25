@@ -39,7 +39,7 @@ class StagesController < ApplicationController
         format.js
         format.html { redirect_to(@stage.translation_activity) }
       else
-        @error = "Unable to delete this stage from the history. Are you trying to delete the only stage left?"
+        @error = "Unable to delete this stage from the history."
         format.js { render 'shared/error_popup' }
         format.html { redirect_to(@stage.translation_activity)}
       end

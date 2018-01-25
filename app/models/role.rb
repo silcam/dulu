@@ -3,6 +3,7 @@ class Role
               LinguisticConsultant LinguisticConsultantTraining
               Literacy_specialist Literacy_consultant
               Scripture_engagement_specialist
+              MediaConsultant MediaSpecialist
               LanguageProgramCommittee
               Cluster_coordinator Cluster_facilitator
               LanguageProgramFacilitator
@@ -19,6 +20,7 @@ class Role
               LinguisticConsultant LinguisticConsultantTraining
               Literacy_specialist Literacy_consultant
               Scripture_engagement_specialist
+              MediaConsultant MediaSpecialist
               Cluster_coordinator Cluster_facilitator
   )
 

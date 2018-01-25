@@ -25,17 +25,17 @@
             <%= render 'dashboard_panel', {title: t(:Bible), pubs: @program.sorted_pubs('Scripture')} %>
             <%= render 'dashboard_panel', {title: t(:Media), pubs: @program.sorted_pubs('Media')} %>
             <%= render 'dashboard_panel', {title: t(:Mobilization), updates: @program.domain_updates.where(domain: 'Mobilization')} %>
-            <%= render 'dashboard_panel', {title: t(:Ethnomusicology), info: ''} %>
+            <%= render 'dashboard_panel', {title: t(:Ethnomusicology), updates: @program.domain_updates.where(domain: 'Ethnomusicology')} %>
           </div>
           <div class="col-md-4">
             <%= render 'dashboard_panel', {title: t(:Publications), pubs: @program.sorted_pubs('NLPub')} %>
             <%= render 'dashboard_panel', {title: t(:Literacy), updates: @program.domain_updates.where(domain: 'Literacy')} %>
-            <%= render 'dashboard_panel', {title: t(:Community_development), info: ''} %>
+            <%= render 'dashboard_panel', {title: t(:Community_development), updates: @program.domain_updates.where(domain: 'Community_development')} %>
           </div>
           <div class="col-md-4">
             <%= render 'dashboard_panel', {title: t(:Linguistics), pubs: @program.sorted_pubs('Linguistic')} %>
             <%= render 'dashboard_panel', {title: t(:Scripture_use), updates: @program.domain_updates.where(domain: 'Scripture_use')} %>
-            <%= render 'dashboard_panel', {title: t(:Anthropology), info: ''} %>
+            <%= render 'dashboard_panel', {title: t(:Anthropology), updates: @program.domain_updates.where(domain: 'Anthropology')} %>
           </div>
         </div>
       </div>

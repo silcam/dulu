@@ -1,5 +1,5 @@
 class PeopleController < ApplicationController
-  before_action :set_person, only: [:show, :edit, :update]
+  before_action :set_person, only: [:show, :edit, :update, :destroy]
 
   def index
     @people = Person.all.includes(:organization)
@@ -26,7 +26,7 @@ class PeopleController < ApplicationController
     authorize! :create, Person
     @person = Person.new(person_params)
     if @person.save
-      follow_redirect people_path, person_id: @person.id
+      follow_redirect person_path(@person), person_id: @person.id
     else
       render 'new'
     end
@@ -35,10 +35,16 @@ class PeopleController < ApplicationController
   def update
     authorize! :update, @person
     if @person.update(person_params)
-      follow_redirect people_path
+      follow_redirect person_path(@person)
     else
       render 'edit'
     end
+  end
+
+  def destroy
+    authorize! :destroy, @person
+    @person.destroy
+    redirect_to people_path
   end
 
   def not_allowed

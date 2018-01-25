@@ -90,6 +90,27 @@ class ParticipantIntTest < Capybara::Rails::TestCase
     assert_current_path not_allowed_path
   end
 
+  test "Delete DrewHdi Participant" do
+    visit program_participants_path(programs(:Hdi))
+    find('table').assert_text 'Drew Maust'
+    setup_show_page
+    find('h2').click_on('Edit')
+    click_button('Delete Drew Maust from Hdi')
+    page.driver.browser.accept_js_confirms
+    assert_current_path program_participants_path(programs(:Hdi))
+    find('table').assert_no_text('Drew Maust')
+  end
+
+  test "Olga can't delete participant" do
+    drew_hdi = participants(:DrewHdi)
+    log_in people(:Rick)
+    visit edit_participant_path(drew_hdi)
+    assert page.has_button? 'Delete Drew Maust from Hdi'
+    log_in people(:Olga)
+    visit edit_participant_path(drew_hdi)
+    refute page.has_button? 'Delete Drew Maust from Hdi'
+  end
+
   test "Add, update and remove Drew from Zulgo Ezra" do
     add_drew
     modify_drew

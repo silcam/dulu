@@ -26,7 +26,6 @@ class PersonIntTest < Capybara::Rails::TestCase
     fill_in_william
     click_button 'Save'
 
-    click_link 'Wallace, William'
     assert_text 'William Wallace'
     assert_text 'AAA'
     assert_text 'scotland_forever@aol.com'
@@ -39,7 +38,7 @@ class PersonIntTest < Capybara::Rails::TestCase
   test "Add Role" do
     log_in @rick
     visit person_path @kevin
-    find('h4', text: 'Roles').click_on 'Add'
+    find('h3', text: 'Roles').click_on 'Add'
     select 'Dulu Admin', from: 'person_role_role'
     click_on 'Add'
     within('div.showable-form-section') do
@@ -50,7 +49,7 @@ class PersonIntTest < Capybara::Rails::TestCase
   test "Remove Role" do
     log_in @rick
     visit person_path @olga
-    find('h4', text: 'Roles').click_on 'Edit'
+    find('h3', text: 'Roles').click_on 'Edit'
     within('div.showable-form-section') do
       find('tr', text: 'Language Program Facilitator').click_on 'Remove'
     end
@@ -58,6 +57,34 @@ class PersonIntTest < Capybara::Rails::TestCase
       assert_no_text 'Language Program Facilitator'
       assert_text 'None'
     end
+  end
+
+  test "Rick delete Olga" do
+    log_in @rick
+    visit people_path
+    click_on 'Nka, Olga'
+    find('h2').click_on 'Edit'
+    click_on 'Delete Olga Nka'
+    page.driver.browser.accept_js_confirms
+    assert_current_path people_path
+    assert_no_text 'Nka, Olga'
+  end
+
+  test "Olga can't delete Kevin" do
+    log_in @rick
+    visit edit_person_path(@kevin)
+    assert_selector('input[value="Delete Kevin Bradford"]')
+
+    log_in @olga
+    visit edit_person_path(@kevin)
+    assert_no_selector('input[value="Delete Kevin Bradford"]')
+  end
+
+  test "Edit does not delete!" do
+    log_in @rick
+    visit edit_person_path(@kevin)
+    click_button 'Save'
+    assert_current_path person_path(@kevin)
   end
 
   # Edit page no longer has any effect on role. Deprecating this test

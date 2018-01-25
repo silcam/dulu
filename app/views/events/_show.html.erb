@@ -20,7 +20,8 @@
     <%= t :Clusters %>
     <% if can? :update, @event %>
       <small>
-        <a href="#" data-showable-form-show><%= t :Edit %></a>
+        <a href="#" data-showable-form-show><%= @event.clusters.empty? ? t(:Add) : t(:Edit) %></a>
+        <a href="#" data-showable-form-hide class="not-shown"><%= t(:Cancel) %></a>
       </small>
     <% end %>
   </h3>
@@ -52,7 +53,8 @@
     <%= t :Programs %>
     <% if can? :update, @event %>
       <small>
-        <a href="#" data-showable-form-show><%= t :Edit %></a>
+        <a href="#" data-showable-form-show><%= @event.programs.empty? ? t(:Add) : t(:Edit) %></a>
+        <a href="#" data-showable-form-hide class="not-shown"><%= t(:Cancel) %></a>
       </small>
     <% end %>
   </h3>
@@ -84,7 +86,8 @@
     <%= t :People %>
     <% if can? :update, @event %>
       <small>
-        <a href="#" data-showable-form-show><%= t :Edit %></a>
+        <a href="#" data-showable-form-show><%= @event.event_participants.empty? ? t(:Add) : t(:Edit) %></a>
+        <a href="#" data-showable-form-hide class="not-shown"><%= t(:Cancel) %></a>
       </small>
     <% end %>
   </h3>

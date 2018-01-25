@@ -11,12 +11,15 @@
 
 <div class="showable-form-section">
   <% roles = @participant.roles %>
+  <% available_roles = Role.available @participant, @participant.person.program_roles %>
   <h3>
     <%= t :Roles %>
     <small>
       <% if can? :manage_participants, @cluster_program %>
-        <a href="#" data-showable-form-show><%= roles.empty? ? t(:Add) : t(:Edit) %></a>
-        <a href="#" data-showable-form-hide class="not-shown"><%= t(:Cancel) %></a>
+        <% unless roles.empty? && available_roles.empty? %>
+          <a href="#" data-showable-form-show><%= roles.empty? ? t(:Add) : t(:Edit) %></a>
+          <a href="#" data-showable-form-hide class="not-shown"><%= t(:Cancel) %></a>
+        <% end %>
       <% end %>
     </smalL>
   </h3>
@@ -36,7 +39,6 @@
   <% end %>
 
   <p>
-    <% available_roles = Role.available @participant, @participant.person.program_roles %>
     <% unless available_roles.empty? %>
       <%= form_tag(add_update_participant_path(@participant), method: :patch, class: 'form-inline not-shown') do %>
         <div class="form-group">

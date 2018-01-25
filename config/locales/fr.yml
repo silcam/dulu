@@ -87,6 +87,7 @@ fr:
   Home_Country: Pays d'origine
   Email: Adresse mail
   Can_log_in: Compte de connexion
+  No_login: Pas de compte de connexion
   dulu_preferred_language: Langue
   English: English
   French: Français
@@ -109,6 +110,7 @@ fr:
   confirm_different_person: C'est une personne différente.
   Current_programs: Programmes actuels
   Previous_programs: Anciens programmes
+  Delete_person_confirmation: Confirmez que vous voulez supprimer %{person}.
 
   #Organizations Controller
   Organization: Organisation
@@ -179,6 +181,8 @@ fr:
   Left_program: Sorti(e) du programme
   End_of_participation: Fin de relation
   End_of_participation_prompt: a quitté le programme le 
+  Delete_from: Supprimer %{person} de %{program}
+  Delete_participant_confirmation: Confirmez que vous voulez supprimer cette personne du programme. Si cette personne faisait partie du programme et en est quitté, revenez à leur page et cliquez sur 'Sorti(e) du programme'.
 
   #Translation Stages Controller
   Planned: Prévue
@@ -218,6 +222,8 @@ fr:
   Literacy_specialist: Spécialiste en alphabétisation
   Literacy_consultant: Conseiller en alphabétisation
   Scripture_engagement_specialist: Spécialiste en promotion des Saintes Écritures
+  MediaConsultant: Conseiller en média
+  MediaSpecialist: Spécialiste en média
   Administration: Administration
   DuluAdmin: Dulu Admin
   Facilitator: Facilitateur
