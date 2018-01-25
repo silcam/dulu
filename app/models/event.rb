@@ -10,10 +10,6 @@ class Event < ApplicationRecord
 
   default_scope{ order(:start_date) }
 
-  # NB: The kind field is being deprecated
-  enum kind: [:Consultation]
-
-  # validates :kind, inclusion: { in: Event.kinds }
   validates :domain, inclusion: {in: StatusParameter.domains}
   validates :name, presence: true
   validates :start_date, presence: true
