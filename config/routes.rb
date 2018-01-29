@@ -52,7 +52,11 @@ Rails.application.routes.draw do
   resources :programs do
     get 'dashboard', on: :member
     resources :activities, shallow: true do
-      post 'update_workshops', on: :member
+      member do
+        post 'update_workshops'
+        patch 'add_update'
+        patch 'remove_update'
+      end
       resources :stages, only: [:new, :create, :update, :destroy], shallow: true
       resources :workshops, shallow: true do
         post 'complete', on: :member

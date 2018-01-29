@@ -1,5 +1,5 @@
 class ActivitiesController < ApplicationController
-  before_action :set_activity, only: [:show, :edit, :update, :update_workshops, :destroy]
+  before_action :set_activity, only: [:show, :edit, :update, :update_workshops, :destroy, :add_update, :remove_update]
   before_action :set_program, only: [:index, :new, :create]
 
   def index
@@ -45,6 +45,18 @@ class ActivitiesController < ApplicationController
     authorize! :destroy, @activity
     @activity.destroy
     redirect_to @program
+  end
+
+  def add_update
+    authorize! :manage_participants, @activity.program
+    @activity.participants << Participant.find(params[:participant_id])
+    redirect_to activity_path(@activity)
+  end
+
+  def remove_update
+    authorize! :manage_participants, @activity.program
+    @activity.participants.delete(params[:participant_id])
+    redirect_to activity_path(@activity)
   end
 
   private

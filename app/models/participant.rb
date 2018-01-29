@@ -26,6 +26,10 @@ class Participant < ApplicationRecord
     person.full_name
   end
 
+  def full_name_rev
+    person.full_name_rev
+  end
+
   def f_start_date
     FuzzyDate.from_string(start_date)
   end
