@@ -4,7 +4,12 @@
 
   <%= link_to t(:Add_event), new_event_path, class: 'btn btn-primary' if can?(:create, Event) %>
 
-  <% events = Event.events_as_hash %>
+  <%
+    events = {}
+    events[:future] = Event.upcoming
+    events[:current] = Event.current
+    events[:past] = Event.past.limit(20)
+  %>
 
   <% if events.empty? %>
     <h3><%= t :No_events %></h3>

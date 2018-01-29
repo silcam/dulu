@@ -53,17 +53,18 @@
     </div>
 
     <div class="col-md-3">
-      <% events = @program.events_as_hash %>
-      <% unless events[:current].empty? %>
+      <% events = @program.all_events.current %>
+      <% unless events.empty? %>
         <div>
-          <%= render 'events/events_column', title: t(:Current_events), events: events[:current] %>
+          <%= render 'events/events_column', title: t(:Current_events), events: events, reverse: true %>
         </div>
       <% end %>
 
-      <% unless events[:future].empty? %>
+      <% events = @program.all_events.upcoming.last(4) %>
+      <% unless events.empty? %>
         <div>
-          <%= render 'events/events_column', title: t(:Upcoming_events), events: events[:future].first(3) %>
-          <% if events[:future].count > 3 %>
+          <%= render 'events/events_column', title: t(:Upcoming_events), events: events.last(3), reverse: true %>
+          <% if events.count > 3 %>
             <p class="lead">
               <%= link_to t(:More), program_events_path(@program) %>
             </p>
@@ -71,10 +72,11 @@
         </div>
       <% end %>
 
-      <% unless events[:past].empty? %>
+      <% events = @program.all_events.past.first(4) %>
+      <% unless events.empty? %>
         <div>
-          <%= render 'events/events_column', title: t(:Past_events), events: events[:past].last(3), reverse: true %>
-          <% if events[:past].count > 3 %>
+          <%= render 'events/events_column', title: t(:Past_events), events: events.first(3) %>
+          <% if events.count > 3 %>
               <p class="lead">
                 <%= link_to t(:More), program_events_path(@program) %>
               </p>

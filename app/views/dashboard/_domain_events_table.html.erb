@@ -1,5 +1,5 @@
 <div id="events" style="margin-bottom: 36px;">
-  <% events_hash = Event.events_as_hash Event.where(domain: @domain) %>
+  <% events = Event.upcoming.where(domain: @domain) + Event.current.where(domain: @domain) %>
   <h3>
     <%= t :Events %>
     <% if can? :create, Event %>
@@ -8,5 +8,5 @@
         </small>
     <% end %>
   </h3>
-  <%= render 'event_table', events: events_hash[:current] + events_hash[:future] %>
+  <%= render 'event_table', events: events %>
 </div>

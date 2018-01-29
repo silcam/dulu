@@ -10,7 +10,7 @@ class Event < ApplicationRecord
 
   audited
 
-  default_scope{ order(:start_date) }
+  default_scope{ order(start_date: :desc) }
 
   validates :domain, inclusion: {in: StatusParameter.domains}
   validates :name, presence: true
@@ -100,38 +100,15 @@ class Event < ApplicationRecord
   end
 
   def self.upcoming
-    where("start_date > ?", Date.today.to_s)
+    where(upcoming_filter)
   end
 
   def self.past
-    today = Date.today.to_s
-    year_month = today[0, 7] # YYYY-MM
-    year = today[0, 4] # YYYY
-    filter = "end_date < '#{today}' AND end_date != '#{year_month}' AND end_date != '#{year}'"
-    where(filter)
+    where(past_filter)
   end
 
   def self.current
-    today = Date.today.to_s
-    year_month = today[0, 7] # YYYY-MM
-    year = today[0, 4] # YYYY
-    filter = "start_date <= '#{today}' AND (end_date >= '#{today}' OR end_date = '#{year_month}' OR end_date = '#{year}')"
-    where(filter)
-  end
-
-  def self.events_as_hash(events=nil)
-    events = Event.all if events.nil?
-    event_hash = {past: [], current: [], future: []}
-    events.each do |event|
-      if event.f_end_date.past?
-        event_hash[:past] << event
-      elsif event.f_start_date.future?
-        event_hash[:future] << event
-      else
-        event_hash[:current] << event
-      end
-    end
-    event_hash
+    where(current_filter)
   end
 
   def self.search(query)
@@ -145,5 +122,28 @@ class Event < ApplicationRecord
       results << {title: title, description: description, model: event}
     end
     results
+  end
+
+  private
+
+  def self.upcoming_filter
+    "start_date > '#{Date.today.to_s}'"
+  end
+
+  def self.past_filter
+    today, year_month, year = today_texts
+    "end_date < '#{today}' AND end_date != '#{year_month}' AND end_date != '#{year}'"
+  end
+
+  def self.current_filter
+    today, year_month, year = today_texts
+    "start_date <= '#{today}' AND (end_date >= '#{today}' OR end_date = '#{year_month}' OR end_date = '#{year}')"
+  end
+
+  def self.today_texts
+    today = Date.today.to_s
+    year_month = today[0, 7] # YYYY-MM
+    year = today[0, 4] # YYYY
+    return today, year_month, year
   end
 end

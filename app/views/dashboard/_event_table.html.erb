@@ -3,7 +3,7 @@
   <% if events.empty? %>
     <tr><td><%= t :No_events %></td></tr>
   <% else %>
-    <% events.each do |event| %>
+    <% events.reverse_each do |event| %>
       <tr>
         <td class="bigger">
           <%= link_to event.name, event %>

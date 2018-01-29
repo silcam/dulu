@@ -3,7 +3,8 @@
       <div class="col-md-4">
         <%= render 'events/events_column',
                    title: t(:Current_events),
-                   events: events[:current] %>
+                   events: events[:current],
+                   reverse: true %>
       </div>
   <% end %>
 
@@ -11,7 +12,8 @@
       <div class="col-md-4">
         <%= render 'events/events_column',
                    title: t(:Upcoming_events),
-                   events: events[:future] %>
+                   events: events[:future],
+                   reverse: true %>
       </div>
   <% end %>
 
@@ -19,8 +21,7 @@
       <div class="col-md-4">
         <%= render 'events/events_column',
                    title: t(:Past_events),
-                   events: events[:past],
-                   reverse: true%>
+                   events: events[:past] %>
       </div>
   <% end %>
 </div>

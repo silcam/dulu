@@ -121,7 +121,7 @@
   <h3><%= t :Events %></h3>
   <table class="table auto-width">
     <% [future_events, current_events, past_events].each_with_index do |events, i| %>
-      <% events.reverse_each do |event| %>
+      <% events.each do |event| %>
         <% tr_class = (i==2) ? "class='text-muted'".html_safe : "" %>
         <tr <%= tr_class %>>
           <td class="bigger"><%= link_to event.name, event %></td>

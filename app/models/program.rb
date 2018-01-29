@@ -62,32 +62,11 @@ class Program < ApplicationRecord
     translation_activities.where(bible_book_id: book_id).count > 0
   end
 
-  # These methods may still be needed later, but I abandoned them when
-  # I thought of events_as_hash
-  #
-  # def current_events
-  #
-  # end
-  #
-  # def upcoming_events
-  #   self.events.where('start_date > ?', Date.today.to_s).order(:start_date)
-  # end
-  #
-  # def past_events
-  #   past = self.events.where('end_date < ?', Date.today.to_s).order(:start_date)
-  #   today = FuzzyDate.today
-  #   past.delete_if{ |event| event.f_end_date.coincident?(today)}
-  #   past
-  # end
-
   def all_events
     cluster.nil? ?
         events :
-        (events + cluster.events).sort{ |a,b| a.start_date <=> b.start_date }
-  end
-
-  def events_as_hash
-    Event.events_as_hash(all_events)
+        Event.left_outer_joins(:programs, :clusters)
+            .where("events_programs.program_id=? or clusters_events.cluster_id=?", id, cluster.id)
   end
 
   def percentages
