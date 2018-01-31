@@ -2,6 +2,7 @@ class DomainUpdate < ApplicationRecord
 
   belongs_to :program, required: true, touch: true
   belongs_to :status_parameter, required: false
+  belongs_to :author, required: true, class_name: 'Person'
 
   audited associated_with: :program
 

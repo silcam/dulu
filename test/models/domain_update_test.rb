@@ -29,6 +29,6 @@ class DomainUpdateTest < ActiveSupport::TestCase
   private
 
   def some_valid_params(other_params={})
-    {program: @hdi, status: 'Going good', date: '2017', domain: 'Literacy'}.merge other_params
+    {program: @hdi, status: 'Going good', date: '2017', domain: 'Literacy', author: people(:Drew)}.merge other_params
   end
 end

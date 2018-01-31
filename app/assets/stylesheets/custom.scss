@@ -360,3 +360,8 @@ form.inline-button-to {
     pointer-events: none;
   }
 }
+
+// Revealable Truncate
+.revealable-truncate .truncate-remainder{
+  display: none;
+}

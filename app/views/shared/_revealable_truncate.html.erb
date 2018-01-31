@@ -1,0 +1,12 @@
+<%
+  # Available Locals: truncated, remainder
+%>
+
+<span class="revealable-truncate">
+  <%= truncated %><span class="truncate-more">...
+    <a href="#" data-reveal-truncated><%= t(:See_more) %></a>
+  </span>
+  <span class="truncate-remainder">
+    <%= remainder %>
+  </span>
+</span>

@@ -11,12 +11,17 @@
             <td style="width: 140px">
               <%= update.f_date.pretty_print(always_year: true) %>
             </td>
-            <td style="width: 280px">
+            <td class="subtle-links" style="width: 280px">
+              <% unless update.author.nil? %>
+                <u><%= link_to update.author.full_name, update.author %></u> :<br>
+              <% end %>
               <%= render 'domain_updates/status', update: update %>
             </td>
-            <td><%= update.note %></td>
+            <td><%= revealable_truncate update.note, length: 500, separator: ' ' %></td>
             <% if !defined? hide_edit and can? :update, update %>
               <td style="width: 140px;"><%= link_to t(:Edit), edit_domain_update_path(update) %></td>
+            <% else %>
+              <td></td>
             <% end %>
           </tr>
       <% end %>

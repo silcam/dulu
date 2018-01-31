@@ -24,6 +24,7 @@ class DomainUpdatesController < ApplicationController
         domain_update = @program.domain_updates.new(domain_update_params(du_params))
         domain_update.date = params[:domain_update][:date]
         domain_update.domain = @domain
+        domain_update.author = current_user
         domain_update.status_parameter_id = key if StatusParameter.find_by id: key
         @domain_updates_with_errors << domain_update unless domain_update.save
       end

@@ -48,4 +48,13 @@ module ApplicationHelper
         '#6C3483'
     end
   end
+
+  def revealable_truncate(text, options={})
+    length = options[:length] || 30
+    return text if text.length <= length
+    options[:escape] = false
+    truncated = truncate(text, options).chomp('...')
+    remainder = text[truncated.length, text.length - truncated.length]
+    render 'shared/revealable_truncate', truncated: truncated, remainder: remainder
+  end
 end

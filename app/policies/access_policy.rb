@@ -18,7 +18,7 @@ class AccessPolicy
       can :manage, Language
       can :manage, Event
       can :manage, Publication
-      can :manage, DomainUpdate
+      can :create, DomainUpdate
       can :manage, SurveyCompletion
     end
 
@@ -52,8 +52,12 @@ class AccessPolicy
         pub.program.all_current_people.include? user
       end
 
-      can :manage, DomainUpdate do |domain_update, user|
+      can :create, DomainUpdate do |domain_update, user|
         domain_update.program.all_current_people.include? user
+      end
+
+      can [:update, :destroy], DomainUpdate do |domain_update, user|
+        domain_update.author == user
       end
     end
 
