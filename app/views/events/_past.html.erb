@@ -1,0 +1,39 @@
+<h2>
+  <%= t :Past_events %>
+</h2>
+
+<%= paginate @events %>
+
+<table class="table">
+  <% @events.each do |event| %>
+    <tr>
+      <td class="bigger">
+        <%= link_to event.name, ctxt_event_path(@program, event) %>
+      </td>
+      <td>
+        <%= event.dates_display_text %>
+      </td>
+      <td class="subtle-links">
+        <%= event.cluster_programs.collect do |cp| %>
+          <% link_to(cp.display_name, cp) %>
+        <% end.join(', ').html_safe %>
+      </td>
+      <td class="subtle-links">
+        <%= event.people.collect do |person| %>
+          <% link_to(person.full_name, person) %>
+        <% end.join(', ').html_safe %>
+      </td>
+    </tr>
+    <% unless event.note.blank? %>
+      <tr>
+        <td colspan="4" style="border-top: none;">
+          <small>
+            <%= truncate(event.note, length: 100, separator: ' ') %>
+          </small>
+        </td>
+      </tr>
+    <% end %>
+  <% end %>
+</table>
+
+<%= paginate @events %>

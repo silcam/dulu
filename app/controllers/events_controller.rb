@@ -10,6 +10,12 @@ class EventsController < ApplicationController
     end
   end
 
+  def past
+    @program = Program.find(params[:program_id]) if params[:program_id]
+    @events = @program ? @program.events.past : Event.past
+    @events = @events.page(params[:page])
+  end
+
   def new
     authorize! :create, Event
 

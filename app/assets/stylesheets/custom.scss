@@ -350,3 +350,13 @@ form.inline-button-to {
 #components {
   display: none;
 }
+
+// Pagination
+.pagination {
+  a {
+    color: $link-color;
+  }
+  .no-link {
+    pointer-events: none;
+  }
+}

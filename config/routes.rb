@@ -31,6 +31,7 @@ Rails.application.routes.draw do
   resources :organizations
   resources :languages
   resources :events do
+    get 'past', on: :collection
     member do
       patch 'add_update'
       patch 'remove_update'
@@ -71,6 +72,7 @@ Rails.application.routes.draw do
       end
     end
     resources :events do
+      get 'past', on: :collection
       member do
         patch 'add_update'
         patch 'remove_update'

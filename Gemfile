@@ -43,7 +43,9 @@ gem 'audited', '~> 4.5'
 # xlsx Export
 gem 'rubyzip', '>= 1.2.1'
 gem 'axlsx', git: 'https://github.com/randym/axlsx.git', ref: '776037c0fc799bb09da8c9ea47980bd3bf296874'
-gem 'axlsx_rails', '~> 0.5.1'
+gem 'axlsx_rails', '~> 0.5'
+# Pagination
+gem 'kaminari', '~> 1.1'
 
 group :development, :test do
   gem 'puma', '~>3.0'

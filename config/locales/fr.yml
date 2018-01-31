@@ -339,6 +339,15 @@ fr:
   # Error messages
   not_before_start: ne peut pas être avant le date de commencement.
 
+  # Pagination
+  views:
+    pagination:
+      first: '<<'
+      previous: '<'
+      truncate: '...'
+      next: '>'
+      last: '>>'
+
   # ActiveRecord
   activerecord:
     attributes:

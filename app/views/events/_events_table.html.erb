@@ -1,27 +1,34 @@
 <div class="row">
   <% unless events[:current].empty? %>
       <div class="col-md-4">
-        <%= render 'events/events_column',
-                   title: t(:Current_events),
-                   events: events[:current],
-                   reverse: true %>
+        <h3><%= t(:Current_events) %></h3>
+        <% events[:current].reverse_each do |event| %>
+          <%= render 'events/event', event: event %>
+        <% end %>
       </div>
   <% end %>
 
   <% unless events[:future].empty? %>
       <div class="col-md-4">
-        <%= render 'events/events_column',
-                   title: t(:Upcoming_events),
-                   events: events[:future],
-                   reverse: true %>
+        <h3><%= t(:Upcoming_events) %></h3>
+        <% events[:future].reverse_each do |event| %>
+          <%= render 'events/event', event: event %>
+        <% end %>
       </div>
   <% end %>
 
   <% unless events[:past].empty? %>
       <div class="col-md-4">
-        <%= render 'events/events_column',
-                   title: t(:Past_events),
-                   events: events[:past] %>
+        <h3>
+          <%= t(:Past_events) %>
+          <small><%= link_to t(:See_all), ctxt_past_events_path(@program) %></small>
+        </h3>
+        <% events[:past].each do |event| %>
+          <%= render 'events/event', event: event %>
+        <% end %>
+        <p class="bigger">
+          <%= link_to "#{t(:See_all)}...", ctxt_past_events_path(@program) %>
+        </p>
       </div>
   <% end %>
 </div>

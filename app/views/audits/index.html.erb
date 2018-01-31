@@ -1,16 +1,6 @@
 <h1><%= t :Activity_log %></h1>
 
-<ul class="list-inline">
-  <% (1..@pages).each do |page| %>
-    <li>
-      <% if page == @page %>
-        <%= page %>
-      <% else %>
-        <%= link_to page, audits_path(page: page) %>
-      <% end %>
-    </li>
-  <% end %>
-</ul>
+<%= paginate @audits %>
 
 <table class="table">
   <% @audits.each do |audit| %>
@@ -25,3 +15,5 @@
     </tr>
   <% end %>
 </table>
+
+<%= paginate @audits %>

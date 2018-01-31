@@ -1,4 +1,12 @@
 module EventsHelper
+  def ctxt_past_events_path(program)
+    if program
+      past_program_events_path(program)
+    else
+      past_events_path
+    end
+  end
+
   def ctxt_events_path(program)
     if program
       program_events_path(program)

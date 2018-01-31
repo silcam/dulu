@@ -338,3 +338,12 @@ en:
 
   # Error messages
   not_before_start: can't be before start date.
+
+  # Pagination
+  views:
+    pagination:
+      first: '<<'
+      previous: '<'
+      truncate: '...'
+      next: '>'
+      last: '>>'
