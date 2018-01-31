@@ -337,6 +337,9 @@ fr:
   new_publication: Nouvelle publication
   new_publications: Nouvelles publications
 
+  # Reports
+  Generate_report: Générer rapport
+
   # Error messages
   not_before_start: ne peut pas être avant le date de commencement.
 

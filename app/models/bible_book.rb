@@ -11,6 +11,8 @@ class BibleBook < ApplicationRecord
   VERSES_NT = 7957
   VERSES_OT = 23029
 
+  default_scope { order(:usfm_number) }
+
   def name
     if I18n.locale == :fr
       return french_name

@@ -43,6 +43,7 @@
             </div>
           </li>
           <li><%= link_to t(:Events), events_path %></li>
+          <li><%= link_to t(:Reports), reports_path %></li>
         </ul>
         <ul class="nav navbar-nav navbar-right">
           <li><%= link_to @current_user.first_name, edit_person_path(@current_user, referred_by: request.path) %></li>

@@ -1,0 +1,41 @@
+<h3><%= t :New_report %></h3>
+
+<%= form_tag(reports_path, method: :get, class: 'auto-width') do %>
+  <div class="form-group">
+    <h3><%= t :Report %></h3>
+    <%= select_tag :type, t_select_options(Report::TYPES), class: 'form-control' %>
+  </div>
+
+  <div class="form-group">
+    <div>
+      <h3><%= t :Languages %>:</h3>
+      <span id="report-languages-none"><%= t :None_selected %></span>
+      <p id="report-languages"></p>
+    </div>
+    <div>
+      <label><%= t :Add_cluster %>:</label>
+      <%= select_tag :add_cluster, options_from_collection_for_select(Cluster.all, :id, :display_name), class: 'form-control form-control-inline' %>
+      <a href="#" data-add-cluster class="btn btn-primary"><%= t :Add %></a>
+
+      <label><%= t :Add_language %>:</label>
+      <%= select_tag :add_language, options_from_collection_for_select(Program.all, :id, :name), class: 'form-control form-control-inline' %>
+      <a href="#" data-add-language class="btn btn-primary"><%= t :Add %></a>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <h3><%= t :Report_elements %></h3>
+    <div class="form-group">
+      <div class="checkbox">
+        <label>
+          <%= check_box_tag "elements[]" %>
+          <%= t :Bible_translation %>
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <p>
+    <%= submit_tag t(:Generate_report), class: 'btn btn-primary btn-lg' %>
+  </p>
+<% end %>

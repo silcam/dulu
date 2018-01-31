@@ -337,6 +337,9 @@ en:
   new_publication: New publication
   new_publications: New publications
 
+  # Reports
+  Generate_report: Generate Report
+
   # Error messages
   not_before_start: can't be before start date.
 
