@@ -59,11 +59,11 @@ class Stage < ApplicationRecord
   def progress
     case kind
       when :Translation
-        return translation_progress
+        return Stage.translation_progress(name)
       when :Linguistic
-        return linguistic_progress
+        return Stage.linguistic_progress(name)
       when :Media
-        return media_progress
+        return Stage.media_progress(name)
     end
   end
 
@@ -99,12 +99,24 @@ class Stage < ApplicationRecord
     end
   end
 
+  def self.progress(kind, stage_name)
+    case kind
+      when :Translation
+        return translation_progress(stage_name)
+      when :Linguistic
+        return linguistic_progress(stage_name)
+      when :Media
+        return media_progress(stage_name)
+    end
+
+  end
+
   private
 
-  def translation_progress
+  def self.translation_progress(name)
     case name
       when :Planned
-        return 0, :red
+        return 0, :white
       when :Drafting
         return 10, :red
       when :Testing
@@ -123,10 +135,10 @@ class Stage < ApplicationRecord
     return 100, :purple
   end
 
-  def linguistic_progress
+  def self.linguistic_progress(name)
     case name
       when :Planned
-        return 0, :red
+        return 0, :white
       when :Research
         return 25, :red
       when :Drafting
@@ -138,10 +150,10 @@ class Stage < ApplicationRecord
     end
   end
 
-  def media_progress
+  def self.media_progress(name)
     case name
       when :Planned
-        return 0, :red
+        return 0, :white
       when :Application
         return 20, :red
       when :Script

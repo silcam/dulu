@@ -48,7 +48,7 @@
       <% @person.person_roles.current.each do |person_role| %>
         <tr>
           <td><%= t person_role.role %></td>
-          <td><%= l(person_role.start_date, format: :long) %></td>
+          <td><%= l(person_role.start_date, format: :full) %></td>
           <td class="not-shown">
             <%= link_to t(:Remove), finish_person_person_role_path(@person, person_role.role), method: :post %>
           </td>

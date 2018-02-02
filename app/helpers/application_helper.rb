@@ -30,6 +30,8 @@ module ApplicationHelper
 
   def color_from_sym(color)
     case color
+      when :white
+        '#FFFFFF'
       when :red
         '#A93226'
       when :orange
@@ -46,6 +48,29 @@ module ApplicationHelper
         '#21618C'
       when :purple
         '#6C3483'
+    end
+  end
+
+  def forecolor_from_sym(color)
+    case color
+      when :white
+        '#000000'
+      when :red
+        '#ffffff'
+      when :orange
+        '#000000'
+      when :yellow
+        '#000000'
+      when :light_green
+        '#000000'
+      when :dark_green
+        '#ffffff'
+      when :light_blue
+        '#000000'
+      when :dark_blue
+        '#ffffff'
+      when :purple
+        '#ffffff'
     end
   end
 

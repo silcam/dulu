@@ -1,9 +1,29 @@
-<table class="table">
-  <% @data.each do |row| %>
+
+<!-- Language Comparison Report -->
+<table class="table auto-width">
+  <tr>
+    <% Stage::TRANSLATION_STAGES.slice((1..-1)).each do |stage| %>
+      <% bgcolor = color_from_sym Stage.progress(:Translation, stage)[1] %>
+      <% color = forecolor_from_sym Stage.progress(:Translation, stage)[1] %>
+      <td style="background-color: <%= bgcolor %>; color: <%= color %>">
+        <%= t(stage) %>
+      </td>
+    <% end %>
+  </tr>
+</table>
+
+<table class="table auto-width bottom-border">
+  <% @data[:clusters].each do |cluster, programs| %>
     <tr>
-      <% row.each do |item| %>
-        <td><%= item %></td>
-      <% end %>
+      <td class="h3" colspan="100">
+        <%= link_to cluster.display_name, cluster %>
+      </td>
     </tr>
+    <% programs.each do |program, p_report| %>
+      <%= render 'lc_program_report', program: program, p_report: p_report %>
+    <% end %>
+  <% end %>
+  <% @data[:programs].each do |program, p_report| %>
+    <%= render 'lc_program_report', program: program, p_report: p_report %>
   <% end %>
 </table>

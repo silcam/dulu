@@ -198,6 +198,10 @@ table.auto-width {
   width: auto;
 }
 
+table.bottom-border {
+  border-bottom: 1px solid #ddd;
+}
+
 table.table.borderless {
   tbody{
     tr{
@@ -325,6 +329,14 @@ form.inline-button-to {
   display: none;
 }
 
+.masterbox label {
+  font-weight: bold;
+}
+
+.slaveboxes {
+  margin-left: 30px;
+}
+
 .bs-callout {
   padding: 8px;
   margin: 0;
@@ -364,4 +376,20 @@ form.inline-button-to {
 // Revealable Truncate
 .revealable-truncate .truncate-remainder{
   display: none;
+}
+
+// Reports
+
+table.table tbody td.table-container {
+  padding: 0;
+  border: 0;
+  table.table {
+    margin: 0;
+  }
+}
+
+td.lang-comp-book-cell {
+  border-left: 1px solid #ddd;
+  border-right: 1px solid #ddd;
+  //font-weight: bold;
 }

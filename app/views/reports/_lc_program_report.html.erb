@@ -1,0 +1,36 @@
+<%
+  # Locals: program, p_report
+%>
+
+<tr>
+  <td class="bigger" colspan="100"><%= link_to program.name, program %></td>
+</tr>
+<%
+  books = p_report[:activities][:old_testament] || []
+  books += (p_report[:activities][:new_testament] || [])
+  cols = (books.length / 3.0).ceil
+%>
+<tr>
+  <td class="table-container">
+    <table class="table auto-width">
+      <% (0..2).each do |row| %>
+        <tr>
+          <% (0..(cols-1)).each do |col| %>
+            <% book_report = books[row*cols + col] %>
+            <% if book_report %>
+              <% bgcolor = (book_report[:stage]) ? color_from_sym(book_report[:stage].progress[1]) : '#ffffff' %>
+              <% color = (book_report[:stage]) ? forecolor_from_sym(book_report[:stage].progress[1]) : '#000000' %>
+              <td class="lang-comp-book-cell"
+                  style="background-color: <%= bgcolor %>; color: <%= color %>;">
+                <%= abbreviate_book book_report[:name] %>
+              </td>
+            <% else %>
+              <td></td>
+            <% end %>
+          <% end %>
+        </tr>
+      <% end %>
+
+    </table>
+  </td>
+</tr>
