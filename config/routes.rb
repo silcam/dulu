@@ -21,10 +21,6 @@ Rails.application.routes.draw do
   get     '/surveys/:id',                             to: 'survey_completions#show', as: :survey
   get     '/surveys/:id/report/:report',              to: 'survey_completions#report', as: :survey_report
 
-  # Reports
-  get '/reports', to: 'reports#index'
-
-
   resources :people do
     get 'find', on: :collection
     resources :person_roles do
@@ -40,6 +36,7 @@ Rails.application.routes.draw do
       patch 'remove_update'
     end
   end
+  resources :reports
   resources :audits, only: [:index, :show]
 
   resources :clusters do

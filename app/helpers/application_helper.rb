@@ -24,6 +24,11 @@ module ApplicationHelper
     end
   end
 
+  # Translate each element in the string surrounded by %{}
+  def t_phrase(s)
+    s.gsub(/%\{(\w+)\}/){ |m| t($1) }
+  end
+
   def t_select_options(array, selected=nil)
     options_for_select(array.collect{ |item| [t(item), item]}, selected)
   end

@@ -15,6 +15,10 @@ remove_cluster_program = (element) ->
 $(document).ready ->
   switch $('body').data('page-name')
     when 'reports#index'
+      $('#recently_viewed_reports').change ->
+        path = "/reports/" + $(this).val()
+        $(this).closest('h4').find('a').attr('href', path)
+
       $('a[data-add-cluster]').click (e) ->
         e.preventDefault()
         $(this).blur()

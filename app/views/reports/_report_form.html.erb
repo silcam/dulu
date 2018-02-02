@@ -1,0 +1,130 @@
+<%
+  params ||= {type: :LanguageComparison, element_masters: ['bible_translation'], elements: {activities: ['old_testament', 'new_testament']}}
+%>
+
+<%= form_tag(reports_path, method: :post, class: 'auto-width') do %>
+  <div class="form-group">
+    <h3><%= t :Report %></h3>
+    <%= select_tag :type, t_select_options(Report::TYPES, params[:type]), class: 'form-control' %>
+  </div>
+
+  <div class="form-group">
+    <div class="bigger">
+      <h3><%= t :Languages %>:</h3>
+      <% unless params[:cluster_ids] || params[:program_ids] %>
+        <span id="report-languages-none" class="text-danger"><%= t :None_selected %></span>
+      <% end %>
+      <p id="report-languages">
+        <% params[:cluster_ids].try(:each) do |id| %>
+          <span>
+            <%= hidden_field_tag 'cluster_ids[]', id %>
+            <%= Cluster.find(id).display_name %>
+            <a href="#" class="btn btn-xs btn-danger">X</a>
+          </span>
+        <% end %>
+        <% params[:program_ids].try(:each) do |id| %>
+          <span>
+            <%= hidden_field_tag 'program_ids[]', id %>
+            <%= Program.find(id).display_name %>
+            <a href="#" class="btn btn-xs btn-danger">X</a>
+          </span>
+        <% end %>
+      </p>
+    </div>
+    <div>
+      <label><%= t :Add_cluster %>:</label>
+      <%= select_tag :add_cluster, options_from_collection_for_select(Cluster.all, :id, :display_name), class: 'form-control form-control-inline' %>
+      <a href="#" data-add-cluster class="btn btn-primary"><%= t :Add %></a>
+
+      <label><%= t :Add_language %>:</label>
+      <%= select_tag :add_program, options_from_collection_for_select(Program.all, :id, :name), class: 'form-control form-control-inline' %>
+      <a href="#" data-add-program class="btn btn-primary"><%= t :Add %></a>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <h3><%= t :Report_elements %></h3>
+
+    <h4><%= t :Current_activities %></h4>
+    <div class="form-group">
+      <% master_checked = params[:element_masters].include? 'bible_translation' %>
+      <div class="checkbox masterbox">
+        <label>
+          <%= check_box_tag "element_masters[]", 'bible_translation', master_checked %>
+          <%= t :Bible_translation %>
+        </label>
+      </div>
+      <div class="checkbox slaveboxes">
+        <label class="checkbox-inline">
+          <%= render 'slavebox', params: params, sub1: 'activities', value: 'new_testament', master_checked: master_checked %>
+          <%= t :New_testament %>
+        </label>
+        <label class="checkbox-inline">
+          <%= render 'slavebox', params: params, sub1: 'activities', value: 'old_testament', master_checked: master_checked %>
+          <%= t :Old_testament %>
+        </label>
+      </div>
+    </div>
+
+    <h4><%= t :Publications %></h4>
+    <div class="form-group">
+      <% master_checked = false %>
+      <div class="checkbox masterbox">
+        <label>
+          <%= check_box_tag "element_masters[]", 'publications_scripture', master_checked %>
+          <%= t :Scripture %>
+        </label>
+      </div>
+      <div class="checkbox slaveboxes">
+        <label class="checkbox-inline">
+          <%= check_box_tag "elements[publications][]", 'bible', false, disabled: !master_checked %>
+          <%= t :Bible %>
+        </label>
+        <label class="checkbox-inline">
+          <%= check_box_tag "elements[publications][]", 'new_testament', false, disabled: !master_checked %>
+          <%= t :New_testament %>
+        </label>
+        <label class="checkbox-inline">
+          <%= check_box_tag "elements[publications][]", 'old_testament', false, disabled: !master_checked %>
+          <%= t :Old_testament %>
+        </label>
+        <label class="checkbox-inline">
+          <%= check_box_tag "elements[publications][]", 'any_scripture', false, disabled: !master_checked %>
+          <%= t :Any_scripture %>
+        </label>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <% master_checked = false %>
+      <div class="checkbox masterbox">
+        <label>
+          <%= check_box_tag "element_masters[]", 'publications_audio_scripture', master_checked %>
+          <%= t :AudioScripture %>
+        </label>
+      </div>
+      <div class="checkbox slaveboxes">
+        <label class="checkbox-inline">
+          <%= check_box_tag "elements[publications][]", 'audio_bible', false, disabled: !master_checked %>
+          <%= t :Bible %>
+        </label>
+        <label class="checkbox-inline">
+          <%= check_box_tag "elements[publications][]", 'audio_new_testament', false, disabled: !master_checked %>
+          <%= t :New_testament %>
+        </label>
+        <label class="checkbox-inline">
+          <%= check_box_tag "elements[publications][]", 'audio_old_testament', false, disabled: !master_checked %>
+          <%= t :Old_testament %>
+        </label>
+        <label class="checkbox-inline">
+          <%= check_box_tag "elements[publications][]", 'any_audio_scripture', false, disabled: !master_checked %>
+          <%= t :Any_scripture %>
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <p>
+    <%= submit_tag t(:Generate_report), class: 'btn btn-primary btn-lg' %>
+  </p>
+<% end %>

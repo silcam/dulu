@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180131102706) do
+ActiveRecord::Schema.define(version: 20180202130341) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -258,6 +258,13 @@ ActiveRecord::Schema.define(version: 20180131102706) do
     t.index ["program_id"], name: "index_publications_on_program_id", using: :btree
   end
 
+  create_table "reports", force: :cascade do |t|
+    t.string   "name"
+    t.jsonb    "params"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "stages", force: :cascade do |t|
     t.integer  "activity_id"
     t.datetime "created_at",                  null: false
@@ -302,6 +309,15 @@ ActiveRecord::Schema.define(version: 20180131102706) do
     t.datetime "created_at",                 null: false
     t.datetime "updated_at",                 null: false
     t.boolean  "open",       default: false
+  end
+
+  create_table "viewed_reports", force: :cascade do |t|
+    t.integer  "person_id"
+    t.integer  "report_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["person_id"], name: "index_viewed_reports_on_person_id", using: :btree
+    t.index ["report_id"], name: "index_viewed_reports_on_report_id", using: :btree
   end
 
   create_table "workshops", force: :cascade do |t|

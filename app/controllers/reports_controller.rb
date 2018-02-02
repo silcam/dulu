@@ -1,11 +1,24 @@
 class ReportsController < ApplicationController
 
   def index
-    if params[:type]
-      @data = Report.generate(params)
-      render 'report'
-    else
-      render 'index'
-    end
+    @saved_reports = current_user.reports
+  end
+
+  def create
+    params_json = JSON.generate(params.to_hash)
+    name = Report.make_name params
+    @report = Report.create(params: params_json, name: name)
+    redirect_to @report
+  end
+
+  def edit
+    @report = Report.find params[:id]
+  end
+
+  def show
+    @report = Report.find params[:id]
+    @saved_reports = current_user.reports.where.not(id: @report.id)
+    ViewedReport.mark_viewed @report, current_user
+    @data = @report.generate
   end
 end

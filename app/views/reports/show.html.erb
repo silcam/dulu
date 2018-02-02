@@ -1,3 +1,17 @@
+<%= render 'recently_viewed_reports' %>
+
+<h2>
+  <%= t_phrase(@report.name) %>
+</h2>
+
+<p>
+  <%= link_to t(:Edit), edit_report_path(@report), class: 'btn btn-primary btn-sm' %>
+  <%= mail_to '',
+              t(:Email_report),
+              subject: "#{t(:Dulu_report)} - #{t_phrase(@report.name)}",
+              body: "#{t_phrase(@report.name)} : #{request.url}",
+              class: 'btn btn-primary btn-sm' %>
+</p>
 
 <!-- Language Comparison Report -->
 <table class="table auto-width">

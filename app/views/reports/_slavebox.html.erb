@@ -1,0 +1,10 @@
+<%
+  # Locals: sub1, value, master_checked, params
+%>
+
+<%=
+  check_box_tag "elements[#{sub1}][]",
+                  value,
+                  params[:elements][sub1.to_sym].include?(value),
+                  disabled: !master_checked
+%>

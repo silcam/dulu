@@ -338,7 +338,9 @@ en:
   new_publications: New publications
 
   # Reports
+  Dulu_report: Dulu Report
   Generate_report: Generate Report
+  LanguageComparison: Language Comparison
 
   # Error messages
   not_before_start: can't be before start date.
