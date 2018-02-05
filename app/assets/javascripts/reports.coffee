@@ -13,37 +13,39 @@ remove_cluster_program = (element) ->
     $(this).remove()
 
 $(document).ready ->
-  switch $('body').data('page-name')
-    when 'reports#index'
-      $('#recently_viewed_reports').change ->
-        path = "/reports/" + $(this).val()
-        $(this).closest('h4').find('a').attr('href', path)
+  if $('body').data('page-name') == 'reports#index' or $('body').data('page-name') == 'reports#show'
+    $('#recently_viewed_reports').change ->
+      path = "/reports/" + $(this).val()
+      $(this).closest('div').find('a').attr('href', path)
 
-      $('a[data-add-cluster]').click (e) ->
+  if $('body').data('page-name') == 'reports#index' or $('body').data('page-name') == 'reports#edit'
+    $('a[data-add-cluster]').click (e) ->
+      e.preventDefault()
+      $(this).blur()
+      select = $('#add_cluster')
+      id = select.val()
+      name = select.find('option:selected').text()
+      add_cluster_program('cluster', id, name)
+
+    $('a[data-add-program]').click (e) ->
+      e.preventDefault()
+      $(this).blur()
+      select = $('#add_program')
+      id = select.val()
+      name = select.find('option:selected').text()
+      add_cluster_program('program', id, name)
+
+
+    $('#report-languages').click (e) ->
+      if(e.target.nodeName.toLowerCase() == 'a')
         e.preventDefault()
-        $(this).blur()
-        select = $('#add_cluster')
-        id = select.val()
-        name = select.find('option:selected').text()
-        add_cluster_program('cluster', id, name)
+        remove_cluster_program(e.target)
 
-      $('a[data-add-program]').click (e) ->
-        e.preventDefault()
-        $(this).blur()
-        select = $('#add_program')
-        id = select.val()
-        name = select.find('option:selected').text()
-        add_cluster_program('program', id, name)
-
-
-      $('#report-languages').click (e) ->
-        if(e.target.nodeName.toLowerCase() == 'a')
-          e.preventDefault()
-          remove_cluster_program(e.target)
-
-      $('.masterbox input:checkbox').change ->
-        slaveboxes = $(this).closest('.form-group').find('.slaveboxes input:checkbox')
-        if this.checked
-          slaveboxes.prop('disabled', false)
-        else
-          slaveboxes.prop('disabled', true)
+    $('.masterbox input:checkbox').change ->
+      slavebox_container = $(this).closest('.form-group').find('.slaveboxes')
+      if this.checked
+        slavebox_container.removeClass('disabled')
+        slavebox_container.find('input').prop('disabled', false)
+      else
+        slavebox_container.addClass('disabled')
+        slavebox_container.find('input').prop('disabled', true)

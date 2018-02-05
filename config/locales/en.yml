@@ -338,8 +338,19 @@ en:
   new_publications: New publications
 
   # Reports
+  Report: Report
+  Reports: Reports
+  Recently_viewed_reports: Recently Viewed Reports
+  New_report: New Report
+  None_selected: None Selected
+  Report_elements: Report Elements
+  Bible_translation: Bible Translation
+  Any_scripture: Any Scripture
+  Any_literacy: Any Literacy
+  Any: Any
   Dulu_report: Dulu Report
   Generate_report: Generate Report
+  Email_report: Email Report
   LanguageComparison: Language Comparison
 
   # Error messages

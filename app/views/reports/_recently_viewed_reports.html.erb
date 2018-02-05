@@ -1,7 +1,8 @@
 <% unless @saved_reports.empty? %>
+  <p> </p>
   <div>
-    <span class="h4"><%= t :Recenty_viewed_reports %></span>
-    <%= select_tag 'recently_viewed_reports', options_for_select(@saved_reports.collect{ |r| [t_phrase(r.name), r.id]}) %>
+    <span class="h4"><%= t :Recently_viewed_reports %></span>
+    <%= select_tag 'recently_viewed_reports', options_for_select(@saved_reports.collect{ |r| [t_phrase(r.name), r.id]}), class: 'form-control form-control-inline' %>
     <%= link_to t(:View), @saved_reports.first, class: 'btn btn-primary' %>
   </div>
 <% end %>

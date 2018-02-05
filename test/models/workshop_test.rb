@@ -4,6 +4,7 @@ class WorkshopTest < ActiveSupport::TestCase
 
   def setup
     @grammar_ws = linguistic_activities(:EwondoGrammarIntro)
+    I18n.locale = :en
   end
 
   test "Required Params Validation" do

@@ -26,10 +26,10 @@
   </tr>
 </table>
 
-<table class="table auto-width bottom-border">
+<table class="table auto-width">
   <% @data[:clusters].each do |cluster, programs| %>
     <tr>
-      <td class="h3" colspan="100">
+      <td class="h3 borderless" colspan="100">
         <%= link_to cluster.display_name, cluster %>
       </td>
     </tr>

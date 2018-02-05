@@ -212,6 +212,10 @@ table.table.borderless {
   }
 }
 
+table.table tbody tr td.borderless {
+  border-top: none;
+}
+
 .space-below{
   margin-bottom: 10px;
 }
@@ -306,6 +310,7 @@ form.auto-width {
 
 .form-control-inline {
   display: inline-block;
+  width: auto;
 }
 
 div.select{
@@ -384,11 +389,11 @@ table.table tbody td.table-container {
   padding: 0;
   border: 0;
   table.table {
-    margin: 0;
+    margin: 0 0 8px 0;
   }
 }
 
-td.lang-comp-book-cell {
+td.lang-comp-book-cell, th.lang-comp-book-cell{
   border-left: 1px solid #ddd;
   border-right: 1px solid #ddd;
   //font-weight: bold;

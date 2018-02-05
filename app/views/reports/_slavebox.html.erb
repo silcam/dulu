@@ -5,6 +5,6 @@
 <%=
   check_box_tag "elements[#{sub1}][]",
                   value,
-                  params[:elements][sub1.to_sym].include?(value),
+                  params[:elements].try(:[], sub1.to_sym).try(:include?, value),
                   disabled: !master_checked
 %>

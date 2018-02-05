@@ -2,17 +2,18 @@
   # Locals: program, p_report
 %>
 
-<tr>
-  <td class="bigger" colspan="100"><%= link_to program.name, program %></td>
-</tr>
 <%
   books = p_report[:activities][:old_testament] || []
   books += (p_report[:activities][:new_testament] || [])
   cols = (books.length / 3.0).ceil
 %>
 <tr>
+  <td class="bigger borderless" colspan="<%= cols %>"><%= link_to program.name, program %></td>
+</tr>
+
+<tr>
   <td class="table-container">
-    <table class="table auto-width">
+    <table class="table auto-width bottom-border">
       <% (0..2).each do |row| %>
         <tr>
           <% (0..(cols-1)).each do |col| %>
@@ -34,3 +35,24 @@
     </table>
   </td>
 </tr>
+
+<% if p_report[:publications] && !p_report[:publications].empty? %>
+  <tr>
+    <td class="table-container">
+      <table class="table auto-width bottom-border">
+        <tr>
+          <th class="lang-comp-book-cell"><%= t :Published %></th>
+          <% p_report[:publications].each do |pub| %>
+            <%
+              bgcolor = pub[:published?] ? color_from_sym(:purple) : '#ffffff'
+              color = pub[:published?] ? '#ffffff' : '#000000'
+            %>
+            <td class="lang-comp-book-cell" style="background-color: <%= bgcolor %>; color: <%= color %>;">
+              <%= t pub[:name] %>
+            </td>
+          <% end %>
+        </tr>
+      </table>
+    </td>
+  </tr>
+<% end %>
