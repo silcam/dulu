@@ -12,10 +12,17 @@ else
   <% id = @activity.id %>
   $('#update-stage-form-<%= id %>').slideUp(350)
   $('#activity-progress-<%= id %>').html(
-    " <%= j(render 'programs/progress_bar', activity: @activity) %>")
+    " <%= j(render 'programs/progress_bar', activity: @activity) %>"
+  )
   $('a[data-slide-form-id=<%= id %>]').html(
-    " <%= t(@activity.stage_name, default: @activity.stage_name.to_s) %>")
+    " <%= t(@activity.stage_name, default: @activity.stage_name.to_s) %>"
+  )
   $('#activity-stage-date-<%= id %>').html(
-    " (<%= @activity.current_stage.f_start_date.try(:pretty_print) %>)")
+    " (<%= @activity.current_stage.f_start_date.try(:pretty_print) %>)"
+  )
   $('#activity-participants-<%= id %>').html(
-    " <%= j(render 'programs/participants', activity: @activity) %>")
+    " <%= j(render 'programs/participants', activity: @activity) %>"
+  )
+  $('#activity-archive-<%= id %>').html(
+    " <%= j(render 'programs/archive_button', activity: @activity) %>"
+  )

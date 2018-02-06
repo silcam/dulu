@@ -8,13 +8,13 @@
 
 <% if can? :update, stage.activity %>
   <td>
-    <%= button_tag t(:Edit), class: 'btn btn-warning',
+    <%= button_tag t(:Edit), class: 'btn btn-warning btn-sm',
                       data: {'edit-stage-id' => stage.id}  %>
   </td>
 
   <td>
-      <%= button_to t(:Delete), stage_path(stage),
-            method: :delete, remote: true, class: 'btn btn-danger',
+      <%= button_to 'X', stage_path(stage),
+            method: :delete, remote: true, class: 'btn btn-danger btn-sm',
             data: { confirm: t(:Delete_stage_confirmation)}  %>
   </td>
 <% end %>

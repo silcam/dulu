@@ -99,6 +99,8 @@ $(document).ready ->
           bar.css('background-color', data.activity.progress.color)
           dash_row.find('a[data-slide-form-id]').html(data.activity.stage_name)
           dash_row.find('#activity-stage-date-'+data.activity.id).html("(#{data.date})")
+          if data.activity.archivable
+            dash_row.find('span[data-archive-button]').show()
         else
           td = $('tr#edit-workshop-'+data.id).find('td.workshop-completed-cell')
           label = $('#components').find('label.workshop-completed-check').clone()

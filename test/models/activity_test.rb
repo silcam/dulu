@@ -127,6 +127,7 @@ class ActivityTest < ActiveSupport::TestCase
     exp = {
         id: @hdi_ezra.id,
         stage_name: :Drafting,
+        archivable: false,
         progress: {percent: 10, color: '#A93226'}
     }
     assert_equal exp, @hdi_ezra.to_hash

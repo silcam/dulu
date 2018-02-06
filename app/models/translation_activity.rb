@@ -1,7 +1,8 @@
 class TranslationActivity < Activity
 
   belongs_to :bible_book
-  # has_many :book_translation_consultants TODO Delete this line
+
+  default_scope{ where(archived: false) }
 
   def name
     self.bible_book.name
@@ -44,6 +45,28 @@ class TranslationActivity < Activity
                           stages.name != ?",
                          'Planned',
                          'Published')
+  end
+
+  def self.by_testament(testament)
+    case testament.to_sym
+      when :New_testament
+        usfm_range = (41..67)
+      when :Old_testament
+        usfm_range = (1..39)
+      else
+        return nil
+    end
+    joins(:bible_book).where(bible_books: {usfm_number: usfm_range})
+  end
+
+  def self.archivable?(program, testament)
+    activities = program.translation_activities.by_testament(testament)
+    activities.count > 0 && !activities.any?{ |ta| !ta.archivable? }
+  end
+
+  def self.archive(program, testament)
+    activities = program.translation_activities.by_testament(testament)
+    activities.update archived: true
   end
 
   def self.search(query)

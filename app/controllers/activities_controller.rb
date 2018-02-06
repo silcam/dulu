@@ -3,7 +3,6 @@ class ActivitiesController < ApplicationController
   before_action :set_program, only: [:index, :new, :create]
 
   def index
-    @program = Program.find params[:program_id]
   end
 
   def new
@@ -39,6 +38,20 @@ class ActivitiesController < ApplicationController
     authorize! :update, @activity
     @activity.update_workshops(params)
     redirect_to activity_path(@activity)
+  end
+
+  def archive
+    if params[:id]
+      @activity = Activity.find(params[:id])
+      authorize! :update, @activity
+      @activity.update archived: true
+      follow_redirect @activity.program
+    else
+      @program = Program.find params[:program_id]
+      authorize! :update, @program.translation_activities.first
+      TranslationActivity.archive(@program, params[:testament])
+      follow_redirect @program
+    end
   end
 
   def destroy

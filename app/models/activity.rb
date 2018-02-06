@@ -11,6 +11,8 @@ class Activity < ApplicationRecord
 
   validates :type, presence: true
 
+  default_scope{ where(archived: false) }
+
   after_touch :update_current_stage
 
   def current_stage
@@ -59,12 +61,17 @@ class Activity < ApplicationRecord
     stages.count.zero? && participants.count.zero?
   end
 
+  def archivable?
+    stage_name == Stage.last_stage(kind)
+  end
+
   def to_hash
     percent, color = progress
     color = color_from_sym(color)
     {
         id: id,
         stage_name: stage_name,
+        archivable: archivable?,
         progress:
             {
                 percent: percent,

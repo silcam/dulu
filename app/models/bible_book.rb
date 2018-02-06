@@ -39,24 +39,24 @@ class BibleBook < ApplicationRecord
   end
 
   def self.get_old_testament
-    BibleBook.where(usfm_number: (GENESIS_USFM..MALACHI_USFM)).order('usfm_number').to_a
+    where(usfm_number: (GENESIS_USFM..MALACHI_USFM)).order('usfm_number')
   end
 
   def self.get_new_testament
-    BibleBook.where(usfm_number: (MATTHEW_USFM..REVELATION_USFM)).order('usfm_number').to_a
+    where(usfm_number: (MATTHEW_USFM..REVELATION_USFM)).order('usfm_number')
   end
 
-  def self.verses_in_bible
-    BibleBook.sum(:number_of_verses)
-  end
+  # def self.verses_in_bible
+  #   BibleBook.sum(:number_of_verses)
+  # end
 
-  def self.verses_in_old_testament
-    BibleBook.where(usfm_number: (GENESIS_USFM..MALACHI_USFM)).sum(:number_of_verses)
-  end
-
-  def self.verses_in_new_testament
-    BibleBook.where(usfm_number: (MATTHEW_USFM..REVELATION_USFM)).sum(:number_of_verses)
-  end
+  # def self.verses_in_old_testament
+  #   BibleBook.where(usfm_number: (GENESIS_USFM..MALACHI_USFM)).sum(:number_of_verses)
+  # end
+  #
+  # def self.verses_in_new_testament
+  #   BibleBook.where(usfm_number: (MATTHEW_USFM..REVELATION_USFM)).sum(:number_of_verses)
+  # end
 
   def self.options_for_select(program)
     books = BibleBook.all.order(:usfm_number) - BibleBook.joins(:translation_activities)

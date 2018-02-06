@@ -2,13 +2,12 @@
 <table class="table">
   <% pubs.each do |pub| %>
       <tr>
-        <td class="bigger"><%= pub.name %></td>
+        <td class="bigger"><%= link_to pub.name, pub %></td>
         <td><%= pub.year %></td>
-        <td><%= pub.program.name %></td>
+        <td class="subtle-links"><%= link_to pub.program.name, pub.program %></td>
         <% if kind=='Media' %>
           <td><%= t(pub.media_kind) %></td>
         <% end %>
-        <td><%= link_to t(:View), pub %></td>
       </tr>
   <% end %>
   <tr><td>...</td><td colspan="3"></td> </tr>

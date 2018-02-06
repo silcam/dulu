@@ -35,12 +35,12 @@ class BibleBookTest < ActiveSupport::TestCase
     assert_includes(BibleBook.get_new_testament, bible_books(:John))
   end
 
-  test 'verse counters' do
-    nt = BibleBook.verses_in_new_testament
-    ot = BibleBook.verses_in_old_testament
-    bible = BibleBook.verses_in_bible
-    assert_equal(bible, nt + ot, 'Verses in Bible should match sum of NT and OT')
-  end
+  # test 'verse counters' do
+  #   nt = BibleBook.verses_in_new_testament
+  #   ot = BibleBook.verses_in_old_testament
+  #   bible = BibleBook.verses_in_bible
+  #   assert_equal(bible, nt + ot, 'Verses in Bible should match sum of NT and OT')
+  # end
 
   test "Options for Select All" do
     options = BibleBook.options_for_select(programs :Ewondo)

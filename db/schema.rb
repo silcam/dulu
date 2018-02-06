@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180202130341) do
+ActiveRecord::Schema.define(version: 20180206140831) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -19,14 +19,15 @@ ActiveRecord::Schema.define(version: 20180202130341) do
   create_table "activities", force: :cascade do |t|
     t.integer  "program_id"
     t.integer  "bible_book_id"
-    t.datetime "created_at",    null: false
-    t.datetime "updated_at",    null: false
+    t.datetime "created_at",                    null: false
+    t.datetime "updated_at",                    null: false
     t.string   "type"
     t.text     "note"
     t.string   "category"
     t.string   "title"
     t.string   "scripture"
     t.string   "film"
+    t.boolean  "archived",      default: false
     t.index ["bible_book_id"], name: "index_activities_on_bible_book_id", using: :btree
     t.index ["program_id"], name: "index_activities_on_program_id", using: :btree
   end

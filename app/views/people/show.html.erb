@@ -85,8 +85,8 @@
         <td class="bigger">
           <%= link_to participant.cluster_program.display_name, participant.cluster_program %>
         </td>
-        <td>
-          <%= participant.roles_text %>
+        <td class="subtle-links">
+          <%= link_to participant.roles_text, participant %>
         </td>
       </tr>
     <% end %>

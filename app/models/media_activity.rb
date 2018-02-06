@@ -10,6 +10,8 @@ class MediaActivity < Activity
   validates :film, inclusion: FILMS, allow_nil: true
   validates :scripture, inclusion: SCRIPTURE, allow_nil: true
 
+  default_scope{ where(archived: false) }
+
   def category
     attributes['category'].try(:to_sym)
   end

@@ -2,6 +2,8 @@ class LinguisticActivity < Activity
 
   CATEGORIES = %i( Research Workshops )
 
+  default_scope{ where(archived: false) }
+
   has_many :workshops
 
   validates :title, presence: true, allow_blank: false
@@ -47,6 +49,12 @@ class LinguisticActivity < Activity
     (category == :Workshops) ?
         workshop_progress :
         current_stage.progress
+  end
+
+  def archivable?
+    (category == :Workshops) ?
+        stages.count == workshops.count :
+        super
   end
 
   def empty_activity?

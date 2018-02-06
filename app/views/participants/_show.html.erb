@@ -1,6 +1,6 @@
 
 <h2>
-  <%= @participant.full_name %>
+  <%= link_to @participant.full_name, @participant.person, class: 'subtle' %>
   <% if can? :manage_participants, @cluster_program %>
     <%= link_to t(:Edit), edit_participant_path(@participant), class: 'btn btn-warning hdr-btn' %>
     <% if @participant.end_date.blank? %>
@@ -93,11 +93,11 @@
       <% activities.each do |activity| %>
         <tr>
           <% if @cluster %>
-            <td><%= activity.program.name %></td>
+            <td><%= link_to activity.program.name, activity.program %></td>
           <% end %>
-          <td><%= activity.name %></td>
+          <td><%= link_to activity.name, activity_path(activity) %></td>
           <td><%= t activity.current_stage.name %></td>
-          <td><%= activity.participants.collect{ |p| p.full_name }.join(', ') %></td>
+          <td class="subtle-links"><%= activity.participants.collect{ |p| link_to(p.full_name, p) }.join(', ').html_safe %></td>
           <td class="not-shown">
             <%= link_to "#{t(:Remove)} #{@participant.full_name}",
                         remove_update_participant_path(@participant, activity_id: activity),

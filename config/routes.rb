@@ -57,7 +57,9 @@ Rails.application.routes.draw do
         post 'update_workshops'
         patch 'add_update'
         patch 'remove_update'
+        patch 'archive'
       end
+      patch 'archive', on: :collection
       resources :stages, only: [:new, :create, :update, :destroy], shallow: true
       resources :workshops, shallow: true do
         post 'complete', on: :member

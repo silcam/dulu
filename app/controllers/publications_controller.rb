@@ -8,7 +8,7 @@ class PublicationsController < ApplicationController
   end
 
   def show
-    redirect_to program_publications_path(Publication.find(params[:id]).program)
+    redirect_to program_publications_path(@publication.program, anchor: @publication.kind)
   end
 
   def new

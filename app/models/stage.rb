@@ -82,6 +82,10 @@ class Stage < ApplicationRecord
     stages(kind).first
   end
 
+  def self.last_stage(kind)
+    stages(kind).last
+  end
+
   def self.stage_after(stage, kind)
     stages = stages(kind)
     stage = stage.to_sym

@@ -28,6 +28,12 @@
   <td id="activity-participants-<%= activity.id %>">
     <%= render 'programs/participants', activity: activity %>
   </td>
+
+  <% unless activity.kind == :Translation %>
+    <td id="activity-archive-<%= activity.id %>">
+      <%= render 'programs/archive_button', activity: activity %>
+    </td>
+  <% end %>
 </tr>
 
 <% if can? :update, activity %>

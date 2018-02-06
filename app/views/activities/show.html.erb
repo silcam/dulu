@@ -30,19 +30,19 @@
   <% unless @activity.category == :Workshops %>
     <div class="row">
       <div class="col-md-6">
-        <p>
+        <p class="bigger">
           <%= t :Current_stage %>:
           <span id="current-stage">
             <%= t @activity.current_stage.name %>
           </span>
-        </p>
 
-        <% if can? :update, @activity %>
-          <%= button_tag t(:Update), id: 'show-update-form', class: 'btn btn-primary' %>
-          <div class="row" id="update-stage-form" style="display: none;">
-            <%= render 'stages/ajax_form', activity: @activity %>
-          </div>
-        <% end %>
+          <% if can? :update, @activity %>
+            <%= button_tag t(:Update), id: 'show-update-form', class: 'btn btn-primary btn-sm' %>
+            <div class="row" id="update-stage-form" style="display: none;">
+              <%= render 'stages/ajax_form', activity: @activity %>
+            </div>
+          <% end %>
+        </p>
       </div>
     </div>
   <% end %>

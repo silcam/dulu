@@ -1,0 +1,5 @@
+<% [:New_testament, :Old_testament].each do |testament| %>
+  <% if TranslationActivity.archivable?(@program, testament) %>
+    <%= button_to "#{t(:Archive)} #{t(testament)}", archive_program_activities_path(@program, testament: testament), method: :patch, class: 'btn btn-warning' %>
+  <% end %>
+<% end %>

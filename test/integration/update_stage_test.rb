@@ -38,7 +38,7 @@ class UpdateStageTest < Capybara::Rails::TestCase
   test "Remove Stage" do
     hdi_drafting = @hdi_ezra.current_stage
     within(:css, "form[action='#{stage_path(hdi_drafting)}']") do
-      click_button 'Delete'
+      click_button 'X'
       page.driver.browser.accept_js_confirms
     end
 
