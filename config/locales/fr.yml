@@ -353,6 +353,13 @@ fr:
   Email_report: Envoyer ce rapport par mail
   LanguageComparison: Comparaison de langues
   Copy_and_edit: Copier et modifier
+  Audio_Bible: Audio Bible
+  Audio_New_testament: Audio Nouveau Testament
+  Audio_Old_testament: Audio Ancien Testament
+  Other_media: Autres publications audiovisuels
+
+  # Audits
+  Activity_log: Journal des opérations
 
   # Error messages
   not_before_start: ne peut pas être avant le date de commencement.

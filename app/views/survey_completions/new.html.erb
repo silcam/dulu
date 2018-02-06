@@ -25,7 +25,7 @@
       <% end %>
     </ul>
   <% end %>
-  <%= link_to t(:Enter_a_publication), new_program_publication_path(@program, referred_by: request.path), class: 'btn btn-primary' %>
+  <%= link_to 'Enter a Publication', new_program_publication_path(@program, referred_by: request.path), class: 'btn btn-primary' %>
 
   <h3><%= t :Events %></h3>
   <p>
@@ -44,7 +44,7 @@
       <% end %>
     </table>
   <% end %>
-  <%= link_to t(:Enter_event), new_program_event_path(@program, referred_by: request.path), class: 'btn btn-primary' %>
+  <%= link_to 'Enter Event', new_program_event_path(@program, referred_by: request.path), class: 'btn btn-primary' %>
 
   <% domains = @survey.status_parameters.collect{ |sp| sp.domain }.uniq %>
   <% domains.each do |domain| %>

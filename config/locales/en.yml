@@ -177,7 +177,7 @@ en:
   New_activity: New Activity
   new_activity: new activity
   Multiple_stages_hint: "If the books are at different stages, set the stage to Planned and the date to the beginning of the project. Then update each book to it's current stage on the Project Dashboard."
-  No_current_activites: No Current Activities
+  No_current_activities: No Current Activities
   Select_books: Select Books
   Title_error: Please enter a title
   Name_error: Please enter a name
@@ -353,6 +353,13 @@ en:
   Email_report: Email Report
   LanguageComparison: Language Comparison
   Copy_and_edit: Copy and Edit
+  Audio_Bible: Audio Bible
+  Audio_New_testament: Audio New Testament
+  Audio_Old_testament: Audio Old Testament
+  Other_media: Other Media
+
+  # Audits
+  Activity_log: Activity Log
 
   # Error messages
   not_before_start: can't be before start date.
