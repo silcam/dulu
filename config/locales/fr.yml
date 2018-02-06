@@ -352,6 +352,7 @@ fr:
   Generate_report: Générer rapport
   Email_report: Envoyer ce rapport par mail
   LanguageComparison: Comparaison de langues
+  Copy_and_edit: Copier et modifier
 
   # Error messages
   not_before_start: ne peut pas être avant le date de commencement.

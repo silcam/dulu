@@ -5,7 +5,7 @@
 </h2>
 
 <p>
-  <%= link_to t(:Edit), edit_report_path(@report), class: 'btn btn-primary btn-sm' %>
+  <%= link_to t(:Copy_and_edit), edit_report_path(@report), class: 'btn btn-primary btn-sm' %>
   <%= mail_to '',
               t(:Email_report),
               subject: "#{t(:Dulu_report)} - #{t_phrase(@report.name)}",
