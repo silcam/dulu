@@ -15,7 +15,7 @@
       <h3 id="<%= kind %>"><%= t kind %></h3>
       <table class="table auto-width" style="margin-left: 20px;">
         <% kind_pubs.each do |pub| %>
-          <% names = pub.names prefer_nl: true %>
+          <% names = pub.names %>
           <tr>
             <td>
               <span class="bigger">

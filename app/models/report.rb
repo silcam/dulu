@@ -89,12 +89,7 @@ class Report < ApplicationRecord
   def pub_published?(program, pub)
     case pub
       when 'Bible', 'New_testament', 'Old_testament'
-        return program
-            .publications
-            .where("kind='Scripture' AND (english_name ILIKE ? OR french_name ILIKE ?)",
-                  "%#{I18n.t(pub, locale: :en)}%",
-                   "%#{I18n.t(pub, locale: :fr)}%"
-            ).count > 0
+        return !program.publications.find_by(kind: :Scripture, scripture_kind: pub).nil?
 
       when 'Any_scripture'
         return !program.publications.find_by(kind: :Scripture).nil?

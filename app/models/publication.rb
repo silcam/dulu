@@ -15,37 +15,31 @@ class Publication < ApplicationRecord
     %w[Audio Video App]
   end
 
+  def self.scripture_kinds
+    %w[Bible New_testament Old_testament Portions]
+  end
+
   validates :kind, inclusion: {in: Publication.kinds}
   validates :media_kind, inclusion: {in: Publication.media_kinds}, allow_blank: true
+  validates :scripture_kind, inclusion: {in: Publication.scripture_kinds}, allow_blank: true
   validates :year, numericality: {only_integer: true, greater_than: 0, less_than: 10000, allow_nil: true}
   validate :has_a_name
 
-  # Primary intl lang is first choice, nl is second
+  # Intl languages are first choices
   def name
-    n = I18n.locale==:fr ? french_name : english_name
-    n = nl_name if n.blank?
-    n = I18n.locale==:fr ? english_name : french_name if n.blank?
-    n
+    name_priorities.each do |method|
+      n = send(method)
+      return n unless n.blank?
+    end
   end
 
   def nl_name_or_name
     nl_name.blank? ? name : nl_name
   end
 
-  def names(options={})
-    names = []
-    intl_lang_1 = I18n.locale==:fr ? french_name : english_name
-    intl_lang_2 = I18n.locale==:fr ? english_name : french_name
-
-    first = options[:prefer_nl] ? nl_name : intl_lang_1
-    names << first unless first.blank?
-
-    second = options[:prefer_nl] ? intl_lang_1 : nl_name
-    names << second unless second.blank?
-
-    names << intl_lang_2 unless intl_lang_2.blank?
-
-    names
+  def names
+    names = name_priorities.collect{ |method| send(method) }
+    names.delete_if{ |n| n.blank? }
   end
 
   def self.search(query)
@@ -66,5 +60,11 @@ class Publication < ApplicationRecord
     if english_name.blank? && french_name.blank? && nl_name.blank?
       errors.add(:base, "Publication must have a name")
     end
+  end
+
+  def name_priorities
+    I18n.locale==:en ?
+        [:english_name, :french_name, :nl_name] :
+        [:french_name, :english_name, :nl_name]
   end
 end

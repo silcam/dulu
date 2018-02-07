@@ -83,4 +83,7 @@ Rails.application.routes.draw do
     resources :publications, shallow: true
     resources :domain_updates, shallow: true
   end
+
+  # These are necessary for route helpers to work with subclasses
+  get '/translation_activities/:id', to: 'activities#show', as: :translation_activity
 end

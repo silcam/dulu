@@ -32,8 +32,8 @@
         <% stats.each do |stat| %>
             <tr>
               <td class="bigger"><%= stat.title %></td>
-              <td><%= stat.description %></td>
-              <td><%= link_to t(:View), stat.model if stat.model %></td>
+              <td><%= link_to_if stat.program, stat.program.try(:name), stat.program %></td>
+              <td><%= link_to_if stat.model, stat.description, stat.model %></td>
             </tr>
         <% end %>
       </table>

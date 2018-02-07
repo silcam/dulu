@@ -34,8 +34,20 @@
 <div class="form-group" id="media-kinds" style="display: none;">
   <% Publication.media_kinds.each do |media_kind| %>
     <label class="radio-inline">
-      <%= form.radio_button :media_kind, media_kind, checked: (media_kind == 'Audio') %>
+      <% @publication.media_kind ||= 'Audio' %>
+      <%= form.radio_button :media_kind, media_kind %>
       <%= t media_kind %>
+    </label>
+  <% end %>
+</div>
+
+<%= hidden_field_tag 'publication[scripture_kind]', '' %>
+<div class="form-group" id="scripture-kinds" style="display: none;">
+  <% Publication.scripture_kinds.each do |scripture_kind| %>
+    <label class="radio-inline">
+      <% @publication.scripture_kind ||= 'Bible' %>
+      <%= form.radio_button :scripture_kind, scripture_kind %>
+      <%= t scripture_kind %>
     </label>
   <% end %>
 </div>
