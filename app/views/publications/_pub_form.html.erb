@@ -34,7 +34,7 @@
 <div class="form-group" id="media-kinds" style="display: none;">
   <% Publication.media_kinds.each do |media_kind| %>
     <label class="radio-inline">
-      <% @publication.media_kind ||= 'Audio' %>
+      <% @publication.media_kind ||= 'AudioScripture' %>
       <%= form.radio_button :media_kind, media_kind %>
       <%= t media_kind %>
     </label>
