@@ -12,7 +12,11 @@ class Publication < ApplicationRecord
   end
 
   def self.media_kinds
-    %w[Audio Video App]
+    %w[AudioScripture Audio Video App]
+  end
+
+  def self.film_kinds
+    %w[JesusFilm LukeFilm Other]
   end
 
   def self.scripture_kinds
@@ -22,6 +26,7 @@ class Publication < ApplicationRecord
   validates :kind, inclusion: {in: Publication.kinds}
   validates :media_kind, inclusion: {in: Publication.media_kinds}, allow_blank: true
   validates :scripture_kind, inclusion: {in: Publication.scripture_kinds}, allow_blank: true
+  validates :film_kind, inclusion: {in: Publication.film_kinds}, allow_blank: true
   validates :year, numericality: {only_integer: true, greater_than: 0, less_than: 10000, allow_nil: true}
   validate :has_a_name
 

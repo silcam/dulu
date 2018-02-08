@@ -347,9 +347,9 @@ fr:
   None_selected: Aucun sélectionné
   Report_elements: Éléments du rapport
   Bible_translation: Traduction de la Bible
-  Any_scripture: Au moins un livre de la Bible
-  Any_literacy: Au moins un livre d'alphabétisation
-  Any: Au moins un livre
+  Any_scripture: Portions
+  Any_literacy: Alphabétisation
+  Any: Tout
   Dulu_report: Dulu Rapport
   Generate_report: Générer rapport
   Email_report: Envoyer ce rapport par mail

@@ -89,30 +89,20 @@ class Report < ApplicationRecord
   def pub_published?(program, pub)
     case pub
       when 'Bible', 'New_testament', 'Old_testament'
-        return !program.publications.find_by(kind: :Scripture, scripture_kind: pub).nil?
+        return true if program.publications.find_by(kind: :Scripture, scripture_kind: pub)
 
       when 'Any_scripture'
-        return !program.publications.find_by(kind: :Scripture).nil?
+        return true if program.publications.find_by(kind: :Scripture)
 
       when 'Audio_Bible', 'Audio_New_testament', 'Audio_Old_testament'
         key = pub[(6..-1)] # Chop off 'Audio_'
-        return program
-               .publications
-               .where("kind='Media' AND media_kind='Audio' AND (english_name ILIKE ? OR french_name ILIKE ?)",
-                                      "%#{I18n.t(key, locale: :en)}%",
-                                      "%#{I18n.t(key, locale: :fr)}%"
-               ).count > 0
+        return true if program.publications.find_by(kind: :AudioScripture, scripture_kind: key)
 
       when 'JesusFilm', 'LukeFilm'
-        key = pub.chomp('Film')
-        return program
-                   .publications
-                   .where("kind='Media' AND media_kind='Video' AND english_name ILIKE ?",
-                          "%#{key}%"
-                   ).count > 0
+        return true if program.publications.find_by(film_kind: pub)
 
       when 'App'
-        return !program.publications.find_by(kind: :Media, media_kind: :App).nil?
+        return true if program.publications.find_by(kind: :Media, media_kind: :App)
 
       when 'Dictionary'
         return program
@@ -123,7 +113,7 @@ class Report < ApplicationRecord
                    ).count > 0
 
       when 'Any_literacy'
-        return !program.publications.find_by(kind: :Literacy).nil?
+        return true if program.publications.find_by(kind: :Literacy)
     end
   end
 end

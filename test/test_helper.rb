@@ -1,4 +1,9 @@
-`rails db:migrate`
+begin
+  `rails db:migrate`
+rescue
+  `rails db:schema:load`
+end
+
 require File.expand_path('../../config/environment', __FILE__)
 require 'rails/test_help'
 require 'minitest/reporters'
