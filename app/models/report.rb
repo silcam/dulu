@@ -96,7 +96,7 @@ class Report < ApplicationRecord
 
       when 'Audio_Bible', 'Audio_New_testament', 'Audio_Old_testament'
         key = pub[(6..-1)] # Chop off 'Audio_'
-        return true if program.publications.find_by(kind: :AudioScripture, scripture_kind: key)
+        return true if program.publications.find_by(media_kind: :AudioScripture, scripture_kind: key)
 
       when 'JesusFilm', 'LukeFilm'
         return true if program.publications.find_by(film_kind: pub)

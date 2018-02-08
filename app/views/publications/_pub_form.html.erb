@@ -34,7 +34,7 @@
 <div class="form-group" id="media-kinds" style="display: none;">
   <% Publication.media_kinds.each do |media_kind| %>
     <label class="radio-inline">
-      <% @publication.media_kind ||= 'AudioScripture' %>
+      <% @publication.media_kind = 'AudioScripture' if @publication.media_kind.blank? %>
       <%= form.radio_button :media_kind, media_kind %>
       <%= t media_kind %>
     </label>
@@ -45,7 +45,7 @@
 <div class="form-group" id="scripture-kinds" style="display: none;">
   <% Publication.scripture_kinds.each do |scripture_kind| %>
     <label class="radio-inline">
-      <% @publication.scripture_kind ||= 'Bible' %>
+      <% @publication.scripture_kind = 'Bible' if @publication.scripture_kind.blank? %>
       <%= form.radio_button :scripture_kind, scripture_kind %>
       <%= t scripture_kind %>
     </label>
@@ -56,7 +56,7 @@
 <div class="form-group" id="film-kinds" style="display: none;">
   <% Publication.film_kinds.each do |film_kind| %>
     <label class="radio-inline">
-      <% @publication.film_kind ||= 'JesusFilm' %>
+      <% @publication.film_kind = 'JesusFilm' if @publication.film_kind.blank? %>
       <%= form.radio_button :film_kind, film_kind %>
       <%= t film_kind %>
     </label>

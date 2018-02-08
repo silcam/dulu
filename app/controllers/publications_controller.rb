@@ -57,6 +57,6 @@ class PublicationsController < ApplicationController
   end
 
   def pub_params
-    params.require(:publication).permit(:kind, :media_kind, :english_name, :french_name, :nl_name, :year)
+    params.require(:publication).permit(:kind, :media_kind, :english_name, :french_name, :nl_name, :year, :scripture_kind, :film_kind)
   end
 end
