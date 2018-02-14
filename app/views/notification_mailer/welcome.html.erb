@@ -1,0 +1,10 @@
+<h1>Welcome to Dulu!</h1>
+
+<p>
+  <%= @creator.full_name %> has created a Dulu account for you. To log in, go to <%= link_to 'https://dulu.sil.org', root_url %>,
+  click on 'Sign in with Google', and sign in to your <%= @person.email %> Google account.
+</p>
+
+<p>
+  For help, send an email to <%= mail_to 'programmer_cameroon@sil.org' %>.
+</p>

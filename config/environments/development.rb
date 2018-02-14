@@ -28,6 +28,9 @@ Rails.application.configure do
 
   # Don't care if the mailer can't send.
   config.action_mailer.raise_delivery_errors = false
+  # For initial testing
+  # TODO remove this line
+  config.action_mailer.delivery_method = :sendmail
 
   config.action_mailer.perform_caching = false
 

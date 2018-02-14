@@ -26,6 +26,7 @@ class PeopleController < ApplicationController
     authorize! :create, Person
     @person = Person.new(person_params)
     if @person.save
+      NotificationMailer.welcome(@person, current_user).deliver_later if @person.has_login
       follow_redirect person_path(@person), person_id: @person.id
     else
       render 'new'
@@ -34,7 +35,9 @@ class PeopleController < ApplicationController
 
   def update
     authorize! :update, @person
+    had_login = @person.has_login
     if @person.update(person_params)
+      NotificationMailer.welcome(@person, current_user).deliver_later if !had_login && @person.has_login
       follow_redirect person_path(@person)
     else
       render 'edit'
