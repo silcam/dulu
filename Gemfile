@@ -48,6 +48,9 @@ gem 'axlsx_rails', '~> 0.5'
 gem 'kaminari', '~> 1.1'
 # Set ENV variables
 gem 'figaro' , '~> 1.1'
+# Delayed Job for background jobs
+gem 'delayed_job_active_record', '~> 4.1'
+gem 'daemons', '~> 1.2'
 
 group :development, :test do
   gem 'puma', '~>3.0'
@@ -58,6 +61,8 @@ group :development do
   gem 'capistrano-rails'
   gem 'capistrano-rbenv'
   gem 'capistrano-passenger'
+  # gem 'capistrano-delayed-job'
+
   # Access an IRB console on exception pages or by using <%= console %> anywhere in the code.
   gem 'web-console', '>= 3.3.0'
   # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
