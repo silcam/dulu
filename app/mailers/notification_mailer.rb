@@ -1,5 +1,5 @@
 class NotificationMailer < ApplicationMailer
-  default from: 'dulu@dulu.sil.org', reply_to: 'programmer_cameroon@sil.org '
+  default from: "#{ENV['GMAIL_USERNAME']}@sil.org"
 
   def welcome(person, creator)
     @person = person
