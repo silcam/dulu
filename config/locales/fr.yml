@@ -366,6 +366,16 @@ fr:
   # Error messages
   not_before_start: ne peut pas être avant le date de commencement.
 
+  email:
+    welcome:
+      welcome: Bienvenue à Dulu !
+      account_created: "%{name} vient de créer un compte Dulu pour vous."
+      log_in_now: Connectez-vous maintenant
+      log_in_how: "Pour vous connecter, allez à %{site_link}, cliquez sur «Sign in with Google», et connectez-vous avec votre compte Google: %{email}."
+      whats_dulu: Dulu ? Qu'est-ce que c'est ?
+      dulu_is: Dulu est un site web developpé par SIL Cameroun pour faciliter la gestion des plusiers projets de traduction et de développement de langue au Cameroun.
+      help: Si vous avez besoin d'aide, envoyez-nous un mail à %{email_link} ou simplement répondez à ce message.
+
   # Pagination
   views:
     pagination:

@@ -1,10 +1,27 @@
-<h1>Welcome to Dulu!</h1>
+<% locale = @person.try(:ui_language) || I18n.default_locale %>
+
+<h1><%= t 'email.welcome.welcome', locale: locale %></h1>
 
 <p>
-  <%= @creator.full_name %> has created a Dulu account for you. To log in, go to <%= link_to 'https://dulu.sil.org', root_url %>,
-  click on 'Sign in with Google', and sign in to your <%= @person.email %> Google account.
+  <%= t 'email.welcome.account_created', locale: locale, name: @creator.full_name %>
+</p>
+
+<h3>
+  <%= link_to t('email.welcome.log_in_now', locale: locale), login_url %>
+</h3>
+
+<p>
+  <%= t('email.welcome.log_in_how', locale: locale, site_link: link_to('dulu.sil.org', root_url), email: @person.email).html_safe %>
+</p>
+
+<h3>
+  <%= t 'email.welcome.whats_dulu', locale: locale %>
+</h3>
+
+<p>
+  <%= t 'email.welcome.dulu_is', locale: locale %>
 </p>
 
 <p>
-  For help, send an email to <%= mail_to 'programmer_cameroon@sil.org' %>.
+  <%= t('email.welcome.help', locale: locale, email_link: mail_to(ENV['GMAIL_USERNAME'])).html_safe %>
 </p>

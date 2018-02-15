@@ -1,0 +1,14 @@
+<% locale = @person.try(:ui_language) || I18n.default_locale %>
+
+<%= t 'email.welcome.welcome', locale: locale %>
+==============================================
+
+<%= t 'email.welcome.account_created', locale: locale, name: @creator.full_name %>
+<%= t('email.welcome.log_in_how', locale: locale, site_link: root_url, email: @person.email) %>
+
+
+<%= t 'email.welcome.whats_dulu', locale: locale %>
+<%= t 'email.welcome.dulu_is', locale: locale %>
+
+
+<%= t('email.welcome.help', locale: locale, email_link: ENV['GMAIL_USERNAME']) %>
