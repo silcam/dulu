@@ -1,5 +1,5 @@
 class NotificationMailer < ApplicationMailer
-  default from: "#{ENV['GMAIL_USERNAME']}@sil.org"
+  default from: ENV['GMAIL_USERNAME']
 
   def welcome(person, creator)
     @person = person

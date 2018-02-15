@@ -7,7 +7,7 @@ set :deploy_via, :remote_cache
 set :bundle_flags, '--deployment'
 # set :branch, "postgres"
 
-append :linked_files, "config/secrets.yml", "config/initializers/omniauth.rb", "config/database.yml"
+append :linked_files, "config/secrets.yml", "config/initializers/omniauth.rb", "config/database.yml", "config/application.yml"
 
 # task :bundle_install do
 #   on roles(:app) do
