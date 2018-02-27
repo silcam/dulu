@@ -152,6 +152,7 @@ fr:
 
   #Programs Controller
   Program: Programme
+  Program_x: Programme %{name}
   Programs: Programmes
   Language_program: Programme de langue
   Add_program: Créer un programme
@@ -365,6 +366,9 @@ fr:
 
   # Error messages
   not_before_start: ne peut pas être avant le date de commencement.
+
+  notification:
+    new_participant: "%{user_name} a ajouté %{participant_name} au %{cluster_program_name}."
 
   email:
     welcome:

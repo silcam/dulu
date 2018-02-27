@@ -23,6 +23,7 @@ class ParticipantsController < ApplicationController
     @participant = @cluster_program.participants.new(participant_params)
     if @participant.save
       @participant.associate_activities(params[:assoc_activities])
+      Notification.new_participant current_user, @participant
       redirect_to @participant
     else
       render 'new'
