@@ -9,16 +9,17 @@ class StagesController < ApplicationController
 
   def create
     @stage = @activity.stages.create(stage_params.merge(kind: @activity.kind))
-    unless @stage.new_record?
-      respond_to do |format|
-        format.js
-        format.html { redirect_to(@activity.program) }
-      end
-    else
+    if @stage.new_record?
       respond_to do |format|
         format.js { render 'display_errors' }
         format.html { render 'new' }
       end
+    else
+      respond_to do |format|
+        format.js
+        format.html { redirect_to(@activity.program) }
+      end
+      Notification.generate(:new_stage, current_user, @stage)
     end
   end
 

@@ -22,6 +22,8 @@ fr:
   Bible: Bible
   Old_testament: Ancien Testament
   New_testament: Nouveau Testament
+  The_old_testament: l'Ancien Testament
+  The_new_testament: le Nouveau Testament
   Scripture: Saintes Écritures
   'Yes': Oui
   'No': Non
@@ -369,7 +371,9 @@ fr:
   not_before_start: ne peut pas être avant le date de commencement.
 
   notification:
-    new_participant: "%{user_name} a ajouté %{participant_name} au %{cluster_program_name}."
+    new_participant: "%{user_name} a ajouté %{participant_name} au %{cluster_program_name}"
+    new_stage: "%{user_name} a mis à jour %{program_name}: %{activity_name} à %{stage_name}"
+    new_activity: "%{user_name} a ajouté %{activity_name} au %{program_name}"
 
   email:
     welcome:

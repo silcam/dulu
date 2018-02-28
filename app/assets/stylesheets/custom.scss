@@ -98,7 +98,7 @@ body {
 
   ul.notifications {
     width: 250px;
-    height: 80vh;
+    max-height: 80vh;
     overflow: auto;
     background: white;
     li, li:hover {

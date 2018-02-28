@@ -16,6 +16,7 @@ class ActivitiesController < ApplicationController
     @activity = Activity.subclass_from_text(params[:activity][:type]).build(params[:activity], @program, participants)
     if @activity.persisted?
       redirect_to program_path @program
+      Notification.generate(:new_activity, current_user, @activity, bible_book_id: params[:activity][:bible_book_id])
     else
       render :new
     end
