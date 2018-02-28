@@ -21,6 +21,9 @@ Rails.application.routes.draw do
   get     '/surveys/:id',                             to: 'survey_completions#show', as: :survey
   get     '/surveys/:id/report/:report',              to: 'survey_completions#report', as: :survey_report
 
+  # Notifications
+  post '/notifications/mark_read', to: 'notifications#mark_read'
+
   resources :people do
     get 'find', on: :collection
     resources :person_roles do

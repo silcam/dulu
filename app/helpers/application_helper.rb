@@ -87,4 +87,13 @@ module ApplicationHelper
     remainder = text[truncated.length, text.length - truncated.length]
     render 'shared/revealable_truncate', truncated: truncated, remainder: remainder
   end
+
+  MAX_NOTIFICATIONS = 8
+  def user_notifications
+    notifications = current_user.notifications.where(read: false).to_a
+    if notifications.count < MAX_NOTIFICATIONS
+      notifications += current_user.notifications.where(read: true).limit(MAX_NOTIFICATIONS - notifications.count)
+    end
+    notifications
+  end
 end

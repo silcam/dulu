@@ -115,6 +115,7 @@ en:
   Current_programs: Current Programs
   Previous_programs: Previous Programs
   Delete_person_confirmation: Are you sure you want to delete %{person}?
+  My_info: My Info
 
   #Organizations Controller
   Organization: Organization

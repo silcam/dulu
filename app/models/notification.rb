@@ -2,6 +2,8 @@ class Notification < ApplicationRecord
 
   belongs_to :person
 
+  default_scope{ order(created_at: :desc) }
+
   def details
     if @details.nil?
       @details = JSON.parse(details_json, symbolize_names: true)

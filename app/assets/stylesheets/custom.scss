@@ -86,7 +86,43 @@ body {
       background: #272727;
     }
   }
+
+  .notification-bell {
+    font-size: 22px;
+    margin-top: 8px;
+  }
+
+  .unread-notifications {
+    color: $dulu-red;
+  }
+
+  ul.notifications {
+    width: 250px;
+    height: 80vh;
+    overflow: auto;
+    background: white;
+    li, li:hover {
+      a, a:hover {
+        font-size: 12px;
+        white-space: normal;
+        color: black;
+        background: white;
+        font-weight: normal;
+      }
+    }
+
+    li.unread {
+      a, a:hover {
+        font-weight: bold;
+      }
+    }
+
+    li.divider:hover {
+      background: #e5e5e5;
+    }
+  }
 }
+
 
 
 /*
