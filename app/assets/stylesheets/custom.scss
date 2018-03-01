@@ -86,7 +86,55 @@ body {
       background: #272727;
     }
   }
+
+  .notification-bell {
+    font-size: 22px;
+    margin-top: 8px;
+  }
+
+  .unread-notifications {
+    color: $dulu-red;
+  }
+
+  ul.notifications {
+    width: 250px;
+    max-height: 80vh;
+    overflow: auto;
+    background: white;
+    li, li:hover {
+      color: black;
+      background: white;
+      white-space: normal;
+      font-size: 12px;
+      padding-left: 8px;
+      padding-right: 8px;
+      a {
+        color: $link-color;
+        font-weight: normal;
+        display: inline;
+        padding: 0;
+        white-space: normal;
+      }
+      a:hover {
+        background: white;
+        font-weight: normal;
+        text-decoration: underline;
+      }
+    }
+
+    li.unread {
+      font-weight: bold;
+      a, a:hover {
+        font-weight: bold;
+      }
+    }
+
+    li.divider, li.divider:hover {
+      background: #e5e5e5;
+    }
+  }
 }
+
 
 
 /*

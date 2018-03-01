@@ -22,6 +22,8 @@ fr:
   Bible: Bible
   Old_testament: Ancien Testament
   New_testament: Nouveau Testament
+  The_old_testament: l'Ancien Testament
+  The_new_testament: le Nouveau Testament
   Scripture: Saintes Écritures
   'Yes': Oui
   'No': Non
@@ -115,6 +117,7 @@ fr:
   Current_programs: Programmes actuels
   Previous_programs: Anciens programmes
   Delete_person_confirmation: Confirmez que vous voulez supprimer %{person}.
+  My_info: Mes infos
 
   #Organizations Controller
   Organization: Organisation
@@ -152,6 +155,7 @@ fr:
 
   #Programs Controller
   Program: Programme
+  Program_x: Programme %{name}
   Programs: Programmes
   Language_program: Programme de langue
   Add_program: Créer un programme
@@ -213,7 +217,7 @@ fr:
   Delete_participant_confirmation: Confirmez que vous voulez supprimer cette personne du programme. Si cette personne faisait partie du programme et en est quitté, revenez à leur page et cliquez sur 'Sorti(e) du programme'.
 
   # Stages Controller
-  Current_stage: 'Étape actuelle '
+  Current_stage: Étape actuelle
   Update_stage: Étape actuelle
   As_of: Depuis
   Stage: Étape
@@ -365,6 +369,22 @@ fr:
 
   # Error messages
   not_before_start: ne peut pas être avant le date de commencement.
+
+  notification:
+    new_participant: "%{user_name} a ajouté %{participant_name} au %{cluster_program_name}."
+    new_stage: "%{user_name} a mis à jour %{activity_name} à %{stage_name} pour le programme %{program_name}."
+    workshop_complete: "%{user_name} a mis à jour l'atelier %{workshop_name} pour le programme %{program_name} comme réalisé."
+    new_activity: "%{user_name} a ajouté une nouvelle activité au programme %{program_name} : %{activity_name}."
+    added_a_testament: "%{user_name} a ajouté une nouvelle activité au programme %{program_name} : %{testament}."
+    updated_you: "%{user_name} a mis à jour %{your_info}."
+    your_info: vos infos
+    gave_you_role: "%{user_name} vous a donné le rôle %{role_name}."
+    added_you_to_program: "%{user_name} vous a ajouté au programme %{program_name}."
+    added_you_to_activity: "%{user_name} vous a ajouté à %{activity_name} pour le programme %{program_name}."
+    added_you_to_event: "%{user_name} vous a ajouté à l'événement %{event_name}."
+    new_event_for_program: "%{user_name} a créé l'événement %{event_name} pour le programme %{program_name}."
+    added_program_to_event: "%{user_name} a ajouté le programme %{program_name} à l'événement %{event_name}."
+    added_cluster_to_event: "%{user_name} a ajouté le groupe %{cluster_name} à l'événement %{event_name}."
 
   email:
     welcome:

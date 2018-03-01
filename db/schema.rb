@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180215132351) do
+ActiveRecord::Schema.define(version: 20180227142348) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -199,6 +199,19 @@ ActiveRecord::Schema.define(version: 20180215132351) do
     t.index ["country_id"], name: "index_languages_on_country_id", using: :btree
     t.index ["language_status_id"], name: "index_languages_on_language_status_id", using: :btree
     t.index ["parent_id"], name: "index_languages_on_parent_id", using: :btree
+  end
+
+  create_table "notifications", force: :cascade do |t|
+    t.integer  "person_id"
+    t.string   "kind"
+    t.json     "details_json"
+    t.string   "link"
+    t.string   "assoc_class"
+    t.integer  "assoc_model_id"
+    t.boolean  "read",           default: false
+    t.datetime "created_at",                     null: false
+    t.datetime "updated_at",                     null: false
+    t.index ["person_id"], name: "index_notifications_on_person_id", using: :btree
   end
 
   create_table "organizations", force: :cascade do |t|

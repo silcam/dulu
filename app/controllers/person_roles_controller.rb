@@ -7,6 +7,7 @@ class PersonRolesController < ApplicationController
     authorize_add_role role
     @person.add_role(role) if Role.is_a_role?(role)
     redirect_to @person
+    Notification.generate :gave_you_role, current_user, @person, role: role
   end
 
   def finish

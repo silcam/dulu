@@ -16,6 +16,7 @@ class ActivitiesController < ApplicationController
     @activity = Activity.subclass_from_text(params[:activity][:type]).build(params[:activity], @program, participants)
     if @activity.persisted?
       redirect_to program_path @program
+      generate_notification
     else
       render :new
     end
@@ -62,8 +63,10 @@ class ActivitiesController < ApplicationController
 
   def add_update
     authorize! :manage_participants, @activity.program
-    @activity.participants << Participant.find(params[:participant_id])
+    participant = Participant.find(params[:participant_id])
+    @activity.participants << participant
     redirect_to activity_path(@activity)
+    Notification.generate :added_you_to_activity, current_user, participant, activity_id: @activity.id
   end
 
   def remove_update
@@ -85,5 +88,13 @@ class ActivitiesController < ApplicationController
 
   def activity_params
     params.require(:activity).permit(:note, :title)
+  end
+
+  def generate_notification
+    if ['nt', 'ot'].include? params[:activity][:bible_book_id]
+      Notification.generate(:added_a_testament, current_user, @activity.program, testament: params[:activity][:bible_book_id])
+    else
+      Notification.generate(:new_activity, current_user, @activity)
+    end
   end
 end

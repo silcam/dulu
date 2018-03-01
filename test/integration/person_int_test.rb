@@ -11,7 +11,8 @@ class PersonIntTest < Capybara::Rails::TestCase
 
   test 'Kevin edits self' do
     log_in @kevin
-    click_link 'Kevin'
+    click_button 'Kevin'
+    click_link 'My Info'
     fill_in 'First Name', with: 'William'
     fill_in 'Last Name', with: 'Wallace'
     click_button 'Save'

@@ -1,0 +1,14 @@
+<h1>Notifications</h1>
+
+<%= paginate @notifications %>
+
+<table class="table">
+  <% @notifications.each do |notification| %>
+    <tr>
+      <td><%= notification.person.full_name %></td>
+      <td><%= render 'notifications/text', notification: notification %></td>
+    </tr>
+  <% end %>
+</table>
+
+<%= paginate @notifications %>

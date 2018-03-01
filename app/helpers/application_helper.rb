@@ -24,6 +24,21 @@ module ApplicationHelper
     end
   end
 
+  def try_t(key, options={})
+    options[:default] = key
+    t(key, options)
+  end
+
+  def t_gen(key, feminine, options={})
+    gender = feminine ? :f : :m
+    new_key = "#{key}_#{gender}"
+    if I18n.exists? new_key, I18n.locale
+      t new_key, options
+    else
+      t key, options
+    end
+  end
+
   # Translate each element in the string surrounded by %{}
   def t_phrase(s)
     s.gsub(/%\{(\w+)\}/){ |m| t($1) }
@@ -86,5 +101,14 @@ module ApplicationHelper
     truncated = truncate(text, options).chomp('...')
     remainder = text[truncated.length, text.length - truncated.length]
     render 'shared/revealable_truncate', truncated: truncated, remainder: remainder
+  end
+
+  MAX_NOTIFICATIONS = 8
+  def user_notifications
+    notifications = current_user.notifications.where(read: false).to_a
+    if notifications.count < MAX_NOTIFICATIONS
+      notifications += current_user.notifications.where(read: true).limit(MAX_NOTIFICATIONS - notifications.count)
+    end
+    notifications
   end
 end

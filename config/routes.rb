@@ -21,6 +21,10 @@ Rails.application.routes.draw do
   get     '/surveys/:id',                             to: 'survey_completions#show', as: :survey
   get     '/surveys/:id/report/:report',              to: 'survey_completions#report', as: :survey_report
 
+  # Notifications
+  post '/notifications/mark_read', to: 'notifications#mark_read'
+  get '/notifications/', to: 'notifications#index', as: :notifications
+
   resources :people do
     get 'find', on: :collection
     resources :person_roles do
@@ -86,4 +90,6 @@ Rails.application.routes.draw do
 
   # These are necessary for route helpers to work with subclasses
   get '/translation_activities/:id', to: 'activities#show', as: :translation_activity
+  get '/linguistic_activities/:id', to: 'activities#show', as: :linguistic_activity
+  get '/media_activities/:id', to: 'activities#show', as: :media_activity
 end

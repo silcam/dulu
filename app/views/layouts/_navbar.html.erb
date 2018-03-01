@@ -46,8 +46,39 @@
           <li><%= link_to t(:Reports), reports_path %></li>
         </ul>
         <ul class="nav navbar-nav navbar-right">
-          <li><%= link_to @current_user.first_name, edit_person_path(@current_user, referred_by: request.path) %></li>
-          <li><%= link_to t(:Log_out), logout_url, method: :delete %></li>
+          <% notifications = user_notifications %>
+          <% unless notifications.empty? %>
+            <% unread = !notifications.first.read %>
+            <li>
+              <div class="btn-group">
+                <button type="button" class="btn btn-link dropdown-toggle notification-bell" data-toggle="dropdown">
+                  <span class="glyphicon glyphicon-bell <%= 'unread-notifications' if unread %>"></span>
+                </button>
+                <ul class="dropdown-menu notifications">
+                  <% notifications.each do |notification| %>
+                    <li class="<%= 'unread' unless notification.read %>">
+                      <%= render 'notifications/text', notification: notification %>
+                    </li>
+                    <% unless notification == notifications.last %>
+                      <li role="separator" class="divider"></li>
+                    <% end %>
+                  <% end %>
+                </ul>
+              </div>
+            </li>
+          <% end %>
+          <li>
+            <div class="btn-group">
+              <button type="button" class="btn btn-link nav-btn dropdown-toggle" data-toggle="dropdown">
+                <%= @current_user.first_name %>
+                <span class="caret"></span>
+              </button>
+              <ul class="dropdown-menu">
+                <li><%= link_to t(:My_info), edit_person_path(@current_user, referred_by: request.path) %></li>
+                <li><%= link_to t(:Log_out), logout_url, method: :delete %></li>
+              </ul>
+            </div>
+          </li>
         </ul>
         <%= form_tag(search_path, method: :get, class: 'navbar-form navbar-right') do %>
           <%= text_field_tag :q, '', placeholder: t(:Search_bar), class: 'form-control', size: 16; %>
