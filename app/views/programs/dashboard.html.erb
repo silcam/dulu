@@ -23,8 +23,9 @@
                   <%= render 'shared/percentages', program: @program %>
                 <% end %>
                 <table class="table activities-table" id="<%= kind.to_s.downcase %>-activities-table">
+                  <% can_update = can? :update_activities, @program %>
                   <% activities_hash[kind].each do |activity| %>
-                    <%= render 'current_activity_table_row', activity: activity %>
+                    <%= render 'current_activity_table_row', activity: activity, can_update: can_update %>
                   <% end %>
                 </table>
               </div>

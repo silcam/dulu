@@ -10,7 +10,7 @@ class AccessPolicy
 
     role :supervisor, proc{ |u| u.has_role_among?(Role::SUPERVISOR_ROLES) } do
       can [:grant_login], Person
-      can [:create_activity, :manage_participants, :manage_surveys], Program
+      can [:create_activity, :manage_participants, :manage_surveys, :update_activities], Program
       can :manage, Cluster # :manage cannot be part of an array
       can :manage_participants, Cluster
       can :manage, Activity
@@ -26,7 +26,7 @@ class AccessPolicy
     role :participant, proc{ |u| u.has_role_among? part_roles } do
       can [:create, :read, :update], Person
 
-      can [:manage_participants, :create_activity, :manage_surveys], Program do |program, user|
+      can [:manage_participants, :create_activity, :manage_surveys, :update_activities], Program do |program, user|
         program.all_current_people.include? user
       end
 
