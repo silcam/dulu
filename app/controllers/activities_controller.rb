@@ -63,8 +63,10 @@ class ActivitiesController < ApplicationController
 
   def add_update
     authorize! :manage_participants, @activity.program
-    @activity.participants << Participant.find(params[:participant_id])
+    participant = Participant.find(params[:participant_id])
+    @activity.participants << participant
     redirect_to activity_path(@activity)
+    Notification.generate :added_you_to_activity, current_user, participant, activity_id: @activity.id
   end
 
   def remove_update

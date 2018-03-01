@@ -24,6 +24,7 @@ class ParticipantsController < ApplicationController
     if @participant.save
       @participant.associate_activities(params[:assoc_activities])
       Notification.generate :new_participant, current_user, @participant
+      Notification.generate :added_you_to_program, current_user, @participant
       redirect_to @participant
     else
       render 'new'
@@ -60,6 +61,7 @@ class ParticipantsController < ApplicationController
       @participant.add_role(params[:role]) if @participant.person.has_role?(params[:role])
     elsif params[:activity_id]
       @participant.activities << Activity.find(params[:activity_id])
+      Notification.generate :added_you_to_activity, current_user, @participant, activity_id: params[:activity_id]
     end
     redirect_to @participant
   end

@@ -376,6 +376,15 @@ fr:
     workshop_complete: "%{user_name} a mis à jour l'atelier %{workshop_name} pour le programme %{program_name} comme réalisé."
     new_activity: "%{user_name} a ajouté une nouvelle activité au programme %{program_name} : %{activity_name}."
     added_a_testament: "%{user_name} a ajouté une nouvelle activité au programme %{program_name} : %{testament}."
+    updated_you: "%{user_name} a mis à jour %{your_info}."
+    your_info: vos infos
+    gave_you_role: "%{user_name} vous a donné le rôle %{role_name}."
+    added_you_to_program: "%{user_name} vous a ajouté au programme %{program_name}."
+    added_you_to_activity: "%{user_name} vous a ajouté à %{activity_name} pour le programme %{program_name}."
+    added_you_to_event: "%{user_name} vous a ajouté à l'événement %{event_name}."
+    new_event_for_program: "%{user_name} a créé l'événement %{event_name} pour le programme %{program_name}."
+    added_program_to_event: "%{user_name} a ajouté le programme %{program_name} à l'événement %{event_name}."
+    added_cluster_to_event: "%{user_name} a ajouté le groupe %{cluster_name} à l'événement %{event_name}."
 
   email:
     welcome:

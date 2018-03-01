@@ -37,8 +37,10 @@ class PeopleController < ApplicationController
     authorize! :update, @person
     had_login = @person.has_login
     if @person.update(person_params)
-      NotificationMailer.delay.welcome(@person, current_user) if !had_login && @person.has_login
       follow_redirect person_path(@person)
+      Notification.generate(:updated_you, current_user, @person)
+      NotificationMailer.delay.welcome(@person, current_user) if !had_login && @person.has_login
+
     else
       render 'edit'
     end

@@ -53,17 +53,10 @@ class Notification < ApplicationRecord
     )
 
     return {
-        people: participant.cluster_program.all_current_people,
+        people: participant.cluster_program.all_current_people.reject{ |p| p==participant.person },
         details: details
     }
   end
-
-  # def text_new_participant
-  #   cp_name = details[:cluster_program_name]
-  #   cp_name = details[:is_for_a_program] ? I18n.t(:Program_x, name: cp_name) : I18n.t(:Cluster_x, name: cp_name)
-  #   text_details = details.merge cluster_program_name: cp_name
-  #   I18n.t('notification.new_participant', text_details)
-  # end
 
   def self.generate_new_stage(stage, details)
     stage.reload
@@ -81,13 +74,6 @@ class Notification < ApplicationRecord
     }
   end
 
-  # def text_new_stage
-  #   stage_name = I18n.t(details[:stage_name], default: details[:stage_name])
-  #   text_details = details.merge activity_name: assoc_model.name,
-  #                                stage_name: stage_name
-  #   I18n.t('notification.new_stage', text_details)
-  # end
-
   def self.generate_workshop_complete(workshop, details)
     details.merge!(
         workshop_name: workshop.name,
@@ -100,10 +86,6 @@ class Notification < ApplicationRecord
         details: details
     }
   end
-
-  # def text_workshop_complete
-  #   I18n.t('notification.workshop_complete', details)
-  # end
 
   def self.generate_new_activity(activity, details)
     details.merge!(
@@ -131,9 +113,80 @@ class Notification < ApplicationRecord
     }
   end
 
-  # def text_new_activity
-  #   activity_name = details[:activity_name].nil? ? assoc_model.name : I18n.t(details[:activity_name])
-  #   text_details = details.merge activity_name: activity_name
-  #   I18n.t('notification.new_activity', text_details)
-  # end
+  def self.generate_updated_you(person, details)
+    return {
+        people: [person],
+        details: details
+    }
+  end
+
+  def self.generate_gave_you_role(person, details)
+    return {
+        people: [person],
+        details: details
+    }
+  end
+
+  def self.generate_added_you_to_program(participant, details)
+    details.merge!(
+               program_name: participant.program.name,
+               program_id: participant.program.id
+    )
+    return {
+        people: [participant.person],
+        details: details
+    }
+  end
+
+  def self.generate_added_you_to_activity(participant, details)
+    details.merge!(
+               program_name: participant.program.name,
+               program_id: participant.program.id
+    )
+    return {
+        people: [participant.person],
+        details: details
+    }
+  end
+
+  def self.generate_added_you_to_event(event_participant, details)
+    details.merge!(
+               event_name: event_participant.event.name,
+               event_id: event_participant.event.id,
+    )
+    return {
+        people: [event_participant.person],
+        details: details
+    }
+  end
+
+  def self.generate_new_event_for_program(event, details)
+    program = Program.find details[:program_id]
+    details.merge!(
+               program_name: program.name,
+               event_name: event.name,
+               event_id: event.id
+    )
+    return {
+        people: program.current_people,
+        details: details
+    }
+  end
+
+  def self.generate_added_program_to_event(event, details)
+    generate_new_event_for_program event, details
+  end
+
+  def self.generate_added_cluster_to_event(event, details)
+    cluster = Cluster.find details[:cluster_id]
+    details.merge!(
+        cluster_name: cluster.name,
+        event_name: event.name,
+        event_id: event.id
+    )
+    return {
+        people: cluster.current_people,
+        details: details
+    }
+  end
 end

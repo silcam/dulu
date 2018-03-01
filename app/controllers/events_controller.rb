@@ -45,6 +45,7 @@ class EventsController < ApplicationController
         follow_redirect activity_path(workshop.linguistic_activity)
       else
         redirect_to ctxt_event_path(@program, @event)
+        new_event_for_program_notification if @program
       end
     else
       render 'new'
@@ -77,8 +78,9 @@ class EventsController < ApplicationController
     authorize! :update, @event
     @event.clusters << Cluster.find(params[:event_cluster]) if params[:event_cluster]
     @event.programs << Program.find(params[:event_program]) if params[:event_program]
-    EventParticipant.build(@event, params[:event_person]) if params[:event_person]
+    @event_participant = EventParticipant.build(@event, params[:event_person]) if params[:event_person]
     redirect_to ctxt_event_path(params[:program_id], @event)
+    added_to_event_notification
   end
 
   def remove_update
@@ -103,5 +105,19 @@ class EventsController < ApplicationController
     assemble_dates params, 'event', 'start_date', 'end_date'
     params[:event][:creator_id] = current_user.id
     params.require(:event).permit(:domain, :name, :start_date, :end_date, :note, :creator_id)
+  end
+
+  def new_event_for_program_notification
+    Notification.generate :new_event_for_program, current_user, @event, program_id: @program.id
+  end
+
+  def added_to_event_notification
+    if params[:event_cluster]
+      Notification.generate :added_cluster_to_event, current_user, @event, cluster_id: params[:event_cluster]
+    elsif params[:event_program]
+      Notification.generate :added_program_to_event, current_user, @event, program_id: params[:event_program]
+    elsif @event_participant
+      Notification.generate :added_you_to_event, current_user, @event_participant
+    end
   end
 end

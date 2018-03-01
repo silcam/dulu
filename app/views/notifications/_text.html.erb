@@ -46,6 +46,59 @@
           testament: t(details[:testament])
       )
       t('notification.added_a_testament', vars).html_safe
+
+    when 'updated_you'
+      vars.merge!(
+          your_info: link_to(t('notification.your_info'), person_path(notification.person))
+      )
+      t('notification.updated_you', vars).html_safe
+
+    when 'gave_you_role'
+      vars.merge!(
+          role_name: link_to(t(details[:role]), person_path(notification.person))
+      )
+      t('notification.gave_you_role', vars).html_safe
+
+    when 'added_you_to_program'
+      vars.merge!(
+          program_name: link_to(details[:program_name], program_path(details[:program_id]))
+      )
+      t('notification.added_you_to_program', vars).html_safe
+
+    when 'added_you_to_activity'
+      details[:activity_name] ||= Activity.find(details[:activity_id]).name
+      vars.merge!(
+          activity_name: link_to(details[:activity_name], activity_path(details[:activity_id])),
+          program_name: link_to(details[:program_name], program_path(details[:program_id]))
+      )
+      t('notification.added_you_to_activity', vars).html_safe
+
+    when 'added_you_to_event'
+      vars.merge!(
+          event_name: link_to(details[:event_name], event_path(details[:event_id]))
+      )
+      t('notification.added_you_to_event', vars).html_safe
+
+    when 'new_event_for_program'
+      vars.merge!(
+          event_name: link_to(details[:event_name], program_event_path(details[:program_id], details[:event_id])),
+          program_name: link_to(details[:program_name], program_path(details[:program_id]))
+      )
+      t('notification.new_event_for_program', vars).html_safe
+
+    when 'added_program_to_event'
+      vars.merge!(
+          event_name: link_to(details[:event_name], program_event_path(details[:program_id], details[:event_id])),
+          program_name: link_to(details[:program_name], program_path(details[:program_id]))
+      )
+      t('notification.added_program_to_event', vars).html_safe
+
+    when 'added_cluster_to_event'
+      vars.merge!(
+          event_name: link_to(details[:event_name], event_path(details[:event_id])),
+          cluster_name: link_to(details[:cluster_name], cluster_path(details[:cluster_id]))
+      )
+      t('notification.added_cluster_to_event', vars).html_safe
   end
 
 %>
