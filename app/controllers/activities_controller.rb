@@ -16,7 +16,7 @@ class ActivitiesController < ApplicationController
     @activity = Activity.subclass_from_text(params[:activity][:type]).build(params[:activity], @program, participants)
     if @activity.persisted?
       redirect_to program_path @program
-      Notification.generate(:new_activity, current_user, @activity, bible_book_id: params[:activity][:bible_book_id])
+      generate_notification
     else
       render :new
     end
@@ -86,5 +86,13 @@ class ActivitiesController < ApplicationController
 
   def activity_params
     params.require(:activity).permit(:note, :title)
+  end
+
+  def generate_notification
+    if ['nt', 'ot'].include? params[:activity][:bible_book_id]
+      Notification.generate(:added_a_testament, current_user, @activity.program, testament: params[:activity][:bible_book_id])
+    else
+      Notification.generate(:new_activity, current_user, @activity)
+    end
   end
 end

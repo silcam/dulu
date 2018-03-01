@@ -24,18 +24,16 @@ class Notification < ApplicationRecord
   end
 
   class << self
-    def generate(kind, user, object, options={})
-      n_params = Notification.send "generate_#{kind}", user, object, options
+    def generate(kind, user, object, details={})
+      details[:user_name] = user.full_name
+      details[:user_id] = user.id
+      n_params = Notification.send "generate_#{kind}", object, details
       return if n_params.nil?
-      n_params[:assoc_class] ||= object.class
-      n_params[:assoc_model_id] ||= object.id
       n_params[:people].each do |person|
         unless person == user
           person.notifications.create(
               kind: kind,
-              details: n_params[:details],
-              assoc_class: n_params[:assoc_class],
-              assoc_model_id: n_params[:assoc_model_id]
+              details: n_params[:details]
           )
         end
       end
@@ -45,15 +43,14 @@ class Notification < ApplicationRecord
 
   private
 
-  def self.generate_new_participant(current_user, participant, options)
-    is_for_a_program = participant.cluster.nil?
-    cluster_program_name = participant.cluster_program.name
-    details = {
-        user_name: current_user.full_name,
+  def self.generate_new_participant(participant, details)
+    details.merge!(
         participant_name: participant.full_name,
-        cluster_program_name: cluster_program_name,
-        is_for_a_program: is_for_a_program
-    }
+        participant_id: participant.id,
+        cluster_program_name: participant.cluster_program.name,
+        cluster_program_id: participant.cluster_program.id,
+        is_for_a_program: participant.cluster.nil?
+    )
 
     return {
         people: participant.cluster_program.all_current_people,
@@ -61,62 +58,82 @@ class Notification < ApplicationRecord
     }
   end
 
-  def text_new_participant
-    cp_name = details[:cluster_program_name]
-    cp_name = details[:is_for_a_program] ? I18n.t(:Program_x, name: cp_name) : I18n.t(:Cluster_x, name: cp_name)
-    text_details = details.merge cluster_program_name: cp_name
-    I18n.t('notification.new_participant', text_details)
-  end
+  # def text_new_participant
+  #   cp_name = details[:cluster_program_name]
+  #   cp_name = details[:is_for_a_program] ? I18n.t(:Program_x, name: cp_name) : I18n.t(:Cluster_x, name: cp_name)
+  #   text_details = details.merge cluster_program_name: cp_name
+  #   I18n.t('notification.new_participant', text_details)
+  # end
 
-  def self.generate_new_stage(user, stage, options)
+  def self.generate_new_stage(stage, details)
     stage.reload
     return nil unless stage.current
-    details = {
-        user_name: user.full_name,
+    details.merge!(
         program_name: stage.activity.program.name,
-        stage_name: stage.name
-    }
+        program_id: stage.activity.program.id,
+        stage_name: stage.name,
+        activity_id: stage.activity.id
+    )
 
     return {
         people: stage.activity.program.all_current_people,
-        details: details,
-        assoc_class: Activity,
-        assoc_model_id: stage.activity.id
+        details: details
     }
   end
 
-  def text_new_stage
-    stage_name = I18n.t(details[:stage_name], default: details[:stage_name])
-    text_details = details.merge activity_name: assoc_model.name, stage_name: stage_name
-    I18n.t('notification.new_stage', text_details)
+  # def text_new_stage
+  #   stage_name = I18n.t(details[:stage_name], default: details[:stage_name])
+  #   text_details = details.merge activity_name: assoc_model.name,
+  #                                stage_name: stage_name
+  #   I18n.t('notification.new_stage', text_details)
+  # end
+
+  def self.generate_workshop_complete(workshop, details)
+    details.merge!(
+        workshop_name: workshop.name,
+        program_name: workshop.linguistic_activity.program.name,
+        program_id: workshop.linguistic_activity.program.id,
+        activity_id: workshop.linguistic_activity.id
+    )
+    return {
+        people: workshop.linguistic_activity.program.all_current_people,
+        details: details
+    }
   end
 
-  def self.generate_new_activity(user, activity, options)
-    details = {
-        user_name: user.full_name,
-        program_name: activity.program.name
-    }
-    if ['nt', 'ot'].include? options[:bible_book_id]
-      details[:activity_name] = (options[:bible_book_id]=='nt') ? :The_new_testament : :The_old_testament
-      assoc_class = Program
-      assoc_model_id = activity.program.id
-    else
-      assoc_class = Activity
-      assoc_model_id = activity.id
-    end
+  # def text_workshop_complete
+  #   I18n.t('notification.workshop_complete', details)
+  # end
+
+  def self.generate_new_activity(activity, details)
+    details.merge!(
+        program_name: activity.program.name,
+        program_id: activity.program.id,
+        activity_id: activity.id
+    )
 
     return {
         people: activity.program.all_current_people,
-        details: details,
-        assoc_class: assoc_class,
-        assoc_model_id: assoc_model_id
+        details: details
     }
   end
 
-  def text_new_activity
-    activity_name = details[:activity_name].nil? ? assoc_model.name : I18n.t(details[:activity_name])
-    program_name = I18n.t(:Program_x, name: details[:program_name])
-    text_details = {user_name: details[:user_name], activity_name: activity_name, program_name: program_name}
-    I18n.t('notification.new_activity', text_details)
+  def self.generate_added_a_testament(program, details)
+    testament = details[:testament]=='nt' ? :New_testament : :Old_testament
+    details.merge!(
+        program_name: program.name,
+        program_id: program.id,
+        testament: testament
+    )
+    return {
+        people: program.all_current_people,
+        details: details
+    }
   end
+
+  # def text_new_activity
+  #   activity_name = details[:activity_name].nil? ? assoc_model.name : I18n.t(details[:activity_name])
+  #   text_details = details.merge activity_name: activity_name
+  #   I18n.t('notification.new_activity', text_details)
+  # end
 end

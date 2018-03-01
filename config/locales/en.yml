@@ -217,7 +217,7 @@ en:
   Delete_participant_confirmation: Are you sure you want to completely remove this person from the program? If you are trying to say that this person was in the program and left, go back to their page and click 'Left Program'.
 
   # Stages Controller
-  Current_stage: 'Current stage'
+  Current_stage: Current stage
   Update_stage: Update stage to
   As_of: As of
   Stage: Stage
@@ -371,9 +371,19 @@ en:
   not_before_start: can't be before start date.
 
   notification:
-    new_participant: "%{user_name} added %{participant_name} to the %{cluster_program_name}"
-    new_stage: "%{user_name} updated %{program_name}: %{activity_name} to %{stage_name}"
-    new_activity: "%{user_name} added %{activity_name} to the %{program_name}"
+    new_participant: "%{user_name} added %{participant_name} to the %{cluster_program_name} program."
+    new_stage: "%{user_name} updated %{activity_name} to the %{stage_name} stage for the %{program_name} program."
+    workshop_complete: "%{user_name} updated the %{workshop_name} workshop for the %{program_name} as complete."
+    new_activity: "%{user_name} added a new activity to the %{program_name} program: %{activity_name}."
+    added_a_testament: "%{user_name} added a new activity to the %{program_name} program: %{testament}."
+    updated_you: "%{user_name} updated your info."
+    gave_you_role: "%{user_name} gave you the %{role_name} role."
+    added_you_to_program: "%{user_name} added you to the %{program_name} program."
+    added_you_to_activity: "%{user_name} added you to %{activity_name} for the %{program_name} program."
+    added_you_to_event: "%{user_name} added you to the %{event_name} event."
+    new_event: "%{user_name} created the %{event_name} event for the %{program_name} program."
+    added_program_to_event: "%{user_name} added the %{program_name} program to the %{event_name} event."
+    added_cluster_to_event: "%{user_name} added the %{cluster_name} cluster to the %{event_name} event."
 
   email:
     welcome:

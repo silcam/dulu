@@ -1,0 +1,52 @@
+<%
+  # Locals: notification
+
+  details = notification.details
+  vars = {
+      user_name: link_to(details[:user_name], person_path(details[:user_id]))
+  }
+%>
+
+<%=
+  case notification.kind
+    when 'new_participant'
+      vars.merge!(
+          participant_name: link_to(details[:participant_name], participant_path(details[:participant_id])),
+          cluster_program_name: link_to(details[:cluster_program_name], program_path(details[:cluster_program_id]))
+      )
+      t('notification.new_participant', vars).html_safe
+
+    when 'new_stage'
+      activity = Activity.find(details[:activity_id])
+      vars.merge!(
+          activity_name: link_to(activity.name, activity),
+          stage_name: t(details[:stage_name]),
+          program_name: link_to(details[:program_name], program_path(details[:program_id]))
+      )
+      t('notification.new_stage', vars).html_safe
+
+    when 'workshop_complete'
+      vars.merge!(
+          workshop_name: link_to(details[:workshop_name], activity_path(details[:activity_id])),
+          program_name: link_to(details[:program_name], program_path(details[:program_id]))
+      )
+      t('notification.workshop_complete', vars).html_safe
+
+    when 'new_activity'
+      details[:activity_name] ||= Activity.find(details[:activity_id]).name
+      vars.merge!(
+          program_name: link_to(details[:program_name], program_path(details[:program_id])),
+          activity_name: link_to(details[:activity_name], activity_path(details[:activity_id]))
+      )
+      t('notification.new_activity', vars).html_safe
+
+    when 'added_a_testament'
+      vars.merge!(
+          program_name: link_to(details[:program_name], program_path(details[:program_id])),
+          testament: t(details[:testament])
+      )
+      t('notification.added_a_testament', vars).html_safe
+  end
+
+%>
+

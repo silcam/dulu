@@ -6,6 +6,7 @@ class WorkshopsController < ApplicationController
     authorize! :update, @activity
     @workshop.complete(workshop_params)
     render json: @workshop.to_hash.merge(action: 'workshops#complete')
+    Notification.generate(:workshop_complete, current_user, @workshop)
   end
 
   private

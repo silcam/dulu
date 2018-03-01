@@ -102,22 +102,34 @@ body {
     overflow: auto;
     background: white;
     li, li:hover {
-      a, a:hover {
-        font-size: 12px;
+      color: black;
+      background: white;
+      white-space: normal;
+      font-size: 12px;
+      padding-left: 8px;
+      padding-right: 8px;
+      a {
+        color: $link-color;
+        font-weight: normal;
+        display: inline;
+        padding: 0;
         white-space: normal;
-        color: black;
+      }
+      a:hover {
         background: white;
         font-weight: normal;
+        text-decoration: underline;
       }
     }
 
     li.unread {
+      font-weight: bold;
       a, a:hover {
         font-weight: bold;
       }
     }
 
-    li.divider:hover {
+    li.divider, li.divider:hover {
       background: #e5e5e5;
     }
   }

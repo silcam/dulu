@@ -24,6 +24,21 @@ module ApplicationHelper
     end
   end
 
+  def try_t(key, options={})
+    options[:default] = key
+    t(key, options)
+  end
+
+  def t_gen(key, feminine, options={})
+    gender = feminine ? :f : :m
+    new_key = "#{key}_#{gender}"
+    if I18n.exists? new_key, I18n.locale
+      t new_key, options
+    else
+      t key, options
+    end
+  end
+
   # Translate each element in the string surrounded by %{}
   def t_phrase(s)
     s.gsub(/%\{(\w+)\}/){ |m| t($1) }

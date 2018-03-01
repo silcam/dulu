@@ -217,7 +217,7 @@ fr:
   Delete_participant_confirmation: Confirmez que vous voulez supprimer cette personne du programme. Si cette personne faisait partie du programme et en est quitté, revenez à leur page et cliquez sur 'Sorti(e) du programme'.
 
   # Stages Controller
-  Current_stage: 'Étape actuelle '
+  Current_stage: Étape actuelle
   Update_stage: Étape actuelle
   As_of: Depuis
   Stage: Étape
@@ -371,9 +371,11 @@ fr:
   not_before_start: ne peut pas être avant le date de commencement.
 
   notification:
-    new_participant: "%{user_name} a ajouté %{participant_name} au %{cluster_program_name}"
-    new_stage: "%{user_name} a mis à jour %{program_name}: %{activity_name} à %{stage_name}"
-    new_activity: "%{user_name} a ajouté %{activity_name} au %{program_name}"
+    new_participant: "%{user_name} a ajouté %{participant_name} au %{cluster_program_name}."
+    new_stage: "%{user_name} a mis à jour %{activity_name} à %{stage_name} pour le programme %{program_name}."
+    workshop_complete: "%{user_name} a mis à jour l'atelier %{workshop_name} pour le programme %{program_name} comme réalisé."
+    new_activity: "%{user_name} a ajouté une nouvelle activité au programme %{program_name} : %{activity_name}."
+    added_a_testament: "%{user_name} a ajouté une nouvelle activité au programme %{program_name} : %{testament}."
 
   email:
     welcome:

@@ -57,7 +57,7 @@
                 <ul class="dropdown-menu notifications">
                   <% notifications.each do |notification| %>
                     <li class="<%= 'unread' unless notification.read %>">
-                      <%= link_to notification.text, notification.assoc_model %>
+                      <%= render 'notifications/text', notification: notification %>
                     </li>
                     <% unless notification == notifications.last %>
                       <li role="separator" class="divider"></li>

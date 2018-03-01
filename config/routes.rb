@@ -23,6 +23,7 @@ Rails.application.routes.draw do
 
   # Notifications
   post '/notifications/mark_read', to: 'notifications#mark_read'
+  get '/notifications/', to: 'notifications#index', as: :notifications
 
   resources :people do
     get 'find', on: :collection
