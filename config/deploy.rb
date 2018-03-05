@@ -11,7 +11,7 @@ append :linked_files, "config/secrets.yml", "config/initializers/omniauth.rb", "
 append :linked_dirs, "tmp/pids"
 
 after 'deploy:publishing', 'delayed_job:restart'
-after 'deploy:publishing', 'recurring:init'
+# after 'deploy:publishing', 'recurring:init'
 
 # task :bundle_install do
 #   on roles(:app) do

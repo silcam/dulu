@@ -1,0 +1,1 @@
+DailyEmailTask.schedule!
