@@ -51,6 +51,7 @@ gem 'figaro' , '~> 1.1'
 # Delayed Job for background jobs
 gem 'delayed_job_active_record', '~> 4.1'
 gem 'daemons', '~> 1.2'
+gem 'delayed_job_recurring'
 
 group :development, :test do
   gem 'puma', '~>3.0'

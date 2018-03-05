@@ -64,7 +64,7 @@ class PeopleController < ApplicationController
 
 private
   def person_params
-    permitted = %i( first_name last_name email birth_date organization_id gender country_id ui_language )
+    permitted = %i( first_name last_name email birth_date organization_id gender country_id ui_language email_pref )
     permitted << :has_login if can? :grant_login, Person
     params.require(:person).permit(permitted)
   end

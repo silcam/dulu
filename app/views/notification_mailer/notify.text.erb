@@ -1,0 +1,5 @@
+<%= strip_tags render('notifications/text.html.erb', notification: @notification) %>
+
+<%= t('email.notify.log_in_now') %>: <%= login_url %>
+
+<%= t('email.update_email_prefs') %>: <%= edit_person_url(@notification.person) %>

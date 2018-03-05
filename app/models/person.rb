@@ -22,6 +22,8 @@ class Person < ApplicationRecord
 
   default_scope{ order(:last_name, :first_name) }
 
+  enum email_pref: [:immediate, :daily, :weekly]
+
   def full_name
     "#{first_name} #{last_name}"
   end

@@ -110,6 +110,9 @@ GEM
     delayed_job_active_record (4.1.2)
       activerecord (>= 3.0, < 5.2)
       delayed_job (>= 3.0, < 5)
+    delayed_job_recurring (0.3.7)
+      delayed_job (>= 3.0)
+      delayed_job_active_record
     erubis (2.7.0)
     execjs (2.7.0)
     faraday (0.12.2)
@@ -297,6 +300,7 @@ DEPENDENCIES
   coffee-rails (~> 4.2)
   daemons (~> 1.2)
   delayed_job_active_record (~> 4.1)
+  delayed_job_recurring
   figaro (~> 1.1)
   jbuilder (~> 2.5)
   jquery-rails

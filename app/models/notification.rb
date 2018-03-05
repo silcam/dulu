@@ -31,14 +31,21 @@ class Notification < ApplicationRecord
       return if n_params.nil?
       n_params[:people].each do |person|
         unless person == user
-          person.notifications.create(
+          notification = person.notifications.create(
               kind: kind,
               details: n_params[:details]
           )
+          notification.email
         end
       end
     end
     handle_asynchronously :generate
+  end
+
+  def email
+    if person.email_pref == 'immediate'
+      NotificationMailer.delay.notify(self)
+    end
   end
 
   private

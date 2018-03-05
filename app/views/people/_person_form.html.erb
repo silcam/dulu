@@ -80,6 +80,16 @@
     </label>
   </div>
 
+  <div class="form-group">
+    <%= f.label :email_pref, t(:Email_frequency) %><br />
+    <% Person.email_prefs.keys.each do |pref| %>
+      <label class="radio-inline">
+        <%= f.radio_button :email_pref, pref %>
+        <%= t pref %>
+      </label>
+    <% end %>
+  </div>
+
   <p>
     <%= f.submit t(:Save), class: 'btn btn-primary btn-lg' %>
     <a onclick="window.history.back()" class="btn btn-lg btn-danger"><%= t :Cancel %></a>

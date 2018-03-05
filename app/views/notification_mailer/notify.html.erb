@@ -1,0 +1,12 @@
+<%= render 'styles' %>
+
+<p>
+  <%= render 'notifications/text', notification: @notification %>
+</p>
+
+<p>
+  <small>
+    <%= link_to t('email.notify.log_in_now'), login_url %><br />
+    <%= link_to t('email.update_email_prefs'), edit_person_url(@notification.person) %>
+  </small>
+</p>

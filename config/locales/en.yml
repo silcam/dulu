@@ -118,6 +118,10 @@ en:
   Previous_programs: Previous Programs
   Delete_person_confirmation: Are you sure you want to delete %{person}?
   My_info: My Info
+  Email_frequency: Email Frequency
+  immediate: Immediate
+  daily: Daily
+  weekly: Weekly
 
   #Organizations Controller
   Organization: Organization
@@ -395,6 +399,13 @@ en:
       whats_dulu: What's Dulu?
       dulu_is: Dulu is a tool developed by SIL Cameroon for tracking and managing the many language development and translation projects in Cameroon.
       help: For help, send an email to %{email_link} (or just reply to this email). 
+    notify:
+      subject: New Dulu Notification
+      log_in_now: Log into Dulu now
+    update_email_prefs: Update your email preferences
+    notification_summary:
+      subject: New Dulu Notifications
+      intro: "Here's what's new on Dulu:"
 
   # Pagination
   views:
