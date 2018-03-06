@@ -22,7 +22,8 @@
               <% bgcolor = (book_report[:stage]) ? color_from_sym(book_report[:stage].progress[1]) : '#ffffff' %>
               <% color = (book_report[:stage]) ? forecolor_from_sym(book_report[:stage].progress[1]) : '#000000' %>
               <td class="lang-comp-book-cell"
-                  style="background-color: <%= bgcolor %>; color: <%= color %>;">
+                  style="background-color: <%= bgcolor %>; color: <%= color %>;"
+                  <%= "title=\"#{t(book_report[:stage].name)}\"".html_safe if book_report[:stage] %>>
                 <%= abbreviate_book book_report[:name] %>
               </td>
             <% else %>
