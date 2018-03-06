@@ -98,11 +98,6 @@ class Program < ApplicationRecord
     percentages
   end
 
-  # TODO Deprecate. This is now covered by default scope
-  def self.all_sorted
-    Program.joins(:language).order('languages.name').includes(:language)
-  end
-
   def self.all_sorted_by_recency
     Program.all.unscope(:order).order('programs.updated_at DESC')
   end

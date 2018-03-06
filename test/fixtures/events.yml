@@ -6,7 +6,7 @@ HdiGenesisChecking:
   domain: Translation
   programs: Hdi
   name: Genesis Checking
-  # creator: Olga
+  creator: Olga
 
 HdiPastChecking:
   start_date: 2017-01

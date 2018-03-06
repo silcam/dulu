@@ -5,6 +5,7 @@ class HasRolesTest < ActiveSupport::TestCase
   def setup
     # EventParticipant includes HasRoles
     @drew_hdi_gen = event_participants :DrewHdiGenesis
+    I18n.locale = :en
   end
 
   test "Roles" do

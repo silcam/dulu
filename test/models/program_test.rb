@@ -108,11 +108,6 @@ class ProgramTest < ActiveSupport::TestCase
     percentage_assertions percentages[@hdi.id]
   end
 
-  test "All Sorted" do
-    first = programs :Bambalang
-    assert_equal first, Program.all_sorted.first
-  end
-
   test 'Programs Sorted by Recency' do
     no_activity = programs :NoActivityProgram
     really_old = programs :ReallyOldProgram
