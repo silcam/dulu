@@ -12,7 +12,7 @@ class CreateLanguages < ActiveRecord::Migration[5.0]
       t.integer :population
       t.string :population_description
       t.string :classification
-      t.belongs_to :cameroon_region
+      t.belongs_to :region
       
       t.timestamps
     end

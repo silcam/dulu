@@ -18,7 +18,7 @@
       <%= form_for @dialect, html: {class: 'auto-width', id: 'new_dialect_form'} do |form| %>
       <%= form.hidden_field :parent_id %>
       <%= form.hidden_field :country_id %>
-      <%= form.hidden_field :cameroon_region_id %>
+      <%= form.hidden_field :region_id %>
       <div class="form-group">
         <label><%= t :Name_of_dialect %></label>
         <%= form.text_field :name, class: 'form-control' %>

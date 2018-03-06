@@ -1,6 +1,7 @@
 class Country < ApplicationRecord
   has_many :languages
   has_many :people
+  has_many :regions
 
   def name
     I18n.locale==:fr ? french_name : english_name

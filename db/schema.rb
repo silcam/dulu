@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180305092719) do
+ActiveRecord::Schema.define(version: 20180306144130) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -74,21 +74,6 @@ ActiveRecord::Schema.define(version: 20180305092719) do
     t.integer "number_of_verses"
     t.string  "french_name"
     t.integer "usfm_number"
-  end
-
-  create_table "cameroon_regions", force: :cascade do |t|
-    t.string   "english_name"
-    t.string   "french_name"
-    t.datetime "created_at",   null: false
-    t.datetime "updated_at",   null: false
-  end
-
-  create_table "cameroon_territories", force: :cascade do |t|
-    t.integer  "cameroon_region_id"
-    t.datetime "created_at",         null: false
-    t.datetime "updated_at",         null: false
-    t.string   "name"
-    t.index ["cameroon_region_id"], name: "index_cameroon_territories_on_cameroon_region_id", using: :btree
   end
 
   create_table "clusters", force: :cascade do |t|
@@ -188,17 +173,17 @@ ActiveRecord::Schema.define(version: 20180305092719) do
     t.integer  "population"
     t.string   "population_description"
     t.string   "classification"
-    t.integer  "cameroon_region_id"
+    t.integer  "region_id"
     t.datetime "created_at",             null: false
     t.datetime "updated_at",             null: false
     t.string   "alt_names"
     t.integer  "parent_id"
     t.integer  "cluster_id"
-    t.index ["cameroon_region_id"], name: "index_languages_on_cameroon_region_id", using: :btree
     t.index ["cluster_id"], name: "index_languages_on_cluster_id", using: :btree
     t.index ["country_id"], name: "index_languages_on_country_id", using: :btree
     t.index ["language_status_id"], name: "index_languages_on_language_status_id", using: :btree
     t.index ["parent_id"], name: "index_languages_on_parent_id", using: :btree
+    t.index ["region_id"], name: "index_languages_on_region_id", using: :btree
   end
 
   create_table "notifications", force: :cascade do |t|
@@ -290,6 +275,15 @@ ActiveRecord::Schema.define(version: 20180305092719) do
     t.index ["program_id"], name: "index_publications_on_program_id", using: :btree
   end
 
+  create_table "regions", force: :cascade do |t|
+    t.string   "english_name"
+    t.string   "french_name"
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
+    t.integer  "country_id"
+    t.index ["country_id"], name: "index_regions_on_country_id", using: :btree
+  end
+
   create_table "reports", force: :cascade do |t|
     t.string   "name"
     t.jsonb    "params"
@@ -341,6 +335,14 @@ ActiveRecord::Schema.define(version: 20180305092719) do
     t.datetime "created_at",                 null: false
     t.datetime "updated_at",                 null: false
     t.boolean  "open",       default: false
+  end
+
+  create_table "territories", force: :cascade do |t|
+    t.integer  "region_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string   "name"
+    t.index ["region_id"], name: "index_territories_on_region_id", using: :btree
   end
 
   create_table "viewed_reports", force: :cascade do |t|

@@ -38,7 +38,7 @@ class LanguagesController < ApplicationController
   def edit
     authorize! :update, @language
     @dialect = Language.new(parent: @language, country: @language.country,
-                            cameroon_region: @language.cameroon_region)
+                            region: @language.region)
   end
 
   def update
@@ -52,7 +52,7 @@ class LanguagesController < ApplicationController
   private
 
   def language_params
-    params.require(:language).permit(:parent_id, :country_id, :cameroon_region_id, :name)
+    params.require(:language).permit(:parent_id, :country_id, :region_id, :name)
   end
 
   def set_language

@@ -8,13 +8,13 @@ class LanguageTest < ActiveSupport::TestCase
   test 'Relations' do
     developing = language_statuses :Developing
     cameroon = countries :Cameroon
-    far_north = cameroon_regions :FarNorth
+    far_north = regions :FarNorth
     hdi_program = programs :Hdi
     hdi_dialect = languages :HdiDialect
 
     assert_equal developing, @hdi.language_status
     assert_equal cameroon, @hdi.country
-    assert_equal far_north, @hdi.cameroon_region
+    assert_equal far_north, @hdi.region
     assert_equal hdi_program, @hdi.program
     assert_equal @hdi, hdi_dialect.parent
   end

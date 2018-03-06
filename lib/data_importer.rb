@@ -130,7 +130,7 @@ class DataImporter
 
   def self.import_territories
     csv_file = 'lib\csv_files\territories.csv'
-    fields = [:cameroon_region_id, :name]
+    fields = [:camerooregion_id, :name]
     self.generic_import(csv_file, fields) do |params|
       CameroonTerritory.new(params)
     end

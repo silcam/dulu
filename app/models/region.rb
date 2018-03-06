@@ -1,5 +1,6 @@
-class CameroonRegion < ApplicationRecord
-  has_many :cameroon_territories
+class Region < ApplicationRecord
+  belongs_to :country, required: true
+  has_many :territories
   has_many :languages
 
   def name
