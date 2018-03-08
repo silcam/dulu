@@ -13,14 +13,16 @@ class NotificationMailer < ApplicationMailer
     @notification = notification
     set_locale person
     mail to: to_field(person), subject: I18n.t('email.notify.subject')
+    notification.update(emailed: true)
   end
 
   def notification_summary(person)
-    @notifications = person.notifications.where(read: false)
+    @notifications = person.notifications.where(read: false, emailed: false)
     @person = person
     return if @notifications.empty?
     set_locale(person)
     mail to: to_field(person), subject: I18n.t('email.notification_summary.subject')
+    @notifications.update(emailed: true)
   end
 
   private
