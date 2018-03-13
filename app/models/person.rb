@@ -12,6 +12,7 @@ class Person < ApplicationRecord
   has_many :viewed_reports
   has_many :reports, through: :viewed_reports
   has_many :notifications
+  has_many :lpfs
 
   audited
 

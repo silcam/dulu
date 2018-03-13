@@ -33,6 +33,12 @@ Rails.application.routes.draw do
   end
   resources :organizations
   resources :languages
+  resources :lpfs do
+    member do
+      patch 'add_update'
+      patch 'remove_update'
+    end
+  end
   resources :events do
     get 'past', on: :collection
     member do

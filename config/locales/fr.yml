@@ -278,6 +278,12 @@ fr:
   DuluAdmin: Dulu Admin
   Facilitator: Facilitateur
   Student: Étudiant
+  
+  # LPF Controller
+  LanguageProgramFacilitators: Facilitateurs du programme de langue
+  New_lpf: Nouveau poste LPF
+  No_person_set: Aucune personne réglée
+  Set_person: Régler
 
   #Publications Controller
   Publications: Publications

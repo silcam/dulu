@@ -20,6 +20,7 @@ class AccessPolicy
       can :manage, Publication
       can :create, DomainUpdate
       can :manage, SurveyCompletion
+      can :manage, Lpf
     end
 
     part_roles = Role::SUPERVISOR_ROLES + Role::PARTICIPANT_ROLES

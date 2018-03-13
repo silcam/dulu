@@ -1,5 +1,5 @@
 class Program < ApplicationRecord
-  include HasParticipants
+  include ClusterProgram
 
   has_many :activities
   has_many :translation_activities
@@ -7,10 +7,6 @@ class Program < ApplicationRecord
 
   has_many :publications
   has_many :domain_updates
-  has_and_belongs_to_many :events
-
-  has_many :participants
-  has_many :people, through: :participants
 
   belongs_to :language
   has_one :cluster, through: :language

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180308133153) do
+ActiveRecord::Schema.define(version: 20180313145040) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -80,6 +80,8 @@ ActiveRecord::Schema.define(version: 20180308133153) do
     t.string   "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer  "lpf_id"
+    t.index ["lpf_id"], name: "index_clusters_on_lpf_id", using: :btree
   end
 
   create_table "clusters_events", id: false, force: :cascade do |t|
@@ -186,6 +188,14 @@ ActiveRecord::Schema.define(version: 20180308133153) do
     t.index ["region_id"], name: "index_languages_on_region_id", using: :btree
   end
 
+  create_table "lpfs", force: :cascade do |t|
+    t.string   "name"
+    t.integer  "person_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["person_id"], name: "index_lpfs_on_person_id", using: :btree
+  end
+
   create_table "notifications", force: :cascade do |t|
     t.integer  "person_id"
     t.string   "kind"
@@ -258,7 +268,9 @@ ActiveRecord::Schema.define(version: 20180308133153) do
     t.integer  "language_id"
     t.datetime "created_at",  null: false
     t.datetime "updated_at",  null: false
+    t.integer  "lpf_id"
     t.index ["language_id"], name: "index_programs_on_language_id", using: :btree
+    t.index ["lpf_id"], name: "index_programs_on_lpf_id", using: :btree
   end
 
   create_table "publications", force: :cascade do |t|

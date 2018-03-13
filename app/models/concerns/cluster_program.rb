@@ -1,5 +1,12 @@
-module HasParticipants
+module ClusterProgram
   extend ActiveSupport::Concern
+
+  included do
+    has_many :participants
+    has_many :people, through: :participants
+    has_and_belongs_to_many :events
+    belongs_to :lpf, required: false
+  end
 
   def unassociated_people
     excludes = all_people.collect{ |p| p.id }

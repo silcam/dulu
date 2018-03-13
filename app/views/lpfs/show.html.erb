@@ -1,0 +1,91 @@
+<p class="bigger">
+  <%= link_to t(:LanguageProgramFacilitators), lpfs_path %>
+</p>
+
+<h2>
+  <%= t :LanguageProgramFacilitator %>:
+  <%= @lpf.name %>
+</h2>
+
+<div class="showable-form-section">
+  <h3>
+    <% if @lpf.person.nil? %>
+      <%= t :No_person_set %>
+      <% show_link_text = t :Set_person %>
+    <% else %>
+      <%= link_to @lpf.person.full_name, @lpf.person, class: 'subtle' %>
+      <% show_link_text = t :Edit %>
+    <% end %>
+
+    <small>
+      <a href="#" data-showable-form-show class="shown"><%= show_link_text %></a>
+      <a href="#" data-showable-form-hide class="not-shown"><%= t :Cancel %></a>
+    </small>
+  </h3>
+
+  <div class="not-shown">
+    <%= form_for @lpf, html: {class: 'auto-width'} do |form| %>
+      <%= form.collection_select :person_id, Person.where_has_role(:LanguageProgramFacilitator), :id, :full_name_rev, {}, class: 'form-control form-control-inline' %>
+      <%= form.submit t(:Save), class: 'btn btn-primary' %>
+      <a href="#" data-showable-form-hide class="btn btn-danger"><%= t :Cancel %></a>
+    <% end %>
+  </div>
+</div>
+
+<div class="showable-form-section">
+  <h3>
+    <%= t :Clusters %>
+    <small>
+      <% show_link_text = @lpf.clusters.empty? ? t(:Add) : t(:Edit) %>
+      <a href="#" data-showable-form-show class="shown"><%= show_link_text %></a>
+      <a href="#" data-showable-form-hide class="not-shown"><%= t :Cancel %></a>
+    </small>
+  </h3>
+
+  <table class="table auto-width">
+    <% @lpf.clusters.each do |cluster| %>
+      <tr>
+        <td><%= link_to cluster.display_name, cluster %></td>
+        <td class="not-shown">
+          <%= link_to t(:Remove), remove_update_lpf_path(@lpf, cluster_id: cluster.id), method: :patch %>
+        </td>
+      </tr>
+    <% end %>
+  </table>
+  <div class="not-shown">
+    <%= form_tag add_update_lpf_path(@lpf), method: :patch, class: 'form-inline' do %>
+      <%= select_tag :cluster_id, options_from_collection_for_select(Cluster.all, :id, :name), class: 'form-control' %>
+      <%= submit_tag t(:Add), class: 'btn btn-primary' %>
+      <a href="#" data-showable-form-hide class="btn btn-danger"><%= t :Cancel %></a>
+    <% end %>
+  </div>
+</div>
+
+<div class="showable-form-section">
+  <h3>
+    <%= t :Programs %>
+    <small>
+      <% show_link_text = @lpf.programs.empty? ? t(:Add) : t(:Edit) %>
+      <a href="#" data-showable-form-show class="shown"><%= show_link_text %></a>
+      <a href="#" data-showable-form-hide class="not-shown"><%= t :Cancel %></a>
+    </small>
+  </h3>
+
+  <table class="table auto-width">
+    <% @lpf.programs.each do |program| %>
+      <tr>
+        <td><%= link_to program.name, program %></td>
+        <td class="not-shown">
+          <%= link_to t(:Remove), remove_update_lpf_path(@lpf, program_id: program.id), method: :patch %>
+        </td>
+      </tr>
+    <% end %>
+  </table>
+  <div class="not-shown">
+    <%= form_tag add_update_lpf_path(@lpf), method: :patch, class: 'form-inline' do %>
+      <%= select_tag :program_id, options_from_collection_for_select(Program.all, :id, :name), class: 'form-control' %>
+      <%= submit_tag t(:Add), class: 'btn btn-primary' %>
+      <a href="#" data-showable-form-hide class="btn btn-danger"><%= t :Cancel %></a>
+    <% end %>
+  </div>
+</div>
