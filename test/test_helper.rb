@@ -10,7 +10,7 @@ require 'minitest/reporters'
 require 'minitest/rails/capybara'
 Minitest::Reporters.use!
 
-#Capybara.default_driver = :selenium
+Delayed::Worker.delay_jobs = false
 
 class ActiveSupport::TestCase
   # Setup all fixtures in test/fixtures/*.yml for all tests in alphabetical order.

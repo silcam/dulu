@@ -42,6 +42,14 @@ Olga:
   has_login: true
   roles_field: '|LanguageProgramFacilitator|'
 
+Andreas:
+  first_name: Andreas
+  last_name: Ernst
+  gender: M
+  email: andreas_ernst@sil.org
+  has_login: true
+  roles_field: '|LanguageProgramFacilitator|'
+
 FormerHdiTranslator:
   first_name: Former
   last_name: Translator

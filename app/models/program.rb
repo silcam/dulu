@@ -18,6 +18,10 @@ class Program < ApplicationRecord
   end
   alias display_name name
 
+  def get_lpf
+    lpf || cluster.try(:lpf)
+  end
+
   def all_participants
     cluster.nil? ?
       participants :

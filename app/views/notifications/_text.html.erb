@@ -59,11 +59,18 @@
       )
       t('notification.gave_you_role', vars).html_safe
 
-    when 'added_you_to_program'
-      vars.merge!(
-          program_name: link_to(details[:program_name], program_url(details[:program_id]))
-      )
-      t('notification.added_you_to_program', vars).html_safe
+    when 'added_you_to_cluster_program'
+      if details[:is_for_a_program]
+        vars.merge!(
+            program_name: link_to(details[:cluster_program_name], program_url(details[:cluster_program_id]))
+        )
+        t('notification.added_you_to_program', vars).html_safe
+      else
+        vars.merge!(
+            cluster_name: link_to(details[:cluster_program_name], cluster_url(details[:cluster_program_id]))
+        )
+        t('notification.added_you_to_cluster', vars).html_safe
+      end
 
     when 'added_you_to_activity'
       details[:activity_name] ||= Activity.find(details[:activity_id]).name

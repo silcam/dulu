@@ -15,10 +15,6 @@ class Notification < ApplicationRecord
     self.details_json = JSON.generate details_hash
   end
 
-  def text
-    send "text_#{kind}"
-  end
-
   def assoc_model
     assoc_class.constantize.find_by id: assoc_model_id
   end
@@ -59,8 +55,11 @@ class Notification < ApplicationRecord
         is_for_a_program: participant.cluster.nil?
     )
 
+    # Exclude the person added because he gets the "added_you_to_program" notification
+    people = cluster_program_people(participant.cluster_program).reject!{ |p| p==participant.person }
+
     return {
-        people: participant.cluster_program.all_current_people.reject{ |p| p==participant.person },
+        people: people,
         details: details
     }
   end
@@ -76,7 +75,7 @@ class Notification < ApplicationRecord
     )
 
     return {
-        people: stage.activity.program.all_current_people,
+        people: cluster_program_people(stage.activity.program),
         details: details
     }
   end
@@ -89,7 +88,7 @@ class Notification < ApplicationRecord
         activity_id: workshop.linguistic_activity.id
     )
     return {
-        people: workshop.linguistic_activity.program.all_current_people,
+        people: cluster_program_people(workshop.linguistic_activity.program),
         details: details
     }
   end
@@ -102,7 +101,7 @@ class Notification < ApplicationRecord
     )
 
     return {
-        people: activity.program.all_current_people,
+        people: cluster_program_people(activity.program),
         details: details
     }
   end
@@ -115,7 +114,7 @@ class Notification < ApplicationRecord
         testament: testament
     )
     return {
-        people: program.all_current_people,
+        people: cluster_program_people(program),
         details: details
     }
   end
@@ -134,10 +133,11 @@ class Notification < ApplicationRecord
     }
   end
 
-  def self.generate_added_you_to_program(participant, details)
+  def self.generate_added_you_to_cluster_program(participant, details)
     details.merge!(
-               program_name: participant.program.name,
-               program_id: participant.program.id
+               cluster_program_name: participant.cluster_program.name,
+               cluster_program_id: participant.cluster_program.id,
+               is_for_a_program: participant.cluster.nil?
     )
     return {
         people: [participant.person],
@@ -146,9 +146,11 @@ class Notification < ApplicationRecord
   end
 
   def self.generate_added_you_to_activity(participant, details)
+    program = participant.program
+    program = Activity.find(details[:activity_id]).program if program.nil?
     details.merge!(
-               program_name: participant.program.name,
-               program_id: participant.program.id
+               program_name: program.name,
+               program_id: program.id
     )
     return {
         people: [participant.person],
@@ -175,7 +177,7 @@ class Notification < ApplicationRecord
                event_id: event.id
     )
     return {
-        people: program.current_people,
+        people: cluster_program_people(program),
         details: details
     }
   end
@@ -192,8 +194,15 @@ class Notification < ApplicationRecord
         event_id: event.id
     )
     return {
-        people: cluster.current_people,
+        people: cluster_program_people(cluster),
         details: details
     }
+  end
+
+  def self.cluster_program_people(cluster_program)
+    people = cluster_program.all_current_people
+    lpf = cluster_program.get_lpf.try(:person)
+    people << lpf unless lpf.nil?
+    people
   end
 end

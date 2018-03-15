@@ -390,6 +390,7 @@ fr:
     your_info: vos infos
     gave_you_role: "%{user_name} vous a donné le rôle %{role_name}."
     added_you_to_program: "%{user_name} vous a ajouté au programme %{program_name}."
+    added_you_to_cluster: "%{user_name} vous a ajouté au groupe %{cluster_name}."
     added_you_to_activity: "%{user_name} vous a ajouté à %{activity_name} pour le programme %{program_name}."
     added_you_to_event: "%{user_name} vous a ajouté à l'événement %{event_name}."
     new_event_for_program: "%{user_name} a créé l'événement %{event_name} pour le programme %{program_name}."

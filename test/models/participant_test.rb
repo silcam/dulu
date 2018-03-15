@@ -60,15 +60,12 @@ class ParticipantTest < ActiveSupport::TestCase
 
   test 'Fuzzy Dates' do
     drew_start = FuzzyDate.new 2017, 1, 1
-    olga_hdi = participants :OlgaHdi
-    olga_start = FuzzyDate.new 2010
     abanda_hdi = participants :AbandaHdi
     abanda_start = FuzzyDate.new 2015, 5
     former_hdi = participants :FormerHdiTranslator
     former_quit = FuzzyDate.new 2015, 3
 
     assert_equal drew_start, @drew_hdi.f_start_date
-    assert_equal olga_start, olga_hdi.f_start_date
     assert_equal abanda_start, abanda_hdi.f_start_date
 
     assert_nil @drew_hdi.f_end_date

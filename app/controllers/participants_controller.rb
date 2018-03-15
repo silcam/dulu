@@ -24,7 +24,7 @@ class ParticipantsController < ApplicationController
     if @participant.save
       @participant.associate_activities(params[:assoc_activities])
       Notification.generate :new_participant, current_user, @participant
-      Notification.generate :added_you_to_program, current_user, @participant
+      Notification.generate :added_you_to_cluster_program, current_user, @participant
       redirect_to @participant
     else
       render 'new'

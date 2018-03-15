@@ -11,11 +11,11 @@ DrewNdop:
   roles_field: '|TranslationConsultant|'
   start_date: '2017'
 
-OlgaHdi:
-  person: Olga
-  program: Hdi
-  roles_field: '|LanguageProgramFacilitator|'
-  start_date: 2010
+#OlgaHdi:
+#  person: Olga
+#  program: Hdi
+#  roles_field: '|LanguageProgramFacilitator|'
+#  start_date: 2010
 
 AbandaHdi:
   person: Abanda
