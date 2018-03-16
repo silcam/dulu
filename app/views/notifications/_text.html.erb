@@ -14,7 +14,9 @@
           participant_name: link_to(details[:participant_name], participant_url(details[:participant_id])),
           cluster_program_name: link_to(details[:cluster_program_name], program_url(details[:cluster_program_id]))
       )
-      t('notification.new_participant', vars).html_safe
+      details[:is_for_a_program] ?
+          t('notification.new_participant', vars).html_safe :
+          t('notification.new_cluster_participant', vars).html_safe
 
     when 'new_stage'
       activity = Activity.find(details[:activity_id])

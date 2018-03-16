@@ -52,7 +52,7 @@
             <% unread = !notifications.first.read %>
             <li>
               <div class="btn-group">
-                <button type="button" class="btn btn-link dropdown-toggle notification-bell" data-toggle="dropdown">
+                <button type="button" class="btn btn-link dropdown-toggle notification-bell" id="show-notifications-btn" data-toggle="dropdown">
                   <span class="glyphicon glyphicon-bell <%= 'unread-notifications' if unread %>"></span>
                 </button>
                 <ul class="dropdown-menu notifications">
@@ -70,13 +70,13 @@
           <% end %>
           <li>
             <div class="btn-group">
-              <button type="button" class="btn btn-link nav-btn dropdown-toggle" data-toggle="dropdown">
+              <button type="button" class="btn btn-link nav-btn dropdown-toggle" id="show-user-menu"data-toggle="dropdown">
                 <%= @current_user.first_name %>
                 <span class="caret"></span>
               </button>
               <ul class="dropdown-menu">
                 <li><%= link_to t(:My_info), edit_person_path(@current_user, referred_by: request.path) %></li>
-                <li><%= link_to t(:Log_out), logout_url, method: :delete %></li>
+                <li><%= link_to t(:Log_out), logout_path, method: :delete %></li>
               </ul>
             </div>
           </li>

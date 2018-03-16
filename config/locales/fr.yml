@@ -381,7 +381,8 @@ fr:
   not_before_start: ne peut pas être avant le date de commencement.
 
   notification:
-    new_participant: "%{user_name} a ajouté %{participant_name} au %{cluster_program_name}."
+    new_participant: "%{user_name} a ajouté %{participant_name} au programme %{cluster_program_name}."
+    new_cluster_participant: "%{user_name} a ajouté %{participant_name} au groupe %{cluster_program_name}."
     new_stage: "%{user_name} a mis à jour %{activity_name} à %{stage_name} pour le programme %{program_name}."
     workshop_complete: "%{user_name} a mis à jour l'atelier %{workshop_name} pour le programme %{program_name} comme réalisé."
     new_activity: "%{user_name} a ajouté une nouvelle activité au programme %{program_name} : %{activity_name}."

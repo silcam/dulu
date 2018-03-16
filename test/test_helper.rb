@@ -26,6 +26,12 @@ class ActiveSupport::TestCase
     visit '/auth/google_oauth2'
   end
 
+  # Requires Javascript
+  def log_out
+    click_on 'show-user-menu'
+    click_link_to logout_path
+  end
+
   def model_validation_hack_test(model, params)
     params.each_key do |param|
       test_params = params.clone

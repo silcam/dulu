@@ -130,8 +130,9 @@ class EventsIntegrationTest < Capybara::Rails::TestCase
     assert page.has_content?('Hdi Genesis Checking'), "Should see the event before deletion"
     click_link 'Hdi Genesis Checking'
     find('h2').click_link 'Edit'
-    click_link 'Delete this event'
-    page.driver.browser.accept_js_confirms
+    page.accept_confirm do
+      click_link 'Delete this event'
+    end
     assert_current_path program_events_path(@hdi)
     refute page.has_content?('Hdi Genesis Checking'), "Should no longer see deleted event"
   end
@@ -144,8 +145,9 @@ class EventsIntegrationTest < Capybara::Rails::TestCase
     fill_in 'event_end_date_y', with: '2018'
     click_on 'Save'
     find('h2').click_on('Edit')
-    find('h2').click_on('Delete this event')
-    page.driver.browser.accept_js_confirms
+    page.accept_confirm do
+      find('h2').click_on('Delete this event')
+    end
     assert_current_path events_path
     assert_no_text "Drew's Event"
   end

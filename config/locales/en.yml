@@ -382,6 +382,7 @@ en:
 
   notification:
     new_participant: "%{user_name} added %{participant_name} to the %{cluster_program_name} program."
+    new_cluster_participant: "%{user_name} added %{participant_name} to the %{cluster_program_name} cluster."
     new_stage: "%{user_name} updated %{activity_name} to the %{stage_name} stage for the %{program_name} program."
     workshop_complete: "%{user_name} updated the %{workshop_name} workshop for the %{program_name} as complete."
     new_activity: "%{user_name} added a new activity to the %{program_name} program: %{activity_name}."

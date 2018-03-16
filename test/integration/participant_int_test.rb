@@ -7,6 +7,7 @@ class ParticipantIntTest < Capybara::Rails::TestCase
     @zulgo_program = programs :Zulgo
     @zulgo_ezra = translation_activities :ZulgoEzra
     @drew = people :Drew
+    I18n.locale = :en
   end
 
   test "Regression Test: Add to program with no activities" do
@@ -95,8 +96,9 @@ class ParticipantIntTest < Capybara::Rails::TestCase
     find('table').assert_text 'Drew Maust'
     setup_show_page
     find('h2').click_on('Edit')
-    click_button('Delete Drew Maust from Hdi')
-    page.driver.browser.accept_js_confirms
+    page.accept_confirm do
+      click_button('Delete Drew Maust from Hdi')
+    end
     assert_current_path program_participants_path(programs(:Hdi))
     find('table').assert_no_text('Drew Maust')
   end

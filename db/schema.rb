@@ -16,368 +16,368 @@ ActiveRecord::Schema.define(version: 20180313145040) do
   enable_extension "plpgsql"
   enable_extension "unaccent"
 
-  create_table "activities", force: :cascade do |t|
-    t.integer  "program_id"
-    t.integer  "bible_book_id"
-    t.datetime "created_at",                    null: false
-    t.datetime "updated_at",                    null: false
-    t.string   "type"
-    t.text     "note"
-    t.string   "category"
-    t.string   "title"
-    t.string   "scripture"
-    t.string   "film"
-    t.boolean  "archived",      default: false
-    t.index ["bible_book_id"], name: "index_activities_on_bible_book_id", using: :btree
-    t.index ["program_id"], name: "index_activities_on_program_id", using: :btree
+  create_table "activities", id: :serial, force: :cascade do |t|
+    t.integer "program_id"
+    t.integer "bible_book_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "type"
+    t.text "note"
+    t.string "category"
+    t.string "title"
+    t.string "scripture"
+    t.string "film"
+    t.boolean "archived", default: false
+    t.index ["bible_book_id"], name: "index_activities_on_bible_book_id"
+    t.index ["program_id"], name: "index_activities_on_program_id"
   end
 
-  create_table "activities_bible_books", force: :cascade do |t|
+  create_table "activities_bible_books", id: :serial, force: :cascade do |t|
     t.integer "media_activity_id"
     t.integer "bible_book_id"
-    t.index ["bible_book_id"], name: "index_activities_bible_books_on_bible_book_id", using: :btree
-    t.index ["media_activity_id"], name: "index_activities_bible_books_on_media_activity_id", using: :btree
+    t.index ["bible_book_id"], name: "index_activities_bible_books_on_bible_book_id"
+    t.index ["media_activity_id"], name: "index_activities_bible_books_on_media_activity_id"
   end
 
-  create_table "activities_participants", force: :cascade do |t|
+  create_table "activities_participants", id: :serial, force: :cascade do |t|
     t.integer "activity_id"
     t.integer "participant_id"
-    t.index ["activity_id"], name: "index_activities_participants_on_activity_id", using: :btree
-    t.index ["participant_id"], name: "index_activities_participants_on_participant_id", using: :btree
+    t.index ["activity_id"], name: "index_activities_participants_on_activity_id"
+    t.index ["participant_id"], name: "index_activities_participants_on_participant_id"
   end
 
-  create_table "audits", force: :cascade do |t|
-    t.integer  "auditable_id"
-    t.string   "auditable_type"
-    t.integer  "associated_id"
-    t.string   "associated_type"
-    t.integer  "user_id"
-    t.string   "user_type"
-    t.string   "username"
-    t.string   "action"
-    t.jsonb    "audited_changes"
-    t.integer  "version",         default: 0
-    t.string   "comment"
-    t.string   "remote_address"
-    t.string   "request_uuid"
+  create_table "audits", id: :serial, force: :cascade do |t|
+    t.integer "auditable_id"
+    t.string "auditable_type"
+    t.integer "associated_id"
+    t.string "associated_type"
+    t.integer "user_id"
+    t.string "user_type"
+    t.string "username"
+    t.string "action"
+    t.jsonb "audited_changes"
+    t.integer "version", default: 0
+    t.string "comment"
+    t.string "remote_address"
+    t.string "request_uuid"
     t.datetime "created_at"
-    t.index ["associated_id", "associated_type"], name: "associated_index", using: :btree
-    t.index ["auditable_id", "auditable_type"], name: "auditable_index", using: :btree
-    t.index ["created_at"], name: "index_audits_on_created_at", using: :btree
-    t.index ["request_uuid"], name: "index_audits_on_request_uuid", using: :btree
-    t.index ["user_id", "user_type"], name: "user_index", using: :btree
+    t.index ["associated_id", "associated_type"], name: "associated_index"
+    t.index ["auditable_id", "auditable_type"], name: "auditable_index"
+    t.index ["created_at"], name: "index_audits_on_created_at"
+    t.index ["request_uuid"], name: "index_audits_on_request_uuid"
+    t.index ["user_id", "user_type"], name: "user_index"
   end
 
-  create_table "bible_books", force: :cascade do |t|
-    t.string  "english_name"
+  create_table "bible_books", id: :serial, force: :cascade do |t|
+    t.string "english_name"
     t.integer "number_of_chapters"
     t.integer "number_of_verses"
-    t.string  "french_name"
+    t.string "french_name"
     t.integer "usfm_number"
   end
 
-  create_table "clusters", force: :cascade do |t|
-    t.string   "name"
+  create_table "clusters", id: :serial, force: :cascade do |t|
+    t.string "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer  "lpf_id"
-    t.index ["lpf_id"], name: "index_clusters_on_lpf_id", using: :btree
+    t.integer "lpf_id"
+    t.index ["lpf_id"], name: "index_clusters_on_lpf_id"
   end
 
   create_table "clusters_events", id: false, force: :cascade do |t|
     t.integer "cluster_id", null: false
-    t.integer "event_id",   null: false
+    t.integer "event_id", null: false
   end
 
-  create_table "countries", force: :cascade do |t|
-    t.string   "code"
-    t.string   "english_name"
-    t.string   "french_name"
-    t.datetime "created_at",   null: false
-    t.datetime "updated_at",   null: false
-    t.integer  "people_count"
+  create_table "countries", id: :serial, force: :cascade do |t|
+    t.string "code"
+    t.string "english_name"
+    t.string "french_name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "people_count"
   end
 
-  create_table "delayed_jobs", force: :cascade do |t|
-    t.integer  "priority",   default: 0, null: false
-    t.integer  "attempts",   default: 0, null: false
-    t.text     "handler",                null: false
-    t.text     "last_error"
+  create_table "delayed_jobs", id: :serial, force: :cascade do |t|
+    t.integer "priority", default: 0, null: false
+    t.integer "attempts", default: 0, null: false
+    t.text "handler", null: false
+    t.text "last_error"
     t.datetime "run_at"
     t.datetime "locked_at"
     t.datetime "failed_at"
-    t.string   "locked_by"
-    t.string   "queue"
+    t.string "locked_by"
+    t.string "queue"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.index ["priority", "run_at"], name: "delayed_jobs_priority", using: :btree
+    t.index ["priority", "run_at"], name: "delayed_jobs_priority"
   end
 
-  create_table "domain_updates", force: :cascade do |t|
-    t.integer  "program_id"
-    t.integer  "status_parameter_id"
-    t.float    "number"
-    t.string   "status"
-    t.text     "note"
-    t.string   "date"
-    t.datetime "created_at",          null: false
-    t.datetime "updated_at",          null: false
-    t.string   "domain"
-    t.integer  "author_id"
-    t.index ["program_id"], name: "index_domain_updates_on_program_id", using: :btree
-    t.index ["status_parameter_id"], name: "index_domain_updates_on_status_parameter_id", using: :btree
-  end
-
-  create_table "event_participants", force: :cascade do |t|
-    t.integer  "event_id"
-    t.integer  "person_id"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
-    t.string   "roles_field"
-    t.index ["event_id"], name: "index_event_participants_on_event_id", using: :btree
-    t.index ["person_id"], name: "index_event_participants_on_person_id", using: :btree
-  end
-
-  create_table "events", force: :cascade do |t|
-    t.string   "start_date"
-    t.string   "end_date"
-    t.string   "name"
+  create_table "domain_updates", id: :serial, force: :cascade do |t|
+    t.integer "program_id"
+    t.integer "status_parameter_id"
+    t.float "number"
+    t.string "status"
+    t.text "note"
+    t.string "date"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string   "domain"
-    t.text     "note"
-    t.integer  "creator_id"
+    t.string "domain"
+    t.integer "author_id"
+    t.index ["program_id"], name: "index_domain_updates_on_program_id"
+    t.index ["status_parameter_id"], name: "index_domain_updates_on_status_parameter_id"
   end
 
-  create_table "events_programs", force: :cascade do |t|
+  create_table "event_participants", id: :serial, force: :cascade do |t|
+    t.integer "event_id"
+    t.integer "person_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "roles_field"
+    t.index ["event_id"], name: "index_event_participants_on_event_id"
+    t.index ["person_id"], name: "index_event_participants_on_person_id"
+  end
+
+  create_table "events", id: :serial, force: :cascade do |t|
+    t.string "start_date"
+    t.string "end_date"
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "domain"
+    t.text "note"
+    t.integer "creator_id"
+  end
+
+  create_table "events_programs", id: :serial, force: :cascade do |t|
     t.integer "event_id"
     t.integer "program_id"
-    t.index ["event_id"], name: "index_events_programs_on_event_id", using: :btree
-    t.index ["program_id"], name: "index_events_programs_on_program_id", using: :btree
+    t.index ["event_id"], name: "index_events_programs_on_event_id"
+    t.index ["program_id"], name: "index_events_programs_on_program_id"
   end
 
-  create_table "language_statuses", force: :cascade do |t|
-    t.string   "level"
-    t.string   "label"
-    t.text     "description"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
-  end
-
-  create_table "languages", force: :cascade do |t|
-    t.string   "name"
-    t.string   "category"
-    t.string   "code"
-    t.integer  "language_status_id"
-    t.text     "notes"
-    t.integer  "country_id"
-    t.string   "international_language"
-    t.integer  "population"
-    t.string   "population_description"
-    t.string   "classification"
-    t.integer  "region_id"
-    t.datetime "created_at",             null: false
-    t.datetime "updated_at",             null: false
-    t.string   "alt_names"
-    t.integer  "parent_id"
-    t.integer  "cluster_id"
-    t.index ["cluster_id"], name: "index_languages_on_cluster_id", using: :btree
-    t.index ["country_id"], name: "index_languages_on_country_id", using: :btree
-    t.index ["language_status_id"], name: "index_languages_on_language_status_id", using: :btree
-    t.index ["parent_id"], name: "index_languages_on_parent_id", using: :btree
-    t.index ["region_id"], name: "index_languages_on_region_id", using: :btree
-  end
-
-  create_table "lpfs", force: :cascade do |t|
-    t.string   "name"
-    t.integer  "person_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["person_id"], name: "index_lpfs_on_person_id", using: :btree
-  end
-
-  create_table "notifications", force: :cascade do |t|
-    t.integer  "person_id"
-    t.string   "kind"
-    t.json     "details_json"
-    t.string   "link"
-    t.string   "assoc_class"
-    t.integer  "assoc_model_id"
-    t.boolean  "read",           default: false
-    t.datetime "created_at",                     null: false
-    t.datetime "updated_at",                     null: false
-    t.boolean  "emailed",        default: false
-    t.index ["person_id"], name: "index_notifications_on_person_id", using: :btree
-  end
-
-  create_table "organizations", force: :cascade do |t|
-    t.string   "name"
-    t.string   "abbreviation"
-    t.datetime "created_at",   null: false
-    t.datetime "updated_at",   null: false
-    t.text     "description"
-  end
-
-  create_table "participants", force: :cascade do |t|
-    t.integer  "person_id"
-    t.integer  "program_id"
-    t.string   "start_date"
-    t.string   "end_date"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
-    t.integer  "cluster_id"
-    t.string   "roles_field"
-    t.index ["cluster_id"], name: "index_participants_on_cluster_id", using: :btree
-    t.index ["person_id"], name: "index_participants_on_person_id", using: :btree
-    t.index ["program_id"], name: "index_participants_on_program_id", using: :btree
-  end
-
-  create_table "people", force: :cascade do |t|
-    t.string   "last_name"
-    t.string   "first_name"
-    t.datetime "created_at",                                 null: false
-    t.datetime "updated_at",                                 null: false
-    t.string   "email"
-    t.string   "password"
-    t.integer  "organization_id"
-    t.date     "birth_date"
-    t.string   "gender",           limit: 1
-    t.text     "cv_text"
-    t.string   "former_last_name"
-    t.integer  "country_id"
-    t.string   "ui_language"
-    t.date     "last_access"
-    t.string   "roles_field"
-    t.boolean  "has_login",                  default: false
-    t.integer  "email_pref",                 default: 0
-    t.index ["country_id"], name: "index_people_on_country_id", using: :btree
-    t.index ["organization_id"], name: "index_people_on_organization_id", using: :btree
-  end
-
-  create_table "person_roles", force: :cascade do |t|
-    t.integer  "person_id"
-    t.string   "role"
-    t.date     "start_date"
-    t.date     "end_date"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["person_id"], name: "index_person_roles_on_person_id", using: :btree
-  end
-
-  create_table "programs", force: :cascade do |t|
-    t.integer  "language_id"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
-    t.integer  "lpf_id"
-    t.index ["language_id"], name: "index_programs_on_language_id", using: :btree
-    t.index ["lpf_id"], name: "index_programs_on_lpf_id", using: :btree
-  end
-
-  create_table "publications", force: :cascade do |t|
-    t.integer  "program_id"
-    t.string   "kind"
-    t.string   "english_name"
-    t.string   "french_name"
-    t.string   "nl_name"
-    t.integer  "year"
-    t.datetime "created_at",     null: false
-    t.datetime "updated_at",     null: false
-    t.string   "media_kind"
-    t.string   "scripture_kind"
-    t.string   "film_kind"
-    t.index ["program_id"], name: "index_publications_on_program_id", using: :btree
-  end
-
-  create_table "regions", force: :cascade do |t|
-    t.string   "english_name"
-    t.string   "french_name"
-    t.datetime "created_at",   null: false
-    t.datetime "updated_at",   null: false
-    t.integer  "country_id"
-    t.index ["country_id"], name: "index_regions_on_country_id", using: :btree
-  end
-
-  create_table "reports", force: :cascade do |t|
-    t.string   "name"
-    t.jsonb    "params"
+  create_table "language_statuses", id: :serial, force: :cascade do |t|
+    t.string "level"
+    t.string "label"
+    t.text "description"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
 
-  create_table "stages", force: :cascade do |t|
-    t.integer  "activity_id"
-    t.datetime "created_at",                  null: false
-    t.datetime "updated_at",                  null: false
-    t.string   "start_date"
-    t.boolean  "current",     default: false
-    t.string   "name"
-    t.string   "kind"
-    t.index ["activity_id"], name: "index_stages_on_activity_id", using: :btree
+  create_table "languages", id: :serial, force: :cascade do |t|
+    t.string "name"
+    t.string "category"
+    t.string "code"
+    t.integer "language_status_id"
+    t.text "notes"
+    t.integer "country_id"
+    t.string "international_language"
+    t.integer "population"
+    t.string "population_description"
+    t.string "classification"
+    t.integer "region_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "alt_names"
+    t.integer "parent_id"
+    t.integer "cluster_id"
+    t.index ["cluster_id"], name: "index_languages_on_cluster_id"
+    t.index ["country_id"], name: "index_languages_on_country_id"
+    t.index ["language_status_id"], name: "index_languages_on_language_status_id"
+    t.index ["parent_id"], name: "index_languages_on_parent_id"
+    t.index ["region_id"], name: "index_languages_on_region_id"
   end
 
-  create_table "status_parameters", force: :cascade do |t|
-    t.string   "domain"
-    t.string   "prompt"
-    t.boolean  "number_field"
-    t.string   "number_unit"
-    t.datetime "created_at",   null: false
-    t.datetime "updated_at",   null: false
-    t.integer  "order"
+  create_table "lpfs", id: :serial, force: :cascade do |t|
+    t.string "name"
+    t.integer "person_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["person_id"], name: "index_lpfs_on_person_id"
   end
 
-  create_table "status_parameters_surveys", force: :cascade do |t|
+  create_table "notifications", id: :serial, force: :cascade do |t|
+    t.integer "person_id"
+    t.string "kind"
+    t.json "details_json"
+    t.string "link"
+    t.string "assoc_class"
+    t.integer "assoc_model_id"
+    t.boolean "read", default: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.boolean "emailed", default: false
+    t.index ["person_id"], name: "index_notifications_on_person_id"
+  end
+
+  create_table "organizations", id: :serial, force: :cascade do |t|
+    t.string "name"
+    t.string "abbreviation"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.text "description"
+  end
+
+  create_table "participants", id: :serial, force: :cascade do |t|
+    t.integer "person_id"
+    t.integer "program_id"
+    t.string "start_date"
+    t.string "end_date"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "cluster_id"
+    t.string "roles_field"
+    t.index ["cluster_id"], name: "index_participants_on_cluster_id"
+    t.index ["person_id"], name: "index_participants_on_person_id"
+    t.index ["program_id"], name: "index_participants_on_program_id"
+  end
+
+  create_table "people", id: :serial, force: :cascade do |t|
+    t.string "last_name"
+    t.string "first_name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "email"
+    t.string "password"
+    t.integer "organization_id"
+    t.date "birth_date"
+    t.string "gender", limit: 1
+    t.text "cv_text"
+    t.string "former_last_name"
+    t.integer "country_id"
+    t.string "ui_language"
+    t.date "last_access"
+    t.string "roles_field"
+    t.boolean "has_login", default: false
+    t.integer "email_pref", default: 0
+    t.index ["country_id"], name: "index_people_on_country_id"
+    t.index ["organization_id"], name: "index_people_on_organization_id"
+  end
+
+  create_table "person_roles", id: :serial, force: :cascade do |t|
+    t.integer "person_id"
+    t.string "role"
+    t.date "start_date"
+    t.date "end_date"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["person_id"], name: "index_person_roles_on_person_id"
+  end
+
+  create_table "programs", id: :serial, force: :cascade do |t|
+    t.integer "language_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "lpf_id"
+    t.index ["language_id"], name: "index_programs_on_language_id"
+    t.index ["lpf_id"], name: "index_programs_on_lpf_id"
+  end
+
+  create_table "publications", id: :serial, force: :cascade do |t|
+    t.integer "program_id"
+    t.string "kind"
+    t.string "english_name"
+    t.string "french_name"
+    t.string "nl_name"
+    t.integer "year"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "media_kind"
+    t.string "scripture_kind"
+    t.string "film_kind"
+    t.index ["program_id"], name: "index_publications_on_program_id"
+  end
+
+  create_table "regions", id: :serial, force: :cascade do |t|
+    t.string "english_name"
+    t.string "french_name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "country_id"
+    t.index ["country_id"], name: "index_regions_on_country_id"
+  end
+
+  create_table "reports", id: :serial, force: :cascade do |t|
+    t.string "name"
+    t.jsonb "params"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "stages", id: :serial, force: :cascade do |t|
+    t.integer "activity_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "start_date"
+    t.boolean "current", default: false
+    t.string "name"
+    t.string "kind"
+    t.index ["activity_id"], name: "index_stages_on_activity_id"
+  end
+
+  create_table "status_parameters", id: :serial, force: :cascade do |t|
+    t.string "domain"
+    t.string "prompt"
+    t.boolean "number_field"
+    t.string "number_unit"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "order"
+  end
+
+  create_table "status_parameters_surveys", id: :serial, force: :cascade do |t|
     t.integer "status_parameter_id"
     t.integer "survey_id"
-    t.index ["status_parameter_id"], name: "index_status_parameters_surveys_on_status_parameter_id", using: :btree
-    t.index ["survey_id"], name: "index_status_parameters_surveys_on_survey_id", using: :btree
+    t.index ["status_parameter_id"], name: "index_status_parameters_surveys_on_status_parameter_id"
+    t.index ["survey_id"], name: "index_status_parameters_surveys_on_survey_id"
   end
 
-  create_table "survey_completions", force: :cascade do |t|
-    t.integer  "survey_id"
-    t.integer  "program_id"
-    t.integer  "person_id"
+  create_table "survey_completions", id: :serial, force: :cascade do |t|
+    t.integer "survey_id"
+    t.integer "program_id"
+    t.integer "person_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["person_id"], name: "index_survey_completions_on_person_id", using: :btree
-    t.index ["program_id"], name: "index_survey_completions_on_program_id", using: :btree
-    t.index ["survey_id"], name: "index_survey_completions_on_survey_id", using: :btree
+    t.index ["person_id"], name: "index_survey_completions_on_person_id"
+    t.index ["program_id"], name: "index_survey_completions_on_program_id"
+    t.index ["survey_id"], name: "index_survey_completions_on_survey_id"
   end
 
-  create_table "surveys", force: :cascade do |t|
-    t.string   "name"
-    t.datetime "created_at",                 null: false
-    t.datetime "updated_at",                 null: false
-    t.boolean  "open",       default: false
-  end
-
-  create_table "territories", force: :cascade do |t|
-    t.integer  "region_id"
+  create_table "surveys", id: :serial, force: :cascade do |t|
+    t.string "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string   "name"
-    t.index ["region_id"], name: "index_territories_on_region_id", using: :btree
+    t.boolean "open", default: false
   end
 
-  create_table "viewed_reports", force: :cascade do |t|
-    t.integer  "person_id"
-    t.integer  "report_id"
+  create_table "territories", id: :serial, force: :cascade do |t|
+    t.integer "region_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["person_id"], name: "index_viewed_reports_on_person_id", using: :btree
-    t.index ["report_id"], name: "index_viewed_reports_on_report_id", using: :btree
+    t.string "name"
+    t.index ["region_id"], name: "index_territories_on_region_id"
   end
 
-  create_table "workshops", force: :cascade do |t|
-    t.integer  "number"
-    t.string   "name"
-    t.integer  "linguistic_activity_id"
-    t.datetime "created_at",             null: false
-    t.datetime "updated_at",             null: false
-    t.integer  "event_id"
-    t.integer  "stage_id"
-    t.index ["event_id"], name: "index_workshops_on_event_id", using: :btree
-    t.index ["linguistic_activity_id"], name: "index_workshops_on_linguistic_activity_id", using: :btree
-    t.index ["stage_id"], name: "index_workshops_on_stage_id", using: :btree
+  create_table "viewed_reports", id: :serial, force: :cascade do |t|
+    t.integer "person_id"
+    t.integer "report_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["person_id"], name: "index_viewed_reports_on_person_id"
+    t.index ["report_id"], name: "index_viewed_reports_on_report_id"
+  end
+
+  create_table "workshops", id: :serial, force: :cascade do |t|
+    t.integer "number"
+    t.string "name"
+    t.integer "linguistic_activity_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "event_id"
+    t.integer "stage_id"
+    t.index ["event_id"], name: "index_workshops_on_event_id"
+    t.index ["linguistic_activity_id"], name: "index_workshops_on_linguistic_activity_id"
+    t.index ["stage_id"], name: "index_workshops_on_stage_id"
   end
 
 end
