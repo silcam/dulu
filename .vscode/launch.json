@@ -28,6 +28,18 @@
       ]
     },
     {
+      "name": "Rails Test",
+      "type": "Ruby",
+      "request": "launch",
+      "cwd": "${workspaceRoot}",
+      "program": "${workspaceRoot}/bin/rails",
+      "args": [
+        "test",
+        "${workspaceRoot}",
+        "${file}"
+      ]
+    },
+    {
       "name": "RSpec - all",
       "type": "Ruby",
       "request": "launch",

@@ -109,7 +109,7 @@ class NotificationTest < ActiveSupport::TestCase
 
   test "Added cluster to event" do
     Notification.generate(:added_cluster_to_event, @rick, events(:HdiGenesisChecking), cluster_id: clusters(:Ndop).id)
-    assert_equal 2, Notification.count
+    assert_equal 3, Notification.count
     assert_equal 1, @drew.notifications.count
     assert_equal 1, people(:Olga).notifications.count # LPF
   end

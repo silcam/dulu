@@ -176,8 +176,10 @@ class Notification < ApplicationRecord
                event_name: event.name,
                event_id: event.id
     )
+    people = (cluster_program_people(program) + event.people).uniq
+
     return {
-        people: cluster_program_people(program),
+        people: people,
         details: details
     }
   end
@@ -193,8 +195,10 @@ class Notification < ApplicationRecord
         event_name: event.name,
         event_id: event.id
     )
+    people = (cluster_program_people(cluster) + event.people).uniq
+
     return {
-        people: cluster_program_people(cluster),
+        people: people,
         details: details
     }
   end
