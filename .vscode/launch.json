@@ -35,8 +35,7 @@
       "program": "${workspaceRoot}/bin/rails",
       "args": [
         "test",
-        "${workspaceRoot}",
-        "${file}"
+        "${file}:${lineNumber}"
       ]
     },
     {
