@@ -1,0 +1,1 @@
+json.array! @workshops, partial: 'workshop', as: :workshop

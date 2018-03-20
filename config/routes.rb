@@ -98,4 +98,10 @@ Rails.application.routes.draw do
   get '/translation_activities/:id', to: 'activities#show', as: :translation_activity
   get '/linguistic_activities/:id', to: 'activities#show', as: :linguistic_activity
   get '/media_activities/:id', to: 'activities#show', as: :media_activity
+
+  namespace :api, defaults: {format: :json} do
+    resources :activities, shallow: true do
+      resources :workshops
+    end
+  end
 end

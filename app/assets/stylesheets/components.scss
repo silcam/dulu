@@ -1,0 +1,32 @@
+$red: #dc3545;
+$blue: #428bca;
+$yellow: #ffc107;
+$green: #28a745;
+
+.iconButton {
+    background-color: transparent;
+    border: none;
+}
+
+.iconButton:hover {
+    color: $blue;
+}
+
+.iconButtonSuccess:hover {
+    color: $green;
+}
+
+.iconButtonWarning:hover {
+    color: $yellow;
+}
+
+.iconButtonDanger:hover {
+    color: $red;
+}
+
+.errorMessage {
+    color: $red;
+    .form-control {
+        border-color: $red;
+    }
+}

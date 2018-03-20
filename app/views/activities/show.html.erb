@@ -88,22 +88,13 @@
       </div>
     <% else %>
       <div class="col-md-6 showable-form-section">
+
         <% if @activity.category == :Workshops %>
-          <h3>
-            <%= t :Workshops %>
-            <% if can? :update, @activity %>
-              <small>
-                <a href="#" data-showable-form-show><%= t :Edit %></a>
-                <a href="#" data-showable-form-hide class="not-shown"><%= t :Cancel %></a>
-              </small>
-            <% end %>
-          </h3>
-          <div class="shown">
-            <%= render 'workshops/table' %>
+          <div id='workshops' data-activity-id=<%= @activity.id %>
+                data-authenticity-token=<%= form_authenticity_token %>>
           </div>
-          <div class="not-shown">
-            <%= render 'workshops/edit_table' %>
-          </div>
+          <%= javascript_pack_tag('workshops') %>
+
         <% else %>
           <h3><%= t :History %></h3>
           <table class="table" id="dulutable" >
