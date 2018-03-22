@@ -77,7 +77,7 @@ class Workshop extends React.PureComponent {
     }
 
     completeWorkshop = () => {
-        if (this.props.date) {
+        if (this.props.workshop.date) {
             this.setState({completed: true}, () => {
                 this.updateWorkshop();
             })

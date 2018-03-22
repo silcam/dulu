@@ -41,11 +41,31 @@ class WorkshopActivity extends React.PureComponent {
         })
     }
 
+    findPlaceFor = (workshop, workshops) => {
+        var i
+        for (i=0; i<workshops.length; ++i) {
+            if (workshop.date && !workshops[i].date) {
+                return i
+            }
+            if (!workshop.date && !workshops[i].date && (workshop.id < workshops[i].id)) {
+                return i
+            }
+            if (workshop.date && workshops[i].date && workshop.date < workshops[i].date){
+                return i
+            }
+        }
+        return workshops.length
+    }
+
     handleUpdatedWorkshop = (workshop) => {
         this.setState((prevState, props) => {
-            const i = prevState.workshops.findIndex(ws => ws.id===workshop.id)
-            const workshops = update(prevState.workshops, {
-                $splice: [[i, 1, workshop]]
+            const oldIndex = prevState.workshops.findIndex(ws => ws.id===workshop.id)
+            var workshops = update(prevState.workshops, {
+                $splice: [[oldIndex, 1]]
+            })
+            const newIndex = this.findPlaceFor(workshop, workshops)
+            workshops = update(workshops, {
+                $splice: [[newIndex, 0, workshop]]
             })
             return({ workshops: workshops })
         })

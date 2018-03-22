@@ -81,7 +81,7 @@ class FuzzyDateInput extends React.PureComponent {
         else {
             this.setState({
                 errorMessage: errors,
-                showErrors: true
+                showErrors: this.state.showErrors || (this.state.year.length > 0)
             })
             this.props.dateIsInvalid()
         }

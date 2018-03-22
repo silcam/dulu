@@ -66,6 +66,18 @@ class Workshop < ApplicationRecord
     }
   end
 
+  def self.sort(workshops)
+    return workshops.sort do |a, b|
+      a_date = a.f_date || FuzzyDate.new(9999, 12, 31)
+      b_date = b.f_date || FuzzyDate.new(9999, 12, 31)
+      rvar = a_date <=> b_date
+      if rvar == 0
+        rvar = a.id <=> b.id
+      end
+      rvar
+    end
+  end
+
   private
 
   def add_stage(date)

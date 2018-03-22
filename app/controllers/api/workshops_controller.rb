@@ -2,7 +2,7 @@ class Api::WorkshopsController < ApplicationController
 
   def index
     @activity = Activity.find(params[:activity_id])
-    @workshops = @activity.workshops
+    @workshops = Workshop.sort @activity.workshops
   end
 
   def create
