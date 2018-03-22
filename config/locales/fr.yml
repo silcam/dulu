@@ -431,3 +431,40 @@ fr:
         end_date: Date de fin
       cluster:
         name: Nom
+
+  # React
+  common:
+    Cancel: Annuler
+    Save: Enregistrer
+    Saving: Enregistrement...
+    date_strings:
+      Day: Jour
+      Enter_valid_year: Saisissez un an valide s'il vous plait.
+      Month: Mois
+      Month_day_optional: Jour et mois sont optionnels
+      month_names_short:
+        Jan: jan.
+        Feb: fév.
+        Mar: mar.
+        Apr: avr.
+        May: mai
+        Jun: juin
+        Jul: juil.
+        Aug: août
+        Sep: sept.
+        Oct: oct.
+        Nov: nov.
+        Dec: dec.
+      Year: An
+
+  # Workshops
+  workshops_activity_page:
+    Add_event: Ajouter un événement
+    Add_workshop: Ajouter un atelier
+    Completed: Terminé
+    Delete_workshop_confirmation: Supprimer l'atelier %{name} ?
+    Mark_completed: Marquer comme terminé
+    Name_not_blank: Nom ne peut pas être vide.
+    Workshops: Ateliers
+    Workshop_date: Date d'atelier
+    Workshop_name: Nom d'atelier

@@ -12,7 +12,7 @@ import CancelButton from '../../shared_components/CancelButton'
         string authenticity_token
 */
 
-class NewWorkshopForm extends React.Component {
+class NewWorkshopForm extends React.PureComponent {
     constructor(props) {
         super(props)
         this.state = {
@@ -66,7 +66,7 @@ class NewWorkshopForm extends React.Component {
                 .catch(error => console.error(error))
         }
         else {
-            this.setState({nameError: "Name can't be blank"})
+            this.setState({nameError: this.props.strings.Name_not_blank})
         }
     }
 
@@ -80,16 +80,16 @@ class NewWorkshopForm extends React.Component {
             return(
                 <div>
                     <TextInput handleInput={this.handleInput} name="name" value={this.state.name}
-                                placeholder="Workshop Name" errorMessage={this.state.nameError}
+                                placeholder={this.props.strings.Workshop_name} errorMessage={this.state.nameError}
                                 handleEnter={this.createWorkshop} />
-                    <SaveButton handleClick={this.createWorkshop} saveInProgress={this.state.saving} />&nbsp;
-                    <CancelButton handleClick={this.cancelForm} />
+                    <SaveButton handleClick={this.createWorkshop} saveInProgress={this.state.saving} strings={this.props.strings} />&nbsp;
+                    <CancelButton handleClick={this.cancelForm} strings={this.props.strings} />
                 </div>
             )
         }
         else {
             return(
-                <AddIconButton handleClick={this.showForm} text='Add Workshop' />
+                <AddIconButton handleClick={this.showForm} text={this.props.strings.Add_workshop} />
             )
         }
     }

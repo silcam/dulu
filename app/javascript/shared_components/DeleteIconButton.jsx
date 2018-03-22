@@ -1,5 +1,7 @@
 import React from 'react'
 
+import IconButton from './IconButton'
+
 /*
     Required props:
         function handleClick
@@ -7,9 +9,7 @@ import React from 'react'
 
 function DeleteIconButton(props) {
     return(
-        <button className="iconButton iconButtonDanger" onClick={props.handleClick}>
-            <span className="glyphicon glyphicon-trash"></span>
-        </button>
+        <IconButton icon="trash" extraClasses="iconButtonDanger" {...props} />
     )
 }
 

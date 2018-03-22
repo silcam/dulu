@@ -90,8 +90,14 @@
       <div class="col-md-6 showable-form-section">
 
         <% if @activity.category == :Workshops %>
-          <div id='workshops' data-activity-id=<%= @activity.id %>
-                data-authenticity-token=<%= form_authenticity_token %>>
+          <script type="application/json" id="workshops-strings">
+            <%=
+              strings_json(:common, :workshops_activity_page)
+             %>
+          </script>
+          <div id='workshops' 
+                    data-activity-id=<%= @activity.id %>
+                    data-authenticity-token=<%= form_authenticity_token %>>
           </div>
           <%= javascript_pack_tag('workshops') %>
 

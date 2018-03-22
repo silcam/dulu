@@ -1,5 +1,7 @@
 import React from 'react'
 
+import IconButton from './IconButton'
+
 /*
     Required props:
         function handleClick
@@ -7,9 +9,7 @@ import React from 'react'
 
 function EditIconButton(props) {
     return(
-        <button className="iconButton iconButtonWarning" onClick={props.handleClick}>
-            <span className="glyphicon glyphicon-pencil"></span>
-        </button>
+        <IconButton icon="pencil" extraClasses="iconButtonWarning" {...props} />
     )
 }
 

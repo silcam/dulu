@@ -423,3 +423,48 @@ en:
       truncate: '...'
       next: '>'
       last: '>>'
+
+
+
+
+
+
+
+
+
+  # React
+  common:
+    Cancel: Cancel
+    Save: Save
+    Saving: Saving...
+    date_strings:
+      Day: Day
+      Enter_valid_year: Please enter a valid year
+      Month: Month
+      Month_day_optional: Month and day are optional
+      month_names_short:
+        Jan: Jan
+        Feb: Feb
+        Mar: Mar
+        Apr: Apr
+        May: May
+        Jun: Jun
+        Jul: Jul
+        Aug: Aug
+        Sep: Sep
+        Oct: Oct
+        Nov: Nov
+        Dec: Dec
+      Year: Year
+
+  # Workshops
+  workshops_activity_page:
+    Add_event: Add Event
+    Add_workshop: Add Workshop
+    Completed: Completed
+    Delete_workshop_confirmation: Delete the workshop %{name}?
+    Mark_completed: Mark Completed
+    Name_not_blank: Name can't be blank.
+    Workshops: Workshops
+    Workshop_date: Workshop Date
+    Workshop_name: Workshop Name

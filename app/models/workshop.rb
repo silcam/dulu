@@ -34,6 +34,16 @@ class Workshop < ApplicationRecord
   end
   alias complete? completed?
 
+  # If marking complete, the date is required
+  def update_completion(completed, date=nil)
+    if self.completed? && !completed
+      self.stage.destroy
+      self.reload
+    elsif !self.completed? && completed
+      add_stage(date)
+    end
+  end
+
   def complete(params)
     date = (event.nil?) ?
                params[:date] :
@@ -54,5 +64,16 @@ class Workshop < ApplicationRecord
         date: f_date.try(:pretty_print),
         activity: linguistic_activity.to_hash
     }
+  end
+
+  private
+
+  def add_stage(date)
+    stage = self.linguistic_activity.stages.create!(
+              kind: :Linguistic,
+              name: self.name,
+              start_date: date
+    )
+    self.update(stage: stage)
   end
 end

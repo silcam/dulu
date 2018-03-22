@@ -30,3 +30,25 @@ $green: #28a745;
         border-color: $red;
     }
 }
+
+.autoWidth {
+    width: auto;
+}
+
+.autoWidthFormElements {
+    input, select {
+        width: auto;
+        display: inline-block;
+        margin-right: 8px;
+    }
+}
+
+label.checkBoxLabel {
+    font-weight: normal;
+}
+
+.inlineFuzzyDateInputs {
+    .fuzzyDateInput {
+        display: inline-block;
+    }
+}

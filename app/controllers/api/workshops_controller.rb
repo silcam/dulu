@@ -1,8 +1,8 @@
 class Api::WorkshopsController < ApplicationController
 
   def index
-    activity = Activity.find(params[:activity_id])
-    @workshops = activity.workshops
+    @activity = Activity.find(params[:activity_id])
+    @workshops = @activity.workshops
   end
 
   def create
@@ -16,6 +16,7 @@ class Api::WorkshopsController < ApplicationController
     @workshop = Workshop.find(params[:id])
     authorize! :update, @workshop.linguistic_activity
     @workshop.update(workshop_params)
+    @workshop.update_completion(params[:workshop][:completed], params[:workshop][:date])
   end
 
   def destroy

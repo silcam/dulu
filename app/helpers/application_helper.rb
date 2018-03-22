@@ -25,9 +25,10 @@ module ApplicationHelper
   end
 
   def try_t(key, options={})
-    options[:default] = key
+    options[:default] = key.to_s
     t(key, options)
   end
+  alias tt try_t
 
   def t_gen(key, feminine, options={})
     gender = feminine ? :f : :m
@@ -110,5 +111,11 @@ module ApplicationHelper
       notifications += current_user.notifications.where(read: true).limit(MAX_NOTIFICATIONS - notifications.count)
     end
     notifications
+  end
+
+  def strings_json(*keys)
+    h = {}
+    keys.each{ |key| h.merge!(I18n.t(key)) }
+    return JSON.generate(h).html_safe
   end
 end
