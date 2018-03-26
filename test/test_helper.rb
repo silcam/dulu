@@ -13,6 +13,10 @@ Minitest::Reporters.use!
 
 Delayed::Worker.delay_jobs = false
 
+Capybara::Webkit.configure do |config|
+  # config.raise_javascript_errors = true
+end
+
 class ActiveSupport::TestCase
   # Setup all fixtures in test/fixtures/*.yml for all tests in alphabetical order.
   fixtures :all

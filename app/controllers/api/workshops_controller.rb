@@ -16,7 +16,7 @@ class Api::WorkshopsController < ApplicationController
     @workshop = Workshop.find(params[:id])
     authorize! :update, @workshop.linguistic_activity
     @workshop.update(workshop_params)
-    @workshop.update_completion(params[:workshop][:completed], params[:workshop][:date])
+    update_completion_and_notify
   end
 
   def destroy
@@ -30,5 +30,13 @@ class Api::WorkshopsController < ApplicationController
 
   def workshop_params
     params.require(:workshop).permit(:name)
+  end
+
+  def update_completion_and_notify
+    was_complete = @workshop.completed?
+    @workshop.update_completion(params[:workshop][:completed], params[:workshop][:date])
+    if !was_complete && @workshop.completed?
+      Notification.generate(:workshop_complete, current_user, @workshop)
+    end
   end
 end

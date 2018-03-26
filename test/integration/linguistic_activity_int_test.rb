@@ -67,29 +67,32 @@ class LinguisticActivityIntTest < Capybara::Rails::TestCase
 
   test "Uncomplete Workshop" do
     visit activity_path(@grammar_ws)
-    find('h3', text: 'Workshops').click_on 'Edit'
-    uncheck 'Complete'
-    click_on 'Save'
-    find('tr', text: 'Noun').assert_selector('input[type=submit]' )
+    within('tr', text: 'Noun') do
+      assert_no_selector('button', text: 'Mark Completed')
+      find('button.iconButtonWarning').click # Edit button
+      uncheck 'Completed'
+      click_on 'Save'
+      assert_selector('button', text: 'Mark Completed')
+    end
   end
 
-  # These would be interesting to do someday maybe
-  # test "Add Workshop" do
-  #   visit activity_path(@grammar_ws)
-  #   find('h3', text: 'Workshops').click_on 'Edit'
-  #   within('div.not-shown') do
-  #     within('table') do
-  #       click_on '+'
-  #       assert_selector('tr', count: 5)
-  #     end
-  #   end
-  # end
-  #
-  # test "Remove Workshop" do
-  #
-  # end
-  #
-  # test "Reorder Workshops" do
-  #
-  # end
+  test "Add Workshop" do
+    visit activity_path(@grammar_ws)
+    assert_no_selector('tr', text: 'Taco Party')
+    click_on 'Add Workshop'
+    fill_in 'name', with: 'Taco Party'
+    click_on 'Save'
+    assert_selector('tr', text: 'Taco Party')
+  end
+  
+  test "Remove Workshop" do
+    visit activity_path(@grammar_ws)
+    # assert_selector('tr', text: 'Noun')
+    within('tr', text: 'Noun') do
+      page.accept_confirm do
+        find('button.iconButtonDanger').click # Delete button
+      end
+    end
+    assert_no_selector('tr', text: 'Noun')
+  end
 end
