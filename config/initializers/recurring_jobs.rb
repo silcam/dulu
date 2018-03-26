@@ -1,1 +1,1 @@
-DailyEmailTask.schedule!
+# DailyEmailTask.schedule!

@@ -10,7 +10,9 @@ set :bundle_flags, '--deployment'
 append :linked_files, "config/secrets.yml", "config/initializers/omniauth.rb", "config/database.yml", "config/application.yml"
 append :linked_dirs, "tmp/pids"
 
-after 'deploy:publishing', 'delayed_job:restart'
+# after 'deploy:publishing', 'delayed_job:restart'
+
+
 # after 'deploy:publishing', 'recurring:init'
 
 # task :bundle_install do
