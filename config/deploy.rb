@@ -8,7 +8,7 @@ set :bundle_flags, '--deployment'
 # set :branch, "postgres"
 
 append :linked_files, "config/secrets.yml", "config/initializers/omniauth.rb", "config/database.yml", "config/application.yml"
-append :linked_dirs, "tmp/pids"
+append :linked_dirs, "tmp/pids", "node_modules"
 
 after 'deploy:publishing', 'delayed_job:restart'
 
