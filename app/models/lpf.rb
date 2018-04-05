@@ -1,5 +1,5 @@
 class Lpf < ApplicationRecord
-  belongs_to :person
+  belongs_to :person, required: false
   has_many :clusters
   has_many :programs
 
