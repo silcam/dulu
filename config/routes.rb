@@ -100,6 +100,8 @@ Rails.application.routes.draw do
   get '/media_activities/:id', to: 'activities#show', as: :media_activity
 
   namespace :api, defaults: {format: :json} do
+    get 'search', to: 'searches#search'
+    
     resources :activities, shallow: true do
       resources :workshops
     end

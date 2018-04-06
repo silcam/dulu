@@ -457,6 +457,10 @@ en:
         Dec: Dec
       Year: Year
 
+  # Dashboard
+  dashboard_page:
+    Search_prompt: Search...
+
   # Workshops
   workshops_activity_page:
     Add_event: Add Event

@@ -1,62 +1,11 @@
-<%= render 'searches/search_form' %>
 
+<script type="application/json" id="strings">
+  <%=
+    strings_json(:common, :dashboard_page)
+    %>
+</script>
 
-<div class="row">
-  <div class="col-md-8">
-
-    <h2><%= t @domain %></h2>
-
-    <div style="margin-top: 12px;">
-      <hr>
-      <ul class="list-inline">
-        <% domains = %w[Media Translation].sort{ |a,b| t(a)<=>t(b) } %>
-        <li><%= link_to t(:Home), root_path, class: 'h4' %></li>
-        <% domains.each do |domain| %>
-          <li>
-            <%= link_to t(domain), dashboard_path(domain), class: 'h4' %>
-          </li>
-        <% end %>
-      </ul>
-      <hr>
-    </div>
-
-    <%= render "#{@domain.downcase}" %>
-  </div>
-
-  <div class="col-md-4">
-    <% participants = @user.current_participants %>
-    <% unless participants.empty? %>
-      <h2>
-        <%= t :My_programs %>
-      </h2>
-      <ul class="list-unstyled">
-        <% participants.each do |participant| %>
-          <li style="padding-bottom: 12px;">
-            <% if participant.cluster %>
-              <b><%= link_to t(:Cluster_x, name: participant.cluster.name), participant.cluster, class: 'h3' %></b>
-              <br>
-              <%= render 'my_cluster_summary', cluster: participant.cluster %>
-              <ul class="list-unstyled indented" style="padding-top: 8px;">
-                <% participant.cluster.programs.each do |program| %>
-                  <li style="padding-bottom: 12px;">
-                    <%= link_to program.name, program, class: 'h4' %>
-                    <span class="small" style="font-style: italic; margin-left: 8px; float: right;">
-                      <%= t(:Updated) %> <%= l(program.updated_at.to_date, format: :std) %>
-                    </span><hr style="margin: 0;">
-                    <%= render 'my_program_summary', program: program %>
-                  </li>
-                <% end %>
-              </ul>
-            <% else %>
-              <%= link_to participant.program.name, participant.program, class: 'h4' %>
-              <span class="small" style="font-style: italic; margin-left: 8px; float: right;">
-                <%= t(:Updated) %> <%= l(participant.program.updated_at.to_date, format: :std) %>
-              </span><hr style="margin: 0;">
-              <%= render 'my_program_summary', program: participant.program %>
-            <% end %>
-          </li>
-        <% end %>
-      </ul>
-    <% end %>
-  </div>
+<div id="dashboard">
 </div>
+
+<%= javascript_pack_tag 'dashboard' %>
