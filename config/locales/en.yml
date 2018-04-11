@@ -460,6 +460,7 @@ en:
   # Dashboard
   dashboard_page:
     Search_prompt: Search...
+    Notifications: Notifications
 
   # Workshops
   workshops_activity_page:

@@ -88,11 +88,13 @@ class Searcher extends React.PureComponent {
 
                 {this.state.noResults && <p>No Results</p>}
 
-                <table className='table'>
-                    <tbody>
-                        <ResultsRows results={this.state.results} padding='0' />
-                    </tbody>
-                </table>
+                {(this.state.results.length > 0) && 
+                    <table className='table'>
+                        <tbody>
+                            <ResultsRows results={this.state.results} padding='0' />
+                        </tbody>
+                    </table>
+                }
             </div>
         )
     }
