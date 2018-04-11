@@ -10,19 +10,22 @@ class NotificationMailer < ApplicationMailer
 
   def notify(notification)
     person = notification.person
-    @notification = notification
-    set_locale person
-    mail to: to_field(person), subject: I18n.t('email.notify.subject')
-    notification.update(emailed: true)
+    if should_notify(person)
+      @notification = notification
+      set_locale person
+      mail to: to_field(person), subject: I18n.t('email.notify.subject')
+      notification.update(emailed: true)
+    end
   end
 
   def notification_summary(person)
     @notifications = person.notifications.where(read: false, emailed: false)
     @person = person
-    return if @notifications.empty?
-    set_locale(person)
-    mail to: to_field(person), subject: I18n.t('email.notification_summary.subject')
-    @notifications.update(emailed: true)
+    if should_notify(person) && !@notifications.empty?
+      set_locale(person)
+      mail to: to_field(person), subject: I18n.t('email.notification_summary.subject')
+      @notifications.update(emailed: true)
+    end
   end
 
   private
@@ -33,5 +36,9 @@ class NotificationMailer < ApplicationMailer
 
   def to_field(person)
     %("#{person.full_name}" <#{person.email}>)
+  end
+
+  def should_notify(person)
+    person.has_login && !person.email.blank?
   end
 end
