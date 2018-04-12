@@ -5,7 +5,7 @@ class ReportsController < ApplicationController
   end
 
   def create
-    params_json = JSON.generate(params.to_hash)
+    params_json = JSON.generate(request.parameters)
     name = Report.make_name params
     @report = Report.create(params: params_json, name: name)
     redirect_to @report
