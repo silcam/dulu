@@ -11,9 +11,16 @@ class NotificationTest < ActiveSupport::TestCase
     # @old_count = Notification.count #It will be 0
   end
 
+  test 't_vars' do
+    I18n.locale = :en
+    n = Notification.new(vars: {user_name: 'Rick Conrad', activity_name: {en: 'Genesis', fr: 'Genèse'}})
+    exp = {user_name: 'Rick Conrad', activity_name: 'Genesis'}
+    assert_equal exp, n.t_vars
+  end
+
   test "New participant program" do
     lance_hdi = Participant.create(person: @lance, program: @hdi, start_date: '2018')
-    Notification.generate(:new_participant, @drew, lance_hdi)
+    Notification.new_program_participant(@drew, lance_hdi)
     assert_equal 2, Notification.count
     assert_equal 1, people(:Abanda).notifications.count
     assert_equal 1, @andreas.notifications.count # LPF
@@ -22,7 +29,7 @@ class NotificationTest < ActiveSupport::TestCase
   test "New participant cluster" do
     ndop = clusters :Ndop
     kendall_ndop = Participant.create(person: people(:Kendall), cluster: ndop, start_date: '2018')
-    Notification.generate(:new_participant, @rick, kendall_ndop)
+    Notification.new_cluster_participant @rick, kendall_ndop
     assert_equal 2, Notification.count
     assert_equal 1, @drew.notifications.count
     assert_equal 1, people(:Olga).notifications.count # LPF
@@ -30,7 +37,7 @@ class NotificationTest < ActiveSupport::TestCase
 
   test "New stage" do
     ezra_testing = Stage.create!(activity: translation_activities(:HdiEzra), start_date: '2018', name: :Testing, kind: :Translation)
-    Notification.generate(:new_stage, @drew, ezra_testing)
+    Notification.new_stage(@drew, ezra_testing)
     assert_equal 2, Notification.count
     assert_equal 1, people(:Abanda).notifications.count
     assert_equal 1, @andreas.notifications.count # LPF
@@ -39,7 +46,7 @@ class NotificationTest < ActiveSupport::TestCase
   test "Workshop complete" do
     verbshop = workshops :Verb
     verbshop.complete({})
-    Notification.generate(:workshop_complete, @rick, verbshop)
+    Notification.workshop_complete(@rick, verbshop)
     assert_equal 2, Notification.count
     assert_equal 1, people(:Kendall).notifications.count
     assert_equal 1, people(:Olga).notifications.count # LPF
@@ -47,68 +54,76 @@ class NotificationTest < ActiveSupport::TestCase
 
   test "New activity" do
     dvu_study = LinguisticActivity.create(category: :Research, title: 'Dvu', program: @hdi)
-    #dvu_study = TranslationActivity.create(program: @hdi, bible_book: bible_books(:John))
-    Notification.generate(:new_activity, @drew, dvu_study)
+    # alternate version :
+    # dvu_study = TranslationActivity.create(program: @hdi, bible_book: bible_books(:John))
+    Notification.new_activity(@drew, dvu_study)
     assert_equal 2, Notification.count
     assert_equal 1, people(:Abanda).notifications.count
     assert_equal 1, @andreas.notifications.count # LPF
   end
 
   test "Added a testament" do
-    Notification.generate(:added_a_testament, @rick, programs(:Ewondo), testament: 'ot')
+    Notification.added_a_testament(@rick, :Old_testament, programs(:Ewondo))
     assert_equal 2, Notification.count
     assert_equal 1, people(:Kendall).notifications.count
     assert_equal 1, people(:Olga).notifications.count # LPF
   end
 
   test "Updated you" do
-    Notification.generate(:updated_you, @rick, @drew)
+    Notification.updated_you(@rick, @drew)
     assert_equal 1, Notification.count
     assert_equal 'updated_you', @drew.notifications.first.kind
   end
 
   test "Gave you role" do
-    Notification.generate(:gave_you_role, @rick, @drew, role: :Literacy_specialist)
+    Notification.gave_you_role(@rick, @drew, :Literacy_specialist)
     assert_equal 1, Notification.count
     notification = @drew.notifications.first
     assert_equal 'gave_you_role', notification.kind
-    assert_equal 'Literacy_specialist', notification.details[:role]
+    assert_equal 'Literacy Specialist', notification.t_vars[:role_name]
   end
 
   test "Added you to program" do
     lance_hdi = Participant.create(person: @lance, program: @hdi, start_date: '2018')
-    Notification.generate(:added_you_to_cluster_program, @drew, lance_hdi)
+    Notification.added_you_to_program(@drew, lance_hdi)
     assert_equal 1, Notification.count
     assert_equal 1, @lance.notifications.count
   end
 
   test "Added you to cluster" do
-    Notification.generate(:added_you_to_cluster_program, @rick, participants(:DrewNdop))
+    Notification.added_you_to_cluster(@rick, participants(:DrewNdop))
     assert_equal 1, Notification.count
     assert_equal 1, @drew.notifications.count
   end
 
   test "Added you to activity" do
-    Notification.generate(:added_you_to_activity, @rick, participants(:DrewHdi), activity_id: translation_activities(:HdiGenesis).id)
+    Notification.added_you_to_activity(@rick, @drew, translation_activities(:HdiGenesis))
     assert_equal 1, Notification.count
     assert_equal 1, @drew.notifications.count
   end
 
   test "Added you to event" do
-    Notification.generate(:added_you_to_event, @rick, event_participants(:DrewHdiGenesis))
+    Notification.added_you_to_event(@rick, event_participants(:DrewHdiGenesis))
     assert_equal 1, Notification.count
     assert_equal 1, @drew.notifications.count
   end
 
   test "New event for program" do
-    Notification.generate(:new_event_for_program, @drew, events(:HdiGenesisChecking), program_id: @hdi.id)
+    Notification.new_event_for_program(@drew, events(:HdiGenesisChecking), @hdi)
+    assert_equal 2, Notification.count
+    assert_equal 1, people(:Abanda).notifications.count
+    assert_equal 1, @andreas.notifications.count # LPF
+  end
+
+  test "Added program to event" do
+    Notification.added_program_to_event(@drew, @hdi, events(:HdiGenesisChecking))
     assert_equal 2, Notification.count
     assert_equal 1, people(:Abanda).notifications.count
     assert_equal 1, @andreas.notifications.count # LPF
   end
 
   test "Added cluster to event" do
-    Notification.generate(:added_cluster_to_event, @rick, events(:HdiGenesisChecking), cluster_id: clusters(:Ndop).id)
+    Notification.added_cluster_to_event(@rick, clusters(:Ndop), events(:HdiGenesisChecking))
     assert_equal 3, Notification.count
     assert_equal 1, @drew.notifications.count
     assert_equal 1, people(:Olga).notifications.count # LPF

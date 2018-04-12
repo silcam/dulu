@@ -44,7 +44,7 @@ class NotificationsSidebar extends React.PureComponent {
                     {this.state.notifications.map((notification) => {
                         return (
                             <tr key={notification.id}>
-                            <td dangerouslySetInnerHTML={{__html: t_sub(strings[notification.message.key], notification.message.vars, notification.message.links)}} />
+                            <td dangerouslySetInnerHTML={{__html: t_sub(strings[notification.message.key], notification.message.t_vars, notification.message.links)}} />
                             </tr>
                         )
                     })}

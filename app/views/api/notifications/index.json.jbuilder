@@ -3,7 +3,11 @@ message = {key: 'new_participant', vars: { user_name: 'Rick Conrad', participant
 json.array! @notifications do |notification|
   json.id notification.id
 
-  json.message message
+  json.message do
+    json.key notification.kind
+    json.t_vars notification.t_vars
+    json.links notification.links
+  end
   # json.html ApplicationController.new.render_to_string(partial: 'notifications/text', locals: {notification: notification}, format: :html)
   # json.html ApplicationController.render(file: 'notifications/_text', locals: {notification: notification})
   # json.html raw(render(partial: 'notifications/text', formats: [:html], locals: {notification: notification}))

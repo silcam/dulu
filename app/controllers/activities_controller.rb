@@ -66,7 +66,7 @@ class ActivitiesController < ApplicationController
     participant = Participant.find(params[:participant_id])
     @activity.participants << participant
     redirect_to activity_path(@activity)
-    Notification.generate :added_you_to_activity, current_user, participant, activity_id: @activity.id
+    Notification.added_you_to_activity current_user, participant.person, @activity
   end
 
   def remove_update
@@ -92,9 +92,10 @@ class ActivitiesController < ApplicationController
 
   def generate_notification
     if ['nt', 'ot'].include? params[:activity][:bible_book_id]
-      Notification.generate(:added_a_testament, current_user, @activity.program, testament: params[:activity][:bible_book_id])
+      testament = (params[:activity][:bible_book_id] == 'nt') ? :New_testament : :Old_testament
+      Notification.added_a_testament current_user, testament, @activity.program
     else
-      Notification.generate(:new_activity, current_user, @activity)
+      Notification.new_activity current_user, @activity
     end
   end
 end

@@ -19,7 +19,7 @@ class StagesController < ApplicationController
         format.js
         format.html { redirect_to(@activity.program) }
       end
-      Notification.generate(:new_stage, current_user, @stage)
+      Notification.new_stage(current_user, @stage)
     end
   end
 

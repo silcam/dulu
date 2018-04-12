@@ -457,6 +457,11 @@ fr:
         Dec: dec.
       Year: An
 
+  # Dashboard
+  dashboard_page:
+    Search_prompt: Rechercher...
+    Notifications: Notifications
+
   # Workshops
   workshops_activity_page:
     Add_event: Ajouter un événement

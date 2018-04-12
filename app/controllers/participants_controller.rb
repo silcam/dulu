@@ -23,8 +23,7 @@ class ParticipantsController < ApplicationController
     @participant = @cluster_program.participants.new(participant_params)
     if @participant.save
       @participant.associate_activities(params[:assoc_activities])
-      Notification.generate :new_participant, current_user, @participant
-      Notification.generate :added_you_to_cluster_program, current_user, @participant
+      notify_new_participant
       redirect_to @participant
     else
       render 'new'
@@ -60,8 +59,9 @@ class ParticipantsController < ApplicationController
     if params[:role]
       @participant.add_role(params[:role]) if @participant.person.has_role?(params[:role])
     elsif params[:activity_id]
-      @participant.activities << Activity.find(params[:activity_id])
-      Notification.generate :added_you_to_activity, current_user, @participant, activity_id: params[:activity_id]
+      activity = Activity.find(params[:activity_id])
+      @participant.activities << activity
+      Notification.added_you_to_activity current_user, @participant.person, activity
     end
     redirect_to @participant
   end
@@ -105,6 +105,16 @@ class ParticipantsController < ApplicationController
         'finish'
       else
         redirect_to not_allowed_path
+    end
+  end
+
+  def notify_new_participant
+    if @cluster_program.is_a? Cluster
+      Notification.added_you_to_cluster current_user, @participant
+      Notification.new_cluster_participant current_user, @participant
+    else
+      Notification.added_you_to_program current_user, @participant
+      Notification.new_program_participant current_user, @participant
     end
   end
 end

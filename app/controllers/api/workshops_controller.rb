@@ -36,7 +36,7 @@ class Api::WorkshopsController < ApplicationController
     was_complete = @workshop.completed?
     @workshop.update_completion(params[:workshop][:completed], params[:workshop][:date])
     if !was_complete && @workshop.completed?
-      Notification.generate(:workshop_complete, current_user, @workshop)
+      Notification.workshop_complete current_user, @workshop
     end
   end
 end
