@@ -4,13 +4,15 @@ import React from 'react'
 import DashboardSidebar from './DashboardSidebar'
 import NotificationsSidebar from './NotificationsSidebar'
 import Searcher from './Searcher'
-import TranslationActivitiesTable from './TranslationActivitiesTable'
+import MainContentMenu from './MainContentMenu';
+import MainContent from './MainContent';
 
 class Dashboard extends React.PureComponent {
     constructor(props) {
         super(props)
         this.state = {
-            programs: []
+            programs: [], 
+            mainContentSelection: 'TranslationActivities'
         }
     }
 
@@ -35,6 +37,18 @@ class Dashboard extends React.PureComponent {
         .catch(error => console.error(error))
     }
 
+    onMainContentMenuSelection = (selection) => {
+        this.setState({
+            mainContentSelection: selection
+        })
+    }
+
+    // DEBUG CODE ===================================================================
+    componentDidMount() {
+        this.setSelectedCluster(5)
+    }
+    // ==============================================================================
+
     render() {
         return (
             <div className='row'>
@@ -45,7 +59,9 @@ class Dashboard extends React.PureComponent {
                     <div className='row'>
                         <div className='col-md-9'>
                             <Searcher strings={this.props.strings} />
-                            <TranslationActivitiesTable programs={this.state.programs}  />
+                            <MainContentMenu options={['TranslationActivities', 'Participants']} 
+                                             onSelect={this.onMainContentMenuSelection}/>
+                            <MainContent programs={this.state.programs} mainContentSelection={this.state.mainContentSelection} />
                         </div>
                         <div className='col-md-3'>
                             <NotificationsSidebar strings={this.props.strings} />

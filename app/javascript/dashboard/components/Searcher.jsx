@@ -54,6 +54,12 @@ class Searcher extends React.PureComponent {
         }
     }
 
+    goToFirstResult = () => {
+        if (this.state.results[0] && this.state.results[0].route) {
+            window.location.href = this.state.results[0].route
+        }
+    }
+
     search = (query) => {
         if (query.length > 2) {
             if (this.refireTimer) {
@@ -84,7 +90,7 @@ class Searcher extends React.PureComponent {
         return (
             <div>
                 <TextInput handleInput={this.handleInput} name="query" value={this.state.query}
-                    placeholder={this.props.strings.Search_prompt} />
+                    placeholder={this.props.strings.Search_prompt} handleEnter={this.goToFirstResult} />
 
                 {this.state.noResults && <p>No Results</p>}
 

@@ -4,13 +4,16 @@ class TranslationActivityRow extends React.PureComponent {
 
     render() {
         const activity = this.props.activity
+        const program = this.props.program
         return (
             <tr>
                 {!this.props.oneProgram && 
-                    <td>{this.props.program.name}</td>
+                    <td>
+                        <a href={`/programs/${program.id}/`}>{program.name}</a>
+                    </td>
                 }
                 <td>
-                    {activity.name}
+                    <a href={`/activities/${activity.id}/`}>{activity.name}</a>
                 </td>
                 <td className="progress-cell">
                     <div className="progress">

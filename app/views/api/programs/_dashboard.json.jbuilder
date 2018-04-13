@@ -17,6 +17,11 @@ json.translation_activities translation_activities do |activity|
   end
 end
 
+json.participants program.all_current_participants do |participant|
+  json.(participant, :id, :full_name)
+  json.roles participant.roles.collect{ |role| t(role) }
+end
+
 json.can do
   json.update defined?(can_update) ? can_update : can?(:update_activities, program)
 end
