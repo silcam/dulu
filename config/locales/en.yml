@@ -452,11 +452,21 @@ en:
         Nov: Nov
         Dec: Dec
       Year: Year
+    Updated: Updated
 
   # Dashboard
   dashboard_page:
-    Search_prompt: Search...
+    Book: Book
+    Events: Events
+    Language: Language
+    Last_update: Last Update
     Notifications: Notifications
+    Participants: Participants
+    Search_prompt: Search...
+    Sort: Sort
+    Stage: Stage
+    Translation_activities: Translation Activities
+    
 
   # Workshops
   workshops_activity_page:

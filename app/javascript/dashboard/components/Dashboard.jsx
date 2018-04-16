@@ -4,7 +4,6 @@ import React from 'react'
 import DashboardSidebar from './DashboardSidebar'
 import NotificationsSidebar from './NotificationsSidebar'
 import Searcher from './Searcher'
-import MainContentMenu from './MainContentMenu';
 import MainContent from './MainContent';
 
 class Dashboard extends React.PureComponent {
@@ -37,11 +36,6 @@ class Dashboard extends React.PureComponent {
         .catch(error => console.error(error))
     }
 
-    onMainContentMenuSelection = (selection) => {
-        this.setState({
-            mainContentSelection: selection
-        })
-    }
 
     // DEBUG CODE ===================================================================
     componentDidMount() {
@@ -59,9 +53,7 @@ class Dashboard extends React.PureComponent {
                     <div className='row'>
                         <div className='col-md-9'>
                             <Searcher strings={this.props.strings} />
-                            <MainContentMenu options={['TranslationActivities', 'Participants']} 
-                                             onSelect={this.onMainContentMenuSelection}/>
-                            <MainContent programs={this.state.programs} mainContentSelection={this.state.mainContentSelection} />
+                            <MainContent programs={this.state.programs} strings={this.props.strings} />
                         </div>
                         <div className='col-md-3'>
                             <NotificationsSidebar strings={this.props.strings} />

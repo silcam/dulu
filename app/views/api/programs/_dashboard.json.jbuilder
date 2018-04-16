@@ -7,8 +7,11 @@ translation_activities = program.translation_activities.order(:bible_book_id)
 json.translation_activities translation_activities do |activity|
   json.(activity, :id, :name)
   
+  json.programId program.id
+  json.programName program.name
   json.bibleBookId activity.bible_book_id
   json.stageName t(activity.stage_name)
+  json.lastUpdate activity.updated_at
 
   json.progress do
     percent, color = activity.progress

@@ -4,12 +4,11 @@ class TranslationActivityRow extends React.PureComponent {
 
     render() {
         const activity = this.props.activity
-        const program = this.props.program
         return (
             <tr>
                 {!this.props.oneProgram && 
                     <td>
-                        <a href={`/programs/${program.id}/`}>{program.name}</a>
+                        <a href={`/programs/${activity.programId}/`}>{activity.programName}</a>
                     </td>
                 }
                 <td>
@@ -24,6 +23,11 @@ class TranslationActivityRow extends React.PureComponent {
                 </td>
                 <td>
                     {activity.stageName}
+                </td>
+                <td className='reallySmall'>
+                    <i>
+                        {this.props.strings.Updated}: {activity.lastUpdate.slice(0, 10)}
+                    </i>
                 </td>
             </tr>
         )
