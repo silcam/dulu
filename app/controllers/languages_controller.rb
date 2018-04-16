@@ -3,7 +3,7 @@ class LanguagesController < ApplicationController
 
   def index
     if params[:region]
-      region = CameroonRegion.find params[:region]
+      region = Region.find params[:region]
       @languages = region.languages.std_includes
       @subtitle = region.name
     elsif params[:country]
