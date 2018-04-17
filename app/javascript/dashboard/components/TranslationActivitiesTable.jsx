@@ -17,10 +17,10 @@ class TranslationActivitiesTable extends React.PureComponent {
 
     static sortFunctions = {
         language: (a, b) => {
-            if (a.programId == b.programId) {
+            if (a.programName == b.programName) {
                 return intCompare(a.bibleBookId, b.bibleBookId)
             }
-            return intCompare(a.programId, b.programId)
+            return a.programName.localeCompare(b.programName)
         },
         book: (a, b) => {
             if (a.bibleBookId == b.bibleBookId) return intCompare(a.programId, b.programId)
@@ -48,7 +48,7 @@ class TranslationActivitiesTable extends React.PureComponent {
                 activities: activities
             }
         }
-        return null;
+        return null
     }
 
     changeSort = (e) => {
@@ -62,15 +62,16 @@ class TranslationActivitiesTable extends React.PureComponent {
     }
 
     render() {
+        const sortOptions = ['Language', 'Book', 'Stage', 'Last_update']
         return (
             <div>
-                <SortPicker sort={this.state.sort} strings={this.props.strings} changeSort={this.changeSort} />
+                <SortPicker sort={this.state.sort} options={sortOptions} 
+                            strings={this.props.strings} changeSort={this.changeSort} />
                 <table className="table">
                     <tbody>
                         {this.state.activities.map((activity) => {
                             return <TranslationActivityRow key={activity.id} activity={activity}
-                                    oneProgram={this.props.programs.length==1} sort={this.state.sort}
-                                    strings={this.props.strings} />
+                                        sort={this.state.sort} strings={this.props.strings} />
 
                         })}
                     </tbody>

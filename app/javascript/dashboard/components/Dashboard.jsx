@@ -10,8 +10,7 @@ class Dashboard extends React.PureComponent {
     constructor(props) {
         super(props)
         this.state = {
-            programs: [], 
-            mainContentSelection: 'TranslationActivities',
+            programs: [],
             loading: 0
         }
     }

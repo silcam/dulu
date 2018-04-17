@@ -1,7 +1,7 @@
 import React from 'react'
 
 function SortPicker(props) {
-    const options = ['Language', 'Book', 'Stage', 'Last_update']
+    const options = props.options
     return (
         <div>
             <small>

@@ -428,6 +428,10 @@ en:
 
 
 
+
+
+
+
   # React
   common:
     Cancel: Cancel
@@ -435,6 +439,7 @@ en:
     Save: Save
     Saving: Saving...
     See_more: See more
+    Updated: Updated
     date_strings:
       Day: Day
       Enter_valid_year: Please enter a valid year
@@ -454,7 +459,6 @@ en:
         Nov: Nov
         Dec: Dec
       Year: Year
-    Updated: Updated
 
   # Dashboard
   dashboard_page:
@@ -465,11 +469,12 @@ en:
     Mark_all_read: Mark all as read
     Notifications: Notifications
     Participants: Participants
+    Person: Person
+    Role: Role
     Search_prompt: Search...
     Sort: Sort
     Stage: Stage
     Translation_activities: Translation Activities
-    
 
   # Workshops
   workshops_activity_page:

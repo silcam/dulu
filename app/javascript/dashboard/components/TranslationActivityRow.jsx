@@ -6,11 +6,9 @@ class TranslationActivityRow extends React.PureComponent {
         const activity = this.props.activity
         return (
             <tr>
-                {!this.props.oneProgram && 
-                    <td>
-                        <a href={`/programs/${activity.programId}/`}>{activity.programName}</a>
-                    </td>
-                }
+                <td>
+                    <a href={`/programs/${activity.programId}/`}>{activity.programName}</a>
+                </td>
                 <td>
                     <a href={`/activities/${activity.id}/`}>{activity.name}</a>
                 </td>

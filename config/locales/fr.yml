@@ -435,8 +435,11 @@ fr:
   # React
   common:
     Cancel: Annuler
+    Loading: Chargement...
     Save: Enregistrer
     Saving: Enregistrement...
+    See_more: Voir plus
+    Updated: Mise à jour
     date_strings:
       Day: Jour
       Enter_valid_year: Saisissez un an valide s'il vous plait.
@@ -459,8 +462,19 @@ fr:
 
   # Dashboard
   dashboard_page:
-    Search_prompt: Rechercher...
+    Book: Livre
+    Events: Événements
+    Language: Langue
+    Last_update: Dernière mise à jour
+    Mark_all_as_read: Marquer tous comme lus
     Notifications: Notifications
+    Participants: Participants
+    Person: Personne
+    Role: Rôle
+    Search_prompt: Rechercher...
+    Sort: Trier
+    Stage: Étape
+    Translation_activities: Activités traductions
 
   # Workshops
   workshops_activity_page:

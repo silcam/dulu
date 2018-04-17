@@ -21,7 +21,16 @@ json.translation_activities translation_activities do |activity|
 end
 
 json.participants program.all_current_participants do |participant|
-  json.(participant, :id, :full_name)
+  json.(participant, :id)
+  json.fullName participant.full_name
+  json.fullNameRev participant.full_name_rev
+
+  json.programId program.id
+  program_name = program.name
+  if participant.cluster
+    program_name += " (#{participant.cluster.display_name})"
+  end
+  json.programName program_name
   json.roles participant.roles.collect{ |role| t(role) }
 end
 

@@ -6,7 +6,7 @@ import TranslationActivitiesTable from './TranslationActivitiesTable'
 
 function MainContent(props) {
     return (
-        <Tabs>
+        <Tabs defaultIndex={0}>
             <TabList>
                 <Tab>{props.strings.Translation_activities}</Tab>
                 <Tab>{props.strings.Participants}</Tab>
@@ -15,7 +15,7 @@ function MainContent(props) {
                 <TranslationActivitiesTable programs={props.programs} strings={props.strings} />
             </TabPanel>
             <TabPanel>
-                <ParticipantsTable programs={props.programs} />
+                <ParticipantsTable programs={props.programs} strings={props.strings} />
             </TabPanel>
         </Tabs>
     )
