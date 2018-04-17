@@ -114,3 +114,10 @@ label.checkBoxLabel {
     padding: 8px;
     border-radius: 4px;
 }
+
+.unreadNotification {
+    font-weight: bold;
+    a, a:hover {
+        font-weight: bold;
+    }
+}

@@ -108,7 +108,9 @@ Rails.application.routes.draw do
     resources :clusters do
       get 'dashboard', on: :member
     end
-    resources :notifications
+    resources :notifications do
+      post 'mark_read', on: :collection
+    end
     resources :programs, shallow: true do
       resources :translation_activities
       get 'dashboard_list', on: :collection

@@ -434,6 +434,7 @@ en:
     Loading: Loading...
     Save: Save
     Saving: Saving...
+    See_more: See more
     date_strings:
       Day: Day
       Enter_valid_year: Please enter a valid year
@@ -461,6 +462,7 @@ en:
     Events: Events
     Language: Language
     Last_update: Last Update
+    Mark_all_read: Mark all as read
     Notifications: Notifications
     Participants: Participants
     Search_prompt: Search...

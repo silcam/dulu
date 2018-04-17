@@ -108,7 +108,8 @@ class Dashboard extends React.PureComponent {
                             <MainContent programs={this.state.programs} strings={this.props.strings} />
                         </div>
                         <div className='col-md-3'>
-                            <NotificationsSidebar strings={this.props.strings} />
+                            <NotificationsSidebar strings={this.props.strings}
+                                      authenticityToken={this.props.authenticityToken} />
                         </div>
                     </div>
                 </div>

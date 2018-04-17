@@ -6,12 +6,11 @@ import ReactDOM from 'react-dom'
 import Dashboard from './components/Dashboard'
 
 const dashboardDiv = document.querySelector('#dashboard')
-// const authenticity_token = workshopsDiv.getAttribute('data-authenticity-token')
-const authenticity_token = "yo"
+const authenticityToken = dashboardDiv.getAttribute('data-authenticity-token')
 var strings = JSON.parse(document.getElementById('strings').innerHTML)
 
 ReactDOM.render(
-    <Dashboard      authenticity_token={authenticity_token}
+    <Dashboard      authenticityToken={authenticityToken}
                     strings={strings} />, 
     dashboardDiv
 )
