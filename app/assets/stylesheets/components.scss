@@ -58,3 +58,59 @@ label.checkBoxLabel {
 .reallySmall {
     font-size: 10px;
 }
+
+.plusMinusButton {
+    color: #888888;
+    cursor: pointer;
+    font-weight: bold;
+    background:none;
+    border: none;
+    padding: 0;
+    width: 14px;
+}
+
+.plusMinusButton:focus {
+    outline: none;
+}
+
+#dashboardSidebar {
+    padding-left: 0;
+    padding-right: 0;
+
+    li.h4 {
+        margin-bottom: 0;
+    }
+
+    li.programItem {
+        padding-left: 34px;  // Accounts for lack of PlusMinusButton
+    }
+
+    li {
+        padding-left: 20px;
+        padding-right: 20px;
+        a:focus, a:hover {
+            text-decoration: none;
+            outline: none;
+        }
+    }
+
+    li.active, li.active:hover {
+        a {
+            color: #fff;
+        }
+        .plusMinusButton {
+            color: #fff;
+        }
+        background-color: #428bca;
+    }
+
+    li:hover {
+        background-color: #eeeeee;
+    }
+}
+
+.loading {
+    background-color: #fcf8e3;
+    padding: 8px;
+    border-radius: 4px;
+}

@@ -4,6 +4,5 @@ class Api::ProgramsController < ApplicationController
   end
 
   def dashboard_list
-    @participants = current_user.participants
   end
 end

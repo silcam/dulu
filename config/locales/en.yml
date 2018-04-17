@@ -431,6 +431,7 @@ en:
   # React
   common:
     Cancel: Cancel
+    Loading: Loading...
     Save: Save
     Saving: Saving...
     date_strings:
