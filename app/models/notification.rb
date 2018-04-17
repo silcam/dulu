@@ -4,39 +4,41 @@ class Notification < ApplicationRecord
 
   default_scope{ order(created_at: :desc) }
 
-  def details
-    if @details.nil?
-      @details = JSON.parse(details_json, symbolize_names: true)
+  def vars
+    if @vars.nil?
+      @vars = JSON.parse(vars_json, symbolize_names: true)
     end
-    @details
+    @vars
   end
 
-  def details=(details_hash)
-    self.details_json = JSON.generate details_hash
-  end
-
-  def assoc_model
-    assoc_class.constantize.find_by id: assoc_model_id
-  end
-
-  class << self
-    def generate(kind, user, object, details={})
-      details[:user_name] = user.full_name
-      details[:user_id] = user.id
-      n_params = Notification.send "generate_#{kind}", object, details
-      return if n_params.nil?
-      n_params[:people].each do |person|
-        unless person == user
-          notification = person.notifications.create(
-              kind: kind,
-              details: n_params[:details]
-          )
-          notification.email
-        end
-      end
+  def t_vars
+    t_var_hash = {}
+    vars.each do |key, var|
+      t_var_hash[key] = var.is_a?(Hash) ? 
+                          var[I18n.locale] :
+                          var
     end
-    handle_asynchronously :generate
+    t_var_hash
   end
+
+  def vars=(vars_hash)
+    self.vars_json = JSON.generate vars_hash
+  end
+
+  def links
+    if @links.nil?
+      @links = JSON.parse(links_json, symbolize_names: true)
+    end
+    @links
+  end
+
+  def links=(links_hash)
+    self.links_json = JSON.generate links_hash
+  end
+
+  # def assoc_model
+  #   assoc_class.constantize.find_by id: assoc_model_id
+  # end
 
   def email
     if person.email_pref == 'immediate'
@@ -44,169 +46,317 @@ class Notification < ApplicationRecord
     end
   end
 
-  private
+  class << self
+    include TranslationHelper
+    delegate :url_helpers, to: 'Rails.application.routes'
 
-  def self.generate_new_participant(participant, details)
-    details.merge!(
-        participant_name: participant.full_name,
-        participant_id: participant.id,
-        cluster_program_name: participant.cluster_program.name,
-        cluster_program_id: participant.cluster_program.id,
-        is_for_a_program: participant.cluster.nil?
-    )
+    def new_program_participant(user, participant)
+      program = participant.program
+      n_params = {
+        kind: :new_program_participant,
+        vars: {
+          user_name: user.full_name,
+          participant_name: participant.full_name,
+          program_name: program.name
+        },
+        links: {
+          user_name: url_helpers.person_path(user),
+          participant_name: url_helpers.participant_path(participant),
+          program_name: url_helpers.program_path(program)
+        }
+      }
+      people = cluster_program_people(program, user)
+      people.delete participant.person
+      send_notification n_params, people
+    end
+    handle_asynchronously :new_program_participant
 
-    # Exclude the person added because he gets the "added_you_to_program" notification
-    people = cluster_program_people(participant.cluster_program).reject!{ |p| p==participant.person }
+    def new_cluster_participant(user, participant)
+      cluster = participant.cluster
+      n_params = {
+        kind: :new_cluster_participant,
+        vars: {
+          user_name: user.full_name,
+          participant_name: participant.full_name,
+          cluster_name: cluster.name
+        },
+        links: {
+          user_name: url_helpers.person_path(user),
+          participant_name: url_helpers.participant_path(participant),
+          cluster_name: url_helpers.cluster_path(cluster)
+        }
+      }
+      people = cluster_program_people(cluster, user)
+      people.delete participant.person
+      send_notification n_params, people
+    end
+    handle_asynchronously :new_cluster_participant
 
-    return {
-        people: people,
-        details: details
-    }
-  end
+    def new_stage(user, stage)
+      activity = stage.activity
+      program = activity.program
+      n_params = {
+        kind: :new_stage,
+        vars: {
+          user_name: user.full_name,
+          activity_name: activity_name(activity),
+          stage_name: t_hash(stage.name),
+          program_name: program.name
+        },
+        links: {
+          user_name: url_helpers.person_path(user),
+          activity_name: url_helpers.activity_path(activity),
+          program_name: url_helpers.program_path(program)          
+        }
+      }
+      send_notification n_params, cluster_program_people(program, user)      
+    end
+    handle_asynchronously :new_stage
 
-  def self.generate_new_stage(stage, details)
-    stage.reload
-    return nil unless stage.current
-    details.merge!(
-        program_name: stage.activity.program.name,
-        program_id: stage.activity.program.id,
-        stage_name: stage.name,
-        activity_id: stage.activity.id
-    )
+    def workshop_complete(user, workshop)
+      program = workshop.linguistic_activity.program
+      n_params = {
+        kind: :workshop_complete,
+        vars: {
+          user_name: user.full_name,
+          workshop_name: workshop.name,
+          program_name: program.name
+        },
+        links: {
+          user_name: url_helpers.person_path(user),
+          workshop_name: url_helpers.activity_path(workshop.linguistic_activity),
+          program_name: url_helpers.program_path(program)
+        }
+      }
+      send_notification n_params, cluster_program_people(program, user)
+    end
+    handle_asynchronously :workshop_complete
 
-    return {
-        people: cluster_program_people(stage.activity.program),
-        details: details
-    }
-  end
+    def new_activity(user, activity)
+      program = activity.program
+      n_params = {
+        kind: :new_activity,
+        vars: {
+          user_name: user.full_name,
+          program_name: program.name,
+          activity_name: activity_name(activity)
+        },
+        links: {
+          user_name: url_helpers.person_path(user),
+          program_name: url_helpers.program_path(program),
+          activity_name: url_helpers.activity_path(activity)
+        }
+      }
+      send_notification n_params, cluster_program_people(program, user)
+    end
+    handle_asynchronously :new_activity
 
-  def self.generate_workshop_complete(workshop, details)
-    details.merge!(
-        workshop_name: workshop.name,
-        program_name: workshop.linguistic_activity.program.name,
-        program_id: workshop.linguistic_activity.program.id,
-        activity_id: workshop.linguistic_activity.id
-    )
-    return {
-        people: cluster_program_people(workshop.linguistic_activity.program),
-        details: details
-    }
-  end
+    # testament one of :New_testament or :Old_testament
+    def added_a_testament(user, testament, program)
+      n_params = {
+        kind: :added_a_testament,
+        vars: {
+          user_name: user.full_name,
+          program_name: program.name,
+          testament: t_hash(testament)
+        },
+        links: {
+          user_name: url_helpers.person_path(user),
+          program_name: url_helpers.program_path(program)
+        }
+      }
+      send_notification n_params, cluster_program_people(program, user)
+    end
+    handle_asynchronously :added_a_testament
 
-  def self.generate_new_activity(activity, details)
-    details.merge!(
-        program_name: activity.program.name,
-        program_id: activity.program.id,
-        activity_id: activity.id
-    )
+    def updated_you(user, person)
+      n_params = {
+        kind: :updated_you,
+        vars: {
+          user_name: user.full_name,
+          your_info: t_hash('notification.your_info')
+        },
+        links: {
+          user_name: url_helpers.person_path(user),
+          your_info: url_helpers.person_path(person)
+        }
+      }
+      send_notification n_params, [person]
+    end
+    handle_asynchronously :updated_you
 
-    return {
-        people: cluster_program_people(activity.program),
-        details: details
-    }
-  end
+    def gave_you_role(user, person, role)
+      n_params = {
+        kind: :gave_you_role,
+        vars: {
+          user_name: user.full_name,
+          role_name: t_hash(role)
+        },
+        links: {
+          user_name: url_helpers.person_path(user),
+          role_name: url_helpers.person_path(person)
+        }
+      }
+      send_notification n_params, [person]
+    end
+    handle_asynchronously :gave_you_role
 
-  def self.generate_added_a_testament(program, details)
-    testament = details[:testament]=='nt' ? :New_testament : :Old_testament
-    details.merge!(
-        program_name: program.name,
-        program_id: program.id,
-        testament: testament
-    )
-    return {
-        people: cluster_program_people(program),
-        details: details
-    }
-  end
+    def added_you_to_program(user, participant)
+      person = participant.person
+      program = participant.program
+      n_params = {
+        kind: :added_you_to_program,
+        vars: {
+          user_name: user.full_name,
+          program_name: program.name
+        },
+        links: {
+          user_name: url_helpers.person_path(user),
+          program_name: url_helpers.program_path(program)
+        }
+      }
+      send_notification n_params, [person]
+    end
+    handle_asynchronously :added_you_to_program
 
-  def self.generate_updated_you(person, details)
-    return {
-        people: [person],
-        details: details
-    }
-  end
+    def added_you_to_cluster(user, participant)
+      person = participant.person
+      cluster = participant.cluster
+      n_params = {
+        kind: :added_you_to_cluster,
+        vars: {
+          user_name: user.full_name,
+          cluster_name: cluster.name
+        },
+        links: {
+          user_name: url_helpers.person_path(user),
+          cluster_name: url_helpers.cluster_path(cluster)
+        }
+      }
+      send_notification n_params, [person]
+    end
+    handle_asynchronously :added_you_to_cluster
 
-  def self.generate_gave_you_role(person, details)
-    return {
-        people: [person],
-        details: details
-    }
-  end
+    def added_you_to_activity(user, person, activity)
+      program = activity.program
+      n_params = {
+        kind: :added_you_to_activity,
+        vars: {
+          user_name: user.full_name,
+          activity_name: activity_name(activity),
+          program_name: program.name
+        },
+        links: {
+          user_name: url_helpers.person_path(user),
+          activity_name: url_helpers.activity_path(activity),
+          program_name: url_helpers.program_path(program)
+        }
+      }
+      send_notification n_params, [person]
+    end
+    handle_asynchronously :added_you_to_activity
 
-  def self.generate_added_you_to_cluster_program(participant, details)
-    details.merge!(
-               cluster_program_name: participant.cluster_program.name,
-               cluster_program_id: participant.cluster_program.id,
-               is_for_a_program: participant.cluster.nil?
-    )
-    return {
-        people: [participant.person],
-        details: details
-    }
-  end
+    def added_you_to_event(user, event_participant)
+      person = event_participant.person
+      event = event_participant.event
+      n_params = {
+        kind: :added_you_to_event,
+        vars: {
+          user_name: user.full_name,
+          event_name: event.name
+        },
+        links: {
+          user_name: url_helpers.person_path(user),
+          event_name: url_helpers.event_path(event)
+        }
+      }
+      send_notification n_params, [person]
+    end
+    handle_asynchronously :added_you_to_event
 
-  def self.generate_added_you_to_activity(participant, details)
-    program = participant.program
-    program = Activity.find(details[:activity_id]).program if program.nil?
-    details.merge!(
-               program_name: program.name,
-               program_id: program.id
-    )
-    return {
-        people: [participant.person],
-        details: details
-    }
-  end
+    def new_event_for_program(user, event, program)
+      n_params = {
+        kind: :new_event_for_program,
+        vars: {
+          user_name: user.full_name,
+          event_name: event.name,
+          program_name: program.name
+        },
+        links: {
+          user_name: url_helpers.person_path(user),
+          event_name: url_helpers.program_event_path(program, event),
+          program_name: url_helpers.program_path(program)
+        }
+      } 
+      send_notification n_params, cluster_program_people(program, user)
+    end
+    handle_asynchronously :new_event_for_program
 
-  def self.generate_added_you_to_event(event_participant, details)
-    details.merge!(
-               event_name: event_participant.event.name,
-               event_id: event_participant.event.id,
-    )
-    return {
-        people: [event_participant.person],
-        details: details
-    }
-  end
+    def added_program_to_event(user, program, event)
+      n_params = {
+        kind: :added_program_to_event,
+        vars: {
+          user_name: user.full_name,
+          program_name: program.name,
+          event_name: event.name
+        },
+        links: {
+          user_name: url_helpers.person_path(user),
+          program_name: url_helpers.program_path(program),
+          event_name: url_helpers.program_event_path(program, event)
+        }
+      }
+      send_notification n_params, cluster_program_event_people(program, event, user)
+    end
+    handle_asynchronously :added_program_to_event
 
-  def self.generate_new_event_for_program(event, details)
-    program = Program.find details[:program_id]
-    details.merge!(
-               program_name: program.name,
-               event_name: event.name,
-               event_id: event.id
-    )
-    people = (cluster_program_people(program) + event.people).uniq
+    def added_cluster_to_event(user, cluster, event)
+      n_params = {
+        kind: :added_cluster_to_event,
+        vars: {
+          user_name: user.full_name,
+          cluster_name: cluster.name,
+          event_name: event.name
+        },
+        links: {
+          user_name: url_helpers.person_path(user),
+          cluster_name: url_helpers.cluster_path(cluster),
+          event_name: url_helpers.event_path(event)
+        }
+      }
+      send_notification n_params, cluster_program_event_people(cluster, event, user)
+    end
+    handle_asynchronously :added_cluster_to_event
 
-    return {
-        people: people,
-        details: details
-    }
-  end
+    private
 
-  def self.generate_added_program_to_event(event, details)
-    generate_new_event_for_program event, details
-  end
+    def send_notification(n_params, people)
+      people.each do |person|
+        notification = person.notifications.create n_params
+        notification.email
+      end
+    end
 
-  def self.generate_added_cluster_to_event(event, details)
-    cluster = Cluster.find details[:cluster_id]
-    details.merge!(
-        cluster_name: cluster.name,
-        event_name: event.name,
-        event_id: event.id
-    )
-    people = (cluster_program_people(cluster) + event.people).uniq
+    def cluster_program_people(cluster_program, user)
+      people = cluster_program.all_current_people
+      lpf = cluster_program.get_lpf.try(:person)
+      people << lpf unless lpf.nil?
+      people.delete user
+      people
+    end
 
-    return {
-        people: people,
-        details: details
-    }
-  end
+    def cluster_program_event_people(cluster_program, event, user)
+      people = event.people
+      people.delete(user)
+      people += cluster_program_people(cluster_program, user)
+      people.uniq!
+      people
+    end
 
-  def self.cluster_program_people(cluster_program)
-    people = cluster_program.all_current_people
-    lpf = cluster_program.get_lpf.try(:person)
-    people << lpf unless lpf.nil?
-    people
+    def activity_name(activity)
+      activity.is_a?(TranslationActivity) ?
+          activity.t_names :
+          activity.name
+    end
   end
 end

@@ -48,7 +48,7 @@
         </ul>
         <ul class="nav navbar-nav navbar-right">
           <% notifications = user_notifications %>
-          <% unless notifications.empty? %>
+          <% if !notifications.empty? && request.path != root_path %>
             <% unread = !notifications.first.read %>
             <li>
               <div class="btn-group">
@@ -81,8 +81,10 @@
             </div>
           </li>
         </ul>
-        <%= form_tag(search_path, method: :get, class: 'navbar-form navbar-right') do %>
-          <%= text_field_tag :q, '', placeholder: t(:Search_bar), class: 'form-control', size: 16; %>
+        <% unless request.path == root_path %>
+          <%= form_tag(search_path, method: :get, class: 'navbar-form navbar-right') do %>
+            <%= text_field_tag :q, '', placeholder: t(:Search_bar), class: 'form-control', size: 16; %>
+          <% end %>
         <% end %>
       </div>
     <% end %>

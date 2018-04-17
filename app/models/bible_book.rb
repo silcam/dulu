@@ -1,5 +1,6 @@
 class BibleBook < ApplicationRecord
-
+  include HasTranslatedNames
+  
   has_many :translation_activities
 
   GENESIS_USFM = 1

@@ -38,7 +38,7 @@ class PeopleController < ApplicationController
     had_login = @person.has_login
     if @person.update(person_params)
       follow_redirect person_path(@person)
-      Notification.generate(:updated_you, current_user, @person)
+      Notification.updated_you current_user, @person
       NotificationMailer.delay.welcome(@person, current_user) if !had_login && @person.has_login
 
     else

@@ -1,114 +1,14 @@
-<%
+<%=
   # Locals: notification
 
-  details = notification.details
-  vars = {
-      user_name: link_to(details[:user_name], person_url(details[:user_id]))
-  }
-%>
-
-<%=
-  case notification.kind
-    when 'new_participant'
-      vars.merge!(
-          participant_name: link_to(details[:participant_name], participant_url(details[:participant_id])),
-          cluster_program_name: link_to(details[:cluster_program_name], program_url(details[:cluster_program_id]))
-      )
-      details[:is_for_a_program] ?
-          t('notification.new_participant', vars).html_safe :
-          t('notification.new_cluster_participant', vars).html_safe
-
-    when 'new_stage'
-      activity = Activity.find(details[:activity_id])
-      vars.merge!(
-          activity_name: link_to(activity.name, activity),
-          stage_name: t(details[:stage_name]),
-          program_name: link_to(details[:program_name], program_url(details[:program_id]))
-      )
-      t('notification.new_stage', vars).html_safe
-
-    when 'workshop_complete'
-      vars.merge!(
-          workshop_name: link_to(details[:workshop_name], activity_url(details[:activity_id])),
-          program_name: link_to(details[:program_name], program_url(details[:program_id]))
-      )
-      t('notification.workshop_complete', vars).html_safe
-
-    when 'new_activity'
-      details[:activity_name] ||= Activity.find(details[:activity_id]).name
-      vars.merge!(
-          program_name: link_to(details[:program_name], program_url(details[:program_id])),
-          activity_name: link_to(details[:activity_name], activity_url(details[:activity_id]))
-      )
-      t('notification.new_activity', vars).html_safe
-
-    when 'added_a_testament'
-      vars.merge!(
-          program_name: link_to(details[:program_name], program_url(details[:program_id])),
-          testament: t(details[:testament])
-      )
-      t('notification.added_a_testament', vars).html_safe
-
-    when 'updated_you'
-      vars.merge!(
-          your_info: link_to(t('notification.your_info'), person_url(notification.person))
-      )
-      t('notification.updated_you', vars).html_safe
-
-    when 'gave_you_role'
-      vars.merge!(
-          role_name: link_to(t(details[:role]), person_url(notification.person))
-      )
-      t('notification.gave_you_role', vars).html_safe
-
-    when 'added_you_to_cluster_program'
-      if details[:is_for_a_program]
-        vars.merge!(
-            program_name: link_to(details[:cluster_program_name], program_url(details[:cluster_program_id]))
-        )
-        t('notification.added_you_to_program', vars).html_safe
-      else
-        vars.merge!(
-            cluster_name: link_to(details[:cluster_program_name], cluster_url(details[:cluster_program_id]))
-        )
-        t('notification.added_you_to_cluster', vars).html_safe
-      end
-
-    when 'added_you_to_activity'
-      details[:activity_name] ||= Activity.find(details[:activity_id]).name
-      vars.merge!(
-          activity_name: link_to(details[:activity_name], activity_url(details[:activity_id])),
-          program_name: link_to(details[:program_name], program_url(details[:program_id]))
-      )
-      t('notification.added_you_to_activity', vars).html_safe
-
-    when 'added_you_to_event'
-      vars.merge!(
-          event_name: link_to(details[:event_name], event_url(details[:event_id]))
-      )
-      t('notification.added_you_to_event', vars).html_safe
-
-    when 'new_event_for_program'
-      vars.merge!(
-          event_name: link_to(details[:event_name], program_event_url(details[:program_id], details[:event_id])),
-          program_name: link_to(details[:program_name], program_url(details[:program_id]))
-      )
-      t('notification.new_event_for_program', vars).html_safe
-
-    when 'added_program_to_event'
-      vars.merge!(
-          event_name: link_to(details[:event_name], program_event_url(details[:program_id], details[:event_id])),
-          program_name: link_to(details[:program_name], program_url(details[:program_id]))
-      )
-      t('notification.added_program_to_event', vars).html_safe
-
-    when 'added_cluster_to_event'
-      vars.merge!(
-          event_name: link_to(details[:event_name], event_url(details[:event_id])),
-          cluster_name: link_to(details[:cluster_name], cluster_url(details[:cluster_id]))
-      )
-      t('notification.added_cluster_to_event', vars).html_safe
+  i18n_vars = {}
+  
+  notification.t_vars.each do |key, text|
+    i18n_vars[key] = notification.links[key] ?
+                        link_to(text, notification.links[key]) :
+                        text
   end
 
-%>
+  t("notification.#{notification.kind}", i18n_vars).html_safe
 
+%>

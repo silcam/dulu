@@ -8,6 +8,10 @@ class TranslationActivity < Activity
     self.bible_book.name
   end
 
+  def t_names
+    self.bible_book.t_names
+  end
+
   def next
     list = self.program.sorted_translation_activities
     index = list.index(self)

@@ -100,8 +100,21 @@ Rails.application.routes.draw do
   get '/media_activities/:id', to: 'activities#show', as: :media_activity
 
   namespace :api, defaults: {format: :json} do
+    get 'search', to: 'searches#search'
+
     resources :activities, shallow: true do
       resources :workshops
+    end
+    resources :clusters do
+      get 'dashboard', on: :member
+    end
+    resources :notifications do
+      post 'mark_read', on: :collection
+    end
+    resources :programs, shallow: true do
+      resources :translation_activities
+      get 'dashboard_list', on: :collection
+      get 'dashboard', on: :member
     end
   end
 end

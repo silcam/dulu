@@ -76,11 +76,10 @@ class EventsController < ApplicationController
   def add_update
     @event = Event.find params[:id]
     authorize! :update, @event
-    @event.clusters << Cluster.find(params[:event_cluster]) if params[:event_cluster]
-    @event.programs << Program.find(params[:event_program]) if params[:event_program]
-    @event_participant = EventParticipant.build(@event, params[:event_person]) if params[:event_person]
+    add_cluster_and_notify if params[:event_cluster]
+    add_program_and_notify if params[:event_program]
+    add_participant_and_notify if params[:event_person]
     redirect_to ctxt_event_path(params[:program_id], @event)
-    added_to_event_notification
   end
 
   def remove_update
@@ -108,16 +107,23 @@ class EventsController < ApplicationController
   end
 
   def new_event_for_program_notification
-    Notification.generate :new_event_for_program, current_user, @event, program_id: @program.id
+    Notification.new_event_for_program current_user, @event, @program
   end
 
-  def added_to_event_notification
-    if params[:event_cluster]
-      Notification.generate :added_cluster_to_event, current_user, @event, cluster_id: params[:event_cluster]
-    elsif params[:event_program]
-      Notification.generate :added_program_to_event, current_user, @event, program_id: params[:event_program]
-    elsif @event_participant
-      Notification.generate :added_you_to_event, current_user, @event_participant
-    end
+  def add_cluster_and_notify
+    cluster = Cluster.find params[:event_cluster]
+    @event.clusters << cluster
+    Notification.added_cluster_to_event current_user, cluster, @event
+  end
+
+  def add_program_and_notify
+    program = Program.find params[:event_program]
+    @event.programs << program
+    Notification.added_program_to_event current_user, program, @event
+  end
+
+  def add_participant_and_notify
+    event_participant = EventParticipant.build @event, params[:event_person]
+    Notification.added_you_to_event current_user, event_participant
   end
 end
