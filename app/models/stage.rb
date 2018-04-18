@@ -132,7 +132,7 @@ class Stage < ApplicationRecord
       when :Ready_for_consultant_check
         return 75, :dark_green
       when :Consultant_check
-        return 75, :light_blue
+        return 80, :light_blue
       when :Consultant_checked
         return 95, :dark_blue
     end
