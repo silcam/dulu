@@ -62,6 +62,7 @@ class TranslationActivitiesTable extends React.PureComponent {
     }
 
     render() {
+        if (this.state.activities.length == 0) return <p>{this.props.strings.No_translation_activities}</p>
         const sortOptions = ['Language', 'Book', 'Stage', 'Last_update']
         return (
             <div>

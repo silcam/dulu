@@ -56,6 +56,7 @@ class ParticipantsTable extends React.PureComponent {
     }
 
     render() {
+        if (this.state.participants.length == 0) return <p>{this.props.strings.No_participants}</p>
         const sortOptions = ['Language', 'Person', 'Role']
         return (
             <div>

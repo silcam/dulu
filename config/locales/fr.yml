@@ -445,20 +445,20 @@ fr:
       Enter_valid_year: Saisissez un an valide s'il vous plait.
       Month: Mois
       Month_day_optional: Jour et mois sont optionnels
-      month_names_short:
-        Jan: jan.
-        Feb: fév.
-        Mar: mar.
-        Apr: avr.
-        May: mai
-        Jun: juin
-        Jul: juil.
-        Aug: août
-        Sep: sept.
-        Oct: oct.
-        Nov: nov.
-        Dec: dec.
       Year: An
+      month_names_short:
+      - jan.
+      - fév.
+      - mar.
+      - avr.
+      - mai
+      - juin
+      - juil.
+      - août
+      - sept.
+      - oct.
+      - nov.
+      - dec.
 
   # Dashboard
   dashboard_page:
