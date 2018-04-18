@@ -77,7 +77,7 @@ class NotificationsSidebar extends React.PureComponent {
     render() {
         const strings = this.props.strings
         return (
-            <div>
+            <div id="notificationsSidebar">
                 <h3 style={{ marginTop: 0 }}>
                     {strings.Notifications}
                 </h3>

@@ -11,7 +11,21 @@ class Dashboard extends React.PureComponent {
         super(props)
         this.state = {
             programs: [],
-            loading: 0
+            loading: 0,
+            neededProgramIds: [],
+            neededClusterIds: []
+        }
+    }
+
+    cache = {
+        clusters: {},
+        programs: {}
+    }
+
+    cacheCluster = (id, programs) => {
+        this.cache.clusters[id] = programs
+        for (let program of programs) {
+            this.cache.programs[program.id] = program
         }
     }
 
@@ -31,15 +45,19 @@ class Dashboard extends React.PureComponent {
         })
     }
 
-    addSelectedProgram = (id) => {
+    fetchProgram = (id) => {
         this.addLoading()
         axios.get(`/api/programs/${id}/dashboard/`)
             .then(response => {
                 this.removeLoading()
+                this.cache.programs[id] = response.data
                 this.setState((prevState, props) => {
-                    return {
-                        programs: prevState.programs.concat([response.data])
+                    if (prevState.neededProgramIds.includes(id)) {
+                        return {
+                            programs: prevState.programs.concat([response.data])
+                        }
                     }
+                    return null
                 })
             })
             .catch(error => {
@@ -48,15 +66,19 @@ class Dashboard extends React.PureComponent {
             })
     }
 
-    addSelectedCluster = (id) => {
+    fetchCluster = (id) => {
         this.addLoading()
         axios.get(`/api/clusters/${id}/dashboard/`)
             .then(response => {
                 this.removeLoading()
+                this.cacheCluster(id, response.data.programs)
                 this.setState((prevState, props) => {
-                    return {
-                        programs: prevState.programs.concat(response.data.programs)
+                    if (prevState.neededClusterIds.includes(id)) {
+                        return {
+                            programs: prevState.programs.concat(response.data.programs)
+                        }
                     }
+                    return null
                 })
             })
             .catch(error => {
@@ -66,28 +88,80 @@ class Dashboard extends React.PureComponent {
     }
 
     setSelectedCluster = (id) => {
-        this.setState({
-            programs: []
-        })
-        this.addSelectedCluster(id)
+        if (this.cache.clusters[id]) {
+            this.setState({
+                neededClusterIds: [],
+                neededProgramIds: [],
+                programs: this.cache.clusters[id]
+            })
+        }
+        else {
+            this.setState({
+                programs: [],
+                neededClusterIds: [id],
+                neededProgramIds: []
+            })
+            this.fetchCluster(id)
+        }
     }
 
     setSelectedProgram = (id) => {
-        this.setState({
-            programs: []
-        })
-        this.addSelectedProgram(id)
+        if (this.cache.programs[id]) {
+            this.setState({
+                neededClusterIds: [],
+                neededProgramIds: [],
+                programs: [this.cache.programs[id]]
+            })
+        }
+        else {
+            this.setState({
+                neededClusterIds: [],
+                neededProgramIds: [id],
+                programs: []
+            })
+            this.fetchProgram(id)
+        }
     }
 
     setSelectedMultiple = (selection) => {
         this.setState({
+            neededClusterIds: [],
+            neededProgramIds: [],
             programs: []
         })
         for (let clusterId of selection.clusterIds) {
-            this.addSelectedCluster(clusterId)
+            if (this.cache.clusters[clusterId]) {
+                this.setState((prevState, props) => {
+                    return {
+                        programs: prevState.programs.concat(this.cache.clusters[clusterId])
+                    }
+                })
+            }
+            else {
+                this.setState((prevState, props) => {
+                    return {   
+                        neededClusterIds: prevState.neededClusterIds.concat([clusterId])
+                    }
+                })
+                this.fetchCluster(clusterId)
+            }
         }
         for (let programId of selection.programIds) {
-            this.addSelectedProgram(programId)
+            if (this.cache.programs[programId]) {
+                this.setState((prevState, props) => {
+                    return {
+                        programs: prevState.programs.concat(this.cache.programs[programId])
+                    }
+                })
+            }
+            else {
+                this.setState((prevState, props) => {
+                    return {
+                        neededProgramIds: prevState.neededProgramIds.concat([programId])
+                    }
+                })
+                this.fetchProgram(programId)
+            }
         }
     }
 

@@ -21,6 +21,13 @@ class DashboardSidebarCluster extends React.PureComponent {
         })
     }
 
+    handleClick = () => {
+        this.setState({
+            isExpanded: true
+        })
+        this.props.onClusterSelected(this.props.cluster)
+    }
+
     render() {
         const cluster = this.props.cluster
         const indent = this.props.indent || 0
@@ -30,7 +37,7 @@ class DashboardSidebarCluster extends React.PureComponent {
                 <li className={this.props.selection==cluster ? 'active' : ''}>
                     {indentString}
                     <PlusMinusButton isExpanded={this.state.isExpanded} handleClick={this.onPlusMinusClick}/>
-                    <a href='#' onClick={() => {this.props.onClusterSelected(cluster)}}>
+                    <a href='#' onClick={this.handleClick}>
                         {cluster.displayName}
                     </a>
                 </li>

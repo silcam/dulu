@@ -21,12 +21,19 @@ class DashboardSidebarSection extends React.PureComponent {
         })
     }
 
+    handleClick = () => {
+        this.setState({
+            isExpanded: true
+        })
+        this.props.onSectionSelected(this.props.section)
+    }
+
     render() {
         return (
             <React.Fragment>
                 <li className={'h4 ' + (this.props.selection == this.props.section && 'active') } >
                     <PlusMinusButton isExpanded={this.state.isExpanded} handleClick={this.onPlusMinusClick} />
-                    <a href='#' onClick={() => {this.props.onSectionSelected(this.props.section)}}>
+                    <a href='#' onClick={this.handleClick}>
                         {this.props.section.name}
                     </a>
                 </li>

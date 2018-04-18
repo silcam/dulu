@@ -170,6 +170,7 @@ class Notification < ApplicationRecord
     handle_asynchronously :added_a_testament
 
     def updated_you(user, person)
+      return if user == person
       n_params = {
         kind: :updated_you,
         vars: {
@@ -186,6 +187,7 @@ class Notification < ApplicationRecord
     handle_asynchronously :updated_you
 
     def gave_you_role(user, person, role)
+      return if user == person
       n_params = {
         kind: :gave_you_role,
         vars: {
@@ -202,6 +204,7 @@ class Notification < ApplicationRecord
     handle_asynchronously :gave_you_role
 
     def added_you_to_program(user, participant)
+      return if user == participant.person
       person = participant.person
       program = participant.program
       n_params = {
@@ -220,6 +223,7 @@ class Notification < ApplicationRecord
     handle_asynchronously :added_you_to_program
 
     def added_you_to_cluster(user, participant)
+      return if user == participant.person
       person = participant.person
       cluster = participant.cluster
       n_params = {
@@ -238,6 +242,7 @@ class Notification < ApplicationRecord
     handle_asynchronously :added_you_to_cluster
 
     def added_you_to_activity(user, person, activity)
+      return if user == person
       program = activity.program
       n_params = {
         kind: :added_you_to_activity,
@@ -257,6 +262,7 @@ class Notification < ApplicationRecord
     handle_asynchronously :added_you_to_activity
 
     def added_you_to_event(user, event_participant)
+      return if user == event_participant.person
       person = event_participant.person
       event = event_participant.event
       n_params = {

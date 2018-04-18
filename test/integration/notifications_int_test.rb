@@ -7,8 +7,8 @@ class NotificationsIntTest < Capybara::Rails::TestCase
   end
 
   def assert_notification(text)
-    click_on 'show-notifications-btn'
-    within 'ul.notifications' do
+    # click_on 'show-notifications-btn'
+    within '#notificationsSidebar' do
       assert_text text
     end
   end
