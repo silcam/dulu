@@ -35,7 +35,7 @@ class EventsController < ApplicationController
 
   def create
     authorize! :create, Event
-    @event = Event.new(event_params)
+    @event = Event.new(event_params(true))
     @program = Program.find(params[:program_id]) if params[:program_id]
     workshop = Workshop.find_by id: params[:workshop_id]
     if @event.save
@@ -100,9 +100,9 @@ class EventsController < ApplicationController
 
   private
 
-  def event_params
+  def event_params(create=false)
     assemble_dates params, 'event', 'start_date', 'end_date'
-    params[:event][:creator_id] = current_user.id
+    params[:event][:creator_id] = current_user.id if create
     params.require(:event).permit(:domain, :name, :start_date, :end_date, :note, :creator_id)
   end
 
