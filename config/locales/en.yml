@@ -437,7 +437,6 @@ en:
     All: All
     Cancel: Cancel
     Loading: Loading...
-    None: None
     Save: Save
     Saving: Saving...
     See_more: See more
@@ -472,9 +471,9 @@ en:
       Scripture_use: Scripture Engagement
       Translation: Translation
       
-
   # Dashboard
   dashboard_page:
+    Bible_translation: Bible Translation
     Book: Book
     Current_events: Current Events
     Events: Events
@@ -482,6 +481,7 @@ en:
     Language: Language
     Last_update: Last Update
     Mark_all_read: Mark all as read
+    No_events: No events
     No_participants: No active participants
     No_translation_activities: No translation activities
     Notifications: Notifications
@@ -489,9 +489,8 @@ en:
     Person: Person
     Role: Role
     Search_prompt: Search...
-    Sort: Sort
+    Sort: Sort by
     Stage: Stage
-    Translation_activities: Translation Activities
     Upcoming_events: Upcoming Events
 
   # Workshops

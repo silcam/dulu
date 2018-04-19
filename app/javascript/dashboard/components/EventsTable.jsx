@@ -1,20 +1,16 @@
 import React from 'react'
 
+import EventsFilterer from './EventsFilterer'
 import EventsTableSection from './EventsTableSection'
-import FilterPicker from './FilterPicker'
 
 class EventsTable extends React.PureComponent {
     constructor(props) {
         super(props)
-        let filter = {}
-        for (let domain of Object.values(props.strings.domains)) {
-            filter[domain] = true
-        }
         this.state = {
             programs: null,
             currentEvents: [],
             upcomingEvents: [],
-            filter: filter
+            domainFilter: 'All'
         }
     }
 
@@ -39,10 +35,10 @@ class EventsTable extends React.PureComponent {
         }
     }
 
-    updateFilter = (newFilter) => {
+    setDomainFilter = (newFilter) => {
         console.log(newFilter)
         this.setState({
-            filter: newFilter
+            domainFilter: newFilter
         })
     }
 
@@ -52,16 +48,18 @@ class EventsTable extends React.PureComponent {
         }
         return (
             <div>
-                <FilterPicker strings={this.props.strings} filter={this.state.filter} updateFilter={this.updateFilter} />
+                <EventsFilterer strings={this.props.strings} 
+                                domainFilter={this.state.domainFilter} 
+                                setDomainFilter={this.setDomainFilter} />
                 <table className='table'>
                     <tbody>
                         <EventsTableSection events={this.state.currentEvents} 
                                             sectionTitle={this.props.strings.Current_events}
-                                            filter={this.state.filter}
+                                            domainFilter={this.state.domainFilter}
                                             strings={this.props.strings} />
                         <EventsTableSection events={this.state.upcomingEvents}
                                             sectionTitle={this.props.strings.Upcoming_events}
-                                            filter={this.state.filter}
+                                            domainFilter={this.state.domainFilter}
                                             strings={this.props.strings} />
                     </tbody>
                 </table>

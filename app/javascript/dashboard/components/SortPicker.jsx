@@ -12,11 +12,13 @@ function SortPicker(props) {
                     {options.map((option) => {
                         return (
                             <li key={option}>
-                                <label className='checkBoxLabel'>
-                                    <input type='radio' checked={props.sort == option} 
-                                            onChange={props.changeSort} value={option} />
-                                    {props.strings[option]}
-                                </label>
+                                {(props.sort == option) ?
+                                    <u>{props.strings[option]}</u> :
+                                    <button className='btn-link' 
+                                            onClick={()=>{props.changeSort(option)}}>
+                                        {props.strings[option]}
+                                    </button>
+                                }
                             </li>
                         )
                     })}

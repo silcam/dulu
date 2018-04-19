@@ -3,15 +3,17 @@ import React from 'react'
 import EventsTableRow from './EventsTableRow'
 
 function EventsTableSection(props) {
+    const filteredEvents = props.events.filter((event) => {
+        return props.domainFilter == 'All' || event.domain == props.domainFilter
+    })
     return (
         <React.Fragment>
-            {props.events.length > 0 &&
+            {filteredEvents.length > 0 &&
                 <tr>
-                    <th colSpan='3'>{props.sectionTitle}</th>
+                    <th colSpan='4'>{props.sectionTitle}</th>
                 </tr>
             }
-            {props.events.map((event) => {
-                if (!props.filter[event.domain]) return null
+            {filteredEvents.map((event) => {
                 return (
                     <EventsTableRow key={`${event.programId}-${event.id}`} event={event}
                                     strings={props.strings} />
