@@ -13,7 +13,7 @@ class NotificationMailerPreview < ActionMailer::Preview
   end
 
   def notification_summary
-    person = Person.find(2437)
+    person = Person.find(2417)
     NotificationMailer.notification_summary(person)
   end
 end

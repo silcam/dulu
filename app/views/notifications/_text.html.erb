@@ -1,12 +1,17 @@
 <%=
-  # Locals: notification
+  # Locals: notification, email
 
   i18n_vars = {}
+  email = false unless defined? email
   
   notification.t_vars.each do |key, text|
-    i18n_vars[key] = notification.links[key] ?
-                        link_to(text, notification.links[key]) :
-                        text
+    if (notification.links[key])
+      link = notification.links[key]
+      link = 'https://dulu.sil.org' + link if email
+      i18n_vars[key] = link_to(text, link)
+    else
+      i18n_vars[key] = text
+    end
   end
 
   t("notification.#{notification.kind}", i18n_vars).html_safe

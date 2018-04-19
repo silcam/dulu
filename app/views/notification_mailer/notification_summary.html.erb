@@ -7,7 +7,7 @@
 <ul>
   <% @notifications.each do |notification| %>
     <li>
-      <%= render 'notifications/text', notification: notification %>
+      <%= render 'notifications/text', notification: notification, email: true %>
     </li>
   <% end %>
 </ul>
