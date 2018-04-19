@@ -152,6 +152,15 @@ class EventsIntegrationTest < Capybara::Rails::TestCase
     assert_no_text "Drew's Event"
   end
 
+  test "Don't change Event Creator when updating" do
+    my_setup false
+    visit edit_event_path(@genesis_consult)
+    fill_in 'Name', with: 'Pizza Party!'
+    click_on 'Save'
+    @genesis_consult.reload
+    assert_equal people(:Olga), @genesis_consult.creator  # Not Drew
+  end
+
   test "Can't make New Event with End Date before Start Date" do
     my_setup
     click_on 'Add Event'

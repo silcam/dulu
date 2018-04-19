@@ -1,12 +1,12 @@
 # locals: program
 #   optional: can_update
 
-json.(program, :id, :name)
+json.call(program, :id, :name)
 
 translation_activities = program.translation_activities.order(:bible_book_id)
 json.translation_activities translation_activities do |activity|
-  json.(activity, :id, :name)
-  
+  json.call(activity, :id, :name)
+
   json.programId program.id
   json.programName program.name
   json.bibleBookId activity.bible_book_id
@@ -21,17 +21,25 @@ json.translation_activities translation_activities do |activity|
 end
 
 json.participants program.all_current_participants do |participant|
-  json.(participant, :id)
+  json.call(participant, :id)
   json.fullName participant.full_name
   json.fullNameRev participant.full_name_rev
 
   json.programId program.id
-  program_name = program.name
+  json.programName program.name
   if participant.cluster
-    program_name += " (#{participant.cluster.display_name})"
+    json.clusterName participant.cluster.display_name
+    json.clusterId participant.cluster.id
   end
-  json.programName program_name
-  json.roles participant.roles.collect{ |role| t(role) }
+
+  json.roles(participant.roles.collect{ |role| t(role) })
+end
+
+current_events = program.all_events.current.uniq
+upcoming_events = program.all_events.upcoming.uniq
+json.events do
+  json.current current_events, partial: 'api/programs/event', as: :event, locals: {program: program}
+  json.upcoming upcoming_events, partial: 'api/programs/event', as: :event, locals: {program: program}
 end
 
 json.can do

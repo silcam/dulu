@@ -45,9 +45,8 @@ class ParticipantsTable extends React.PureComponent {
         return null
     }
 
-    changeSort = (e) => {
+    changeSort = (sort) => {
         let participants = this.state.participants.slice()
-        const sort = e.target.value
         participants.sort(ParticipantsTable.sortFunctions[sort.toLowerCase()])
         this.setState({
             participants: participants,
@@ -56,6 +55,7 @@ class ParticipantsTable extends React.PureComponent {
     }
 
     render() {
+        if (this.state.participants.length == 0) return <p>{this.props.strings.No_participants}</p>
         const sortOptions = ['Language', 'Person', 'Role']
         return (
             <div>

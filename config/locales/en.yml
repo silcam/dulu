@@ -434,6 +434,7 @@ en:
 
   # React
   common:
+    All: All
     Cancel: Cancel
     Loading: Loading...
     Save: Save
@@ -445,36 +446,52 @@ en:
       Enter_valid_year: Please enter a valid year
       Month: Month
       Month_day_optional: Month and day are optional
-      month_names_short:
-        Jan: Jan
-        Feb: Feb
-        Mar: Mar
-        Apr: Apr
-        May: May
-        Jun: Jun
-        Jul: Jul
-        Aug: Aug
-        Sep: Sep
-        Oct: Oct
-        Nov: Nov
-        Dec: Dec
       Year: Year
-
+      month_names_short:
+      - Jan
+      - Feb
+      - Mar
+      - Apr
+      - May
+      - Jun
+      - Jul
+      - Aug
+      - Sep
+      - Oct
+      - Nov
+      - Dec
+    domains:
+      Anthropology: Anthropology
+      Community_development: Community Development
+      Ethnomusicology: Ethnomusicology
+      Linguistics: Linguistics
+      Literacy: Literacy
+      Media: Media
+      Mobilization: Mobilization
+      Scripture_use: Scripture Engagement
+      Translation: Translation
+      
   # Dashboard
   dashboard_page:
+    Bible_translation: Bible Translation
     Book: Book
+    Current_events: Current Events
     Events: Events
+    Filter: Filter
     Language: Language
     Last_update: Last Update
     Mark_all_read: Mark all as read
+    No_events: No events
+    No_participants: No active participants
+    No_translation_activities: No translation activities
     Notifications: Notifications
     Participants: Participants
     Person: Person
     Role: Role
     Search_prompt: Search...
-    Sort: Sort
+    Sort: Sort by
     Stage: Stage
-    Translation_activities: Translation Activities
+    Upcoming_events: Upcoming Events
 
   # Workshops
   workshops_activity_page:

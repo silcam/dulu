@@ -51,17 +51,17 @@ class TranslationActivitiesTable extends React.PureComponent {
         return null
     }
 
-    changeSort = (e) => {
+    changeSort = (sort) => {
         let activities = this.state.activities.slice()
-        const sort = e.target.value
         activities.sort(TranslationActivitiesTable.sortFunctions[sort.toLowerCase()])
         this.setState({
             activities: activities,
-            sort: e.target.value
+            sort: sort
         })
     }
 
     render() {
+        if (this.state.activities.length == 0) return <p>{this.props.strings.No_translation_activities}</p>
         const sortOptions = ['Language', 'Book', 'Stage', 'Last_update']
         return (
             <div>
