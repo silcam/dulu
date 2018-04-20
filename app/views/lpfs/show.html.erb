@@ -17,10 +17,12 @@
       <% show_link_text = t :Edit %>
     <% end %>
 
-    <small>
-      <a href="#" data-showable-form-show class="shown"><%= show_link_text %></a>
-      <a href="#" data-showable-form-hide class="not-shown"><%= t :Cancel %></a>
-    </small>
+    <% if can? :update, @lpf %>
+      <small>
+        <a href="#" data-showable-form-show class="shown"><%= show_link_text %></a>
+        <a href="#" data-showable-form-hide class="not-shown"><%= t :Cancel %></a>
+      </small>
+    <% end %>
   </h3>
 
   <div class="not-shown">
@@ -35,11 +37,13 @@
 <div class="showable-form-section">
   <h3>
     <%= t :Clusters %>
-    <small>
-      <% show_link_text = @lpf.clusters.empty? ? t(:Add) : t(:Edit) %>
-      <a href="#" data-showable-form-show class="shown"><%= show_link_text %></a>
-      <a href="#" data-showable-form-hide class="not-shown"><%= t :Cancel %></a>
-    </small>
+    <% if can? :update, @lpf %>
+      <small>
+        <% show_link_text = @lpf.clusters.empty? ? t(:Add) : t(:Edit) %>
+        <a href="#" data-showable-form-show class="shown"><%= show_link_text %></a>
+        <a href="#" data-showable-form-hide class="not-shown"><%= t :Cancel %></a>
+      </small>
+    <% end %>
   </h3>
 
   <table class="table auto-width">
@@ -64,11 +68,13 @@
 <div class="showable-form-section">
   <h3>
     <%= t :Programs %>
-    <small>
-      <% show_link_text = @lpf.programs.empty? ? t(:Add) : t(:Edit) %>
-      <a href="#" data-showable-form-show class="shown"><%= show_link_text %></a>
-      <a href="#" data-showable-form-hide class="not-shown"><%= t :Cancel %></a>
-    </small>
+    <% if can? :update, @lpf %>
+      <small>
+        <% show_link_text = @lpf.programs.empty? ? t(:Add) : t(:Edit) %>
+        <a href="#" data-showable-form-show class="shown"><%= show_link_text %></a>
+        <a href="#" data-showable-form-hide class="not-shown"><%= t :Cancel %></a>
+      </small>
+    <% end %>
   </h3>
 
   <table class="table auto-width">
