@@ -17,7 +17,6 @@ class DashboardSidebar extends React.PureComponent {
                 this.setState({
                     menu: response.data
                 })
-                this.onSectionSelected(response.data.user)
             })
     }
 
@@ -35,9 +34,25 @@ class DashboardSidebar extends React.PureComponent {
         })
     }
 
+    sectionClustersAndPrograms = (section) => {
+        let clusters = section.clusters || []
+        let programs = section.programs || []
+        let subSections = section.sections || []
+        for (let subSection of subSections) {
+            let subSectionClustersAndPrograms = this.sectionClustersAndPrograms(subSection)
+            clusters = clusters.concat(subSectionClustersAndPrograms.clusters)
+            programs = programs.concat(subSectionClustersAndPrograms.programs)
+        }
+        return {
+            clusters: clusters,
+            programs: programs
+        }
+    }
+
     onSectionSelected = (section) => {
-        const clusterIds = section.clusters.map((cluster) => {return cluster.id})
-        const programIds = section.programs.map((program) => {return program.id})
+        let clustersAndPrograms = this.sectionClustersAndPrograms(section)
+        const clusterIds = clustersAndPrograms.clusters.map((cluster) => {return cluster.id})
+        const programIds = clustersAndPrograms.programs.map((program) => {return program.id})
         this.props.setSelectedMultiple({
             clusterIds: clusterIds,
             programIds: programIds
@@ -53,18 +68,27 @@ class DashboardSidebar extends React.PureComponent {
         const userHasParticipants = menu.user.clusters.length > 0 || menu.user.programs.length > 0
         return (
             <ul className="list-unstyled">
-                {userHasParticipants &&
-                    <DashboardSidebarSection section={menu.user} startExpanded='true' selection={this.state.selection}
-                        onSectionSelected={this.onSectionSelected} onProgramSelected={this.onProgramSelected}
-                        onClusterSelected={this.onClusterSelected} />
-                }
-                {menu.other.lpfs.map((lpf) => {
+                {menu.countries.map((country) => {
                     return (
-                        <DashboardSidebarSection key={lpf.id} section={lpf} selection={this.state.selection}
-                            onSectionSelected={this.onSectionSelected} onProgramSelected={this.onProgramSelected}
-                            onClusterSelected={this.onClusterSelected} />
+                        <DashboardSidebarSection key={country.id} 
+                                                 section={country} 
+                                                 selection={this.state.selection}
+                                                 startExpanded={country.startExpanded}
+                                                 onSectionSelected={this.onSectionSelected} 
+                                                 onProgramSelected={this.onProgramSelected}
+                                                 onClusterSelected={this.onClusterSelected}
+                                                 header='h3' />
                     )
                 })}
+                {userHasParticipants &&
+                    <DashboardSidebarSection section={menu.user} 
+                                             startExpanded={menu.user.startExpanded} 
+                                             selection={this.state.selection}
+                                             onSectionSelected={this.onSectionSelected} 
+                                             onProgramSelected={this.onProgramSelected}
+                                             onClusterSelected={this.onClusterSelected}
+                                             header='h4' />
+                }
             </ul>
         )
     }
