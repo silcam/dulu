@@ -23,7 +23,7 @@ class TranslationActivitiesTable extends React.PureComponent {
             return a.programName.localeCompare(b.programName)
         },
         book: (a, b) => {
-            if (a.bibleBookId == b.bibleBookId) return intCompare(a.programId, b.programId)
+            if (a.bibleBookId == b.bibleBookId) return a.programName.localeCompare(b.programName)
             return intCompare(a.bibleBookId, b.bibleBookId)
         },
         stage: (a, b) => {
