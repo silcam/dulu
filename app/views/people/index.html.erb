@@ -1,18 +1,10 @@
-<h1><%= t :People %></h1>
-<p>
-  <%= link_to t(:Add_person), new_person_path, class: "btn btn-primary" if can? :create, Person %>
-</p>
-<table class="table">
-  <tr>
-    <th><%= t :Name %></th>
-    <th><%= t :Organization %></th>
-    <th><%= t :Email %></th>
-  </tr>
-  <% @people.each do |person| %>
-    <tr>
-      <td><%= link_to person.full_name_rev, person_path(person) %></td>
-      <td><%= person.organization.name if person.organization %></td>
-      <td><%= person.email %></td>
-    </tr>
-  <% end %>
-</table>
+<script type="application/json" id="strings">
+  <%=
+    strings_json(:common, :people_page)
+  %>
+</script>
+
+<div id="react" data-authenticity-token=<%= form_authenticity_token %>>
+</div>
+
+<%= javascript_pack_tag 'people' %>

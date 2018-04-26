@@ -105,12 +105,17 @@ Rails.application.routes.draw do
     resources :activities, shallow: true do
       resources :workshops
     end
+
     resources :clusters do
       get 'dashboard', on: :member
     end
+
     resources :notifications do
       post 'mark_read', on: :collection
     end
+
+    resources :people
+
     resources :programs, shallow: true do
       resources :translation_activities
       get 'dashboard_list', on: :collection

@@ -435,12 +435,15 @@ en:
   # React
   common:
     All: All
+    All_changes_saved: All changes saved.
     Cancel: Cancel
     Loading: Loading...
+    'No': 'No'
     Save: Save
     Saving: Saving...
     See_more: See more
     Updated: Updated
+    'Yes': 'Yes'
     date_strings:
       Day: Day
       Enter_valid_year: Please enter a valid year
@@ -492,6 +495,14 @@ en:
     Sort: Sort by
     Stage: Stage
     Upcoming_events: Upcoming Events
+
+  # People and Organizations
+  people_page:
+    Dulu_account: Dulu Account
+    Email: Email
+    Home_country: Home Country
+    Organizations: Organizations
+    People: People
 
   # Workshops
   workshops_activity_page:

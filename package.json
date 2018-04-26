@@ -10,6 +10,9 @@
     "react-tabs": "^2.2.1"
   },
   "devDependencies": {
+    "eslint": "^4.19.1",
+    "eslint-plugin-react": "^7.7.0",
+    "babel-eslint": "^8.2.3",
     "webpack-dev-server": "2.11.2"
   }
 }

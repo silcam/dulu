@@ -127,3 +127,30 @@ select.extraSmall {
     height: 24px !important;
     line-height: 18px !important;
 }
+
+.scrollableColumn {
+    height: calc(100vh - 58px);
+    overflow-y: scroll;
+}
+
+.editableText {
+    cursor: pointer;
+    .glyphicon {
+        display: none;
+    }
+}
+
+.editableText:hover > .glyphicon {
+    color: #aaa;
+    display: inline;
+}
+
+.editableTextInput {
+    .form-group {
+        display: inline-block;
+        .form-control {
+            display: inline-block;
+            width: auto;
+        }
+    }
+}

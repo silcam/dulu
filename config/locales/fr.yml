@@ -435,12 +435,15 @@ fr:
   # React
   common:
     All: Tous
+    All_changes_saved: Toute modification enregistrée
     Cancel: Annuler
     Loading: Chargement...
+    'No': 'Non'
     Save: Enregistrer
     Saving: Enregistrement...
     See_more: Voir plus
     Updated: Mise à jour
+    'Yes': 'Oui'
     date_strings:
       Day: Jour
       Enter_valid_year: Saisissez un an valide s'il vous plait.
@@ -493,6 +496,14 @@ fr:
     Stage: Étape
     Upcoming_events: Événements futurs
 
+  # People and Organizations
+  people_page:
+    Dulu_account: Compte Dulu
+    Email: Mail
+    Home_country: Pays d'origine
+    Organizations: Organisations
+    People: Personnel
+    
   # Workshops
   workshops_activity_page:
     Add_event: Ajouter un événement
