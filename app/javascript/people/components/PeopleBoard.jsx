@@ -7,11 +7,11 @@ class PeopleBoard extends React.PureComponent {
     constructor(props) {
         super(props)
         this.state = {
-            selection: {
-                type: 'Person',
-                id: 2417
-            }
-            // selection: null
+            // selection: {
+            //     type: 'Person',
+            //     id: 2417
+            // }
+            selection: null
         }
     }
 
@@ -36,7 +36,7 @@ class PeopleBoard extends React.PureComponent {
     }
 
     render() {
-        const indexColClass = (this.state.selection) ? 'col-md-4 scrollableColumn' : 'col-md-10'
+        const indexColClass = (this.state.selection) ? 'col-md-4 scrollableColumn' : 'scrollableColumn'
         return (
             <div className='row'>
                 <div className={indexColClass}>

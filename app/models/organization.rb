@@ -19,6 +19,10 @@ class Organization < ApplicationRecord
     Program.joins(participants: {person: :organization}).where("organizations.id=?", id).distinct
   end
 
+  def self.simple_search(query)
+    Organization.multi_word_where(query, 'name', 'abbreviation')
+  end
+
   def self.search(query)
     orgs = Organization.multi_word_where(query, 'name', 'abbreviation')
     results = []

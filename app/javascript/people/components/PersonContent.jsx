@@ -1,7 +1,7 @@
 import React from 'react'
 
 import CloseIconButton from '../../shared_components/CloseIconButton'
-import EditableText from '../../shared_components/EditableText'
+import EditableTextBox from '../../shared_components/EditableTextBox'
 import backedModel from '../../shared_components/backedModel'
 import SaveIndicator from '../../shared_components/SaveIndicator'
 
@@ -33,16 +33,18 @@ class BasicPersonContent extends React.PureComponent {
                                saving={this.props.saving > 0}
                                saved={this.props.savedChanges} />
                 <h2>
-                    <EditableText field='first_name'
-                                  text={person.first_name} 
-                                  updateText={this.updateField}
+                    <EditableTextBox field='first_name'
+                                  text={person.first_name}
+                                  value={person.first_name}
+                                  updateValue={this.updateField}
                                   editEnabled={editEnabled}
                                   validateNotBlank={true}
                                   strings={strings} />
                     &nbsp;
-                    <EditableText field='last_name'
+                    <EditableTextBox field='last_name'
                                   text={person.last_name}
-                                  updateText={this.updateField}
+                                  value={person.last_name}
+                                  updateValue={this.updateField}
                                   editEnabled={editEnabled}
                                   validateNotBlank={true}
                                   strings={strings} />
