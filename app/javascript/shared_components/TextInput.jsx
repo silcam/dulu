@@ -32,7 +32,7 @@ function TextInput(props) {
                     onChange={props.handleInput} onKeyDown={handleKeyDown}
                     placeholder={props.placeholder} value={props.value}
                     onBlur={props.handleBlur} autoFocus={autoFocus} />
-            <div>
+            <div className="inputMessage">
                 {props.errorMessage}
             </div>
         </div>

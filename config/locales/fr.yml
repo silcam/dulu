@@ -473,6 +473,8 @@ fr:
       Mobilization: Mobilisation
       Scripture_use: Interaction des Saintes Écritures
       Translation: Traduction
+    validation:
+      Not_blank: Ça ne peut pas être vide
 
   # Dashboard
   dashboard_page:

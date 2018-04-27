@@ -28,8 +28,18 @@ $green: #28a745;
 
 .errorMessage {
     color: $red;
-    .form-control {
+    .form-control, .form-control:focus {
         border-color: $red;
+    }
+}
+
+.inputMessage {
+    margin-top: 4px;
+}
+
+h1, h2, h3, h4, h5 { 
+    .inputMessage {
+        font-size: 14px;
     }
 }
 

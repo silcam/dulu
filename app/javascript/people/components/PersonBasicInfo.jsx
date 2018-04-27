@@ -23,7 +23,8 @@ function PersonBasicInfo(props) {
                     <td>
                         <EditableText field={'email'}
                                       text={person.email}
-                                      updateText={props.updateText} />
+                                      updateText={props.updateText}
+                                      editEnabled={props.editEnabled} />
                     </td>
                 </tr>
                 <tr>

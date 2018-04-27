@@ -31,3 +31,8 @@ json.person do
     json.past @person.events.past.limit(5), partial: 'event', as: :event
   end
 end
+
+json.can do
+  json.update can?(:update, @person)
+  json.destroy can?(:destroy, @person)
+end

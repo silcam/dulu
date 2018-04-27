@@ -473,6 +473,8 @@ en:
       Mobilization: Mobilization
       Scripture_use: Scripture Engagement
       Translation: Translation
+    validation:
+      Not_blank: "Can't be blank"
       
   # Dashboard
   dashboard_page:

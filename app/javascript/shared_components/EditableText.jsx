@@ -19,7 +19,7 @@ class EditableText extends React.PureComponent {
     }
 
     finishEditMode = () => {
-        if (this.state.text != this.props.text) {
+        if (!this.state.errorMessage && this.state.text != this.props.text) {
             this.props.updateText(this.props.field, this.state.text)
         }
         this.setState({
@@ -28,12 +28,26 @@ class EditableText extends React.PureComponent {
     }
 
     handleInput = (e) => {
+        const errorMessage = this.validate(e.target.value)
         this.setState({
-            text: e.target.value
+            text: e.target.value,
+            errorMessage: errorMessage
         })
     }
 
+    // Returns an error message for invalid text, null for valid
+    validate = (text) => {
+        if (this.props.validateNotBlank && text.length == 0) {
+            return this.props.strings.validation.Not_blank
+        }
+        return null
+    }
+
     render() {
+        const editEnabled = this.props.editEnabled || (this.props.editEnabled == undefined)
+        if (!editEnabled) {
+            return this.props.text
+        }
         if (this.state.editing) {
             return (
                 <span className='editableTextInput'>
@@ -42,7 +56,8 @@ class EditableText extends React.PureComponent {
                             name={this.props.field}
                             handleEnter={this.finishEditMode}
                             handleBlur={this.finishEditMode}
-                            autoFocus={true} />
+                            autoFocus={true}
+                            errorMessage={this.state.errorMessage} />
                 </span>
             )
         }

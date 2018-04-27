@@ -19,6 +19,7 @@ class BasicPersonContent extends React.PureComponent {
     render() {
         const strings = this.props.strings
         const person = this.props.person
+        const editEnabled = this.props.can.update
 
         if (person == null) {
             return <p className='loading'>{strings.Loading}</p>
@@ -34,16 +35,23 @@ class BasicPersonContent extends React.PureComponent {
                 <h2>
                     <EditableText field='first_name'
                                   text={person.first_name} 
-                                  updateText={this.updateField} />
+                                  updateText={this.updateField}
+                                  editEnabled={editEnabled}
+                                  validateNotBlank={true}
+                                  strings={strings} />
                     &nbsp;
                     <EditableText field='last_name'
                                   text={person.last_name}
-                                  updateText={this.updateField} />
+                                  updateText={this.updateField}
+                                  editEnabled={editEnabled}
+                                  validateNotBlank={true}
+                                  strings={strings} />
                 </h2>
 
                 <PersonBasicInfo strings={strings} 
                                  person={person}
-                                 updateText={this.updateField} />
+                                 updateText={this.updateField}
+                                 editEnabled={editEnabled} />
 
             </div>
         )
