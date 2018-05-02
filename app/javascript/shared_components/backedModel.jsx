@@ -66,21 +66,62 @@ function backedModel(WrappedComponent, modelPath, modelName) {
                             authenticity_token: this.props.authToken,
                             [modelName]: model
                         })
-                .then(response => {
-                    this.setState((prevState) => {
-                        return {
-                            model: response.data[modelName],
-                            saving: --prevState.saving,
-                            savedChanges: true
-                        }
-                    })
-                })
-                .catch(error => {
-                    this.setState((prevState) => {
-                        return { saving: --prevState.saving }
-                    })
-                    console.error(error)
-                })
+                .then(this.handleResponse)
+                .catch(this.handleError)
+        }
+
+        rawPost = (url, data) => {
+            this.addSaving()
+            data.authenticity_token = this.props.authToken
+            axios.post(url, data)
+                .then(this.handleResponse)
+                .catch(this.handleError)
+        }
+
+        rawPut = (url, data) => {
+            this.addSaving()
+            data.authenticity_token = this.props.authToken
+            axios.put(url, data)
+                .then(this.handleResponse)
+                .catch(this.handleError)
+        }
+
+        rawDelete = (url) => {
+            this.addSaving()
+            axios({
+                method: 'delete',
+                url: url,
+                data: {
+                    authenticity_token: this.props.authToken
+                }
+            })
+            .then(this.handleResponse)
+            .catch(this.handleError)
+        }
+
+        addSaving = () => {
+            this.setState((prevState) => {
+                return {
+                    saving: ++prevState.saving
+                }
+            })
+        }
+
+        handleResponse = (response) => {
+            this.setState((prevState) => {
+                return {
+                    model: response.data[modelName],
+                    saving: --prevState.saving,
+                    savedChanges: true
+                }
+            })
+        }
+
+        handleError = (error) => {
+            this.setState((prevState) => {
+                return { saving: --prevState.saving }
+            })
+            console.error(error)
         }
 
         render() {
@@ -90,7 +131,10 @@ function backedModel(WrappedComponent, modelPath, modelName) {
                                      can={this.state.can} 
                                      saving={this.state.saving}
                                      savedChanges={this.state.savedChanges}
-                                     update={this.update} />
+                                     update={this.update}
+                                     rawPost={this.rawPost}
+                                     rawPut={this.rawPut}
+                                     rawDelete={this.rawDelete} />
         }
     }
 }

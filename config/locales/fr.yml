@@ -434,6 +434,7 @@ fr:
 
   # React
   common:
+    Add: Ajouter
     All: Tous
     All_changes_saved: Toute modification enregistrée
     Cancel: Annuler
@@ -501,10 +502,16 @@ fr:
   # People and Organizations
   people_page:
     Dulu_account: Compte Dulu
+    dulu_preferred_language: Langue pour site
     Email: Mail
+    Email_frequency: Périodicité des mails
     Home_country: Pays d'origine
     Organizations: Organisations
     People: Personnel
+    Roles: Rôles
+    languages:
+      en: English
+      fr: Français
     
   # Workshops
   workshops_activity_page:

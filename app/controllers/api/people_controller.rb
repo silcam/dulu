@@ -17,7 +17,11 @@ class Api::PeopleController < ApplicationController
   private
 
   def person_params
-    params.require(:person).permit(:first_name, :last_name, :email, :country_id,
-                                   :has_login)
+    params.require(:person).permit(:first_name, 
+                                   :last_name, 
+                                   :email, 
+                                   :country_id,
+                                   :has_login,
+                                   :ui_language)
   end
 end

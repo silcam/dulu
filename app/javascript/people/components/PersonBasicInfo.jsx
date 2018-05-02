@@ -4,6 +4,8 @@ import EditableTextBox from '../../shared_components/EditableTextBox'
 import EditableTextSearchInput from '../../shared_components/EditableTextSearchInput'
 import EditableTextYesNo from '../../shared_components/EditableTextYesNo'
 
+import EditableTextUiLanguage from './EditableTextUiLanguage'
+
 function PersonBasicInfo(props) {
     const strings = props.strings
     const person  = props.person
@@ -37,19 +39,46 @@ function PersonBasicInfo(props) {
                                       editEnabled={props.editEnabled} />
                     </td>
                 </tr>
-                <tr>
-                    <th>
-                        {strings.Dulu_account}
-                    </th>
-                    <td>
-                        <EditableTextYesNo text={hasLoginText}
-                                           value={person.has_login}
-                                           field='has_login'
-                                           updateValue={props.updateText}
-                                           editEnabled={props.editEnabled}
-                                           strings={strings} />
-                    </td>
-                </tr>
+                {!person.isUser &&
+                    <tr>
+                        <th>
+                            {strings.Dulu_account}
+                        </th>
+                        <td>
+                            <EditableTextYesNo text={hasLoginText}
+                                            value={person.has_login}
+                                            field='has_login'
+                                            updateValue={props.updateText}
+                                            editEnabled={props.editEnabled}
+                                            strings={strings} />
+                        </td>
+                    </tr>
+                }
+                {person.isUser &&
+                    <React.Fragment>
+                        <tr>
+                            <th>
+                                {strings.dulu_preferred_language}
+                            </th>
+                            <td>
+                                <EditableTextUiLanguage text={strings.languages[person.ui_language]}
+                                                        value={person.ui_language}
+                                                        field='ui_language'
+                                                        updateValue={props.updateText}
+                                                        editEnabled={props.editEnabled}
+                                                        strings={strings} />
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>
+                                {strings.Email_frequency}
+                            </th>
+                            <td>
+                                {person.email_pref}
+                            </td>
+                        </tr>
+                    </React.Fragment>
+                }
             </tbody>
         </table> 
     )

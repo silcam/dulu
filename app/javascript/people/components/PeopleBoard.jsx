@@ -7,11 +7,11 @@ class PeopleBoard extends React.PureComponent {
     constructor(props) {
         super(props)
         this.state = {
-            // selection: {
-            //     type: 'Person',
-            //     id: 2417
-            // }
-            selection: null
+            selection: {
+                type: 'Person',
+                id: 2417
+            }
+            // selection: null
         }
     }
 

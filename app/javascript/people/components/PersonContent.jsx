@@ -6,6 +6,7 @@ import backedModel from '../../shared_components/backedModel'
 import SaveIndicator from '../../shared_components/SaveIndicator'
 
 import PersonBasicInfo from './PersonBasicInfo'
+import RolesTable from './RolesTable'
 
 class BasicPersonContent extends React.PureComponent {
     clickClose = () => {
@@ -54,6 +55,11 @@ class BasicPersonContent extends React.PureComponent {
                                  person={person}
                                  updateText={this.updateField}
                                  editEnabled={editEnabled} />
+
+                <RolesTable person={person}
+                            strings={strings}
+                            editEnabled={editEnabled}
+                            rawPost={this.props.rawPost} />
 
             </div>
         )

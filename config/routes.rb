@@ -121,6 +121,10 @@ Rails.application.routes.draw do
 
     resources :people
 
+    resources :person_roles do
+      post 'finish', on: :collection
+    end
+
     resources :programs, shallow: true do
       resources :translation_activities
       get 'dashboard_list', on: :collection

@@ -6,11 +6,18 @@ class PeopleTableRow extends React.PureComponent {
         e.target.blur()
     }
 
+    selectionMatches = () => {
+        return this.props.selection &&
+               this.props.selection.type == 'Person' &&
+               this.props.selection.id == this.props.person.id
+    }
+
     render() {
         const person = this.props.person
         const longVersion = !this.props.selection
+        const rowClass = this.selectionMatches() ? 'bg-primary' : ''
         return (
-            <tr>
+            <tr className={rowClass}>
                 <td>
                     <button className='btn-link' 
                             onClick={this.personClick} >
