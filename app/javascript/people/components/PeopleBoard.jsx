@@ -49,7 +49,7 @@ class PeopleBoard extends React.PureComponent {
                                  setOrg={this.setOrg} />
                 </div>
                 {this.state.selection && 
-                    <div className='col-md-8'>
+                    <div className='col-md-8 scrollableColumn'>
                         <ContentColumn selection={this.state.selection}
                                        strings={this.props.strings}
                                        setSelection={this.setSelection}

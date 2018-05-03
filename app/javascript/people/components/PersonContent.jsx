@@ -5,6 +5,8 @@ import EditableTextBox from '../../shared_components/EditableTextBox'
 import backedModel from '../../shared_components/backedModel'
 import SaveIndicator from '../../shared_components/SaveIndicator'
 
+import EventsTable from './EventsTable'
+import ParticipantsTable from './ParticipantsTable'
 import PersonBasicInfo from './PersonBasicInfo'
 import RolesTable from './RolesTable'
 
@@ -60,6 +62,12 @@ class BasicPersonContent extends React.PureComponent {
                             strings={strings}
                             editEnabled={editEnabled}
                             rawPost={this.props.rawPost} />
+
+                <ParticipantsTable person={person}
+                                   strings={strings} />
+
+                <EventsTable person={person}
+                             strings={strings} />
 
             </div>
         )
