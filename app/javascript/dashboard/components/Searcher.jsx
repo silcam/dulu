@@ -21,8 +21,8 @@ class BasicSearcher extends React.PureComponent {
     }
 
     goToFirstResult = () => {
-        if (this.state.results[0] && this.state.results[0].route) {
-            window.location.href = this.state.results[0].route
+        if (this.props.results[0] && this.props.results[0].route) {
+            window.location.href = this.props.results[0].route
         }
     }
 

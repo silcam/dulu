@@ -10,6 +10,7 @@ class ContentColumn extends React.PureComponent {
                     <PersonContent id={selection.id}
                                    strings={this.props.strings}
                                    setSelection={this.props.setSelection}
+                                   deletePerson={this.props.deletePerson}
                                    authToken={this.props.authToken} /> :
                     <OrgContent id={selection.id}
                                 strings={this.props.strings}

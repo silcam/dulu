@@ -438,6 +438,7 @@ fr:
     All: Tous
     All_changes_saved: Toute modification enregistrée
     Cancel: Annuler
+    Im_sure: Je suis certain(e)
     Loading: Chargement...
     'No': 'Non'
     Save: Enregistrer
@@ -501,6 +502,8 @@ fr:
 
   # People and Organizations
   people_page:
+    delete_person: Supprimer %{name} irrévocablement
+    delete_person_warning: Êtes-vous certain(e) que vous voulez supprimer %{name}. Cette action ne peut pas être défaite.
     Dulu_account: Compte Dulu
     dulu_preferred_language: Langue pour Dulu
     Email: Mail

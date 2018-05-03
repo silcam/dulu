@@ -438,6 +438,7 @@ en:
     All: All
     All_changes_saved: All changes saved.
     Cancel: Cancel
+    Im_sure: "I'm sure"
     Loading: Loading...
     'No': 'No'
     Save: Save
@@ -501,6 +502,8 @@ en:
 
   # People and Organizations
   people_page:
+    delete_person: Permanently Delete %{name}
+    delete_person_warning: Are you sure you want to delete %{name}? This can't be undone.
     Dulu_account: Dulu Account
     dulu_preferred_language: Preferred language for using Dulu
     Email: Email

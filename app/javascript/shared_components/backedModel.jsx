@@ -67,10 +67,14 @@ function backedModel(WrappedComponent, modelPath, modelName) {
                             [modelName]: model
                         })
                 .then((response) => {
-                    this.handleResponse(response)
-                    if (callback) callback()
+                    this.handleResponse(response, callback)
                 })
                 .catch(this.handleError)
+        }
+
+        delete = (callback) => {
+            const url = `${modelPath}/${this.props.id}`
+            this.rawDelete(url, callback)
         }
 
         rawPost = (url, data) => {
@@ -89,7 +93,7 @@ function backedModel(WrappedComponent, modelPath, modelName) {
                 .catch(this.handleError)
         }
 
-        rawDelete = (url) => {
+        rawDelete = (url, callback) => {
             this.addSaving()
             axios({
                 method: 'delete',
@@ -98,7 +102,9 @@ function backedModel(WrappedComponent, modelPath, modelName) {
                     authenticity_token: this.props.authToken
                 }
             })
-            .then(this.handleResponse)
+            .then((response) => {
+                this.handleResponse(response, callback)
+            })
             .catch(this.handleError)
         }
 
@@ -110,14 +116,19 @@ function backedModel(WrappedComponent, modelPath, modelName) {
             })
         }
 
-        handleResponse = (response) => {
+        handleResponse = (response, callback) => {
             this.setState((prevState) => {
-                return {
+                let newState = {
                     model: response.data[modelName],
                     saving: --prevState.saving,
                     savedChanges: true
                 }
+                if (response.data[modelName]) {
+                    newState.model = response.data[modelName]
+                }
+                return newState
             })
+            if (callback) callback()
         }
 
         handleError = (error) => {
@@ -135,6 +146,7 @@ function backedModel(WrappedComponent, modelPath, modelName) {
                                      saving={this.state.saving}
                                      savedChanges={this.state.savedChanges}
                                      update={this.update}
+                                     delete={this.delete}
                                      rawPost={this.rawPost}
                                      rawPut={this.rawPut}
                                      rawDelete={this.rawDelete} />
