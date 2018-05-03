@@ -20,7 +20,7 @@ class DomainUpdatesController < ApplicationController
     @domain_updates_with_errors = []
     assemble_dates params, 'domain_update', 'date'
     params[:domain_updates].each do |key, du_params|
-      if du_params.any?{ |key, val| not val.blank? }
+      if du_params.values.any?{ |val| !val.blank? }
         domain_update = @program.domain_updates.new(domain_update_params(du_params))
         domain_update.date = params[:domain_update][:date]
         domain_update.domain = @domain
