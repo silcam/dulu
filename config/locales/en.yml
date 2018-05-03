@@ -509,6 +509,10 @@ en:
     Organizations: Organizations
     People: People
     Roles: Roles
+    email_prefs:
+      immediate: Immediate
+      daily: Daily
+      weekly: Weekly
     languages:
       en: English
       fr: Français

@@ -502,13 +502,17 @@ fr:
   # People and Organizations
   people_page:
     Dulu_account: Compte Dulu
-    dulu_preferred_language: Langue pour site
+    dulu_preferred_language: Langue pour Dulu
     Email: Mail
     Email_frequency: Périodicité des mails
     Home_country: Pays d'origine
     Organizations: Organisations
     People: Personnel
     Roles: Rôles
+    email_prefs:
+      immediate: Immédiat
+      daily: Quotidien
+      weekly: Hebdomodaire
     languages:
       en: English
       fr: Français

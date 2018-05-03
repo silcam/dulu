@@ -6,12 +6,15 @@ import IndexColumn from './IndexColumn'
 class PeopleBoard extends React.PureComponent {
     constructor(props) {
         super(props)
-        this.state = {
-            selection: {
+        let selection = null
+        if (props.personId) {
+            selection = {
                 type: 'Person',
-                id: 2417
+                id: props.personId
             }
-            // selection: null
+        }
+        this.state = {
+            selection: selection
         }
     }
 

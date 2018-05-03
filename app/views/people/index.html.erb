@@ -4,7 +4,8 @@
   %>
 </script>
 
-<div id="react" data-authenticity-token=<%= form_authenticity_token %>>
+<div id="react" data-authenticity-token=<%= form_authenticity_token %>
+                data-person-id=<%= @person ? @person.id : '' %> >
 </div>
 
 <%= javascript_pack_tag 'people' %>

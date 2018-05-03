@@ -2,7 +2,7 @@ import React from 'react'
 
 /*
     Required props:
-        -handleChange - function
+        -handleChange(e)
         -value
         -options - array of objects with display member and optional value member
     Optional props:

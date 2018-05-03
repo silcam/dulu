@@ -13,8 +13,8 @@ class BasicPersonContent extends React.PureComponent {
         this.props.setSelection(null)
     }
 
-    updateField = (field, value) => {
-        this.props.update({ [field]: value })
+    updateField = (field, value, callback) => {
+        this.props.update({ [field]: value }, callback)
     }
 
     render() {

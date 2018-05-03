@@ -7,12 +7,11 @@ class PeopleController < ApplicationController
 
   def show
     respond_to do |format|
-      format.html
+      format.html { render 'index' }
       format.json { render json: @person.to_hash }
     end
   end
 
-  # noinspection RubyArgCount
   def new
     authorize! :create, Person
     @person = Person.new

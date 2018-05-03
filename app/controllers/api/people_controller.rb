@@ -22,6 +22,7 @@ class Api::PeopleController < ApplicationController
                                    :email, 
                                    :country_id,
                                    :has_login,
-                                   :ui_language)
+                                   :ui_language,
+                                   :email_pref)
   end
 end

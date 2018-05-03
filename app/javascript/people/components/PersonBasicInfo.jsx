@@ -1,7 +1,10 @@
 import React from 'react'
 
+import selectOptionsFromObject from '../../util/selectOptionsFromObject'
+
 import EditableTextBox from '../../shared_components/EditableTextBox'
 import EditableTextSearchInput from '../../shared_components/EditableTextSearchInput'
+import EditableTextSelect from '../../shared_components/EditableTextSelect'
 import EditableTextYesNo from '../../shared_components/EditableTextYesNo'
 
 import EditableTextUiLanguage from './EditableTextUiLanguage'
@@ -11,6 +14,14 @@ function PersonBasicInfo(props) {
     const person  = props.person
     const homeCountry = person.home_country || {id: null, name: ''}
     const hasLoginText = person.has_login ? strings.Yes : strings.No
+    const emailPrefOptions = selectOptionsFromObject(strings.email_prefs)
+
+    const updateUiLang = (field, value) => {
+        props.updateText(field, value, () => {
+            window.location.href = `/people/${person.id}`
+        })
+    }
+
     return (
         <table className='table auto-width'>
             <tbody>
@@ -64,7 +75,7 @@ function PersonBasicInfo(props) {
                                 <EditableTextUiLanguage text={strings.languages[person.ui_language]}
                                                         value={person.ui_language}
                                                         field='ui_language'
-                                                        updateValue={props.updateText}
+                                                        updateValue={updateUiLang}
                                                         editEnabled={props.editEnabled}
                                                         strings={strings} />
                             </td>
@@ -74,7 +85,13 @@ function PersonBasicInfo(props) {
                                 {strings.Email_frequency}
                             </th>
                             <td>
-                                {person.email_pref}
+                                <EditableTextSelect 
+                                        text={strings.email_prefs[person.email_pref]}
+                                        value={person.email_pref}
+                                        field={'email_pref'}
+                                        updateValue={props.updateText}
+                                        editEnabled={props.editEnabled}
+                                        options={emailPrefOptions} />
                             </td>
                         </tr>
                     </React.Fragment>

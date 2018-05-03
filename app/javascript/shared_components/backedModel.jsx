@@ -54,7 +54,7 @@ function backedModel(WrappedComponent, modelPath, modelName) {
                 .catch(error => console.error(error))
         }
 
-        update = (model) => {
+        update = (model, callback) => {
             this.setState((prevState) => {
                 return {
                     model: update(prevState.model, {$merge: model}),
@@ -66,7 +66,10 @@ function backedModel(WrappedComponent, modelPath, modelName) {
                             authenticity_token: this.props.authToken,
                             [modelName]: model
                         })
-                .then(this.handleResponse)
+                .then((response) => {
+                    this.handleResponse(response)
+                    if (callback) callback()
+                })
                 .catch(this.handleError)
         }
 
