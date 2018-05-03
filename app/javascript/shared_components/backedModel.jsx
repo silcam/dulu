@@ -22,23 +22,17 @@ function backedModel(WrappedComponent, modelPath, modelName) {
             }
         }
 
-        // Reset when the component is shifted to a different instance of the model
-        static getDerivedStateFromProps(nextProps, prevState) {
-            if (!prevState.model || prevState.model.id == nextProps.id) return null
-
-            return {
-                model: null,
-                saving: 0,
-                savedChanges: false
-            }
-        }
-
         componentDidMount() {
             this.fetch()
         }
 
-        componentDidUpdate() {
-            if (!this.state.model) {
+        componentDidUpdate(prevProps) {
+            if (this.props.id && this.props.id != prevProps.id) {
+                this.setState({
+                    model: null,
+                    saving: 0,
+                    savedChanges: false
+                })
                 this.fetch()
             }
         }

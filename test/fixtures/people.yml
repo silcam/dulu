@@ -19,6 +19,7 @@ Drew:
   country: USA
   has_login: true
   roles_field: '|TranslationConsultant|'
+  ui_language: en
 
 Abanda:
   first_name: Abanda
@@ -41,6 +42,7 @@ Olga:
   organization: SIL
   has_login: true
   roles_field: '|LanguageProgramFacilitator|'
+  ui_language: en
 
 Andreas:
   first_name: Andreas
@@ -49,6 +51,7 @@ Andreas:
   email: andreas_ernst@sil.org
   has_login: true
   roles_field: '|LanguageProgramFacilitator|'
+  ui_language: en
 
 FormerHdiTranslator:
   first_name: Former
@@ -63,6 +66,7 @@ Kevin:
   organization: SIL
   email: kevin_bradford@sil.org
   has_login: true
+  ui_language: en
 
 Lance:
   first_name: Lance
@@ -71,6 +75,7 @@ Lance:
   email: lance_freeland@sil.org
   has_login: true
   roles_field: '|TranslationConsultantTraining|'
+  ui_language: en
 
 Kendall:
   first_name: Kendall
@@ -79,3 +84,4 @@ Kendall:
   email: kendall_isaac@sil.org
   has_login: true
   roles_field: '|LinguisticConsultantTraining|'
+  ui_language: en

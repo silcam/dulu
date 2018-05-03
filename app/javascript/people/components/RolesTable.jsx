@@ -19,7 +19,7 @@ class RolesTable extends React.PureComponent {
         const strings = this.props.strings
         const editEnabled = this.props.editEnabled
         return (
-            <div>
+            <div id='rolesTable'>
                 <h3>
                     {strings.Roles}
                 </h3>

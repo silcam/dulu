@@ -75,7 +75,7 @@
                 <span class="caret"></span>
               </button>
               <ul class="dropdown-menu">
-                <li><%= link_to t(:My_info), edit_person_path(@current_user, referred_by: request.path) %></li>
+                <li><%= link_to t(:My_info), person_path(@current_user) %></li>
                 <li><%= link_to t(:Log_out), logout_path, method: :delete %></li>
               </ul>
             </div>

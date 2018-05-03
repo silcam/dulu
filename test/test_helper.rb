@@ -14,7 +14,7 @@ Minitest::Reporters.use!
 Delayed::Worker.delay_jobs = false
 
 Capybara::Webkit.configure do |config|
-  # config.raise_javascript_errors = true
+  config.raise_javascript_errors = true
 end
 
 class ActiveSupport::TestCase
@@ -71,14 +71,27 @@ class ActiveSupport::TestCase
   def accept_js_confirm
     page.driver.browser.accept_js_confirms
   end
+
+  def edit_editable_text(text, new_text)
+    find('.editableText', text: text).click
+    within('.editableTextInput') do
+      fill_in(currently_with: text, with: new_text)
+      find('input[type="text"]').send_keys(:enter)
+      # fill_in(currently_with: text, with: new_text)
+    end
+  end
+
+  def assert_changes_saved
+    assert find('p', text: 'All changes saved.')
+  end
 end
 
 # Some kind of hack to avoid SQLite::BusyExceptions
-class ActiveRecord::Base
-  mattr_accessor :shared_connection
-  @@shared_connection = nil
-  def self.connection
-    @@shared_connection || retrieve_connection
-  end
-end
-ActiveRecord::Base.shared_connection = ActiveRecord::Base.connection
+# class ActiveRecord::Base
+#   mattr_accessor :shared_connection
+#   @@shared_connection = nil
+#   def self.connection
+#     @@shared_connection || retrieve_connection
+#   end
+# end
+# ActiveRecord::Base.shared_connection = ActiveRecord::Base.connection
