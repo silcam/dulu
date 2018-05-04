@@ -3,13 +3,13 @@ import React from 'react'
 /*
     Required props:
         function handleClick
-        strings
+        strings or text
     Optional props:
         string extraClasses
 */
 
 function AddButton(props) {
-    const text = props.strings.Add
+    const text = props.text || props.strings.Add
     const classes = "btn btn-primary " + (props.extraClasses || '')
     return (
         <button className={classes}

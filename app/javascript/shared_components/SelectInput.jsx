@@ -8,13 +8,16 @@ import React from 'react'
     Optional props:
         -extraClasses
         -autoFocus
+        -name
 
 */
 
 function SelectInput(props) {
     const className = "form-control " + props.extraClasses
+    const name = props.name || 'basic_select'
     return (
         <select className={className} 
+                name={name}
                 value={props.value}
                 autoFocus={props.autoFocus || false}
                 onChange={props.handleChange}>

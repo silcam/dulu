@@ -502,15 +502,28 @@ en:
 
   # People and Organizations
   people_page:
+    Add_new_person: Add New Person
+    already_exists: already exists
+    Can_login: Can log in to Dulu
+    confirm_different_person: This is a different person.
     delete_person: Permanently Delete %{name}
     delete_person_warning: Are you sure you want to delete %{name}? This can't be undone.
     Dulu_account: Dulu Account
     dulu_preferred_language: Preferred language for using Dulu
+    duplicate_warning_start: There is already a person named
+    duplicate_warning_end: in Dulu. Are you sure this is a different person?
     Email: Email
     Email_frequency: Email Frequency
     Events: Events
+    First_name: First Name
+    Gender: Gender
+    genders:
+      M: Male
+      F: Female
     Home_country: Home Country
     Language_programs: Language Programs
+    Last_name: Last Name
+    New_person: New Person
     Organizations: Organizations
     People: People
     Roles: Roles

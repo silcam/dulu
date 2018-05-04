@@ -2,7 +2,7 @@ import React from 'react'
 
 /*
     Required props:
-        function handleInput
+        handleInput(e)
         string value
         string name
 
@@ -17,7 +17,7 @@ import React from 'react'
 
 function TextInput(props) {
     const handleKeyDown = (e) => {
-        if (e.key == 'Enter') {
+        if (e.key == 'Enter' && props.handleEnter) {
             props.handleEnter()
         }
     }

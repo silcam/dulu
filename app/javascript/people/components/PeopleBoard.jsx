@@ -4,6 +4,15 @@ import React from 'react'
 import ContentColumn from './ContentColumn'
 import IndexColumn from './IndexColumn'
 
+function findSpotFor(person, people) {
+    let index = 0
+    while ( index < people.length &&
+            person.last_name.localeCompare(people[index].last_name) > 0) {
+        ++index
+    }
+    return index
+}
+
 class PeopleBoard extends React.PureComponent {
     constructor(props) {
         super(props)
@@ -59,6 +68,23 @@ class PeopleBoard extends React.PureComponent {
         })
     }
 
+    addPerson = (person) => {
+        const selection = {
+            type: 'Person',
+            id: person.id
+        }
+        this.setState((prevState) => {
+            let index = findSpotFor(person, prevState.people)
+            let people = prevState.people.slice(0, index)
+            people.push(person)
+            people = people.concat(prevState.people.slice(index))
+            return {
+                people: people,
+                selection: selection
+            }
+        })
+    }
+
     deletePerson = (id) => {
         this.setState((prevState) => {
             const people = prevState.people
@@ -90,6 +116,7 @@ class PeopleBoard extends React.PureComponent {
                         <ContentColumn selection={this.state.selection}
                                        strings={this.props.strings}
                                        setSelection={this.setSelection}
+                                       addPerson={this.addPerson}
                                        deletePerson={this.deletePerson}
                                        authToken={this.props.authToken} />
                     </div>

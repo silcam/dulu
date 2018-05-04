@@ -1,20 +1,38 @@
 import React from 'react'
 
-import PersonContent from './PersonContent'
+import NewPersonForm from './NewPersonForm'
 import OrgContent from './OrgContent'
+import PersonContent from './PersonContent'
 
 class ContentColumn extends React.PureComponent {
     render() {
         const selection = this.props.selection
-        return (selection.type == 'Person') ?
-                    <PersonContent id={selection.id}
-                                   strings={this.props.strings}
-                                   setSelection={this.props.setSelection}
-                                   deletePerson={this.props.deletePerson}
-                                   authToken={this.props.authToken} /> :
-                    <OrgContent id={selection.id}
+        if (selection.type == 'Person') {
+            if (selection.id == null) {
+                return <NewPersonForm setSelection={this.props.setSelection}
+                                      strings={this.props.strings}
+                                      authToken={this.props.authToken}
+                                      addPerson={this.props.addPerson} />
+            }
+            else { // non-null id
+                return <PersonContent id={selection.id}
                                 strings={this.props.strings}
-                                setSelection={this.props.setSelection} />
+                                setSelection={this.props.setSelection}
+                                deletePerson={this.props.deletePerson}
+                                authToken={this.props.authToken} />
+            }
+        }
+        else { // Organization selected
+            if (selection.id == null) {
+                return null
+            }
+            else { // Non-null id
+                return <OrgContent id={selection.id}
+                            strings={this.props.strings}
+                            setSelection={this.props.setSelection} />
+            }
+        }
+                    
     }
 }
 

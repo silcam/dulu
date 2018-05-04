@@ -7,6 +7,15 @@ class Api::PeopleController < ApplicationController
     @person = Person.find(params[:id])
   end
 
+  def create
+    @person = Person.new(person_params)
+    if duplicate_person?
+      render 'duplicate'
+    else
+      @person.save!
+    end
+  end
+
   def update
     @person = Person.find(params[:id])
     @person.update(person_params)
@@ -26,10 +35,19 @@ class Api::PeopleController < ApplicationController
   def person_params
     params.require(:person).permit(:first_name, 
                                    :last_name, 
+                                   :gender,
                                    :email, 
                                    :country_id,
                                    :has_login,
                                    :ui_language,
                                    :email_pref)
+  end
+
+  def duplicate_person?
+    return false if params[:person][:not_a_duplicate]
+    @duplicate = Person.find_by("first_name ILIKE ? AND last_name ILIKE ?",
+                                @person.first_name,
+                                @person.last_name)
+    return @duplicate
   end
 end
