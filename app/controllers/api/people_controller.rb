@@ -8,9 +8,10 @@ class Api::PeopleController < ApplicationController
   end
 
   def create
+    authorize! :create, Person
     @person = Person.new(person_params)
     if duplicate_person?
-      render 'duplicate'
+      render :duplicate
     else
       @person.save!
     end
@@ -18,6 +19,7 @@ class Api::PeopleController < ApplicationController
 
   def update
     @person = Person.find(params[:id])
+    authorize! :update, @person
     @person.update(person_params)
     @person.reload unless @person.valid?
     render :show

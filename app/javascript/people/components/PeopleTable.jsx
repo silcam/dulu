@@ -17,10 +17,12 @@ class PeopleTable extends React.PureComponent {
         }
         return (
             <div>
-                <p style={{paddingLeft: '8px'}}>
-                    <AddButton text={strings.Add_new_person}
-                               handleClick={this.newPersonForm} />
-                </p>
+                {this.props.can.create &&
+                    <p style={{paddingLeft: '8px'}}>
+                        <AddButton text={strings.Add_new_person}
+                                handleClick={this.newPersonForm} />
+                    </p>
+                }
                 <table className='table'>
                     <tbody>
                         {people.map((person) => {

@@ -4,12 +4,20 @@ import React from 'react'
 import ContentColumn from './ContentColumn'
 import IndexColumn from './IndexColumn'
 
-function findSpotFor(person, people) {
+function findSpotForPerson(person, people) {
     let index = 0
     while ( index < people.length &&
             person.last_name.localeCompare(people[index].last_name) > 0) {
         ++index
     }
+    return index
+}
+
+function findSpotForOrg(org, orgs) {
+    let index = orgs.findIndex((o) => {
+        return org.name.localeCompare(o.name) < 0
+    })
+    if (index < 0) index = orgs.length
     return index
 }
 
@@ -23,10 +31,18 @@ class PeopleBoard extends React.PureComponent {
                 id: props.personId
             }
         }
+        else if (props.orgId) {
+            selection = {
+                type: 'Org',
+                id: props.orgId
+            }
+        }
         this.state = {
             selection: selection,
             people: [],
-            orgs: []
+            orgs: [],
+            peopleCan: {},
+            orgCan: {}
         }
     }
 
@@ -34,18 +50,20 @@ class PeopleBoard extends React.PureComponent {
         axios.get('/api/people')
             .then(response => {
                 this.setState({
-                    people: response.data.people
+                    people: response.data.people,
+                    peopleCan: response.data.can
                 })
             })
             .catch(error => {console.error(error)})
         
-        // axios.get('/api/organizations')
-        //     .then(response => {
-        //         this.setState({
-        //             organizations: response.data.organizations
-        //         })
-        //     })
-        //     .catch(error => console.error(error))
+        axios.get('/api/organizations')
+            .then(response => {
+                this.setState({
+                    orgs: response.data.organizations,
+                    orgCan: response.data.can
+                })
+            })
+            .catch(error => console.error(error))
     }
 
     setSelection = (selection) => {
@@ -74,12 +92,29 @@ class PeopleBoard extends React.PureComponent {
             id: person.id
         }
         this.setState((prevState) => {
-            let index = findSpotFor(person, prevState.people)
+            let index = findSpotForPerson(person, prevState.people)
             let people = prevState.people.slice(0, index)
             people.push(person)
             people = people.concat(prevState.people.slice(index))
             return {
                 people: people,
+                selection: selection
+            }
+        })
+    }
+
+    addOrg = (org) => {
+        const selection = {
+            type: 'Org',
+            id: org.id
+        }
+        this.setState((prevState) => {
+            let index = findSpotForOrg(org, prevState.orgs)
+            let orgs = prevState.orgs.slice(0, index)
+            orgs.push(org)
+            orgs = orgs.concat(prevState.orgs.slice(index))
+            return {
+                orgs: orgs,
                 selection: selection
             }
         })
@@ -99,17 +134,32 @@ class PeopleBoard extends React.PureComponent {
         })
     }
 
+    deleteOrg = (id) => {
+        this.setState((prevState) => {
+            const orgs = prevState.orgs
+            let index = orgs.findIndex((o) => { return o.id==id })
+            let newOrgs = orgs.slice(0, index).concat(orgs.slice(index + 1))
+            return {
+                orgs: newOrgs,
+                selection: null
+            }
+        })
+    }
+
     render() {
         const indexColClass = (this.state.selection) ? 'col-md-4 scrollableColumn' : 'scrollableColumn'
         return (
             <div className='row'>
                 <div className={indexColClass}>
                     <IndexColumn strings={this.props.strings}
+                                 defaultTab={this.props.tab}
                                  selection={this.state.selection}
                                  people={this.state.people}
                                  orgs={this.state.orgs}
                                  setPerson={this.setPerson}
-                                 setOrg={this.setOrg} />
+                                 setOrg={this.setOrg}
+                                 peopleCan={this.state.peopleCan}
+                                 orgCan={this.state.orgCan} />
                 </div>
                 {this.state.selection && 
                     <div className='col-md-8 scrollableColumn'>
@@ -118,6 +168,8 @@ class PeopleBoard extends React.PureComponent {
                                        setSelection={this.setSelection}
                                        addPerson={this.addPerson}
                                        deletePerson={this.deletePerson}
+                                       addOrg={this.addOrg}
+                                       deleteOrg={this.deleteOrg}
                                        authToken={this.props.authToken} />
                     </div>
                 }

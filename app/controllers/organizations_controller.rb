@@ -6,6 +6,11 @@ class OrganizationsController < ApplicationController
     @organizations = Organization.all.order("name ASC")
   end
 
+  def show
+    @organization = Organization.find(params[:id])
+    render :index
+  end
+
   def new
     @organization = Organization.new
   end

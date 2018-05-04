@@ -17,12 +17,6 @@ class OrganizationTest < ActiveSupport::TestCase
     refute fake_sil.save, "Shouldn't save Organization with non-unique name"
   end
 
-  test 'All in order' do
-    orgs = Organization.all_in_order
-    assert_equal organizations(:AAA), orgs.first
-    assert_equal organizations(:ZZZ), orgs.last
-  end
-
   test 'Current Participants' do
     drew_hdi = participants :DrewHdi
     assert_includes @sil.current_participants, drew_hdi

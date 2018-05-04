@@ -71,8 +71,7 @@ class BasicPersonContent extends React.PureComponent {
                 <h3 style={{color: '#aaa'}}>
                     <CloseIconButton handleClick={this.clickClose} />
                     {this.props.can.destroy &&
-                        <DeleteIconButton handleClick={this.clickDelete}
-                                          message={tSub(strings.delete_person_warning, {name: person.full_name})} />
+                        <DeleteIconButton handleClick={this.clickDelete} />
                     }
                 </h3>
 

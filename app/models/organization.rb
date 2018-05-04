@@ -7,9 +7,7 @@ class Organization < ApplicationRecord
 
   validates :name, presence: true, allow_blank: false, uniqueness: true
 
-  def self.all_in_order
-    all.order(:name)
-  end
+  default_scope { order(:name) }
 
   def current_participants
     Participant.joins(person: :organization).where("organizations.id=?", id)
@@ -33,7 +31,10 @@ class Organization < ApplicationRecord
                        model: program,
                        description: I18n.t(:Language_program)}
       end
-      results << {title: org.name, description: org.description, subresults: subresults}
+      results << {title: org.name, 
+                  model: org,
+                  description: org.description, 
+                  subresults: subresults}
     end
     results
   end

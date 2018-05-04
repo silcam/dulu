@@ -1,20 +1,12 @@
-<h1><%= t :Organizations %></h1>
-<% if can? :create, Organization %>
-  <p>
-    <%= link_to t(:add_organization_button), new_organization_path, class: "btn btn-primary" %>
-  </p>
-<% end %>
-<table class="table">
-  <tr>
-    <th><%= t :Name %></th>
-  </tr>
-  <% @organizations.each do |org| %>
-    <tr>
-      <td><%= org.name %>
-        <% unless org.description.blank? %>
-          - <%= org.description %>
-        <% end %>
-      </td>
-    </tr>
-  <% end %>
-</table>
+<script type="application/json" id="strings">
+  <%=
+    strings_json(:common, :people_page)
+  %>
+</script>
+
+<div id="react" data-authenticity-token=<%= form_authenticity_token %>
+                data-tab='organizations'
+                data-organization-id=<%= @organization ? @organization.id : '' %> >
+</div>
+
+<%= javascript_pack_tag 'people' %>

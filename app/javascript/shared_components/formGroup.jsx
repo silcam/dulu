@@ -1,6 +1,8 @@
 import React from 'react'
 
 import SelectInput from './SelectInput'
+import TextArea from './TextArea'
+import TextInput from './TextInput'
 import ValidatedTextInput from './ValidatedTextInput'
 
 /* 
@@ -25,6 +27,8 @@ function formGroup(WrappedInput) {
 }
 
 const SelectGroup = formGroup(SelectInput)
+const TextAreaGroup = formGroup(TextArea)
+const TextInputGroup = formGroup(TextInput)
 const ValidatedTextInputGroup = formGroup(ValidatedTextInput)
 
-export { formGroup, SelectGroup, ValidatedTextInputGroup }
+export { formGroup, SelectGroup, TextAreaGroup, TextInputGroup, ValidatedTextInputGroup }
