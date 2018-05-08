@@ -9,7 +9,8 @@ import AddIconButton from './AddIconButton'
         field
         updateValue - function
         editEnabled - boolean
-
+    Optional props:
+        placeholder
 */
 
 function editableText(WrappedInput) {
@@ -61,11 +62,24 @@ function editableText(WrappedInput) {
                 )
             }
             if (this.props.text.length == 0) {
-                return (
-                    <span style={{color: '#aaa'}}>
-                        <AddIconButton handleClick={this.setEditMode} />
-                    </span>
-                )
+                if (this.props.placeholder) {
+                    return (
+                        <span className='editableText'
+                              onClick={this.setEditMode}
+                              style={{color: '#aaa'}}>
+                            ({this.props.placeholder})
+                            &nbsp;
+                            <span className='glyphicon glyphicon-pencil'></span>
+                        </span>
+                    )
+                }
+                else {
+                    return (
+                        <span style={{color: '#aaa'}}>
+                            <AddIconButton handleClick={this.setEditMode} />
+                        </span>
+                    )
+                }
             }
             return (
                 <span className='editableText'

@@ -23,7 +23,7 @@ class RolesTable extends React.PureComponent {
                 <h3>
                     {strings.Roles}
                 </h3>
-                <table className='table auto-width'>
+                <table className='table'>
                     <tbody>
                         {person.roles.map((role) => {
                             return (

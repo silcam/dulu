@@ -138,9 +138,16 @@ select.extraSmall {
     line-height: 18px !important;
 }
 
-.scrollableColumn {
+#indexColumn {
+    position: fixed;
+    top: 58px;
     height: calc(100vh - 58px);
+    width: 99%;
     overflow-y: scroll;
+}
+
+#indexColumn.narrow {
+    width: 33%;
 }
 
 .editableText {
@@ -162,6 +169,10 @@ select.extraSmall {
             display: inline-block;
             width: auto;
         }
+    }
+
+    textarea {
+        margin-bottom: 8px; // Make space between the textarea and the buttons below
     }
 }
 
@@ -188,4 +199,9 @@ div.searchInputText {
             color: #fff;
         }
     }
+}
+
+div#peopleOrgContent {
+    max-width: 800px;
+    margin-left: 34%;
 }

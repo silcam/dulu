@@ -18,7 +18,7 @@ class EventsTable extends React.PureComponent {
                 <h3>
                     {strings.Events}
                 </h3>
-                <table className='table auto-width'>
+                <table className='table'>
                     <tbody>
                         <EventRows events={person.events.upcoming}
                                    strings={strings} />

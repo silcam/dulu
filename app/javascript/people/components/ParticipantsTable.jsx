@@ -12,7 +12,7 @@ class ParticipantsTable extends React.PureComponent {
                 <h3>
                     {strings.Language_programs}
                 </h3>
-                <table className='table auto-width'>
+                <table className='table'>
                     <tbody>
                         {person.participants.map((participant) => {
                             const clusterProgramPath = participant.program_id ?

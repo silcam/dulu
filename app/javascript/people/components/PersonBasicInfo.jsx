@@ -23,7 +23,7 @@ function PersonBasicInfo(props) {
     }
 
     return (
-        <table className='table auto-width'>
+        <table className='table'>
             <tbody>
                 <tr>
                     <th>

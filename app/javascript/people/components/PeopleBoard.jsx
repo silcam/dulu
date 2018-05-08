@@ -147,10 +147,10 @@ class PeopleBoard extends React.PureComponent {
     }
 
     render() {
-        const indexColClass = (this.state.selection) ? 'col-md-4 scrollableColumn' : 'scrollableColumn'
+        const indexColClass = (this.state.selection) ? 'narrow' : ''
         return (
-            <div className='row'>
-                <div className={indexColClass}>
+            <div className=''>
+                <div className={indexColClass} id='indexColumn'>
                     <IndexColumn strings={this.props.strings}
                                  defaultTab={this.props.tab}
                                  selection={this.state.selection}
@@ -162,7 +162,7 @@ class PeopleBoard extends React.PureComponent {
                                  orgCan={this.state.orgCan} />
                 </div>
                 {this.state.selection && 
-                    <div className='col-md-8 scrollableColumn'>
+                    <div id='peopleOrgContent'>
                         <ContentColumn selection={this.state.selection}
                                        strings={this.props.strings}
                                        setSelection={this.setSelection}

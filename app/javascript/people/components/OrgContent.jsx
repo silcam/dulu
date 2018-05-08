@@ -5,6 +5,7 @@ import tSub from '../../util/tSub'
 import CloseIconButton from '../../shared_components/CloseIconButton'
 import DangerButton from '../../shared_components/DangerButton'
 import DeleteIconButton from '../../shared_components/DeleteIconButton'
+import EditableTextArea from '../../shared_components/EditableTextArea'
 import EditableTextBox from '../../shared_components/EditableTextBox'
 import backedModel from '../../shared_components/backedModel'
 import SaveIndicator from '../../shared_components/SaveIndicator'
@@ -89,14 +90,20 @@ class BasicOrgContent extends React.PureComponent {
                 <h3>
                     <EditableTextBox field='abbreviation'
                                      text={org.abbreviation}
+                                     placeholder={strings.Abbreviation}
                                      value={org.abbreviation}
                                      updateValue={this.updateField}
                                      editEnabled={editEnabled}
-                                     validateNotBlank
                                      strings={strings} />
                 </h3>
                 <p>
-                    {org.description}
+                    <EditableTextArea field='description'
+                                      strings={strings}
+                                      text={org.description}
+                                      placeholder={strings.Description}
+                                      value={org.description}
+                                      updateValue={this.updateField}
+                                      editEnabled={editEnabled} />
                 </p>
             </div>
         )
