@@ -6,6 +6,7 @@ class AccessPolicy
       can [:grant_admin, :login_as_others, :destroy], Person
       can :destroy, Participant
       can :read, Audited::Audit
+      can :manage, Organization
     end
 
     role :supervisor, proc{ |u| u.has_role_among?(Role::SUPERVISOR_ROLES) } do
@@ -14,7 +15,6 @@ class AccessPolicy
       can :manage, Cluster # :manage cannot be part of an array
       can :manage_participants, Cluster
       can :manage, Activity
-      can :manage, Organization
       can :manage, Language
       can :manage, Event
       can :manage, Publication
@@ -26,6 +26,8 @@ class AccessPolicy
     part_roles = Role::SUPERVISOR_ROLES + Role::PARTICIPANT_ROLES
     role :participant, proc{ |u| u.has_role_among? part_roles } do
       can [:create, :read, :update], Person
+
+      can [:create, :read, :update], Organization
 
       can [:manage_participants, :create_activity, :manage_surveys, :update_activities], Program do |program, user|
         program.all_current_people.include? user

@@ -13,7 +13,7 @@ class PersonIntTest < Capybara::Rails::TestCase
     log_in @kevin
     click_button 'Kevin'
     click_link 'My Info'
-    edit_editable_text('Kevin', 'Da Boss')
+    edit_editable_text('first_name', 'Kevin', 'Da Boss')
     assert_changes_saved
     assert find('.editableText', text: 'Da Boss')
   end
@@ -37,12 +37,25 @@ class PersonIntTest < Capybara::Rails::TestCase
     find('#navbar').assert_text 'William'
   end
 
+  test 'Add Organization' do
+    log_in @rick
+    visit person_path @rick
+    within('#orgPeopleTable') do
+      assert_no_selector('tr', text: 'Lutheran Bible Translators')
+      find('.addIconButton').click
+      edit_search_input('Lutheran Bible')
+      click_button 'Save'
+      assert_selector('tr', text: 'Lutheran Bible Translators')
+    end
+    assert_changes_saved
+  end
+
   test "Add Role" do
     log_in @rick
     visit person_path @kevin
     roles_div = find('div#rolesTable')
     within roles_div do 
-      find('.glyphicon-plus').click
+      find('.addIconButton').click
       select 'Dulu Admin'
       click_on 'Add'
     end 
@@ -54,7 +67,7 @@ class PersonIntTest < Capybara::Rails::TestCase
     log_in @rick
     visit person_path @olga
     within('tr', text: 'Language Program Facilitator') do
-      find('.glyphicon-trash').click
+      find('.deleteIconButton').click
     end
     assert_changes_saved
     refute_text 'Language Program Facilitator'
@@ -64,60 +77,18 @@ class PersonIntTest < Capybara::Rails::TestCase
     log_in @rick
     visit person_path @olga
     assert_text 'Nka, Olga'
-    find('h3 .glyphicon-trash').click
-    find('.bs-callout input[type="checkbox"]').click
-    click_button 'Permanently Delete Olga Nka'
+    find('h3 .deleteIconButton').click
+    click_danger_button
     assert_no_text 'Nka, Olga'
   end
 
   test "Olga can't delete Kevin" do
     log_in @rick
     visit person_path(@kevin)
-    assert_selector('h3 .glyphicon-trash')
+    assert_selector('h3 .deleteIconButton')
 
     log_in @olga
     visit person_path(@kevin)
-    assert_no_selector('h3 .glyphicon-trash')
+    assert_no_selector('h3 .deleteIconButton')
   end
-
-  # This is no longer applicable
-  # test "Edit does not delete!" do
-  #   log_in @rick
-  #   visit edit_person_path(@kevin)
-  #   click_button 'Save'
-  #   assert_current_path person_path(@kevin)
-  # end
-
-  # Edit page no longer has any effect on role. Deprecating this test
-  # test 'Editing does not accidentally delete role' do
-  #   log_in @olga
-  #   visit edit_person_path @olga
-  #   refute page.has_css? 'select#person_role'
-  #   # fill_in 'First Name', with: 'OLGA!'
-  #   click_button 'Save'
-  #   assert_current_path people_path
-  #   @olga.reload
-  #   assert @olga.role_program_supervisor # This should not have changed
-  # end
-
-  def fill_in_william
-    fill_in 'First Name', with: 'William'
-    fill_in 'Last Name', with: 'Wallace'
-    choose 'Male'
-    select 'Cameroon', from: 'person_country_id'
-    select 'AAA', from: 'person_organization_id'
-    fill_in 'Email', with: 'scotland_forever@aol.com'
-    check 'Able to log in'
-    choose 'Français'
-  end
-
-  # def check_william
-  #   {first_name: 'William', last_name: 'Wallace',
-  #   gender: 'M', country: countries(:Cameroon),
-  #   organization: organizations(:AAA),
-  #   email: 'scotland_forever@aol.com',
-  #   ui_language: 'fr'}.each_pair do |key, value|
-  #     assert_equal value, @william.send(key)
-  #   end
-  # end
 end

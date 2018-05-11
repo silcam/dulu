@@ -9,7 +9,7 @@ import IconButton from './IconButton'
 
 function DeleteIconButton(props) {
     return(
-        <IconButton icon="trash" extraClasses="iconButtonDanger" {...props} />
+        <IconButton icon="trash" extraClasses="iconButtonDanger deleteIconButton" {...props} />
     )
 }
 

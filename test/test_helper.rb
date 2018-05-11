@@ -72,12 +72,47 @@ class ActiveSupport::TestCase
     page.driver.browser.accept_js_confirms
   end
 
-  def edit_editable_text(text, new_text)
-    find('.editableText', text: text).click
+  def click_editable_text(text)
+    if text
+      find('.editableText', text: text).click
+    else
+      find('.addIconButton').click
+    end
+  end
+
+  def edit_editable_text(field, text, new_text)
+    click_editable_text(text)
     within('.editableTextInput') do
-      fill_in(currently_with: text, with: new_text)
+      fill_in(field, with: new_text)
       find('input[type="text"]').send_keys(:enter)
       # fill_in(currently_with: text, with: new_text)
+    end
+  end
+
+  def edit_editable_search_text(text, new_text)
+    click_editable_text(text)
+    edit_search_input(new_text)
+  end
+
+  def edit_search_input(text)
+    within('.searchTextInput') do
+      fill_in('query', with: text)
+      find('li', text: text).click
+    end
+  end
+
+  def edit_editable_text_area(field, text, new_text)
+    click_editable_text(text)
+    within('.editableTextInput') do
+      fill_in(field, with: new_text)
+      click_button 'Save'
+    end
+  end
+
+  def click_danger_button
+    within('.dangerButton') do
+      check 'dangerButtonCheckbox'
+      find('button.btn-danger').click
     end
   end
 

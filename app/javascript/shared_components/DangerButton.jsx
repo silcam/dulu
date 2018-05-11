@@ -22,12 +22,13 @@ class DangerButton extends React.PureComponent {
 
     render() {
         return (
-            <div className='bs-callout callout-red' >
+            <div className='bs-callout callout-red dangerButton' >
                 <h4>
                     {this.props.message}
                 </h4>
                 <label style={{display: 'block'}}>
                     <input type='checkbox'
+                           name='dangerButtonCheckbox'
                            onChange={this.checkboxClick}
                            checked={this.state.userIsSure} />
                     &nbsp;

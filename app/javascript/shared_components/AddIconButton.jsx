@@ -11,7 +11,7 @@ import IconButton from './IconButton'
 
 function AddIconButton(props) {
     return(
-        <IconButton icon="plus" {...props} />
+        <IconButton icon="plus" extraClasses="addIconButton" {...props} />
     )
 }
 

@@ -99,9 +99,10 @@ class BasicSearchTextInput extends React.PureComponent {
     render() {
         const placeholder = this.props.placeholder || ''
         return (
-            <div className='searchInputText'>
+            <div className='searchTextInput'>
                 <input type='text'
                     className='form-control'
+                    name='query'
                     value={this.state.text}
                     onChange={this.handleChange}
                     onKeyDown={this.handleKeyDown}
