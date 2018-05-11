@@ -2,9 +2,9 @@ import axios from 'axios'
 import React from 'react'
 
 import DashboardSidebar from './DashboardSidebar'
+import MainContent from './MainContent'
 import NotificationsSidebar from './NotificationsSidebar'
 import Searcher from './Searcher'
-import MainContent from './MainContent';
 
 class Dashboard extends React.PureComponent {
     constructor(props) {
@@ -176,7 +176,8 @@ class Dashboard extends React.PureComponent {
                 <div className='col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main'>
                     <div className='row'>
                         <div className='col-md-9'>
-                            <Searcher strings={this.props.strings} />
+                            <Searcher strings={this.props.strings}
+                                      queryPath='/api/search' />
                             {this.state.loading > 0 && <p className='loading'>{this.props.strings.Loading}</p>}
                             <MainContent programs={this.state.programs} strings={this.props.strings} />
                         </div>

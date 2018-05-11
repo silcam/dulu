@@ -2,18 +2,24 @@ import React from 'react'
 
 /*
     Required props:
-        -handleChange - function
+        -handleChange(e)
         -value
         -options - array of objects with display member and optional value member
     Optional props:
         -extraClasses
+        -autoFocus
+        -name
 
 */
 
 function SelectInput(props) {
     const className = "form-control " + props.extraClasses
+    const name = props.name || 'basic_select'
     return (
-        <select className={className} value={props.value}
+        <select className={className} 
+                name={name}
+                value={props.value}
+                autoFocus={props.autoFocus || false}
                 onChange={props.handleChange}>
             {props.options.map((option) => {
                 const value = option.value || option.display

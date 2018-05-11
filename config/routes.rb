@@ -101,16 +101,32 @@ Rails.application.routes.draw do
 
   namespace :api, defaults: {format: :json} do
     get 'search', to: 'searches#search'
+    get 'countries/search', to: 'countries#search'
 
     resources :activities, shallow: true do
       resources :workshops
     end
+
     resources :clusters do
       get 'dashboard', on: :member
     end
+
     resources :notifications do
       post 'mark_read', on: :collection
     end
+
+    resources :organizations do
+      get 'search', on: :collection
+    end
+
+    resources :organization_people
+
+    resources :people
+
+    resources :person_roles do
+      post 'finish', on: :collection
+    end
+
     resources :programs, shallow: true do
       resources :translation_activities
       get 'dashboard_list', on: :collection

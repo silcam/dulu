@@ -25,4 +25,9 @@ class Country < ApplicationRecord
     return Country.all.order(people_count: :desc, english_name: :asc)
   end
 
+  def self.search(query)
+    field = (I18n.locale == :fr) ? 'french_name' : 'english_name'
+    Country.where("unaccent(#{field}) ILIKE unaccent(?)", "#{query}%")
+            .order(field)
+  end
 end

@@ -13,23 +13,24 @@ class PersonIntTest < Capybara::Rails::TestCase
     log_in @kevin
     click_button 'Kevin'
     click_link 'My Info'
-    fill_in 'First Name', with: 'William'
-    fill_in 'Last Name', with: 'Wallace'
-    click_button 'Save'
-
-    find('#navbar').assert_text 'William'
+    edit_editable_text('Kevin', 'Da Boss')
+    assert_changes_saved
+    assert find('.editableText', text: 'Da Boss')
   end
 
   test 'Rick create William Wallace' do
     log_in @rick
     visit people_path
-    click_link 'Add Person'
-    fill_in_william
+    click_button 'Add New Person'
+    fill_in 'first_name', with: 'William'
+    fill_in 'last_name', with: 'Wallace'
+    check 'has_login'
+    fill_in 'email', with: 'scotland_4ever@aol.com'
     click_button 'Save'
 
     assert_text 'William Wallace'
-    assert_text 'AAA'
-    assert_text 'scotland_forever@aol.com'
+    assert_text 'scotland_4ever@aol.com'
+    find('tr', text: 'Dulu Account').assert_text('Yes')
 
     @william = Person.find_by first_name: 'William'
     log_in @william
@@ -39,55 +40,53 @@ class PersonIntTest < Capybara::Rails::TestCase
   test "Add Role" do
     log_in @rick
     visit person_path @kevin
-    find('h3', text: 'Roles').click_on 'Add'
-    select 'Dulu Admin', from: 'person_role_role'
-    click_on 'Add'
-    within('div.showable-form-section') do
-      assert_text 'Dulu Admin'
-    end
+    roles_div = find('div#rolesTable')
+    within roles_div do 
+      find('.glyphicon-plus').click
+      select 'Dulu Admin'
+      click_on 'Add'
+    end 
+    assert_changes_saved
+    roles_div.assert_text('Dulu Admin')
   end
 
   test "Remove Role" do
     log_in @rick
     visit person_path @olga
-    find('h3', text: 'Roles').click_on 'Edit'
-    within('div.showable-form-section') do
-      find('tr', text: 'Language Program Facilitator').click_on 'Remove'
+    within('tr', text: 'Language Program Facilitator') do
+      find('.glyphicon-trash').click
     end
-    within('div.showable-form-section') do
-      assert_no_text 'Language Program Facilitator'
-      assert_text 'None'
-    end
+    assert_changes_saved
+    refute_text 'Language Program Facilitator'
   end
 
   test "Rick delete Olga" do
     log_in @rick
-    visit people_path
-    click_on 'Nka, Olga'
-    find('h2').click_on 'Edit'
-    page.accept_confirm do
-      click_on 'Delete Olga Nka'
-    end
-    assert_current_path people_path
+    visit person_path @olga
+    assert_text 'Nka, Olga'
+    find('h3 .glyphicon-trash').click
+    find('.bs-callout input[type="checkbox"]').click
+    click_button 'Permanently Delete Olga Nka'
     assert_no_text 'Nka, Olga'
   end
 
   test "Olga can't delete Kevin" do
     log_in @rick
-    visit edit_person_path(@kevin)
-    assert_selector('input[value="Delete Kevin Bradford"]')
+    visit person_path(@kevin)
+    assert_selector('h3 .glyphicon-trash')
 
     log_in @olga
-    visit edit_person_path(@kevin)
-    assert_no_selector('input[value="Delete Kevin Bradford"]')
+    visit person_path(@kevin)
+    assert_no_selector('h3 .glyphicon-trash')
   end
 
-  test "Edit does not delete!" do
-    log_in @rick
-    visit edit_person_path(@kevin)
-    click_button 'Save'
-    assert_current_path person_path(@kevin)
-  end
+  # This is no longer applicable
+  # test "Edit does not delete!" do
+  #   log_in @rick
+  #   visit edit_person_path(@kevin)
+  #   click_button 'Save'
+  #   assert_current_path person_path(@kevin)
+  # end
 
   # Edit page no longer has any effect on role. Deprecating this test
   # test 'Editing does not accidentally delete role' do

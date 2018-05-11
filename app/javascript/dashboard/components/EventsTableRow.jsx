@@ -1,6 +1,6 @@
 import React from 'react'
 
-import dateString from '../../util/dateString'
+import eventDateString from '../../util/eventDateString'
 
 class EventsTableRow extends React.PureComponent {
     render() {
@@ -22,10 +22,7 @@ class EventsTableRow extends React.PureComponent {
                     {event.domain}
                 </td>
                 <td>
-                    {dateString(event.startDate, monthNames)}
-                    {(event.startDate != event.endDate) && 
-                        <span> - {dateString(event.endDate, monthNames)}</span>
-                    }
+                    {eventDateString(event.startDate, event.endDate, monthNames)}
                 </td>
             </tr>
         )

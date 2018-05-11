@@ -50,7 +50,7 @@
 
   <div class="form-group">
     <%= f.label :organization, t(:Organization) %>
-    <%= f.collection_select :organization_id, Organization.all_in_order, :id, :name,
+    <%= f.collection_select :organization_id, Organization.all, :id, :name,
                             {include_blank: true}, {class: 'form-control'} %>
   </div>
 

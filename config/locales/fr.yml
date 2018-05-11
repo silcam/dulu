@@ -126,7 +126,6 @@ fr:
   #Organizations Controller
   Organization: Organisation
   Organizations: Organisations
-  Abbreviation: Abréviation
   add_organization_button: Ajouter une organisation
   New_Organization: Nouvelle organisation
   Partners: Partenaires
@@ -434,13 +433,21 @@ fr:
 
   # React
   common:
+    Add: Ajouter
     All: Tous
+    All_changes_saved: Toute modification enregistrée
     Cancel: Annuler
+    Country: Pays
+    End_date: Date de fin
+    Im_sure: Je suis certain(e)
     Loading: Chargement...
+    'No': 'Non'
     Save: Enregistrer
     Saving: Enregistrement...
     See_more: Voir plus
+    Start_date: Date de commencement
     Updated: Mise à jour
+    'Yes': 'Oui'
     date_strings:
       Day: Jour
       Enter_valid_year: Saisissez un an valide s'il vous plait.
@@ -470,6 +477,8 @@ fr:
       Mobilization: Mobilisation
       Scripture_use: Interaction des Saintes Écritures
       Translation: Traduction
+    validation:
+      Not_blank: Ça ne peut pas être vide
 
   # Dashboard
   dashboard_page:
@@ -493,6 +502,51 @@ fr:
     Stage: Étape
     Upcoming_events: Événements futurs
 
+  # People and Organizations
+  people_page:
+    Add_new_organization: Ajouter une nouvelle organisation
+    Add_new_person: Ajouter une nouvelle personne
+    already_exists: existe déjà
+    Can_login: Compte pour se connecter à Dulu
+    confirm_delete_org_person: "Supprimer %{org} des organisations de %{person} ? %{person} n'était jamais dans %{org} ?"
+    confirm_different_person: C'est une personne différente.
+    delete_person: Supprimer %{name} irrévocablement
+    delete_person_warning: Êtes-vous certain(e) que vous voulez supprimer %{name}. Cette action ne peut pas être défaite.
+    Description: Description
+    Dulu_account: Compte Dulu
+    dulu_preferred_language: Langue pour Dulu
+    duplicate_warning_start: Il y a déjà une personne qui s'appelle
+    duplicate_warning_end: en Dulu. Êtes-vous sûr que celle-ci est une personne différente ?
+    Email: Mail
+    Email_frequency: Périodicité des mails
+    Events: Événements
+    First_name: Prénom
+    Gender: Genre
+    genders:
+      M: Homme
+      F: Femme
+    Home_country: Pays d'origine
+    Language_programs: Programmes de langue
+    Last_name: Nom
+    Long_name: Nom longue
+    Name: Nom
+    New_organization: Nouvelle organisation
+    New_person: Nouvelle personne
+    Organization: Organisation
+    Organizations: Organisations
+    Parent_organization: Organisation mère
+    People: Personnel
+    Position: Poste
+    Roles: Rôles
+    Short_name: Nom court
+    email_prefs:
+      immediate: Immédiat
+      daily: Quotidien
+      weekly: Hebdomodaire
+    languages:
+      en: English
+      fr: Français
+    
   # Workshops
   workshops_activity_page:
     Add_event: Ajouter un événement

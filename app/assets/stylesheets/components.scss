@@ -28,8 +28,18 @@ $green: #28a745;
 
 .errorMessage {
     color: $red;
-    .form-control {
+    .form-control, .form-control:focus {
         border-color: $red;
+    }
+}
+
+.inputMessage {
+    margin-top: 4px;
+}
+
+h1, h2, h3, h4, h5 { 
+    .inputMessage {
+        font-size: 14px;
     }
 }
 
@@ -126,4 +136,76 @@ select.extraSmall {
     padding: 3px;
     height: 24px !important;
     line-height: 18px !important;
+}
+
+#indexColumn {
+    position: fixed;
+    top: 58px;
+    height: calc(100vh - 58px);
+    width: 99%;
+    overflow-y: scroll;
+}
+
+#indexColumn.narrow {
+    width: 33%;
+}
+
+.editableText {
+    cursor: pointer;
+    .glyphicon {
+        display: none;
+    }
+}
+
+.editableText:hover > .glyphicon {
+    color: #aaa;
+    display: inline;
+}
+
+.editableTextInput {
+    .form-group {
+        display: inline-block;
+        .form-control {
+            display: inline-block;
+            width: auto;
+        }
+    }
+
+    textarea {
+        margin-bottom: 8px; // Make space between the textarea and the buttons below
+    }
+}
+
+div.searchInputText {
+    display: inline-block;
+
+    ul {
+        background-color: #fff;
+        position: absolute;
+        z-index: 10;
+        list-style: none;
+        padding: 0;
+        border-top: 1px solid #aaa;
+        
+        li {
+            padding: 3px;
+            border: 1px solid #aaa;
+            border-top: none;
+            cursor: pointer;
+        }
+
+        li.selected {
+            background-color: #337ab7;
+            color: #fff;
+        }
+    }
+}
+
+#peopleOrgContent {
+    max-width: 800px;
+    margin-left: 34%;
+}
+
+.buttonsCell {
+    text-align: right;
 }

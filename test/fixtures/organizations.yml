@@ -1,14 +1,14 @@
 SIL:
-  name: 'SIL'
+  short_name: 'SIL'
 
 LBT:
-  name: 'Lutheran Bible Translators'
+  short_name: 'Lutheran Bible Translators'
 
 FBC:
-  name: 'First Baptist Cameroon'
+  short_name: 'First Baptist Cameroon'
 
 AAA:
-  name: 'AAA'
+  short_name: 'AAA'
 
 ZZZ:
-  name: 'ZZZ'
+  short_name: 'ZZZ'
