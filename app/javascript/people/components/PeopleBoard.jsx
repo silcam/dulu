@@ -15,7 +15,7 @@ function findSpotForPerson(person, people) {
 
 function findSpotForOrg(org, orgs) {
     let index = orgs.findIndex((o) => {
-        return org.name.localeCompare(o.name) < 0
+        return org.short_name.localeCompare(o.short_name) < 0
     })
     if (index < 0) index = orgs.length
     return index
@@ -166,6 +166,7 @@ class PeopleBoard extends React.PureComponent {
                         <ContentColumn selection={this.state.selection}
                                        strings={this.props.strings}
                                        setSelection={this.setSelection}
+                                       setOrg={this.setOrg}
                                        addPerson={this.addPerson}
                                        deletePerson={this.deletePerson}
                                        addOrg={this.addOrg}

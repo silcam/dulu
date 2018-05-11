@@ -126,7 +126,6 @@ en:
   #Organizations Controller
   Organization: Organization
   Organizations: Organizations
-  Abbreviation: Abbreviation
   add_organization_button: Add Organization
   New_Organization: New Organization
   Partners: Partners
@@ -438,12 +437,15 @@ en:
     All: All
     All_changes_saved: All changes saved.
     Cancel: Cancel
+    Country: Country
+    End_date: End Date
     Im_sure: "I'm sure"
     Loading: Loading...
     'No': 'No'
     Save: Save
     Saving: Saving...
     See_more: See more
+    Start_date: Start Date
     Updated: Updated
     'Yes': 'Yes'
     date_strings:
@@ -502,11 +504,11 @@ en:
 
   # People and Organizations
   people_page:
-    Abbreviation: Abbreviation
     Add_new_organization: Add New Organization
     Add_new_person: Add New Person
     already_exists: already exists
     Can_login: Can log in to Dulu
+    confirm_delete_org_person: "Delete %{org} from %{person}'s organizations? %{person} was never in %{org}?"
     confirm_different_person: This is a different person.
     delete_person: Permanently Delete %{name}
     delete_person_warning: Are you sure you want to delete %{name}? This can't be undone.
@@ -526,12 +528,17 @@ en:
     Home_country: Home Country
     Language_programs: Language Programs
     Last_name: Last Name
+    Long_name: Long Name
     Name: Name
     New_organization: New Organization
     New_person: New Person
+    Organization: Organization
     Organizations: Organizations
+    Parent_organization: Parent Organization
     People: People
+    Position: Position
     Roles: Roles
+    Short_name: Short Name
     email_prefs:
       immediate: Immediate
       daily: Daily

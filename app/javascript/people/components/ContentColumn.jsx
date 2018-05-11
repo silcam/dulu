@@ -19,6 +19,7 @@ class ContentColumn extends React.PureComponent {
                 return <PersonContent id={selection.id}
                                 strings={this.props.strings}
                                 setSelection={this.props.setSelection}
+                                setOrg={this.props.setOrg}
                                 deletePerson={this.props.deletePerson}
                                 authToken={this.props.authToken} />
             }

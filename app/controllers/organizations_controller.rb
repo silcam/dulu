@@ -3,7 +3,7 @@ class OrganizationsController < ApplicationController
   before_action :authorize_user, only: [:new, :create, :edit, :update]
 
   def index
-    @organizations = Organization.all.order("name ASC")
+    @organizations = Organization.all
   end
 
   def show
@@ -11,30 +11,30 @@ class OrganizationsController < ApplicationController
     render :index
   end
 
-  def new
-    @organization = Organization.new
-  end
+  # def new
+  #   @organization = Organization.new
+  # end
   
-  def create
-    @organization = Organization.new(org_params)
-    if @organization.save
-      redirect_to organizations_path
-    else
-      render 'new'
-    end
-  end
+  # def create
+  #   @organization = Organization.new(org_params)
+  #   if @organization.save
+  #     redirect_to organizations_path
+  #   else
+  #     render 'new'
+  #   end
+  # end
 
-  private
+  # private
 
-  def org_params
-    params.require(:organization).permit(:name, :abbreviation)
-  end
+  # def org_params
+  #   params.require(:organization).permit(:name, :abbreviation)
+  # end
 
-  def set_organization
-    @organization = Organization.find params[:id]
-  end
+  # def set_organization
+  #   @organization = Organization.find params[:id]
+  # end
 
-  def authorize_user
-    authorize! :create, Organization
-  end
+  # def authorize_user
+  #   authorize! :create, Organization
+  # end
 end

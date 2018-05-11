@@ -2,21 +2,22 @@ require 'test_helper'
 
 class AddOrganizationTest < Capybara::Rails::TestCase
   def setup
+    Capybara.current_driver = :webkit
     log_in people(:Rick)
     visit organizations_path
-    click_on 'Add Organization'
+    click_button 'Add New Organization'
   end
 
   test "Add Organization" do
-    fill_in 'Name', with: 'Union des Eglises Evangeliques du Cameroun'
-    fill_in 'Abbreviation', with: 'UEEC'
+    fill_in 'short_name', with: 'UEEC'
+    fill_in 'long_name', with: 'Union des Églises Évangeliques du Cameroun'
     click_on 'Save'
-    assert_current_path organizations_path
-    assert page.has_content?('Union des Eglises Evangeliques du Cameroun')
+
+    assert page.has_content?('Union des Églises Évangeliques du Cameroun')
   end
 
   test "Invalid Name Add Organization" do
     click_on 'Save'
-    assert page.has_content?("Name can't be blank"), "Should see error for missing name"
+    find('.form-group', text: 'Short Name').assert_text("Can't be blank")
   end
 end

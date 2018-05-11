@@ -17,10 +17,8 @@ json.person do
     json.home_country nil
   end
 
-  orgs = []
-  orgs << @person.organization if @person.organization
-  json.organizations orgs do |org|
-    json.call(org, :id, :name, :abbreviation)
+  json.organization_people @person.organization_people do |org_person|
+    json.partial! '/api/organization_people/org_person', org_person: org_person
   end
 
   roles = @person.roles.collect { |r| {value: r, display: t(r) } }

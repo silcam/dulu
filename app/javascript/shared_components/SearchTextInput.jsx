@@ -4,22 +4,29 @@ import searchInterface from './searchInterface'
 
 /*
     Required props:
-        cancel - function
-        save - function
+        cancel()
+        save(id, name)
         queryPath - relative url
+    Optional props:
+        placeholder
+        autofocus
 */
 
 class BasicSearchTextInput extends React.PureComponent {
     constructor(props) {
         super(props)
         this.state = {
-            text: props.text,
-            selection: -1
+            text: props.text || '',
+            selection: -1,
+            showResults: true
         }
     }
     
     handleChange = (e) => {
-        this.setState({ text: e.target.value })
+        this.setState({ 
+            text: e.target.value,
+            showResults: true
+        })
         this.props.updateQuery(e.target.value)
     }
 
@@ -81,11 +88,16 @@ class BasicSearchTextInput extends React.PureComponent {
         }
     }
 
-    save = (country) => {
-        this.props.save(country.id, country.name)
+    save = (item) => {
+        this.setState({
+            text: item.name,
+            showResults: false
+        })
+        this.props.save(item.id, item.name)
     }
 
     render() {
+        const placeholder = this.props.placeholder || ''
         return (
             <div className='searchInputText'>
                 <input type='text'
@@ -94,20 +106,23 @@ class BasicSearchTextInput extends React.PureComponent {
                     onChange={this.handleChange}
                     onKeyDown={this.handleKeyDown}
                     onBlur={this.handleBlur}
-                    autoFocus />
-                <ul onMouseLeave={this.clearSelection}>
-                    {this.props.results.map((country, index) => {
-                        const className = (index == this.state.selection)? 'selected' : ''
-                        return (
-                            <li key={country.id} 
-                                className={className}
-                                onMouseDown={()=>{this.save(country)}}
-                                onMouseEnter={()=>{this.setSelection(index)}}>
-                                {country.name}
-                            </li>
-                        )
-                    })}
-                </ul>
+                    placeholder={placeholder}
+                    autoFocus={this.props.autoFocus} />
+                {this.state.showResults &&
+                    <ul onMouseLeave={this.clearSelection}>
+                        {this.props.results.map((country, index) => {
+                            const className = (index == this.state.selection)? 'selected' : ''
+                            return (
+                                <li key={country.id} 
+                                    className={className}
+                                    onMouseDown={()=>{this.save(country)}}
+                                    onMouseEnter={()=>{this.setSelection(index)}}>
+                                    {country.name}
+                                </li>
+                            )
+                        })}
+                    </ul>
+                }
             </div>
         )
     }

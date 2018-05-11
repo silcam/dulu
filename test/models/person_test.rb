@@ -11,7 +11,7 @@ class PersonTest < ActiveSupport::TestCase
     usa = countries :USA
     drew_hdi = participants :DrewHdi
 
-    assert_equal sil, @drew.organization
+    assert_equal sil, @drew.organizations.first
     assert_equal usa, @drew.country
     assert_includes @drew.participants, drew_hdi
   end
@@ -131,11 +131,5 @@ class PersonTest < ActiveSupport::TestCase
     assert_includes results[0][:subresults],
                     {title: 'Hdi', model: hdi_program,
                         description: 'Translation Consultant'}
-  end
-
-  test "Search for person without Org" do
-    assert_nil people(:Abanda).organization
-    results = Person.search 'abanda'
-    assert_equal 1, results.count
   end
 end

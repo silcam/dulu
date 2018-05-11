@@ -12,6 +12,7 @@ import SaveIndicator from '../../shared_components/SaveIndicator'
 import EventsTable from './EventsTable'
 import ParticipantsTable from './ParticipantsTable'
 import PersonBasicInfo from './PersonBasicInfo'
+import OrgPeopleTable from './OrgPeopleTable'
 import RolesTable from './RolesTable'
 
 class BasicPersonContent extends React.PureComponent {
@@ -108,6 +109,15 @@ class BasicPersonContent extends React.PureComponent {
                                  person={person}
                                  updateText={this.updateField}
                                  editEnabled={editEnabled} />
+
+                <OrgPeopleTable strings={strings}
+                                 person={person}
+                                 editEnabled={editEnabled}
+                                 rawPost={this.props.rawPost}
+                                 rawPut={this.props.rawPut}
+                                 rawDelete={this.props.rawDelete}
+                                 updateModel={this.props.updateModel}
+                                 setOrg={this.props.setOrg} />
 
                 <RolesTable person={person}
                             strings={strings}

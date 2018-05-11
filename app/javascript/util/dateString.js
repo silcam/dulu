@@ -4,6 +4,8 @@
  * @param {Array} monthNames Translated month names/abbreviations
  */
 function dateString(date, monthNames) {
+    if (!date) return ''
+    
     if (date.length == 4) return date
 
     let year = date.slice(0, 4)

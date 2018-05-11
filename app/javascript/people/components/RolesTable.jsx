@@ -18,6 +18,9 @@ class RolesTable extends React.PureComponent {
         const person = this.props.person
         const strings = this.props.strings
         const editEnabled = this.props.editEnabled
+        
+        if (!editEnabled && person.roles.length == 0) return null
+
         return (
             <div id='rolesTable'>
                 <h3>
@@ -32,7 +35,7 @@ class RolesTable extends React.PureComponent {
                                         {role.display}
                                     </td>
                                     {editEnabled &&
-                                        <td>
+                                        <td className='buttonsCell'>
                                             <DeleteIconButton 
                                                 handleClick={()=>{this.deleteRole(role.value)}} />
                                         </td>

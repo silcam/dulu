@@ -57,11 +57,12 @@ function editableText(WrappedInput) {
                                       name={this.props.field}
                                       save={this.save}
                                       cancel={this.cancel}
+                                      autoFocus
                                       {...this.props} />
                     </span>
                 )
             }
-            if (this.props.text.length == 0) {
+            if (!this.props.text) {
                 if (this.props.placeholder) {
                     return (
                         <span className='editableText'

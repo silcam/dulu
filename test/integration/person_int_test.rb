@@ -19,16 +19,18 @@ class PersonIntTest < Capybara::Rails::TestCase
   end
 
   test 'Rick create William Wallace' do
-    assert false
     log_in @rick
     visit people_path
-    click_link 'Add Person'
-    fill_in_william
+    click_button 'Add New Person'
+    fill_in 'first_name', with: 'William'
+    fill_in 'last_name', with: 'Wallace'
+    check 'has_login'
+    fill_in 'email', with: 'scotland_4ever@aol.com'
     click_button 'Save'
 
     assert_text 'William Wallace'
-    assert_text 'AAA'
-    assert_text 'scotland_forever@aol.com'
+    assert_text 'scotland_4ever@aol.com'
+    find('tr', text: 'Dulu Account').assert_text('Yes')
 
     @william = Person.find_by first_name: 'William'
     log_in @william

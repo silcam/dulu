@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180411151851) do
+ActiveRecord::Schema.define(version: 20180509124227) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -212,12 +212,27 @@ ActiveRecord::Schema.define(version: 20180411151851) do
     t.index ["person_id"], name: "index_notifications_on_person_id"
   end
 
+  create_table "organization_people", force: :cascade do |t|
+    t.bigint "organization_id"
+    t.bigint "person_id"
+    t.string "position"
+    t.string "start_date"
+    t.string "end_date"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["organization_id"], name: "index_organization_people_on_organization_id"
+    t.index ["person_id"], name: "index_organization_people_on_person_id"
+  end
+
   create_table "organizations", id: :serial, force: :cascade do |t|
-    t.string "name"
-    t.string "abbreviation"
+    t.string "long_name"
+    t.string "short_name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.text "description"
+    t.integer "parent_id"
+    t.bigint "country_id"
+    t.index ["country_id"], name: "index_organizations_on_country_id"
   end
 
   create_table "participants", id: :serial, force: :cascade do |t|

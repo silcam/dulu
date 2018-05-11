@@ -10,8 +10,8 @@ class NewOrgForm extends React.Component {
         super(props)
         this.state = {
             org: {
-                name: '',
-                abbreviation: '',
+                short_name: '',
+                long_name: '',
                 description: ''
             },
             saving: false,
@@ -37,7 +37,7 @@ class NewOrgForm extends React.Component {
 
     inputValid = () => {
         return (
-            this.state.org.name.length > 0
+            this.state.org.short_name.length > 0
         )
     }
 
@@ -76,18 +76,18 @@ class NewOrgForm extends React.Component {
                     <h3>{strings.New_organization}</h3>
 
                     <ValidatedTextInputGroup handleInput={this.handleInput}
-                                            name='name'
-                                            label={strings.Name}
-                                            value={org.name}
+                                            name='short_name'
+                                            label={strings.Short_name}
+                                            value={org.short_name}
                                             strings={strings}
                                             validateNotBlank
                                             showError={this.state.failedSave}
                                             autoFocus />
 
                     <TextInputGroup handleInput={this.handleInput}
-                                    name='abbreviation'
-                                    label={strings.Abbreviation}
-                                    value={org.abbreviation} />
+                                    name='long_name'
+                                    label={strings.Long_name}
+                                    value={org.long_name} />
                 </div>
 
                 <TextAreaGroup handleInput={this.handleInput}

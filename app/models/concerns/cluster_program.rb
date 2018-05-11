@@ -14,7 +14,7 @@ module ClusterProgram
   end
 
   def current_participants
-    participants.where(end_date: nil)
+    participants.where("end_date IS NULL OR end_date=''")
   end
 
   def current_people
@@ -23,11 +23,12 @@ module ClusterProgram
   end
 
   def current_organizations
+    # TODO: Redo this
     orgs = []
-    current_participants.each do |participant|
-      org = participant.person.organization
-      orgs << org unless(org.nil? || orgs.include?(org))
-    end
+    # current_participants.each do |participant|
+    #   org = participant.person.organization
+    #   orgs << org unless(org.nil? || orgs.include?(org))
+    # end
     orgs
   end
 end

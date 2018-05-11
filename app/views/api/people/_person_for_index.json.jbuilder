@@ -2,9 +2,7 @@
 
 json.call(person, :id, :first_name, :last_name, :has_login)
 
-orgs = []
-orgs << person.organization if person.organization
-json.organizations orgs do |org|
-  json.call(org, :id, :name, :abbreviation)
+json.organizations person.current_orgs do |org|
+  json.call(org, :id, :name)
 end
 json.roles(person.roles.collect {|r| t(r) })

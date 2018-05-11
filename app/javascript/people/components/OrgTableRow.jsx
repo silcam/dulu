@@ -21,7 +21,7 @@ class OrgTableRow extends React.PureComponent {
                 <td>
                     <button className='btn-link'
                             onClick={this.orgClick}>
-                        {org.name}
+                        {org.short_name}
                     </button>
                 </td>
                 {longVersion &&

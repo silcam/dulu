@@ -7,10 +7,10 @@ import YearInput from './YearInput'
 /*
     Required props:
         string date
-        function handleDateInput
-        function dateIsInvalid
-        strings
+        function handleDateInput(dateString)
+        strings - the date_strings
     Optional props:
+        function dateIsInvalid
         string maxDate
         string minDate
         boolean showErrors
@@ -44,19 +44,20 @@ function zeroPad(number, digits) {
 class FuzzyDateInput extends React.PureComponent {
     constructor(props) {
         super(props)
-        const year = props.date.slice(0, 4)
+        const date = props.date || ''
+        const year = date.slice(0, 4)
         const errors = this.validationErrors(year)
         this.state = {
             year: year,
-            month: parseInt(props.date.slice(5, 7)),
-            day: parseInt(props.date.slice(8, 10)),
+            month: parseInt(date.slice(5, 7)),
+            day: parseInt(date.slice(8, 10)),
             errorMessage: errors
         }
     }
 
     componentDidMount() {
         if (this.state.errorMessage) {
-            this.props.dateIsInvalid()
+            this.dateIsInvalid()
         }
     }
 
@@ -65,6 +66,12 @@ class FuzzyDateInput extends React.PureComponent {
             { [e.target.name]: e.target.value }, 
             () => { this.pushDate() }
         )
+    }
+
+    dateIsInvalid = () => {
+        if (this.props.dateIsInvalid) {
+            this.props.dateIsInvalid()
+        }
     }
 
     pushDate = () => {
@@ -83,7 +90,7 @@ class FuzzyDateInput extends React.PureComponent {
                 errorMessage: errors,
                 showErrors: this.state.showErrors || (this.state.year.length > 0)
             })
-            this.props.dateIsInvalid()
+            this.dateIsInvalid()
         }
     }
 
@@ -114,8 +121,8 @@ class FuzzyDateInput extends React.PureComponent {
                 <br/ >
                 <span className={showErrors && 'errorMessage'}>
                     {showErrors ? 
-                        this.state.errorMessage :
-                        this.props.strings.Month_day_optional
+                        this.state.errorMessage : ''
+                        // this.props.strings.Month_day_optional
                     }
                 </span>
             </div>

@@ -119,6 +119,8 @@ Rails.application.routes.draw do
       get 'search', on: :collection
     end
 
+    resources :organization_people
+
     resources :people
 
     resources :person_roles do

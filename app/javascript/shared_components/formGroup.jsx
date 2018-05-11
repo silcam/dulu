@@ -4,6 +4,8 @@ import SelectInput from './SelectInput'
 import TextArea from './TextArea'
 import TextInput from './TextInput'
 import ValidatedTextInput from './ValidatedTextInput'
+import FuzzyDateInput from './FuzzyDateInput'
+import SearchTextInput from './SearchTextInput'
 
 /* 
     Optional props:
@@ -26,9 +28,17 @@ function formGroup(WrappedInput) {
     }
 }
 
+const FuzzyDateGroup = formGroup(FuzzyDateInput)
+const SearchTextGroup = formGroup(SearchTextInput)
 const SelectGroup = formGroup(SelectInput)
 const TextAreaGroup = formGroup(TextArea)
 const TextInputGroup = formGroup(TextInput)
 const ValidatedTextInputGroup = formGroup(ValidatedTextInput)
 
-export { formGroup, SelectGroup, TextAreaGroup, TextInputGroup, ValidatedTextInputGroup }
+export { formGroup, 
+         FuzzyDateGroup, 
+         SelectGroup, 
+         SearchTextGroup,
+         TextAreaGroup, 
+         TextInputGroup, 
+         ValidatedTextInputGroup }

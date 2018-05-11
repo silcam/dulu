@@ -104,9 +104,11 @@ class NotificationsIntTest < Capybara::Rails::TestCase
   test "Gave you role" do
     log_in people(:Rick)
     visit person_path(people(:Drew))
-    within('h3', text: 'Roles') { click_on 'Edit' }
-    select 'Dulu Admin', from: 'person_role_role'
-    click_on 'Add'
+    within('#rolesTable') do 
+      find('.glyphicon-plus').click
+      select 'Dulu Admin', from: 'basic_select'
+      click_on 'Add'
+    end
 
     log_in people(:Drew)
     assert_notification "Rick Conrad gave you the Dulu Admin role."

@@ -14,7 +14,7 @@ Minitest::Reporters.use!
 Delayed::Worker.delay_jobs = false
 
 Capybara::Webkit.configure do |config|
-  config.raise_javascript_errors = true
+  config.raise_javascript_errors = false # true
 end
 
 class ActiveSupport::TestCase

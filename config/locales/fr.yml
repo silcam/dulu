@@ -126,7 +126,6 @@ fr:
   #Organizations Controller
   Organization: Organisation
   Organizations: Organisations
-  Abbreviation: Abréviation
   add_organization_button: Ajouter une organisation
   New_Organization: Nouvelle organisation
   Partners: Partenaires
@@ -438,12 +437,15 @@ fr:
     All: Tous
     All_changes_saved: Toute modification enregistrée
     Cancel: Annuler
+    Country: Pays
+    End_date: Date de fin
     Im_sure: Je suis certain(e)
     Loading: Chargement...
     'No': 'Non'
     Save: Enregistrer
     Saving: Enregistrement...
     See_more: Voir plus
+    Start_date: Date de commencement
     Updated: Mise à jour
     'Yes': 'Oui'
     date_strings:
@@ -502,11 +504,11 @@ fr:
 
   # People and Organizations
   people_page:
-    Abbreviation: Abréviation
     Add_new_organization: Ajouter une nouvelle organisation
     Add_new_person: Ajouter une nouvelle personne
     already_exists: existe déjà
     Can_login: Compte pour se connecter à Dulu
+    confirm_delete_org_person: "Supprimer %{org} des organisations de %{person} ? %{person} n'était jamais dans %{org} ?"
     confirm_different_person: C'est une personne différente.
     delete_person: Supprimer %{name} irrévocablement
     delete_person_warning: Êtes-vous certain(e) que vous voulez supprimer %{name}. Cette action ne peut pas être défaite.
@@ -526,12 +528,17 @@ fr:
     Home_country: Pays d'origine
     Language_programs: Programmes de langue
     Last_name: Nom
+    Long_name: Nom longue
     Name: Nom
     New_organization: Nouvelle organisation
     New_person: Nouvelle personne
+    Organization: Organisation
     Organizations: Organisations
+    Parent_organization: Organisation mère
     People: Personnel
+    Position: Poste
     Roles: Rôles
+    Short_name: Nom court
     email_prefs:
       immediate: Immédiat
       daily: Quotidien

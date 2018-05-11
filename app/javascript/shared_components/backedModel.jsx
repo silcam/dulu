@@ -71,19 +71,23 @@ function backedModel(WrappedComponent, modelPath, modelName) {
             this.rawDelete(url, callback)
         }
 
-        rawPost = (url, data) => {
+        rawPost = (url, data, callback) => {
             this.addSaving()
             data.authenticity_token = this.props.authToken
             axios.post(url, data)
-                .then(this.handleResponse)
+                .then((response) => {
+                    this.handleResponse(response, callback)
+                })
                 .catch(this.handleError)
         }
 
-        rawPut = (url, data) => {
+        rawPut = (url, data, callback) => {
             this.addSaving()
             data.authenticity_token = this.props.authToken
             axios.put(url, data)
-                .then(this.handleResponse)
+                .then((response) => {
+                    this.handleResponse(response, callback)
+                })
                 .catch(this.handleError)
         }
 
@@ -102,6 +106,12 @@ function backedModel(WrappedComponent, modelPath, modelName) {
             .catch(this.handleError)
         }
 
+        updateModel = (model) => {
+            this.setState({
+                model: model
+            })
+        }
+
         addSaving = () => {
             this.setState((prevState) => {
                 return {
@@ -113,7 +123,6 @@ function backedModel(WrappedComponent, modelPath, modelName) {
         handleResponse = (response, callback) => {
             this.setState((prevState) => {
                 let newState = {
-                    model: response.data[modelName],
                     saving: --prevState.saving,
                     savedChanges: true
                 }
@@ -122,7 +131,7 @@ function backedModel(WrappedComponent, modelPath, modelName) {
                 }
                 return newState
             })
-            if (callback) callback()
+            if (callback) callback(response)
         }
 
         handleError = (error) => {
@@ -143,7 +152,8 @@ function backedModel(WrappedComponent, modelPath, modelName) {
                                      delete={this.delete}
                                      rawPost={this.rawPost}
                                      rawPut={this.rawPut}
-                                     rawDelete={this.rawDelete} />
+                                     rawDelete={this.rawDelete}
+                                     updateModel={this.updateModel} />
         }
     }
 }

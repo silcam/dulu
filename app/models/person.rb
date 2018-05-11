@@ -2,15 +2,22 @@ class Person < ApplicationRecord
   include HasRoles
   include MultiWordSearch
 
-  belongs_to :organization, required: false
   belongs_to :country, required: false, counter_cache: true
+
+  has_many :organization_people
+  has_many :organizations, through: :organization_people
+
   has_many :participants, dependent: :destroy
   has_many :programs, through: :participants
+
   has_many :person_roles, dependent: :destroy
+
   has_many :event_participants, dependent: :destroy
   has_many :events, through: :event_participants
+
   has_many :viewed_reports
   has_many :reports, through: :viewed_reports
+
   has_many :notifications
   has_many :lpfs
 
@@ -34,6 +41,10 @@ class Person < ApplicationRecord
     "#{last_name}, #{first_name}"
   end
 
+  def current_orgs
+    organization_people.current.map(&:organization)
+  end
+
   def add_role(new_role)
     transaction do
       person_roles.create(role: new_role, start_date: Date.today)
@@ -49,7 +60,7 @@ class Person < ApplicationRecord
   end
 
   def current_participants
-    participants.where(end_date: nil)
+    participants.where("end_date IS NULL OR end_date=''")
   end
 
   def current_programs
@@ -86,7 +97,7 @@ class Person < ApplicationRecord
       end
       results << {title: person.name,
                   model: person,
-                  description: person.organization.try(:name),
+                  description: person.roles_text,
                   subresults: subresults}
     end
     results
