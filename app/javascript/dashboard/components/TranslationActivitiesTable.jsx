@@ -5,33 +5,42 @@ import intCompare from '../../util/intCompare'
 import SortPicker from './SortPicker'
 import TranslationActivityRow from './TranslationActivityRow'
 
+const sortFunctions = {
+    language: (a, b) => {
+        if (a.programName == b.programName) {
+            return intCompare(a.bibleBookId, b.bibleBookId)
+        }
+        return a.programName.localeCompare(b.programName)
+    },
+    book: (a, b) => {
+        if (a.bibleBookId == b.bibleBookId) return a.programName.localeCompare(b.programName)
+        return intCompare(a.bibleBookId, b.bibleBookId)
+    },
+    stage: (a, b) => {
+        return intCompare(a.progress.percent, b.progress.percent)
+    },
+    last_update: (a, b) => {
+        return a.lastUpdate.localeCompare(b.lastUpdate)
+    }
+}
+
+function sortActivities(sort, activities) {
+    activities.sort(sortFunctions[sort.option.toLowerCase()])
+    if (!sort.asc) activities.reverse()
+    return activities
+}
+
 class TranslationActivitiesTable extends React.PureComponent {
     constructor(props) {
         super(props)
         this.state = {
-            sort: 'Language',
+            sort: {
+                option: 'Language',
+                asc: true
+            },
             activities: []
         }
     }
-
-    static sortFunctions = {
-        language: (a, b) => {
-            if (a.programName == b.programName) {
-                return intCompare(a.bibleBookId, b.bibleBookId)
-            }
-            return a.programName.localeCompare(b.programName)
-        },
-        book: (a, b) => {
-            if (a.bibleBookId == b.bibleBookId) return a.programName.localeCompare(b.programName)
-            return intCompare(a.bibleBookId, b.bibleBookId)
-        },
-        stage: (a, b) => {
-            return intCompare(a.progress.percent, b.progress.percent)
-        },
-        last_update: (a, b) => {
-            return a.lastUpdate.localeCompare(b.lastUpdate)
-        }
-    } 
 
     static getDerivedStateFromProps(nextProps, prevState) {
         // console.log('GetDerivedStateFromProps called...')
@@ -41,7 +50,7 @@ class TranslationActivitiesTable extends React.PureComponent {
             for (let program of nextProps.programs) {
                 activities = activities.concat(program.translation_activities)
             }
-            activities.sort(TranslationActivitiesTable.sortFunctions[prevState.sort.toLowerCase()])
+            sortActivities(prevState.sort, activities)
             return {
                 programs: nextProps.programs,
                 activities: activities
@@ -51,8 +60,7 @@ class TranslationActivitiesTable extends React.PureComponent {
     }
 
     changeSort = (sort) => {
-        let activities = this.state.activities.slice()
-        activities.sort(TranslationActivitiesTable.sortFunctions[sort.toLowerCase()])
+        let activities = sortActivities(sort, this.state.activities.slice())
         this.setState({
             activities: activities,
             sort: sort

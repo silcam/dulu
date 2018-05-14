@@ -3,30 +3,39 @@ import React from 'react'
 import ParticipantRow from './ParticipantRow'
 import SortPicker from './SortPicker'
 
+const sortFunctions = {
+    language: (a, b) => {
+        return a.programName.localeCompare(b.programName)
+    },
+    person: (a, b) => {
+        const comparison = a.fullNameRev.localeCompare(b.fullNameRev)
+        if (comparison == 0) return sortFunctions.language(a, b)
+        return comparison
+    },
+    role: (a, b) => {
+        if (a.roles.length == 0 && b.roles.length > 0) return 1
+        if (b.roles.length == 0 && a.roles.length > 0) return -1
+        const comparison = a.roles.join().localeCompare(b.roles.join())
+        if (comparison == 0) return sortFunctions.person(a, b)
+        return comparison
+    }
+}
+
+function sortParticipants(sort, participants) {
+    participants.sort(sortFunctions[sort.option.toLowerCase()])
+    if (!sort.asc) participants.reverse()
+    return participants
+}
+
 class ParticipantsTable extends React.PureComponent {
     constructor(props) {
         super(props)
         this.state = {
-            sort: 'Language',
+            sort: {
+                option: 'Language',
+                asc: true
+            },
             participants: []
-        }
-    }
-
-    static sortFunctions = {
-        language: (a, b) => {
-            return a.programName.localeCompare(b.programName)
-        },
-        person: (a, b) => {
-            const comparison = a.fullNameRev.localeCompare(b.fullNameRev)
-            if (comparison == 0) return ParticipantsTable.sortFunctions.language(a, b)
-            return comparison
-        },
-        role: (a, b) => {
-            if (a.roles.length == 0 && b.roles.length > 0) return 1
-            if (b.roles.length == 0 && a.roles.length > 0) return -1
-            const comparison = a.roles.join().localeCompare(b.roles.join())
-            if (comparison == 0) return ParticipantsTable.sortFunctions.person(a, b)
-            return comparison
         }
     }
 
@@ -36,7 +45,7 @@ class ParticipantsTable extends React.PureComponent {
             for (let program of nextProps.programs) {
                 participants = participants.concat(program.participants)
             }
-            participants.sort(ParticipantsTable.sortFunctions[prevState.sort.toLowerCase()])
+            sortParticipants(prevState.sort, participants)
             return {
                 programs: nextProps.programs,
                 participants: participants
@@ -46,8 +55,7 @@ class ParticipantsTable extends React.PureComponent {
     }
 
     changeSort = (sort) => {
-        let participants = this.state.participants.slice()
-        participants.sort(ParticipantsTable.sortFunctions[sort.toLowerCase()])
+        let participants = sortParticipants(sort, this.state.participants.slice())
         this.setState({
             participants: participants,
             sort: sort

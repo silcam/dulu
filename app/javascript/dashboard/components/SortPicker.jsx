@@ -1,5 +1,20 @@
 import React from 'react'
 
+function changeSort(newOption, existingSort, callback) {
+    if (newOption != existingSort.option) {
+        callback({
+            option: newOption,
+            asc: true
+        })
+    }
+    else {
+        callback({
+            option: existingSort.option,
+            asc: !existingSort.asc
+        })
+    }
+}
+
 function SortPicker(props) {
     const options = props.options
     return (
@@ -10,15 +25,23 @@ function SortPicker(props) {
                         <label>{props.strings.Sort}:</label>
                     </li>
                     {options.map((option) => {
+                        let btnClass = 'btn-link'
+                        let sortArrow = ''
+                        if (option == props.sort.option) {
+                            btnClass += ' activeSort'
+                            sortArrow = props.sort.asc ? '▲' : '▼'
+                        }
                         return (
                             <li key={option}>
-                                {(props.sort == option) ?
-                                    <u>{props.strings[option]}</u> :
-                                    <button className='btn-link' 
-                                            onClick={()=>{props.changeSort(option)}}>
-                                        {props.strings[option]}
-                                    </button>
-                                }
+                                <button className={btnClass} 
+                                        onClick={(e)=>{
+                                            changeSort(option, props.sort, props.changeSort)
+                                            e.target.blur()
+                                        }}>
+                                    {props.strings[option]}
+                                    {sortArrow}
+                                </button>
+                            
                             </li>
                         )
                     })}
