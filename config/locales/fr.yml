@@ -442,6 +442,7 @@ fr:
     Im_sure: Je suis certain(e)
     Loading: Chargement...
     'No': 'Non'
+    None: Aucun
     Save: Enregistrer
     Saving: Enregistrement...
     See_more: Voir plus
@@ -484,11 +485,13 @@ fr:
   dashboard_page:
     Bible_translation: Traduction de la Bible
     Book: Livre
+    Completed: Terminé
     Current_events: Événements actuels
     Events: Événements
     Filter: Filtrer
     Language: Langue
     Last_update: Dernière mise à jour
+    Linguistics: Linguistique
     Mark_all_read: Marquer tous comme lus
     No_events: Aucun événement
     No_participants: Aucun participant
@@ -496,11 +499,13 @@ fr:
     Notifications: Notifications
     Participants: Participants
     Person: Personne
+    Research: Recherche
     Role: Rôle
     Search_prompt: Rechercher...
     Sort: Trier par
     Stage: Étape
     Upcoming_events: Événements futurs
+    Workshops: Ateliers
 
   # People and Organizations
   people_page:

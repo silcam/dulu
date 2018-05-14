@@ -2,14 +2,15 @@ import React from 'react'
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs'
 
 import EventsTable from './EventsTable'
-import ParticipantsTable from './ParticipantsTable';
+import LinguisticsTable from './LinguisticsTable'
+import ParticipantsTable from './ParticipantsTable'
 import TranslationActivitiesTable from './TranslationActivitiesTable'
 
 class MainContent extends React.PureComponent {
     constructor(props) {
         super(props)
         this.state = {
-            tab: 0
+            tab: 1
         }
     }
 
@@ -26,11 +27,15 @@ class MainContent extends React.PureComponent {
             <Tabs selectedIndex={this.state.tab} onSelect={this.selectTab}>
                 <TabList>
                     <Tab>{props.strings.Bible_translation}</Tab>
+                    <Tab>{props.strings.Linguistics}</Tab>
                     <Tab>{props.strings.Participants}</Tab>
                     <Tab>{props.strings.Events}</Tab>
                 </TabList>
                 <TabPanel>
                     <TranslationActivitiesTable programs={props.programs} strings={props.strings} />
+                </TabPanel>
+                <TabPanel>
+                    <LinguisticsTable programs={props.programs} strings={props.strings} />
                 </TabPanel>
                 <TabPanel>
                     <ParticipantsTable programs={props.programs} strings={props.strings} />

@@ -35,7 +35,7 @@ class RolesTable extends React.PureComponent {
                                         {role.display}
                                     </td>
                                     {editEnabled &&
-                                        <td className='buttonsCell'>
+                                        <td className='rightCol'>
                                             <DeleteIconButton 
                                                 handleClick={()=>{this.deleteRole(role.value)}} />
                                         </td>

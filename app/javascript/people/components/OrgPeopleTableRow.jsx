@@ -139,7 +139,7 @@ class OrgPeopleTableRow extends React.PureComponent {
                         {orgPerson.position}
                     </td>
                     {editEnabled &&
-                        <td className='buttonsCell'>
+                        <td className='rightCol'>
                             <EditIconButton handleClick={this.edit} />
                             <DeleteIconButton handleClick={this.delete} />
                         </td>

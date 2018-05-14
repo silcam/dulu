@@ -20,6 +20,31 @@ json.translation_activities translation_activities do |activity|
   end
 end
 
+research_activities = program.linguistic_activities.where(category: :Research)
+workshops_activities = program.linguistic_activities.where(category: :Workshops)
+json.linguistic_activities do
+  json.research_activities research_activities do |activity|
+    json.call(activity, :id, :title, :program_id, :stage_name)
+    json.program_name activity.program.name
+    json.last_update activity.updated_at
+    json.progress do
+      percent, color = activity.progress
+      json.percent percent
+      json.color color_from_sym(color)
+    end
+  end
+
+  json.workshops_activities workshops_activities do |activity|
+    json.call(activity, :id, :title, :program_id)
+    json.program_name activity.program.name
+    json.last_update activity.updated_at
+    json.workshops activity.workshops do |workshop|
+      json.call(workshop, :id, :name, :event_id)
+      json.completed workshop.completed?
+    end
+  end
+end
+
 json.participants program.all_current_participants do |participant|
   json.call(participant, :id)
   json.fullName participant.full_name

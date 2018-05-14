@@ -442,6 +442,7 @@ en:
     Im_sure: "I'm sure"
     Loading: Loading...
     'No': 'No'
+    None: None
     Save: Save
     Saving: Saving...
     See_more: See more
@@ -484,11 +485,13 @@ en:
   dashboard_page:
     Bible_translation: Bible Translation
     Book: Book
+    Completed: Completed
     Current_events: Current Events
     Events: Events
     Filter: Filter
     Language: Language
     Last_update: Last Update
+    Linguistics: Linguistics
     Mark_all_read: Mark all as read
     No_events: No events
     No_participants: No active participants
@@ -496,11 +499,13 @@ en:
     Notifications: Notifications
     Participants: Participants
     Person: Person
+    Research: Research
     Role: Role
     Search_prompt: Search...
     Sort: Sort by
     Stage: Stage
     Upcoming_events: Upcoming Events
+    Workshops: Workshops
 
   # People and Organizations
   people_page:

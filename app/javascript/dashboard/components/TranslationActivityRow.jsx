@@ -22,7 +22,7 @@ class TranslationActivityRow extends React.PureComponent {
                 <td>
                     {activity.stageName}
                 </td>
-                <td className='reallySmall'>
+                <td className='reallySmall rightCol'>
                     <i>
                         {this.props.strings.Updated}: {activity.lastUpdate.slice(0, 10)}
                     </i>

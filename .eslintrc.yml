@@ -33,5 +33,5 @@ rules:
   #   - error
   #   - single
   semi:
-    - error
+    - warn
     - never
