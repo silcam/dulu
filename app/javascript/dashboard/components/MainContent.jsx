@@ -10,7 +10,7 @@ class MainContent extends React.PureComponent {
     constructor(props) {
         super(props)
         this.state = {
-            tab: 1
+            tab: 0
         }
     }
 

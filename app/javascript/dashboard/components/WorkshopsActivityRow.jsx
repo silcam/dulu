@@ -3,7 +3,8 @@ import React from 'react'
 function WorkshopEventLink(props) {
     const workshop = props.workshop
     return (
-        <a href={`/programs/${props.programId}/events/${workshop.event_id}`}>
+        <a href={`/programs/${props.programId}/events/${workshop.event_id}`}
+           className={props.className}>
             {workshop.name}
         </a>
     )
@@ -36,15 +37,17 @@ class WorkshopsActivityRow extends React.PureComponent {
                 <td>
                     <CompletedText workshops={activity.workshops} />
                 </td>
-                <td className='subtle-links'>
+                <td className=''>
                     {activity.workshops.map((workshop, index) => {
-                        const sep = '  -  '
-                        const style = workshop.completed ? {} : {fontWeight: 'bold'} 
+                        const sep = ' - '
+                        const style = {} // workshop.completed ? {fontStyle: 'italic'} : {}
+                        const spanClass = workshop.completed ? 'text-muted' : ''
                         return (
-                            <span key={workshop.id} style={style}>
+                            <span key={workshop.id} style={style} className={spanClass}>
                                 {workshop.event_id ? 
                                     <WorkshopEventLink workshop={workshop}
-                                                       programId={activity.program_id} /> :
+                                                       programId={activity.program_id}
+                                                       className={spanClass} /> :
                                     workshop.name
                                 }
                                 {index < activity.workshops.length - 1 &&
