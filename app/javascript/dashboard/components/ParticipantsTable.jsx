@@ -2,13 +2,12 @@ import React from 'react'
 
 import ParticipantRow from './ParticipantRow'
 import SortPicker from './SortPicker'
+import { languageSort } from '../../util/sortFunctions'
 
 const sortFunctions = {
-    language: (a, b) => {
-        return a.programName.localeCompare(b.programName)
-    },
+    language: languageSort,
     person: (a, b) => {
-        const comparison = a.fullNameRev.localeCompare(b.fullNameRev)
+        const comparison = a.full_name_rev.localeCompare(b.full_name_rev)
         if (comparison == 0) return sortFunctions.language(a, b)
         return comparison
     },
@@ -72,7 +71,7 @@ class ParticipantsTable extends React.PureComponent {
                 <table className="table">
                     <tbody>
                         {this.state.participants.map((participant) => {
-                            return <ParticipantRow key={`${participant.programId}-${participant.id}`}
+                            return <ParticipantRow key={`${participant.program_id}-${participant.id}`}
                                                     participant={participant}/>
                         })}
                     </tbody>

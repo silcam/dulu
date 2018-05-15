@@ -1,14 +1,11 @@
 import React from 'react'
 import WorkshopsActivityRow from './WorkshopsActivityRow'
 import SortPicker from './SortPicker';
+import { languageSort, lastUpdateSort } from '../../util/sortFunctions'
 
 const sortFunctions = {
-    language: (a, b) => {
-        return a.program_name.localeCompare(b.program_name)
-    },
-    last_update: (a, b) => {
-        return a.last_update.localeCompare(b.last_update)
-    }
+    language: languageSort,
+    last_update: lastUpdateSort
 }
 
 function sortActivities(sort, activities) {
@@ -35,7 +32,7 @@ class WorkshopsActivitiesTable extends React.PureComponent {
         let activities = []
         for (let program of nextProps.programs)
             activities = activities.concat(program.linguistic_activities.workshops_activities)
-         // TODO: sort & filter
+         sortActivities(prevState.sort, activities)
          return {
              programs: nextProps.programs,
              activities: activities

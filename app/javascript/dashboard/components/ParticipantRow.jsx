@@ -6,18 +6,18 @@ class ParticipantRow extends React.PureComponent {
         return (
             <tr>
                 <td>
-                    <a href={`/programs/${participant.programId}/`}>
-                        {participant.programName}
+                    <a href={`/programs/${participant.program_id}/`}>
+                        {participant.program_name}
                     </a>
                     &nbsp;
                     {participant.clusterId && 
-                        <a href={`/clusters/${participant.clusterId}/`}>
-                            ({participant.clusterName})
+                        <a href={`/clusters/${participant.cluster_id}/`}>
+                            ({participant.cluster_name})
                         </a>
                     }
                 </td>
                 <td>
-                    <a href={`/participants/${participant.id}/`}>{participant.fullName}</a>
+                    <a href={`/participants/${participant.id}/`}>{participant.full_name}</a>
                 </td>
                 <td>
                     {participant.roles.join(', ')}

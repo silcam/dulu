@@ -10,8 +10,7 @@ json.user do
   json.startSelected true unless user_lpf
 
   json.clusters cluster_participants do |participant|
-    json.call(participant.cluster, :id)
-    json.displayName participant.cluster.display_name
+    json.call(participant.cluster, :id, :display_name)
     json.programs participant.cluster.programs do |program|
       json.call(program, :id, :name)
     end
@@ -37,8 +36,7 @@ json.countries user_countries do |country|
     json.startSelected true if lpf == user_lpf
 
     json.clusters lpf.clusters do |cluster|
-      json.call(cluster, :id)
-      json.displayName cluster.display_name
+      json.call(cluster, :id, :display_name)
       json.programs cluster.programs do |program|
         json.call(program, :id, :name)
       end

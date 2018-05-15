@@ -4,24 +4,21 @@ import intCompare from '../../util/intCompare'
 
 import SortPicker from './SortPicker'
 import TranslationActivityRow from './TranslationActivityRow'
+import { stageSort, lastUpdateSort } from '../../util/sortFunctions'
 
 const sortFunctions = {
     language: (a, b) => {
-        if (a.programName == b.programName) {
-            return intCompare(a.bibleBookId, b.bibleBookId)
+        if (a.program_name == b.program_name) {
+            return intCompare(a.bible_book_id, b.bible_book_id)
         }
-        return a.programName.localeCompare(b.programName)
+        return a.program_name.localeCompare(b.program_name)
     },
     book: (a, b) => {
-        if (a.bibleBookId == b.bibleBookId) return a.programName.localeCompare(b.programName)
-        return intCompare(a.bibleBookId, b.bibleBookId)
+        if (a.bible_book_id == b.bible_book_id) return a.program_name.localeCompare(b.program_name)
+        return intCompare(a.bible_book_id, b.bible_book_id)
     },
-    stage: (a, b) => {
-        return intCompare(a.progress.percent, b.progress.percent)
-    },
-    last_update: (a, b) => {
-        return a.lastUpdate.localeCompare(b.lastUpdate)
-    }
+    stage: stageSort,
+    last_update: lastUpdateSort
 }
 
 function sortActivities(sort, activities) {

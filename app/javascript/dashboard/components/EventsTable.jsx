@@ -15,7 +15,7 @@ class EventsTable extends React.PureComponent {
     }
 
     static eventSort = (a, b) => {
-        return a.startDate.localeCompare(b.startDate)
+        return a.start_date.localeCompare(b.start_date)
     }
 
     static getDerivedStateFromProps(nextProps, prevState) {
@@ -36,7 +36,6 @@ class EventsTable extends React.PureComponent {
     }
 
     setDomainFilter = (newFilter) => {
-        console.log(newFilter)
         this.setState({
             domainFilter: newFilter
         })

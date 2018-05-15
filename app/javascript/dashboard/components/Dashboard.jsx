@@ -30,7 +30,7 @@ class Dashboard extends React.PureComponent {
     }
 
     addLoading = () => {
-        this.setState((prevState, props) => {
+        this.setState((prevState) => {
             return {
                 loading: prevState.loading + 1
             }
@@ -38,7 +38,7 @@ class Dashboard extends React.PureComponent {
     }
 
     removeLoading = () => {
-        this.setState((prevState, props) => {
+        this.setState((prevState) => {
             return {
                 loading: prevState.loading - 1
             }
@@ -51,7 +51,7 @@ class Dashboard extends React.PureComponent {
             .then(response => {
                 this.removeLoading()
                 this.cache.programs[id] = response.data
-                this.setState((prevState, props) => {
+                this.setState((prevState) => {
                     if (prevState.neededProgramIds.includes(id)) {
                         return {
                             programs: prevState.programs.concat([response.data])
@@ -131,14 +131,14 @@ class Dashboard extends React.PureComponent {
         })
         for (let clusterId of selection.clusterIds) {
             if (this.cache.clusters[clusterId]) {
-                this.setState((prevState, props) => {
+                this.setState((prevState) => {
                     return {
                         programs: prevState.programs.concat(this.cache.clusters[clusterId])
                     }
                 })
             }
             else {
-                this.setState((prevState, props) => {
+                this.setState((prevState) => {
                     return {   
                         neededClusterIds: prevState.neededClusterIds.concat([clusterId])
                     }
@@ -148,14 +148,14 @@ class Dashboard extends React.PureComponent {
         }
         for (let programId of selection.programIds) {
             if (this.cache.programs[programId]) {
-                this.setState((prevState, props) => {
+                this.setState((prevState) => {
                     return {
                         programs: prevState.programs.concat(this.cache.programs[programId])
                     }
                 })
             }
             else {
-                this.setState((prevState, props) => {
+                this.setState((prevState) => {
                     return {
                         neededProgramIds: prevState.neededProgramIds.concat([programId])
                     }

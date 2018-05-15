@@ -38,7 +38,7 @@ class DashboardSidebarCluster extends React.PureComponent {
                     {indentString}
                     <PlusMinusButton isExpanded={this.state.isExpanded} handleClick={this.onPlusMinusClick}/>
                     <a href='#' onClick={this.handleClick}>
-                        {cluster.displayName}
+                        {cluster.display_name}
                     </a>
                 </li>
                 {this.state.isExpanded && cluster.programs.map((program) => {

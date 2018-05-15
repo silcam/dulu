@@ -9,12 +9,12 @@ class EventsTableRow extends React.PureComponent {
         return (
             <tr>
                 <td>
-                    <a href={`/programs/${event.programId}`}>
-                        {event.programName}
+                    <a href={`/programs/${event.program_id}`}>
+                        {event.program_name}
                     </a>        
                 </td>
                 <td>
-                    <a href={`/programs/${event.programId}/events/${event.id}`}>
+                    <a href={`/programs/${event.program_id}/events/${event.id}`}>
                         {event.name}
                     </a>
                 </td>
@@ -22,7 +22,7 @@ class EventsTableRow extends React.PureComponent {
                     {event.domain}
                 </td>
                 <td>
-                    {eventDateString(event.startDate, event.endDate, monthNames)}
+                    {eventDateString(event.start_date, event.end_date, monthNames)}
                 </td>
             </tr>
         )

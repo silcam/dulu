@@ -25,6 +25,7 @@ function GenericSelect(props) {
                 handleChange={handleChange}
                 value={props.value}
                 options={props.options}
+                onBlur={props.cancel}
                 autoFocus />
     )
 }

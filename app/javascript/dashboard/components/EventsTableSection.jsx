@@ -15,7 +15,7 @@ function EventsTableSection(props) {
             }
             {filteredEvents.map((event) => {
                 return (
-                    <EventsTableRow key={`${event.programId}-${event.id}`} event={event}
+                    <EventsTableRow key={`${event.program_id}-${event.id}`} event={event}
                                     strings={props.strings} />
                 )
             })}

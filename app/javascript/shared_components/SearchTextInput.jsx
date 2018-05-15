@@ -39,6 +39,7 @@ class BasicSearchTextInput extends React.PureComponent {
                 this.moveSelectionDown()
                 return
             case 'Enter':
+            case 'Tab':
                 this.handleEnter()
                 return
         }

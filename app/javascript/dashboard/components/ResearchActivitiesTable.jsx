@@ -1,18 +1,12 @@
 import React from 'react'
 import ResearchActivityRow from './ResearchActivityRow'
-import intCompare from '../../util/intCompare'
 import SortPicker from './SortPicker'
+import { languageSort, stageSort, lastUpdateSort } from '../../util/sortFunctions'
 
 const sortFunctions = {
-    language: (a, b) => {
-        return a.program_name.localeCompare(b.program_name)
-    },
-    stage: (a, b) => {
-        return intCompare(a.progress.percent, b.progress.percent)
-    },
-    last_update: (a, b) => {
-        return a.last_update.localeCompare(b.last_update)
-    }
+    language: languageSort,
+    stage: stageSort,
+    last_update: lastUpdateSort
 }
 
 function sortActivities(sort, activities) {

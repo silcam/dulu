@@ -9,6 +9,7 @@ import React from 'react'
         -extraClasses
         -autoFocus
         -name
+        -onBlur
 
 */
 
@@ -20,7 +21,8 @@ function SelectInput(props) {
                 name={name}
                 value={props.value}
                 autoFocus={props.autoFocus || false}
-                onChange={props.handleChange}>
+                onChange={props.handleChange}
+                onBlur={props.onBlur}>
             {props.options.map((option) => {
                 const value = option.value || option.display
                 return (

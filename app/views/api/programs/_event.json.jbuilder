@@ -1,9 +1,8 @@
 # Locals: event, program
 
-json.call(event, :id, :name)
-json.startDate event.start_date
-json.endDate event.end_date
+json.call(event, :id, :name, :start_date, :end_date)
+
 json.domain t(event.domain)
 
-json.programId program.id
-json.programName program.name
+json.program_id program.id
+json.program_name program.name
