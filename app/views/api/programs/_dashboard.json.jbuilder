@@ -5,9 +5,10 @@ json.call(program, :id, :name)
 
 translation_activities = program.translation_activities.order(:bible_book_id)
 json.translation_activities translation_activities do |activity|
-  json.call(activity, :id, :name, :program_id, :bible_book_id, :stage_name)
+  json.call(activity, :id, :name, :program_id, :bible_book_id)
 
   json.program_name program.name
+  json.stage_name t(activity.stage_name)
   json.last_update activity.updated_at
 
   json.progress do
