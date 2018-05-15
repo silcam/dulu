@@ -119,10 +119,19 @@ label.checkBoxLabel {
     }
 }
 
-.loading {
-    background-color: #fcf8e3;
+// Alerts
+
+.alertBox {
     padding: 8px;
     border-radius: 4px;
+}
+
+.alertYellow {
+    background-color: #fcf8e3;
+}
+
+.alertRed {
+    background-color: #f2dede;
 }
 
 .unreadNotification {

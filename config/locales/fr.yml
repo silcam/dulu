@@ -535,6 +535,7 @@ fr:
     Last_name: Nom
     Long_name: Nom longue
     Name: Nom
+    need_email_for_login: Il faut un adresse mail avant d'activer le compte Dulu.
     New_organization: Nouvelle organisation
     New_person: Nouvelle personne
     Organization: Organisation

@@ -51,7 +51,7 @@ class BasicOrgContent extends React.PureComponent {
         const org = this.props.organization
 
         if (org == null) {
-            return <p className='loading'>{strings.Loading}</p>
+            return <p className='alertBox alertYellow'>{strings.Loading}</p>
         }
 
         const editEnabled = this.props.can.update

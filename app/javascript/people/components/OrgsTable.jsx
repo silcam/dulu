@@ -13,7 +13,7 @@ class OrgsTable extends React.PureComponent {
         const orgs = this.props.orgs
         const strings = this.props.strings
         if (orgs.length == 0) {
-            return <p className='loading'>{strings.Loading}</p>
+            return <p className='alertBox alertYellow'>{strings.Loading}</p>
         }
         return (
             <div>

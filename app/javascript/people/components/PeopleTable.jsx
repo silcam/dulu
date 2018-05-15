@@ -13,7 +13,7 @@ class PeopleTable extends React.PureComponent {
         const people = this.props.people
         const strings = this.props.strings
         if (people.length == 0) {
-            return <p className='loading'>{strings.Loading}</p>
+            return <p className='alertBox alertYellow'>{strings.Loading}</p>
         }
         return (
             <div>

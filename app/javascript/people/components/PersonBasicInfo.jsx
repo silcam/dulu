@@ -22,6 +22,20 @@ function PersonBasicInfo(props) {
         })
     }
 
+    const updateLogin = (field, value) => {
+        if (value && !props.person.email) {
+            props.setErrorMessage(props.strings.need_email_for_login)
+        }
+        else {
+            props.updateField(field, value)
+        }
+    }
+
+    const updateEmail = (field, value) => {
+        if (value) props.setErrorMessage('')
+        props.updateField(field, value)
+    }
+
     return (
         <table className='table'>
             <tbody>
@@ -35,7 +49,7 @@ function PersonBasicInfo(props) {
                                          value={homeCountry.id}
                                          field={'country_id'}
                                          editEnabled={props.editEnabled}
-                                         updateValue={props.updateText} />
+                                         updateValue={props.updateField} />
                     </td>
                 </tr>
                 <tr>
@@ -46,7 +60,7 @@ function PersonBasicInfo(props) {
                         <EditableTextBox field={'email'}
                                       text={person.email}
                                       value={person.email}
-                                      updateValue={props.updateText}
+                                      updateValue={updateEmail}
                                       editEnabled={props.editEnabled} />
                     </td>
                 </tr>
@@ -59,7 +73,7 @@ function PersonBasicInfo(props) {
                             <EditableTextYesNo text={hasLoginText}
                                             value={person.has_login}
                                             field='has_login'
-                                            updateValue={props.updateText}
+                                            updateValue={updateLogin}
                                             editEnabled={props.editEnabled}
                                             strings={strings} />
                         </td>
@@ -89,7 +103,7 @@ function PersonBasicInfo(props) {
                                         text={strings.email_prefs[person.email_pref]}
                                         value={person.email_pref}
                                         field={'email_pref'}
-                                        updateValue={props.updateText}
+                                        updateValue={props.updateField}
                                         editEnabled={props.editEnabled}
                                         options={emailPrefOptions} />
                             </td>

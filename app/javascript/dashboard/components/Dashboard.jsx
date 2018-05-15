@@ -178,7 +178,7 @@ class Dashboard extends React.PureComponent {
                         <div className='col-md-9'>
                             <Searcher strings={this.props.strings}
                                       queryPath='/api/search' />
-                            {this.state.loading > 0 && <p className='loading'>{this.props.strings.Loading}</p>}
+                            {this.state.loading > 0 && <p className='alertBox alertYellow'>{this.props.strings.Loading}</p>}
                             <MainContent programs={this.state.programs} strings={this.props.strings} />
                         </div>
                         <div className='col-md-3'>

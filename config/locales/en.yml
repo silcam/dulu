@@ -535,6 +535,7 @@ en:
     Last_name: Last Name
     Long_name: Long Name
     Name: Name
+    need_email_for_login: An email is required before enabling Dulu login.
     New_organization: New Organization
     New_person: New Person
     Organization: Organization

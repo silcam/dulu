@@ -14,17 +14,29 @@ import ParticipantsTable from './ParticipantsTable'
 import PersonBasicInfo from './PersonBasicInfo'
 import OrgPeopleTable from './OrgPeopleTable'
 import RolesTable from './RolesTable'
+import ErrorMessage from '../../shared_components/ErrorMessage'
+import differentIds from '../../util/differentIds'
 
 class BasicPersonContent extends React.PureComponent {
     constructor(props) {
         super(props)
-        this.state = { deleting: false }
+        this.state = { 
+            deleting: false,
+            errorMessage: ''
+        }
     }
 
     componentDidUpdate(prevProps) {
-        if (this.state.deleting && this.props.person != prevProps.person) {
-            this.setState({deleting: false})
+        if (differentIds(prevProps.person, this.props.person)) {
+            this.setState({
+                deleting: false,
+                errorMessage: ''
+            })
         }
+    }
+
+    setErrorMessage = (errorMessage) => {
+        this.setState({ errorMessage: errorMessage })
     }
     
     clickClose = () => {
@@ -65,7 +77,7 @@ class BasicPersonContent extends React.PureComponent {
         const person = this.props.person
 
         if (person == null) {
-            return <p className='loading'>{strings.Loading}</p>
+            return <p className='alertBox alertYellow'>{strings.Loading}</p>
         }
 
         const editEnabled = this.props.can.update
@@ -93,6 +105,9 @@ class BasicPersonContent extends React.PureComponent {
                 <SaveIndicator strings={strings}
                                saving={this.props.saving > 0}
                                saved={this.props.savedChanges} />
+
+                <ErrorMessage message={this.state.errorMessage} />
+
                 <h2>
                     <EditableTextBox field='first_name'
                                   text={person.first_name}
@@ -113,8 +128,9 @@ class BasicPersonContent extends React.PureComponent {
 
                 <PersonBasicInfo strings={strings} 
                                  person={person}
-                                 updateText={this.updateField}
-                                 editEnabled={editEnabled} />
+                                 updateField={this.updateField}
+                                 editEnabled={editEnabled}
+                                 setErrorMessage={this.setErrorMessage} />
 
                 <OrgPeopleTable strings={strings}
                                  person={person}
