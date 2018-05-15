@@ -24,7 +24,7 @@ class Role
               Cluster_coordinator Cluster_facilitator
   )
 
-  EVENT_ROLES = %i( Facilitator Student )
+  EVENT_ROLES = %i( Leader Facilitator Student )
 
   def self.program_roles(source=ROLES)
     source - NON_PROGRAM_ROLES
