@@ -93,9 +93,8 @@ class NotificationsIntTest < Capybara::Rails::TestCase
 
   test "Updated you" do
     log_in people(:Rick)
-    visit edit_person_path(people(:Drew))
-    fill_in 'Last Name', with: 'Clown'
-    click_on 'Save'
+    visit person_path(people(:Drew))
+    edit_editable_text('last_name', 'Maust', 'Clown')
 
     log_in people(:Drew)
     assert_notification "Rick Conrad updated your info."

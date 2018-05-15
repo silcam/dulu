@@ -14,14 +14,20 @@ class Api::PeopleController < ApplicationController
       render :duplicate
     else
       @person.save!
+      NotificationMailer.delay.welcome(@person, current_user) if @person.has_login
     end
   end
 
   def update
     @person = Person.find(params[:id])
     authorize! :update, @person
-    @person.update(person_params)
-    @person.reload unless @person.valid?
+    had_login = @person.has_login
+    if @person.update(person_params)
+      Notification.updated_you(current_user, @person)
+      NotificationMailer.delay.welcome(@person, current_user) if !had_login && @person.has_login
+    else
+      @person.reload
+    end
     render :show
   end
 
