@@ -54,6 +54,12 @@ class BasicPersonContent extends React.PureComponent {
         this.props.update({ [field]: value }, callback)
     }
 
+    // Correct capitalization of names
+    // updateNameField = (field, value) => {
+    //     let v = fixCaps(value)
+    //     this.updateField(field, v)
+    // }
+
     render() {
         const strings = this.props.strings
         const person = this.props.person

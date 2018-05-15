@@ -30,6 +30,8 @@ class Person < ApplicationRecord
 
   default_scope{ order(:last_name, :first_name) }
 
+  before_validation :normalize_name
+
   enum email_pref: [:immediate, :daily, :weekly]
 
   def full_name
@@ -103,4 +105,18 @@ class Person < ApplicationRecord
     results
   end
 
+  private
+
+  def normalize_name
+    self.first_name = fix_caps(self.first_name)
+    self.last_name = fix_caps(self.last_name)
+  end
+
+  def fix_caps(text)
+    return text unless text
+    if text == text.upcase || text == text.downcase
+      text = text[0].upcase + text[1..-1].downcase
+    end
+    text
+  end
 end
