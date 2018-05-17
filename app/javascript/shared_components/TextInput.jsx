@@ -22,6 +22,7 @@ function TextInput(props) {
         }
     }
 
+    const value = props.value || ''
     const divClass = props.errorMessage ? "form-group errorMessage" : "form-group"
     const inputClass = props.extraClasses ? 'form-control ' + props.extraClasses : 'form-control'
     const autoFocus = props.autoFocus || false
@@ -30,7 +31,7 @@ function TextInput(props) {
         <div className={divClass}>
             <input type="text" className={inputClass} name={props.name}
                     onChange={props.handleInput} onKeyDown={handleKeyDown}
-                    placeholder={props.placeholder} value={props.value}
+                    placeholder={props.placeholder} value={value}
                     onBlur={props.handleBlur} autoFocus={autoFocus} />
             <div className="inputMessage">
                 {props.errorMessage}

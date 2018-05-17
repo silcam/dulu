@@ -23,7 +23,7 @@ function DaySelector(props) {
     }
     return(
         <select className="form-control" name={name} value={String(props.value)} onChange={props.handleInput}>
-            <option>{props.strings.Day}</option>
+            <option value=''>{props.strings.Day}</option>
             {optionsArray}
         </select>
     )

@@ -14,6 +14,7 @@ import YearInput from './YearInput'
         string maxDate
         string minDate
         boolean showErrors
+        boolean allowBlank
 */
 
 // Jan == 1
@@ -25,6 +26,7 @@ function daysInMonth(month) {
 }
 
 function assembleDateString(year, month, day) {
+    if (!year) return ''
     var s = zeroPad(year, 4)
     if (!month) return s
     s += '-' + zeroPad(month, 2)
@@ -51,7 +53,8 @@ class FuzzyDateInput extends React.PureComponent {
             year: year,
             month: parseInt(date.slice(5, 7)),
             day: parseInt(date.slice(8, 10)),
-            errorMessage: errors
+            errorMessage: errors,
+            showErrors: year.length > 0
         }
     }
 
@@ -64,7 +67,7 @@ class FuzzyDateInput extends React.PureComponent {
     handleInput = (e) => {
         this.setState(
             { [e.target.name]: e.target.value }, 
-            () => { this.pushDate() }
+            this.pushDate
         )
     }
 
@@ -75,7 +78,7 @@ class FuzzyDateInput extends React.PureComponent {
     }
 
     pushDate = () => {
-        const errors = this.validationErrors(this.state.year)
+        const errors = this.validationErrors()
         if (!errors) {
             this.props.handleDateInput(
                 assembleDateString(
@@ -83,7 +86,10 @@ class FuzzyDateInput extends React.PureComponent {
                     this.state.month,
                     this.state.day
                 ))
-            this.setState({errorMessage: null})
+            this.setState({
+                errorMessage: null,
+                showErrors: true
+            })
         }
         else {
             this.setState({
@@ -95,6 +101,10 @@ class FuzzyDateInput extends React.PureComponent {
     }
 
     validationErrors = (year) => {
+        if (year === undefined) year = this.state.year
+        if (this.props.allowBlank && year.length == 0) {
+            return null
+        }
         if (!parseInt(year)) {
             return this.props.strings.Enter_valid_year
         }

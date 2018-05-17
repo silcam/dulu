@@ -15,6 +15,7 @@ class OrgPeopleTableRow extends React.PureComponent {
         const orgPerson = this.props.orgPerson
         this.state = {
             editing: false,
+            invalid: false,
             position: orgPerson.position,
             start_date: orgPerson.start_date,
             end_date: orgPerson.end_date
@@ -22,7 +23,10 @@ class OrgPeopleTableRow extends React.PureComponent {
     }
 
     edit = () => {
-        this.setState({editing: true})
+        this.setState({
+            editing: true,
+            invalid: false
+        })
     }
 
     cancelEdit = () => {
@@ -30,15 +34,27 @@ class OrgPeopleTableRow extends React.PureComponent {
     }
 
     setStartDate = (date) => {
-        this.setState({start_date: date})
+        this.setState({
+            start_date: date,
+            invalid: false
+        })
     }
 
     setEndDate = (date) => {
-        this.setState({end_date: date})
+        this.setState({
+            end_date: date,
+            invalid: false
+        })
     }
 
     handleInput = (e) => {
-        this.setState({ [e.target.name]: e.target.value })
+        this.setState({ 
+            [e.target.name]: e.target.value
+        })
+    }
+
+    setInvalid = () => {
+        this.setState({ invalid: true })
     }
 
     delete = () => {
@@ -101,15 +117,18 @@ class OrgPeopleTableRow extends React.PureComponent {
                         <FuzzyDateGroup label={strings.Start_date}
                                         date={orgPerson.start_date}
                                         handleDateInput={this.setStartDate}
-                                        dateIsInvalid={()=>{}}
+                                        dateIsInvalid={this.setInvalid}
                                         strings={strings.date_strings} />
                         <FuzzyDateGroup label={strings.End_date}
                                         date={orgPerson.end_date}
                                         handleDateInput={this.setEndDate}
-                                        strings={strings.date_strings} />
+                                        dateIsInvalid={this.setInvalid}
+                                        strings={strings.date_strings}
+                                        allowBlank />
                         <SmallSaveAndCancel handleSave={this.save}
                                             handleCancel={this.cancelEdit}
-                                            strings={strings} />
+                                            strings={strings}
+                                            saveDisabled={this.state.invalid} />
                     </td>
                 </tr>
             )
