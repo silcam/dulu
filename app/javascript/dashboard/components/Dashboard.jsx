@@ -5,6 +5,7 @@ import DashboardSidebar from './DashboardSidebar'
 import MainContent from './MainContent'
 import NotificationsSidebar from './NotificationsSidebar'
 import Searcher from './Searcher'
+import { arrayDelete } from '../../util/arrayUtils'
 
 class Dashboard extends React.PureComponent {
     constructor(props) {
@@ -53,8 +54,10 @@ class Dashboard extends React.PureComponent {
                 this.cache.programs[id] = response.data
                 this.setState((prevState) => {
                     if (prevState.neededProgramIds.includes(id)) {
+                        let neededProgramIds = arrayDelete(prevState.neededProgramIds, id)
                         return {
-                            programs: prevState.programs.concat([response.data])
+                            programs: prevState.programs.concat([response.data]),
+                            neededProgramIds: neededProgramIds
                         }
                     }
                     return null
@@ -72,10 +75,12 @@ class Dashboard extends React.PureComponent {
             .then(response => {
                 this.removeLoading()
                 this.cacheCluster(id, response.data.programs)
-                this.setState((prevState, props) => {
+                this.setState((prevState) => {
                     if (prevState.neededClusterIds.includes(id)) {
+                        let neededClusterIds = arrayDelete(prevState.neededClusterIds, id)
                         return {
-                            programs: prevState.programs.concat(response.data.programs)
+                            programs: prevState.programs.concat(response.data.programs),
+                            neededClusterIds: neededClusterIds
                         }
                     }
                     return null
