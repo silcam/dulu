@@ -10,9 +10,13 @@ class TranslationKeyTest < ActiveSupport::TestCase
 
   def check_keys(standard, check, key_prefix)
     standard.each_key do |key|
-      assert check[key], "#{key_prefix}.#{key} key should exist in fr translations."
+      unless check[key]
+        unless check[key+'_m'] || check[key+'_f']
+          assert false, "#{key_prefix}#{key} key should exist in fr translations."
+        end
+      end
       if standard[key].respond_to? :each_key
-        check_keys(standard[key], check[key], "#{key_prefix}.#{key}")
+        check_keys(standard[key], check[key], "#{key_prefix}.#{key}.")
       end
     end
   end
