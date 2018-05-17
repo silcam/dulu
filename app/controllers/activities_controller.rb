@@ -66,7 +66,7 @@ class ActivitiesController < ApplicationController
     participant = Participant.find(params[:participant_id])
     @activity.participants << participant
     redirect_to activity_path(@activity)
-    Notification.added_you_to_activity current_user, participant.person, @activity
+    Notification.added_person_to_activity current_user, participant.person, @activity
   end
 
   def remove_update

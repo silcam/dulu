@@ -1,6 +1,6 @@
 class Notification < ApplicationRecord
 
-  belongs_to :person
+  belongs_to :person, required: false
 
   default_scope{ order(created_at: :desc) }
 
@@ -50,6 +50,10 @@ class Notification < ApplicationRecord
     include TranslationHelper
     delegate :url_helpers, to: 'Rails.application.routes'
 
+    def global
+      where(person: nil)
+    end
+
     def new_program_participant(user, participant)
       program = participant.program
       n_params = {
@@ -65,9 +69,11 @@ class Notification < ApplicationRecord
           program_name: url_helpers.program_path(program)
         }
       }
-      people = cluster_program_people(program, user)
-      people.delete participant.person
+      people = cluster_program_people(program, user, participant.person)
       send_notification n_params, people
+
+      n_params[:kind] = :added_you_to_program
+      send_notification n_params, [participant.person], false
     end
     handle_asynchronously :new_program_participant
 
@@ -86,9 +92,11 @@ class Notification < ApplicationRecord
           cluster_name: url_helpers.cluster_path(cluster)
         }
       }
-      people = cluster_program_people(cluster, user)
-      people.delete participant.person
+      people = cluster_program_people(cluster, user, participant.person)
       send_notification n_params, people
+
+      n_params[:kind] = :added_you_to_cluster
+      send_notification n_params, [participant.person], false
     end
     handle_asynchronously :new_cluster_participant
 
@@ -170,115 +178,157 @@ class Notification < ApplicationRecord
     handle_asynchronously :added_a_testament
 
     def updated_you(user, person)
-      return if user == person
+      return updated_himself(user) if user == person
       n_params = {
         kind: :updated_you,
         vars: {
           user_name: user.full_name,
-          your_info: t_hash('notification.your_info')
+          your_info: t_hash('notification.your_info'),
+          person_name: person.full_name
         },
         links: {
           user_name: url_helpers.person_path(user),
-          your_info: url_helpers.person_path(person)
+          your_info: url_helpers.person_path(person),
+          person_name: url_helpers.person_path(person)
         }
       }
-      send_notification n_params, [person]
+      send_notification n_params, [person], true, :updated_person
     end
     handle_asynchronously :updated_you
 
+    def updated_himself(user)
+      n_params = {
+        kind: :updated_himself,
+        vars: {
+          user_name: user.full_name,
+          his: I18n.t("notification.his.#{user.gender}")
+        },
+        links: {
+          user_name: url_helpers.person_path(user)
+        }
+      }
+      send_notification n_params, []  # Global only
+    end
+
     def gave_you_role(user, person, role)
-      return if user == person
+      return gave_himself_role(user, role) if user == person
       n_params = {
         kind: :gave_you_role,
         vars: {
           user_name: user.full_name,
-          role_name: t_hash(role)
+          role_name: t_hash(role),
+          person_name: person.full_name
         },
         links: {
           user_name: url_helpers.person_path(user),
-          role_name: url_helpers.person_path(person)
+          person_name: url_helpers.person_path(person)
         }
       }
-      send_notification n_params, [person]
+      send_notification n_params, [person], true, :gave_person_role
     end
     handle_asynchronously :gave_you_role
 
-    def added_you_to_program(user, participant)
-      return if user == participant.person
-      person = participant.person
-      program = participant.program
+    def gave_himself_role(user, role)
       n_params = {
-        kind: :added_you_to_program,
+        kind: :gave_himself_role,
         vars: {
           user_name: user.full_name,
-          program_name: program.name
+          himself: I18n.t("notification.himself.#{user.gender}"),
+          role_name: t_hash(role)
         },
         links: {
-          user_name: url_helpers.person_path(user),
-          program_name: url_helpers.program_path(program)
+          user_name: url_helpers.person_path(user)
         }
       }
-      send_notification n_params, [person]
+      send_notification n_params, []  # Global only
     end
-    handle_asynchronously :added_you_to_program
 
-    def added_you_to_cluster(user, participant)
-      return if user == participant.person
-      person = participant.person
-      cluster = participant.cluster
-      n_params = {
-        kind: :added_you_to_cluster,
-        vars: {
-          user_name: user.full_name,
-          cluster_name: cluster.name
-        },
-        links: {
-          user_name: url_helpers.person_path(user),
-          cluster_name: url_helpers.cluster_path(cluster)
-        }
-      }
-      send_notification n_params, [person]
-    end
-    handle_asynchronously :added_you_to_cluster
-
-    def added_you_to_activity(user, person, activity)
-      return if user == person
+    def added_person_to_activity(user, person, activity)
+      return added_himself_to_activity(user, activity) if user == person
       program = activity.program
       n_params = {
-        kind: :added_you_to_activity,
+        kind: :added_person_to_activity,
         vars: {
           user_name: user.full_name,
+          person_name: person.full_name,
           activity_name: activity_name(activity),
           program_name: program.name
         },
         links: {
           user_name: url_helpers.person_path(user),
+          person_name: url_helpers.person_path(person),
           activity_name: url_helpers.activity_path(activity),
           program_name: url_helpers.program_path(program)
         }
       }
-      send_notification n_params, [person]
-    end
-    handle_asynchronously :added_you_to_activity
+      people = cluster_program_people(activity.program, user, person)
+      send_notification n_params, people
 
-    def added_you_to_event(user, event_participant)
-      return if user == event_participant.person
+      n_params[:kind] = :added_you_to_activity
+      send_notification n_params, [person], false
+    end
+    handle_asynchronously :added_person_to_activity
+
+    def added_himself_to_activity(user, activity)
+      n_params = {
+        kind: :added_himself_to_activity,
+        vars: {
+          user_name: user.full_name,
+          himself: I18n.t("notification.himself.#{user.gender}"),
+          activity_name: activity_name(activity),
+          program_name: activity.program.name
+        },
+        links: {
+          user_name: url_helpers.person_path(user),
+          activity_name: url_helpers.activity_path(activity),
+          program_name: url_helpers.program_path(activity.program)
+        }
+      }
+      people = cluster_program_people(activity.program, user)
+      send_notification n_params, people
+    end
+
+    def added_person_to_event(user, event_participant)
+      return added_himself_to_event(user, event_participant) if user == event_participant.person
       person = event_participant.person
       event = event_participant.event
       n_params = {
-        kind: :added_you_to_event,
+        kind: :added_person_to_event,
         vars: {
           user_name: user.full_name,
+          person_name: person.full_name,
           event_name: event.name
         },
         links: {
           user_name: url_helpers.person_path(user),
+          person_name: url_helpers.person_path(person),
           event_name: url_helpers.event_path(event)
         }
       }
-      send_notification n_params, [person]
+      people = event.people - [user, person]
+      send_notification n_params, people
+      
+      n_params[:kind] = :added_you_to_event
+      send_notification n_params, [person], false
     end
-    handle_asynchronously :added_you_to_event
+    handle_asynchronously :added_person_to_event
+
+    def added_himself_to_event(user, event_participant)
+      n_params = {
+        kind: :added_himself_to_event,
+        vars: {
+          user_name: user.full_name,
+          himself: I18n.t("notification.himself.#{user.gender}"),
+          event_name: event_participant.event.name
+        },
+        links: {
+          user_name: url_helpers.person_path(user),
+          event_name: url_helpers.event_path(event_participant.event)
+        }
+      }
+      people = event_participant.event.people - [user]
+      send_notification n_params, people
+    end
 
     def new_event_for_program(user, event, program)
       n_params = {
@@ -336,18 +386,23 @@ class Notification < ApplicationRecord
 
     private
 
-    def send_notification(n_params, people)
+    def send_notification(n_params, people, send_global=true, global_kind=nil)
       people.each do |person|
         notification = person.notifications.create n_params
         notification.email
       end
+
+      return unless send_global
+      global_kind ||= n_params[:kind]
+      n_params = n_params.merge(kind: global_kind, read: true)
+      Notification.create(n_params)
     end
 
-    def cluster_program_people(cluster_program, user)
+    def cluster_program_people(cluster_program, *omissions)
       people = cluster_program.all_current_people
       lpf = cluster_program.get_lpf.try(:person)
       people << lpf unless lpf.nil?
-      people.delete user
+      omissions.each{ |p| people.delete(p) }
       people
     end
 

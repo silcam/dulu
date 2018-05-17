@@ -124,6 +124,6 @@ class EventsController < ApplicationController
 
   def add_participant_and_notify
     event_participant = EventParticipant.build @event, params[:event_person]
-    Notification.added_you_to_event current_user, event_participant
+    Notification.added_person_to_event current_user, event_participant
   end
 end

@@ -381,22 +381,36 @@ fr:
   not_before_start: ne peut pas être avant le date de commencement.
 
   notification:
-    new_participant: "%{user_name} a ajouté %{participant_name} au programme %{cluster_program_name}."
-    new_cluster_participant: "%{user_name} a ajouté %{participant_name} au groupe %{cluster_program_name}."
+    new_program_participant: "%{user_name} a ajouté %{participant_name} au programme %{program_name}."
+    added_you_to_program: "%{user_name} vous a ajouté au programme %{program_name}."
+    new_cluster_participant: "%{user_name} a ajouté %{participant_name} au groupe %{cluster_name}."
+    added_you_to_cluster: "%{user_name} vous a ajouté au groupe %{cluster_name}."
     new_stage: "%{user_name} a mis à jour %{activity_name} à %{stage_name} pour le programme %{program_name}."
     workshop_complete: "%{user_name} a mis à jour l'atelier %{workshop_name} pour le programme %{program_name} comme réalisé."
     new_activity: "%{user_name} a ajouté une nouvelle activité au programme %{program_name} : %{activity_name}."
     added_a_testament: "%{user_name} a ajouté une nouvelle activité au programme %{program_name} : %{testament}."
     updated_you: "%{user_name} a mis à jour %{your_info}."
+    updated_person: "%{user_name} a mis à jour les infos pour %{person_name}."
+    updated_himself: "%{user_name} a mis à jour ses propres infos."
     your_info: vos infos
     gave_you_role: "%{user_name} vous a donné le rôle %{role_name}."
-    added_you_to_program: "%{user_name} vous a ajouté au programme %{program_name}."
-    added_you_to_cluster: "%{user_name} vous a ajouté au groupe %{cluster_name}."
+    gave_person_role: "%{user_name} a donné le rôle %{role_name} à %{person_name}."
+    gave_himself_role: "%{user_name} a donné le rôle %{role_name} à %{himself}."
+    added_person_to_activity: "%{user_name} a ajouté %{person_name} à %{activity_name} pour le programme %{program_name}."
     added_you_to_activity: "%{user_name} vous a ajouté à %{activity_name} pour le programme %{program_name}."
+    added_himself_to_activity: "%{user_name} a ajouté %{himself} à %{activity_name} pour le programme %{program_name}."
+    added_person_to_event: "%{user_name} a ajouté %{person_name} à l'événement %{event_name}."
     added_you_to_event: "%{user_name} vous a ajouté à l'événement %{event_name}."
+    added_himself_to_event: "%{user_name} a ajouté %{himself} à l'événement %{event_name}."
     new_event_for_program: "%{user_name} a créé l'événement %{event_name} pour le programme %{program_name}."
     added_program_to_event: "%{user_name} a ajouté le programme %{program_name} à l'événement %{event_name}."
     added_cluster_to_event: "%{user_name} a ajouté le groupe %{cluster_name} à l'événement %{event_name}."
+    his:
+      M: son  # This is looked up but eventually not used.
+      F: son  # This is looked up but eventually not used.
+    himself:
+      M: lui-même
+      F: elle-même
 
   email:
     welcome:
@@ -490,6 +504,7 @@ fr:
     Current_events: Événements actuels
     Events: Événements
     Filter: Filtrer
+    For_me: Pour moi
     Language: Langue
     Last_update: Dernière mise à jour
     Linguistics: Linguistique

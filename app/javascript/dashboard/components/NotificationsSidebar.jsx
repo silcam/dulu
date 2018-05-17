@@ -1,63 +1,65 @@
-import axios from 'axios'
 import React from 'react'
+import { Tab, Tabs, TabList, TabPanel } from 'react-tabs'
+import NotificationsList from './NotificationsList'
+import axios from 'axios'
 
-/**
- * Inserts variable strings into a translated string
- * @param {string} message 
- * @param {object} vars 
- * @param {object} links
- */
-function t_sub(message, vars, links) {
-    let newMessage = message
-    for (let v in vars) {
-        let searchStr = '%{' + v + '}'
-        let replacement = links[v] ?
-            `<a href="${links[v]}">${vars[v]}</a>` :
-            vars[v]
-        newMessage = newMessage.replace(searchStr, replacement)
-    }
-    return newMessage
+const paths = {
+    forMe: '/api/notifications',
+    all: '/api/notifications/global'
 }
 
-class NotificationsSidebar extends React.PureComponent {
+class NotificationsSidebar extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            notifications: [],
-            unreadNotifications: false,
-            moreAvailable: false
+            forMe: {
+                notifications: [],
+                nextPage: 0
+            },
+            all: {
+                notifications: [],
+                nextPage: 0
+            }
         }
-        this.nextNotificationsPage = 0
     }
 
     componentDidMount() {
-        this.getNotifications()
+        this.getNotifications('forMe')
+        this.getNotifications('all')
     }
 
-    getNotifications = () => {
-        axios.get(`/api/notifications?page=${this.nextNotificationsPage}`)
+    getNotifications = (channel) => {
+        this.setState((prevState) => {
+            const channelState = prevState[channel]
+            channelState.loading = true
+            return {
+                [channel]: channelState
+            }
+        })
+        const channelState = this.state[channel]    
+        axios.get(`${paths[channel]}?page=${channelState.nextPage}`)
             .then(response => {
-                this.setState((prevState, props) => {
+                this.setState((prevState) => {
+                    const channelState = prevState[channel]
                     return {
-                        notifications: prevState.notifications.concat(response.data.notifications),
-                        unreadNotifications: prevState.unreadNotifications || response.data.unreadNotifications,
-                        moreAvailable: response.data.moreAvailable
+                        [channel]: {
+                            notifications: channelState.notifications.concat(response.data.notifications),
+                            unreadNotifications: channelState.unreadNotifications || response.data.unreadNotifications,
+                            moreAvailable: response.data.moreAvailable,
+                            nextPage: channelState.nextPage + 1,
+                            loading: false
+                        }
                     }
                 })
             })
             .catch(error => { console.error(error) })
-        this.nextNotificationsPage += 1
     }
 
-    clickSeeMore = (e) => {
-        this.getNotifications()
-        e.target.blur()
-    }
-
-    markAllRead = () => {
-        this.setState((prevState, props) => {
-            const notifications = prevState.notifications
-            axios.post('/api/notifications/mark_read/', {
+    markAllRead = (channel) => {
+        this.setState((prevState) => {
+            let channelState = prevState[channel]
+            const notifications = channelState.notifications
+            axios.post(`${paths[channel]}/mark_read/`, {
                 authenticity_token: this.props.authenticityToken,
                 from: notifications[notifications.length - 1].id,
                 to: notifications[0].id
@@ -67,9 +69,10 @@ class NotificationsSidebar extends React.PureComponent {
             for (let notification of newNotifications) {
                 notification.read = true
             }
+            channelState.notifications = newNotifications
+            channelState.unreadNotifications = false
             return {
-                notifications: newNotifications,
-                unreadNotifications: false
+                [channel]: channelState
             }
         })
     }
@@ -81,37 +84,26 @@ class NotificationsSidebar extends React.PureComponent {
                 <h3 style={{ marginTop: 0 }}>
                     {strings.Notifications}
                 </h3>
-                {this.state.unreadNotifications &&
-                    <button className='btn-link' onClick={this.markAllRead}>
-                        {this.props.strings.Mark_all_read}
-                    </button>
-                }
-                <table className='table'><tbody>
-                    {this.state.notifications.map((notification) => {
-                        return (
-                            <tr key={notification.id}>
-                                <td className={notification.read ? '' : 'unreadNotification'}
-                                    dangerouslySetInnerHTML={{
-                                        __html: t_sub(strings[notification.message.key],
-                                            notification.message.t_vars,
-                                            notification.message.links
-                                        )
-                                    }} />
-                            </tr>
-                        )
-                    })}
-                    <tr>
-                        <td>
-                            {this.state.moreAvailable &&
-                                <button className='btn-link' onClick={this.clickSeeMore}
-                                        style={{padding: 0}}>
-                                    {this.props.strings.See_more}
-                                </button>
-                            }
-                        </td>
-                    </tr>
-                </tbody>
-                </table>
+                <Tabs>
+                    <TabList>
+                        <Tab>{strings.For_me}</Tab>
+                        <Tab>{strings.All}</Tab>
+                    </TabList>
+                    <TabPanel>
+                        <NotificationsList channel='forMe'
+                                           getNotifications={this.getNotifications}
+                                           markAllRead={this.markAllRead}
+                                           strings={strings}
+                                           {...this.state.forMe} />
+                    </TabPanel>
+                    <TabPanel>
+                        <NotificationsList channel='all'
+                                           getNotifications={this.getNotifications}
+                                           markAllRead={this.markAllRead}
+                                           strings={strings}
+                                           {...this.state.all} />
+                    </TabPanel>
+                </Tabs>
             </div>
         )
     }

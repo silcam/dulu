@@ -61,7 +61,7 @@ class ParticipantsController < ApplicationController
     elsif params[:activity_id]
       activity = Activity.find(params[:activity_id])
       @participant.activities << activity
-      Notification.added_you_to_activity current_user, @participant.person, activity
+      Notification.added_person_to_activity current_user, @participant.person, activity
     end
     redirect_to @participant
   end
@@ -110,10 +110,10 @@ class ParticipantsController < ApplicationController
 
   def notify_new_participant
     if @cluster_program.is_a? Cluster
-      Notification.added_you_to_cluster current_user, @participant
+      # Notification.added_you_to_cluster current_user, @participant
       Notification.new_cluster_participant current_user, @participant
     else
-      Notification.added_you_to_program current_user, @participant
+      # Notification.added_you_to_program current_user, @participant
       Notification.new_program_participant current_user, @participant
     end
   end

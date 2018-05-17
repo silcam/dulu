@@ -112,6 +112,7 @@ Rails.application.routes.draw do
     end
 
     resources :notifications do
+      get 'global', on: :collection
       post 'mark_read', on: :collection
     end
 

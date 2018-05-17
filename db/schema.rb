@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180509124227) do
+ActiveRecord::Schema.define(version: 20180516130442) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -199,10 +199,6 @@ ActiveRecord::Schema.define(version: 20180509124227) do
   create_table "notifications", id: :serial, force: :cascade do |t|
     t.integer "person_id"
     t.string "kind"
-    t.json "details_json"
-    t.string "link"
-    t.string "assoc_class"
-    t.integer "assoc_model_id"
     t.boolean "read", default: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
