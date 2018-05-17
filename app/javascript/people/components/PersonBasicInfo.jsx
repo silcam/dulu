@@ -17,7 +17,7 @@ function PersonBasicInfo(props) {
     const emailPrefOptions = selectOptionsFromObject(strings.email_prefs)
 
     const updateUiLang = (field, value) => {
-        props.updateText(field, value, () => {
+        props.updateField(field, value, () => {
             window.location.href = `/people/${person.id}`
         })
     }
