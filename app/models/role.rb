@@ -1,11 +1,11 @@
 class Role
-  ROLES = %i( Translator TranslationConsultant TranslationConsultantTraining Exegete
-              LinguisticConsultant LinguisticConsultantTraining
+  ROLES = %i( Translator TranslationConsultant TranslationConsultantTraining Exegete BackTranslator
+              LinguisticConsultant LinguisticConsultantTraining Linguist
               Literacy_specialist Literacy_consultant
               Scripture_engagement_specialist
               MediaConsultant MediaSpecialist
               LanguageProgramCommittee
-              Cluster_coordinator Cluster_facilitator
+              Cluster_coordinator Cluster_facilitator ProjectCoordinator
               LanguageProgramFacilitator
               Administration
               DuluAdmin
