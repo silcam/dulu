@@ -24,12 +24,12 @@ class Stage < ApplicationRecord
   # }
 
   TRANSLATION_STAGE_ROLES = {
-                              Drafting: [:Translator],
-                              Testing: [:Translator],
+                              Drafting: [:Translator, :Exegete],
+                              Testing: [:Translator, :Exegete],
                               Back_translating: [:Translator],
-                              Ready_for_consultant_check: [:TranslationConsultant, :TranslationConsultantTraining, :Exegete],
-                              Consultant_check: [:TranslationConsultant, :TranslationConsultantTraining, :Exegete],
-                              Consultant_checked: [:TranslationConsultant, :TranslationConsultantTraining, :Exegete]
+                              Ready_for_consultant_check: [:TranslationConsultant, :TranslationConsultantTraining],
+                              Consultant_check: [:TranslationConsultant, :TranslationConsultantTraining],
+                              Consultant_checked: [:TranslationConsultant, :TranslationConsultantTraining]
                             }
 
 

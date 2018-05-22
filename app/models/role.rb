@@ -16,12 +16,12 @@ class Role
   SUPERVISOR_ROLES = %i( DuluAdmin Administration LanguageProgramFacilitator )
 
   PARTICIPANT_ROLES = %i(
-              Translator TranslationConsultant TranslationConsultantTraining Exegete
-              LinguisticConsultant LinguisticConsultantTraining
+              Translator TranslationConsultant TranslationConsultantTraining Exegete BackTranslator
+              LinguisticConsultant LinguisticConsultantTraining Linguist
               Literacy_specialist Literacy_consultant
               Scripture_engagement_specialist
               MediaConsultant MediaSpecialist
-              Cluster_coordinator Cluster_facilitator
+              Cluster_coordinator Cluster_facilitator ProjectCoordinator
   )
 
   EVENT_ROLES = %i( Leader Facilitator Student )
