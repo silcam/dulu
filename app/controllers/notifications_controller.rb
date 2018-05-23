@@ -4,6 +4,6 @@ class NotificationsController < ApplicationController
   end
 
   def index
-    @notifications = Notification.where.not(person: nil).includes(:person).page(params[:page])
+    @notifications = Notification.all.includes(:person).page(params[:page])
   end
 end

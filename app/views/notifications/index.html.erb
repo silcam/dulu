@@ -5,7 +5,7 @@
 <table class="table">
   <% @notifications.each do |notification| %>
     <tr>
-      <td><%= notification.person.full_name %></td>
+      <td><%= notification.person.try(:full_name) || 'Global' %></td>
       <td><%= render 'notifications/text', notification: notification %></td>
     </tr>
   <% end %>
