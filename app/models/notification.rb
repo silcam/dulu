@@ -201,7 +201,7 @@ class Notification < ApplicationRecord
         kind: :updated_himself,
         vars: {
           user_name: user.full_name,
-          his: I18n.t("notification.his.#{user.gender}")
+          his: t_hash("notification.his.#{user.gender}")
         },
         links: {
           user_name: url_helpers.person_path(user)
@@ -233,7 +233,7 @@ class Notification < ApplicationRecord
         kind: :gave_himself_role,
         vars: {
           user_name: user.full_name,
-          himself: I18n.t("notification.himself.#{user.gender}"),
+          himself: t_hash("notification.himself.#{user.gender}"),
           role_name: t_hash(role)
         },
         links: {
@@ -274,7 +274,7 @@ class Notification < ApplicationRecord
         kind: :added_himself_to_activity,
         vars: {
           user_name: user.full_name,
-          himself: I18n.t("notification.himself.#{user.gender}"),
+          himself: t_hash("notification.himself.#{user.gender}"),
           activity_name: activity_name(activity),
           program_name: activity.program.name
         },
@@ -318,7 +318,7 @@ class Notification < ApplicationRecord
         kind: :added_himself_to_event,
         vars: {
           user_name: user.full_name,
-          himself: I18n.t("notification.himself.#{user.gender}"),
+          himself: t_hash("notification.himself.#{user.gender}"),
           event_name: event_participant.event.name
         },
         links: {
