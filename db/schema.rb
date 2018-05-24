@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180516130442) do
+ActiveRecord::Schema.define(version: 20180524143021) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -96,6 +96,13 @@ ActiveRecord::Schema.define(version: 20180516130442) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "people_count"
+  end
+
+  create_table "countries_languages", force: :cascade do |t|
+    t.bigint "country_id"
+    t.bigint "language_id"
+    t.index ["country_id"], name: "index_countries_languages_on_country_id"
+    t.index ["language_id"], name: "index_countries_languages_on_language_id"
   end
 
   create_table "delayed_jobs", id: :serial, force: :cascade do |t|
@@ -186,6 +193,13 @@ ActiveRecord::Schema.define(version: 20180516130442) do
     t.index ["language_status_id"], name: "index_languages_on_language_status_id"
     t.index ["parent_id"], name: "index_languages_on_parent_id"
     t.index ["region_id"], name: "index_languages_on_region_id"
+  end
+
+  create_table "languages_regions", force: :cascade do |t|
+    t.bigint "language_id"
+    t.bigint "region_id"
+    t.index ["language_id"], name: "index_languages_regions_on_language_id"
+    t.index ["region_id"], name: "index_languages_regions_on_region_id"
   end
 
   create_table "lpfs", id: :serial, force: :cascade do |t|
