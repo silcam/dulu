@@ -1,5 +1,5 @@
 class Country < ApplicationRecord
-  has_many :languages
+  has_and_belongs_to_many :languages
   has_many :people
   has_many :regions
 

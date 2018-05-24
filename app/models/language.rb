@@ -1,8 +1,8 @@
 class Language < ApplicationRecord
   belongs_to :cluster, required: false
   belongs_to :language_status, required: false
-  belongs_to :country, required: false
-  belongs_to :region, required: false
+  has_and_belongs_to_many :countries
+  has_and_belongs_to_many :regions
   belongs_to :parent, class_name: 'Language', required: false
   has_one :program
 
@@ -13,7 +13,7 @@ class Language < ApplicationRecord
 
   default_scope { order(:name) }
 
-  scope :std_includes, -> { includes(:language_status, :country, :region, {program: :activities}) }
+  scope :std_includes, -> { includes(:language_status, :countries, :regions, {program: :activities}) }
 
   def parent_cannot_be_dialect
     if parent.try(:is_dialect?)

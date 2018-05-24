@@ -32,8 +32,8 @@
           <%= "(#{status.level}) #{status.label}" %>
         <% end %>
       </td>
-      <td><%= language.country.name if language.country %></td>
-      <td><%= language.region.name if language.region %></td>
+      <td><%= language.countries.map(&:name).join(', ') %></td>
+      <td><%= language.regions.map(&:name).join(', ') %></td>
       <td><%= language.population_description %></td>
     </tr>
   <% end %>

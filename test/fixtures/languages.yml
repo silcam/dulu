@@ -1,15 +1,15 @@
 Hdi:
   name: Hdi
-  country: Cameroon
-  region: FarNorth
+  countries: Cameroon
+  regions: FarNorth
   language_status: Developing
   code: xed
   alt_names: 'Hedi, Hide, Turu-Hide, Xadi, Xdi, Xedi'
 
 HdiDialect:
   name: HdiDialect
-  country: Cameroon
-  region: FarNorth
+  countries: Cameroon
+  regions: FarNorth
   parent: Hdi
 
 Bangolan:

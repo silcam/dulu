@@ -13,8 +13,8 @@ class LanguageTest < ActiveSupport::TestCase
     hdi_dialect = languages :HdiDialect
 
     assert_equal developing, @hdi.language_status
-    assert_equal cameroon, @hdi.country
-    assert_equal far_north, @hdi.region
+    assert_equal cameroon, @hdi.countries.first
+    assert_equal far_north, @hdi.regions.first
     assert_equal hdi_program, @hdi.program
     assert_equal @hdi, hdi_dialect.parent
   end

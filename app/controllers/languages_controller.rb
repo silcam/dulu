@@ -37,8 +37,9 @@ class LanguagesController < ApplicationController
 
   def edit
     authorize! :update, @language
-    @dialect = Language.new(parent: @language, country: @language.country,
-                            region: @language.region)
+    @dialect = Language.new(parent: @language)
+    @dialect.countries = @language.countries
+    @dialect.regions = @language.regions
   end
 
   def update

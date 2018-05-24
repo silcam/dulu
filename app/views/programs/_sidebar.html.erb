@@ -8,16 +8,22 @@
     <%= link_to link_text, @language.ethnologue_link,
       target: '_blank', class: "h3 sidebar-subtitle" %>
     <h3 class="sidebar-subtitle">
-      <% if @program.language.country %>
-        <%= link_to @language.country.name,
-                    languages_path(country: @language.country),
-                    class: 'h3 sidebar-subtitle' %>
-        <% if @language.region %>
+      <%= 
+        @language.countries.map do |country|
+          link_to country.name,
+                    languages_path(country: country),
+                    class: 'h3 sidebar-subtitle'
+        end.join(', ').html_safe
+      %>
+      <% if @language.countries.length == 1 && @language.regions.length > 0 %>
           :
-          <%= link_to(@language.region.name,
-                      languages_path(region: @language.region),
-                      class: 'h3 sidebar-subtitle') %>
-        <% end %>
+          <%= 
+            @language.regions.map do |region|
+              link_to(region.name,
+                      languages_path(region: region),
+                      class: 'h3 sidebar-subtitle')
+            end.join(', ').html_safe
+          %>
       <% end %>
     </h3>
     <% if @language.cluster %>

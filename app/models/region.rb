@@ -1,7 +1,7 @@
 class Region < ApplicationRecord
   belongs_to :country, required: true
   has_many :territories
-  has_many :languages
+  has_and_belongs_to_many :languages
 
   def name
     if I18n.locale == :fr
