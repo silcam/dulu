@@ -23,7 +23,7 @@ json.user do
   end
   json.programs program_participants do |participant|
     json.call(participant.program, :id, :name)
-    tag = "current_user>program#{program.id}"
+    tag = "current_user>program#{participant.program.id}"
     json.partial! 'selection_params', tag: tag, selection: selection
   end
 end
