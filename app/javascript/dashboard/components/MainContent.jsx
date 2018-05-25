@@ -4,6 +4,7 @@ import { Tab, Tabs, TabList, TabPanel } from 'react-tabs'
 import EventsTable from './EventsTable'
 import LinguisticsTable from './LinguisticsTable'
 import ParticipantsTable from './ParticipantsTable'
+import MediaTable from './MediaTable'
 import TranslationActivitiesTable from './TranslationActivitiesTable'
 
 class MainContent extends React.PureComponent {
@@ -28,6 +29,7 @@ class MainContent extends React.PureComponent {
                 <TabList>
                     <Tab>{props.strings.Bible_translation}</Tab>
                     <Tab>{props.strings.Linguistics}</Tab>
+                    <Tab>{props.strings.Media}</Tab>
                     <Tab>{props.strings.Participants}</Tab>
                     <Tab>{props.strings.Events}</Tab>
                 </TabList>
@@ -36,6 +38,9 @@ class MainContent extends React.PureComponent {
                 </TabPanel>
                 <TabPanel>
                     <LinguisticsTable programs={props.programs} strings={props.strings} />
+                </TabPanel>
+                <TabPanel>
+                    <MediaTable programs={props.programs} strings={props.strings} />
                 </TabPanel>
                 <TabPanel>
                     <ParticipantsTable programs={props.programs} strings={props.strings} />

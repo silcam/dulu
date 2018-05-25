@@ -4,6 +4,7 @@ class Program < ApplicationRecord
   has_many :activities
   has_many :translation_activities
   has_many :linguistic_activities
+  has_many :media_activities
   has_many :bible_books, through: :translation_activities
 
   has_many :publications

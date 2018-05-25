@@ -43,6 +43,19 @@ json.linguistic_activities do
   end
 end
 
+json.media_activities program.media_activities do |activity|
+  json.call(activity, :id, :name, :program_id)
+  json.program_name program.name
+  json.stage_name t(activity.stage_name)
+  json.last_update activity.updated_at
+
+  json.progress do
+    percent, color = activity.progress
+    json.percent percent
+    json.color color_from_sym(color)
+  end
+end
+
 json.participants program.all_current_participants do |participant|
   json.call(participant, :id, :full_name, :full_name_rev)
 
