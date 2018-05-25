@@ -21,7 +21,6 @@ class Cluster < ApplicationRecord
     I18n.t(:Cluster_x, name: name)
   end
 
-
   def sorted_activities
     Activity.where(program_id: self.programs).order('program_id, type DESC, bible_book_id')
   end

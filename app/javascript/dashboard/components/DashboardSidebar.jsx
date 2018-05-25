@@ -2,6 +2,7 @@ import axios from 'axios'
 import React from 'react'
 
 import DashboardSidebarSection from './DashboardSidebarSection'
+import updateViewPrefs from '../../util/updateViewPrefs'
 
 class DashboardSidebar extends React.PureComponent {
     constructor(props) {
@@ -25,6 +26,7 @@ class DashboardSidebar extends React.PureComponent {
         this.setState({
             selection: program
         })
+        updateViewPrefs({ dashboardSelection: program.selectionTag })
     }
 
     onClusterSelected = (cluster) => {
@@ -32,6 +34,7 @@ class DashboardSidebar extends React.PureComponent {
         this.setState({
             selection: cluster
         })
+        updateViewPrefs({ dashboardSelection: cluster.selectionTag })
     }
 
     sectionClustersAndPrograms = (section) => {
@@ -60,6 +63,7 @@ class DashboardSidebar extends React.PureComponent {
         this.setState({
             selection: section
         })
+        updateViewPrefs({ dashboardSelection: section.selectionTag })
     }
 
     render() {
@@ -73,7 +77,6 @@ class DashboardSidebar extends React.PureComponent {
                         <DashboardSidebarSection key={country.id} 
                                                  section={country} 
                                                  selection={this.state.selection}
-                                                 startExpanded={country.startExpanded}
                                                  onSectionSelected={this.onSectionSelected} 
                                                  onProgramSelected={this.onProgramSelected}
                                                  onClusterSelected={this.onClusterSelected}
@@ -81,8 +84,7 @@ class DashboardSidebar extends React.PureComponent {
                     )
                 })}
                 {userHasParticipants &&
-                    <DashboardSidebarSection section={menu.user} 
-                                             startExpanded={menu.user.startExpanded} 
+                    <DashboardSidebarSection section={menu.user}
                                              selection={this.state.selection}
                                              onSectionSelected={this.onSectionSelected} 
                                              onProgramSelected={this.onProgramSelected}

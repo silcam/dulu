@@ -9,7 +9,7 @@ class DashboardSidebarSection extends React.PureComponent {
     constructor(props) {
         super(props)
         this.state = {
-            isExpanded: props.startExpanded
+            isExpanded: props.section.startExpanded
         }
     }
 

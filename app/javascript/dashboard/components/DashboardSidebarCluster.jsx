@@ -8,7 +8,13 @@ class DashboardSidebarCluster extends React.PureComponent {
     constructor(props) {
         super(props)
         this.state = {
-            isExpanded: props.startExpanded
+            isExpanded: props.cluster.startExpanded
+        }
+    }
+
+    componentDidMount() {
+        if (this.props.cluster.startSelected) {
+            this.handleClick()
         }
     }
 
