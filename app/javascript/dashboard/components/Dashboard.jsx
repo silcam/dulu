@@ -184,7 +184,9 @@ class Dashboard extends React.PureComponent {
                             <Searcher strings={this.props.strings}
                                       queryPath='/api/search' />
                             {this.state.loading > 0 && <p className='alertBox alertYellow'>{this.props.strings.Loading}</p>}
-                            <MainContent programs={this.state.programs} strings={this.props.strings} />
+                            <MainContent programs={this.state.programs} 
+                                         strings={this.props.strings}
+                                         viewPrefs={this.props.viewPrefs} />
                         </div>
                         <div className='col-md-3'>
                             <NotificationsSidebar strings={this.props.strings}

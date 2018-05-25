@@ -1,4 +1,6 @@
 class Api::PeopleController < ApplicationController
+  skip_before_action :verify_authenticity_token, only: [:update_view_prefs]
+
   def index
     @people = Person.all
   end
@@ -35,6 +37,13 @@ class Api::PeopleController < ApplicationController
     @person = Person.find(params[:id])
     authorize! :destroy, @person
     @person.destroy!
+    head :no_content, status: :ok
+  end
+
+  def update_view_prefs
+    params.permit!
+    current_user.view_prefs.merge!(params[:view_prefs])
+    current_user.save
     head :no_content, status: :ok
   end
 

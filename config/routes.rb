@@ -122,7 +122,9 @@ Rails.application.routes.draw do
 
     resources :organization_people
 
-    resources :people
+    resources :people do
+      put 'update_view_prefs', on: :collection
+    end
 
     resources :person_roles do
       post 'finish', on: :collection

@@ -6,12 +6,14 @@ import LinguisticsTable from './LinguisticsTable'
 import ParticipantsTable from './ParticipantsTable'
 import MediaTable from './MediaTable'
 import TranslationActivitiesTable from './TranslationActivitiesTable'
+import updateViewPrefs from '../../util/updateViewPrefs'
 
 class MainContent extends React.PureComponent {
     constructor(props) {
         super(props)
+        const tab = props.viewPrefs.dashboardTab || 0
         this.state = {
-            tab: 0
+            tab: tab
         }
     }
 
@@ -19,6 +21,7 @@ class MainContent extends React.PureComponent {
         this.setState({
             tab: tab
         })
+        updateViewPrefs({dashboardTab: tab})
     }
 
     render() {

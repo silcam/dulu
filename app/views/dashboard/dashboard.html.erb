@@ -5,6 +5,10 @@
     %>
 </script>
 
+<script type="application/json" id="viewPrefs">
+  <%= current_user.view_prefs.to_json.html_safe %>
+</script>
+
 <div id="dashboard" data-authenticity-token=<%= form_authenticity_token %>>
 </div>
 
