@@ -8,7 +8,7 @@
   <% pub_list_path = "http://cameroon.sil.org/resources/search/language/#{@program.language.code}" %>
   <%= link_to t(:reap_link_text), pub_list_path, target: 'blank' %>
 
-  <% if @publications.empty? %>
+  <% if @publications.count == 0 %>
     <h3><%= t :No_publications %></h3>
   <% end %>
 
