@@ -5,6 +5,9 @@
     <%= link_to t(:Add_publication), new_program_publication_path, class: 'btn btn-primary' %>
   <% end %>
 
+  <% pub_list_path = "http://cameroon.sil.org/resources/search/language/#{@program.language.code}" %>
+  <%= link_to t(:reap_link_text), pub_list_path, target: 'blank' %>
+
   <% if @publications.empty? %>
     <h3><%= t :No_publications %></h3>
   <% end %>
