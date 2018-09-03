@@ -66,6 +66,7 @@ group :development do
   gem 'capistrano-rails'
   gem 'capistrano-rbenv'
   gem 'capistrano-passenger'
+  gem 'foreman'
   # gem 'capistrano-yarn'
 
   # Access an IRB console on exception pages or by using <%= console %> anywhere in the code.
