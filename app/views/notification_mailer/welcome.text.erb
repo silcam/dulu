@@ -11,4 +11,4 @@
 <%= t 'email.welcome.dulu_is', locale: locale %>
 
 
-<%= t('email.welcome.help', locale: locale, email_link: ENV['GMAIL_USERNAME']) %>
+<%= t('email.welcome.help', locale: locale, email_link: Rails.application.secrets.gmail_username) %>

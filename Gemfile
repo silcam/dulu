@@ -50,8 +50,6 @@ gem 'axlsx', git: 'https://github.com/randym/axlsx.git', ref: '776037c0fc799bb09
 gem 'axlsx_rails', '~> 0.5'
 # Pagination
 gem 'kaminari', '~> 1.1'
-# Set ENV variables
-gem 'figaro' , '~> 1.1'
 # Delayed Job for background jobs
 gem 'delayed_job_active_record', '~> 4.1'
 gem 'daemons', '~> 1.2'

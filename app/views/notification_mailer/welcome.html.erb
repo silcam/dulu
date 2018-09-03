@@ -23,5 +23,5 @@
 </p>
 
 <p>
-  <%= t('email.welcome.help', email_link: mail_to(ENV['GMAIL_USERNAME'])).html_safe %>
+  <%= t('email.welcome.help', email_link: mail_to(Rails.application.secrets.gmail_username)).html_safe %>
 </p>

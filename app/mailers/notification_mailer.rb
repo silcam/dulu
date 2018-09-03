@@ -1,5 +1,5 @@
 class NotificationMailer < ApplicationMailer
-  default from: ENV['GMAIL_USERNAME']
+  default from: Rails.application.secrets.gmail_username
 
   def welcome(person, creator)
     @person = person
