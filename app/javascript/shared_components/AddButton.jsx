@@ -1,4 +1,4 @@
-import React from 'react'
+import React from "react";
 
 /*
     Required props:
@@ -9,14 +9,13 @@ import React from 'react'
 */
 
 function AddButton(props) {
-    const text = props.text || props.strings.Add
-    const classes = "btn btn-primary " + (props.extraClasses || '')
-    return (
-        <button className={classes}
-                onClick={props.handleClick}>
-            {text}
-        </button>
-    )
+  const text = props.text || props.strings.Add;
+  const classes = "btn btn-primary " + (props.extraClasses || "");
+  return (
+    <button className={classes} onClick={props.handleClick}>
+      {text}
+    </button>
+  );
 }
 
-export default AddButton
+export default AddButton;

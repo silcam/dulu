@@ -1,4 +1,4 @@
-import React from 'react'
+import React from "react";
 
 /*
     Required props:
@@ -16,16 +16,18 @@ import React from 'react'
 */
 
 function TextArea(props) {
-    const rows = props.rows || 4
-    return (
-        <div>
-            <textarea className='form-control'
-                    rows={rows}
-                    name={props.name}
-                    onChange={props.handleInput}
-                    value={props.value} />
-        </div>
-    )
+  const rows = props.rows || 4;
+  return (
+    <div>
+      <textarea
+        className="form-control"
+        rows={rows}
+        name={props.name}
+        onChange={props.handleInput}
+        value={props.value}
+      />
+    </div>
+  );
 }
 
-export default TextArea
+export default TextArea;

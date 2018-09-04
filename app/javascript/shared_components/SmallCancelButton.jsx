@@ -1,6 +1,6 @@
-import React from 'react'
+import React from "react";
 
-import CancelButton from './CancelButton'
+import CancelButton from "./CancelButton";
 
 /*
     Required props:
@@ -9,9 +9,13 @@ import CancelButton from './CancelButton'
 */
 
 function SmallCancelButton(props) {
-    return(
-        <CancelButton handleClick={props.handleClick} extraClasses="btn-sm" strings={props.strings} />
-    )
+  return (
+    <CancelButton
+      handleClick={props.handleClick}
+      extraClasses="btn-sm"
+      strings={props.strings}
+    />
+  );
 }
 
-export default SmallCancelButton
+export default SmallCancelButton;

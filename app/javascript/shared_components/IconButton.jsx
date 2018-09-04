@@ -1,4 +1,4 @@
-import React from 'react'
+import React from "react";
 
 /*
     Required props:
@@ -10,19 +10,19 @@ import React from 'react'
 */
 
 function IconButton(props) {
-    const className = "iconButton " + (props.extraClasses || '')
-    const glyphClass = "glyphicon glyphicon-" + props.icon
-    return(
-        <button className={className} onClick={props.handleClick}>
-            <span className={glyphClass}></span>
-            { props.text &&
-                <span>
-                    &nbsp;
-                    <u>{props.text}</u>
-                </span>
-            }
-        </button>
-    )
+  const className = "iconButton " + (props.extraClasses || "");
+  const glyphClass = "glyphicon glyphicon-" + props.icon;
+  return (
+    <button className={className} onClick={props.handleClick}>
+      <span className={glyphClass} />
+      {props.text && (
+        <span>
+          &nbsp;
+          <u>{props.text}</u>
+        </span>
+      )}
+    </button>
+  );
 }
 
-export default IconButton
+export default IconButton;

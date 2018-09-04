@@ -1,6 +1,6 @@
-import React from 'react'
+import React from "react";
 
-import IconButton from './IconButton'
+import IconButton from "./IconButton";
 
 /*
     Required props:
@@ -10,9 +10,9 @@ import IconButton from './IconButton'
 */
 
 function CloseIconButton(props) {
-    return (
-        <IconButton icon="remove" extraClasses="iconButtonDanger" {...props} />
-    )
+  return (
+    <IconButton icon="remove" extraClasses="iconButtonDanger" {...props} />
+  );
 }
 
-export default CloseIconButton
+export default CloseIconButton;

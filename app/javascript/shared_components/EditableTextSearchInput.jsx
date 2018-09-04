@@ -1,5 +1,5 @@
-import editableText from './editableText'
-import SearchTextInput from './SearchTextInput'
+import editableText from "./editableText";
+import SearchTextInput from "./SearchTextInput";
 
 /*
     Required props:
@@ -11,6 +11,6 @@ import SearchTextInput from './SearchTextInput'
         queryPath - relative url
 */
 
-const EditableTextSearchInput = editableText(SearchTextInput)
+const EditableTextSearchInput = editableText(SearchTextInput);
 
-export default EditableTextSearchInput
+export default EditableTextSearchInput;

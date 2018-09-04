@@ -1,7 +1,7 @@
-import React from 'react'
+import React from "react";
 
-import editableText from './editableText'
-import SelectInput from './SelectInput'
+import editableText from "./editableText";
+import SelectInput from "./SelectInput";
 
 /*
     Required props:
@@ -14,22 +14,23 @@ import SelectInput from './SelectInput'
 */
 
 function GenericSelect(props) {
-    const handleChange = (e) => {
-        const value = e.target.value
-        const text = props.options[value]
-        props.save(value, text)
-    }
+  const handleChange = e => {
+    const value = e.target.value;
+    const text = props.options[value];
+    props.save(value, text);
+  };
 
-    return (
-        <SelectInput
-                handleChange={handleChange}
-                value={props.value}
-                options={props.options}
-                onBlur={props.cancel}
-                autoFocus />
-    )
+  return (
+    <SelectInput
+      handleChange={handleChange}
+      value={props.value}
+      options={props.options}
+      onBlur={props.cancel}
+      autoFocus
+    />
+  );
 }
 
-const EditableTextSelect = editableText(GenericSelect)
+const EditableTextSelect = editableText(GenericSelect);
 
-export default EditableTextSelect
+export default EditableTextSelect;

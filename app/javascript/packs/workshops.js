@@ -1,1 +1,1 @@
-import 'workshops'
+import "workshops";

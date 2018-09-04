@@ -1,4 +1,4 @@
-import React from 'react'
+import React from "react";
 
 /*
     Required props:
@@ -14,25 +14,27 @@ import React from 'react'
 */
 
 function SelectInput(props) {
-    const className = "form-control " + props.extraClasses
-    const name = props.name || 'basic_select'
-    return (
-        <select className={className} 
-                name={name}
-                value={props.value}
-                autoFocus={props.autoFocus || false}
-                onChange={props.handleChange}
-                onBlur={props.onBlur}>
-            {props.options.map((option) => {
-                const value = option.value || option.display
-                return (
-                    <option key={value} value={value}>
-                        {option.display}
-                    </option>
-                )
-            })}
-        </select>
-    )
+  const className = "form-control " + props.extraClasses;
+  const name = props.name || "basic_select";
+  return (
+    <select
+      className={className}
+      name={name}
+      value={props.value}
+      autoFocus={props.autoFocus || false}
+      onChange={props.handleChange}
+      onBlur={props.onBlur}
+    >
+      {props.options.map(option => {
+        const value = option.value || option.display;
+        return (
+          <option key={value} value={value}>
+            {option.display}
+          </option>
+        );
+      })}
+    </select>
+  );
 }
 
-export default SelectInput
+export default SelectInput;

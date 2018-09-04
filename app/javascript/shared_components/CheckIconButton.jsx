@@ -1,6 +1,6 @@
-import React from 'react'
+import React from "react";
 
-import IconButton from './IconButton'
+import IconButton from "./IconButton";
 
 /* 
     Required props:
@@ -10,9 +10,7 @@ import IconButton from './IconButton'
 */
 
 function CheckIconButton(props) {
-    return(
-        <IconButton icon="ok" extraClasses="iconButtonSuccess" {...props} />
-    )
+  return <IconButton icon="ok" extraClasses="iconButtonSuccess" {...props} />;
 }
 
-export default CheckIconButton
+export default CheckIconButton;

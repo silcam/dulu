@@ -1,6 +1,6 @@
-import React from 'react'
+import React from "react";
 
-import IconButton from './IconButton'
+import IconButton from "./IconButton";
 
 /*
     Required props:
@@ -8,9 +8,9 @@ import IconButton from './IconButton'
 */
 
 function EditIconButton(props) {
-    return(
-        <IconButton icon="pencil" extraClasses="iconButtonWarning" {...props} />
-    )
+  return (
+    <IconButton icon="pencil" extraClasses="iconButtonWarning" {...props} />
+  );
 }
 
-export default EditIconButton
+export default EditIconButton;

@@ -1,6 +1,6 @@
-import React from 'react'
+import React from "react";
 
-import IconButton from './IconButton'
+import IconButton from "./IconButton";
 
 /*
     Required props:
@@ -8,9 +8,13 @@ import IconButton from './IconButton'
 */
 
 function DeleteIconButton(props) {
-    return(
-        <IconButton icon="trash" extraClasses="iconButtonDanger deleteIconButton" {...props} />
-    )
+  return (
+    <IconButton
+      icon="trash"
+      extraClasses="iconButtonDanger deleteIconButton"
+      {...props}
+    />
+  );
 }
 
-export default DeleteIconButton
+export default DeleteIconButton;

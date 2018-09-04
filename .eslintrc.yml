@@ -2,6 +2,7 @@ parser: babel-eslint
 env:
   browser: true
   es6: true
+  amd: true
 extends: 
   - 'eslint:recommended'
   - 'plugin:react/recommended'
@@ -12,6 +13,8 @@ parserOptions:
   sourceType: module
 plugins:
   - react
+globals:
+  module: true
 rules:
   react/jsx-uses-vars:
     - error
@@ -32,6 +35,6 @@ rules:
   # quotes:
   #   - error
   #   - single
-  semi:
-    - warn
-    - never
+  # semi:
+  #   - warn
+  #   - never

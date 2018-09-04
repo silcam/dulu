@@ -1,4 +1,4 @@
-import React from 'react'
+import React from "react";
 
 /*
     Required props:
@@ -9,34 +9,32 @@ import React from 'react'
 */
 
 function dateText(date, eventPath) {
-    return(
-        eventPath ?
-            <a href={eventPath}>{date}</a> :
-            date
-    )
+  return eventPath ? <a href={eventPath}>{date}</a> : date;
 }
 
 function addEventLink(eventPath, canUpdate, newEventText, newEventPath) {
-    return(
-        canUpdate && !eventPath ?
-            <a href={newEventPath}>{newEventText}</a> :
-            ''
-    )
+  return canUpdate && !eventPath ? (
+    <a href={newEventPath}>{newEventText}</a>
+  ) : (
+    ""
+  );
 }
 
 function DateCell(props) {
-    const theDateText = dateText(props.date, props.eventPath)
-    const theAddEventLink = addEventLink(props.eventPath, 
-                                         props.canUpdate, 
-                                         props.strings.Add_event,
-                                         props.newEventPath)
-    return(
-        <div>
-            {theDateText}
-            {(theDateText && theAddEventLink) && <br />}
-            {theAddEventLink}
-        </div>
-    )
+  const theDateText = dateText(props.date, props.eventPath);
+  const theAddEventLink = addEventLink(
+    props.eventPath,
+    props.canUpdate,
+    props.strings.Add_event,
+    props.newEventPath
+  );
+  return (
+    <div>
+      {theDateText}
+      {theDateText && theAddEventLink && <br />}
+      {theAddEventLink}
+    </div>
+  );
 }
 
-export default DateCell
+export default DateCell;

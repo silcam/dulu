@@ -1,6 +1,6 @@
-import React from 'react'
+import React from "react";
 
-import AddButton from './AddButton'
+import AddButton from "./AddButton";
 
 /*
     Required props:
@@ -9,11 +9,13 @@ import AddButton from './AddButton'
 */
 
 function SmallAddButton(props) {
-    return (
-        <AddButton handleClick={props.handleClick}
-                   extraClasses="btn-sm"
-                   strings={props.strings} />
-    )
+  return (
+    <AddButton
+      handleClick={props.handleClick}
+      extraClasses="btn-sm"
+      strings={props.strings}
+    />
+  );
 }
 
-export default SmallAddButton
+export default SmallAddButton;

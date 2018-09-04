@@ -1,6 +1,6 @@
-import React from 'react'
+import React from "react";
 
-import searchInterface from './searchInterface'
+import searchInterface from "./searchInterface";
 
 /*
     Required props:
@@ -13,123 +13,129 @@ import searchInterface from './searchInterface'
 */
 
 class BasicSearchTextInput extends React.PureComponent {
-    constructor(props) {
-        super(props)
-        this.state = {
-            text: props.text || '',
-            selection: -1,
-            showResults: true
-        }
-    }
-    
-    handleChange = (e) => {
-        this.setState({ 
-            text: e.target.value,
-            showResults: true
-        })
-        this.props.updateQuery(e.target.value)
-    }
+  constructor(props) {
+    super(props);
+    this.state = {
+      text: props.text || "",
+      selection: -1,
+      showResults: true
+    };
+  }
 
-    handleKeyDown = (e) => {
-        switch(e.key) {
-            case 'ArrowUp':
-                this.moveSelectionUp()
-                return
-            case 'ArrowDown':
-                this.moveSelectionDown()
-                return
-            case 'Enter':
-            case 'Tab':
-                this.handleEnter()
-                return
-        }
-    }
+  handleChange = e => {
+    this.setState({
+      text: e.target.value,
+      showResults: true
+    });
+    this.props.updateQuery(e.target.value);
+  };
 
-    moveSelectionUp = () => {
-        this.setState((prevState) => {
-            let selection  = prevState.selection
-            if (selection > -1) --selection
-            return {
-                selection: selection
-            }
-        })
+  handleKeyDown = e => {
+    switch (e.key) {
+      case "ArrowUp":
+        this.moveSelectionUp();
+        return;
+      case "ArrowDown":
+        this.moveSelectionDown();
+        return;
+      case "Enter":
+      case "Tab":
+        this.handleEnter();
+        return;
     }
+  };
 
-    moveSelectionDown = () => {
-        this.setState((prevState, props) => {
-            let selection = prevState.selection
-            if (selection < props.results.length - 1) ++selection
-            return {
-                selection: selection
-            }
-        })
-    }
+  moveSelectionUp = () => {
+    this.setState(prevState => {
+      let selection = prevState.selection;
+      if (selection > -1) --selection;
+      return {
+        selection: selection
+      };
+    });
+  };
 
-    setSelection = (index) => {
-        this.setState({ selection: index })
-    }
+  moveSelectionDown = () => {
+    this.setState((prevState, props) => {
+      let selection = prevState.selection;
+      if (selection < props.results.length - 1) ++selection;
+      return {
+        selection: selection
+      };
+    });
+  };
 
-    clearSelection = () => {
-        this.setState({ selection: -1 })
-    }
+  setSelection = index => {
+    this.setState({ selection: index });
+  };
 
-    handleBlur = () => {
-        this.props.cancel()
-    }
+  clearSelection = () => {
+    this.setState({ selection: -1 });
+  };
 
-    handleEnter = () => {
-        if (this.props.results[this.state.selection]) {
-            this.save(this.props.results[this.state.selection])
-        }
-        else if (this.props.results[0]) {
-            this.save(this.props.results[0])
-        }
-        else {
-            this.props.cancel()
-        }
-    }
+  handleBlur = () => {
+    this.props.cancel();
+  };
 
-    save = (item) => {
-        this.setState({
-            text: item.name,
-            showResults: false
-        })
-        this.props.save(item.id, item.name)
+  handleEnter = () => {
+    if (this.props.results[this.state.selection]) {
+      this.save(this.props.results[this.state.selection]);
+    } else if (this.props.results[0]) {
+      this.save(this.props.results[0]);
+    } else {
+      this.props.cancel();
     }
+  };
 
-    render() {
-        const placeholder = this.props.placeholder || ''
-        return (
-            <div className='searchTextInput'>
-                <input type='text'
-                    className='form-control'
-                    name='query'
-                    value={this.state.text}
-                    onChange={this.handleChange}
-                    onKeyDown={this.handleKeyDown}
-                    onBlur={this.handleBlur}
-                    placeholder={placeholder}
-                    autoFocus={this.props.autoFocus} />
-                {this.state.showResults &&
-                    <ul onMouseLeave={this.clearSelection}>
-                        {this.props.results.map((country, index) => {
-                            const className = (index == this.state.selection)? 'selected' : ''
-                            return (
-                                <li key={country.id} 
-                                    className={className}
-                                    onMouseDown={()=>{this.save(country)}}
-                                    onMouseEnter={()=>{this.setSelection(index)}}>
-                                    {country.name}
-                                </li>
-                            )
-                        })}
-                    </ul>
-                }
-            </div>
-        )
-    }
+  save = item => {
+    this.setState({
+      text: item.name,
+      showResults: false
+    });
+    this.props.save(item.id, item.name);
+  };
+
+  render() {
+    const placeholder = this.props.placeholder || "";
+    return (
+      <div className="searchTextInput">
+        <input
+          type="text"
+          className="form-control"
+          name="query"
+          value={this.state.text}
+          onChange={this.handleChange}
+          onKeyDown={this.handleKeyDown}
+          onBlur={this.handleBlur}
+          placeholder={placeholder}
+          autoFocus={this.props.autoFocus}
+        />
+        {this.state.showResults && (
+          <ul onMouseLeave={this.clearSelection}>
+            {this.props.results.map((country, index) => {
+              const className = index == this.state.selection ? "selected" : "";
+              return (
+                <li
+                  key={country.id}
+                  className={className}
+                  onMouseDown={() => {
+                    this.save(country);
+                  }}
+                  onMouseEnter={() => {
+                    this.setSelection(index);
+                  }}
+                >
+                  {country.name}
+                </li>
+              );
+            })}
+          </ul>
+        )}
+      </div>
+    );
+  }
 }
 
-const SearchTextInput = searchInterface(BasicSearchTextInput, 2)
+const SearchTextInput = searchInterface(BasicSearchTextInput, 2);
 
-export default SearchTextInput
+export default SearchTextInput;

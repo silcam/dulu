@@ -1,4 +1,4 @@
-import React from 'react'
+import React from "react";
 
 /*
     Required Props: 
@@ -11,16 +11,18 @@ import React from 'react'
 */
 
 function SaveButton(props) {
-    const text = props.saveInProgress ? props.strings.Saving : props.strings.Save
-    const classes = "btn btn-primary " + (props.extraClasses || '')
-    const disabled = props.disabled ? true : false
-    return(
-        <button className={classes} 
-                onClick={props.handleClick} 
-                disabled={props.saveInProgress || disabled}>
-            {text}
-        </button>
-    )
+  const text = props.saveInProgress ? props.strings.Saving : props.strings.Save;
+  const classes = "btn btn-primary " + (props.extraClasses || "");
+  const disabled = props.disabled ? true : false;
+  return (
+    <button
+      className={classes}
+      onClick={props.handleClick}
+      disabled={props.saveInProgress || disabled}
+    >
+      {text}
+    </button>
+  );
 }
 
-export default SaveButton
+export default SaveButton;

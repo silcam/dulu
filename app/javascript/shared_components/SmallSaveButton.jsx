@@ -1,6 +1,6 @@
-import React from 'react'
+import React from "react";
 
-import SaveButton from './SaveButton'
+import SaveButton from "./SaveButton";
 
 /*
     Required props:
@@ -12,12 +12,15 @@ import SaveButton from './SaveButton'
 */
 
 function SmallSaveButton(props) {
-    return(
-        <SaveButton handleClick={props.handleClick} 
-                    saveInProgress={props.saveInProgress}
-                    disabled={props.disabled} 
-                    extraClasses="btn-sm" strings={props.strings} />
-    )
+  return (
+    <SaveButton
+      handleClick={props.handleClick}
+      saveInProgress={props.saveInProgress}
+      disabled={props.disabled}
+      extraClasses="btn-sm"
+      strings={props.strings}
+    />
+  );
 }
 
-export default SmallSaveButton
+export default SmallSaveButton;

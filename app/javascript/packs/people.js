@@ -1,1 +1,1 @@
-import 'people'
+import "people";

@@ -1,7 +1,7 @@
-import React from 'react'
+import React from "react";
 
-import SmallCancelButton from './SmallCancelButton'
-import SmallSaveButton from './SmallSaveButton'
+import SmallCancelButton from "./SmallCancelButton";
+import SmallSaveButton from "./SmallSaveButton";
 
 /*
     Required props:
@@ -15,16 +15,22 @@ import SmallSaveButton from './SmallSaveButton'
 */
 
 function SmallSaveAndCancel(props) {
-    const style = props.floatRight ? {float: 'right'} : {}
-    return(
-        <span style={style}>
-            <SmallSaveButton handleClick={props.handleSave} 
-                             saveInProgress={props.saveInProgress}
-                             strings={props.strings}
-                             disabled={props.saveDisabled} />&nbsp;
-            <SmallCancelButton handleClick={props.handleCancel} strings={props.strings} />
-        </span>
-    )
+  const style = props.floatRight ? { float: "right" } : {};
+  return (
+    <span style={style}>
+      <SmallSaveButton
+        handleClick={props.handleSave}
+        saveInProgress={props.saveInProgress}
+        strings={props.strings}
+        disabled={props.saveDisabled}
+      />
+      &nbsp;
+      <SmallCancelButton
+        handleClick={props.handleCancel}
+        strings={props.strings}
+      />
+    </span>
+  );
 }
 
-export default SmallSaveAndCancel
+export default SmallSaveAndCancel;
