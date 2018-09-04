@@ -1,6 +1,6 @@
 unread_notifications = false
 json.notifications @notifications do |notification|
-  json.(notification, :id, :read)
+  json.(notification, :id, :read, :created_at)
 
   json.message do
     json.key notification.kind

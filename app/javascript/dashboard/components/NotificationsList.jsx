@@ -43,7 +43,9 @@ class NotificationsList extends React.PureComponent {
             {this.props.notifications.map(notification => {
               return (
                 <tr key={notification.id}>
-                  <td
+                  <td>
+                    <span className="notificationDate">{notification.created_at.slice(0, 10)}</span><br />
+                    <span
                     className={notification.read ? "" : "unreadNotification"}
                     dangerouslySetInnerHTML={{
                       __html: t_sub(
@@ -53,6 +55,7 @@ class NotificationsList extends React.PureComponent {
                       )
                     }}
                   />
+                  </td>
                 </tr>
               );
             })}
