@@ -13,12 +13,5 @@
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
   </head>
-
-  <% page_name = "#{controller_name}##{action_name}" %>
-  <body data-page-name="<%= page_name %>">
-    <%= render 'layouts/navbar' %>
-    <div class="container-fluid" class="Frame">
-      <%= yield %>
-    </div>
-  </body>
+  <body><%= yield %></body>
 </html>
