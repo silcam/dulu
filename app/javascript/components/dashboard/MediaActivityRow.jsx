@@ -28,7 +28,7 @@ class MediaActivityRow extends React.PureComponent {
         <td>{activity.stage_name}</td>
         <td className="reallySmall rightCol">
           <i>
-            {this.props.strings.Updated}: {activity.last_update.slice(0, 10)}
+            {this.props.t('Updated')}: {activity.last_update.slice(0, 10)}
           </i>
         </td>
       </tr>

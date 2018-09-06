@@ -30,32 +30,32 @@ class MainContent extends React.PureComponent {
     return (
       <Tabs selectedIndex={this.state.tab} onSelect={this.selectTab}>
         <TabList>
-          <Tab>{props.strings.Bible_translation}</Tab>
-          <Tab>{props.strings.Linguistics}</Tab>
-          <Tab>{props.strings.Media}</Tab>
-          <Tab>{props.strings.Participants}</Tab>
-          <Tab>{props.strings.Events}</Tab>
+          <Tab>{props.t('Bible_translation')}</Tab>
+          <Tab>{props.t('Linguistics')}</Tab>
+          <Tab>{props.t('Media')}</Tab>
+          <Tab>{props.t('Participants')}</Tab>
+          <Tab>{props.t('Events')}</Tab>
         </TabList>
         <TabPanel>
           <TranslationActivitiesTable
             programs={props.programs}
-            strings={props.strings}
+            t={props.t}
           />
         </TabPanel>
         <TabPanel>
-          <LinguisticsTable programs={props.programs} strings={props.strings} />
+          <LinguisticsTable programs={props.programs} t={props.t} />
         </TabPanel>
         <TabPanel>
-          <MediaTable programs={props.programs} strings={props.strings} />
+          <MediaTable programs={props.programs} t={props.t} />
         </TabPanel>
         <TabPanel>
           <ParticipantsTable
             programs={props.programs}
-            strings={props.strings}
+            t={props.t}
           />
         </TabPanel>
         <TabPanel>
-          <EventsTable programs={props.programs} strings={props.strings} />
+          <EventsTable programs={props.programs} t={props.t} />
         </TabPanel>
       </Tabs>
     );

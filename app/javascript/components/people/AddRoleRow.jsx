@@ -1,9 +1,9 @@
 import React from "react";
 
-import AddIconButton from "../../shared_components/AddIconButton";
-import SelectInput from "../../shared_components/SelectInput";
-import SmallAddButton from "../../shared_components/SmallAddButton";
-import SmallCancelButton from "../../shared_components/SmallCancelButton";
+import AddIconButton from "../shared/AddIconButton";
+import SelectInput from "../shared/SelectInput";
+import SmallAddButton from "../shared/SmallAddButton";
+import SmallCancelButton from "../shared/SmallCancelButton";
 
 class AddRoleRow extends React.PureComponent {
   constructor(props) {
@@ -43,7 +43,7 @@ class AddRoleRow extends React.PureComponent {
   };
 
   render() {
-    const strings = this.props.strings;
+    const t = this.props.t;
     if (this.state.adding) {
       return (
         <tr>
@@ -56,12 +56,9 @@ class AddRoleRow extends React.PureComponent {
             />
           </td>
           <td>
-            <SmallAddButton handleClick={this.addRole} strings={strings} />
+            <SmallAddButton handleClick={this.addRole} t={t} />
             &nbsp;
-            <SmallCancelButton
-              handleClick={this.cancelAddingMode}
-              strings={strings}
-            />
+            <SmallCancelButton handleClick={this.cancelAddingMode} t={t} />
           </td>
         </tr>
       );

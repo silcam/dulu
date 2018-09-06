@@ -21,14 +21,11 @@ function SmallSaveAndCancel(props) {
       <SmallSaveButton
         handleClick={props.handleSave}
         saveInProgress={props.saveInProgress}
-        strings={props.strings}
+        t={props.t}
         disabled={props.saveDisabled}
       />
       &nbsp;
-      <SmallCancelButton
-        handleClick={props.handleCancel}
-        strings={props.strings}
-      />
+      <SmallCancelButton handleClick={props.handleCancel} t={props.t} />
     </span>
   );
 }

@@ -1,12 +1,12 @@
 import React from "react";
 
-import editableText from "../../shared_components/editableText";
+import editableText from "../shared/editableText";
 
 function UiLanguageSelect(props) {
-  const strings = props.strings;
+  const t = props.t;
 
   const handleChange = e => {
-    const text = strings.languages[e.target.value];
+    const text = t("languages")[e.target.value];
     props.save(e.target.value, text);
   };
 
@@ -20,9 +20,9 @@ function UiLanguageSelect(props) {
       autoFocus
       onBlur={props.cancel}
     >
-      <option value="en">{strings.languages.en}</option>
+      <option value="en">{t("languages.en")}</option>
 
-      <option value="fr">{strings.languages.fr}</option>
+      <option value="fr">{t("languages.fr")}</option>
     </select>
   );
 }

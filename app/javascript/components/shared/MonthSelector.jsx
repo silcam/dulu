@@ -20,8 +20,8 @@ function MonthSelector(props) {
       value={String(props.value)}
       onChange={props.handleInput}
     >
-      <option value="">{props.strings.Month}</option>
-      {props.strings.month_names_short.map((month, index) => {
+      <option value="">{props.t("Month")}</option>
+      {props.t("month_names_short").map((month, index) => {
         return (
           <option key={index + 1} value={index + 1}>
             {month}

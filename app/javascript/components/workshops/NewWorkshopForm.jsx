@@ -1,10 +1,10 @@
 import React from "react";
 import axios from "axios";
 
-import AddIconButton from "../../shared_components/AddIconButton";
-import TextInput from "../../shared_components/TextInput";
-import SaveButton from "../../shared_components/SaveButton";
-import CancelButton from "../../shared_components/CancelButton";
+import AddIconButton from "../shared/AddIconButton";
+import TextInput from "../shared/TextInput";
+import SaveButton from "../shared/SaveButton";
+import CancelButton from "../shared/CancelButton";
 
 /*
     Required props
@@ -65,7 +65,7 @@ class NewWorkshopForm extends React.PureComponent {
         })
         .catch(error => console.error(error));
     } else {
-      this.setState({ nameError: this.props.strings.Name_not_blank });
+      this.setState({ nameError: this.props.t("Name_not_blank") });
     }
   };
 
@@ -82,27 +82,24 @@ class NewWorkshopForm extends React.PureComponent {
             handleInput={this.handleInput}
             name="name"
             value={this.state.name}
-            placeholder={this.props.strings.Workshop_name}
+            placeholder={this.props.t("Workshop_name")}
             errorMessage={this.state.nameError}
             handleEnter={this.createWorkshop}
           />
           <SaveButton
             handleClick={this.createWorkshop}
             saveInProgress={this.state.saving}
-            strings={this.props.strings}
+            t={this.props.t}
           />
           &nbsp;
-          <CancelButton
-            handleClick={this.cancelForm}
-            strings={this.props.strings}
-          />
+          <CancelButton handleClick={this.cancelForm} t={this.props.t} />
         </div>
       );
     } else {
       return (
         <AddIconButton
           handleClick={this.showForm}
-          text={this.props.strings.Add_workshop}
+          text={this.props.t("Add_workshop")}
         />
       );
     }

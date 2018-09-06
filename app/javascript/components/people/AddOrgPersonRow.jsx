@@ -1,8 +1,8 @@
 import React from "react";
 
-import AddIconButton from "../../shared_components/AddIconButton";
-import { SearchTextGroup } from "../../shared_components/formGroup";
-import SmallSaveAndCancel from "../../shared_components/SmallSaveAndCancel";
+import AddIconButton from "../shared/AddIconButton";
+import { SearchTextGroup } from "../shared/formGroup";
+import SmallSaveAndCancel from "../shared/SmallSaveAndCancel";
 import update from "immutability-helper";
 
 class AddOrgPersonRow extends React.PureComponent {
@@ -55,13 +55,13 @@ class AddOrgPersonRow extends React.PureComponent {
               queryPath={"/api/organizations/search"}
               save={this.setOrg}
               cancel={() => {}}
-              placeholder={this.props.strings.Organization}
+              placeholder={this.props.t("Organization")}
               autoFocus
             />
             <SmallSaveAndCancel
               handleSave={this.save}
               handleCancel={this.cancelEdit}
-              strings={this.props.strings}
+              t={this.props.t}
             />
           </td>
         </tr>

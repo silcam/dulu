@@ -159,7 +159,7 @@ class PeopleBoard extends React.PureComponent {
       <div className="">
         <div className={indexColClass} id="indexColumn">
           <IndexColumn
-            strings={this.props.strings}
+            t={this.props.t}
             defaultTab={this.props.tab}
             selection={this.state.selection}
             people={this.state.people}
@@ -174,7 +174,7 @@ class PeopleBoard extends React.PureComponent {
           <div id="peopleOrgContent">
             <ContentColumn
               selection={this.state.selection}
-              strings={this.props.strings}
+              t={this.props.t}
               setSelection={this.setSelection}
               setOrg={this.setOrg}
               addPerson={this.addPerson}

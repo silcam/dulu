@@ -2,18 +2,18 @@ import React from "react";
 
 function DuplicateWarning(props) {
   const duplicatePerson = props.duplicatePerson;
-  const strings = props.strings;
+  const t = props.t;
   return (
     <div className="bs-callout callout-red" style={{ marginBottom: "12px" }}>
-      <h4>{`${duplicatePerson.full_name} ${strings.already_exists}`}</h4>
+      <h4>{`${duplicatePerson.full_name} ${t("already_exists")}`}</h4>
       <p>
-        {strings.duplicate_warning_start}
+        {t("duplicate_warning_start")}
         &nbsp;
         <a href={`/people/${duplicatePerson.id}`} target="_blank">
           {duplicatePerson.full_name}
         </a>
         &nbsp;
-        {strings.duplicate_warning_end}
+        {t("duplicate_warning_end")}
       </p>
       <label>
         <input
@@ -23,7 +23,7 @@ function DuplicateWarning(props) {
           onChange={props.handleCheck}
         />
         &nbsp;
-        {strings.confirm_different_person}
+        {t("confirm_different_person")}
       </label>
     </div>
   );

@@ -21,7 +21,7 @@ function SortPicker(props) {
       <small>
         <ul className="list-inline">
           <li>
-            <label>{props.strings.Sort}:</label>
+            <label>{props.t("Sort")}:</label>
           </li>
           {options.map(option => {
             let btnClass = "btn-link";
@@ -39,7 +39,7 @@ function SortPicker(props) {
                     e.target.blur();
                   }}
                 >
-                  {props.strings[option]}
+                  {props.t(option)}
                   {sortArrow}
                 </button>
               </li>

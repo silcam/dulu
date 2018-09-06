@@ -14,7 +14,7 @@ import editableText from "./editableText";
 
 function YesNoSelect(props) {
   const handleChange = e => {
-    const text = e.target.value ? props.strings.Yes : props.strings.No;
+    const text = e.target.value ? props.t("Yes") : props.t("No");
     props.save(e.target.value, text);
   };
 
@@ -30,9 +30,9 @@ function YesNoSelect(props) {
       autoFocus
       onBlur={props.cancel}
     >
-      <option value={true}>{props.strings.Yes}</option>
+      <option value={true}>{props.t("Yes")}</option>
 
-      <option value={false}>{props.strings.No}</option>
+      <option value={false}>{props.t("No")}</option>
     </select>
   );
 }

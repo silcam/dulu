@@ -1,13 +1,10 @@
 import React from "react";
 import update from "immutability-helper";
 
-import DeleteIconButton from "../../shared_components/DeleteIconButton";
-import EditIconButton from "../../shared_components/EditIconButton";
-import {
-  FuzzyDateGroup,
-  TextInputGroup
-} from "../../shared_components/formGroup";
-import SmallSaveAndCancel from "../../shared_components/SmallSaveAndCancel";
+import DeleteIconButton from "../shared/DeleteIconButton";
+import EditIconButton from "../shared/EditIconButton";
+import { FuzzyDateGroup, TextInputGroup } from "../shared/formGroup";
+import SmallSaveAndCancel from "../shared/SmallSaveAndCancel";
 
 import dateString from "../../util/dateString";
 import tSub from "../../util/tSub";
@@ -68,7 +65,7 @@ class OrgPeopleTableRow extends React.PureComponent {
       person: `${this.props.person.first_name} ${this.props.person.last_name}`
     };
     const message = tSub(
-      tSub(this.props.strings.confirm_delete_org_person, subs),
+      tSub(this.props.t("confirm_delete_org_person"), subs),
       subs
     );
     if (window.confirm(message)) {
@@ -111,8 +108,8 @@ class OrgPeopleTableRow extends React.PureComponent {
 
   render() {
     const orgPerson = this.props.orgPerson;
-    const strings = this.props.strings;
-    const monthNames = strings.date_strings.month_names_short;
+    const t = this.props.t;
+    const monthNames = t("date_strings.month_names_short");
     const editEnabled = this.props.editEnabled;
 
     if (this.state.editing) {
@@ -122,30 +119,30 @@ class OrgPeopleTableRow extends React.PureComponent {
             <label>{orgPerson.organization.name}</label>
             <br />
             <TextInputGroup
-              label={strings.Position}
+              label={t("Position")}
               handleInput={this.handleInput}
               value={this.state.position}
               name="position"
             />
             <FuzzyDateGroup
-              label={strings.Start_date}
+              label={t("Start_date")}
               date={orgPerson.start_date}
               handleDateInput={this.setStartDate}
               dateIsInvalid={this.setInvalid}
-              strings={strings.date_strings}
+              strings={t("date_strings")}
             />
             <FuzzyDateGroup
-              label={strings.End_date}
+              label={t("End_date")}
               date={orgPerson.end_date}
               handleDateInput={this.setEndDate}
               dateIsInvalid={this.setInvalid}
-              strings={strings.date_strings}
+              strings={t("date_strings")}
               allowBlank
             />
             <SmallSaveAndCancel
               handleSave={this.save}
               handleCancel={this.cancelEdit}
-              strings={strings}
+              t={t}
               saveDisabled={this.state.invalid}
             />
           </td>

@@ -1,7 +1,7 @@
 import React from "react";
 
-import searchInterface from "../../shared_components/searchInterface";
-import TextInput from "../../shared_components/TextInput";
+import searchInterface from "../shared/searchInterface";
+import TextInput from "../shared/TextInput";
 
 import ResultsRows from "./ResultsRows";
 
@@ -33,7 +33,7 @@ class BasicSearcher extends React.PureComponent {
           handleInput={this.handleInput}
           name="query"
           value={this.state.query}
-          placeholder={this.props.strings.Search_prompt}
+          placeholder={this.props.t("Search_prompt")}
           handleEnter={this.goToFirstResult}
         />
 

@@ -56,29 +56,25 @@ class MediaTable extends React.PureComponent {
   };
 
   render() {
-    const strings = this.props.strings;
+    const t = this.props.t;
     const sortOptions = ["Language", "Media", "Stage", "Last_update"];
 
     if (this.state.activities.length == 0)
-      return <p>{strings.No_media_activities}</p>;
+      return <p>{t("No_media_activities")}</p>;
 
     return (
       <div>
         <SortPicker
           sort={this.state.sort}
           options={sortOptions}
-          strings={strings}
+          t={t}
           changeSort={this.changeSort}
         />
         <table className="table">
           <tbody>
             {this.state.activities.map(activity => {
               return (
-                <MediaActivityRow
-                  key={activity.id}
-                  activity={activity}
-                  strings={strings}
-                />
+                <MediaActivityRow key={activity.id} activity={activity} t={t} />
               );
             })}
           </tbody>

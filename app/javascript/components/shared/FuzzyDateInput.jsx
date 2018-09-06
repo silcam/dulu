@@ -99,7 +99,7 @@ class FuzzyDateInput extends React.PureComponent {
       return null;
     }
     if (!parseInt(year)) {
-      return this.props.strings.Enter_valid_year;
+      return this.props.t("Enter_valid_year");
     }
     return null;
   };
@@ -119,22 +119,22 @@ class FuzzyDateInput extends React.PureComponent {
           handleInput={this.handleInput}
           value={this.state.day}
           maxValue={daysInMonth(this.state.month)}
-          strings={this.props.strings}
+          t={this.props.t}
         />
         <MonthSelector
           handleInput={this.handleInput}
           value={this.state.month}
-          strings={this.props.strings}
+          t={this.props.t}
         />
         <YearInput
           handleInput={this.handleInput}
           value={this.state.year}
-          strings={this.props.strings}
+          t={this.props.t}
         />
         <br />
         <span className={showErrors && "errorMessage"}>
           {showErrors ? this.state.errorMessage : ""
-          // this.props.strings.Month_day_optional
+          // this.props.t('Month_day_optional')
           }
         </span>
       </div>

@@ -1,20 +1,22 @@
 import React from "react";
 
-import SelectInput from "../../shared_components/SelectInput";
+import SelectInput from "../shared/SelectInput";
 
 class EventsFilterer extends React.PureComponent {
   constructor(props) {
     super(props);
     let domainSelectOptions = [
       {
-        display: props.strings.All,
+        display: props.t("All"),
         value: "All"
       }
     ];
     domainSelectOptions = domainSelectOptions.concat(
-      Object.values(props.strings.domains).map(domain => {
-        return { display: domain };
-      })
+      Object.values(
+        props.t("domains").map(domain => {
+          return { display: domain };
+        })
+      )
     );
     this.state = {
       domainSelectOptions: domainSelectOptions
@@ -29,7 +31,7 @@ class EventsFilterer extends React.PureComponent {
     return (
       <div style={{ marginBottom: "4px" }}>
         <label>
-          {this.props.strings.Filter}
+          {this.props.t("Filter")}
           :&nbsp;
         </label>
         <SelectInput

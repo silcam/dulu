@@ -1,6 +1,6 @@
 import React from "react";
 
-import PlusMinusButton from "../../shared_components/PlusMinusButton";
+import PlusMinusButton from "../shared/PlusMinusButton";
 
 import DashboardSidebarCluster from "./DashboardSidebarCluster";
 import DashboardSidebarProgram from "./DashboardSidebarProgram";

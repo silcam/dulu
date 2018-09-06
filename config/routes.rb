@@ -42,7 +42,7 @@ Rails.application.routes.draw do
   # Sessions
   get     'not_allowed',              to: 'people#not_allowed'
   get     '/login',                   to: 'sessions#new'
-  delete  '/logout',                  to: 'sessions#destroy'
+  post    '/logout',                  to: 'sessions#destroy'
   get     '/auth/:provider/callback', to: 'sessions#create'
   get     '/auth/failure',            to: redirect('/')
   get     '/login_as/:id',            to: 'sessions#login_as' 

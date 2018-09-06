@@ -25,7 +25,7 @@ function DateCell(props) {
   const theAddEventLink = addEventLink(
     props.eventPath,
     props.canUpdate,
-    props.strings.Add_event,
+    props.t("Add_event"),
     props.newEventPath
   );
   return (

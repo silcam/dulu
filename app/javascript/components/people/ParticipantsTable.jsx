@@ -2,14 +2,14 @@ import React from "react";
 
 class ParticipantsTable extends React.PureComponent {
   render() {
-    const strings = this.props.strings;
+    const t = this.props.t;
     const person = this.props.person;
 
     if (person.participants.length == 0) return null;
 
     return (
       <div>
-        <h3>{strings.Language_programs}</h3>
+        <h3>{t("Language_programs")}</h3>
         <table className="table">
           <tbody>
             {person.participants.map(participant => {

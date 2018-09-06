@@ -30,12 +30,12 @@ class NotificationsList extends React.PureComponent {
   };
 
   render() {
-    const strings = this.props.strings;
+    const t = this.props.t;
     return (
       <div>
         {this.props.unreadNotifications && (
           <button className="btn-link" onClick={this.markAllRead}>
-            {this.props.strings.Mark_all_read}
+            {this.props.t("Mark_all_read")}
           </button>
         )}
         <table className="table">
@@ -44,24 +44,27 @@ class NotificationsList extends React.PureComponent {
               return (
                 <tr key={notification.id}>
                   <td>
-                    <span className="notificationDate">{notification.created_at.slice(0, 10)}</span><br />
+                    <span className="notificationDate">
+                      {notification.created_at.slice(0, 10)}
+                    </span>
+                    <br />
                     <span
-                    className={notification.read ? "" : "unreadNotification"}
-                    dangerouslySetInnerHTML={{
-                      __html: t_sub(
-                        strings[notification.message.key],
-                        notification.message.t_vars,
-                        notification.message.links
-                      )
-                    }}
-                  />
+                      className={notification.read ? "" : "unreadNotification"}
+                      dangerouslySetInnerHTML={{
+                        __html: t_sub(
+                          t(notification.message.key),
+                          notification.message.t_vars,
+                          notification.message.links
+                        )
+                      }}
+                    />
                   </td>
                 </tr>
               );
             })}
             <tr>
               <td>
-                {this.props.loading && <p>{strings.Loading}</p>}
+                {this.props.loading && <p>{t("Loading")}</p>}
                 {this.props.moreAvailable &&
                   !this.props.loading && (
                     <button
@@ -69,7 +72,7 @@ class NotificationsList extends React.PureComponent {
                       onClick={this.clickSeeMore}
                       style={{ padding: 0 }}
                     >
-                      {this.props.strings.See_more}
+                      {this.props.t("See_more")}
                     </button>
                   )}
               </td>

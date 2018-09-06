@@ -13,7 +13,7 @@ function SmallAddButton(props) {
     <AddButton
       handleClick={props.handleClick}
       extraClasses="btn-sm"
-      strings={props.strings}
+      t={props.t}
     />
   );
 }

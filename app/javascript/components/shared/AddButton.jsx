@@ -9,7 +9,7 @@ import React from "react";
 */
 
 function AddButton(props) {
-  const text = props.text || props.strings.Add;
+  const text = props.text || props.t("Add");
   const classes = "btn btn-primary " + (props.extraClasses || "");
   return (
     <button className={classes} onClick={props.handleClick}>

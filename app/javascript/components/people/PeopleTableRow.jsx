@@ -34,7 +34,7 @@ class PeopleTableRow extends React.PureComponent {
         </td>
         {longVersion && <td>{person.roles.join(", ")}</td>}
         {longVersion && (
-          <td>{person.has_login && this.props.strings.Dulu_account}</td>
+          <td>{person.has_login && this.props.t("Dulu_account")}</td>
         )}
       </tr>
     );

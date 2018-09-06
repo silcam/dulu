@@ -31,7 +31,7 @@ function DaySelector(props) {
       value={String(props.value)}
       onChange={props.handleInput}
     >
-      <option value="">{props.strings.Day}</option>
+      <option value="">{props.t("Day")}</option>
       {optionsArray}
     </select>
   );

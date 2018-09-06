@@ -32,7 +32,7 @@ class DangerButton extends React.PureComponent {
             checked={this.state.userIsSure}
           />
           &nbsp;
-          {this.props.strings.Im_sure}
+          {this.props.t("Im_sure")}
         </label>
         <button
           className="btn btn-danger"
@@ -43,7 +43,7 @@ class DangerButton extends React.PureComponent {
         </button>
         &nbsp;
         <button className="btn btn-primary" onClick={this.props.handleCancel}>
-          {this.props.strings.Cancel}
+          {this.props.t("Cancel")}
         </button>
       </div>
     );

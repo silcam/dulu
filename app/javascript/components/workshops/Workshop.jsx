@@ -1,12 +1,12 @@
 import React from "react";
 import axios from "axios";
 
-import CheckIconButton from "../../shared_components/CheckIconButton";
-import DeleteIconButton from "../../shared_components/DeleteIconButton";
-import EditIconButton from "../../shared_components/EditIconButton";
-import FuzzyDateInput from "../../shared_components/FuzzyDateInput";
-import SmallSaveAndCancel from "../../shared_components/SmallSaveAndCancel";
-import TextInput from "../../shared_components/TextInput";
+import CheckIconButton from "../shared/CheckIconButton";
+import DeleteIconButton from "../shared/DeleteIconButton";
+import EditIconButton from "../shared/EditIconButton";
+import FuzzyDateInput from "../shared/FuzzyDateInput";
+import SmallSaveAndCancel from "../shared/SmallSaveAndCancel";
+import TextInput from "../shared/TextInput";
 
 import DateCell from "./DateCell";
 
@@ -66,10 +66,9 @@ class Workshop extends React.PureComponent {
   delete = () => {
     if (
       confirm(
-        this.props.strings.Delete_workshop_confirmation.replace(
-          "%{name}",
-          this.state.name
-        )
+        this.props
+          .t("Delete_workshop_confirmation")
+          .replace("%{name}", this.state.name)
       )
     ) {
       this.props.deleteWorkshop(this.props.workshop.id);
@@ -130,7 +129,7 @@ class Workshop extends React.PureComponent {
       return false;
     }
     if (!this.state.name) {
-      this.setState({ nameError: this.props.strings.Name_not_blank });
+      this.setState({ nameError: this.props.t("Name_not_blank") });
       return false;
     }
     return true;
@@ -163,7 +162,7 @@ class Workshop extends React.PureComponent {
               handleSave={this.save}
               handleCancel={this.cancelEdit}
               saveInProgress={this.state.saving}
-              strings={this.props.strings}
+              t={this.props.t}
             />
           </td>
         </tr>
@@ -172,7 +171,7 @@ class Workshop extends React.PureComponent {
       return (
         <tr>
           <td colSpan="4" className="inlineFuzzyDateInputs">
-            <label>{this.props.strings.Workshop_date}:</label>
+            <label>{this.props.t("Workshop_date")}:</label>
             <br />
 
             <FuzzyDateInput
@@ -180,14 +179,14 @@ class Workshop extends React.PureComponent {
               handleDateInput={this.handleDateInput}
               dateIsInvalid={this.dateIsInvalid}
               showErrors={this.state.showDateErrors}
-              strings={this.props.strings.date_strings}
+              strings={this.props.t("date_strings")}
             />
 
             <SmallSaveAndCancel
               handleSave={this.save}
               handleCancel={this.cancelEdit}
               saveInProgress={this.state.saving}
-              strings={this.props.strings}
+              t={this.props.t}
             />
           </td>
         </tr>
@@ -202,16 +201,16 @@ class Workshop extends React.PureComponent {
               eventPath={this.props.workshop.eventPath}
               newEventPath={this.props.workshop.newEventPath}
               canUpdate={this.props.workshop.can.update}
-              strings={this.props.strings}
+              t={this.props.t}
             />
           </td>
           <td>
             {this.state.completed
-              ? this.props.strings.Completed
+              ? this.props.t("Completed")
               : this.props.workshop.can.update && (
                   <CheckIconButton
                     handleClick={this.completeWorkshop}
-                    text={this.props.strings.Mark_completed}
+                    text={this.props.t("Mark_completed")}
                   />
                 )}
           </td>

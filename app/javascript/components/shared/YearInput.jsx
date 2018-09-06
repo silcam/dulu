@@ -15,7 +15,7 @@ function YearInput(props) {
       value={props.value}
       size="4"
       maxLength="4"
-      placeholder={props.strings.Year}
+      placeholder={props.t("Year")}
       onChange={props.handleInput}
       className="form-control"
     />

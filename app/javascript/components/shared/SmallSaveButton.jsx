@@ -18,7 +18,7 @@ function SmallSaveButton(props) {
       saveInProgress={props.saveInProgress}
       disabled={props.disabled}
       extraClasses="btn-sm"
-      strings={props.strings}
+      t={props.t}
     />
   );
 }

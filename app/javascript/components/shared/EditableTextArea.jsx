@@ -44,7 +44,7 @@ class TextAreaWithButtons extends React.PureComponent {
         <SmallSaveAndCancel
           handleSave={this.save}
           handleCancel={this.props.cancel}
-          strings={this.props.strings}
+          t={this.props.t}
         />
       </div>
     );

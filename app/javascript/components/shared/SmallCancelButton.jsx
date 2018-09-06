@@ -13,7 +13,7 @@ function SmallCancelButton(props) {
     <CancelButton
       handleClick={props.handleClick}
       extraClasses="btn-sm"
-      strings={props.strings}
+      t={props.t}
     />
   );
 }

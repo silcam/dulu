@@ -7,12 +7,12 @@ class LinguisticsTable extends React.PureComponent {
     return (
       <div>
         <ResearchActivitiesTable
-          strings={this.props.strings}
+          t={this.props.t}
           programs={this.props.programs}
         />
 
         <WorkshopsActivitiesTable
-          strings={this.props.strings}
+          t={this.props.t}
           programs={this.props.programs}
         />
       </div>

@@ -1,6 +1,6 @@
 import React from "react";
 
-import DeleteIconButton from "../../shared_components/DeleteIconButton";
+import DeleteIconButton from "../shared/DeleteIconButton";
 
 import AddRoleRow from "./AddRoleRow";
 
@@ -16,14 +16,14 @@ class RolesTable extends React.PureComponent {
 
   render() {
     const person = this.props.person;
-    const strings = this.props.strings;
+    const t = this.props.t;
     const editEnabled = this.props.editEnabled;
 
     if (!editEnabled && person.roles.length == 0) return null;
 
     return (
       <div id="rolesTable">
-        <h3>{strings.Roles}</h3>
+        <h3>{t("Roles")}</h3>
         <table className="table">
           <tbody>
             {person.roles.map(role => {
@@ -45,7 +45,7 @@ class RolesTable extends React.PureComponent {
             {person.grantable_roles.length > 0 && (
               <AddRoleRow
                 person={person}
-                strings={strings}
+                t={t}
                 editEnabled={editEnabled}
                 rawPost={this.props.rawPost}
               />

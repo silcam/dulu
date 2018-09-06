@@ -11,7 +11,7 @@ import React from "react";
 */
 
 function SaveButton(props) {
-  const text = props.saveInProgress ? props.strings.Saving : props.strings.Save;
+  const text = props.saveInProgress ? props.t("Saving") : props.t("Save");
   const classes = "btn btn-primary " + (props.extraClasses || "");
   const disabled = props.disabled ? true : false;
   return (

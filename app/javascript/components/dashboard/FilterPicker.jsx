@@ -1,6 +1,6 @@
 import React from "react";
 
-import Checkbox from "../../shared_components/Checkbox";
+import Checkbox from "../shared/Checkbox";
 
 class FilterPicker extends React.PureComponent {
   newFilterAll = value => {
@@ -34,23 +34,23 @@ class FilterPicker extends React.PureComponent {
   };
 
   render() {
-    const strings = this.props.strings;
+    const t = this.props.t;
     const filter = this.props.filter;
     return (
       <div>
         <small>
           <ul className="list-inline">
             <li>
-              <label>{strings.Filter}:</label>
+              <label>{t('Filter')}:</label>
             </li>
             <li>
               <button onClick={this.clickAll} className="btn-link">
-                {strings.All}
+                {t('All')}
               </button>
             </li>
             <li>
               <button onClick={this.clickNone} className="btn-link">
-                {strings.None}
+                {t('None')}
               </button>
             </li>
           </ul>

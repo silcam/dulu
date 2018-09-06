@@ -18,7 +18,7 @@ function EventsTableSection(props) {
           <EventsTableRow
             key={`${event.program_id}-${event.id}`}
             event={event}
-            strings={props.strings}
+            t={props.t}
           />
         );
       })}

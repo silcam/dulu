@@ -1,12 +1,9 @@
 import axios from "axios";
 import React from "react";
 
-import CloseIconButton from "../../shared_components/CloseIconButton";
-import {
-  SelectGroup,
-  ValidatedTextInputGroup
-} from "../../shared_components/formGroup";
-import SaveButton from "../../shared_components/SaveButton";
+import CloseIconButton from "../shared/CloseIconButton";
+import { SelectGroup, ValidatedTextInputGroup } from "../shared/formGroup";
+import SaveButton from "../shared/SaveButton";
 
 import selectOptionsFromObject from "../../util/selectOptionsFromObject";
 
@@ -95,7 +92,7 @@ class NewPersonForm extends React.Component {
   };
 
   render() {
-    const strings = this.props.strings;
+    const t = this.props.t;
     const person = this.state.person;
     return (
       <div onKeyDown={this.handleKeyDown}>
@@ -103,14 +100,14 @@ class NewPersonForm extends React.Component {
           <CloseIconButton handleClick={this.clickClose} />
         </h3>
 
-        <h3>{strings.New_person}</h3>
+        <h3>{t("New_person")}</h3>
 
         <ValidatedTextInputGroup
           handleInput={this.handleInput}
           name="first_name"
-          label={strings.First_name}
+          label={t("First_name")}
           value={person.first_name}
-          strings={strings}
+          t={t}
           validateNotBlank
           showError={this.state.failedSave}
           autoFocus
@@ -119,9 +116,9 @@ class NewPersonForm extends React.Component {
         <ValidatedTextInputGroup
           handleInput={this.handleInput}
           name="last_name"
-          label={strings.Last_name}
+          label={t("Last_name")}
           value={person.last_name}
-          strings={strings}
+          t={t}
           validateNotBlank
           showError={this.state.failedSave}
         />
@@ -129,9 +126,9 @@ class NewPersonForm extends React.Component {
         <SelectGroup
           handleChange={this.handleInput}
           name="gender"
-          label={strings.Gender}
+          label={t("Gender")}
           value={person.gender}
-          options={selectOptionsFromObject(strings.genders)}
+          options={selectOptionsFromObject(t("genders"))}
         />
 
         <div className="form-group">
@@ -143,7 +140,7 @@ class NewPersonForm extends React.Component {
               onChange={this.handleCheck}
             />
             &nbsp;
-            {strings.Can_login}
+            {t("Can_login")}
           </label>
         </div>
 
@@ -152,9 +149,9 @@ class NewPersonForm extends React.Component {
             <ValidatedTextInputGroup
               handleInput={this.handleInput}
               name="email"
-              label={strings.Email}
+              label={t("Email")}
               value={person.email}
-              strings={strings}
+              t={t}
               validateNotBlank
               showError={this.state.failedSave}
             />
@@ -162,16 +159,16 @@ class NewPersonForm extends React.Component {
             <SelectGroup
               handleChange={this.handleInput}
               name="ui_language"
-              label={strings.dulu_preferred_language}
+              label={t("dulu_preferred_language")}
               value={person.ui_language}
-              options={selectOptionsFromObject(strings.languages)}
+              options={selectOptionsFromObject(t("languages"))}
             />
           </div>
         )}
 
         {this.state.duplicatePerson && (
           <DuplicateWarning
-            strings={strings}
+            t={t}
             duplicatePerson={this.state.duplicatePerson}
             not_a_duplicate={person.not_a_duplicate}
             handleCheck={this.handleCheck}
@@ -181,7 +178,7 @@ class NewPersonForm extends React.Component {
           <SaveButton
             handleClick={this.clickSave}
             saveInProgress={this.state.saving}
-            strings={strings}
+            t={t}
           />
         </p>
       </div>

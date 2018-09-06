@@ -46,12 +46,12 @@ class EventsTable extends React.PureComponent {
       this.state.currentEvents.length == 0 &&
       this.state.upcomingEvents.length == 0
     ) {
-      return <p>{this.props.strings.No_events}</p>;
+      return <p>{this.props.t("No_events")}</p>;
     }
     return (
       <div>
         <EventsFilterer
-          strings={this.props.strings}
+          t={this.props.t}
           domainFilter={this.state.domainFilter}
           setDomainFilter={this.setDomainFilter}
         />
@@ -59,15 +59,15 @@ class EventsTable extends React.PureComponent {
           <tbody>
             <EventsTableSection
               events={this.state.currentEvents}
-              sectionTitle={this.props.strings.Current_events}
+              sectionTitle={this.props.t("Current_events")}
               domainFilter={this.state.domainFilter}
-              strings={this.props.strings}
+              t={this.props.t}
             />
             <EventsTableSection
               events={this.state.upcomingEvents}
-              sectionTitle={this.props.strings.Upcoming_events}
+              sectionTitle={this.props.t("Upcoming_events")}
               domainFilter={this.state.domainFilter}
-              strings={this.props.strings}
+              t={this.props.t}
             />
           </tbody>
         </table>

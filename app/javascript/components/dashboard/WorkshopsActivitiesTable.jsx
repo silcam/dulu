@@ -50,18 +50,18 @@ class WorkshopsActivitiesTable extends React.PureComponent {
   };
 
   render() {
-    const strings = this.props.strings;
+    const t = this.props.t;
     const sortOptions = ["Language", "Last_update"];
     return (
       <div>
-        <h3> {strings.Workshops} </h3>
+        <h3> {t("Workshops")} </h3>
         {this.state.activities.length == 0 ? (
-          <p>{strings.None}</p>
+          <p>{t("None")}</p>
         ) : (
           <SortPicker
             sort={this.state.sort}
             options={sortOptions}
-            strings={strings}
+            t={t}
             changeSort={this.changeSort}
           />
         )}
@@ -72,7 +72,7 @@ class WorkshopsActivitiesTable extends React.PureComponent {
                 <WorkshopsActivityRow
                   key={activity.id}
                   activity={activity}
-                  strings={strings}
+                  t={t}
                 />
               );
             })}

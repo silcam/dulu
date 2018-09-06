@@ -4,7 +4,7 @@ import eventDateString from "../../util/eventDateString";
 
 function EventRows(props) {
   const events = props.events;
-  const strings = props.strings;
+  const t = props.t;
 
   return (
     <React.Fragment>
@@ -19,7 +19,7 @@ function EventRows(props) {
               {eventDateString(
                 event.start_date,
                 event.end_date,
-                strings.date_strings.month_names_short
+                t("date_strings.month_names_short")
               )}
             </td>
             <td className="subtle-links">

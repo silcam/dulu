@@ -88,21 +88,21 @@ class NotificationsSidebar extends React.Component {
   };
 
   render() {
-    const strings = this.props.strings;
+    const t = this.props.t;
     return (
       <div id="notificationsSidebar">
-        <h3 style={{ marginTop: 0 }}>{strings.Notifications}</h3>
+        <h3 style={{ marginTop: 0 }}>{t("Notifications")}</h3>
         <Tabs>
           <TabList>
-            <Tab>{strings.For_me}</Tab>
-            <Tab>{strings.All}</Tab>
+            <Tab>{t("For_me")}</Tab>
+            <Tab>{t("All")}</Tab>
           </TabList>
           <TabPanel>
             <NotificationsList
               channel="forMe"
               getNotifications={this.getNotifications}
               markAllRead={this.markAllRead}
-              strings={strings}
+              t={t}
               {...this.state.forMe}
             />
           </TabPanel>
@@ -111,7 +111,7 @@ class NotificationsSidebar extends React.Component {
               channel="all"
               getNotifications={this.getNotifications}
               markAllRead={this.markAllRead}
-              strings={strings}
+              t={t}
               {...this.state.all}
             />
           </TabPanel>

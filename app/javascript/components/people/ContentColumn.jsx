@@ -13,7 +13,7 @@ class ContentColumn extends React.PureComponent {
         return (
           <NewPersonForm
             setSelection={this.props.setSelection}
-            strings={this.props.strings}
+            t={this.props.t}
             authToken={this.props.authToken}
             addPerson={this.props.addPerson}
           />
@@ -23,7 +23,7 @@ class ContentColumn extends React.PureComponent {
         return (
           <PersonContent
             id={selection.id}
-            strings={this.props.strings}
+            t={this.props.t}
             setSelection={this.props.setSelection}
             setOrg={this.props.setOrg}
             deletePerson={this.props.deletePerson}
@@ -37,7 +37,7 @@ class ContentColumn extends React.PureComponent {
         return (
           <NewOrgForm
             setSelection={this.props.setSelection}
-            strings={this.props.strings}
+            t={this.props.t}
             authToken={this.props.authToken}
             addOrg={this.props.addOrg}
           />
@@ -47,7 +47,7 @@ class ContentColumn extends React.PureComponent {
         return (
           <OrgContent
             id={selection.id}
-            strings={this.props.strings}
+            t={this.props.t}
             setSelection={this.props.setSelection}
             deleteOrg={this.props.deleteOrg}
             authToken={this.props.authToken}

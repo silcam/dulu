@@ -22,7 +22,7 @@ class TextBox extends React.PureComponent {
   // Returns an error message for invalid text, null for valid
   validate = text => {
     if (this.props.validateNotBlank && text.length == 0) {
-      return this.props.strings.validation.Not_blank;
+      return this.props.t("validation.Not_blank");
     }
     return null;
   };

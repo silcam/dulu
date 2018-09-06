@@ -67,14 +67,14 @@ class TranslationActivitiesTable extends React.PureComponent {
 
   render() {
     if (this.state.activities.length == 0)
-      return <p>{this.props.strings.No_translation_activities}</p>;
+      return <p>{this.props.t("No_translation_activities")}</p>;
     const sortOptions = ["Language", "Book", "Stage", "Last_update"];
     return (
       <div>
         <SortPicker
           sort={this.state.sort}
           options={sortOptions}
-          strings={this.props.strings}
+          t={this.props.t}
           changeSort={this.changeSort}
         />
         <table className="table">
@@ -85,7 +85,7 @@ class TranslationActivitiesTable extends React.PureComponent {
                   key={activity.id}
                   activity={activity}
                   sort={this.state.sort}
-                  strings={this.props.strings}
+                  t={this.props.t}
                 />
               );
             })}

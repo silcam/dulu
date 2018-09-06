@@ -63,14 +63,14 @@ class ParticipantsTable extends React.PureComponent {
 
   render() {
     if (this.state.participants.length == 0)
-      return <p>{this.props.strings.No_participants}</p>;
+      return <p>{this.props.t("No_participants")}</p>;
     const sortOptions = ["Language", "Person", "Role"];
     return (
       <div>
         <SortPicker
           sort={this.state.sort}
           options={sortOptions}
-          strings={this.props.strings}
+          t={this.props.t}
           changeSort={this.changeSort}
         />
         <table className="table">

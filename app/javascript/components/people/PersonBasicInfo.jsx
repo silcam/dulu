@@ -2,19 +2,19 @@ import React from "react";
 
 import selectOptionsFromObject from "../../util/selectOptionsFromObject";
 
-import EditableTextBox from "../../shared_components/EditableTextBox";
-import EditableTextSearchInput from "../../shared_components/EditableTextSearchInput";
-import EditableTextSelect from "../../shared_components/EditableTextSelect";
-import EditableTextYesNo from "../../shared_components/EditableTextYesNo";
+import EditableTextBox from "../shared/EditableTextBox";
+import EditableTextSearchInput from "../shared/EditableTextSearchInput";
+import EditableTextSelect from "../shared/EditableTextSelect";
+import EditableTextYesNo from "../shared/EditableTextYesNo";
 
 import EditableTextUiLanguage from "./EditableTextUiLanguage";
 
 function PersonBasicInfo(props) {
-  const strings = props.strings;
+  const t = props.t;
   const person = props.person;
   const homeCountry = person.home_country || { id: null, name: "" };
-  const hasLoginText = person.has_login ? strings.Yes : strings.No;
-  const emailPrefOptions = selectOptionsFromObject(strings.email_prefs);
+  const hasLoginText = person.has_login ? t("Yes") : t("No");
+  const emailPrefOptions = selectOptionsFromObject(t("email_prefs"));
 
   const updateUiLang = (field, value) => {
     props.updateField(field, value, () => {
@@ -24,7 +24,7 @@ function PersonBasicInfo(props) {
 
   const updateLogin = (field, value) => {
     if (value && !props.person.email) {
-      props.setErrorMessage(props.strings.need_email_for_login);
+      props.setErrorMessage(props.t("need_email_for_login"));
     } else {
       props.updateField(field, value);
     }
@@ -39,7 +39,7 @@ function PersonBasicInfo(props) {
     <table className="table">
       <tbody>
         <tr>
-          <th>{strings.Home_country}</th>
+          <th>{t("Home_country")}</th>
           <td>
             <EditableTextSearchInput
               queryPath="/api/countries/search"
@@ -52,7 +52,7 @@ function PersonBasicInfo(props) {
           </td>
         </tr>
         <tr>
-          <th>{strings.Email}</th>
+          <th>{t("Email")}</th>
           <td>
             <EditableTextBox
               field={"email"}
@@ -65,7 +65,7 @@ function PersonBasicInfo(props) {
         </tr>
         {!person.isUser && (
           <tr>
-            <th>{strings.Dulu_account}</th>
+            <th>{t("Dulu_account")}</th>
             <td>
               <EditableTextYesNo
                 text={hasLoginText}
@@ -73,7 +73,7 @@ function PersonBasicInfo(props) {
                 field="has_login"
                 updateValue={updateLogin}
                 editEnabled={props.editEnabled}
-                strings={strings}
+                t={t}
               />
             </td>
           </tr>
@@ -81,23 +81,23 @@ function PersonBasicInfo(props) {
         {person.isUser && (
           <React.Fragment>
             <tr>
-              <th>{strings.dulu_preferred_language}</th>
+              <th>{t("dulu_preferred_language")}</th>
               <td>
                 <EditableTextUiLanguage
-                  text={strings.languages[person.ui_language]}
+                  text={t(`languages.${person.ui_language}`)}
                   value={person.ui_language}
                   field="ui_language"
                   updateValue={updateUiLang}
                   editEnabled={props.editEnabled}
-                  strings={strings}
+                  t={t}
                 />
               </td>
             </tr>
             <tr>
-              <th>{strings.Email_frequency}</th>
+              <th>{t("Email_frequency")}</th>
               <td>
                 <EditableTextSelect
-                  text={strings.email_prefs[person.email_pref]}
+                  text={t(`email_prefs.${person.email_pref}`)}
                   value={person.email_pref}
                   field={"email_pref"}
                   updateValue={props.updateField}

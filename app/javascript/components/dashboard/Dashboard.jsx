@@ -181,22 +181,22 @@ class Dashboard extends React.PureComponent {
         <div className="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
           <div className="row">
             <div className="col-md-9">
-              <Searcher strings={this.props.strings} queryPath="/api/search" />
+              <Searcher t={this.props.t} queryPath="/api/search" />
               {this.state.loading > 0 && (
                 <p className="alertBox alertYellow">
-                  {this.props.strings.Loading}
+                  {this.props.t("Loading")}
                 </p>
               )}
               <MainContent
                 programs={this.state.programs}
-                strings={this.props.strings}
+                t={this.props.t}
                 viewPrefs={this.props.viewPrefs}
               />
             </div>
             <div className="col-md-3">
               <NotificationsSidebar
-                strings={this.props.strings}
-                authenticityToken={this.props.authenticityToken}
+                t={this.props.t}
+                authToken={this.props.authToken}
               />
             </div>
           </div>

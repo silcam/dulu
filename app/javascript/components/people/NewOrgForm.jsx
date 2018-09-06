@@ -1,13 +1,13 @@
 import axios from "axios";
 import React from "react";
 
-import CloseIconButton from "../../shared_components/CloseIconButton";
+import CloseIconButton from "../shared/CloseIconButton";
 import {
   TextAreaGroup,
   TextInputGroup,
   ValidatedTextInputGroup
-} from "../../shared_components/formGroup";
-import SaveButton from "../../shared_components/SaveButton";
+} from "../shared/formGroup";
+import SaveButton from "../shared/SaveButton";
 
 class NewOrgForm extends React.Component {
   constructor(props) {
@@ -67,7 +67,7 @@ class NewOrgForm extends React.Component {
   };
 
   render() {
-    const strings = this.props.strings;
+    const t = this.props.t;
     const org = this.state.org;
 
     return (
@@ -77,14 +77,14 @@ class NewOrgForm extends React.Component {
             <CloseIconButton handleClick={this.clickClose} />
           </h3>
 
-          <h3>{strings.New_organization}</h3>
+          <h3>{t("New_organization")}</h3>
 
           <ValidatedTextInputGroup
             handleInput={this.handleInput}
             name="short_name"
-            label={strings.Short_name}
+            label={t("Short_name")}
             value={org.short_name}
-            strings={strings}
+            t={t}
             validateNotBlank
             showError={this.state.failedSave}
             autoFocus
@@ -93,7 +93,7 @@ class NewOrgForm extends React.Component {
           <TextInputGroup
             handleInput={this.handleInput}
             name="long_name"
-            label={strings.Long_name}
+            label={t("Long_name")}
             value={org.long_name}
           />
         </div>
@@ -101,7 +101,7 @@ class NewOrgForm extends React.Component {
         <TextAreaGroup
           handleInput={this.handleInput}
           name="description"
-          label={strings.Description}
+          label={t("Description")}
           value={org.description}
         />
 
@@ -109,7 +109,7 @@ class NewOrgForm extends React.Component {
           <SaveButton
             handleClick={this.clickSave}
             saveInProgress={this.state.saving}
-            strings={strings}
+            t={t}
           />
         </p>
       </div>

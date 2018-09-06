@@ -1,6 +1,6 @@
 import React from "react";
 
-import AddButton from "../../shared_components/AddButton";
+import AddButton from "../shared/AddButton";
 
 import PeopleTableRow from "./PeopleTableRow";
 
@@ -11,16 +11,16 @@ class PeopleTable extends React.PureComponent {
 
   render() {
     const people = this.props.people;
-    const strings = this.props.strings;
+    const t = this.props.t;
     if (people.length == 0) {
-      return <p className="alertBox alertYellow">{strings.Loading}</p>;
+      return <p className="alertBox alertYellow">{t("Loading")}</p>;
     }
     return (
       <div>
         {this.props.can.create && (
           <p style={{ paddingLeft: "8px" }}>
             <AddButton
-              text={strings.Add_new_person}
+              text={t("Add_new_person")}
               handleClick={this.newPersonForm}
             />
           </p>
@@ -32,7 +32,7 @@ class PeopleTable extends React.PureComponent {
                 <PeopleTableRow
                   key={person.id}
                   person={person}
-                  strings={strings}
+                  t={t}
                   setPerson={this.props.setPerson}
                   selection={this.props.selection}
                 />

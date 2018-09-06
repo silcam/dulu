@@ -12,7 +12,7 @@ function CancelButton(props) {
   const classes = "btn btn-danger " + (props.extraClasses || "");
   return (
     <button className={classes} onClick={props.handleClick}>
-      {props.strings.Cancel}
+      {props.t("Cancel")}
     </button>
   );
 }

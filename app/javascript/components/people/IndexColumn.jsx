@@ -12,12 +12,12 @@ class IndexColumn extends React.PureComponent {
     return (
       <Tabs defaultIndex={defaultIndex}>
         <TabList>
-          <Tab>{props.strings.People}</Tab>
-          <Tab>{props.strings.Organizations}</Tab>
+          <Tab>{props.t("People")}</Tab>
+          <Tab>{props.t("Organizations")}</Tab>
         </TabList>
         <TabPanel>
           <PeopleTable
-            strings={props.strings}
+            t={props.t}
             people={props.people}
             setPerson={props.setPerson}
             selection={props.selection}
@@ -26,7 +26,7 @@ class IndexColumn extends React.PureComponent {
         </TabPanel>
         <TabPanel>
           <OrgsTable
-            strings={props.strings}
+            t={props.t}
             orgs={props.orgs}
             setOrg={props.setOrg}
             selection={props.selection}

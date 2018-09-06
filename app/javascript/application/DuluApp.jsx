@@ -1,55 +1,65 @@
 import React from "react";
 import { Switch, Route, NavLink } from "react-router-dom";
+import axios from "axios";
+import NavBar from "../components/layout/NavBar";
+import Dashboard from "../components/dashboard/Dashboard";
+import PeopleBoard from "../components/people/PeopleBoard";
+import translator from "../i18n/i18n";
 
 export default class DuluApp extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      t: translator("en")
+    };
   }
 
   render() {
-    if (!this.state.session)
-      return (
-        <Login
-          login={() => {
-            this.setState({
-              session: {
-                user: {
-                  id: 1,
-                  first_name: "Rick",
-                  last_name: "Conrad"
-                }
-              }
-            });
-          }}
-        />
-      );
     return (
       <div>
-        <ul>
-          <li>
-            <NavLink to="/people">People</NavLink>
-          </li>
-          <li>
-            <NavLink to="/dashboard">Dashboard</NavLink>
-          </li>
-        </ul>
+        <NavBar user={this.state.user} />
 
         <Switch>
-          <Route path="/people" component={People} />
-          <Route path="/dashboard" component={Dashboard} />
+          <Route path="/people">
+            <PeopleBoard
+              t={this.state.t}
+              authToken={getAuthToken()}
+              tab="people"
+            />
+          </Route>
+          <Route path="/">
+            <Dashboard
+              authToken={getAuthToken()}
+              t={this.state.t}
+              viewPrefs={{}}
+            />
+          </Route>
         </Switch>
       </div>
     );
   }
 }
 
-function People() {
-  return <h1>Da Peeeps Page</h1>;
+async function logout() {
+  await axios.post("/logout", {
+    authenticity_token: getAuthToken()
+  });
+  document.location = "/";
 }
 
-function Dashboard() {
-  return <h1>Da Dashboard</h1>;
+function FakeDashboard(props) {
+  return (
+    <div>
+      <p>{props.t("common.Loading")}</p>
+      <p>
+        <button onClick={props.swapLocale}>Button</button>
+      </p>
+    </div>
+  );
+}
+
+function People() {
+  return <h1>Da Peeeps Page</h1>;
 }
 
 function Login(props) {
@@ -58,4 +68,10 @@ function Login(props) {
       <a href="http://localhost:3000/login">Log in</a>
     </div>
   );
+}
+
+function getAuthToken() {
+  return document
+    .querySelector("meta[name=csrf-token]")
+    .getAttribute("content");
 }

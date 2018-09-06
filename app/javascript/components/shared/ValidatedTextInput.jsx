@@ -32,7 +32,7 @@ class ValidatedTextInput extends React.PureComponent {
       return null;
     }
     if (this.props.validateNotBlank && this.props.value.length == 0) {
-      return this.props.strings.validation.Not_blank;
+      return this.props.t("validation.Not_blank");
     }
     return null;
   };

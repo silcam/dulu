@@ -55,18 +55,18 @@ class ResearchActivitiesTable extends React.PureComponent {
   };
 
   render() {
-    const strings = this.props.strings;
+    const t = this.props.t;
     const sortOptions = ["Language", "Stage", "Last_update"];
     return (
       <div>
-        <h3> {strings.Research} </h3>
+        <h3> {t("Research")} </h3>
         {this.state.activities.length == 0 ? (
-          <p>{strings.None}</p>
+          <p>{t("None")}</p>
         ) : (
           <SortPicker
             sort={this.state.sort}
             options={sortOptions}
-            strings={strings}
+            t={t}
             changeSort={this.changeSort}
           />
         )}
@@ -77,7 +77,7 @@ class ResearchActivitiesTable extends React.PureComponent {
                 <ResearchActivityRow
                   key={activity.id}
                   activity={activity}
-                  strings={strings}
+                  t={t}
                 />
               );
             })}

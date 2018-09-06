@@ -7,14 +7,14 @@ class OrgPeopleTable extends React.PureComponent {
   render() {
     const person = this.props.person;
     const orgPeople = this.props.person.organization_people;
-    const strings = this.props.strings;
+    const t = this.props.t;
     const editEnabled = this.props.editEnabled;
 
     if (!editEnabled && orgPeople.length == 0) return null;
 
     return (
       <div id="orgPeopleTable">
-        <h3> {strings.Organizations} </h3>
+        <h3> {t("Organizations")} </h3>
         <table className="table">
           <tbody>
             {orgPeople.map(orgPerson => {
@@ -23,7 +23,7 @@ class OrgPeopleTable extends React.PureComponent {
                   key={orgPerson.id}
                   person={person}
                   orgPerson={orgPerson}
-                  strings={strings}
+                  t={t}
                   editEnabled={editEnabled}
                   rawPut={this.props.rawPut}
                   rawDelete={this.props.rawDelete}
@@ -34,7 +34,7 @@ class OrgPeopleTable extends React.PureComponent {
             })}
             {editEnabled && (
               <AddOrgPersonRow
-                strings={strings}
+                t={t}
                 person={person}
                 rawPost={this.props.rawPost}
                 updateModel={this.props.updateModel}

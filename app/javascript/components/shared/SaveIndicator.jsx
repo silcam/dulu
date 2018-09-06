@@ -5,7 +5,7 @@ function SaveIndicator(props) {
 
   return (
     <p className="alertBox alertYellow">
-      {props.saving ? props.strings.Saving : props.strings.All_changes_saved}
+      {props.saving ? props.t("Saving") : props.t("All_changes_saved")}
     </p>
   );
 }

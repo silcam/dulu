@@ -2,14 +2,14 @@ import React from "react";
 
 import tSub from "../../util/tSub";
 
-import CloseIconButton from "../../shared_components/CloseIconButton";
-import DangerButton from "../../shared_components/DangerButton";
-import DeleteIconButton from "../../shared_components/DeleteIconButton";
-import EditableTextSearchInput from "../../shared_components/EditableTextSearchInput";
-import EditableTextArea from "../../shared_components/EditableTextArea";
-import EditableTextBox from "../../shared_components/EditableTextBox";
-import backedModel from "../../shared_components/backedModel";
-import SaveIndicator from "../../shared_components/SaveIndicator";
+import CloseIconButton from "../shared/CloseIconButton";
+import DangerButton from "../shared/DangerButton";
+import DeleteIconButton from "../shared/DeleteIconButton";
+import EditableTextSearchInput from "../shared/EditableTextSearchInput";
+import EditableTextArea from "../shared/EditableTextArea";
+import EditableTextBox from "../shared/EditableTextBox";
+import backedModel from "../shared/backedModel";
+import SaveIndicator from "../shared/SaveIndicator";
 
 class BasicOrgContent extends React.PureComponent {
   constructor(props) {
@@ -50,18 +50,18 @@ class BasicOrgContent extends React.PureComponent {
   };
 
   render() {
-    const strings = this.props.strings;
+    const t = this.props.t;
     const org = this.props.organization;
 
     if (org == null) {
-      return <p className="alertBox alertYellow">{strings.Loading}</p>;
+      return <p className="alertBox alertYellow">{t("Loading")}</p>;
     }
 
     const editEnabled = this.props.can.update;
-    const deleteWarning = tSub(strings.delete_person_warning, {
+    const deleteWarning = tSub(t("delete_person_warning"), {
       name: org.short_name
     });
-    const deleteButtonText = tSub(strings.delete_person, {
+    const deleteButtonText = tSub(t("delete_person"), {
       name: org.short_name
     });
 
@@ -80,12 +80,12 @@ class BasicOrgContent extends React.PureComponent {
             handleCancel={this.cancelDelete}
             message={deleteWarning}
             buttonText={deleteButtonText}
-            strings={strings}
+            t={t}
           />
         )}
 
         <SaveIndicator
-          strings={strings}
+          t={t}
           saving={this.props.saving > 0}
           saved={this.props.savedChanges}
         />
@@ -98,23 +98,23 @@ class BasicOrgContent extends React.PureComponent {
             updateValue={this.updateField}
             editEnabled={editEnabled}
             validateNotBlank
-            strings={strings}
+            t={t}
           />
         </h2>
         <h3>
           <EditableTextBox
             field="long_name"
             text={org.long_name}
-            placeholder={strings.Long_name}
+            placeholder={t("Long_name")}
             value={org.long_name || ""}
             updateValue={this.updateField}
             editEnabled={editEnabled}
-            strings={strings}
+            t={t}
           />
         </h3>
         <ul className="list-unstyled">
           <li>
-            <strong>{strings.Parent_organization}:</strong>
+            <strong>{t("Parent_organization")}:</strong>
             &nbsp;
             <EditableTextSearchInput
               queryPath="/api/organizations/search"
@@ -126,7 +126,7 @@ class BasicOrgContent extends React.PureComponent {
             />
           </li>
           <li>
-            <strong>{strings.Country}:</strong>
+            <strong>{t("Country")}:</strong>
             &nbsp;
             <EditableTextSearchInput
               queryPath="/api/countries/search"
@@ -143,9 +143,9 @@ class BasicOrgContent extends React.PureComponent {
         <div>
           <EditableTextArea
             field="description"
-            strings={strings}
+            t={t}
             text={org.description}
-            placeholder={strings.Description}
+            placeholder={t("Description")}
             value={org.description || ""}
             updateValue={this.updateField}
             editEnabled={editEnabled}

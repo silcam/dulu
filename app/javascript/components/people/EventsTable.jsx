@@ -5,7 +5,7 @@ import EventRows from "./EventRows";
 class EventsTable extends React.PureComponent {
   render() {
     const person = this.props.person;
-    const strings = this.props.strings;
+    const t = this.props.t;
 
     if (
       person.events.current.length == 0 &&
@@ -17,16 +17,12 @@ class EventsTable extends React.PureComponent {
 
     return (
       <div>
-        <h3>{strings.Events}</h3>
+        <h3>{t("Events")}</h3>
         <table className="table">
           <tbody>
-            <EventRows events={person.events.upcoming} strings={strings} />
-            <EventRows events={person.events.current} strings={strings} />
-            <EventRows
-              events={person.events.past}
-              pastEvents={true}
-              strings={strings}
-            />
+            <EventRows events={person.events.upcoming} t={t} />
+            <EventRows events={person.events.current} t={t} />
+            <EventRows events={person.events.past} pastEvents={true} t={t} />
           </tbody>
         </table>
       </div>

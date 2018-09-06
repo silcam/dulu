@@ -105,7 +105,7 @@ class WorkshopActivity extends React.PureComponent {
   render() {
     return (
       <div>
-        <h3>{this.props.strings.Workshops}</h3>
+        <h3>{this.props.t("Workshops")}</h3>
         <table className="table">
           <tbody>
             {this.state.workshops.map(workshop => {
@@ -117,7 +117,7 @@ class WorkshopActivity extends React.PureComponent {
                   handleUpdatedWorkshop={this.handleUpdatedWorkshop}
                   deleteWorkshop={this.deleteWorkshop}
                   displayDelete={this.state.workshops.length > 1}
-                  strings={this.props.strings}
+                  t={this.props.t}
                 />
               );
             })}
@@ -128,7 +128,7 @@ class WorkshopActivity extends React.PureComponent {
             handleNewWorkshop={this.handleNewWorkshop}
             authenticity_token={this.props.authenticity_token}
             activity_id={this.props.activity_id}
-            strings={this.props.strings}
+            t={this.props.t}
           />
         )}
       </div>
