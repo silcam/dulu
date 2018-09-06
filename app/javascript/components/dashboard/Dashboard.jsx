@@ -6,6 +6,7 @@ import MainContent from "./MainContent";
 import NotificationsSidebar from "./NotificationsSidebar";
 import Searcher from "./Searcher";
 import { arrayDelete } from "../../util/arrayUtils";
+import styles from "./Dashboard.css";
 
 class Dashboard extends React.PureComponent {
   constructor(props) {
@@ -170,36 +171,30 @@ class Dashboard extends React.PureComponent {
 
   render() {
     return (
-      <div className="row">
-        <div className="col-sm-3 col-md-2 sidebar" id="dashboardSidebar">
+      <div className="fullHeight">
+        <div className={styles.leftSidebar}>
           <DashboardSidebar
             setSelectedProgram={this.setSelectedProgram}
             setSelectedCluster={this.setSelectedCluster}
             setSelectedMultiple={this.setSelectedMultiple}
           />
         </div>
-        <div className="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-          <div className="row">
-            <div className="col-md-9">
-              <Searcher t={this.props.t} queryPath="/api/search" />
-              {this.state.loading > 0 && (
-                <p className="alertBox alertYellow">
-                  {this.props.t("Loading")}
-                </p>
-              )}
-              <MainContent
-                programs={this.state.programs}
-                t={this.props.t}
-                viewPrefs={this.props.viewPrefs}
-              />
-            </div>
-            <div className="col-md-3">
-              <NotificationsSidebar
-                t={this.props.t}
-                authToken={this.props.authToken}
-              />
-            </div>
-          </div>
+        <div className={styles.main}>
+          <Searcher t={this.props.t} queryPath="/api/search" />
+          {this.state.loading > 0 && (
+            <p className="alertBox alertYellow">{this.props.t("Loading")}</p>
+          )}
+          <MainContent
+            programs={this.state.programs}
+            t={this.props.t}
+            viewPrefs={this.props.viewPrefs}
+          />
+        </div>
+        <div className={styles.sidebar}>
+          <NotificationsSidebar
+            t={this.props.t}
+            authToken={this.props.authToken}
+          />
         </div>
       </div>
     );

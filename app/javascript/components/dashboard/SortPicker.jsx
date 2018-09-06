@@ -1,4 +1,6 @@
 import React from "react";
+import StyledButton from "../shared/StyledButton";
+import HorizontalList from "../shared/HorizontalList";
 
 function changeSort(newOption, existingSort, callback) {
   if (newOption != existingSort.option) {
@@ -19,7 +21,7 @@ function SortPicker(props) {
   return (
     <div>
       <small>
-        <ul className="list-inline">
+        <HorizontalList>
           <li>
             <label>{props.t("Sort")}:</label>
           </li>
@@ -32,8 +34,8 @@ function SortPicker(props) {
             }
             return (
               <li key={option}>
-                <button
-                  className={btnClass}
+                <StyledButton
+                  styleClass="link"
                   onClick={e => {
                     changeSort(option, props.sort, props.changeSort);
                     e.target.blur();
@@ -41,11 +43,11 @@ function SortPicker(props) {
                 >
                   {props.t(option)}
                   {sortArrow}
-                </button>
+                </StyledButton>
               </li>
             );
           })}
-        </ul>
+        </HorizontalList>
       </small>
     </div>
   );

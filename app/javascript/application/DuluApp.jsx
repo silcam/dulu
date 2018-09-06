@@ -16,7 +16,7 @@ export default class DuluApp extends React.Component {
 
   render() {
     return (
-      <div>
+      <div className="fullHeight">
         <NavBar user={this.state.user} />
 
         <Switch>

@@ -3,6 +3,7 @@ import React from "react";
 import ParticipantRow from "./ParticipantRow";
 import SortPicker from "./SortPicker";
 import { languageSort } from "../../util/sortFunctions";
+import StyledTable from "../shared/StyledTable";
 
 const sortFunctions = {
   language: languageSort,
@@ -73,7 +74,7 @@ class ParticipantsTable extends React.PureComponent {
           t={this.props.t}
           changeSort={this.changeSort}
         />
-        <table className="table">
+        <StyledTable>
           <tbody>
             {this.state.participants.map(participant => {
               return (
@@ -84,7 +85,7 @@ class ParticipantsTable extends React.PureComponent {
               );
             })}
           </tbody>
-        </table>
+        </StyledTable>
       </div>
     );
   }

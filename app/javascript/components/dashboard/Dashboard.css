@@ -1,0 +1,22 @@
+.div {
+    display: inline-block;
+    vertical-align: top;
+}
+
+.sidebar {
+    composes: div;
+    width: 15%;
+}
+
+.leftSidebar {
+    composes: sidebar;
+    background-color: #f5f5f5;
+    min-height: 100%;
+}
+
+.main {
+    composes: div;
+    box-sizing: border-box;
+    width: 70%;
+    padding: 0 16px 0 16px;
+}

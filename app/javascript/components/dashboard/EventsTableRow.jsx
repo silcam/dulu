@@ -5,7 +5,7 @@ import eventDateString from "../../util/eventDateString";
 class EventsTableRow extends React.PureComponent {
   render() {
     const event = this.props.event;
-    const monthNames = this.props.t('date_strings').month_names_short;
+    const monthNames = this.props.t("month_names_short");
     return (
       <tr>
         <td>

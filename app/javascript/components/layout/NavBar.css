@@ -1,0 +1,30 @@
+.nav {
+    background-color: black;
+  }
+
+.nav li {
+  display: inline-block;
+  padding: 8px;
+}
+
+.nav li:hover {
+  background-color: white;
+}
+
+.nav a {
+  color: white;
+}
+
+.nav a:hover {
+  text-decoration: none;
+  color: blue;
+}
+
+.nav :global(a.active) {
+  text-decoration: underline;
+}
+
+.nav :global(a.active):hover {
+  cursor: default;
+  font-weight: normal;
+}

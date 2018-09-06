@@ -8,13 +8,18 @@ const strings = {
   fr: fr
 };
 
-export default function translator(locale) {
-  const tLocale = strings[locale] ? locale : "en";
-  return (key, subs) => {
-    let tStr = getString(strings[tLocale], key);
-    if (tStr === undefined) tStr = key;
-    return tStr;
+export default function translator(setLocale) {
+  setLocale = strings[setLocale] ? setLocale : "en";
+  return (key, subs, locale) => {
+    let tLocale = locale && strings[locale] ? locale : setLocale;
+    return t(key, subs, tLocale);
   };
+}
+
+function t(key, subs, locale) {
+  let tStr = getString(strings[locale], key);
+  if (tStr === undefined) return key;
+  return subs ? tSubs(tStr, subs) : tStr;
 }
 
 function getString(strings, key) {
@@ -27,16 +32,9 @@ function getString(strings, key) {
   }
 }
 
-// export default {
-//   locale: "en",
-//   t: (key, subs) => {
-//     let tStr = strings[this.locale][key];
-//     if (tStr === undefined) tStr = strings.en[key];
-//     return subs
-//       ? Object.keys(subs).reduce((str, sub) => {
-//           const pattern = new RegExp("%{" + sub + "}", "g");
-//           return str.replace(pattern, subs[sub]);
-//         }, tStr)
-//       : tStr;
-//   }
-// };
+function tSubs(str, subs) {
+  return Object.keys(subs).reduce((accumStr, subKey) => {
+    const pattern = new RegExp("%{" + subKey + "}", "g");
+    return accumStr.replace(pattern, subs[subKey]);
+  }, str);
+}

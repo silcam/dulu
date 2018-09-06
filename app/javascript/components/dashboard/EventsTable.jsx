@@ -2,6 +2,7 @@ import React from "react";
 
 import EventsFilterer from "./EventsFilterer";
 import EventsTableSection from "./EventsTableSection";
+import StyledTable from "../shared/StyledTable";
 
 class EventsTable extends React.PureComponent {
   constructor(props) {
@@ -55,7 +56,7 @@ class EventsTable extends React.PureComponent {
           domainFilter={this.state.domainFilter}
           setDomainFilter={this.setDomainFilter}
         />
-        <table className="table">
+        <StyledTable>
           <tbody>
             <EventsTableSection
               events={this.state.currentEvents}
@@ -70,7 +71,7 @@ class EventsTable extends React.PureComponent {
               t={this.props.t}
             />
           </tbody>
-        </table>
+        </StyledTable>
       </div>
     );
   }

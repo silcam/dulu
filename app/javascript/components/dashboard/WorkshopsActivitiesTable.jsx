@@ -2,6 +2,7 @@ import React from "react";
 import WorkshopsActivityRow from "./WorkshopsActivityRow";
 import SortPicker from "./SortPicker";
 import { languageSort, lastUpdateSort } from "../../util/sortFunctions";
+import StyledTable from "../shared/StyledTable";
 
 const sortFunctions = {
   language: languageSort,
@@ -65,7 +66,7 @@ class WorkshopsActivitiesTable extends React.PureComponent {
             changeSort={this.changeSort}
           />
         )}
-        <table className="table">
+        <StyledTable>
           <tbody>
             {this.state.activities.map(activity => {
               return (
@@ -77,7 +78,7 @@ class WorkshopsActivitiesTable extends React.PureComponent {
               );
             })}
           </tbody>
-        </table>
+        </StyledTable>
       </div>
     );
   }

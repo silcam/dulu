@@ -1,26 +1,20 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 
-import styles from "./navBarStyles";
+import styles from "./NavBar.css";
 
 export default function NavBar(props) {
   return (
-    <nav style={styles.nav}>
+    <nav className={styles.nav}>
       <ul>
-        <li style={styles.li}>
-          <NavLink to="/" style={styles.a}>
-            Home
-          </NavLink>
+        <li>
+          <NavLink to="/">Home</NavLink>
         </li>
-        <li style={styles.li}>
-          <NavLink to="/people" style={styles.a}>
-            People
-          </NavLink>
+        <li>
+          <NavLink to="/people">People</NavLink>
         </li>
-        <li style={styles.li}>
-          <NavLink to="/organizations" style={styles.a}>
-            Organizations
-          </NavLink>
+        <li>
+          <NavLink to="/organizations">Organizations</NavLink>
         </li>
       </ul>
     </nav>

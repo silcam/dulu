@@ -5,6 +5,7 @@ import intCompare from "../../util/intCompare";
 import SortPicker from "./SortPicker";
 import TranslationActivityRow from "./TranslationActivityRow";
 import { stageSort, lastUpdateSort } from "../../util/sortFunctions";
+import StyledTable from "../shared/StyledTable";
 
 const sortFunctions = {
   language: (a, b) => {
@@ -77,7 +78,7 @@ class TranslationActivitiesTable extends React.PureComponent {
           t={this.props.t}
           changeSort={this.changeSort}
         />
-        <table className="table">
+        <StyledTable>
           <tbody>
             {this.state.activities.map(activity => {
               return (
@@ -90,7 +91,7 @@ class TranslationActivitiesTable extends React.PureComponent {
               );
             })}
           </tbody>
-        </table>
+        </StyledTable>
       </div>
     );
   }

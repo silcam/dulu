@@ -8,6 +8,7 @@ import {
 } from "../../util/sortFunctions";
 import MediaActivityRow from "./MediaActivityRow";
 import SortPicker from "./SortPicker";
+import StyledTable from "../shared/StyledTable";
 
 const sortFunctions = {
   language: languageSort,
@@ -70,7 +71,7 @@ class MediaTable extends React.PureComponent {
           t={t}
           changeSort={this.changeSort}
         />
-        <table className="table">
+        <StyledTable>
           <tbody>
             {this.state.activities.map(activity => {
               return (
@@ -78,7 +79,7 @@ class MediaTable extends React.PureComponent {
               );
             })}
           </tbody>
-        </table>
+        </StyledTable>
       </div>
     );
   }

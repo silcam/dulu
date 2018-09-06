@@ -130,5 +130,57 @@ export default {
   Home_country: "Home Country",
   confirm_different_person: "This is a different person.",
   delete_person_warning:
-    "Are you sure you want to delete %{name}? This can't be undone."
+    "Are you sure you want to delete %{name}? This can't be undone.",
+
+  notifications: {
+    new_program_participant:
+      "%{user_name} added %{participant_name} to the %{program_name} program.",
+    added_you_to_program:
+      "%{user_name} added you to the %{program_name} program.",
+    new_cluster_participant:
+      "%{user_name} added %{participant_name} to the %{cluster_name} cluster.",
+    added_you_to_cluster:
+      "%{user_name} added you to the %{cluster_name} cluster.",
+    new_stage:
+      "%{user_name} updated %{activity_name} to the %{stage_name} stage for the %{program_name} program.",
+    workshop_complete:
+      "%{user_name} updated the %{workshop_name} workshop for the %{program_name} program as complete.",
+    new_activity:
+      "%{user_name} added a new activity to the %{program_name} program: %{activity_name}.",
+    added_a_testament:
+      "%{user_name} added a new activity to the %{program_name} program: %{testament}.",
+    updated_you: "%{user_name} updated %{your_info}.",
+    updated_person: "%{user_name} updated the info for %{person_name}.",
+    updated_himself: "%{user_name} updated %{his} own info.",
+    your_info: "your info",
+    gave_you_role: "%{user_name} gave you the %{role_name} role.",
+    gave_person_role:
+      "%{user_name} gave the %{role_name} role to %{person_name}.",
+    gave_himself_role: "%{user_name} gave %{himself} the %{role_name} role.",
+    added_person_to_activity:
+      "%{user_name} added %{person_name} to %{activity_name} for the %{program_name} program.",
+    added_you_to_activity:
+      "%{user_name} added you to %{activity_name} for the %{program_name} program.",
+    added_himself_to_activity:
+      "%{user_name} added %{himself} to %{activity_name} for the %{program_name} program.",
+    added_person_to_event:
+      "%{user_name} added %{person_name} to the %{event_name} event.",
+    added_you_to_event: "%{user_name} added you to the %{event_name} event.",
+    added_himself_to_event:
+      "%{user_name} added %{himself} to the %{event_name} event.",
+    new_event_for_program:
+      "%{user_name} created the %{event_name} event for the %{program_name} program.",
+    added_program_to_event:
+      "%{user_name} added the %{program_name} program to the %{event_name} event.",
+    added_cluster_to_event:
+      "%{user_name} added the %{cluster_name} cluster to the %{event_name} event.",
+    his: {
+      M: "his",
+      F: "her"
+    },
+    himself: {
+      M: "himself",
+      F: "herself"
+    }
+  }
 };

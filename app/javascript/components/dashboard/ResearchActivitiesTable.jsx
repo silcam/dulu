@@ -6,6 +6,7 @@ import {
   stageSort,
   lastUpdateSort
 } from "../../util/sortFunctions";
+import StyledTable from "../shared/StyledTable";
 
 const sortFunctions = {
   language: languageSort,
@@ -70,7 +71,7 @@ class ResearchActivitiesTable extends React.PureComponent {
             changeSort={this.changeSort}
           />
         )}
-        <table className="table">
+        <StyledTable>
           <tbody>
             {this.state.activities.map(activity => {
               return (
@@ -82,7 +83,7 @@ class ResearchActivitiesTable extends React.PureComponent {
               );
             })}
           </tbody>
-        </table>
+        </StyledTable>
       </div>
     );
   }

@@ -12,11 +12,11 @@ class EventsFilterer extends React.PureComponent {
       }
     ];
     domainSelectOptions = domainSelectOptions.concat(
-      Object.values(
-        props.t("domains").map(domain => {
+      Object.values(props.t("domains"))
+        .sort()
+        .map(domain => {
           return { display: domain };
         })
-      )
     );
     this.state = {
       domainSelectOptions: domainSelectOptions

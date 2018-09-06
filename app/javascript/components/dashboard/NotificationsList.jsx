@@ -52,7 +52,7 @@ class NotificationsList extends React.PureComponent {
                       className={notification.read ? "" : "unreadNotification"}
                       dangerouslySetInnerHTML={{
                         __html: t_sub(
-                          t(notification.message.key),
+                          t(`notifications.${notification.message.key}`),
                           notification.message.t_vars,
                           notification.message.links
                         )
