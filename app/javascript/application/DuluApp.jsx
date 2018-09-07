@@ -14,6 +14,14 @@ export default class DuluApp extends React.Component {
     };
   }
 
+  componentDidMount() {
+    const user = getUser();
+    this.setState({
+      user: user,
+      t: translator(user.ui_language)
+    });
+  }
+
   render() {
     return (
       <div className="fullHeight">
@@ -74,4 +82,8 @@ function getAuthToken() {
   return document
     .querySelector("meta[name=csrf-token]")
     .getAttribute("content");
+}
+
+function getUser() {
+  return JSON.parse(document.getElementById("userData").innerHTML);
 }

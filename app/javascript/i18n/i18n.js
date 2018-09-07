@@ -18,7 +18,10 @@ export default function translator(setLocale) {
 
 function t(key, subs, locale) {
   let tStr = getString(strings[locale], key);
-  if (tStr === undefined) return key;
+  if (tStr === undefined) {
+    console.error(`Missing translation key: ${key} for locale: ${locale}`);
+    return key;
+  }
   return subs ? tSubs(tStr, subs) : tStr;
 }
 

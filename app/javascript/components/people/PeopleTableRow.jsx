@@ -1,4 +1,5 @@
 import React from "react";
+import StyledButton from "../shared/StyledButton";
 
 class PeopleTableRow extends React.PureComponent {
   personClick = e => {
@@ -21,9 +22,9 @@ class PeopleTableRow extends React.PureComponent {
     return (
       <tr className={rowClass}>
         <td>
-          <button className="btn-link" onClick={this.personClick}>
+          <StyledButton styleClass="link" onClick={this.personClick}>
             {`${person.last_name}, ${person.first_name}`}
-          </button>
+          </StyledButton>
         </td>
         <td>
           {person.organizations

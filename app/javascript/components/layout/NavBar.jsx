@@ -17,6 +17,19 @@ export default function NavBar(props) {
           <NavLink to="/organizations">Organizations</NavLink>
         </li>
       </ul>
+      {props.user && (
+        <ul className={styles.ulRight}>
+          <li>
+            <NavLink to={pathToUser(props.user)}>
+              {props.user.first_name}
+            </NavLink>
+          </li>
+        </ul>
+      )}
     </nav>
   );
+}
+
+function pathToUser(user) {
+  return `/people/${user.id}`;
 }
