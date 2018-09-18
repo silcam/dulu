@@ -8,7 +8,9 @@ export default function NavBar(props) {
     <nav className={styles.nav}>
       <ul>
         <li>
-          <NavLink to="/">Home</NavLink>
+          <NavLink exact to="/">
+            Home
+          </NavLink>
         </li>
         <li>
           <NavLink to="/people">People</NavLink>

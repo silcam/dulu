@@ -1,0 +1,55 @@
+div.container {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: row;
+}
+
+div.master {
+    overflow-y: scroll;
+    margin-right: 16px;
+}
+
+div.master table {
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+div.master table tr {
+    cursor: pointer;
+}
+
+div.master table tr.selected {
+    color: white;
+    background-color: #337ab7;
+}
+
+div.master table tr.selected:hover {
+    color: white;
+    background-color: #337ab7;
+}
+
+div.master table tr:hover {
+    background-color: #ddd;
+}
+
+div.master table td {
+    padding: 8px;
+    border-top: 1px solid #ddd;
+}
+
+div.detail {
+    flex-grow: 1;
+    overflow-y: scroll;
+}
+
+div.detail table {
+    border-collapse: collapse;
+    border-spacing: 0;
+    width: 100%;
+}
+
+div.detail table th, td {
+    padding: 8px;
+    border-top: 1px solid #ddd;
+    text-align: left;
+}

@@ -1,8 +1,10 @@
 import axios from "axios";
 import React from "react";
-
-import ContentColumn from "./ContentColumn";
-import IndexColumn from "./IndexColumn";
+import styles from "../shared/MasterDetail.css";
+import { Switch, Route } from "react-router-dom";
+import PersonContent from "./PersonContent";
+import PeopleTable from "./PeopleTable";
+import NewPersonForm from "./NewPersonForm";
 
 function findSpotForPerson(person, people) {
   let index = 0;
@@ -12,14 +14,6 @@ function findSpotForPerson(person, people) {
   ) {
     ++index;
   }
-  return index;
-}
-
-function findSpotForOrg(org, orgs) {
-  let index = orgs.findIndex(o => {
-    return org.short_name.localeCompare(o.short_name) < 0;
-  });
-  if (index < 0) index = orgs.length;
   return index;
 }
 
@@ -59,16 +53,6 @@ class PeopleBoard extends React.PureComponent {
       .catch(error => {
         console.error(error);
       });
-
-    axios
-      .get("/api/organizations")
-      .then(response => {
-        this.setState({
-          orgs: response.data.organizations,
-          orgCan: response.data.can
-        });
-      })
-      .catch(error => console.error(error));
   }
 
   setSelection = selection => {
@@ -80,13 +64,6 @@ class PeopleBoard extends React.PureComponent {
   setPerson = id => {
     this.setSelection({
       type: "Person",
-      id: id
-    });
-  };
-
-  setOrg = id => {
-    this.setSelection({
-      type: "Org",
       id: id
     });
   };
@@ -108,23 +85,6 @@ class PeopleBoard extends React.PureComponent {
     });
   };
 
-  addOrg = org => {
-    const selection = {
-      type: "Org",
-      id: org.id
-    };
-    this.setState(prevState => {
-      let index = findSpotForOrg(org, prevState.orgs);
-      let orgs = prevState.orgs.slice(0, index);
-      orgs.push(org);
-      orgs = orgs.concat(prevState.orgs.slice(index));
-      return {
-        orgs: orgs,
-        selection: selection
-      };
-    });
-  };
-
   deletePerson = id => {
     this.setState(prevState => {
       const people = prevState.people;
@@ -139,52 +99,53 @@ class PeopleBoard extends React.PureComponent {
     });
   };
 
-  deleteOrg = id => {
-    this.setState(prevState => {
-      const orgs = prevState.orgs;
-      let index = orgs.findIndex(o => {
-        return o.id == id;
-      });
-      let newOrgs = orgs.slice(0, index).concat(orgs.slice(index + 1));
-      return {
-        orgs: newOrgs,
-        selection: null
-      };
-    });
-  };
-
   render() {
-    const indexColClass = this.state.selection ? "narrow" : "";
     return (
-      <div className="">
-        <div className={indexColClass} id="indexColumn">
-          <IndexColumn
-            t={this.props.t}
-            defaultTab={this.props.tab}
-            selection={this.state.selection}
-            people={this.state.people}
-            orgs={this.state.orgs}
-            setPerson={this.setPerson}
-            setOrg={this.setOrg}
-            peopleCan={this.state.peopleCan}
-            orgCan={this.state.orgCan}
+      <div className={styles.container}>
+        <div className={styles.master}>
+          <Route
+            path="/people/:action?"
+            render={({ match }) => (
+              <PeopleTable
+                t={this.props.t}
+                routeAction={match.params.action}
+                people={this.state.people}
+                setPerson={this.setPerson}
+                can={this.state.peopleCan}
+              />
+            )}
           />
         </div>
-        {this.state.selection && (
-          <div id="peopleOrgContent">
-            <ContentColumn
-              selection={this.state.selection}
-              t={this.props.t}
-              setSelection={this.setSelection}
-              setOrg={this.setOrg}
-              addPerson={this.addPerson}
-              deletePerson={this.deletePerson}
-              addOrg={this.addOrg}
-              deleteOrg={this.deleteOrg}
-              authToken={this.props.authToken}
+        <div className={styles.detail}>
+          <Switch>
+            <Route
+              path="/people/new"
+              render={() => (
+                <NewPersonForm
+                  t={this.props.t}
+                  authToken={this.props.authToken}
+                  addPerson={this.addPerson}
+                />
+              )}
             />
-          </div>
-        )}
+            <Route
+              path="/people/:id"
+              render={({ match }) => (
+                <PersonContent
+                  id={match.params.id}
+                  t={this.props.t}
+                  setSelection={this.setSelection}
+                  deletePerson={this.deletePerson}
+                  authToken={this.props.authToken}
+                />
+              )}
+            />
+
+            <Route
+              render={() => <span>Placeholder for PeopleBoard summary</span>}
+            />
+          </Switch>
+        </div>
       </div>
     );
   }

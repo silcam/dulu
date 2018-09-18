@@ -16,6 +16,8 @@ import OrgPeopleTable from "./OrgPeopleTable";
 import RolesTable from "./RolesTable";
 import ErrorMessage from "../shared/ErrorMessage";
 import differentIds from "../../util/differentIds";
+import DeleteIcon from "../shared/icons/DeleteIcon";
+import EditIcon from "../shared/icons/EditIcon";
 
 class BasicPersonContent extends React.PureComponent {
   constructor(props) {
@@ -89,12 +91,19 @@ class BasicPersonContent extends React.PureComponent {
 
     return (
       <div>
-        <h3 style={{ color: "#aaa" }}>
-          <CloseIconButton handleClick={this.clickClose} />
-          {this.props.can.destroy && (
-            <DeleteIconButton handleClick={this.clickDelete} />
+        <div>
+          {this.props.can.update && (
+            <EditIcon
+              iconSize="large"
+              onClick={() => {
+                console.warn("Not implemented");
+              }}
+            />
           )}
-        </h3>
+          {this.props.can.destroy && (
+            <DeleteIcon iconSize="large" onClick={this.clickDelete} />
+          )}
+        </div>
 
         {this.state.deleting && (
           <DangerButton

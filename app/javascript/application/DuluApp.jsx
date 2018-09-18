@@ -1,10 +1,11 @@
 import React from "react";
-import { Switch, Route, NavLink } from "react-router-dom";
+import { Switch, Route } from "react-router-dom";
 import axios from "axios";
 import NavBar from "../components/layout/NavBar";
 import Dashboard from "../components/dashboard/Dashboard";
 import PeopleBoard from "../components/people/PeopleBoard";
 import translator from "../i18n/i18n";
+import styles from "./DuluApp.css";
 
 export default class DuluApp extends React.Component {
   constructor(props) {
@@ -18,30 +19,48 @@ export default class DuluApp extends React.Component {
     const user = getUser();
     this.setState({
       user: user,
-      t: translator(user.ui_language)
+      t: translator(user.ui_language),
+      authToken: getAuthToken()
     });
   }
 
   render() {
     return (
-      <div className="fullHeight">
+      <div className={styles.container}>
         <NavBar user={this.state.user} />
 
         <Switch>
-          <Route path="/people">
-            <PeopleBoard
-              t={this.state.t}
-              authToken={getAuthToken()}
-              tab="people"
-            />
-          </Route>
-          <Route path="/">
-            <Dashboard
-              authToken={getAuthToken()}
-              t={this.state.t}
-              viewPrefs={{}}
-            />
-          </Route>
+          <Route
+            path="/people"
+            render={props => (
+              <PeopleBoard
+                {...props}
+                t={this.state.t}
+                authToken={this.state.authToken}
+              />
+            )}
+          />
+          <Route
+            path="/organizations"
+            render={props => (
+              <PeopleBoard
+                {...props}
+                t={this.state.t}
+                authToken={this.state.authToken}
+              />
+            )}
+          />
+          <Route
+            path="/"
+            render={props => (
+              <Dashboard
+                {...props}
+                authToken={this.state.authToken}
+                t={this.state.t}
+                viewPrefs={{}}
+              />
+            )}
+          />
         </Switch>
       </div>
     );
@@ -53,21 +72,6 @@ async function logout() {
     authenticity_token: getAuthToken()
   });
   document.location = "/";
-}
-
-function FakeDashboard(props) {
-  return (
-    <div>
-      <p>{props.t("common.Loading")}</p>
-      <p>
-        <button onClick={props.swapLocale}>Button</button>
-      </p>
-    </div>
-  );
-}
-
-function People() {
-  return <h1>Da Peeeps Page</h1>;
 }
 
 function Login(props) {

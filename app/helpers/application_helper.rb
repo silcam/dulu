@@ -87,4 +87,8 @@ module ApplicationHelper
     keys.each{ |key| h.merge!(I18n.t(key)) }
     return JSON.generate(h).html_safe
   end
+
+  def model_path(instance)
+    return "/#{instance.class.name.pluralize.underscore}/#{instance.id}"
+  end
 end

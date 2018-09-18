@@ -1,45 +1,28 @@
 import React from "react";
-import StyledButton from "../shared/StyledButton";
+import styles from "../shared/MasterDetail.css";
+import { withRouter } from "react-router-dom";
+import StyledText from "../shared/StyledText";
 
-class PeopleTableRow extends React.PureComponent {
-  personClick = e => {
-    this.props.setPerson(this.props.person.id);
-    e.target.blur();
-  };
+export default withRouter(PeopleTableRow);
 
-  selectionMatches = () => {
-    return (
-      this.props.selection &&
-      this.props.selection.type == "Person" &&
-      this.props.selection.id == this.props.person.id
-    );
-  };
-
-  render() {
-    const person = this.props.person;
-    const longVersion = !this.props.selection;
-    const rowClass = this.selectionMatches() ? "bg-primary" : "";
-    return (
-      <tr className={rowClass}>
-        <td>
-          <StyledButton styleClass="link" onClick={this.personClick}>
-            {`${person.last_name}, ${person.first_name}`}
-          </StyledButton>
-        </td>
-        <td>
+function PeopleTableRow(props) {
+  const person = props.person;
+  const rowClass = props.selected ? styles.selected : "";
+  return (
+    <tr
+      className={rowClass}
+      onClick={() => props.history.push(`/people/${person.id}`)}
+    >
+      <td>{`${person.last_name}, ${person.first_name}`}</td>
+      <td>
+        <StyledText styleClass="subdued">
           {person.organizations
             .map(org => {
               return org.name;
             })
             .join(", ")}
-        </td>
-        {longVersion && <td>{person.roles.join(", ")}</td>}
-        {longVersion && (
-          <td>{person.has_login && this.props.t("Dulu_account")}</td>
-        )}
-      </tr>
-    );
-  }
+        </StyledText>
+      </td>
+    </tr>
+  );
 }
-
-export default PeopleTableRow;
