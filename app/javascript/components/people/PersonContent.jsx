@@ -19,7 +19,7 @@ import differentIds from "../../util/differentIds";
 import DeleteIcon from "../shared/icons/DeleteIcon";
 import EditIcon from "../shared/icons/EditIcon";
 
-class BasicPersonContent extends React.PureComponent {
+export default class PersonContent extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
@@ -145,15 +145,15 @@ class BasicPersonContent extends React.PureComponent {
           />
         </h2>
 
-        <PersonBasicInfo
+        {/* <PersonBasicInfo
           t={t}
           person={person}
           updateField={this.updateField}
           editEnabled={editEnabled}
           setErrorMessage={this.setErrorMessage}
-        />
+        /> */}
 
-        <OrgPeopleTable
+        {/* <OrgPeopleTable
           t={t}
           person={person}
           editEnabled={editEnabled}
@@ -173,12 +173,12 @@ class BasicPersonContent extends React.PureComponent {
 
         <ParticipantsTable person={person} t={t} />
 
-        <EventsTable person={person} t={t} />
+        <EventsTable person={person} t={t} /> */}
       </div>
     );
   }
 }
 
-const PersonContent = backedModel(BasicPersonContent, "/api/people", "person");
+// const PersonContent = backedModel(BasicPersonContent, "/api/people", "person");
 
-export default PersonContent;
+// export default PersonContent;

@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 class ParticipantsTable extends React.PureComponent {
   render() {
@@ -19,12 +20,12 @@ class ParticipantsTable extends React.PureComponent {
               return (
                 <tr key={participant.id}>
                   <td>
-                    <a href={clusterProgramPath}>{participant.name}</a>
+                    <Link to={clusterProgramPath}>{participant.name}</Link>
                   </td>
                   <td className="subtle-links">
-                    <a href={`/participants/${participant.id}`}>
+                    <Link to={`/participants/${participant.id}`}>
                       {participant.roles.join(", ")}
-                    </a>
+                    </Link>
                   </td>
                 </tr>
               );

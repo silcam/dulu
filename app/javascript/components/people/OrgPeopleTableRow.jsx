@@ -1,10 +1,10 @@
 import React from "react";
 import update from "immutability-helper";
-
 import DeleteIconButton from "../shared/DeleteIconButton";
 import EditIconButton from "../shared/EditIconButton";
 import { FuzzyDateGroup, TextInputGroup } from "../shared/formGroup";
 import SmallSaveAndCancel from "../shared/SmallSaveAndCancel";
+import { Link } from "react-router-dom";
 
 import dateString from "../../util/dateString";
 import tSub from "../../util/tSub";
@@ -109,7 +109,7 @@ class OrgPeopleTableRow extends React.PureComponent {
   render() {
     const orgPerson = this.props.orgPerson;
     const t = this.props.t;
-    const monthNames = t("date_strings.month_names_short");
+    const monthNames = t("month_names_short");
     const editEnabled = this.props.editEnabled;
 
     if (this.state.editing) {
@@ -156,9 +156,9 @@ class OrgPeopleTableRow extends React.PureComponent {
                                 onClick={()=>{this.props.setOrg(orgPerson.organization.id)}}>
                             {orgPerson.organization.name} 
                         </button> */}
-            <a href={`/organizations/${orgPerson.organization.id}`}>
+            <Link to={`/organizations/${orgPerson.organization.id}`}>
               {orgPerson.organization.name}
-            </a>
+            </Link>
           </td>
           <td>
             {orgPerson.start_date && (

@@ -4,8 +4,8 @@ import searchInterface from "./searchInterface";
 
 /*
     Required props:
-        cancel()
-        save(id, name)
+        text
+        updateValue(id, name)
         queryPath - relative url
     Optional props:
         placeholder
@@ -15,12 +15,14 @@ import searchInterface from "./searchInterface";
 class BasicSearchTextInput extends React.PureComponent {
   constructor(props) {
     super(props);
-    this.state = {
-      text: props.text || "",
-      selection: -1,
-      showResults: true
-    };
+    this.state = this.freshState();
   }
+
+  freshState = () => ({
+    text: this.props.text || "",
+    selection: -1,
+    showResults: false
+  });
 
   handleChange = e => {
     this.setState({
@@ -28,6 +30,11 @@ class BasicSearchTextInput extends React.PureComponent {
       showResults: true
     });
     this.props.updateQuery(e.target.value);
+    if (e.target.value == "")
+      this.save({
+        id: null,
+        name: ""
+      });
   };
 
   handleKeyDown = e => {
@@ -74,7 +81,7 @@ class BasicSearchTextInput extends React.PureComponent {
   };
 
   handleBlur = () => {
-    this.props.cancel();
+    this.setState(this.freshState());
   };
 
   handleEnter = () => {
@@ -83,7 +90,10 @@ class BasicSearchTextInput extends React.PureComponent {
     } else if (this.props.results[0]) {
       this.save(this.props.results[0]);
     } else {
-      this.props.cancel();
+      this.save({
+        name: "",
+        id: null
+      });
     }
   };
 
@@ -92,7 +102,7 @@ class BasicSearchTextInput extends React.PureComponent {
       text: item.name,
       showResults: false
     });
-    this.props.save(item.id, item.name);
+    this.props.updateValue(item.id, item.name);
   };
 
   render() {
@@ -101,7 +111,6 @@ class BasicSearchTextInput extends React.PureComponent {
       <div className="searchTextInput">
         <input
           type="text"
-          className="form-control"
           name="query"
           value={this.state.text}
           onChange={this.handleChange}

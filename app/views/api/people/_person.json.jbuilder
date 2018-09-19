@@ -40,9 +40,11 @@ json.person do
     json.upcoming @person.events.upcoming, partial: 'api/people/event', as: :event
     json.past @person.events.past.limit(5), partial: 'api/people/event', as: :event
   end
-end
 
-json.can do
-  json.update can?(:update, @person)
-  json.destroy can?(:destroy, @person)
+  json.can do
+    json.update can?(:update, @person)
+    json.destroy can?(:destroy, @person)
+  end
+
+  json.loaded true
 end

@@ -11,10 +11,10 @@ function PeopleTableRow(props) {
   return (
     <tr
       className={rowClass}
-      onClick={() => props.history.push(`/people/${person.id}`)}
+      onClick={() => props.history.push(`/people/show/${person.id}`)}
     >
       <td>{`${person.last_name}, ${person.first_name}`}</td>
-      <td>
+      {/* <td>
         <StyledText styleClass="subdued">
           {person.organizations
             .map(org => {
@@ -22,7 +22,7 @@ function PeopleTableRow(props) {
             })
             .join(", ")}
         </StyledText>
-      </td>
+      </td> */}
     </tr>
   );
 }

@@ -1,7 +1,6 @@
 import React from "react";
 
 import Checkbox from "../shared/Checkbox";
-import StyledButton from "../shared/StyledButton";
 
 class FilterPicker extends React.PureComponent {
   newFilterAll = value => {
@@ -45,14 +44,14 @@ class FilterPicker extends React.PureComponent {
               <label>{t("Filter")}:</label>
             </li>
             <li>
-              <StyledButton onClick={this.clickAll} styleClass="link">
+              <button onClick={this.clickAll} className="link">
                 {t("All")}
-              </StyledButton>
+              </button>
             </li>
             <li>
-              <StyledButton onClick={this.clickNone} styleClass="link">
+              <button onClick={this.clickNone} className="link">
                 {t("None")}
-              </StyledButton>
+              </button>
             </li>
           </ul>
           <ul className="list-inline">

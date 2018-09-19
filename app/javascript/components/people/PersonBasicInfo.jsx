@@ -8,13 +8,15 @@ import EditableTextSelect from "../shared/EditableTextSelect";
 import EditableTextYesNo from "../shared/EditableTextYesNo";
 
 import EditableTextUiLanguage from "./EditableTextUiLanguage";
+import TextOrEditText from "../shared/TextOrEditText";
+import TextOrYesNo from "../shared/TextOrYesNo";
+import TextOrSelect from "../shared/TextOrSelect";
+import TextOrSearchInput from "../shared/TextOrSearchInput";
 
 function PersonBasicInfo(props) {
   const t = props.t;
   const person = props.person;
-  const homeCountry = person.home_country || { id: null, name: "" };
-  const hasLoginText = person.has_login ? t("Yes") : t("No");
-  const emailPrefOptions = selectOptionsFromObject(t("email_prefs"));
+  const home_country = person.home_country || { id: null, name: "" };
 
   const updateUiLang = (field, value) => {
     props.updateField(field, value, () => {
@@ -41,25 +43,29 @@ function PersonBasicInfo(props) {
         <tr>
           <th>{t("Home_country")}</th>
           <td>
-            <EditableTextSearchInput
+            <TextOrSearchInput
+              editing={props.editing}
+              text={home_country.name}
               queryPath="/api/countries/search"
-              text={homeCountry.name}
-              value={homeCountry.id}
-              field={"country_id"}
-              editEnabled={props.editEnabled}
-              updateValue={props.updateField}
+              updateValue={(id, name) =>
+                props.updatePerson({
+                  home_country: {
+                    id: id,
+                    name: name
+                  },
+                  country_id: id
+                })
+              }
             />
           </td>
         </tr>
         <tr>
           <th>{t("Email")}</th>
           <td>
-            <EditableTextBox
-              field={"email"}
-              text={person.email}
+            <TextOrEditText
+              editing={props.editing}
               value={person.email}
-              updateValue={updateEmail}
-              editEnabled={props.editEnabled}
+              updateValue={value => props.updatePerson({ email: value })}
             />
           </td>
         </tr>
@@ -67,13 +73,11 @@ function PersonBasicInfo(props) {
           <tr>
             <th>{t("Dulu_account")}</th>
             <td>
-              <EditableTextYesNo
-                text={hasLoginText}
+              <TextOrYesNo
+                editing={props.editing}
                 value={person.has_login}
-                field="has_login"
-                updateValue={updateLogin}
-                editEnabled={props.editEnabled}
-                t={t}
+                t={props.t}
+                updateValue={value => props.updatePerson({ has_login: value })}
               />
             </td>
           </tr>
@@ -83,26 +87,29 @@ function PersonBasicInfo(props) {
             <tr>
               <th>{t("dulu_preferred_language")}</th>
               <td>
-                <EditableTextUiLanguage
-                  text={t(`languages.${person.ui_language}`)}
+                <TextOrSelect
+                  editing={props.editing}
                   value={person.ui_language}
-                  field="ui_language"
-                  updateValue={updateUiLang}
-                  editEnabled={props.editEnabled}
-                  t={t}
+                  options={{
+                    en: "English",
+                    fr: "Français"
+                  }}
+                  updateValue={value =>
+                    props.updatePerson({ ui_language: value })
+                  }
                 />
               </td>
             </tr>
             <tr>
               <th>{t("Email_frequency")}</th>
               <td>
-                <EditableTextSelect
-                  text={t(`email_prefs.${person.email_pref}`)}
+                <TextOrSelect
+                  editing={props.editing}
                   value={person.email_pref}
-                  field={"email_pref"}
-                  updateValue={props.updateField}
-                  editEnabled={props.editEnabled}
-                  options={emailPrefOptions}
+                  options={t("email_prefs")}
+                  updateValue={value =>
+                    props.updatePerson({ email_pref: value })
+                  }
                 />
               </td>
             </tr>

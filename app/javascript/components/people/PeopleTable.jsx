@@ -1,6 +1,5 @@
 import React from "react";
 import PeopleTableRow from "./PeopleTableRow";
-import StyledLink from "../shared/StyledLink";
 import { Link } from "react-router-dom";
 
 class PeopleTable extends React.PureComponent {
@@ -18,9 +17,9 @@ class PeopleTable extends React.PureComponent {
       <div>
         {this.props.can.create && (
           <p style={{ paddingLeft: "8px" }}>
-            <StyledLink styleClass="btnBlue">
-              <Link to="/people/new">{t("Add_new_person")}</Link>
-            </StyledLink>
+            <Link to="/people/new" className="btn">
+              {t("Add_new_person")}
+            </Link>
           </p>
         )}
         <table className="table">
@@ -30,10 +29,8 @@ class PeopleTable extends React.PureComponent {
                 <PeopleTableRow
                   key={person.id}
                   person={person}
-                  selected={this.props.routeAction == person.id}
+                  selected={this.props.id == person.id}
                   t={t}
-                  setPerson={this.props.setPerson}
-                  selection={this.props.selection}
                 />
               );
             })}

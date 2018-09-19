@@ -24,6 +24,12 @@ export default class DuluApp extends React.Component {
     });
   }
 
+  updateLanguage = language => {
+    this.setState({
+      t: translator(language)
+    });
+  };
+
   render() {
     return (
       <div className={styles.container}>
@@ -31,12 +37,14 @@ export default class DuluApp extends React.Component {
 
         <Switch>
           <Route
-            path="/people"
-            render={props => (
+            path="/people/:action?/:id?"
+            render={({ match }) => (
               <PeopleBoard
-                {...props}
+                action={match.params.action}
+                id={match.params.id}
                 t={this.state.t}
                 authToken={this.state.authToken}
+                updateLanguage={this.updateLanguage}
               />
             )}
           />
