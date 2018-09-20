@@ -33,5 +33,5 @@ export default function NavBar(props) {
 }
 
 function pathToUser(user) {
-  return `/people/${user.id}`;
+  return `/people/show/${user.id}`;
 }
