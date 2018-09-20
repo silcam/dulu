@@ -1,13 +1,12 @@
 import React from "react";
+import AlertBox from "./AlertBox";
 
-function SaveIndicator(props) {
+export default function SaveIndicator(props) {
   if (!props.saving && !props.saved) return null;
 
   return (
-    <p className="alertBox alertYellow">
-      {props.saving ? props.t("Saving") : props.t("All_changes_saved")}
-    </p>
+    <AlertBox
+      text={props.saving ? props.t("Saving") : props.t("All_changes_saved")}
+    />
   );
 }
-
-export default SaveIndicator;

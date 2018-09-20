@@ -11,23 +11,33 @@ export default class DuluApp extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      t: translator("en")
+      t: translator("en"),
+      locale: "en"
     };
   }
 
   componentDidMount() {
     const user = getUser();
-    this.setState({
-      user: user,
-      t: translator(user.ui_language),
-      authToken: getAuthToken()
+    this.setState(prevState => {
+      const t =
+        user.ui_language == prevState.locale
+          ? prevState.t
+          : translator(user.ui_language);
+      return {
+        user: user,
+        t: t,
+        locale: user.ui_language,
+        authToken: getAuthToken()
+      };
     });
   }
 
-  updateLanguage = language => {
-    this.setState({
-      t: translator(language)
-    });
+  updateLanguage = locale => {
+    if (locale != this.state.locale)
+      this.setState({
+        locale: locale,
+        t: translator(locale)
+      });
   };
 
   render() {
