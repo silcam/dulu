@@ -1,14 +1,8 @@
 import React from "react";
+import PropTypes from "prop-types";
+import styles from "./Callout.css";
 
-/*
-    Required props:
-        handleClick()
-        message
-        buttonText
-        strings
-*/
-
-class DangerButton extends React.PureComponent {
+export default class DangerButton extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = { userIsSure: false };
@@ -22,7 +16,7 @@ class DangerButton extends React.PureComponent {
 
   render() {
     return (
-      <div className="bs-callout callout-red dangerButton">
+      <div className={styles.calloutRed}>
         <h4>{this.props.message}</h4>
         <label style={{ display: "block" }}>
           <input
@@ -35,14 +29,14 @@ class DangerButton extends React.PureComponent {
           {this.props.t("Im_sure")}
         </label>
         <button
-          className="btn btn-danger"
+          className="btnRed"
           onClick={this.props.handleClick}
           disabled={!this.state.userIsSure}
         >
           {this.props.buttonText}
         </button>
         &nbsp;
-        <button className="btn btn-primary" onClick={this.props.handleCancel}>
+        <button onClick={this.props.handleCancel}>
           {this.props.t("Cancel")}
         </button>
       </div>
@@ -50,4 +44,10 @@ class DangerButton extends React.PureComponent {
   }
 }
 
-export default DangerButton;
+DangerButton.propTypes = {
+  handleClick: PropTypes.func.isRequired,
+  handleCancel: PropTypes.func.isRequired,
+  message: PropTypes.string.isRequired,
+  buttonText: PropTypes.string.isRequired,
+  t: PropTypes.func.isRequired
+};

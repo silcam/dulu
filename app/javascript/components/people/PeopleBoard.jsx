@@ -5,9 +5,15 @@ import PeopleTable from "./PeopleTable";
 import NewPersonForm from "./NewPersonForm";
 import PersonPage from "./PersonPage";
 import update from "immutability-helper";
-import { findById, findIndexById, insertInto } from "../../util/findById";
+import {
+  findById,
+  findIndexById,
+  insertInto,
+  deleteFrom
+} from "../../util/findById";
 import Loading from "../shared/Loading";
 import { personCompare, sameName } from "../../models/person";
+import { axiosDelete, statusOK } from "../../util/network";
 
 class PeopleBoard extends React.PureComponent {
   state = {
@@ -103,18 +109,17 @@ class PeopleBoard extends React.PureComponent {
     }
   }
 
-  deletePerson = id => {
-    this.setState(prevState => {
-      const people = prevState.people;
-      let index = people.findIndex(p => {
-        return p.id == id;
-      });
-      let newPeople = people.slice(0, index).concat(people.slice(index + 1));
-      return {
-        people: newPeople,
-        selection: null
-      };
+  deletePerson = async id => {
+    this.props.history.push("/people");
+    const response = await axiosDelete(`/api/people/${id}`, {
+      authenticity_token: this.props.authToken
     });
+    if (statusOK(response))
+      this.setState(prevState => {
+        return {
+          people: deleteFrom(prevState.people, id)
+        };
+      });
   };
 
   render() {

@@ -14,3 +14,10 @@ export function insertInto(array, newItem, compare) {
     ? update(array, { $push: [newItem] })
     : update(array, { $splice: [[insertIndex, 0, newItem]] });
 }
+
+export function deleteFrom(array, id) {
+  const deleteIndex = findIndexById(array, id);
+  return deleteIndex >= 0
+    ? update(array, { $splice: [[deleteIndex, 1]] })
+    : array;
+}

@@ -5,6 +5,8 @@ import TextOrEditText from "../shared/TextOrEditText";
 import merge from "deepmerge";
 import SaveIndicator from "../shared/SaveIndicator";
 import PersonBasicInfo from "./PersonBasicInfo";
+import DangerButton from "../shared/DangerButton";
+import { fullName } from "../../models/person";
 
 export default class PersonPage extends React.PureComponent {
   state = {
@@ -47,6 +49,22 @@ export default class PersonPage extends React.PureComponent {
             })
           }
         />
+
+        {this.state.deleting && (
+          <DangerButton
+            handleClick={() => {
+              this.props.deletePerson(person.id);
+            }}
+            handleCancel={() => this.setState({ deleting: false })}
+            message={this.props.t("delete_person_warning", {
+              name: fullName(person)
+            })}
+            buttonText={this.props.t("delete_person", {
+              name: fullName(person)
+            })}
+            t={this.props.t}
+          />
+        )}
 
         <SaveIndicator
           t={this.props.t}

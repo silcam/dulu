@@ -20,7 +20,7 @@ export default {
   Day: "Jour",
   delete_person: "Supprimer %{name} irrévocablement",
   delete_person_warning:
-    "Êtes-vous certain(e) que vous voulez supprimer %{name}. Cette action ne peut pas être défaite.",
+    "Êtes-vous certain que vous voulez supprimer %{name} ? Cette action ne peut pas être défaite.",
   Delete_workshop_confirmation: "Supprimer l'atelier %{name} ?",
   Description: "Description",
   domains: {
@@ -58,7 +58,7 @@ export default {
     F: "Femme"
   },
   Home_country: "Pays d'origine",
-  Im_sure: "Je suis certain(e)",
+  Im_sure: "Je suis certain.",
   Language: "Langue",
   Language_programs: "Programmes de langue",
   languages: {
