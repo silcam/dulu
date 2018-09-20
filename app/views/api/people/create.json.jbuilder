@@ -1,1 +1,0 @@
-json.partial! 'person_for_index', person: @person

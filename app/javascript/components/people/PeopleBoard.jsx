@@ -1,24 +1,13 @@
 import axios from "axios";
 import React from "react";
 import styles from "../shared/MasterDetail.css";
-import { Switch, Route } from "react-router-dom";
-import PersonContent from "./PersonContent";
 import PeopleTable from "./PeopleTable";
 import NewPersonForm from "./NewPersonForm";
 import PersonPage from "./PersonPage";
 import update from "immutability-helper";
-import { findById, findIndexById } from "../../util/findById";
-
-function findSpotForPerson(person, people) {
-  let index = 0;
-  while (
-    index < people.length &&
-    person.last_name.localeCompare(people[index].last_name) > 0
-  ) {
-    ++index;
-  }
-  return index;
-}
+import { findById, findIndexById, insertInto } from "../../util/findById";
+import Loading from "../shared/Loading";
+import { personCompare, sameName } from "../../models/person";
 
 class PeopleBoard extends React.PureComponent {
   state = {
@@ -59,21 +48,36 @@ class PeopleBoard extends React.PureComponent {
       });
   };
 
-  addPerson = person => {
-    const selection = {
-      type: "Person",
-      id: person.id
-    };
-    this.setState(prevState => {
-      let index = findSpotForPerson(person, prevState.people);
-      let people = prevState.people.slice(0, index);
-      people.push(person);
-      people = people.concat(prevState.people.slice(index));
-      return {
-        people: people,
-        selection: selection
-      };
+  findDuplicate = newPerson => {
+    return this.state.people.find(person => sameName(person, newPerson));
+  };
+
+  addPerson = async person => {
+    const duplicate = !person.not_a_duplicate && this.findDuplicate(person);
+    if (duplicate) {
+      this.setState({ duplicatePerson: duplicate });
+      return;
+    }
+    this.setState({ savingNew: true });
+    const response = await axios.post(`/api/people`, {
+      authenticity_token: this.props.authToken,
+      person: person
     });
+    if (response.data.person) {
+      const newPerson = response.data.person;
+      this.setState(prevState => {
+        const newPeople = insertInto(
+          prevState.people,
+          newPerson,
+          personCompare
+        );
+        return {
+          people: newPeople,
+          savingNew: false
+        };
+      });
+      this.props.history.push(`/people/show/${newPerson.id}`);
+    }
   };
 
   updatePerson = async person => {
@@ -130,13 +134,14 @@ class PeopleBoard extends React.PureComponent {
           {this.props.action == "new" && (
             <NewPersonForm
               t={this.props.t}
-              authToken={this.props.authToken}
+              saving={this.state.savingNew}
               addPerson={this.addPerson}
+              duplicatePerson={this.state.duplicatePerson}
             />
           )}
           {this.props.action == "show" &&
             selectedPerson &&
-            selectedPerson.loaded && (
+            (selectedPerson.loaded ? (
               <PersonPage
                 key={selectedPerson.id}
                 person={selectedPerson}
@@ -144,7 +149,9 @@ class PeopleBoard extends React.PureComponent {
                 updatePerson={this.updatePerson}
                 deletePerson={this.deletePerson}
               />
-            )}
+            ) : (
+              <Loading t={this.props.t} />
+            ))}
           {!this.props.action && (
             <span>Placeholder for PeopleBoard summary</span>
           )}

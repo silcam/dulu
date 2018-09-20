@@ -32,7 +32,17 @@ button, a.btn {
     margin: 8px;
 }
 
+button:disabled, a.btn:disabled,
+button:hover:disabled, a.btn:hover:disabled  {
+    cursor: not-allowed;
+    opacity: 0.65;
+    background-color: #337ab7;
+    border-color: #2e6da4;
+}
+
 button:hover, a.btn:hover {
+    color: white;
+    text-decoration: none;
     background-color: #286090;
     border-color: #204d74;
 }
@@ -42,7 +52,10 @@ button:hover:active, a.btn:hover:active {
     border-color: #122b40;
 }
 
-button.btnRed, a.btnRed {
+button.btnRed, 
+a.btnRed, 
+button.btnRed:hover:disabled, 
+a.btnRed:hover:disabled{
     background-color: #d9534f;
     border-color: #d43f3a;
 }
@@ -52,7 +65,7 @@ button.btnRed:hover, a.btnRed:hover {
     border-color: #ac2925;
 }
 
-button.btnRed:hover:active, a.btn:hover:active {
+button.btnRed:hover:active, a.btnRed:hover:active {
     background-color: #ac2925;
     border-color: #761c19;
 }

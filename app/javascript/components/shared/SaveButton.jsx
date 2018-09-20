@@ -12,14 +12,9 @@ import React from "react";
 
 function SaveButton(props) {
   const text = props.saveInProgress ? props.t("Saving") : props.t("Save");
-  const classes = "btn btn-primary " + (props.extraClasses || "");
-  const disabled = props.disabled ? true : false;
+  const disabled = (props.disabled || props.saveInProgress) && "disabled";
   return (
-    <button
-      className={classes}
-      onClick={props.handleClick}
-      disabled={props.saveInProgress || disabled}
-    >
+    <button onClick={props.handleClick} disabled={disabled}>
       {text}
     </button>
   );

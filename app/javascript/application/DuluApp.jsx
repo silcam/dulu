@@ -38,8 +38,9 @@ export default class DuluApp extends React.Component {
         <Switch>
           <Route
             path="/people/:action?/:id?"
-            render={({ match }) => (
+            render={({ match, history }) => (
               <PeopleBoard
+                history={history}
                 action={match.params.action}
                 id={match.params.id}
                 t={this.state.t}

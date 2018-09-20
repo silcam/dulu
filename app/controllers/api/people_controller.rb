@@ -17,6 +17,7 @@ class Api::PeopleController < ApplicationController
     else
       @person.save!
       NotificationMailer.delay.welcome(@person, current_user) if @person.has_login
+      render :show
     end
   end
 

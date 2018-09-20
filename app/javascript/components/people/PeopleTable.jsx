@@ -1,6 +1,7 @@
 import React from "react";
 import PeopleTableRow from "./PeopleTableRow";
 import { Link } from "react-router-dom";
+import Loading from "../shared/Loading";
 
 class PeopleTable extends React.PureComponent {
   newPersonForm = () => {
@@ -11,7 +12,7 @@ class PeopleTable extends React.PureComponent {
     const people = this.props.people;
     const t = this.props.t;
     if (people.length == 0) {
-      return <p className="alertBox alertYellow">{t("Loading")}</p>;
+      return <Loading t={t} />;
     }
     return (
       <div>

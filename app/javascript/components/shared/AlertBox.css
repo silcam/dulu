@@ -1,0 +1,10 @@
+.alertBox {
+    padding: 8px;
+    border-radius: 4px;
+    background-color: #fcf8e3;
+}
+
+.alertBoxRed {
+    composes: alertBox;
+    background-color: #f2dede;
+}

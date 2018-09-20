@@ -1,9 +1,13 @@
 import React from "react";
+import PropTypes from "prop-types";
+import AlertBox from "./AlertBox";
 
-function ErrorMessage(props) {
+export default function ErrorMessage(props) {
   if (!props.message) return null;
 
-  return <p className="alertBox alertRed">{props.message}</p>;
+  return <AlertBox message={props.message} styleClass="alertBoxRed" />;
 }
 
-export default ErrorMessage;
+ErrorMessage.propTypes = {
+  message: PropTypes.string
+};

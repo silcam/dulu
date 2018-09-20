@@ -1,30 +1,22 @@
-import axios from "axios";
 import React from "react";
-
 import CloseIconButton from "../shared/CloseIconButton";
 import { SelectGroup, ValidatedTextInputGroup } from "../shared/formGroup";
 import SaveButton from "../shared/SaveButton";
-
 import selectOptionsFromObject from "../../util/selectOptionsFromObject";
-
 import DuplicateWarning from "./DuplicateWarning";
 
 class NewPersonForm extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      person: {
-        first_name: "",
-        last_name: "",
-        gender: "M",
-        has_login: false,
-        email: "",
-        ui_language: "en"
-      },
-      saving: false,
-      failedSave: false
-    };
-  }
+  state = {
+    person: {
+      first_name: "",
+      last_name: "",
+      gender: "M",
+      has_login: false,
+      email: "",
+      ui_language: "en"
+    },
+    failedSave: false
+  };
 
   handleInput = e => {
     const name = e.target.name;
@@ -65,25 +57,7 @@ class NewPersonForm extends React.Component {
     if (!this.inputValid()) {
       this.setState({ failedSave: true });
     } else {
-      this.setState({ saving: true });
-      axios
-        .post("/api/people", {
-          authenticity_token: this.props.authToken,
-          person: this.state.person
-        })
-        .then(response => {
-          if (response.data.duplicatePerson) {
-            this.setState({
-              duplicatePerson: response.data.duplicatePerson,
-              saving: false
-            });
-          } else {
-            this.props.addPerson(response.data);
-          }
-        })
-        .catch(error => {
-          console.error(error);
-        });
+      this.props.addPerson(this.state.person);
     }
   };
 
@@ -166,10 +140,10 @@ class NewPersonForm extends React.Component {
           </div>
         )}
 
-        {this.state.duplicatePerson && (
+        {this.props.duplicatePerson && (
           <DuplicateWarning
             t={t}
-            duplicatePerson={this.state.duplicatePerson}
+            duplicatePerson={this.props.duplicatePerson}
             not_a_duplicate={person.not_a_duplicate}
             handleCheck={this.handleCheck}
           />
@@ -177,7 +151,8 @@ class NewPersonForm extends React.Component {
         <p>
           <SaveButton
             handleClick={this.clickSave}
-            saveInProgress={this.state.saving}
+            saveInProgress={this.props.saving}
+            disabled={this.props.duplicatePerson && !person.not_a_duplicate}
             t={t}
           />
         </p>
