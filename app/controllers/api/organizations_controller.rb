@@ -10,6 +10,7 @@ class Api::OrganizationsController < ApplicationController
   def create
     authorize! :create, Organization
     @org = Organization.create!(org_params)
+    render :show
   end
 
   def update

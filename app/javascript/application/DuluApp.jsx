@@ -6,6 +6,7 @@ import Dashboard from "../components/dashboard/Dashboard";
 import PeopleBoard from "../components/people/PeopleBoard";
 import translator from "../i18n/i18n";
 import styles from "./DuluApp.css";
+import OrganizationsBoard from "../components/organizations/OrganizationsBoard";
 
 export default class DuluApp extends React.Component {
   constructor(props) {
@@ -60,10 +61,11 @@ export default class DuluApp extends React.Component {
             )}
           />
           <Route
-            path="/organizations"
-            render={props => (
-              <PeopleBoard
-                {...props}
+            path="/organizations/:action?/:id?"
+            render={({ match, history }) => (
+              <OrganizationsBoard
+                history={history}
+                {...match.params}
                 t={this.state.t}
                 authToken={this.state.authToken}
               />

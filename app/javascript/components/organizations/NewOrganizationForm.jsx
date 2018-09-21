@@ -1,7 +1,4 @@
-import axios from "axios";
 import React from "react";
-
-import CloseIconButton from "../shared/CloseIconButton";
 import {
   TextAreaGroup,
   TextInputGroup,
@@ -9,11 +6,11 @@ import {
 } from "../shared/formGroup";
 import SaveButton from "../shared/SaveButton";
 
-class NewOrgForm extends React.Component {
+export default class NewOrganizationForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      org: {
+      organization: {
         short_name: "",
         long_name: "",
         description: ""
@@ -27,9 +24,9 @@ class NewOrgForm extends React.Component {
     const name = e.target.name;
     const value = e.target.value;
     this.setState(prevState => {
-      let org = prevState.org;
-      org[name] = value;
-      return { org: org };
+      let organization = prevState.organization;
+      organization[name] = value;
+      return { organization: organization };
     });
   };
 
@@ -40,7 +37,7 @@ class NewOrgForm extends React.Component {
   };
 
   inputValid = () => {
-    return this.state.org.short_name.length > 0;
+    return this.state.organization.short_name.length > 0;
   };
 
   clickSave = () => {
@@ -48,42 +45,24 @@ class NewOrgForm extends React.Component {
       this.setState({ failedSave: true });
     } else {
       this.setState({ saving: true });
-      axios
-        .post("/api/organizations", {
-          authenticity_token: this.props.authToken,
-          organization: this.state.org
-        })
-        .then(response => {
-          this.props.addOrg(response.data);
-        })
-        .catch(error => {
-          console.error(error);
-        });
+      this.props.addOrganization(this.state.organization);
     }
-  };
-
-  clickClose = () => {
-    this.props.setSelection(null);
   };
 
   render() {
     const t = this.props.t;
-    const org = this.state.org;
+    const organization = this.state.organization;
 
     return (
       <div>
         <div onKeyDown={this.handleKeyDown}>
-          <h3 style={{ color: "#aaa" }}>
-            <CloseIconButton handleClick={this.clickClose} />
-          </h3>
-
           <h3>{t("New_organization")}</h3>
 
           <ValidatedTextInputGroup
             handleInput={this.handleInput}
             name="short_name"
             label={t("Short_name")}
-            value={org.short_name}
+            value={organization.short_name}
             t={t}
             validateNotBlank
             showError={this.state.failedSave}
@@ -94,7 +73,7 @@ class NewOrgForm extends React.Component {
             handleInput={this.handleInput}
             name="long_name"
             label={t("Long_name")}
-            value={org.long_name}
+            value={organization.long_name}
           />
         </div>
 
@@ -102,7 +81,7 @@ class NewOrgForm extends React.Component {
           handleInput={this.handleInput}
           name="description"
           label={t("Description")}
-          value={org.description}
+          value={organization.description}
         />
 
         <p>
@@ -116,5 +95,3 @@ class NewOrgForm extends React.Component {
     );
   }
 }
-
-export default NewOrgForm;

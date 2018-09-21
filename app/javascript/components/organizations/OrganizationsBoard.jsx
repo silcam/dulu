@@ -1,193 +1,58 @@
-import axios from "axios";
 import React from "react";
+import styles from "../shared/MasterDetail.css";
+import Loading from "../shared/Loading";
+import thingBoard from "../shared/thingBoard";
+import OrganizationsTable from "./OrganizationsTable";
+import NewOrganizationForm from "./NewOrganizationForm";
+import { organizationCompare } from "../../models/organization";
+import OrganizationPage from "./OrganizationPage";
 
-import ContentColumn from "./ContentColumn";
-import IndexColumn from "./IndexColumn";
-
-function findSpotForPerson(person, people) {
-  let index = 0;
-  while (
-    index < people.length &&
-    person.last_name.localeCompare(people[index].last_name) > 0
-  ) {
-    ++index;
-  }
-  return index;
-}
-
-function findSpotForOrg(org, orgs) {
-  let index = orgs.findIndex(o => {
-    return org.short_name.localeCompare(o.short_name) < 0;
-  });
-  if (index < 0) index = orgs.length;
-  return index;
-}
-
-class PeopleBoard extends React.PureComponent {
-  constructor(props) {
-    super(props);
-    let selection = null;
-    if (props.personId) {
-      selection = {
-        type: "Person",
-        id: props.personId
-      };
-    } else if (props.orgId) {
-      selection = {
-        type: "Org",
-        id: props.orgId
-      };
-    }
-    this.state = {
-      selection: selection,
-      people: [],
-      orgs: [],
-      peopleCan: {},
-      orgCan: {}
-    };
-  }
-
-  componentDidMount() {
-    axios
-      .get("/api/people")
-      .then(response => {
-        this.setState({
-          people: response.data.people,
-          peopleCan: response.data.can
-        });
-      })
-      .catch(error => {
-        console.error(error);
-      });
-
-    axios
-      .get("/api/organizations")
-      .then(response => {
-        this.setState({
-          orgs: response.data.organizations,
-          orgCan: response.data.can
-        });
-      })
-      .catch(error => console.error(error));
-  }
-
-  setSelection = selection => {
-    this.setState({
-      selection: selection
-    });
-  };
-
-  setPerson = id => {
-    this.setSelection({
-      type: "Person",
-      id: id
-    });
-  };
-
-  setOrg = id => {
-    this.setSelection({
-      type: "Org",
-      id: id
-    });
-  };
-
-  addPerson = person => {
-    const selection = {
-      type: "Person",
-      id: person.id
-    };
-    this.setState(prevState => {
-      let index = findSpotForPerson(person, prevState.people);
-      let people = prevState.people.slice(0, index);
-      people.push(person);
-      people = people.concat(prevState.people.slice(index));
-      return {
-        people: people,
-        selection: selection
-      };
-    });
-  };
-
-  addOrg = org => {
-    const selection = {
-      type: "Org",
-      id: org.id
-    };
-    this.setState(prevState => {
-      let index = findSpotForOrg(org, prevState.orgs);
-      let orgs = prevState.orgs.slice(0, index);
-      orgs.push(org);
-      orgs = orgs.concat(prevState.orgs.slice(index));
-      return {
-        orgs: orgs,
-        selection: selection
-      };
-    });
-  };
-
-  deletePerson = id => {
-    this.setState(prevState => {
-      const people = prevState.people;
-      let index = people.findIndex(p => {
-        return p.id == id;
-      });
-      let newPeople = people.slice(0, index).concat(people.slice(index + 1));
-      return {
-        people: newPeople,
-        selection: null
-      };
-    });
-  };
-
-  deleteOrg = id => {
-    this.setState(prevState => {
-      const orgs = prevState.orgs;
-      let index = orgs.findIndex(o => {
-        return o.id == id;
-      });
-      let newOrgs = orgs.slice(0, index).concat(orgs.slice(index + 1));
-      return {
-        orgs: newOrgs,
-        selection: null
-      };
-    });
-  };
+class Board extends React.PureComponent {
+  state = {};
 
   render() {
-    const indexColClass = this.state.selection ? "narrow" : "";
+    const selectedOrganization = this.props.selected;
     return (
-      <div className="">
-        <div className={indexColClass} id="indexColumn">
-          <IndexColumn
+      <div className={styles.container}>
+        <div className={styles.master}>
+          <OrganizationsTable
             t={this.props.t}
-            defaultTab={this.props.tab}
-            selection={this.state.selection}
-            people={this.state.people}
-            orgs={this.state.orgs}
-            setPerson={this.setPerson}
-            setOrg={this.setOrg}
-            peopleCan={this.state.peopleCan}
-            orgCan={this.state.orgCan}
+            id={this.props.id}
+            organizations={this.props.organizations}
+            can={this.props.can}
           />
         </div>
-        {this.state.selection && (
-          <div id="peopleOrgContent">
-            <ContentColumn
-              selection={this.state.selection}
+        <div className={styles.detail}>
+          {this.props.action == "new" && (
+            <NewOrganizationForm
               t={this.props.t}
-              setSelection={this.setSelection}
-              setOrg={this.setOrg}
-              addPerson={this.addPerson}
-              deletePerson={this.deletePerson}
-              addOrg={this.addOrg}
-              deleteOrg={this.deleteOrg}
-              authToken={this.props.authToken}
+              saving={this.props.savingNew}
+              addOrganization={this.props.add}
             />
-          </div>
-        )}
+          )}
+          {this.props.action == "show" &&
+            selectedOrganization &&
+            (selectedOrganization.loaded ? (
+              <OrganizationPage
+                key={selectedOrganization.id}
+                organization={selectedOrganization}
+                t={this.props.t}
+                update={this.props.update}
+                delete={this.props.delete}
+              />
+            ) : (
+              <Loading t={this.props.t} />
+            ))}
+          {!this.props.action && <span>Placeholder for OrgsBoard summary</span>}
+        </div>
       </div>
     );
   }
 }
 
-export default PeopleBoard;
+const OrganizationsBoard = thingBoard(Board, {
+  name: "organization",
+  compare: organizationCompare
+});
+
+export default OrganizationsBoard;

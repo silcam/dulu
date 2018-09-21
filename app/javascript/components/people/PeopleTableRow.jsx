@@ -1,7 +1,6 @@
 import React from "react";
 import styles from "../shared/MasterDetail.css";
 import { withRouter } from "react-router-dom";
-import StyledText from "../shared/StyledText";
 
 export default withRouter(PeopleTableRow);
 
