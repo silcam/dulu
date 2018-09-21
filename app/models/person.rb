@@ -28,7 +28,7 @@ class Person < ApplicationRecord
   validates :gender, inclusion: { in: %w(M F)}
   validates :email, uniqueness: true, allow_blank: true
 
-  default_scope{ order('LOWER(last_name) ASC', 'LOWER(first_name) ASC', 'id ASC') }
+  default_scope{ order(:last_name, :first_name) }
 
   before_validation :normalize_name
 
