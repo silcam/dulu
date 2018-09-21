@@ -92,6 +92,14 @@ export default function thingBoard(Board, thingParams) {
       }
     };
 
+    replace = thing => {
+      this.setState(prevState => ({
+        things: update(prevState.things, {
+          [findIndexById(prevState.things, thing.id)]: { $set: thing }
+        })
+      }));
+    };
+
     delete = async id => {
       this.props.history.push(baseUrl);
       const response = await axiosDelete(`${baseApiUrl}/${id}`, {
@@ -117,6 +125,7 @@ export default function thingBoard(Board, thingParams) {
           add={this.add}
           update={this.update}
           delete={this.delete}
+          replace={this.replace}
           selected={selectedThing}
           {...{
             [thingsName]: this.state.things

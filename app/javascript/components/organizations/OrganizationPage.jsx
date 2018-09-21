@@ -1,5 +1,5 @@
 import React from "react";
-import PersonActionBar from "../people/PersonActionBar";
+import EditActionBar from "../shared/EditActionBar";
 import deepcopy from "../../util/deepcopy";
 import TextOrEditText from "../shared/TextOrEditText";
 import merge from "deepmerge";
@@ -39,7 +39,7 @@ export default class OrganizationPage extends React.PureComponent {
 
     return (
       <div>
-        <PersonActionBar
+        <EditActionBar
           can={organization.can}
           editing={this.state.editing}
           t={this.props.t}

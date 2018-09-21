@@ -1,4 +1,5 @@
 import React from "react";
+import axios from "axios";
 import styles from "../shared/MasterDetail.css";
 import PeopleTable from "./PeopleTable";
 import NewPersonForm from "./NewPersonForm";
@@ -65,6 +66,8 @@ class Board extends React.PureComponent {
                 t={this.props.t}
                 updatePerson={this.updatePerson}
                 deletePerson={this.props.delete}
+                replacePerson={this.props.replace}
+                authToken={this.props.authToken}
               />
             ) : (
               <Loading t={this.props.t} />

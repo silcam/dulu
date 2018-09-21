@@ -1,5 +1,5 @@
 import React from "react";
-import PersonActionBar from "./PersonActionBar";
+import EditActionBar from "../shared/EditActionBar";
 import deepcopy from "../../util/deepcopy";
 import TextOrEditText from "../shared/TextOrEditText";
 import merge from "deepmerge";
@@ -7,6 +7,8 @@ import SaveIndicator from "../shared/SaveIndicator";
 import PersonBasicInfo from "./PersonBasicInfo";
 import DangerButton from "../shared/DangerButton";
 import { fullName } from "../../models/person";
+import MyOrganizationsTable from "./MyOrganizationsTable";
+import update from "immutability-helper";
 
 export default class PersonPage extends React.PureComponent {
   state = {
@@ -15,6 +17,7 @@ export default class PersonPage extends React.PureComponent {
 
   updatePerson = mergePerson => {
     this.setState(prevState => ({
+      edited: true,
       person: merge(prevState.person, mergePerson)
     }));
   };
@@ -24,10 +27,21 @@ export default class PersonPage extends React.PureComponent {
     const newPerson = await this.props.updatePerson(this.state.person);
     this.setState({
       editing: false,
+      edited: false,
       saving: false,
       savedChanges: true,
       person: newPerson
     });
+  };
+
+  replaceOrganizationPeople = newOrganizationsPeople => {
+    const newPerson = update(this.props.person, {
+      organization_people: { $set: newOrganizationsPeople }
+    });
+    this.setState({
+      person: deepcopy(newPerson)
+    });
+    this.props.replacePerson(newPerson);
   };
 
   render() {
@@ -35,9 +49,10 @@ export default class PersonPage extends React.PureComponent {
 
     return (
       <div>
-        <PersonActionBar
+        <EditActionBar
           can={person.can}
           editing={this.state.editing}
+          saveDisabled={!this.state.edited}
           t={this.props.t}
           edit={() => this.setState({ editing: true })}
           delete={() => this.setState({ deleting: true })}
@@ -45,6 +60,7 @@ export default class PersonPage extends React.PureComponent {
           cancel={() =>
             this.setState({
               editing: false,
+              edited: false,
               person: deepcopy(this.props.person)
             })
           }
@@ -91,6 +107,13 @@ export default class PersonPage extends React.PureComponent {
           person={person}
           editing={this.state.editing}
           updatePerson={this.updatePerson}
+        />
+
+        <MyOrganizationsTable
+          t={this.props.t}
+          person={person}
+          authToken={this.props.authToken}
+          replaceOrganizationPeople={this.replaceOrganizationPeople}
         />
       </div>
     );

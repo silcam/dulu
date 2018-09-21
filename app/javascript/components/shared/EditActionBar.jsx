@@ -2,11 +2,13 @@ import React from "react";
 import EditIcon from "../shared/icons/EditIcon";
 import DeleteIcon from "../shared/icons/DeleteIcon";
 
-export default function PersonActionBar(props) {
+export default function EditActionBar(props) {
   if (!props.can) return null;
   return props.editing ? (
     <div>
-      <button onClick={props.save}>{props.t("Save")}</button>
+      <button onClick={props.save} disabled={props.saveDisabled && "disabled"}>
+        {props.t("Save")}
+      </button>
       <button className="btnRed" onClick={props.cancel}>
         {props.t("Cancel")}
       </button>
