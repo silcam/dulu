@@ -8,10 +8,6 @@ import DangerButton from "../shared/DangerButton";
 import TextOrSearchInput from "../shared/TextOrSearchInput";
 import TextOrTextArea from "../shared/TextOrTextArea";
 
-console.warn(
-  "Using PersonActionBar in OrganizationPage...this should be fixed"
-);
-
 export default class OrganizationPage extends React.PureComponent {
   state = {
     organization: deepcopy(this.props.organization)

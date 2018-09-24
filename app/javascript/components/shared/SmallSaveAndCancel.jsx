@@ -1,33 +1,33 @@
 import React from "react";
+import PropTypes from "prop-types";
 
-import SmallCancelButton from "./SmallCancelButton";
-import SmallSaveButton from "./SmallSaveButton";
-
-/*
-    Required props:
-        function handleSave()
-        function handleCancel()
-        boolean saveInProgress
-        strings
-    Optional props:
-        boolean floatRight
-        boolean saveDisabled
-*/
-
-function SmallSaveAndCancel(props) {
-  const style = props.floatRight ? { float: "right" } : {};
+export default function SmallSaveAndCancel(props) {
+  const style = props.style || {};
   return (
     <span style={style}>
-      <SmallSaveButton
-        handleClick={props.handleSave}
-        saveInProgress={props.saveInProgress}
-        t={props.t}
-        disabled={props.saveDisabled}
-      />
-      &nbsp;
-      <SmallCancelButton handleClick={props.handleCancel} t={props.t} />
+      <button
+        onClick={props.handleSave}
+        // saveInProgress={props.saveInProgress}
+        disabled={props.saveDisabled && "disabled"}
+        style={{ fontSize: "11px" }}
+      >
+        {props.t("Save")}
+      </button>
+      <button
+        onClick={props.handleCancel}
+        className="btnRed"
+        style={{ fontSize: "11px" }}
+      >
+        {props.t("Cancel")}
+      </button>
     </span>
   );
 }
 
-export default SmallSaveAndCancel;
+SmallSaveAndCancel.propTypes = {
+  handleSave: PropTypes.func.isRequired,
+  handleCancel: PropTypes.func.isRequired,
+  t: PropTypes.func.isRequired,
+  saveDisabled: PropTypes.bool,
+  style: PropTypes.object
+};

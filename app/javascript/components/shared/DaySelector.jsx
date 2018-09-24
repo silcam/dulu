@@ -1,15 +1,7 @@
 import React from "react";
+import PropTypes from "prop-types";
 
-/*
-    Required params:
-        function handleInput
-        int value
-    Options params:
-        int maxValue
-        string name
-*/
-
-function DaySelector(props) {
+export default function DaySelector(props) {
   const name = props.name || "day";
   const maxValue = props.maxValue || 31;
 
@@ -37,4 +29,10 @@ function DaySelector(props) {
   );
 }
 
-export default DaySelector;
+DaySelector.propTypes = {
+  handleInput: PropTypes.func.isRequired,
+  t: PropTypes.func.isRequired,
+  value: PropTypes.number,
+  maxValue: PropTypes.number,
+  name: PropTypes.string
+};

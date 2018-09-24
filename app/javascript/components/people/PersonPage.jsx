@@ -9,6 +9,8 @@ import DangerButton from "../shared/DangerButton";
 import { fullName } from "../../models/person";
 import MyOrganizationsTable from "./MyOrganizationsTable";
 import update from "immutability-helper";
+import ParticipantsTable from "./ParticipantsTable";
+import EventsTable from "./EventsTable";
 
 export default class PersonPage extends React.PureComponent {
   state = {
@@ -115,6 +117,10 @@ export default class PersonPage extends React.PureComponent {
           authToken={this.props.authToken}
           replaceOrganizationPeople={this.replaceOrganizationPeople}
         />
+
+        <ParticipantsTable t={this.props.t} person={person} />
+
+        <EventsTable t={this.props.t} person={person} />
       </div>
     );
   }

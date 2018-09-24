@@ -1,12 +1,7 @@
 import React from "react";
+import PropTypes from "prop-types";
 
-/*
-    Required props:
-        function handleInput
-        int value
-*/
-
-function YearInput(props) {
+export default function YearInput(props) {
   const name = props.name || "year";
   return (
     <input
@@ -22,4 +17,8 @@ function YearInput(props) {
   );
 }
 
-export default YearInput;
+YearInput.propTypes = {
+  handleInput: PropTypes.func.isRequired,
+  t: PropTypes.func.isRequired,
+  value: PropTypes.string
+};

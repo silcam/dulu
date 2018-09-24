@@ -2,6 +2,7 @@ import React from "react";
 import { TextInputGroup, FuzzyDateGroup } from "../shared/formGroup";
 import deepcopy from "../../util/deepcopy";
 import merge from "deepmerge";
+import SmallSaveAndCancel from "../shared/SmallSaveAndCancel";
 
 export default class MyOrganizationForm extends React.PureComponent {
   constructor(props) {
@@ -19,7 +20,13 @@ export default class MyOrganizationForm extends React.PureComponent {
         mergeOrganizationPerson
       )
     }));
+    if (mergeOrganizationPerson.start_date)
+      this.setState({ invalidStartDate: undefined });
+    if (mergeOrganizationPerson.end_date)
+      this.setState({ invalidEndDate: undefined });
   };
+
+  invalid = () => this.state.invalidStartDate || this.state.invalidEndDate;
 
   save = () => {
     this.props.updateOrganizationPerson(this.state.organization_person);
@@ -30,7 +37,7 @@ export default class MyOrganizationForm extends React.PureComponent {
     const org_person = this.state.organization_person;
     return (
       <tr>
-        <td>
+        <td colSpan="4">
           <label>{org_person.organization.name}</label>
           <TextInputGroup
             label={t("Position")}
@@ -39,36 +46,37 @@ export default class MyOrganizationForm extends React.PureComponent {
             }
             value={org_person.position}
           />
-          {/* <FuzzyDateGroup
+          <FuzzyDateGroup
             label={t("Start_date")}
             date={org_person.start_date}
-            handleDateInput={this.setStartDate}
-            dateIsInvalid={this.setInvalid}
-            strings={t("date_strings")}
+            handleDateInput={date =>
+              this.updateOrganizationPerson({ start_date: date })
+            }
+            dateIsInvalid={() => {
+              this.setState({ invalidStartDate: true });
+            }}
+            t={t}
+            allowBlank
           />
           <FuzzyDateGroup
             label={t("End_date")}
             date={org_person.end_date}
-            handleDateInput={this.setEndDate}
-            dateIsInvalid={this.setInvalid}
-            strings={t("date_strings")}
+            handleDateInput={date =>
+              this.updateOrganizationPerson({ end_date: date })
+            }
+            dateIsInvalid={() => {
+              this.setState({ invalidEndDate: true });
+            }}
+            t={t}
             allowBlank
-          /> */}
+          />
           <div>
-            <button
-              onClick={this.save}
-              disabled={this.state.invalid && "disabled"}
-              style={{ fontSize: "11px" }}
-            >
-              {t("Save")}
-            </button>
-            <button
-              className="btnRed"
-              onClick={this.props.cancelEdit}
-              style={{ fontSize: "11px" }}
-            >
-              {t("Cancel")}
-            </button>
+            <SmallSaveAndCancel
+              handleSave={this.save}
+              handleCancel={this.props.cancelEdit}
+              t={t}
+              saveDisabled={this.invalid()}
+            />
           </div>
         </td>
       </tr>

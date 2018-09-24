@@ -7,6 +7,18 @@
     fill: #aaa;
 }
 
+.iconBlue {
+    composes: icon;
+}
+
+.iconBlue:hover path {
+    fill: #337ab7
+}
+
+.iconBlue:hover:active path {
+    fill: #286090
+}
+
 .iconYellow {
     composes: icon;
 }

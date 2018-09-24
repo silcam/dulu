@@ -1,17 +1,7 @@
 import React from "react";
+import PropTypes from "prop-types";
 
-/*
-    Required props:
-        function handleInput
-        int value
-        strings (date_strings)
-    Optional props:
-        string name
-*/
-
-// const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-
-function MonthSelector(props) {
+export default function MonthSelector(props) {
   const name = props.name || "month";
   return (
     <select
@@ -32,4 +22,9 @@ function MonthSelector(props) {
   );
 }
 
-export default MonthSelector;
+MonthSelector.propTypes = {
+  handleInput: PropTypes.func.isRequired,
+  value: PropTypes.number,
+  t: PropTypes.func.isRequired,
+  name: PropTypes.string
+};
