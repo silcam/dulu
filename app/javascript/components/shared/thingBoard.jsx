@@ -1,4 +1,3 @@
-import axios from "axios";
 import React from "react";
 import PropTypes from "prop-types";
 import update from "immutability-helper";
@@ -8,7 +7,7 @@ import {
   insertInto,
   deleteFrom
 } from "../../util/findById";
-import { axiosDelete, statusOK } from "../../util/network";
+import DuluAxios from "../../util/DuluAxios";
 
 export default function thingBoard(Board, thingParams) {
   const thingName = thingParams.name;
@@ -23,15 +22,26 @@ export default function thingBoard(Board, thingParams) {
       can: {}
     };
 
-    async componentDidMount() {
-      const response = await axios.get(baseApiUrl);
-      if (response.data[thingsName])
-        this.setState({
-          things: response.data[thingsName],
-          can: response.data.can
-        });
-      this.fetchThingIfNeeded();
+    handleNetworkError(tryAgain) {
+      this.props.setNetworkError({ tryAgain: tryAgain });
     }
+
+    async componentDidMount() {
+      this.fetchList();
+    }
+
+    fetchList = async () => {
+      try {
+        const data = await DuluAxios.get(baseApiUrl);
+        this.setState({
+          things: data[thingsName],
+          can: data.can
+        });
+        this.fetchThingIfNeeded();
+      } catch (error) {
+        this.handleNetworkError(this.fetchList);
+      }
+    };
 
     async componentDidUpdate() {
       this.fetchThingIfNeeded();
@@ -40,31 +50,34 @@ export default function thingBoard(Board, thingParams) {
     fetchThingIfNeeded = () => {
       if (this.props.id) {
         let thing = findById(this.state.things, this.props.id);
-        if (thing && !thing.loaded) this.fetchThing(this.props.id);
+        if (thing && !thing.loaded && !this.state.networkError)
+          this.fetchThing(this.props.id);
       }
     };
 
     fetchThing = async id => {
-      const response = await axios.get(`${baseApiUrl}/${id}`);
-      if (response.data[thingName])
+      try {
+        const data = await DuluAxios.get(`${baseApiUrl}/${id}`);
         this.setState(prevState => {
           const thingIndex = findIndexById(prevState.things, id);
           return {
             things: update(prevState.things, {
-              [thingIndex]: { $set: response.data[thingName] }
+              [thingIndex]: { $set: data[thingName] }
             })
           };
         });
+      } catch (error) {
+        this.handleNetworkError(() => this.fetchThing(id));
+      }
     };
 
     add = async thing => {
-      this.setState({ savingNew: true });
-      const response = await axios.post(baseApiUrl, {
-        authenticity_token: this.props.authToken,
-        [thingName]: thing
-      });
-      if (response.data[thingName]) {
-        const newThing = response.data[thingName];
+      try {
+        this.setState({ savingNew: true });
+        const data = await DuluAxios.post(baseApiUrl, {
+          [thingName]: thing
+        });
+        const newThing = data[thingName];
         this.setState(prevState => {
           return {
             things: insertInto(prevState.things, newThing, thingCompare),
@@ -73,22 +86,26 @@ export default function thingBoard(Board, thingParams) {
         });
         this.props.history.push(`${baseUrl}/show/${newThing.id}`);
         return newThing;
+      } catch (error) {
+        this.handleNetworkError(() => this.add(thing));
+        this.setState({ savingNew: false });
       }
     };
 
     update = async thing => {
-      const response = await axios.put(`${baseApiUrl}/${thing.id}`, {
-        authenticity_token: this.props.authToken,
-        [thingName]: thing
-      });
-      if (response.data[thingName]) {
-        const newThing = response.data[thingName];
+      try {
+        const data = await DuluAxios.put(`${baseApiUrl}/${thing.id}`, {
+          [thingName]: thing
+        });
+        const newThing = data[thingName];
         this.setState(prevState => ({
           things: update(prevState.things, {
             [findIndexById(prevState.things, newThing.id)]: { $set: newThing }
           })
         }));
         return newThing;
+      } catch (error) {
+        this.handleNetworkError(() => this.update(thing));
       }
     };
 
@@ -101,17 +118,17 @@ export default function thingBoard(Board, thingParams) {
     };
 
     delete = async id => {
-      this.props.history.push(baseUrl);
-      const response = await axiosDelete(`${baseApiUrl}/${id}`, {
-        authenticity_token: this.props.authToken
-      });
-      if (statusOK(response)) {
+      try {
+        await DuluAxios.delete(`${baseApiUrl}/${id}`);
+        this.props.history.push(baseUrl);
         this.setState(prevState => {
           return {
             things: deleteFrom(prevState.things, id)
           };
         });
         return true;
+      } catch (error) {
+        this.handleNetworkError(() => this.delete(id));
       }
     };
 
@@ -137,7 +154,6 @@ export default function thingBoard(Board, thingParams) {
 
     static propTypes = {
       id: PropTypes.string,
-      authToken: PropTypes.string,
       action: PropTypes.string,
       history: PropTypes.object.isRequired
     };

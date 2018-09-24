@@ -93,6 +93,7 @@ export default {
   Name_not_blank: "Nom ne peut pas être vide.",
   need_email_for_login:
     "Il faut un adresse mail avant d'activer le compte Dulu.",
+  network_error_message: "Erreur de connexion au serveur Dulu.",
   New_organization: "Nouvelle organisation",
   New_person: "Nouvelle personne",
   No: "Non",
@@ -173,6 +174,7 @@ export default {
   Sort: "Trier par",
   Stage: "Étape",
   Start_date: "Date de commencement",
+  Try_again: "Réessayer",
   Upcoming_events: "Événements futurs",
   Updated: "Mise à jour",
   validation: {

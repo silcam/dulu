@@ -11,6 +11,7 @@ import MyOrganizationsTable from "./MyOrganizationsTable";
 import update from "immutability-helper";
 import ParticipantsTable from "./ParticipantsTable";
 import EventsTable from "./EventsTable";
+import DuluAxios from "../../util/DuluAxios";
 
 export default class PersonPage extends React.PureComponent {
   state = {
@@ -25,14 +26,24 @@ export default class PersonPage extends React.PureComponent {
   };
 
   save = async () => {
-    this.setState({ saving: true });
-    const newPerson = await this.props.updatePerson(this.state.person);
+    try {
+      const data = await DuluAxios.put(`/api/people/${this.state.person.id}`, {
+        person: this.state.person
+      });
+      this.props.replacePerson(data.person);
+      this.setStateAfterSave(data.person);
+    } catch (error) {
+      this.props.setNetworkError({ tryAgain: this.save });
+    }
+  };
+
+  setStateAfterSave = person => {
     this.setState({
       editing: false,
       edited: false,
       saving: false,
       savedChanges: true,
-      person: newPerson
+      person: person
     });
   };
 
@@ -114,8 +125,8 @@ export default class PersonPage extends React.PureComponent {
         <MyOrganizationsTable
           t={this.props.t}
           person={person}
-          authToken={this.props.authToken}
           replaceOrganizationPeople={this.replaceOrganizationPeople}
+          setNetworkError={this.props.setNetworkError}
         />
 
         <ParticipantsTable t={this.props.t} person={person} />

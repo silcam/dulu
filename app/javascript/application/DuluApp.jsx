@@ -7,6 +7,8 @@ import PeopleBoard from "../components/people/PeopleBoard";
 import translator from "../i18n/i18n";
 import styles from "./DuluApp.css";
 import OrganizationsBoard from "../components/organizations/OrganizationsBoard";
+import NetworkErrorAlert from "../components/shared/NetworkErrorAlert";
+import DuluAxios from "../util/DuluAxios";
 
 export default class DuluApp extends React.Component {
   constructor(props) {
@@ -27,10 +29,12 @@ export default class DuluApp extends React.Component {
       return {
         user: user,
         t: t,
-        locale: user.ui_language,
-        authToken: getAuthToken()
+        locale: user.ui_language
       };
     });
+    DuluAxios.clearNetworkError = () => {
+      this.setState({ networkError: undefined });
+    };
   }
 
   updateLanguage = locale => {
@@ -41,11 +45,22 @@ export default class DuluApp extends React.Component {
       });
   };
 
+  setNetworkError = networkError => {
+    this.setState({ networkError: networkError });
+  };
+
   render() {
     return (
       <div className={styles.container}>
         <NavBar user={this.state.user} />
-
+        {this.state.networkError && (
+          <div>
+            <NetworkErrorAlert
+              t={this.state.t}
+              tryAgain={this.state.networkError.tryAgain}
+            />
+          </div>
+        )}
         <Switch>
           <Route
             path="/people/:action?/:id?"
@@ -55,8 +70,8 @@ export default class DuluApp extends React.Component {
                 action={match.params.action}
                 id={match.params.id}
                 t={this.state.t}
-                authToken={this.state.authToken}
                 updateLanguage={this.updateLanguage}
+                setNetworkError={this.setNetworkError}
               />
             )}
           />
@@ -67,7 +82,7 @@ export default class DuluApp extends React.Component {
                 history={history}
                 {...match.params}
                 t={this.state.t}
-                authToken={this.state.authToken}
+                setNetworkError={this.setNetworkError}
               />
             )}
           />
@@ -76,9 +91,9 @@ export default class DuluApp extends React.Component {
             render={props => (
               <Dashboard
                 {...props}
-                authToken={this.state.authToken}
                 t={this.state.t}
                 viewPrefs={{}}
+                setNetworkError={this.setNetworkError}
               />
             )}
           />
@@ -101,12 +116,6 @@ function Login(props) {
       <a href="http://localhost:3000/login">Log in</a>
     </div>
   );
-}
-
-function getAuthToken() {
-  return document
-    .querySelector("meta[name=csrf-token]")
-    .getAttribute("content");
 }
 
 function getUser() {

@@ -1,5 +1,4 @@
 import React from "react";
-import axios from "axios";
 import styles from "../shared/MasterDetail.css";
 import PeopleTable from "./PeopleTable";
 import NewPersonForm from "./NewPersonForm";
@@ -24,10 +23,9 @@ class Board extends React.PureComponent {
     }
   };
 
-  updatePerson = async person => {
-    const newPerson = await this.props.update(person);
-    this.updateLanguageIfNecessary(newPerson);
-    return newPerson;
+  replacePerson = async person => {
+    this.props.replace(person);
+    this.updateLanguageIfNecessary(person);
   };
 
   updateLanguageIfNecessary(newPerson) {
@@ -64,10 +62,9 @@ class Board extends React.PureComponent {
                 key={selectedPerson.id}
                 person={selectedPerson}
                 t={this.props.t}
-                updatePerson={this.updatePerson}
+                replacePerson={this.replacePerson}
                 deletePerson={this.props.delete}
-                replacePerson={this.props.replace}
-                authToken={this.props.authToken}
+                setNetworkError={this.props.setNetworkError}
               />
             ) : (
               <Loading t={this.props.t} />

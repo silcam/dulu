@@ -4,10 +4,11 @@ import styles from "./AlertBox.css";
 
 export default function AlertBox(props) {
   const styleClass = props.styleClass || "alertBox";
-  return <p className={styles[styleClass]}>{props.text}</p>;
+  const contents = props.text || props.children;
+  return <p className={styles[styleClass]}>{contents}</p>;
 }
 
 AlertBox.propTypes = {
-  text: PropTypes.string.isRequired,
+  text: PropTypes.string,
   styleClass: PropTypes.string
 };

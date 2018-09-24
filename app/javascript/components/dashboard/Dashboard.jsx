@@ -191,10 +191,7 @@ class Dashboard extends React.PureComponent {
           />
         </div>
         <div className={styles.sidebar}>
-          <NotificationsSidebar
-            t={this.props.t}
-            authToken={this.props.authToken}
-          />
+          <NotificationsSidebar t={this.props.t} />
         </div>
       </div>
     );

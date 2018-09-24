@@ -13,7 +13,6 @@ export default class MyOrganizationForm extends React.PureComponent {
   }
 
   updateOrganizationPerson = mergeOrganizationPerson => {
-    console.log(mergeOrganizationPerson);
     this.setState(prevState => ({
       organization_person: merge(
         prevState.organization_person,

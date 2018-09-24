@@ -4,13 +4,26 @@ import DeleteIcon from "../shared/icons/DeleteIcon";
 import MyOrganizationForm from "./MyOrganizationForm";
 import { Link } from "react-router-dom";
 import dateString from "../../util/dateString";
+import DuluAxios from "../../util/DuluAxios";
 
 export default class MyOrganizationsTableRow extends React.PureComponent {
   state = {};
 
-  updateOrganizationPerson = organization_person => {
-    this.setState({ editing: false });
-    this.props.updateOrganizationPerson(organization_person);
+  updateOrganizationPerson = async organization_person => {
+    try {
+      const data = await DuluAxios.put(
+        `/api/organization_people/${organization_person.id}`,
+        {
+          organization_person: organization_person
+        }
+      );
+      this.props.replaceOrganizationPerson(data.organization_person);
+      this.setState({ editing: false });
+    } catch (error) {
+      this.props.setNetworkError({
+        tryAgain: () => this.updateOrganizationPerson(organization_person)
+      });
+    }
   };
 
   render() {

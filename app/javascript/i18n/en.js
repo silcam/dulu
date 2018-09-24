@@ -91,6 +91,7 @@ export default {
   Name: "Name",
   Name_not_blank: "Name can't be blank.",
   need_email_for_login: "An email is required before enabling Dulu login.",
+  network_error_message: "Failed to connect to Dulu server.",
   New_organization: "New Organization",
   New_person: "New Person",
   No: "No",
@@ -169,6 +170,7 @@ export default {
   Sort: "Sort by",
   Stage: "Stage",
   Start_date: "Start Date",
+  Try_again: "Try again",
   Upcoming_events: "Upcoming Events",
   Updated: "Updated",
   validation: {

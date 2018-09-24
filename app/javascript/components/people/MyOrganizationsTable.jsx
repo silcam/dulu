@@ -1,69 +1,61 @@
 import React from "react";
 import MyOrganizationsTableRow from "./MyOrganizationsTableRow";
-import Axios from "axios";
 import { findIndexById } from "../../util/findById";
 import update from "immutability-helper";
 import AddIcon from "../shared/icons/AddIcon";
 import SearchTextInput from "../shared/SearchTextInput";
 import SmallSaveAndCancel from "../shared/SmallSaveAndCancel";
-import { axiosDelete, statusOK } from "../../util/network";
+import DuluAxios from "../../util/DuluAxios";
 
 export default class MyOrganizationsTable extends React.PureComponent {
   state = {};
 
   createOrganizationPerson = async () => {
-    if (!this.state.newOrganization) return;
-    const organizationPerson = {
-      person_id: this.props.person.id,
-      organization_id: this.state.newOrganization.id
-    };
-    const response = await Axios.post("/api/organization_people", {
-      authenticity_token: this.props.authToken,
-      organization_person: organizationPerson
-    });
-    if (response.data.organization_person) {
-      const newOrganizationPerson = response.data.organization_person;
+    try {
+      if (!this.state.newOrganization) return;
+      const organizationPerson = {
+        person_id: this.props.person.id,
+        organization_id: this.state.newOrganization.id
+      };
+      const data = await DuluAxios.post("/api/organization_people", {
+        organization_person: organizationPerson
+      });
+      const newOrganizationPerson = data.organization_person;
       this.props.replaceOrganizationPeople(
         update(this.props.person.organization_people, {
           $push: [newOrganizationPerson]
         })
       );
       this.setState({ addingNew: false });
+    } catch (error) {
+      this.props.setNetworkError({ tryAgain: this.createOrganizationPerson });
     }
   };
 
-  updateOrganizationPerson = async organizationPerson => {
-    const response = await Axios.put(
-      `/api/organization_people/${organizationPerson.id}`,
-      {
-        authenticity_token: this.props.authToken,
-        organization_person: organizationPerson
-      }
+  replaceOrganizationPerson = organizationPerson => {
+    this.props.replaceOrganizationPeople(
+      update(this.props.person.organization_people, {
+        [findIndexById(
+          this.props.person.organization_people,
+          organizationPerson.id
+        )]: { $set: organizationPerson }
+      })
     );
-    if (response.data.organization_person) {
-      const newOrganizationPerson = response.data.organization_person;
-      this.props.replaceOrganizationPeople(
-        update(this.props.person.organization_people, {
-          [findIndexById(
-            this.props.person.organization_people,
-            newOrganizationPerson.id
-          )]: { $set: newOrganizationPerson }
-        })
-      );
-    }
   };
 
   deleteOrganizationPerson = async id => {
-    const response = await axiosDelete(`/api/organization_people/${id}`, {
-      authenticity_token: this.props.authToken
-    });
-    if (statusOK(response)) {
+    try {
+      await DuluAxios.delete(`/api/organization_people/${id}`);
       const index = findIndexById(this.props.person.organization_people, id);
       this.props.replaceOrganizationPeople(
         update(this.props.person.organization_people, {
           $splice: [[index, 1]]
         })
       );
+    } catch (error) {
+      this.props.setNetworkError({
+        tryAgain: () => this.deleteOrganizationPerson(id)
+      });
     }
   };
 
@@ -82,8 +74,9 @@ export default class MyOrganizationsTable extends React.PureComponent {
                 t={this.props.t}
                 editing={this.props.editing}
                 org_person={org_person}
-                updateOrganizationPerson={this.updateOrganizationPerson}
+                replaceOrganizationPerson={this.replaceOrganizationPerson}
                 deleteOrganizationPerson={this.deleteOrganizationPerson}
+                setNetworkError={this.props.setNetworkError}
               />
             ))}
             {this.state.addingNew && (
