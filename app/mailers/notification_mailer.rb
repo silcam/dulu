@@ -1,4 +1,5 @@
 class NotificationMailer < ApplicationMailer
+  helper ApplicationHelper
   default from: Rails.application.secrets.gmail_username
 
   def welcome(person, creator)

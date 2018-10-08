@@ -63,12 +63,11 @@ export default class DuluApp extends React.Component {
         )}
         <Switch>
           <Route
-            path="/people/:action?/:id?"
+            path="/people/:actionOrId?/:id?"
             render={({ match, history }) => (
               <PeopleBoard
                 history={history}
-                action={match.params.action}
-                id={match.params.id}
+                {...routeActionAndId(match.params)}
                 t={this.state.t}
                 updateLanguage={this.updateLanguage}
                 setNetworkError={this.setNetworkError}
@@ -76,11 +75,11 @@ export default class DuluApp extends React.Component {
             )}
           />
           <Route
-            path="/organizations/:action?/:id?"
+            path="/organizations/:actionOrId?/:id?"
             render={({ match, history }) => (
               <OrganizationsBoard
                 history={history}
-                {...match.params}
+                {...routeActionAndId(match.params)}
                 t={this.state.t}
                 setNetworkError={this.setNetworkError}
               />
@@ -109,6 +108,14 @@ function Login(props) {
       <a href="http://localhost:3000/login">Log in</a>
     </div>
   );
+}
+
+function routeActionAndId(routeParams) {
+  if (routeParams.actionOrId && routeParams.id)
+    return { action: routeParams.actionOrId, id: routeParams.id };
+  if (routeParams.actionOrId)
+    return { action: "show", id: routeParams.actionOrId };
+  return {};
 }
 
 function getUser() {

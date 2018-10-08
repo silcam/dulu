@@ -91,4 +91,8 @@ module ApplicationHelper
   def model_path(instance)
     return "/#{instance.class.name.pluralize.underscore}/#{instance.id}"
   end
+
+  def model_url(instance)
+    return "dulu.sil.org" + model_path(instance)
+  end
 end
