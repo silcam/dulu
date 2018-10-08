@@ -19,7 +19,7 @@ rules:
   react/jsx-uses-vars:
     - error
   react/prop-types:
-    - 0
+    - warn
   react/display-name:
     - 0
   no-console:
