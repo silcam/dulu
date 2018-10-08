@@ -14,6 +14,7 @@ export default {
   Completed: "Terminé",
   confirm_delete_org_person:
     "Supprimer %{org} des organisations de %{person} ? %{person} n'était jamais dans %{org} ?",
+  confirm_delete_role: "Enlever le rôle %{role} ?",
   confirm_different_person: "C'est une personne différente.",
   Country: "Pays",
   Current_events: "Événements actuels",

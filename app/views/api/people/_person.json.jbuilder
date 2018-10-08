@@ -21,8 +21,9 @@ json.person do
     json.partial! '/api/organization_people/org_person', org_person: org_person
   end
 
-  roles = @person.roles.collect { |r| {value: r, display: t(r) } }
-  json.roles roles
+  json.roles do
+    json.partial! '/api/person_roles/roles', roles: @person.roles
+  end
   json.grantable_roles Role
                         .grantable_roles(current_user, @person)
                         .collect{ |r| { value: r, display: t(r) } }

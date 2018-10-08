@@ -53,22 +53,24 @@ export default class MyOrganizationsTableRow extends React.PureComponent {
             )}`}
         </td>
         <td>{orgPerson.position}</td>
-        <td>
-          <EditIcon onClick={() => this.setState({ editing: true })} />
-          <DeleteIcon
-            onClick={() => {
-              if (
-                window.confirm(
-                  this.props.t("confirm_delete_org_person", {
-                    org: orgPerson.organization.name,
-                    person: orgPerson.person.full_name
-                  })
+        {this.props.canUpdate && (
+          <td>
+            <EditIcon onClick={() => this.setState({ editing: true })} />
+            <DeleteIcon
+              onClick={() => {
+                if (
+                  window.confirm(
+                    this.props.t("confirm_delete_org_person", {
+                      org: orgPerson.organization.name,
+                      person: orgPerson.person.full_name
+                    })
+                  )
                 )
-              )
-                this.props.deleteOrganizationPerson(orgPerson.id);
-            }}
-          />
-        </td>
+                  this.props.deleteOrganizationPerson(orgPerson.id);
+              }}
+            />
+          </td>
+        )}
       </tr>
     );
   }

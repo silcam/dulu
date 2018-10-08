@@ -1,12 +1,16 @@
 import React from "react";
+import PropTypes from "prop-types";
 import styles from "./Icon.css";
+import update from "immutability-helper";
 
 export default function Icon(props) {
-  const { iconSize, styleClass, children, ...otherProps } = props;
+  let { iconSize, styleClass, children, svgStyle, ...otherProps } = props;
+  svgStyle = update(iconSizer(iconSize), { $merge: svgStyle || {} });
+
   return (
     <span className={styles[styleClass]} {...otherProps}>
       <svg
-        style={iconSizer(iconSize)}
+        style={svgStyle}
         xmlns="http://www.w3.org/2000/svg"
         width="24"
         height="24"
@@ -27,3 +31,9 @@ function iconSizer(size) {
   }
   return {};
 }
+
+Icon.propTypes = {
+  iconSize: PropTypes.string,
+  styleClass: PropTypes.string,
+  svgStyle: PropTypes.object
+};

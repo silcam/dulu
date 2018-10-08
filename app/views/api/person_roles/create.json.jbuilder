@@ -1,1 +1,3 @@
-json.partial! 'api/people/person'
+json.roles do
+  json.partial! 'roles', roles: @person.roles
+end

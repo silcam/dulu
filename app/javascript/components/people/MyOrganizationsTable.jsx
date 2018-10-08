@@ -2,10 +2,10 @@ import React from "react";
 import MyOrganizationsTableRow from "./MyOrganizationsTableRow";
 import { findIndexById } from "../../util/findById";
 import update from "immutability-helper";
-import AddIcon from "../shared/icons/AddIcon";
 import SearchTextInput from "../shared/SearchTextInput";
 import SmallSaveAndCancel from "../shared/SmallSaveAndCancel";
 import DuluAxios from "../../util/DuluAxios";
+import InlineAddIcon from "../shared/icons/InlineAddIcon";
 
 export default class MyOrganizationsTable extends React.PureComponent {
   state = {};
@@ -63,8 +63,10 @@ export default class MyOrganizationsTable extends React.PureComponent {
     return (
       <div>
         <h3>
-          {this.props.t("Organizations")}{" "}
-          <AddIcon onClick={() => this.setState({ addingNew: true })} />{" "}
+          {this.props.t("Organizations")}
+          {this.props.person.can.update && (
+            <InlineAddIcon onClick={() => this.setState({ addingNew: true })} />
+          )}
         </h3>
         <table>
           <tbody>
@@ -72,6 +74,7 @@ export default class MyOrganizationsTable extends React.PureComponent {
               <MyOrganizationsTableRow
                 key={org_person.id}
                 t={this.props.t}
+                canUpdate={this.props.person.can.update}
                 editing={this.props.editing}
                 org_person={org_person}
                 replaceOrganizationPerson={this.replaceOrganizationPerson}

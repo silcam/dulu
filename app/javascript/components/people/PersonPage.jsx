@@ -12,6 +12,7 @@ import update from "immutability-helper";
 import ParticipantsTable from "./ParticipantsTable";
 import EventsTable from "./EventsTable";
 import DuluAxios from "../../util/DuluAxios";
+import RolesTable from "./RolesTable";
 
 export default class PersonPage extends React.PureComponent {
   state = {
@@ -50,6 +51,16 @@ export default class PersonPage extends React.PureComponent {
   replaceOrganizationPeople = newOrganizationsPeople => {
     const newPerson = update(this.props.person, {
       organization_people: { $set: newOrganizationsPeople }
+    });
+    this.setState({
+      person: deepcopy(newPerson)
+    });
+    this.props.replacePerson(newPerson);
+  };
+
+  replaceRoles = newRoles => {
+    const newPerson = update(this.props.person, {
+      roles: { $set: newRoles }
     });
     this.setState({
       person: deepcopy(newPerson)
@@ -126,6 +137,13 @@ export default class PersonPage extends React.PureComponent {
           t={this.props.t}
           person={person}
           replaceOrganizationPeople={this.replaceOrganizationPeople}
+          setNetworkError={this.props.setNetworkError}
+        />
+
+        <RolesTable
+          t={this.props.t}
+          person={person}
+          replaceRoles={this.replaceRoles}
           setNetworkError={this.props.setNetworkError}
         />
 

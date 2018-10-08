@@ -1,40 +1,59 @@
 import React from "react";
-
-import DeleteIconButton from "../shared/DeleteIconButton";
-
+import PropTypes from "prop-types";
 import AddRoleRow from "./AddRoleRow";
+import DeleteIcon from "../shared/icons/DeleteIcon";
+import DuluAxios from "../../util/DuluAxios";
+import InlineAddIcon from "../shared/icons/InlineAddIcon";
 
-class RolesTable extends React.PureComponent {
-  deleteRole = role => {
-    let url = "/api/person_roles/finish";
-    let data = {
-      person_id: this.props.person.id,
-      role: role
-    };
-    this.props.rawPost(url, data);
+export default class RolesTable extends React.PureComponent {
+  state = {};
+
+  addRole = async () => {};
+
+  deleteRole = async role => {
+    try {
+      const data = await DuluAxios.post(`/api/person_roles/finish`, {
+        person_id: this.props.person.id,
+        role: role
+      });
+      this.props.replaceRoles(data.roles);
+    } catch (error) {
+      this.props.setNetworkError({ tryAgain: () => this.deleteRole(role) });
+    }
   };
 
   render() {
     const person = this.props.person;
     const t = this.props.t;
-    const editEnabled = this.props.editEnabled;
 
-    if (!editEnabled && person.roles.length == 0) return null;
+    if (!person.can.update && person.roles.length == 0) return null;
 
     return (
       <div id="rolesTable">
-        <h3>{t("Roles")}</h3>
-        <table className="table">
+        <h3>
+          {t("Roles")}
+          {person.can.update && (
+            <InlineAddIcon onClick={() => this.setState({ addingNew: true })} />
+          )}
+        </h3>
+        <table>
           <tbody>
             {person.roles.map(role => {
               return (
                 <tr key={role.value}>
                   <td>{role.display}</td>
-                  {editEnabled && (
-                    <td className="rightCol">
-                      <DeleteIconButton
-                        handleClick={() => {
-                          this.deleteRole(role.value);
+                  {person.can.update && (
+                    <td>
+                      <DeleteIcon
+                        onClick={() => {
+                          if (
+                            window.confirm(
+                              t("confirm_delete_role", {
+                                role: role.display
+                              })
+                            )
+                          )
+                            this.deleteRole(role.value);
                         }}
                       />
                     </td>
@@ -42,12 +61,13 @@ class RolesTable extends React.PureComponent {
                 </tr>
               );
             })}
-            {person.grantable_roles.length > 0 && (
+            {this.state.addingNew && (
               <AddRoleRow
                 person={person}
                 t={t}
-                editEnabled={editEnabled}
-                rawPost={this.props.rawPost}
+                replaceRoles={this.props.replaceRoles}
+                setNetworkError={this.props.setNetworkError}
+                cancel={() => this.setState({ addingNew: false })}
               />
             )}
           </tbody>
@@ -57,4 +77,9 @@ class RolesTable extends React.PureComponent {
   }
 }
 
-export default RolesTable;
+RolesTable.propTypes = {
+  t: PropTypes.func.isRequired,
+  person: PropTypes.object.isRequired,
+  replaceRoles: PropTypes.func.isRequired,
+  setNetworkError: PropTypes.func.isRequired
+};

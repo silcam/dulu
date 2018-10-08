@@ -1,39 +1,28 @@
 import React from "react";
-
-import AddIconButton from "../shared/AddIconButton";
+import PropTypes from "prop-types";
 import SelectInput from "../shared/SelectInput";
-import SmallAddButton from "../shared/SmallAddButton";
-import SmallCancelButton from "../shared/SmallCancelButton";
+import DuluAxios from "../../util/DuluAxios";
+import SmallSaveAndCancel from "../shared/SmallSaveAndCancel";
 
-class AddRoleRow extends React.PureComponent {
+export default class AddRoleRow extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      adding: false,
       role: props.person.grantable_roles[0].value
     };
   }
 
-  setAddingMode = () => {
-    this.setState({
-      adding: true
-    });
-  };
-
-  cancelAddingMode = () => {
-    this.setState({
-      adding: false
-    });
-  };
-
-  addRole = () => {
-    let url = "/api/person_roles";
-    let data = {
-      person_id: this.props.person.id,
-      role: this.state.role
-    };
-    this.props.rawPost(url, data);
-    this.setState({ adding: false });
+  addRole = async () => {
+    try {
+      const data = await DuluAxios.post("/api/person_roles", {
+        person_id: this.props.person.id,
+        role: this.state.role
+      });
+      this.props.replaceRoles(data.roles);
+      this.props.cancel();
+    } catch (error) {
+      this.props.setNetworkError({ tryAgain: this.addRole });
+    }
   };
 
   handleRoleSelect = e => {
@@ -44,33 +33,30 @@ class AddRoleRow extends React.PureComponent {
 
   render() {
     const t = this.props.t;
-    if (this.state.adding) {
-      return (
-        <tr>
-          <td>
-            <SelectInput
-              value={this.state.role}
-              options={this.props.person.grantable_roles}
-              handleChange={this.handleRoleSelect}
-              autoFocus
-            />
-          </td>
-          <td>
-            <SmallAddButton handleClick={this.addRole} t={t} />
-            &nbsp;
-            <SmallCancelButton handleClick={this.cancelAddingMode} t={t} />
-          </td>
-        </tr>
-      );
-    }
     return (
       <tr>
-        <td colSpan="2">
-          <AddIconButton handleClick={this.setAddingMode} />
+        <td>
+          <SelectInput
+            value={this.state.role}
+            options={this.props.person.grantable_roles}
+            handleChange={this.handleRoleSelect}
+            autoFocus
+          />
+          <SmallSaveAndCancel
+            handleSave={this.addRole}
+            handleCancel={this.props.cancel}
+            t={t}
+          />
         </td>
       </tr>
     );
   }
 }
 
-export default AddRoleRow;
+AddRoleRow.propTypes = {
+  person: PropTypes.object.isRequired,
+  t: PropTypes.func.isRequired,
+  replaceRoles: PropTypes.func.isRequired,
+  setNetworkError: PropTypes.func.isRequired,
+  cancel: PropTypes.func.isRequired
+};
