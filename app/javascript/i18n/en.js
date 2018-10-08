@@ -69,6 +69,7 @@ export default {
   Last_update: "Last Update",
   Linguistics: "Linguistics",
   Loading: "Loading...",
+  Logout: "Logout",
   Long_name: "Long Name",
   Mark_all_read: "Mark all as read",
   Mark_completed: "Mark Completed",

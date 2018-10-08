@@ -70,6 +70,7 @@ export default {
   Last_update: "Dernière mise à jour",
   Linguistics: "Linguistique",
   Loading: "Chargement...",
+  Logout: "Déconnexion",
   Long_name: "Nom longue",
   Mark_all_read: "Marquer tous comme lus",
   Mark_completed: "Marquer comme terminé",

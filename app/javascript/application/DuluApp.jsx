@@ -52,7 +52,7 @@ export default class DuluApp extends React.Component {
   render() {
     return (
       <div className={styles.container}>
-        <NavBar user={this.state.user} />
+        <NavBar user={this.state.user} t={this.state.t} />
         {this.state.networkError && (
           <div>
             <NetworkErrorAlert
@@ -101,13 +101,6 @@ export default class DuluApp extends React.Component {
       </div>
     );
   }
-}
-
-async function logout() {
-  await axios.post("/logout", {
-    authenticity_token: getAuthToken()
-  });
-  document.location = "/";
 }
 
 function Login(props) {

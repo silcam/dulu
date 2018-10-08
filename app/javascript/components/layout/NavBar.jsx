@@ -1,7 +1,9 @@
 import React from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, Link } from "react-router-dom";
+import PropTypes from "prop-types";
 
 import styles from "./NavBar.css";
+import DuluAxios from "../../util/DuluAxios";
 
 export default function NavBar(props) {
   return (
@@ -9,28 +11,44 @@ export default function NavBar(props) {
       <ul>
         <li>
           <NavLink exact to="/">
-            Home
+            {props.t("Home")}
           </NavLink>
         </li>
         <li>
-          <NavLink to="/people">People</NavLink>
+          <NavLink to="/people">{props.t("People")}</NavLink>
         </li>
         <li>
-          <NavLink to="/organizations">Organizations</NavLink>
+          <NavLink to="/organizations">{props.t("Organizations")}</NavLink>
         </li>
       </ul>
       {props.user && (
         <ul className={styles.ulRight}>
           <li>
-            <NavLink to={pathToUser(props.user)}>
-              {props.user.first_name}
-            </NavLink>
+            <Link to={pathToUser(props.user)}>{props.user.first_name}</Link>
+          </li>
+          <li>
+            <a
+              onClick={async e => {
+                e.preventDefault();
+                await DuluAxios.post("/logout", {});
+                document.location = "/";
+              }}
+              href="/logout"
+            >
+              {props.t("Logout")}
+            </a>
           </li>
         </ul>
       )}
     </nav>
   );
 }
+
+NavBar.propTypes = {
+  user: PropTypes.object.isRequired,
+  t: PropTypes.func.isRequired,
+  logout: PropTypes.func.isRequired
+};
 
 function pathToUser(user) {
   return `/people/show/${user.id}`;
