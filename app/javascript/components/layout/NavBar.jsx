@@ -10,15 +10,20 @@ export default function NavBar(props) {
     <nav className={styles.nav}>
       <ul>
         <li>
-          <NavLink exact to="/">
-            {props.t("Home")}
-          </NavLink>
+          <Link to="/" className={styles.duluLink}>
+            <img
+              src={require("./dulu.png")}
+              alt="Dulu"
+              width="107"
+              height="40"
+            />
+          </Link>
         </li>
         <li>
-          <NavLink to="/people">{props.t("People")}</NavLink>
+          <Link to="/people">{props.t("People")}</Link>
         </li>
         <li>
-          <NavLink to="/organizations">{props.t("Organizations")}</NavLink>
+          <Link to="/organizations">{props.t("Organizations")}</Link>
         </li>
       </ul>
       {props.user && (
