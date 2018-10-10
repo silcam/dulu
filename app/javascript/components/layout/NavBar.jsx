@@ -45,9 +45,8 @@ export default function NavBar(props) {
 }
 
 NavBar.propTypes = {
-  user: PropTypes.object.isRequired,
-  t: PropTypes.func.isRequired,
-  logout: PropTypes.func.isRequired
+  user: PropTypes.object,
+  t: PropTypes.func.isRequired
 };
 
 function pathToUser(user) {

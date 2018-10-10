@@ -2,6 +2,7 @@ import React from "react";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import NotificationsList from "./NotificationsList";
 import axios from "axios";
+import styles from "./NotificationsList.css";
 
 const paths = {
   forMe: "/api/notifications",
@@ -94,7 +95,17 @@ class NotificationsSidebar extends React.Component {
         <h3 style={{ marginTop: 0 }}>{t("Notifications")}</h3>
         <Tabs>
           <TabList>
-            <Tab>{t("For_me")}</Tab>
+            <Tab>
+              <span
+                className={
+                  this.state.forMe.unreadNotifications
+                    ? styles.unreadNotification
+                    : ""
+                }
+              >
+                {t("For_me")}
+              </span>
+            </Tab>
             <Tab>{t("All")}</Tab>
           </TabList>
           <TabPanel>

@@ -1,25 +1,9 @@
-import axios from "axios";
 import React from "react";
+import styles from "./NotificationsList.css";
+import Notification from "./Notification";
+import PropTypes from "prop-types";
 
-/**
- * Inserts variable strings into a translated string
- * @param {string} message
- * @param {object} vars
- * @param {object} links
- */
-function t_sub(message, vars, links) {
-  let newMessage = message;
-  for (let v in vars) {
-    let searchStr = "%{" + v + "}";
-    let replacement = links[v]
-      ? `<a href="${links[v]}">${vars[v]}</a>`
-      : vars[v];
-    newMessage = newMessage.replace(searchStr, replacement);
-  }
-  return newMessage;
-}
-
-class NotificationsList extends React.PureComponent {
+export default class NotificationsList extends React.PureComponent {
   clickSeeMore = e => {
     this.props.getNotifications(this.props.channel);
     e.target.blur();
@@ -34,32 +18,19 @@ class NotificationsList extends React.PureComponent {
     return (
       <div>
         {this.props.unreadNotifications && (
-          <button className="btn-link" onClick={this.markAllRead}>
+          <button className="link" onClick={this.markAllRead}>
             {this.props.t("Mark_all_read")}
           </button>
         )}
-        <table className="table">
+        <table className={styles.notificationsList}>
           <tbody>
             {this.props.notifications.map(notification => {
               return (
-                <tr key={notification.id}>
-                  <td>
-                    <span className="notificationDate">
-                      {notification.created_at.slice(0, 10)}
-                    </span>
-                    <br />
-                    <span
-                      className={notification.read ? "" : "unreadNotification"}
-                      dangerouslySetInnerHTML={{
-                        __html: t_sub(
-                          t(`notifications.${notification.message.key}`),
-                          notification.message.t_vars,
-                          notification.message.links
-                        )
-                      }}
-                    />
-                  </td>
-                </tr>
+                <Notification
+                  key={notification.id}
+                  notification={notification}
+                  t={t}
+                />
               );
             })}
             <tr>
@@ -68,7 +39,7 @@ class NotificationsList extends React.PureComponent {
                 {this.props.moreAvailable &&
                   !this.props.loading && (
                     <button
-                      className="btn-link"
+                      className="link"
                       onClick={this.clickSeeMore}
                       style={{ padding: 0 }}
                     >
@@ -84,4 +55,12 @@ class NotificationsList extends React.PureComponent {
   }
 }
 
-export default NotificationsList;
+NotificationsList.propTypes = {
+  getNotifications: PropTypes.func.isRequired,
+  markAllRead: PropTypes.func.isRequired,
+  channel: PropTypes.string.isRequired,
+  unreadNotifications: PropTypes.bool,
+  notifications: PropTypes.array,
+  loading: PropTypes.bool,
+  moreAvailable: PropTypes.bool
+};

@@ -1,0 +1,15 @@
+table.notificationsList {
+    font-size: 14px;
+}
+
+.unreadNotification {
+    font-weight: bold;
+}
+
+.unreadNotification a {
+    font-weight: bold;
+}
+
+.unreadNotification a:hover {
+    font-weight: bold;
+}

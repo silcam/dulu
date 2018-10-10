@@ -1,5 +1,6 @@
 import React from "react";
 import HorizontalList from "../shared/HorizontalList";
+import styles from "./SortPicker.css";
 
 function changeSort(newOption, existingSort, callback) {
   if (newOption != existingSort.option) {
@@ -30,7 +31,7 @@ function SortPicker(props) {
               sortArrow = props.sort.asc ? "▲" : "▼";
             }
             return (
-              <li key={option}>
+              <li key={option} className={styles.picker}>
                 <button
                   className="link"
                   onClick={e => {
