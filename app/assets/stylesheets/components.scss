@@ -178,31 +178,6 @@ select.extraSmall {
     }
 }
 
-div.searchTextInput {
-    display: inline-block;
-
-    ul {
-        background-color: #fff;
-        position: absolute;
-        z-index: 10;
-        list-style: none;
-        padding: 0;
-        border-top: 1px solid #aaa;
-        
-        li {
-            padding: 3px;
-            border: 1px solid #aaa;
-            border-top: none;
-            cursor: pointer;
-        }
-
-        li.selected {
-            background-color: #337ab7;
-            color: #fff;
-        }
-    }
-}
-
 #peopleOrgContent {
     max-width: 800px;
     margin-left: 34%;

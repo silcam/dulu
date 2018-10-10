@@ -1,9 +1,8 @@
 import React from "react";
-
 import searchInterface from "../shared/searchInterface";
 import TextInput from "../shared/TextInput";
-
 import ResultsRows from "./ResultsRows";
+import styles from "./Searcher.css";
 
 class BasicSearcher extends React.PureComponent {
   constructor(props) {
@@ -28,7 +27,7 @@ class BasicSearcher extends React.PureComponent {
 
   render() {
     return (
-      <div>
+      <div className={styles.searcher}>
         <TextInput
           handleInput={this.handleInput}
           name="query"

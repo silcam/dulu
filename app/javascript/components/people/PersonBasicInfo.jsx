@@ -1,13 +1,4 @@
 import React from "react";
-
-import selectOptionsFromObject from "../../util/selectOptionsFromObject";
-
-import EditableTextBox from "../shared/EditableTextBox";
-import EditableTextSearchInput from "../shared/EditableTextSearchInput";
-import EditableTextSelect from "../shared/EditableTextSelect";
-import EditableTextYesNo from "../shared/EditableTextYesNo";
-
-import EditableTextUiLanguage from "./EditableTextUiLanguage";
 import TextOrEditText from "../shared/TextOrEditText";
 import TextOrYesNo from "../shared/TextOrYesNo";
 import TextOrSelect from "../shared/TextOrSelect";
@@ -17,25 +8,6 @@ function PersonBasicInfo(props) {
   const t = props.t;
   const person = props.person;
   const home_country = person.home_country || { id: null, name: "" };
-
-  const updateUiLang = (field, value) => {
-    props.updateField(field, value, () => {
-      window.location.href = `/people/${person.id}`;
-    });
-  };
-
-  const updateLogin = (field, value) => {
-    if (value && !props.person.email) {
-      props.setErrorMessage(props.t("need_email_for_login"));
-    } else {
-      props.updateField(field, value);
-    }
-  };
-
-  const updateEmail = (field, value) => {
-    if (value) props.setErrorMessage("");
-    props.updateField(field, value);
-  };
 
   return (
     <table className="table">

@@ -1,13 +1,9 @@
 import axios from "axios";
 import React from "react";
+import PropTypes from "prop-types";
 
-/*
-    Require props:
-        queryPath - relative url
-*/
-
-function searchInterface(WrappedComponent, minQueryLength) {
-  return class extends React.PureComponent {
+export default function searchInterface(WrappedComponent, minQueryLength) {
+  return class SearchInterface extends React.PureComponent {
     queryNum = 0;
     displayedQuery = 0;
 
@@ -89,5 +85,3 @@ function searchInterface(WrappedComponent, minQueryLength) {
     }
   };
 }
-
-export default searchInterface;

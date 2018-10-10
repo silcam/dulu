@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 
 /*
     Required props:
@@ -15,7 +16,7 @@ import React from "react";
         bool autoFocus
 */
 
-function TextInput(props) {
+export default function TextInput(props) {
   const handleKeyDown = e => {
     if (e.key == "Enter" && props.handleEnter) {
       props.handleEnter();
@@ -23,12 +24,8 @@ function TextInput(props) {
   };
 
   const value = props.value || "";
-  const divClass = props.errorMessage
-    ? "form-group errorMessage"
-    : "form-group";
-  const inputClass = props.extraClasses
-    ? "form-control " + props.extraClasses
-    : "form-control";
+  const divClass = props.errorMessage ? "errorMessage" : "";
+  const inputClass = props.extraClasses ? props.extraClasses : "";
   const autoFocus = props.autoFocus || false;
 
   return (
@@ -49,4 +46,15 @@ function TextInput(props) {
   );
 }
 
-export default TextInput;
+TextInput.propTypes = {
+  handleInput: PropTypes.func,
+  value: PropTypes.string,
+  name: PropTypes.string,
+  // Optional
+  handleEnter: PropTypes.func,
+  handleBlur: PropTypes.func,
+  placeholder: PropTypes.string,
+  errorMessage: PropTypes.string,
+  extraClasses: PropTypes.string,
+  autoFocus: PropTypes.bool
+};

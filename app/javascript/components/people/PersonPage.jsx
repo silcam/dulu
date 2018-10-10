@@ -13,6 +13,7 @@ import ParticipantsTable from "./ParticipantsTable";
 import EventsTable from "./EventsTable";
 import DuluAxios from "../../util/DuluAxios";
 import RolesTable from "./RolesTable";
+import styles from "./PersonPage.css";
 
 export default class PersonPage extends React.PureComponent {
   state = {
@@ -112,7 +113,7 @@ export default class PersonPage extends React.PureComponent {
           saved={this.state.savedChanges}
         />
 
-        <h2>
+        <h2 className={styles.nameHeader}>
           <TextOrEditText
             editing={this.state.editing}
             value={person.first_name}

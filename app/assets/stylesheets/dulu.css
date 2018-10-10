@@ -5,6 +5,7 @@ html {
 body {
     height: 100%;
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 14px;
     margin: 0;
 }
 
@@ -70,7 +71,7 @@ button.btnRed:hover:active, a.btnRed:hover:active {
     border-color: #761c19;
 }
 
-a, button.link {
+a, button.link, button.link:active, button.link:focus {
     color: #337ab7;
     text-decoration: none;
     border-width: 0;
@@ -81,9 +82,10 @@ a, button.link {
     text-align: left;
     margin: 0;
     padding: 0;
+    outline: none;
 }
 
-a:hover, button.link:hover {
+a:hover, button.link:hover, button.link:hover:active {
     text-decoration: underline;
     color: #23527c;
 }
@@ -93,6 +95,24 @@ h1, h2, h3, h4, h5, h6 {
     line-height: 1.1;
 }
 
-h2 {
+h2, h2 input[type=text] {
     font-size: 30px;
+}
+
+input[type=text] {
+    width: calc(100% - 20px);
+    margin: 4px;
+    padding: 4px;
+    font-size: 14px;
+}
+
+textarea {
+    width: calc(100% - 20px);
+    margin: 4px;
+    padding: 4px;
+    font-size: 14px;
+}
+
+select {
+    font-size: 14px;
 }

@@ -1,16 +1,7 @@
 import React from "react";
-
 import searchInterface from "./searchInterface";
-
-/*
-    Required props:
-        text
-        updateValue(id, name)
-        queryPath - relative url
-    Optional props:
-        placeholder
-        autofocus
-*/
+import styles from "./SearchTextInput.css";
+import PropTypes from "prop-types";
 
 class BasicSearchTextInput extends React.PureComponent {
   constructor(props) {
@@ -108,7 +99,7 @@ class BasicSearchTextInput extends React.PureComponent {
   render() {
     const placeholder = this.props.placeholder || "";
     return (
-      <div className="searchTextInput">
+      <div className={styles.searchTextInput}>
         <input
           type="text"
           name="query"
@@ -122,7 +113,8 @@ class BasicSearchTextInput extends React.PureComponent {
         {this.state.showResults && (
           <ul onMouseLeave={this.clearSelection}>
             {this.props.results.map((country, index) => {
-              const className = index == this.state.selection ? "selected" : "";
+              const className =
+                index == this.state.selection ? styles.selected : "";
               return (
                 <li
                   key={country.id}
@@ -144,6 +136,15 @@ class BasicSearchTextInput extends React.PureComponent {
     );
   }
 }
+
+BasicSearchTextInput.propTypes = {
+  text: PropTypes.string,
+  updateQuery: PropTypes.func,
+  results: PropTypes.array,
+  updateValue: PropTypes.func,
+  placeholder: PropTypes.string,
+  autoFocus: PropTypes.bool
+};
 
 const SearchTextInput = searchInterface(BasicSearchTextInput, 2);
 
