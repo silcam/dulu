@@ -12,5 +12,5 @@ h2 .errorMessage {
 }
 
 .errorMessage input:focus {
-    border: inherit;
+    outline-color: #c9302c;
 }
