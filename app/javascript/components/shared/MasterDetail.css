@@ -41,6 +41,7 @@ div.master table td {
 div.detail {
     flex-grow: 1;
     overflow-y: scroll;
+    padding: 0 8px;
 }
 
 div.detail table {

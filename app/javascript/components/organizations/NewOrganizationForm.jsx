@@ -5,6 +5,7 @@ import {
   ValidatedTextInputGroup
 } from "../shared/formGroup";
 import SaveButton from "../shared/SaveButton";
+import CancelButton from "../shared/CancelButton";
 
 export default class NewOrganizationForm extends React.Component {
   constructor(props) {
@@ -90,6 +91,8 @@ export default class NewOrganizationForm extends React.Component {
             saveInProgress={this.state.saving}
             t={t}
           />
+
+          <CancelButton t={t} />
         </p>
       </div>
     );

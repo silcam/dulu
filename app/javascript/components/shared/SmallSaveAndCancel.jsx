@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 export default function SmallSaveAndCancel(props) {
   const style = props.style || {};
   return (
-    <span style={style}>
+    <div style={style}>
       <button
         onClick={props.handleSave}
         // saveInProgress={props.saveInProgress}
@@ -20,7 +20,7 @@ export default function SmallSaveAndCancel(props) {
       >
         {props.t("Cancel")}
       </button>
-    </span>
+    </div>
   );
 }
 

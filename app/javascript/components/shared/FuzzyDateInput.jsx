@@ -1,21 +1,9 @@
 import React from "react";
-
+import PropTypes from "prop-types";
 import DaySelector from "./DaySelector";
 import MonthSelector from "./MonthSelector";
 import YearInput from "./YearInput";
-
-/*
-    Required props:
-        string date
-        function handleDateInput(dateString)
-        strings - the date_strings
-    Optional props:
-        function dateIsInvalid
-        string maxDate
-        string minDate
-        boolean showErrors
-        boolean allowBlank
-*/
+import styles from "./FuzzyDateInput.css";
 
 // Jan == 1
 function daysInMonth(month) {
@@ -43,7 +31,7 @@ function zeroPad(number, digits) {
   return s;
 }
 
-class FuzzyDateInput extends React.PureComponent {
+export default class FuzzyDateInput extends React.PureComponent {
   constructor(props) {
     super(props);
     const date = props.date || "";
@@ -114,7 +102,7 @@ class FuzzyDateInput extends React.PureComponent {
   render() {
     var showErrors = this.showErrors();
     return (
-      <div className="fuzzyDateInput autoWidthFormElements">
+      <div className={styles.fuzzyDate}>
         <DaySelector
           handleInput={this.handleInput}
           value={this.state.day}
@@ -132,7 +120,7 @@ class FuzzyDateInput extends React.PureComponent {
           t={this.props.t}
         />
         <br />
-        <span className={showErrors && "errorMessage"}>
+        <span className={showErrors && styles.errorMessage}>
           {showErrors ? this.state.errorMessage : ""
           // this.props.t('Month_day_optional')
           }
@@ -142,4 +130,12 @@ class FuzzyDateInput extends React.PureComponent {
   }
 }
 
-export default FuzzyDateInput;
+FuzzyDateInput.propTypes = {
+  date: PropTypes.string,
+  handleDateInput: PropTypes.func.isRequired, // accepts date as str
+  t: PropTypes.func.isRequired,
+  allowBlank: PropTypes.bool,
+  showErrors: PropTypes.bool,
+  //optional
+  dateIsInvalid: PropTypes.func
+};

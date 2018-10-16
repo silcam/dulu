@@ -1,16 +1,7 @@
 import React from "react";
+import PropTypes from "prop-types";
 
-/*
-    Required Props: 
-        function handleClick(e)
-        boolean saveInProgress
-        strings
-    Optional props:
-        string extraClasses
-        boolean disabled
-*/
-
-function SaveButton(props) {
+export default function SaveButton(props) {
   const text = props.saveInProgress ? props.t("Saving") : props.t("Save");
   const disabled = (props.disabled || props.saveInProgress) && "disabled";
   return (
@@ -20,4 +11,9 @@ function SaveButton(props) {
   );
 }
 
-export default SaveButton;
+SaveButton.propTypes = {
+  saveInProgress: PropTypes.bool,
+  disabled: PropTypes.bool,
+  t: PropTypes.func,
+  handleClick: PropTypes.func
+};

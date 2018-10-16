@@ -1,26 +1,11 @@
 import React from "react";
+import PropTypes from "prop-types";
 
-/*
-    Required props:
-        handleInput(e)
-        value
-        name
-
-    Optional Props:
-        rows
-        placeholder
-        errorMessage
-        handleBlur
-        extraClasses
-        autoFocus
-*/
-
-function TextArea(props) {
+export default function TextArea(props) {
   const rows = props.rows || 4;
   return (
     <div>
       <textarea
-        className="form-control"
         rows={rows}
         name={props.name}
         onChange={props.handleInput}
@@ -30,4 +15,10 @@ function TextArea(props) {
   );
 }
 
-export default TextArea;
+TextArea.propTypes = {
+  handleInput: PropTypes.func.isRequired,
+  value: PropTypes.string,
+  name: PropTypes.string,
+  // optional
+  rows: PropTypes.number
+};

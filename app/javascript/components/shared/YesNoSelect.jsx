@@ -1,18 +1,11 @@
 import React from "react";
+import PropTypes from "prop-types";
 
 export default function YesNoSelect(props) {
-  // const handleChange = e => {
-  //   const text = e.target.value ? props.t("Yes") : props.t("No");
-  //   props.save(e.target.value, text);
-  // };
-
-  // const className = props.extraClasses
-  //   ? `form-control ${props.extraClasses}`
-  //   : "form-control";
   return (
     <select
       value={props.value}
-      onChange={e => props.updateValue(e.target.value)}
+      onChange={e => props.updateValue(booleanize(e.target.value))}
     >
       <option value={true}>{props.t("Yes")}</option>
 
@@ -20,3 +13,12 @@ export default function YesNoSelect(props) {
     </select>
   );
 }
+
+function booleanize(str) {
+  return str === "true";
+}
+
+YesNoSelect.propTypes = {
+  value: PropTypes.bool,
+  updateValue: PropTypes.func.isRequired
+};

@@ -97,6 +97,7 @@ export default class MyOrganizationsTable extends React.PureComponent {
                     handleCancel={() => this.setState({ addingNew: false })}
                     t={this.props.t}
                     saveDisabled={!this.state.newOrganization}
+                    style={{ marginTop: "8px" }}
                   />
                 </td>
               </tr>

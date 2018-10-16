@@ -20,6 +20,7 @@ export default class OrganizationPage extends React.PureComponent {
   };
 
   save = async () => {
+    if (!this.validate()) return;
     this.setState({ saving: true });
     const newOrganization = await this.props.update(this.state.organization);
     this.setState({
@@ -28,6 +29,10 @@ export default class OrganizationPage extends React.PureComponent {
       savedChanges: true,
       organization: newOrganization
     });
+  };
+
+  validate = () => {
+    return this.state.organization.short_name.length > 0;
   };
 
   render() {
@@ -45,7 +50,7 @@ export default class OrganizationPage extends React.PureComponent {
           cancel={() =>
             this.setState({
               editing: false,
-              person: deepcopy(this.props.person)
+              organization: deepcopy(this.props.organization)
             })
           }
         />
@@ -79,6 +84,8 @@ export default class OrganizationPage extends React.PureComponent {
             updateValue={value =>
               this.updateOrganization({ short_name: value })
             }
+            t={this.props.t}
+            validateNotBlank
           />
         </h2>
 
@@ -86,6 +93,7 @@ export default class OrganizationPage extends React.PureComponent {
           <TextOrEditText
             editing={this.state.editing}
             value={organization.long_name}
+            label={this.props.t("Long_name")}
             updateValue={value => {
               this.updateOrganization({ long_name: value });
             }}
@@ -130,15 +138,16 @@ export default class OrganizationPage extends React.PureComponent {
             />
           </li>
         </ul>
-        <p>
+        <div style={{ marginTop: "16px" }}>
           <TextOrTextArea
             editing={this.state.editing}
+            label={this.props.t("Description")}
             value={organization.description}
             updateValue={value =>
               this.updateOrganization({ description: value })
             }
           />
-        </p>
+        </div>
       </div>
     );
   }

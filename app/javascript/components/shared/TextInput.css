@@ -1,0 +1,3 @@
+.errorMessage {
+    composes: errorMessage from "./formElements.css";
+}

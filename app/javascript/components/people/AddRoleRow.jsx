@@ -46,6 +46,7 @@ export default class AddRoleRow extends React.PureComponent {
             handleSave={this.addRole}
             handleCancel={this.props.cancel}
             t={t}
+            style={{ marginTop: "8px" }}
           />
         </td>
       </tr>

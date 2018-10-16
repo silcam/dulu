@@ -7,6 +7,7 @@ export default function NetworkErrorAlert(props) {
     <AlertBox styleClass="alertBoxRed">
       <span style={{ textAlign: "center" }}>
         {props.t("network_error_message")}
+        &nbsp;
         {props.tryAgain && (
           <button className="link" onClick={props.tryAgain}>
             {props.t("Try_again")}

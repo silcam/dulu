@@ -28,9 +28,9 @@ button, a.btn {
     background-color: #337ab7;
     border: 1px solid #2e6da4;
     padding: 6px 12px;
-    border-radius: 4px;
     font-size: 14px;
-    margin: 8px;
+    margin: 0 8px 8px 0;
+    box-shadow: 1px 1px 0 #00000033;
 }
 
 button:disabled, a.btn:disabled,
@@ -83,6 +83,7 @@ a, button.link, button.link:active, button.link:focus {
     margin: 0;
     padding: 0;
     outline: none;
+    vertical-align: baseline;
 }
 
 a:hover, button.link:hover, button.link:hover:active {
@@ -100,19 +101,22 @@ h2, h2 input[type=text] {
 }
 
 input[type=text] {
-    width: calc(100% - 20px);
-    margin: 4px;
+    width: calc(100% - 12px);
+    margin: 0;
     padding: 4px;
     font-size: 14px;
 }
 
 textarea {
-    width: calc(100% - 20px);
-    margin: 4px;
+    width: calc(100% - 12px);
+    margin: 0;
     padding: 4px;
     font-size: 14px;
 }
 
 select {
+    width: calc(100% - 2px);
     font-size: 14px;
+    margin: 0;
+    /* padding: 4px; Not supported */
 }

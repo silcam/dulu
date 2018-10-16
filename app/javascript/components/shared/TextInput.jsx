@@ -1,20 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-
-/*
-    Required props:
-        handleInput(e)
-        string value
-        string name
-
-    Optional props:
-        string placeholder
-        string errorMessage
-        function handleEnter
-        function handleBlur
-        string extraClasses
-        bool autoFocus
-*/
+import styles from "./TextInput.css";
 
 export default function TextInput(props) {
   const handleKeyDown = e => {
@@ -24,7 +10,7 @@ export default function TextInput(props) {
   };
 
   const value = props.value || "";
-  const divClass = props.errorMessage ? "errorMessage" : "";
+  const divClass = props.errorMessage ? styles.errorMessage : "";
   const inputClass = props.extraClasses ? props.extraClasses : "";
   const autoFocus = props.autoFocus || false;
 
@@ -41,7 +27,7 @@ export default function TextInput(props) {
         onBlur={props.handleBlur}
         autoFocus={autoFocus}
       />
-      <div className="inputMessage">{props.errorMessage}</div>
+      <div style={{ marginTop: "4px" }}>{props.errorMessage}</div>
     </div>
   );
 }

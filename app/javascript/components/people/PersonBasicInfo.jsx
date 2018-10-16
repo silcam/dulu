@@ -38,6 +38,8 @@ function PersonBasicInfo(props) {
               editing={props.editing}
               value={person.email}
               updateValue={value => props.updatePerson({ email: value })}
+              t={props.t}
+              validateNotBlank={person.has_login}
             />
           </td>
         </tr>

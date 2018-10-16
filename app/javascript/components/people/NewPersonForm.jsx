@@ -1,11 +1,16 @@
 import React from "react";
-import CloseIconButton from "../shared/CloseIconButton";
-import { SelectGroup, ValidatedTextInputGroup } from "../shared/formGroup";
+import PropTypes from "prop-types";
+import {
+  SelectGroup,
+  ValidatedTextInputGroup,
+  CheckboxGroup
+} from "../shared/formGroup";
 import SaveButton from "../shared/SaveButton";
 import selectOptionsFromObject from "../../util/selectOptionsFromObject";
 import DuplicateWarning from "./DuplicateWarning";
+import CancelButton from "../shared/CancelButton";
 
-class NewPersonForm extends React.Component {
+export default class NewPersonForm extends React.Component {
   state = {
     person: {
       first_name: "",
@@ -61,19 +66,11 @@ class NewPersonForm extends React.Component {
     }
   };
 
-  clickClose = () => {
-    this.props.setSelection(null);
-  };
-
   render() {
     const t = this.props.t;
     const person = this.state.person;
     return (
       <div onKeyDown={this.handleKeyDown}>
-        <h3 style={{ color: "#aaa" }}>
-          <CloseIconButton handleClick={this.clickClose} />
-        </h3>
-
         <h3>{t("New_person")}</h3>
 
         <ValidatedTextInputGroup
@@ -105,18 +102,13 @@ class NewPersonForm extends React.Component {
           options={selectOptionsFromObject(t("genders"))}
         />
 
-        <div className="form-group">
-          <label>
-            <input
-              type="checkbox"
-              name="has_login"
-              checked={person.has_login}
-              onChange={this.handleCheck}
-            />
-            &nbsp;
-            {t("Can_login")}
-          </label>
-        </div>
+        <CheckboxGroup
+          label={t("Dulu_account")}
+          handleCheck={this.handleCheck}
+          name="has_login"
+          value={person.has_login}
+          text={t("Can_login")}
+        />
 
         {person.has_login && (
           <div>
@@ -155,10 +147,17 @@ class NewPersonForm extends React.Component {
             disabled={this.props.duplicatePerson && !person.not_a_duplicate}
             t={t}
           />
+
+          <CancelButton t={t} />
         </p>
       </div>
     );
   }
 }
 
-export default NewPersonForm;
+NewPersonForm.propTypes = {
+  duplicatePerson: PropTypes.bool,
+  t: PropTypes.func,
+  addPerson: PropTypes.func,
+  saving: PropTypes.bool
+};

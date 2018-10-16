@@ -1,6 +1,5 @@
 import React from "react";
 import { Switch, Route } from "react-router-dom";
-import axios from "axios";
 import NavBar from "../components/layout/NavBar";
 import Dashboard from "../components/dashboard/Dashboard";
 import PeopleBoard from "../components/people/PeopleBoard";
@@ -102,20 +101,12 @@ export default class DuluApp extends React.Component {
   }
 }
 
-function Login(props) {
-  return (
-    <div>
-      <a href="http://localhost:3000/login">Log in</a>
-    </div>
-  );
-}
-
 function routeActionAndId(routeParams) {
   if (routeParams.actionOrId && routeParams.id)
     return { action: routeParams.actionOrId, id: routeParams.id };
-  if (routeParams.actionOrId)
+  if (parseInt(routeParams.actionOrId))
     return { action: "show", id: routeParams.actionOrId };
-  return {};
+  return { action: routeParams.actionOrId };
 }
 
 function getUser() {

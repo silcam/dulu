@@ -28,6 +28,7 @@ export default class PersonPage extends React.PureComponent {
   };
 
   save = async () => {
+    if (!this.validate()) return;
     try {
       const data = await DuluAxios.put(`/api/people/${this.state.person.id}`, {
         person: this.state.person
@@ -37,6 +38,15 @@ export default class PersonPage extends React.PureComponent {
     } catch (error) {
       this.props.setNetworkError({ tryAgain: this.save });
     }
+  };
+
+  validate = () => {
+    const person = this.state.person;
+    return (
+      person.first_name.length > 0 &&
+      person.last_name.length > 0 &&
+      (!person.has_login || person.email.length > 0)
+    );
   };
 
   setStateAfterSave = person => {
@@ -113,17 +123,21 @@ export default class PersonPage extends React.PureComponent {
           saved={this.state.savedChanges}
         />
 
-        <h2 className={styles.nameHeader}>
+        <h2>
           <TextOrEditText
             editing={this.state.editing}
             value={person.first_name}
             updateValue={value => this.updatePerson({ first_name: value })}
+            t={this.props.t}
+            validateNotBlank
           />
-          &nbsp;
+          {!this.state.editing && " "}
           <TextOrEditText
             editing={this.state.editing}
             value={person.last_name}
             updateValue={value => this.updatePerson({ last_name: value })}
+            t={this.props.t}
+            validateNotBlank
           />
         </h2>
 
