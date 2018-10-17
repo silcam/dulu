@@ -6,6 +6,9 @@ import PersonPage from "./PersonPage";
 import Loading from "../shared/Loading";
 import { personCompare, sameName } from "../../models/person";
 import thingBoard from "../shared/thingBoard";
+import AddIcon from "../shared/icons/AddIcon";
+import { Link } from "react-router-dom";
+import TextFilter from "../shared/TextFilter";
 
 class Board extends React.PureComponent {
   state = {};
@@ -38,40 +41,58 @@ class Board extends React.PureComponent {
     const selectedPerson = this.props.selected;
     return (
       <div className={styles.container}>
-        <div className={styles.master}>
-          <PeopleTable
-            t={this.props.t}
-            id={this.props.id}
-            people={this.props.people}
-            can={this.props.can}
+        <div className={styles.headerBar}>
+          <Link to="/people">
+            <h2>{this.props.t("People")}</h2>
+          </Link>
+          <TextFilter
+            placeholder={this.props.t("Find")}
+            filter={this.state.filter || ""}
+            updateFilter={filter => this.setState({ filter: filter })}
           />
+          {this.props.can.create && (
+            <Link to="/people/new">
+              <AddIcon iconSize="large" />
+            </Link>
+          )}
         </div>
-        <div className={styles.detail}>
-          {this.props.action == "new" && (
-            <NewPersonForm
+        <div className={styles.masterDetailContainer}>
+          <div className={styles.master}>
+            <PeopleTable
               t={this.props.t}
-              saving={this.props.savingNew}
-              addPerson={this.addPerson}
-              duplicatePerson={this.state.duplicatePerson}
+              id={this.props.id}
+              people={this.props.people}
+              can={this.props.can}
+              filter={this.state.filter}
             />
-          )}
-          {this.props.action == "show" &&
-            selectedPerson &&
-            (selectedPerson.loaded ? (
-              <PersonPage
-                key={selectedPerson.id}
-                person={selectedPerson}
+          </div>
+          <div className={styles.detail}>
+            {this.props.action == "new" && (
+              <NewPersonForm
                 t={this.props.t}
-                replacePerson={this.replacePerson}
-                deletePerson={this.props.delete}
-                setNetworkError={this.props.setNetworkError}
+                saving={this.props.savingNew}
+                addPerson={this.addPerson}
+                duplicatePerson={this.state.duplicatePerson}
               />
-            ) : (
-              <Loading t={this.props.t} />
-            ))}
-          {!this.props.action && (
-            <span>Placeholder for PeopleBoard summary</span>
-          )}
+            )}
+            {this.props.action == "show" &&
+              selectedPerson &&
+              (selectedPerson.loaded ? (
+                <PersonPage
+                  key={selectedPerson.id}
+                  person={selectedPerson}
+                  t={this.props.t}
+                  replacePerson={this.replacePerson}
+                  deletePerson={this.props.delete}
+                  setNetworkError={this.props.setNetworkError}
+                />
+              ) : (
+                <Loading t={this.props.t} />
+              ))}
+            {!this.props.action && (
+              <span>Placeholder for PeopleBoard summary</span>
+            )}
+          </div>
         </div>
       </div>
     );

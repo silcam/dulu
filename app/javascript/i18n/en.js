@@ -50,6 +50,7 @@ export default {
   Enter_valid_year: "Please enter a valid year",
   Events: "Events",
   Filter: "Filter",
+  Find: "Find",
   First_name: "First Name",
   For_me: "For Me",
   Gender: "Gender",
@@ -102,6 +103,7 @@ export default {
   No_participants: "No active participants",
   No_translation_activities: "No translation activities",
   None: "None",
+  NoneFound: "None Found",
   Notifications: "Notifications",
   notifications: {
     new_program_participant:

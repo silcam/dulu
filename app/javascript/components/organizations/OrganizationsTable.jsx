@@ -1,22 +1,22 @@
 import React from "react";
 import OrganizationTableRow from "./OrganizationTableRow";
-import { Link } from "react-router-dom";
+import Loading from "../shared/Loading";
 
 export default function OrganizationsTable(props) {
-  const organizations = props.organizations;
+  const filter = new RegExp(props.filter, "i");
+  const organizations = props.organizations.filter(org =>
+    org.short_name.match(filter)
+  );
+
   const t = props.t;
+  if (props.organizations.length == 0) {
+    return <Loading t={t} />;
+  }
   if (organizations.length == 0) {
-    return <p className="alertBox alertYellow">{t("Loading")}</p>;
+    return <p>{t("NoneFound")}</p>;
   }
   return (
     <div>
-      {props.can.create && (
-        <p style={{ paddingLeft: "8px" }}>
-          <Link to="/organizations/new" className="btn">
-            {t("Add_new_organization")}
-          </Link>
-        </p>
-      )}
       <table>
         <tbody>
           {organizations.map(organization => (

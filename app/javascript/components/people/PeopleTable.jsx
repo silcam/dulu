@@ -1,23 +1,21 @@
 import React from "react";
 import PeopleTableRow from "./PeopleTableRow";
-import { Link } from "react-router-dom";
 import Loading from "../shared/Loading";
 
 export default function PeopleTable(props) {
-  const people = props.people;
+  const filter = new RegExp(props.filter, "i");
+  const people = props.people.filter(person =>
+    `${person.first_name} ${person.last_name}`.match(filter)
+  );
   const t = props.t;
-  if (people.length == 0) {
+  if (props.people.length == 0) {
     return <Loading t={t} />;
+  }
+  if (people.length == 0) {
+    return <p>{t("NoneFound")}</p>;
   }
   return (
     <div>
-      {props.can.create && (
-        <p style={{ paddingLeft: "8px" }}>
-          <Link to="/people/new" className="btn">
-            {t("Add_new_person")}
-          </Link>
-        </p>
-      )}
       <table>
         <tbody>
           {people.map(person => (
