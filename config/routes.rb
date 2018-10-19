@@ -13,6 +13,8 @@ Rails.application.routes.draw do
       get 'dashboard', on: :member
     end
 
+    resources :languages
+
     resources :notifications do
       get 'global', on: :collection
       post 'mark_read', on: :collection

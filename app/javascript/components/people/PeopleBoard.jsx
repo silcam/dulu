@@ -47,7 +47,6 @@ class Board extends React.PureComponent {
           </Link>
           <TextFilter
             placeholder={this.props.t("Find")}
-            filter={this.state.filter || ""}
             updateFilter={filter => this.setState({ filter: filter })}
           />
           {this.props.can.create && (

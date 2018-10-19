@@ -8,6 +8,7 @@ import styles from "./DuluApp.css";
 import OrganizationsBoard from "../components/organizations/OrganizationsBoard";
 import NetworkErrorAlert from "../components/shared/NetworkErrorAlert";
 import DuluAxios from "../util/DuluAxios";
+import LanguagesBoard from "../components/languages/LanguagesBoard";
 
 export default class DuluApp extends React.Component {
   constructor(props) {
@@ -61,6 +62,17 @@ export default class DuluApp extends React.Component {
           </div>
         )}
         <Switch>
+          <Route
+            path="/languages/:actionOrId?/:id?"
+            render={({ match, history }) => (
+              <LanguagesBoard
+                history={history}
+                {...routeActionAndId(match.params)}
+                t={this.state.t}
+                setNetworkError={this.setNetworkError}
+              />
+            )}
+          />
           <Route
             path="/people/:actionOrId?/:id?"
             render={({ match, history }) => (

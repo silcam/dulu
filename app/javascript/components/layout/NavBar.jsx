@@ -20,6 +20,9 @@ export default function NavBar(props) {
           </Link>
         </li>
         <li>
+          <Link to="/languages">{props.t("Languages")}</Link>
+        </li>
+        <li>
           <Link to="/people">{props.t("People")}</Link>
         </li>
         <li>

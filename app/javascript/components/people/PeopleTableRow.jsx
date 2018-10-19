@@ -10,7 +10,7 @@ function PeopleTableRow(props) {
   return (
     <tr
       className={rowClass}
-      onClick={() => props.history.push(`/people/show/${person.id}`)}
+      onClick={() => props.history.push(`/people/${person.id}`)}
     >
       <td>{`${person.last_name}, ${person.first_name}`}</td>
       {/* <td>
