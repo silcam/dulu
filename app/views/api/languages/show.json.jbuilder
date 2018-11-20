@@ -2,20 +2,7 @@ json.language do
   json.call(@program, :id, :name)
 
   translation_activities = @program.translation_activities.order(:bible_book_id)
-  json.translation_activities translation_activities do |activity|
-    json.call(activity, :id, :name, :program_id, :bible_book_id)
-
-    json.program_name @program.name
-    json.stage_name t(activity.stage_name)
-    json.stage_date activity.current_stage.start_date
-    json.last_update activity.updated_at
-
-    json.progress do
-      percent, color = activity.progress
-      json.percent percent
-      json.color color_from_sym(color)
-    end
-  end
+  json.partial! 'api/translation_activities/index', activities: translation_activities
 
   research_activities = @program.linguistic_activities.where(category: :Research)
   workshops_activities = @program.linguistic_activities.where(category: :Workshops)

@@ -26,7 +26,8 @@ button, a.btn {
     cursor: pointer;
     color: white;
     background-color: #337ab7;
-    border: 1px solid #2e6da4;
+    /* border: 1px solid #2e6da4; */
+    border-width: 0;
     padding: 6px 12px;
     font-size: 14px;
     margin: 0 8px 8px 0;

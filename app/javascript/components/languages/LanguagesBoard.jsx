@@ -12,10 +12,6 @@ import LanguagePage from "./LanguagePage";
 class Board extends React.PureComponent {
   state = {};
 
-  // addLanguage = () => {}
-
-  replaceLanguage = () => {};
-
   render() {
     const selectedLanguage = this.props.selected;
     return (
@@ -59,7 +55,7 @@ class Board extends React.PureComponent {
                   key={selectedLanguage.id}
                   language={selectedLanguage}
                   t={this.props.t}
-                  replaceLanguage={this.replaceLanguage}
+                  replaceLanguage={this.props.replace}
                   setNetworkError={this.props.setNetworkError}
                 />
               ) : (

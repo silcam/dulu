@@ -7,12 +7,10 @@ import LanguagePageContent from "./LanguagePageContent";
 const tabs = [/*"All",*/ "Translation", "Linguistics", "Literacy", "Media"];
 
 export default class LanguagePage extends React.PureComponent {
-  state = {
-    language: deepcopy(this.props.language)
-  };
+  state = {};
 
   render() {
-    const language = this.state.language;
+    const language = this.props.language;
     const t = this.props.t;
     return (
       <div>
@@ -30,7 +28,13 @@ export default class LanguagePage extends React.PureComponent {
           </TabList>
           {tabs.map(name => (
             <TabPanel key={name}>
-              <LanguagePageContent language={language} tab={name} t={t} />
+              <LanguagePageContent
+                language={language}
+                tab={name}
+                t={t}
+                replaceLanguage={this.props.replaceLanguage}
+                setNetworkError={this.props.setNetworkError}
+              />
             </TabPanel>
           ))}
         </Tabs>

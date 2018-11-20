@@ -1,32 +1,17 @@
 import React from "react";
 import PropTypes from "prop-types";
-import ProgressBar from "../shared/ProgressBar";
-import EditIcon from "../shared/icons/EditIcon";
+import TranslationActivitiesTable from "./TranslationActivitiesTable";
 
 export default function ActivitiesTable(props) {
+  if (props.tab == "Translation")
+    return <TranslationActivitiesTable {...props} />;
+
   const language = props.language;
   return (
     <div>
       <h3>{props.t("Activities")}</h3>
       <table>
         <tbody>
-          {showActivities("Translation", props.tab) &&
-            language.translation_activities.map(activity => (
-              <tr key={activity.id}>
-                <td>{activity.name}</td>
-                <td>
-                  <ProgressBar
-                    percent={activity.progress.percent}
-                    color={activity.progress.color}
-                  />
-                </td>
-                <td>{activity.stage_name}</td>
-                <td>{activity.stage_date}</td>
-                <td>
-                  <EditIcon />
-                </td>
-              </tr>
-            ))}
           {showActivities("Linguistics", props.tab) && (
             <React.Fragment>
               {language.linguistic_activities.research_activities.map(

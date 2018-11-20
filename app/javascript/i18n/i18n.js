@@ -8,6 +8,18 @@ const strings = {
   fr: fr
 };
 
+// const I18n = {
+//   locale: "en",
+
+//   setLocale: function(newLocale) {
+//     if (strings[newLocale]) this.locale = newLocale;
+//   },
+
+//   t: function(key, subs) {
+//     return translate(key, subs, this.locale);
+//   }
+// };
+
 export default function translator(setLocale) {
   setLocale = strings[setLocale] ? setLocale : "en";
   return (key, subs, locale) => {
@@ -41,3 +53,5 @@ function tSubs(str, subs) {
     return accumStr.replace(pattern, subs[subKey]);
   }, str);
 }
+
+// export default I18n;

@@ -39,6 +39,8 @@ Rails.application.routes.draw do
       get 'dashboard_list', on: :collection
       get 'dashboard', on: :member
     end
+
+    resources :stages
   end
 
   # Sessions

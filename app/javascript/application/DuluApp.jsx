@@ -63,7 +63,7 @@ export default class DuluApp extends React.Component {
         )}
         <Switch>
           <Route
-            path="/languages/:actionOrId?/:id?"
+            path="/(languages|programs)/:actionOrId?/:id?"
             render={({ match, history }) => (
               <LanguagesBoard
                 history={history}

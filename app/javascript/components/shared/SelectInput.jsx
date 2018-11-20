@@ -1,19 +1,7 @@
 import React from "react";
+import PropTypes from "prop-types";
 
-/*
-    Required props:
-        -handleChange(e)
-        -value
-        -options - array of objects with display member and optional value member
-    Optional props:
-        -extraClasses
-        -autoFocus
-        -name
-        -onBlur
-
-*/
-
-function SelectInput(props) {
+export default function SelectInput(props) {
   const className = "form-control " + props.extraClasses;
   const name = props.name || "basic_select";
   return (
@@ -37,4 +25,13 @@ function SelectInput(props) {
   );
 }
 
-export default SelectInput;
+SelectInput.propTypes = {
+  handleChange: PropTypes.func.isRequired, // handleChange(e)
+  value: PropTypes.string.isRequired,
+  options: PropTypes.array.isRequired, // [{value: v, display: d} ... ]
+  // optional
+  name: PropTypes.string,
+  autoFocus: PropTypes.bool,
+  extraClasses: PropTypes.string,
+  onBlur: PropTypes.func
+};
