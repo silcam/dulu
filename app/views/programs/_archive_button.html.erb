@@ -1,6 +1,0 @@
-
-<% if can?(:update, activity) %>
-  <span data-archive-button <%= 'style="display: none;"'.html_safe unless activity.archivable? %>>
-    <%= button_to t(:Archive), archive_activity_path(activity), method: :patch, class: 'btn btn-warning btn-sm' %>
-  </span>
-<% end %>

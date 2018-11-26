@@ -1,5 +1,0 @@
-<h3><%= title %></h3>
-<% each = defined?(reverse) && reverse ? :reverse_each : :each %>
-<% events.send(each) do |event| %>
-    <%= render 'events/event', event: event %>
-<% end %>

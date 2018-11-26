@@ -1,7 +1,0 @@
-<div class="form-group">
-  <%= label_tag :bible_book, t(:Translate) %>
-  <%= select_tag('activity[bible_book_id]',
-                 options_for_select(BibleBook.options_for_select(@program)),
-                 class: 'form-control',
-                  disabled: (activity_kind != :Translation)) %>
-</div>
