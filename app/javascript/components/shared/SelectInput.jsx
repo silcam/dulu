@@ -27,7 +27,7 @@ export default function SelectInput(props) {
 
 SelectInput.propTypes = {
   handleChange: PropTypes.func.isRequired, // handleChange(e)
-  value: PropTypes.string.isRequired,
+  value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
   options: PropTypes.array.isRequired, // [{value: v, display: d} ... ]
   // optional
   name: PropTypes.string,

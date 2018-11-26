@@ -92,6 +92,10 @@ a:hover, button.link:hover, button.link:hover:active {
     color: #23527c;
 }
 
+button.small {
+    font-size: 11px;
+}
+
 h1, h2, h3, h4, h5, h6 {
     font-weight: 500;
     line-height: 1.1;
@@ -120,4 +124,8 @@ select {
     font-size: 14px;
     margin: 0;
     /* padding: 4px; Not supported */
+}
+
+label {
+    font-weight: bold;
 }

@@ -8,6 +8,7 @@ export default {
   All: "Tous",
   All_changes_saved: "Toute modification enregistrée",
   already_exists: "existe déjà",
+  As_of: "Depuis",
   Bible: "Bible",
   bible_books: [
     "Genèse",
@@ -168,6 +169,7 @@ export default {
   need_email_for_login:
     "Il faut un adresse mail avant d'activer le compte Dulu.",
   network_error_message: "Erreur de connexion au serveur Dulu.",
+  New_activity: "Nouvelle activité",
   New_organization: "Nouvelle organisation",
   New_person: "Nouvelle personne",
   New_testament: "Nouveau Testament",
@@ -175,6 +177,7 @@ export default {
   No_events: "Aucun événement",
   No_media_activities: "Aucune activité audiovisuelle",
   No_participants: "Aucun participant",
+  No_scripture: "Aucune écriture",
   No_translation_activities: "Aucune activité de traduction",
   None: "Aucun",
   NoneFound: "Aucun trouvé",
@@ -295,8 +298,11 @@ export default {
     Review: "Révision"
   },
   Start_date: "Date de commencement",
+  Status: "Statut",
   Try_again: "Réessayer",
   Upcoming_events: "Événements futurs",
+  Update: "Mettre à jour",
+  Update_stage: "Mettre à jour :",
   Updated: "Mise à jour",
   validation: {
     Not_blank: "Ça ne peut pas être vide"

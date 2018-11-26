@@ -32,7 +32,7 @@ export default function DaySelector(props) {
 DaySelector.propTypes = {
   handleInput: PropTypes.func.isRequired,
   t: PropTypes.func.isRequired,
-  value: PropTypes.number,
+  value: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   maxValue: PropTypes.number,
   name: PropTypes.string
 };

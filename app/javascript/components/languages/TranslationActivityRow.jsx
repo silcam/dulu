@@ -10,6 +10,7 @@ import FuzzyDate from "../../util/FuzzyDate";
 import DuluAxios from "../../util/DuluAxios";
 import NewStageForm from "./NewStageForm";
 import BibleBook from "../../models/BibleBook";
+import styles from "./TranslationActivitiesTable.css";
 
 export default class TranslationActivityRow extends React.PureComponent {
   constructor(props) {
@@ -47,7 +48,7 @@ export default class TranslationActivityRow extends React.PureComponent {
         stage_date: data.stage.start_date,
         last_update: data.stage.last_update
       });
-      this.setState({ updateFormState: "none" });
+      this.setState(this.freshState(this.props));
     } catch (error) {
       this.props.setNetworkError(error);
       this.setState({ updateFormState: "date" });
@@ -64,45 +65,52 @@ export default class TranslationActivityRow extends React.PureComponent {
   render() {
     const activity = this.props.activity;
     const t = this.props.t;
-    return this.state.expanded ? (
-      <tr>
-        <td colSpan="4">
-          <button
-            className="link"
-            onClick={() => this.setState(this.freshState(this.props))}
-          >
-            {BibleBook.name(activity.bible_book_id, t)}
-          </button>
-          <div>
-            <NewStageForm
-              t={t}
-              formState={this.state.updateFormState}
-              stage={this.state.nextStage}
-              updateNextStage={this.updateNextStage}
-              setFormState={formState =>
-                this.setState({ updateFormState: formState })
-              }
-              save={this.addNextStage}
+    return (
+      <React.Fragment>
+        <tr>
+          <td>
+            {this.props.can.update ? (
+              <button
+                className="link"
+                onClick={() =>
+                  this.setState(prevState => ({
+                    expanded: !prevState.expanded
+                  }))
+                }
+              >
+                {BibleBook.name(activity.bible_book_id, t)}
+              </button>
+            ) : (
+              BibleBook.name(activity.bible_book_id, t)
+            )}
+          </td>
+          <td>
+            <ProgressBar
+              {...Activity.translationProgress[activity.stage_name]}
             />
-          </div>
-        </td>
-      </tr>
-    ) : (
-      <tr>
-        <td>
-          <button
-            className="link"
-            onClick={() => this.setState({ expanded: true })}
-          >
-            {BibleBook.name(activity.bible_book_id, t)}
-          </button>
-        </td>
-        <td>
-          <ProgressBar {...Activity.translationProgress[activity.stage_name]} />
-        </td>
-        <td>{t(`stage_names.${activity.stage_name}`)}</td>
-        <td>{activity.stage_date}</td>
-      </tr>
+          </td>
+          <td>{t(`stage_names.${activity.stage_name}`)}</td>
+          <td>{activity.stage_date}</td>
+        </tr>
+        {this.state.expanded && (
+          <tr>
+            <td colSpan="4" className={styles.rowExpansion}>
+              <div>
+                <NewStageForm
+                  t={t}
+                  formState={this.state.updateFormState}
+                  stage={this.state.nextStage}
+                  updateNextStage={this.updateNextStage}
+                  setFormState={formState =>
+                    this.setState({ updateFormState: formState })
+                  }
+                  save={this.addNextStage}
+                />
+              </div>
+            </td>
+          </tr>
+        )}
+      </React.Fragment>
     );
   }
 }

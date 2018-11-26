@@ -9,6 +9,7 @@ import SmallSaveAndCancel from "../shared/SmallSaveAndCancel";
 import FuzzyDate from "../../util/FuzzyDate";
 import Activity from "../../models/Activity";
 import DuluAxios from "../../util/DuluAxios";
+import styles from "./TranslationActivitiesTable.css";
 
 export default class TranslationActivitiesTable extends React.PureComponent {
   constructor(props) {
@@ -75,22 +76,23 @@ export default class TranslationActivitiesTable extends React.PureComponent {
       <div>
         <h3>
           {t("Activities")}
-          {!this.state.showNewForm && this.state.bookOptions.length > 0 && (
-            <InlineAddIcon
-              onClick={() => this.setState({ showNewForm: true })}
-            />
-          )}
+          {!this.state.showNewForm &&
+            this.state.bookOptions.length > 0 &&
+            this.props.language.can.update && (
+              <InlineAddIcon
+                onClick={() => this.setState({ showNewForm: true })}
+              />
+            )}
         </h3>
         {this.state.showNewForm && (
-          <div>
+          <div className={styles.newActivityForm}>
             <SelectGroup
-              label={t("Book")}
+              label={t("New_activity")}
               value={this.state.newActivity.bible_book_id}
               handleChange={e =>
                 this.updateNewActivity({ bible_book_id: e.target.value })
               }
               options={this.state.bookOptions}
-              autoFocus
             />
             <SmallSaveAndCancel
               t={t}
@@ -106,6 +108,7 @@ export default class TranslationActivitiesTable extends React.PureComponent {
               <TranslationActivityRow
                 key={activity.id}
                 activity={activity}
+                can={this.props.language.can}
                 t={t}
                 replaceActivity={this.replaceTranslationActivity}
                 setNetworkError={this.props.setNetworkError}
