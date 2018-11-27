@@ -11,7 +11,7 @@ export default function SmallSaveAndCancel(props) {
         disabled={props.saveDisabled && "disabled"}
         style={{ fontSize: "11px" }}
       >
-        {props.t("Save")}
+        {props.saveCaption || props.t("Save")}
       </button>
       <button
         onClick={props.handleCancel}
@@ -29,5 +29,6 @@ SmallSaveAndCancel.propTypes = {
   handleCancel: PropTypes.func.isRequired,
   t: PropTypes.func.isRequired,
   saveDisabled: PropTypes.bool,
-  style: PropTypes.object
+  style: PropTypes.object,
+  saveCaption: PropTypes.string
 };

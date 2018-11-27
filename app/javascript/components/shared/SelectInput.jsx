@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 export default function SelectInput(props) {
   const className = "form-control " + props.extraClasses;
   const name = props.name || "basic_select";
+
   return (
     <select
       className={className}
@@ -24,6 +25,12 @@ export default function SelectInput(props) {
     </select>
   );
 }
+
+SelectInput.translatedOptions = (options, t, keyPrefix) =>
+  options.map(option => ({
+    value: option,
+    display: keyPrefix ? t(`${keyPrefix}.${option}`) : t(option)
+  }));
 
 SelectInput.propTypes = {
   handleChange: PropTypes.func.isRequired, // handleChange(e)

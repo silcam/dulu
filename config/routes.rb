@@ -36,6 +36,7 @@ Rails.application.routes.draw do
 
     resources :programs, shallow: true do
       resources :translation_activities
+      resources :media_activities
       get 'dashboard_list', on: :collection
       get 'dashboard', on: :member
     end

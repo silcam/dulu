@@ -4,7 +4,7 @@ import SelectInput from "../shared/SelectInput";
 import Activity from "../../models/Activity";
 import FuzzyDateInput from "../shared/FuzzyDateInput";
 import SmallSaveAndCancel from "../shared/SmallSaveAndCancel";
-import styles from "./TranslationActivitiesTable.css";
+import styles from "./ActivitiesTable.css";
 
 export default function NewStageForm(props) {
   const t = props.t;
@@ -20,10 +20,11 @@ export default function NewStageForm(props) {
                 props.updateNextStage({ name: e.target.value })
               }
               value={props.stage.name}
-              options={Activity.translationStages.map(stage => ({
-                value: stage,
-                display: t(`stage_names.${stage}`)
-              }))}
+              options={SelectInput.translatedOptions(
+                Activity.stages(props.activity),
+                t,
+                "stage_names"
+              )}
             />
           </div>
           <button className="small" onClick={() => props.setFormState("date")}>
@@ -66,6 +67,7 @@ export default function NewStageForm(props) {
 
 NewStageForm.propTypes = {
   t: PropTypes.func.isRequired,
+  activity: PropTypes.object.isRequired,
   formState: PropTypes.string.isRequired,
   stage: PropTypes.object.isRequired,
   updateNextStage: PropTypes.func.isRequired,

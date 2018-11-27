@@ -1,53 +1,129 @@
 import React from "react";
 import PropTypes from "prop-types";
-import TranslationActivitiesTable from "./TranslationActivitiesTable";
+import ActivityRow from "./ActivityRow";
+import update from "immutability-helper";
+import { findIndexById } from "../../util/findById";
+import InlineAddIcon from "../shared/icons/InlineAddIcon";
+import Activity from "../../models/Activity";
+import DuluAxios from "../../util/DuluAxios";
+import NewMediaActivityForm from "./NewMediaActivityForm";
+import NewTranslationActivityForm from "./NewTranslationActivityForm";
+import styles from "./ActivitiesTable.css";
 
-export default function ActivitiesTable(props) {
-  if (props.tab == "Translation")
-    return <TranslationActivitiesTable {...props} />;
+export default class ActivitiesTable extends React.PureComponent {
+  constructor(props) {
+    super(props);
+    this.state = this.freshState(props);
+  }
 
-  const language = props.language;
-  return (
-    <div>
-      <h3>{props.t("Activities")}</h3>
-      <table>
-        <tbody>
-          {showActivities("Linguistics", props.tab) && (
-            <React.Fragment>
-              {language.linguistic_activities.research_activities.map(
-                activity => (
-                  <tr key={activity.id}>
-                    <td>{activity.title}</td>
-                  </tr>
-                )
-              )}
-              {language.linguistic_activities.workshops_activities.map(
-                activity => (
-                  <tr key={activity.id}>
-                    <td>{activity.title}</td>
-                  </tr>
-                )
-              )}
-            </React.Fragment>
+  freshState = () => {
+    return {
+      showNewForm: false,
+      newFormSaving: false
+    };
+  };
+
+  x_activity = () => `${this.props.type}_activity`;
+
+  x_activities = () => `${this.props.type}_activities`;
+
+  NewActivityForm = () => {
+    switch (this.props.type) {
+      case "media":
+        return NewMediaActivityForm;
+      case "translation":
+        return NewTranslationActivityForm;
+    }
+  };
+
+  addNewActivity = async activity => {
+    this.setState({ newFormSaving: true });
+    try {
+      const data = await DuluAxios.post(
+        `/api/programs/${this.props.language.id}/${this.x_activities()}/`,
+        {
+          [this.x_activity()]: activity
+        }
+      );
+      this.props.replaceLanguage(
+        update(this.props.language, {
+          [this.x_activities()]: { $set: data[this.x_activities()] }
+        })
+      );
+      this.setState(this.freshState(this.props));
+    } catch (error) {
+      this.props.setNetworkError({});
+      this.setState({ newFormSaving: false });
+    }
+  };
+
+  replaceTranslationActivity = newActivity => {
+    this.props.replaceLanguage(
+      update(this.props.language, {
+        [this.x_activities()]: {
+          [findIndexById(
+            this.props.language[this.x_activities()],
+            newActivity.id
+          )]: {
+            $set: newActivity
+          }
+        }
+      })
+    );
+  };
+
+  render() {
+    const language = this.props.language;
+    const t = this.props.t;
+    const NewActivityForm = this.NewActivityForm();
+    return (
+      <div>
+        <h3>
+          {t("Activities")}
+          {!this.state.showNewForm && this.props.language.can.update && (
+            <InlineAddIcon
+              onClick={() => this.setState({ showNewForm: true })}
+            />
           )}
-          {showActivities("Media", props.tab) &&
-            language.media_activities.map(activity => (
-              <tr key={activity.id}>
-                <td>{activity.name}</td>
-              </tr>
+        </h3>
+        {this.state.showNewForm && (
+          <NewActivityForm
+            t={t}
+            saving={this.state.newFormSaving}
+            cancelForm={() => this.setState({ showNewForm: false })}
+            addNewActivity={this.addNewActivity}
+            availableBooks={
+              this.props.type == "translation" &&
+              Activity.availableBooks(
+                this.props.language.translation_activities,
+                t
+              )
+            }
+          />
+        )}
+        <table>
+          <tbody>
+            {language[this.x_activities()].map(activity => (
+              <ActivityRow
+                key={activity.id}
+                activity={activity}
+                can={this.props.language.can}
+                t={t}
+                replaceActivity={this.replaceTranslationActivity}
+                setNetworkError={this.props.setNetworkError}
+              />
             ))}
-        </tbody>
-      </table>
-    </div>
-  );
-}
-
-function showActivities(domain, tab) {
-  return tab == "All" || tab == domain;
+          </tbody>
+        </table>
+      </div>
+    );
+  }
 }
 
 ActivitiesTable.propTypes = {
-  t: PropTypes.func.isRequired,
+  type: PropTypes.oneOf(["media", "translation"]).isRequired,
   language: PropTypes.object.isRequired,
-  tab: PropTypes.string.isRequired
+  replaceLanguage: PropTypes.func.isRequired,
+  t: PropTypes.func.isRequired,
+  setNetworkError: PropTypes.func.isRequired
 };

@@ -24,7 +24,7 @@ export default function MonthSelector(props) {
 
 MonthSelector.propTypes = {
   handleInput: PropTypes.func.isRequired,
-  value: PropTypes.number,
+  value: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   t: PropTypes.func.isRequired,
   name: PropTypes.string
 };

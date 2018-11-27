@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import AlertBox from "./AlertBox";
 
 export default function SaveIndicator(props) {
@@ -10,3 +11,9 @@ export default function SaveIndicator(props) {
     />
   );
 }
+
+SaveIndicator.propTypes = {
+  saving: PropTypes.bool,
+  saved: PropTypes.bool,
+  t: PropTypes.func.isRequired
+};

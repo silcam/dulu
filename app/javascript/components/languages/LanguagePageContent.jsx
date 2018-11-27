@@ -9,7 +9,9 @@ import TranslationStatus from "./TranslationStatus";
 export default function LanguagePageContent(props) {
   return (
     <div className={styles.pageContent}>
-      <ActivitiesTable {...props} />
+      {(props.tab == "Translation" || props.tab == "Media") && (
+        <ActivitiesTable {...props} type={props.tab.toLowerCase()} />
+      )}
       <EventsTable {...props} />
       <PeopleTable {...props} />
       {props.tab == "Translation" && <TranslationStatus {...props} />}

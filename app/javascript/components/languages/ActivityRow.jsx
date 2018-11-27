@@ -1,18 +1,13 @@
 import React from "react";
 import PropTypes from "prop-types";
-import ProgressBar from "../shared/ProgressBar";
-import SelectInput from "../shared/SelectInput";
 import Activity from "../../models/Activity";
-import { itemAfter } from "../../util/arrayUtils";
-import FuzzyDateInput from "../shared/FuzzyDateInput";
 import update from "immutability-helper";
-import FuzzyDate from "../../util/FuzzyDate";
 import DuluAxios from "../../util/DuluAxios";
+import ProgressBar from "../shared/ProgressBar";
 import NewStageForm from "./NewStageForm";
-import BibleBook from "../../models/BibleBook";
-import styles from "./TranslationActivitiesTable.css";
+import styles from "./ActivitiesTable.css";
 
-export default class TranslationActivityRow extends React.PureComponent {
+export default class ActivityRow extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = this.freshState(props);
@@ -21,13 +16,8 @@ export default class TranslationActivityRow extends React.PureComponent {
   freshState = props => {
     return {
       expanded: false,
-      nextStage: {
-        name: itemAfter(Activity.translationStages, props.activity.stage_name),
-        start_date: FuzzyDate.today(),
-        activity_id: props.activity.id
-      },
-      updateFormState:
-        props.activity.stage_name == "Published" ? "none" : "stage"
+      nextStage: Activity.nextStage(props.activity),
+      updateFormState: "stage"
     };
   };
 
@@ -78,16 +68,14 @@ export default class TranslationActivityRow extends React.PureComponent {
                   }))
                 }
               >
-                {BibleBook.name(activity.bible_book_id, t)}
+                {Activity.name(activity, t)}
               </button>
             ) : (
-              BibleBook.name(activity.bible_book_id, t)
+              Activity.name(activity, t)
             )}
           </td>
           <td>
-            <ProgressBar
-              {...Activity.translationProgress[activity.stage_name]}
-            />
+            <ProgressBar {...Activity.progress(activity)} />
           </td>
           <td>{t(`stage_names.${activity.stage_name}`)}</td>
           <td>{activity.stage_date}</td>
@@ -98,6 +86,7 @@ export default class TranslationActivityRow extends React.PureComponent {
               <div>
                 <NewStageForm
                   t={t}
+                  activity={this.props.activity}
                   formState={this.state.updateFormState}
                   stage={this.state.nextStage}
                   updateNextStage={this.updateNextStage}
@@ -115,6 +104,10 @@ export default class TranslationActivityRow extends React.PureComponent {
   }
 }
 
-TranslationActivityRow.propTypes = {
-  activity: PropTypes.object.isRequired
+ActivityRow.propTypes = {
+  activity: PropTypes.object.isRequired,
+  t: PropTypes.func.isRequired,
+  can: PropTypes.object.isRequired,
+  replaceActivity: PropTypes.func.isRequired,
+  setNetworkError: PropTypes.func.isRequired
 };

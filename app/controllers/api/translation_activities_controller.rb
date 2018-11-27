@@ -16,6 +16,6 @@ class Api::TranslationActivitiesController < ApplicationController
   private
 
   def translation_activity_params
-    return params.require('translation_activity').permit(:bible_book_id)
+    return params.require(:translation_activity).permit(:bible_book_id)
   end
 end
