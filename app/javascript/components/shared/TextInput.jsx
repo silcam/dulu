@@ -33,8 +33,8 @@ export default function TextInput(props) {
 }
 
 TextInput.propTypes = {
-  handleInput: PropTypes.func,
-  value: PropTypes.string,
+  handleInput: PropTypes.func.isRequired,
+  value: PropTypes.string.isRequired,
   name: PropTypes.string,
   // Optional
   handleEnter: PropTypes.func,

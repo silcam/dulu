@@ -23,6 +23,8 @@ export default class Activity {
 
   static name(activity, t) {
     switch (activity.type) {
+      case "LinguisticActivity":
+        return activity.title;
       case "MediaActivity":
         return activity.name;
       case "TranslationActivity":
@@ -32,6 +34,10 @@ export default class Activity {
 
   static progress(activity) {
     switch (activity.type) {
+      case "LinguisticActivity":
+        return activity.category == "Research"
+          ? Activity.researchProgress[activity.stage_name]
+          : Activity.workshopsProgress(activity);
       case "MediaActivity":
         return Activity.mediaProgress[activity.stage_name];
       case "TranslationActivity":
@@ -39,13 +45,29 @@ export default class Activity {
     }
   }
 
+  static workshopsProgress(activity) {
+    return {
+      /* Need to figure this out :) */
+    };
+  }
+
   static stages(activity) {
     switch (activity.type) {
+      case "LinguisticActivity":
+        return activity.category == "Research"
+          ? Object.keys(Activity.researchProgress)
+          : Activity.workshopsStages(activity);
       case "MediaActivity":
         return Object.keys(Activity.mediaProgress);
       case "TranslationActivity":
         return Object.keys(Activity.translationProgress);
     }
+  }
+
+  static workshopsStages(activity) {
+    return [
+      /* Definitely should fill this in */
+    ];
   }
 }
 
@@ -70,6 +92,14 @@ Activity.mediaProgress = {
   Scheduled: { percent: 50, color: Colors.yellow },
   Recording: { percent: 60, color: Colors.light_green },
   Mastering: { percent: 80, color: Colors.light_blue },
+  Published: { percent: 100, color: Colors.purple }
+};
+
+Activity.researchProgress = {
+  Planned: { percent: 0, color: Colors.white },
+  Research: { percent: 25, color: Colors.red },
+  Drafting: { percent: 50, color: Colors.yellow },
+  Review: { percent: 75, color: Colors.light_blue },
   Published: { percent: 100, color: Colors.purple }
 };
 

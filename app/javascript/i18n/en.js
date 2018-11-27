@@ -254,6 +254,7 @@ export default {
   Person: "Person",
   Position: "Position",
   Research: "Research",
+  Research_activities: "Research Activities",
   Role: "Role",
   Roles: "Roles",
   roles: {
@@ -308,6 +309,7 @@ export default {
   },
   Start_date: "Start Date",
   Status: "Status",
+  Title: "Title",
   Try_again: "Try again",
   Upcoming_events: "Upcoming Events",
   Update: "Update",

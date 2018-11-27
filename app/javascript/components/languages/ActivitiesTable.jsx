@@ -9,6 +9,7 @@ import DuluAxios from "../../util/DuluAxios";
 import NewMediaActivityForm from "./NewMediaActivityForm";
 import NewTranslationActivityForm from "./NewTranslationActivityForm";
 import styles from "./ActivitiesTable.css";
+import NewResearchActivityForm from "./NewResearchActivityForm";
 
 export default class ActivitiesTable extends React.PureComponent {
   constructor(props) {
@@ -31,6 +32,8 @@ export default class ActivitiesTable extends React.PureComponent {
     switch (this.props.type) {
       case "media":
         return NewMediaActivityForm;
+      case "research":
+        return NewResearchActivityForm;
       case "translation":
         return NewTranslationActivityForm;
     }
@@ -57,7 +60,7 @@ export default class ActivitiesTable extends React.PureComponent {
     }
   };
 
-  replaceTranslationActivity = newActivity => {
+  replaceActivity = newActivity => {
     this.props.replaceLanguage(
       update(this.props.language, {
         [this.x_activities()]: {
@@ -79,7 +82,7 @@ export default class ActivitiesTable extends React.PureComponent {
     return (
       <div>
         <h3>
-          {t("Activities")}
+          {this.props.heading || t("Activities")}
           {!this.state.showNewForm && this.props.language.can.update && (
             <InlineAddIcon
               onClick={() => this.setState({ showNewForm: true })}
@@ -109,7 +112,7 @@ export default class ActivitiesTable extends React.PureComponent {
                 activity={activity}
                 can={this.props.language.can}
                 t={t}
-                replaceActivity={this.replaceTranslationActivity}
+                replaceActivity={this.replaceActivity}
                 setNetworkError={this.props.setNetworkError}
               />
             ))}
@@ -121,9 +124,10 @@ export default class ActivitiesTable extends React.PureComponent {
 }
 
 ActivitiesTable.propTypes = {
-  type: PropTypes.oneOf(["media", "translation"]).isRequired,
+  type: PropTypes.oneOf(["media", "research", "translation"]).isRequired,
   language: PropTypes.object.isRequired,
   replaceLanguage: PropTypes.func.isRequired,
   t: PropTypes.func.isRequired,
-  setNetworkError: PropTypes.func.isRequired
+  setNetworkError: PropTypes.func.isRequired,
+  heading: PropTypes.string // Default "Activities"
 };

@@ -258,6 +258,7 @@ export default {
   Person: "Personne",
   Position: "Poste",
   Research: "Recherche",
+  Research_activities: "Activités de recherche",
   Role: "Rôle",
   Roles: "Rôles",
   roles: {
@@ -313,6 +314,7 @@ export default {
   },
   Start_date: "Date de commencement",
   Status: "Statut",
+  Title: "Titre",
   Try_again: "Réessayer",
   Upcoming_events: "Événements futurs",
   Update: "Mettre à jour",
