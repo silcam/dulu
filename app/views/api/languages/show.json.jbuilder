@@ -4,23 +4,10 @@ json.language do
   translation_activities = @program.translation_activities.order(:bible_book_id)
   json.partial! 'api/translation_activities/index', activities: translation_activities
 
-  json.partial! 'api/research_activities/index', activities: @program.research_activities
-
-  workshops_activities = @program.linguistic_activities.where(category: :Workshops)
-  json.linguistic_activities do
-
-    json.workshops_activities workshops_activities do |activity|
-      json.call(activity, :id, :title, :program_id)
-      json.program_name activity.program.name
-      json.last_update activity.updated_at
-      json.workshops activity.workshops do |workshop|
-        json.call(workshop, :id, :name, :event_id)
-        json.completed workshop.completed?
-      end
-    end
-  end
-
   json.partial! 'api/media_activities/index', activities: @program.media_activities
+  json.partial! 'api/research_activities/index', activities: @program.research_activities
+  json.partial! 'api/workshops_activities/index', activities: @program.workshops_activities
+
 
   json.participants @program.all_current_participants do |participant|
     json.call(participant, :id, :full_name, :full_name_rev)

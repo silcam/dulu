@@ -1,45 +1,15 @@
 import React from "react";
-import axios from "axios";
+import PropTypes from "prop-types";
 import update from "immutability-helper";
-
 import Workshop from "./Workshop";
 import NewWorkshopForm from "./NewWorkshopForm";
+import DuluAxios from "../../util/DuluAxios";
 
-/*
-    Required props:
-        number activity_id
-        string authenticity_token
-*/
-
-class WorkshopActivity extends React.PureComponent {
-  constructor(props) {
-    super(props);
-    this.state = {
-      workshops: [],
-      can: { create: false }
-    };
-  }
-
-  componentDidMount() {
-    axios
-      .get(`/api/activities/${this.props.activity_id}/workshops/`)
-      .then(response => {
-        // console.log(response.data)
-        this.setState({
-          workshops: response.data.workshops,
-          can: response.data.can
-        });
-      })
-      .catch(error => console.error(error));
-  }
-
+export default class WorkshopActivity extends React.PureComponent {
   handleNewWorkshop = workshop => {
-    this.setState((prevState, props) => {
-      const workshops = update(prevState.workshops, {
-        $push: [workshop]
-      });
-      return { workshops: workshops };
-    });
+    this.props.replaceActivity(
+      update(this.props.activity, { workshops: { $push: [workshop] } })
+    );
   };
 
   findPlaceFor = (workshop, workshops) => {
@@ -67,39 +37,37 @@ class WorkshopActivity extends React.PureComponent {
   };
 
   handleUpdatedWorkshop = workshop => {
-    this.setState((prevState, props) => {
-      const oldIndex = prevState.workshops.findIndex(
-        ws => ws.id === workshop.id
-      );
-      var workshops = update(prevState.workshops, {
-        $splice: [[oldIndex, 1]]
-      });
-      const newIndex = this.findPlaceFor(workshop, workshops);
-      workshops = update(workshops, {
-        $splice: [[newIndex, 0, workshop]]
-      });
-      return { workshops: workshops };
+    const oldIndex = this.props.activity.workshops.findIndex(
+      ws => ws.id === workshop.id
+    );
+    let workshops = update(this.props.activity.workshops, {
+      $splice: [[oldIndex, 1]]
     });
+    const newIndex = this.findPlaceFor(workshop, workshops);
+    workshops = update(workshops, {
+      $splice: [[newIndex, 0, workshop]]
+    });
+    this.props.replaceActivity(
+      update(this.props.activity, {
+        workshops: {
+          $set: workshops
+        }
+      })
+    );
   };
 
-  deleteWorkshop = id => {
-    axios({
-      method: "delete",
-      url: `/api/workshops/${id}`,
-      data: {
-        authenticity_token: this.props.authenticity_token
-      }
-    })
-      .then(response => {
-        this.setState((prevState, props) => {
-          const i = prevState.workshops.findIndex(ws => ws.id === id);
-          const workshops = update(prevState.workshops, {
-            $splice: [[i, 1]]
-          });
-          return { workshops: workshops };
-        });
-      })
-      .catch(error => console.error(error));
+  deleteWorkshop = async id => {
+    try {
+      await DuluAxios.delete(`/api/workshops/${id}`);
+      const i = this.props.activity.workshops.findIndex(ws => ws.id === id);
+      this.props.replaceActivity(
+        update(this.props.activity, {
+          workshops: { $splice: [[i, 1]] }
+        })
+      );
+    } catch (error) {
+      this.props.setNetworkError(error);
+    }
   };
 
   render() {
@@ -108,27 +76,27 @@ class WorkshopActivity extends React.PureComponent {
         <h3>{this.props.t("Workshops")}</h3>
         <table className="table">
           <tbody>
-            {this.state.workshops.map(workshop => {
+            {this.props.activity.workshops.map(workshop => {
               return (
                 <Workshop
                   key={workshop.id}
                   workshop={workshop}
-                  authenticity_token={this.props.authenticity_token}
                   handleUpdatedWorkshop={this.handleUpdatedWorkshop}
                   deleteWorkshop={this.deleteWorkshop}
-                  displayDelete={this.state.workshops.length > 1}
+                  displayDelete={this.props.activity.workshops.length > 1}
+                  setNetworkError={this.props.setNetworkError}
                   t={this.props.t}
                 />
               );
             })}
           </tbody>
         </table>
-        {this.state.can.create && (
+        {this.props.can.update && (
           <NewWorkshopForm
             handleNewWorkshop={this.handleNewWorkshop}
-            authenticity_token={this.props.authenticity_token}
-            activity_id={this.props.activity_id}
+            activity_id={this.props.activity.id}
             t={this.props.t}
+            setNetworkError={this.props.setNetworkError}
           />
         )}
       </div>
@@ -136,4 +104,10 @@ class WorkshopActivity extends React.PureComponent {
   }
 }
 
-export default WorkshopActivity;
+WorkshopActivity.propTypes = {
+  activity: PropTypes.object.isRequired,
+  t: PropTypes.func.isRequired,
+  can: PropTypes.object.isRequired,
+  setNetworkError: PropTypes.func.isRequired,
+  replaceActivity: PropTypes.func.isRequired
+};

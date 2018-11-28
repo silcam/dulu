@@ -10,6 +10,7 @@ import NewMediaActivityForm from "./NewMediaActivityForm";
 import NewTranslationActivityForm from "./NewTranslationActivityForm";
 import styles from "./ActivitiesTable.css";
 import NewResearchActivityForm from "./NewResearchActivityForm";
+import NewWorkshopsActivityForm from "./NewWorkshopsActivityForm";
 
 export default class ActivitiesTable extends React.PureComponent {
   constructor(props) {
@@ -36,6 +37,8 @@ export default class ActivitiesTable extends React.PureComponent {
         return NewResearchActivityForm;
       case "translation":
         return NewTranslationActivityForm;
+      case "workshops":
+        return NewWorkshopsActivityForm;
     }
   };
 
@@ -124,7 +127,8 @@ export default class ActivitiesTable extends React.PureComponent {
 }
 
 ActivitiesTable.propTypes = {
-  type: PropTypes.oneOf(["media", "research", "translation"]).isRequired,
+  type: PropTypes.oneOf(["media", "research", "translation", "workshops"])
+    .isRequired,
   language: PropTypes.object.isRequired,
   replaceLanguage: PropTypes.func.isRequired,
   t: PropTypes.func.isRequired,

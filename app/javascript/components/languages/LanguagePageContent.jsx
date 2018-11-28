@@ -13,11 +13,18 @@ export default function LanguagePageContent(props) {
         <ActivitiesTable {...props} type={props.tab.toLowerCase()} />
       )}
       {props.tab == "Linguistics" && (
-        <ActivitiesTable
-          {...props}
-          type="research"
-          heading={props.t("Research_activities")}
-        />
+        <div>
+          <ActivitiesTable
+            {...props}
+            type="research"
+            heading={props.t("Research_activities")}
+          />
+          <ActivitiesTable
+            {...props}
+            type="workshops"
+            heading={props.t("Workshops_activities")}
+          />
+        </div>
       )}
       <EventsTable {...props} />
       <PeopleTable {...props} />

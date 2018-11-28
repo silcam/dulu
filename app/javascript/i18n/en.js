@@ -321,6 +321,7 @@ export default {
   Workshop_date: "Workshop Date",
   Workshop_name: "Workshop Name",
   Workshops: "Workshops",
+  Workshops_activities: "Workshops Activities",
   Year: "Year",
   Yes: "Yes"
 };

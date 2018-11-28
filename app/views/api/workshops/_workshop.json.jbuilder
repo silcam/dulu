@@ -13,9 +13,10 @@ end
 
 program = workshop.linguistic_activity.program
 if workshop.event
-  json.eventPath program_event_path(program, workshop.event)
+  json.eventPath model_path(workshop.event)
 else
-  json.newEventPath new_program_event_path(program, 
-                                            workshop: workshop, 
-                                            referred_by: activity_path(workshop.linguistic_activity))
+  # json.newEventPath new_program_event_path(program, 
+  #                                           workshop: workshop, 
+  #                                           referred_by: activity_path(workshop.linguistic_activity))
+  json.newEventPath "/events/new"
 end

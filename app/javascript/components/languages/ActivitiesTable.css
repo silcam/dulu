@@ -10,3 +10,7 @@ div.verticalSpace {
 div.newActivityForm {
     padding: 0 30px;
 }
+
+table.workshopsTable tbody tr td {
+    border: none;
+}

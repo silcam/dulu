@@ -1,16 +1,15 @@
 import React from "react";
-import axios from "axios";
-
-import CheckIconButton from "../shared/CheckIconButton";
-import DeleteIconButton from "../shared/DeleteIconButton";
-import EditIconButton from "../shared/EditIconButton";
+import DuluAxios from "../../util/DuluAxios";
+import PropTypes from "prop-types";
+import DeleteIcon from "../shared/icons/DeleteIcon";
+import EditIcon from "../shared/icons/EditIcon";
 import FuzzyDateInput from "../shared/FuzzyDateInput";
 import SmallSaveAndCancel from "../shared/SmallSaveAndCancel";
 import TextInput from "../shared/TextInput";
 
 import DateCell from "./DateCell";
 
-class Workshop extends React.PureComponent {
+export default class Workshop extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
@@ -94,7 +93,7 @@ class Workshop extends React.PureComponent {
     }
   };
 
-  updateWorkshop = () => {
+  updateWorkshop = async () => {
     this.setState({ saving: true });
     const id = this.props.workshop.id;
     const workshop = {
@@ -102,25 +101,20 @@ class Workshop extends React.PureComponent {
       completed: this.state.completed,
       date: this.state.date
     };
-    axios
-      .put(`/api/workshops/${id}/`, {
-        authenticity_token: this.props.authenticity_token,
+    try {
+      const data = await DuluAxios.put(`/api/workshops/${id}/`, {
         workshop: workshop
-      })
-      .then(response => {
-        this.props.handleUpdatedWorkshop(response.data);
-        this.setState({
-          editing: false,
-          enteringDate: false,
-          saving: false
-        });
-      })
-      .catch(error => {
-        console.error(error);
-        this.setState({
-          saving: false
-        });
       });
+      this.props.handleUpdatedWorkshop(data);
+      this.setState({
+        editing: false,
+        enteringDate: false,
+        saving: false
+      });
+    } catch (error) {
+      this.props.setNetworkError(error);
+      this.setState({ saving: false });
+    }
   };
 
   validate = () => {
@@ -155,7 +149,7 @@ class Workshop extends React.PureComponent {
                   checked={this.state.completed}
                   onChange={this.handleCheck}
                 />
-                Completed
+                {this.props.t("Completed")}
               </label>
             )}
             <SmallSaveAndCancel
@@ -179,7 +173,7 @@ class Workshop extends React.PureComponent {
               handleDateInput={this.handleDateInput}
               dateIsInvalid={this.dateIsInvalid}
               showErrors={this.state.showDateErrors}
-              strings={this.props.t("date_strings")}
+              t={this.props.t}
             />
 
             <SmallSaveAndCancel
@@ -208,18 +202,15 @@ class Workshop extends React.PureComponent {
             {this.state.completed
               ? this.props.t("Completed")
               : this.props.workshop.can.update && (
-                  <CheckIconButton
-                    handleClick={this.completeWorkshop}
-                    text={this.props.t("Mark_completed")}
-                  />
+                  <button onClick={this.completeWorkshop}>
+                    {this.props.t("Completed")}
+                  </button>
                 )}
           </td>
           {this.props.workshop.can.update && (
             <td align="right" style={{ whiteSpace: "noWrap" }}>
-              <EditIconButton handleClick={this.editMode} />
-              {this.props.displayDelete && (
-                <DeleteIconButton handleClick={this.delete} />
-              )}
+              <EditIcon onClick={this.editMode} />
+              {this.props.displayDelete && <DeleteIcon onClick={this.delete} />}
             </td>
           )}
         </tr>
@@ -228,4 +219,11 @@ class Workshop extends React.PureComponent {
   }
 }
 
-export default Workshop;
+Workshop.propTypes = {
+  workshop: PropTypes.object.isRequired,
+  displayDelete: PropTypes.bool,
+  setNetworkError: PropTypes.func.isRequired,
+  handleUpdatedWorkshop: PropTypes.func.isRequired,
+  deleteWorkshop: PropTypes.func.isRequired,
+  t: PropTypes.func.isRequired
+};

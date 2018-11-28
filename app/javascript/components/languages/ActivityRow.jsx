@@ -6,6 +6,7 @@ import DuluAxios from "../../util/DuluAxios";
 import ProgressBar from "../shared/ProgressBar";
 import NewStageForm from "./NewStageForm";
 import styles from "./ActivitiesTable.css";
+import WorkshopActivity from "../workshops/WorkshopActivity";
 
 export default class ActivityRow extends React.PureComponent {
   constructor(props) {
@@ -77,24 +78,34 @@ export default class ActivityRow extends React.PureComponent {
           <td>
             <ProgressBar {...Activity.progress(activity)} />
           </td>
-          <td>{t(`stage_names.${activity.stage_name}`)}</td>
-          <td>{activity.stage_date}</td>
+          <td>{Activity.currentStageName(activity, t)}</td>
+          <td>{Activity.stageDate(activity)}</td>
         </tr>
         {this.state.expanded && (
           <tr>
             <td colSpan="4" className={styles.rowExpansion}>
               <div>
-                <NewStageForm
-                  t={t}
-                  activity={this.props.activity}
-                  formState={this.state.updateFormState}
-                  stage={this.state.nextStage}
-                  updateNextStage={this.updateNextStage}
-                  setFormState={formState =>
-                    this.setState({ updateFormState: formState })
-                  }
-                  save={this.addNextStage}
-                />
+                {Activity.isWorkshops(activity) ? (
+                  <WorkshopActivity
+                    activity={activity}
+                    t={t}
+                    can={this.props.can}
+                    replaceActivity={this.props.replaceActivity}
+                    setNetworkError={this.props.setNetworkError}
+                  />
+                ) : (
+                  <NewStageForm
+                    t={t}
+                    activity={this.props.activity}
+                    formState={this.state.updateFormState}
+                    stage={this.state.nextStage}
+                    updateNextStage={this.updateNextStage}
+                    setFormState={formState =>
+                      this.setState({ updateFormState: formState })
+                    }
+                    save={this.addNextStage}
+                  />
+                )}
               </div>
             </td>
           </tr>

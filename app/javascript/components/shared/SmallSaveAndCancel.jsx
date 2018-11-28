@@ -3,15 +3,19 @@ import PropTypes from "prop-types";
 
 export default function SmallSaveAndCancel(props) {
   const style = props.style || {};
+  const saveCaption = props.saveInProgress
+    ? props.t("Saving")
+    : props.saveCaption || props.t("Save");
+  const saveDisabled =
+    (props.saveDisabled || props.saveInProgress) && "disabled";
   return (
     <div style={style}>
       <button
         onClick={props.handleSave}
-        // saveInProgress={props.saveInProgress}
-        disabled={props.saveDisabled && "disabled"}
+        disabled={saveDisabled}
         style={{ fontSize: "11px" }}
       >
-        {props.saveCaption || props.t("Save")}
+        {saveCaption}
       </button>
       <button
         onClick={props.handleCancel}
@@ -29,6 +33,7 @@ SmallSaveAndCancel.propTypes = {
   handleCancel: PropTypes.func.isRequired,
   t: PropTypes.func.isRequired,
   saveDisabled: PropTypes.bool,
+  saveInProgress: PropTypes.bool,
   style: PropTypes.object,
   saveCaption: PropTypes.string
 };

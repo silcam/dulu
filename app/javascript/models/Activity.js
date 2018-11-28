@@ -46,8 +46,13 @@ export default class Activity {
   }
 
   static workshopsProgress(activity) {
+    const percent =
+      (100 * activity.workshops.filter(ws => ws.completed).length) /
+      activity.workshops.length;
+    const color = percent == 100 ? Colors.purple : Colors.yellow;
     return {
-      /* Need to figure this out :) */
+      percent: percent,
+      color: color
     };
   }
 
@@ -65,9 +70,35 @@ export default class Activity {
   }
 
   static workshopsStages(activity) {
-    return [
-      /* Definitely should fill this in */
-    ];
+    return activity.workshops.map(ws => ws.name);
+  }
+
+  static currentStageName(activity, t) {
+    return Activity.isWorkshops(activity)
+      ? Activity.workshopsCurrentStageName(activity, t)
+      : t(`stage_names.${activity.stage_name}`);
+  }
+
+  static workshopsCurrentStageName(activity, t) {
+    const firstIncomplete = activity.workshops.find(ws => !ws.completed);
+    return firstIncomplete ? firstIncomplete.name : t("Completed");
+  }
+
+  static isWorkshops(activity) {
+    return (
+      activity.type == "LinguisticActivity" && activity.category == "Workshops"
+    );
+  }
+
+  static stageDate(activity) {
+    return Activity.isWorkshops(activity)
+      ? Activity.workshopsStageDate(activity)
+      : activity.stage_date;
+  }
+
+  static workshopsStageDate(activity) {
+    const firstIncomplete = activity.workshops.find(ws => !ws.completed);
+    return firstIncomplete ? firstIncomplete.date : "";
   }
 }
 

@@ -1,18 +1,11 @@
 import React from "react";
-import axios from "axios";
-
-import AddIconButton from "../shared/AddIconButton";
+import PropTypes from "prop-types";
 import TextInput from "../shared/TextInput";
-import SaveButton from "../shared/SaveButton";
-import CancelButton from "../shared/CancelButton";
+import AddIcon from "../shared/icons/AddIcon";
+import SmallSaveAndCancel from "../shared/SmallSaveAndCancel";
+import DuluAxios from "../../util/DuluAxios";
 
-/*
-    Required props
-        function handleNewWorkshop
-        string authenticity_token
-*/
-
-class NewWorkshopForm extends React.PureComponent {
+export default class NewWorkshopForm extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
@@ -43,35 +36,31 @@ class NewWorkshopForm extends React.PureComponent {
     });
   };
 
-  createWorkshop = () => {
-    if (this.validate()) {
-      const workshop = {
-        name: this.state.name
-      };
-      this.setState({ saving: true });
-      axios
-        .post(`/api/activities/${this.props.activity_id}/workshops`, {
-          authenticity_token: this.props.authenticity_token,
+  createWorkshop = async () => {
+    const workshop = {
+      name: this.state.name
+    };
+    this.setState({ saving: true });
+    try {
+      const data = await DuluAxios.post(
+        `/api/activities/${this.props.activity_id}/workshops`,
+        {
           workshop: workshop
-        })
-        .then(response => {
-          this.props.handleNewWorkshop(response.data);
-          this.setState({
-            editing: false,
-            saving: false,
-            name: "",
-            nameError: null
-          });
-        })
-        .catch(error => console.error(error));
-    } else {
-      this.setState({ nameError: this.props.t("Name_not_blank") });
+        }
+      );
+      this.props.handleNewWorkshop(data);
+      this.setState({
+        editing: false,
+        saving: false,
+        name: "",
+        nameError: null
+      });
+    } catch (error) {
+      this.props.setNetworkError(error);
+      this.setState({
+        saving: false
+      });
     }
-  };
-
-  validate = () => {
-    // valid if name not blank
-    return this.state.name;
   };
 
   render() {
@@ -85,25 +74,26 @@ class NewWorkshopForm extends React.PureComponent {
             placeholder={this.props.t("Workshop_name")}
             errorMessage={this.state.nameError}
             handleEnter={this.createWorkshop}
+            autoFocus
           />
-          <SaveButton
-            handleClick={this.createWorkshop}
-            saveInProgress={this.state.saving}
+          <SmallSaveAndCancel
+            handleSave={this.createWorkshop}
+            handleCancel={this.cancelForm}
             t={this.props.t}
+            saveDisabled={!this.state.name}
+            saveInProgress={this.state.saving}
           />
-          &nbsp;
-          <CancelButton handleClick={this.cancelForm} t={this.props.t} />
         </div>
       );
     } else {
-      return (
-        <AddIconButton
-          handleClick={this.showForm}
-          text={this.props.t("Add_workshop")}
-        />
-      );
+      return <AddIcon onClick={this.showForm} />;
     }
   }
 }
 
-export default NewWorkshopForm;
+NewWorkshopForm.propTypes = {
+  handleNewWorkshop: PropTypes.func.isRequired,
+  setNetworkError: PropTypes.func.isRequired,
+  activity_id: PropTypes.number.isRequired,
+  t: PropTypes.func.isRequired
+};
