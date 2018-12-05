@@ -5,6 +5,7 @@ import ActivitiesTable from "./ActivitiesTable";
 import EventsTable from "./EventsTable";
 import PeopleTable from "./PeopleTable";
 import TranslationStatus from "./TranslationStatus";
+import Event from "../../models/Event";
 
 export default function LanguagePageContent(props) {
   return (
@@ -26,7 +27,14 @@ export default function LanguagePageContent(props) {
           />
         </div>
       )}
-      <EventsTable {...props} />
+      <EventsTable
+        {...props}
+        events={Event.domainEvents(
+          Event.flattenEvents(props.language.events),
+          props.tab
+        )}
+        domain={props.tab}
+      />
       <PeopleTable {...props} />
       {props.tab == "Translation" && <TranslationStatus {...props} />}
     </div>

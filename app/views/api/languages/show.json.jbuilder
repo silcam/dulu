@@ -22,21 +22,22 @@ json.language do
     json.roles participant.roles #.collect{ |role| t(role) })
   end
 
-  current_events = @program.all_events.current.uniq
-  upcoming_events = @program.all_events.upcoming.uniq
   json.events do
-    json.current current_events, partial: 'api/programs/event', as: :event, locals: {program: @program}
-    json.upcoming upcoming_events, partial: 'api/programs/event', as: :event, locals: {program: @program}
+    json.current @program.all_events.current, partial: 'api/events/event', as: :event
+    json.upcoming @program.all_events.upcoming, partial: 'api/events/event', as: :event
+    json.past @program.all_events.past.limit(5), partial: 'api/events/event', as: :event
   end
 
   json.publications @program.publications.where(kind: [:Scripture, :Media]) do |pub|
     json.call(pub, :id, :name, :kind, :scripture_kind, :media_kind, :film_kind, :year)
   end
 
-
   json.loaded true
 
   json.can do
     json.update can?(:update_activities, @program)
+    json.event do
+      json.create can?(:create, Event)
+    end
   end
 end

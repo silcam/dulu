@@ -1,41 +1,66 @@
 import React from "react";
 import PropTypes from "prop-types";
-import eventDateString from "../../util/eventDateString";
+import InlineAddIcon from "../shared/icons/InlineAddIcon";
+import NewEventForm from "./NewEventForm";
+import Event from "../../models/Event";
+import update from "immutability-helper";
+import EventRow from "./EventRow";
 
-export default function EventsTable(props) {
-  const events = domainEvents(props.language.events, props.tab);
-  return (
-    <div>
-      <h3>{props.t("Events")}</h3>
-      <table>
-        <tbody>
-          {events.map(event => (
-            <tr key={event.id}>
-              <td>{event.name}</td>
-              <td>
-                {eventDateString(
-                  event.start_date,
-                  event.end_date,
-                  props.t("month_names_short")
-                )}
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-  );
+export default class EventsTable extends React.PureComponent {
+  constructor(props) {
+    super(props);
+    this.state = {};
+  }
+
+  addNewEvent = event => {
+    const newEvents = Event.addEventToEventsObj(
+      this.props.language.events,
+      event
+    );
+    this.props.replaceLanguage(
+      update(this.props.language, { events: { $set: newEvents } })
+    );
+    this.setState({ showNewForm: false });
+  };
+
+  render() {
+    const t = this.props.t;
+    return (
+      <div>
+        <h3>
+          {t("Events")}
+          {!this.state.showNewForm && this.props.language.can.event.create && (
+            <InlineAddIcon
+              onClick={() => this.setState({ showNewForm: true })}
+            />
+          )}
+        </h3>
+        {this.state.showNewForm && (
+          <NewEventForm
+            t={t}
+            cancelForm={() => this.setState({ showNewForm: false })}
+            addNewEvent={this.addNewEvent}
+            setNetworkError={this.props.setNetworkError}
+            programId={this.props.language.id}
+            defaultDomain={this.props.domain}
+          />
+        )}
+        <table>
+          <tbody>
+            {this.props.events.map(event => (
+              <EventRow key={event.id} event={event} t={t} />
+            ))}
+          </tbody>
+        </table>
+      </div>
+    );
+  }
 }
-
-function domainEvents(allEvents, domain) {
-  let events = [];
-  events = events.concat(allEvents.upcoming.filter(e => e.domain == domain));
-  events = events.concat(allEvents.current.filter(e => e.domain == domain));
-  return events;
-}
-
 EventsTable.propTypes = {
   language: PropTypes.object.isRequired,
-  tab: PropTypes.string.isRequired,
-  t: PropTypes.func.isRequired
+  events: PropTypes.array.isRequired,
+  t: PropTypes.func.isRequired,
+  replaceLanguage: PropTypes.func.isRequired,
+  setNetworkError: PropTypes.func.isRequired,
+  domain: PropTypes.string
 };

@@ -13,6 +13,8 @@ Rails.application.routes.draw do
       get 'dashboard', on: :member
     end
 
+    resources :events
+
     resources :languages
 
     resources :notifications do

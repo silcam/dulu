@@ -6,3 +6,5 @@ json.domain event.domain
 
 json.program_id program.id
 json.program_name program.name
+
+# TODO: CLEANUP
