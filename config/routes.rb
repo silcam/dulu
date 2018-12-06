@@ -13,7 +13,9 @@ Rails.application.routes.draw do
       get 'dashboard', on: :member
     end
 
-    resources :events
+    resources :events do
+      get 'find/:year/:month', on: :collection, action: :find
+    end
 
     resources :languages
 

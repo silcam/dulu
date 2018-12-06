@@ -9,6 +9,8 @@ import OrganizationsBoard from "../components/organizations/OrganizationsBoard";
 import NetworkErrorAlert from "../components/shared/NetworkErrorAlert";
 import DuluAxios from "../util/DuluAxios";
 import LanguagesBoard from "../components/languages/LanguagesBoard";
+import EventsCalendar from "../components/events/EventsCalendar";
+import ReportsViewer from "../components/reports/ReportsViewer";
 
 export default class DuluApp extends React.Component {
   constructor(props) {
@@ -98,7 +100,26 @@ export default class DuluApp extends React.Component {
             )}
           />
           <Route
-            path="/"
+            path="/events/:year?/:month?"
+            render={({ match }) => (
+              <EventsCalendar
+                t={this.state.t}
+                setNetworkError={this.setNetworkError}
+                year={match.params.year}
+                month={match.params.month}
+              />
+            )}
+          />
+          <Route
+            path="/reports"
+            render={() => (
+              <ReportsViewer
+                t={this.state.t}
+                setNetworkError={this.setNetworkError}
+              />
+            )}
+          />
+          <Route
             render={props => (
               <Dashboard
                 {...props}

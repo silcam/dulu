@@ -256,6 +256,7 @@ export default {
   People: "People",
   Person: "Person",
   Position: "Position",
+  Reports: "Reports",
   Research: "Research",
   Research_activities: "Research Activities",
   Role: "Role",

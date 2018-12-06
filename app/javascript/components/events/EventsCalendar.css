@@ -1,0 +1,9 @@
+div.calendar {
+    display: flex;
+    flex-direction: row;
+}
+
+div.calendar div {
+    flex-grow: 1;
+    width: 100%;
+}

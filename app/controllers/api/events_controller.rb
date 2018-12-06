@@ -1,4 +1,8 @@
 class Api::EventsController < ApplicationController
+  def find
+    @events = Event.for_month(params[:year], params[:month]).reverse
+  end
+
   def show
     @event = Event.find(params[:id])
   end

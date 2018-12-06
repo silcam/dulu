@@ -1,5 +1,5 @@
 import React from "react";
-import { NavLink, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 
 import styles from "./NavBar.css";
@@ -27,6 +27,12 @@ export default function NavBar(props) {
         </li>
         <li>
           <Link to="/organizations">{props.t("Organizations")}</Link>
+        </li>
+        <li>
+          <Link to="/events">{props.t("Events")}</Link>
+        </li>
+        <li>
+          <Link to="/reports">{props.t("Reports")}</Link>
         </li>
       </ul>
       {props.user && (

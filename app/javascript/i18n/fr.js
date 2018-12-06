@@ -260,6 +260,7 @@ export default {
   People: "Personnel",
   Person: "Personne",
   Position: "Poste",
+  Reports: "Rapports",
   Research: "Recherche",
   Research_activities: "Activités de recherche",
   Role: "Rôle",
