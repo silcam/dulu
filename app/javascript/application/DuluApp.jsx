@@ -63,11 +63,12 @@ export default class DuluApp extends React.Component {
         )}
         <Switch>
           <Route
-            path="/(languages|programs)/:actionOrId?/:id?"
-            render={({ match, history }) => (
+            path="/(languages|programs)/:idOrAction?"
+            render={({ match, history, location }) => (
               <LanguagesBoard
                 history={history}
-                {...routeActionAndId(match.params)}
+                location={location}
+                {...matchParamsForChild(match)}
                 t={this.state.t}
                 setNetworkError={this.setNetworkError}
               />
@@ -119,6 +120,14 @@ function routeActionAndId(routeParams) {
   if (parseInt(routeParams.actionOrId))
     return { action: "show", id: routeParams.actionOrId };
   return { action: routeParams.actionOrId };
+}
+
+function matchParamsForChild(match) {
+  let params = { basePath: match.url };
+  let id = parseInt(match.params.idOrAction);
+  if (id) params.id = match.params.idOrAction;
+  else params.action = match.params.idOrAction;
+  return params;
 }
 
 function getUser() {

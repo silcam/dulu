@@ -83,6 +83,7 @@ export default {
   Book: "Livre",
   Can_login: "Compte pour se connecter à Dulu",
   Cancel: "Annuler",
+  Clusters: "Groupes de langue",
   Category: "Catégorie",
   Completed: "Terminé",
   confirm_delete_org_person:

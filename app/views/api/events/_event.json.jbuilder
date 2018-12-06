@@ -1,6 +1,6 @@
 # Locals: event, program
 
-json.call(event, :id, :name, :domain, :start_date, :end_date)
+json.call(event, :id, :name, :domain, :start_date, :end_date, :note)
 
 json.programs event.programs do |program|
   json.call(program, :id, :name)

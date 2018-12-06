@@ -48,8 +48,7 @@ class Board extends React.PureComponent {
                 addLanguage={this.addLanguage}
               />
             )} */}
-            {this.props.action == "show" &&
-              selectedLanguage &&
+            {selectedLanguage &&
               (selectedLanguage.loaded ? (
                 <LanguagePage
                   key={selectedLanguage.id}
@@ -57,11 +56,13 @@ class Board extends React.PureComponent {
                   t={this.props.t}
                   replaceLanguage={this.props.replace}
                   setNetworkError={this.props.setNetworkError}
+                  basePath={this.props.basePath}
+                  location={this.props.location}
                 />
               ) : (
                 <Loading t={this.props.t} />
               ))}
-            {!this.props.action && (
+            {!this.props.action && !selectedLanguage && (
               <span>Placeholder for Languages summary</span>
             )}
           </div>

@@ -44,5 +44,6 @@ export default function LanguagePageContent(props) {
 LanguagePageContent.propTypes = {
   t: PropTypes.func.isRequired,
   language: PropTypes.object.isRequired,
-  tab: PropTypes.string.isRequired
+  tab: PropTypes.string.isRequired,
+  location: PropTypes.object.isRequired
 };

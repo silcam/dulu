@@ -84,6 +84,7 @@ export default {
   Can_login: "Can log in to Dulu",
   Cancel: "Cancel",
   Category: "Category",
+  Clusters: "Clusters",
   Completed: "Completed",
   confirm_delete_org_person:
     "Delete %{org} from %{person}'s organizations? %{person} was never in %{org}?",
