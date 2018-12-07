@@ -22,10 +22,12 @@ const strings = {
 
 export default function translator(setLocale) {
   setLocale = strings[setLocale] ? setLocale : "en";
-  return (key, subs, locale) => {
+  let exportedT = (key, subs, locale) => {
     let tLocale = locale && strings[locale] ? locale : setLocale;
     return t(key, subs, tLocale);
   };
+  exportedT.locale = setLocale;
+  return exportedT;
 }
 
 function t(key, subs, locale) {

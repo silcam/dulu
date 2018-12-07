@@ -34,6 +34,8 @@ Rails.application.routes.draw do
       put 'update_view_prefs', on: :collection
     end
 
+    get '/permissions/check', to: 'permissions#check'
+
     resources :person_roles do
       post 'finish', on: :collection
     end

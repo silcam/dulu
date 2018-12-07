@@ -12,18 +12,23 @@ export default class FuzzyDate {
     if (!a.day || !b.day) return 0;
     return a.day - b.day;
   }
+
+  static toObject(date) {
+    return toObject(date);
+  }
 }
 
 function toObject(date) {
   let dateObj = {
     year: parseInt(date.slice(0, 4))
   };
-  if (date.length > 4) dateObj.month = date.slice(5, 7);
-  if (date.length > 7) dateObj.day = date.slice(8, 10);
+  if (date.length > 4) dateObj.month = parseInt(date.slice(5, 7));
+  if (date.length > 7) dateObj.day = parseInt(date.slice(8, 10));
   return dateObj;
 }
 
 // Srsly?? Come on, javascript...
+// YYYY-MM-DD
 function stdDateString(date) {
   return (
     date.getFullYear() +

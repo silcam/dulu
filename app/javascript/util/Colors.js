@@ -7,5 +7,6 @@ export default {
   dark_green: "#1E8449",
   light_blue: "#5DADE2",
   dark_blue: "#21618C",
-  purple: "#6C3483"
+  purple: "#6C3483",
+  grey: "#d3d4d9"
 };

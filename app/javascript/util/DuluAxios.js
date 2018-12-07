@@ -2,8 +2,10 @@ import axios from "axios";
 
 export default function DuluAxios() {}
 
-DuluAxios.get = async url => {
-  const response = await axios.get(url);
+DuluAxios.get = async (url, params) => {
+  const response = await axios.get(url, {
+    params: params
+  });
   assertStatusOK(response);
   return response.data;
 };

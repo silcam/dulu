@@ -5,12 +5,16 @@ import MonthColumn from "./MonthColumn";
 import update from "immutability-helper";
 import style from "./EventsCalendar.css";
 import { Link } from "react-router-dom";
+import { monthKey, monthBefore, monthAfter, monthName } from "./dateUtils";
+import AddIcon from "../shared/icons/AddIcon";
+import IfAllowed from "../shared/IfAllowed";
 
 export default class EventsCalendar extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      events: {}
+      events: {},
+      can: {}
     };
   }
 
@@ -22,13 +26,14 @@ export default class EventsCalendar extends React.PureComponent {
     this.updateEvents();
   }
 
+  centerMonth = () => ({
+    year: parseInt(this.props.year),
+    month: parseInt(this.props.month)
+  });
+
   updateEvents = async () => {
     const center = this.centerMonth();
-    const monthsToUpdate = [
-      center,
-      this.rightMonth(center),
-      this.leftMonth(center)
-    ];
+    const monthsToUpdate = [monthBefore(center), center, monthAfter(center)];
     monthsToUpdate.forEach(month => {
       if (this.state.events[monthKey(month)] === undefined)
         this.fetchEvents(month);
@@ -55,48 +60,38 @@ export default class EventsCalendar extends React.PureComponent {
     }));
   };
 
-  centerMonth = () => {
-    if (this.props.year && this.props.month)
-      return {
-        year: parseInt(this.props.year),
-        month: parseInt(this.props.month)
-      };
-    const today = new Date();
-    return {
-      year: today.getFullYear(),
-      month: today.getMonth() + 1 // JS month is 0 based
-    };
-  };
-
-  leftMonth = center => {
-    return center.month == 1
-      ? { year: center.year - 1, month: 12 }
-      : { year: center.year, month: center.month - 1 };
-  };
-
-  rightMonth = center => {
-    return center.month == 12
-      ? { year: center.year + 1, month: 1 }
-      : { year: center.year, month: center.month + 1 };
-  };
-
   eventsFor(month) {
     return this.state.events[monthKey(month)] || [];
   }
 
   render() {
     const center = this.centerMonth();
-    const left = this.leftMonth(center);
-    const right = this.rightMonth(center);
+    const left = monthBefore(center);
+    const right = monthAfter(center);
+    const t = this.props.t;
     return (
-      <div>
-        <div>
-          <Link to={`/events/${left.year}/${left.month}`}>Back</Link>
+      <div className={style.container}>
+        <div className={style.header}>
+          <h2>
+            {t("Events")}
+            <IfAllowed
+              can={this.state.can}
+              permission="Event:create"
+              setCan={can => this.setState({ can: can })}
+              setNetworkError={this.props.setNetworkError}
+            >
+              <AddIcon iconSize="large" />
+            </IfAllowed>
+          </h2>
+          <Link to={`/events/cal/${left.year}/${left.month}`} className="btn">
+            {"< " + monthName(monthBefore(left).month, t)}
+          </Link>
           <Link
-            to={`/events/${right.year}/${right.month}`}
+            to={`/events/cal/${right.year}/${right.month}`}
+            className="btn"
             style={{ float: "right" }}
           >
-            Forward
+            {monthName(monthAfter(right).month, t) + " >"}
           </Link>
         </div>
         <div className={style.calendar}>
@@ -121,13 +116,9 @@ export default class EventsCalendar extends React.PureComponent {
   }
 }
 
-function monthKey(monthObj) {
-  return `${monthObj.year}-${monthObj.month}`;
-}
-
 EventsCalendar.propTypes = {
   t: PropTypes.func.isRequired,
   setNetworkError: PropTypes.func.isRequired,
-  year: PropTypes.string,
-  month: PropTypes.string
+  year: PropTypes.string.isRequired,
+  month: PropTypes.string.isRequired
 };

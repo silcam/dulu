@@ -1,9 +1,46 @@
-div.calendar {
+div.container {
+    flex-grow: 1;
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
 }
 
-div.calendar div {
+div.header {
+    padding: 0 12px;
+}
+
+div.calendar {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: row;
+    padding-left: 12px;
+    background-color: lightgray;
+}
+
+div.calendar > div {
     flex-grow: 1;
     width: 100%;
+    margin: 12px 12px 12px 0;
+    padding: 8px;
+    background-color: white;
+    overflow-y: scroll;
+}
+
+div.calendar > div > h2 {
+    text-align: center;
+}
+
+.dateTitle {
+    margin-bottom: 0;
+}
+
+.eventTitle {
+    margin-bottom: 0;
+}
+
+span.linkListItem::after {
+    content: ", ";
+}
+
+span.linkListItem:last-child::after {
+    content: "";
 }
