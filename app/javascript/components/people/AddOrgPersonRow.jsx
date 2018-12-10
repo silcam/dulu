@@ -57,6 +57,7 @@ class AddOrgPersonRow extends React.PureComponent {
               cancel={() => {}}
               placeholder={this.props.t("Organization")}
               autoFocus
+              allowBlank
             />
             <SmallSaveAndCancel
               handleSave={this.save}

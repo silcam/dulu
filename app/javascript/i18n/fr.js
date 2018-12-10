@@ -197,6 +197,7 @@ export default {
   No_translation_activities: "Aucune activité de traduction",
   None: "Aucun",
   NoneFound: "Aucun trouvé",
+  Note: "Nôte",
   Notifications: "Notifications",
   notifications: {
     new_program_participant:

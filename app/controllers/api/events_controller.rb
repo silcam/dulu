@@ -13,9 +13,16 @@ class Api::EventsController < ApplicationController
     render :show
   end
 
+  def update
+    @event = Event.find(params[:id])
+    authorize! :update, @event
+    @event.update(event_params)
+    render :show
+  end
+
   private
 
   def event_params
-    return params.require(:event).permit(:name, :domain, :start_date, :end_date, program_ids: [], cluster_ids: [])
+    return params.require(:event).permit(:name, :domain, :note, :start_date, :end_date, program_ids: [], cluster_ids: [])
   end
 end

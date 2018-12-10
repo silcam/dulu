@@ -8,8 +8,11 @@ export default function EditActionBar(props) {
   if (!props.can) return null;
   return props.editing ? (
     <div className={styles.actionBar}>
-      <button onClick={props.save} disabled={props.saveDisabled && "disabled"}>
-        {props.t("Save")}
+      <button
+        onClick={props.save}
+        disabled={(props.saveDisabled || props.saving) && "disabled"}
+      >
+        {props.saving ? props.t("Saving") : props.t("Save")}
       </button>
       <button className="btnRed" onClick={props.cancel}>
         {props.t("Cancel")}
@@ -26,11 +29,13 @@ export default function EditActionBar(props) {
 }
 
 EditActionBar.propTypes = {
-  can: PropTypes.object,
+  can: PropTypes.object.isRequired,
   editing: PropTypes.bool,
-  save: PropTypes.func,
+  saving: PropTypes.bool,
+  save: PropTypes.func.isRequired,
   saveDisabled: PropTypes.bool,
-  cancel: PropTypes.func,
-  edit: PropTypes.func,
-  delete: PropTypes.func
+  cancel: PropTypes.func.isRequired,
+  edit: PropTypes.func.isRequired,
+  delete: PropTypes.func, // Not required if not needed
+  t: PropTypes.func.isRequired
 };

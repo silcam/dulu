@@ -21,7 +21,7 @@ class BasicSearchTextInput extends React.PureComponent {
       showResults: true
     });
     this.props.updateQuery(e.target.value);
-    if (e.target.value == "")
+    if (e.target.value == "" && this.props.allowBlank)
       this.save({
         id: null,
         name: ""
@@ -147,5 +147,14 @@ BasicSearchTextInput.propTypes = {
 };
 
 const SearchTextInput = searchInterface(BasicSearchTextInput, 2);
+
+SearchTextInput.propTypes = {
+  queryPath: PropTypes.string.isRequired,
+  text: PropTypes.string, // Initial text only!
+  updateValue: PropTypes.func.isRequired,
+  placeholder: PropTypes.string,
+  autoFocus: PropTypes.bool,
+  allowBlank: PropTypes.bool
+};
 
 export default SearchTextInput;

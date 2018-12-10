@@ -11,13 +11,16 @@ Rails.application.routes.draw do
 
     resources :clusters do
       get 'dashboard', on: :member
+      get 'search', on: :collection
     end
 
     resources :events do
       get 'find/:year/:month', on: :collection, action: :find
     end
 
-    resources :languages
+    resources :languages do
+      get 'search', on: :collection
+    end
 
     resources :notifications do
       get 'global', on: :collection

@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import { Switch, Route, Redirect } from "react-router-dom";
 import EventsCalendar from "./EventsCalendar";
 import { thisYear, thisMonth } from "./dateUtils";
+import EventPage from "./EventPage";
 
 export default function EventsPage(props) {
   return (
@@ -19,9 +20,7 @@ export default function EventsPage(props) {
       />
       <Route
         path="/events/:id"
-        render={({ match }) => (
-          <p>This is the page for event {match.params.id}</p>
-        )}
+        render={({ match }) => <EventPage id={match.params.id} {...props} />}
       />
       <Route
         render={() => (

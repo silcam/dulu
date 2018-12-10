@@ -188,6 +188,7 @@ export default {
   New_person: "New Person",
   New_testament: "New Testament",
   No: "No",
+  Note: "Note",
   No_events: "No events",
   No_media_activities: "No media activities",
   No_participants: "No active participants",

@@ -2,8 +2,8 @@ import React from "react";
 import PropTypes from "prop-types";
 import eventDateString from "../../util/eventDateString";
 import { toggleStateFlag } from "../../util/toggleStateFlag";
-import { Link } from "react-router-dom";
 import style from "./EventsTable.css";
+import EventsParticipantsTable from "../events/EventsParticipantsTable";
 
 export default class EventRow extends React.PureComponent {
   constructor(props) {
@@ -40,46 +40,7 @@ export default class EventRow extends React.PureComponent {
             <td className={style.rowExpansion} colSpan="2">
               <div>
                 {event.note && <p>{event.note}</p>}
-                <table className={style.eventParticipants}>
-                  <tbody>
-                    <tr>
-                      <th>{t("Clusters")}</th>
-                      <td>
-                        {event.clusters.map(cluster => (
-                          <Link key={cluster.id} to={`/clusters/${cluster.id}`}>
-                            {cluster.name}
-                          </Link>
-                        ))}
-                      </td>
-                    </tr>
-                    <tr>
-                      <th>{t("Languages")}</th>
-                      <td>
-                        {event.programs.map(program => (
-                          <Link
-                            key={program.id}
-                            to={`/languages/${program.id}`}
-                          >
-                            {program.name}
-                          </Link>
-                        ))}
-                      </td>
-                    </tr>
-                    <tr>
-                      <th>{t("People")}</th>
-                      <td>
-                        {event.event_participants.map(participant => (
-                          <Link
-                            key={participant.id}
-                            to={`/people/${participant.person_id}`}
-                          >
-                            {participant.full_name}
-                          </Link>
-                        ))}
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
+                <EventsParticipantsTable event={event} t={t} />
               </div>
             </td>
           </tr>

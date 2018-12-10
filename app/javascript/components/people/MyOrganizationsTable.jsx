@@ -91,6 +91,7 @@ export default class MyOrganizationsTable extends React.PureComponent {
                     }
                     queryPath="/api/organizations/search"
                     autoFocus
+                    allowBlank
                   />
                   <SmallSaveAndCancel
                     handleSave={this.createOrganizationPerson}

@@ -5,21 +5,3 @@ td.rowExpansion {
 .eventTitle button {
     font-size: larger;
 }
-
-table.eventParticipants {
-    width: auto !important;
-}
-
-table.eventParticipants tbody tr th, 
-table.eventParticipants tbody tr td {
-    border: none;
-    padding: 0 4px 4px ;
-}
-
-table.eventParticipants tbody tr a::after {
-    content: ", ";
-}
-
-table.eventParticipants tbody tr a:last-child::after {
-    content: '';
-}

@@ -117,6 +117,7 @@ export default class OrganizationPage extends React.PureComponent {
                 })
               }
               queryPath="/api/organizations/search"
+              allowBlank
             />
           </li>
           <li>
@@ -135,6 +136,7 @@ export default class OrganizationPage extends React.PureComponent {
                   country_id: id
                 })
               }
+              allowBlank
             />
           </li>
         </ul>

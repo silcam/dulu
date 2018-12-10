@@ -28,6 +28,7 @@ function PersonBasicInfo(props) {
                   country_id: id
                 })
               }
+              allowBlank
             />
           </td>
         </tr>

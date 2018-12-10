@@ -45,4 +45,8 @@ class Cluster < ApplicationRecord
     end
     results
   end
+
+  def self.basic_search(query)
+    Cluster.where("unaccent(name) ILIKE unaccent(?)", "%#{query}%")
+  end
 end
