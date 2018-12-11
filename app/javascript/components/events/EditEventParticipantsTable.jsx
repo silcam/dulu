@@ -194,36 +194,38 @@ export default function EditEventParticipantsTable(props) {
           </tr>
         </tbody>
       </table>
-      <table className={style.rolesTable}>
-        <tbody>
-          <tr>
-            <th colSpan="2">{t("Roles")}</th>
-          </tr>
-          {event.event_participants.map(participant => (
-            <tr key={participant.person_id}>
-              <td>{participant.full_name}</td>
-              <td>
-                {participant.roles.map((role, roleIndex) => (
-                  <span key={roleIndex}>
-                    <SelectInput
-                      options={selectOptionsFromObject(t("roles"))}
-                      value={role}
-                      handleChange={e =>
-                        updateRole(participant, roleIndex, e.target.value)
-                      }
-                    />
-                    <DeleteIcon
-                      onClick={() => dropRole(participant, roleIndex)}
-                    />
-                    <br />
-                  </span>
-                ))}
-                <AddIcon onClick={() => addRole(participant)} />
-              </td>
+      {event.event_participants.length > 0 && (
+        <table className={style.rolesTable}>
+          <tbody>
+            <tr>
+              <th colSpan="2">{t("Roles")}</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+            {event.event_participants.map(participant => (
+              <tr key={participant.person_id}>
+                <td>{participant.full_name}</td>
+                <td>
+                  {participant.roles.map((role, roleIndex) => (
+                    <span key={roleIndex}>
+                      <SelectInput
+                        options={selectOptionsFromObject(t("roles"))}
+                        value={role}
+                        handleChange={e =>
+                          updateRole(participant, roleIndex, e.target.value)
+                        }
+                      />
+                      <DeleteIcon
+                        onClick={() => dropRole(participant, roleIndex)}
+                      />
+                      <br />
+                    </span>
+                  ))}
+                  <AddIcon onClick={() => addRole(participant)} />
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
     </div>
   );
 }

@@ -1,3 +1,5 @@
+import Event from "../../models/Event";
+
 // return month object for the month prior to given month object
 export function monthBefore(month) {
   return month.month == 1
@@ -32,6 +34,14 @@ export function thisYear() {
 // As an int (1-12)
 export function thisMonth() {
   return new Date().getMonth() + 1; // JS month is 0 indexed
+}
+
+export function eventInMonth(event, monthKey) {
+  const monthEvent = {
+    start_date: monthKey,
+    end_date: monthKey
+  };
+  return Event.overlapCompare(event, monthEvent) == 0;
 }
 
 function titleize(word) {

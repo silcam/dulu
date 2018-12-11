@@ -50,4 +50,32 @@ export default class Event {
     // if (b.end_date < a.start_date) return 1;
     return 0;
   }
+
+  static prepareEventParams(event, oldEvent) {
+    const cluster_ids = event.clusters.map(c => c.id);
+    const program_ids = event.programs.map(p => p.id);
+    let eventParticipantsAttributes = event.event_participants.reduce(
+      (accum, participant, index) => {
+        accum[index] = participant;
+        return accum;
+      },
+      {}
+    );
+    if (oldEvent) {
+      oldEvent.event_participants.forEach(participant => {
+        if (!event.event_participants.some(p => p.id == participant.id))
+          eventParticipantsAttributes[
+            Object.keys(eventParticipantsAttributes).length
+          ] = {
+            id: participant.id,
+            _destroy: true
+          };
+      });
+    }
+    return update(event, {
+      cluster_ids: { $set: cluster_ids },
+      program_ids: { $set: program_ids },
+      event_participants_attributes: { $set: eventParticipantsAttributes }
+    });
+  }
 }

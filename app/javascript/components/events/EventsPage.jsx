@@ -18,6 +18,7 @@ export default function EventsPage(props) {
           />
         )}
       />
+      <Route path="/events/new" render={() => "To be added..."} />
       <Route
         path="/events/:id"
         render={({ match, history }) => (

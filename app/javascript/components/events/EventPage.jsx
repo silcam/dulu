@@ -14,6 +14,7 @@ import P from "../shared/P";
 import { FuzzyDateGroup, SelectGroup } from "../shared/formGroup";
 import selectOptionsFromObject from "../../util/selectOptionsFromObject";
 import EditEventParticipantsTable from "./EditEventParticipantsTable";
+import Event from "../../models/Event";
 
 export default class EventPage extends React.PureComponent {
   constructor(props) {
@@ -63,7 +64,10 @@ export default class EventPage extends React.PureComponent {
 
   save = async () => {
     this.setState({ saving: true });
-    const event = prepareEventParams(this.state.event, this.state.eventBackup);
+    const event = Event.prepareEventParams(
+      this.state.event,
+      this.state.eventBackup
+    );
     try {
       const data = await DuluAxios.put(`/api/events/${this.props.id}`, {
         event: event
@@ -184,32 +188,6 @@ export default class EventPage extends React.PureComponent {
       </div>
     );
   }
-}
-
-function prepareEventParams(event, oldEvent) {
-  const cluster_ids = event.clusters.map(c => c.id);
-  const program_ids = event.programs.map(p => p.id);
-  let eventParticipantsAttributes = event.event_participants.reduce(
-    (accum, participant, index) => {
-      accum[index] = participant;
-      return accum;
-    },
-    {}
-  );
-  oldEvent.event_participants.forEach(participant => {
-    if (!event.event_participants.some(p => p.id == participant.id))
-      eventParticipantsAttributes[
-        Object.keys(eventParticipantsAttributes).length
-      ] = {
-        id: participant.id,
-        _destroy: true
-      };
-  });
-  return update(event, {
-    cluster_ids: { $set: cluster_ids },
-    program_ids: { $set: program_ids },
-    event_participants_attributes: { $set: eventParticipantsAttributes }
-  });
 }
 
 EventPage.propTypes = {
