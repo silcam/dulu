@@ -2,6 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import style from "./EventsParticipantsTable.css";
 import { Link } from "react-router-dom";
+import { print } from "../../util/arrayUtils";
 
 export default function EventsParticipantsTable(props) {
   return (
@@ -13,9 +14,9 @@ export default function EventsParticipantsTable(props) {
             {props.event.clusters.length == 0
               ? props.t("None")
               : props.event.clusters.map(cluster => (
-                  <Link key={cluster.id} to={`/clusters/${cluster.id}`}>
-                    {cluster.name}
-                  </Link>
+                  <span key={cluster.id} className={style.listItem}>
+                    <Link to={`/clusters/${cluster.id}`}>{cluster.name}</Link>
+                  </span>
                 ))}
           </td>
         </tr>
@@ -25,9 +26,9 @@ export default function EventsParticipantsTable(props) {
             {props.event.programs.length == 0
               ? props.t("None")
               : props.event.programs.map(program => (
-                  <Link key={program.id} to={`/languages/${program.id}`}>
-                    {program.name}
-                  </Link>
+                  <span className={style.listItem} key={program.id}>
+                    <Link to={`/languages/${program.id}`}>{program.name}</Link>
+                  </span>
                 ))}
           </td>
         </tr>
@@ -37,12 +38,13 @@ export default function EventsParticipantsTable(props) {
             {props.event.event_participants.length == 0
               ? props.t("None")
               : props.event.event_participants.map(participant => (
-                  <Link
-                    key={participant.id}
-                    to={`/people/${participant.person_id}`}
-                  >
-                    {participant.full_name}
-                  </Link>
+                  <span key={participant.id} className={style.listItem}>
+                    <Link to={`/people/${participant.person_id}`}>
+                      {participant.full_name}
+                    </Link>
+                    {participant.roles.length > 0 &&
+                      ` (${print(participant.roles, props.t, "roles")})`}
+                  </span>
                 ))}
           </td>
         </tr>

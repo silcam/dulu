@@ -20,9 +20,24 @@ class Api::EventsController < ApplicationController
     render :show
   end
 
+  def destroy
+    @event = Event.find(params[:id])
+    authorize! :destroy, @event
+    @event.destroy!
+    head :no_content, status: :ok
+  end
+
   private
 
   def event_params
-    return params.require(:event).permit(:name, :domain, :note, :start_date, :end_date, program_ids: [], cluster_ids: [])
+    return params
+            .require(:event)
+            .permit(
+                :name, :domain, :note, :start_date, :end_date, 
+                program_ids: [], cluster_ids: [], 
+                event_participants_attributes: [
+                  :id, :person_id, :_destroy, roles: []
+                ]
+              )
   end
 end

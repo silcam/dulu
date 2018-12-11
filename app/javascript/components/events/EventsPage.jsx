@@ -20,7 +20,9 @@ export default function EventsPage(props) {
       />
       <Route
         path="/events/:id"
-        render={({ match }) => <EventPage id={match.params.id} {...props} />}
+        render={({ match, history }) => (
+          <EventPage id={match.params.id} history={history} {...props} />
+        )}
       />
       <Route
         render={() => (

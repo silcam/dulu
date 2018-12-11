@@ -11,7 +11,7 @@ json.clusters event.clusters do |cluster|
 end
 
 json.event_participants event.event_participants do |participant|
-  json.call(participant, :id, :full_name)
+  json.call(participant, :id, :full_name, :roles)
   json.person_id participant.person.id
 end
 

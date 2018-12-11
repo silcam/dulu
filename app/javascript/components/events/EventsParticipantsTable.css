@@ -9,10 +9,10 @@ table.eventParticipants tbody tr td {
     text-align: left;
 }
 
-table.eventParticipants tbody tr a::after {
+span.listItem::after {
     content: ", ";
 }
 
-table.eventParticipants tbody tr a:last-child::after {
+span.listItem:last-child::after {
     content: '';
 }

@@ -35,6 +35,7 @@ Rails.application.routes.draw do
 
     resources :people do
       put 'update_view_prefs', on: :collection
+      get 'search', on: :collection
     end
 
     get '/permissions/check', to: 'permissions#check'

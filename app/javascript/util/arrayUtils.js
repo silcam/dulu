@@ -23,3 +23,8 @@ export function insertInto(array, newItem, compare) {
     ? update(array, { $splice: [[index, 0, newItem]] })
     : update(array, { $push: [newItem] });
 }
+
+export function print(array, t, keyPrefix) {
+  keyPrefix = keyPrefix ? keyPrefix + "." : "";
+  return array.map(item => t(keyPrefix + item)).join(", ");
+}

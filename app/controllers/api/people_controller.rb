@@ -48,6 +48,10 @@ class Api::PeopleController < ApplicationController
     head :no_content, status: :ok
   end
 
+  def search
+    @people = Person.basic_search(params[:q])
+  end
+
   private
 
   def person_params

@@ -1,0 +1,17 @@
+.container table tr th,
+.container table tr td {
+    border: none;
+    vertical-align: top;
+}
+
+.container .rolesTable tr th {
+    text-align: left;
+}
+
+.container .rolesTable {
+    border-collapse: collapse;
+}
+
+.container .rolesTable tr td {
+    border-top: 1px solid #ddd;
+}

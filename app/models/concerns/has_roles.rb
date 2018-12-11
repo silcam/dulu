@@ -6,6 +6,10 @@ module HasRoles
     roles_field[1..-1].split('|').collect{ |r| r.to_sym }
   end
 
+  def roles=(roles)
+    self.roles_field = make_roles_field(roles)
+  end
+
   def program_roles
     Role.program_roles(roles)
   end

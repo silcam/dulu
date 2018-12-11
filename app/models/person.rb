@@ -105,6 +105,10 @@ class Person < ApplicationRecord
     results
   end
 
+  def self.basic_search(query)
+    Person.multi_word_where(query, 'first_name', 'last_name')
+  end
+
   private
 
   def normalize_name

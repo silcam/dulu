@@ -1,9 +1,12 @@
 export default {
   Activities: "Activities",
   Add: "Add",
+  Add_cluster: "Add Cluster",
   Add_event: "Add Event",
+  Add_language: "Add Language",
   Add_new_organization: "Add New Organization",
   Add_new_person: "Add New Person",
+  Add_person: "Add Person",
   Add_workshop: "Add Workshop",
   All: "All",
   All_changes_saved: "All changes saved.",
@@ -86,6 +89,7 @@ export default {
   Category: "Category",
   Clusters: "Clusters",
   Completed: "Completed",
+  confirm_delete_event: "Delete %{name}?",
   confirm_delete_org_person:
     "Delete %{org} from %{person}'s organizations? %{person} was never in %{org}?",
   confirm_delete_role: "Remove the %{role} role?",

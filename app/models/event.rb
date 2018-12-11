@@ -4,6 +4,7 @@ class Event < ApplicationRecord
   has_and_belongs_to_many :programs
   has_and_belongs_to_many :clusters
   has_many :event_participants, autosave: true, dependent: :destroy
+  accepts_nested_attributes_for :event_participants, allow_destroy: true
   has_many :people, through: :event_participants
   belongs_to :creator, required: false, class_name: 'Person'
   has_one :workshop
