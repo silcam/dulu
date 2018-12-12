@@ -151,7 +151,7 @@ const SearchTextInput = searchInterface(BasicSearchTextInput, 2);
 SearchTextInput.propTypes = {
   queryPath: PropTypes.string.isRequired,
   text: PropTypes.string, // Initial text only!
-  updateValue: PropTypes.func.isRequired,
+  updateValue: PropTypes.func.isRequired, // updateValue(id, name)
   placeholder: PropTypes.string,
   autoFocus: PropTypes.bool,
   allowBlank: PropTypes.bool

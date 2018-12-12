@@ -6,6 +6,8 @@ class Report < ApplicationRecord
   validates :name, presence: true, allow_blank: false
 
   TYPES = %i( LanguageComparison )
+  PUBLICATIONS = %i( Bible New_testament Old_testament Any_scripture Audio_Bible Audio_New_testament
+                     Audio_Old_testament JesusFilm LukeFilm App Dictionary Any_literacy)
 
   def generate
     case params[:type]
@@ -29,6 +31,14 @@ class Report < ApplicationRecord
     end
   end
 
+  def self.get_program_report(report_type, program)
+    return lc_program_report(program)
+  end
+
+  def self.get_cluster_report(report_type, cluster)
+    return lc_cluster_report(cluster)
+  end
+
   private
 
   def generate_language_comparison
@@ -44,50 +54,49 @@ class Report < ApplicationRecord
       report[:programs][program] = lc_program_report(program)
     end
     report
-
   end
 
-  def lc_program_report(program)
-    report = { activities: {}, publications: [] }
-
-    if params[:elements] && params[:elements][:activities]
-      if params[:elements][:activities].include? 'Old_testament'
-        report[:activities][:old_testament] = bible_books_report(program, BibleBook.get_old_testament)
-      end
-      if params[:elements][:activities].include? 'New_testament'
-        report[:activities][:new_testament] = bible_books_report(program, BibleBook.get_new_testament)
-      end
-    end
-
-    if params[:elements] && params[:elements][:publications]
-      params[:elements][:publications].each do |pub|
-        report[:publications] << pub_report(program, pub)
-      end
-    end
-
-    report
-  end
-
-  def bible_books_report(program, bible_books)
-    report = []
-    bible_books.each do |book|
-      book_report = {name: book.name}
-      ta = program.translation_activities.find{ |a| a.bible_book==book }
-      book_report[:stage] = ta.current_stage if ta
-      report << book_report
-    end
-    report
-  end
-
-  def pub_report(program, pub)
+  def self.lc_cluster_report(cluster)
     {
-        name: pub,
-        published?: pub_published?(program, pub)
+      id: cluster.id,
+      name: cluster.name,
+      programs: cluster.programs.collect do |program|
+        lc_program_report(program)
+      end
     }
   end
 
-  def pub_published?(program, pub)
-    case pub
+  def self.lc_program_report(program)
+    {
+      id: program.id,
+      name: program.name,
+      report: {
+        publications: pubs_report(program),
+        activities: {
+          Old_testament: bible_books_report(program, BibleBook.get_old_testament),
+          New_testament: bible_books_report(program, BibleBook.get_new_testament)
+        }
+      }
+    }
+  end
+
+  def self.bible_books_report(program, bible_books)
+    bible_books.collect do |book|
+      ta = program.translation_activities.find{ |a| a.bible_book==book }
+      ta ? ta.current_stage.name : ""
+    end
+  end
+
+  def self.pubs_report(program)
+    pubs = {}
+    PUBLICATIONS.each do |pub_type|
+      pubs[pub_type] = pub_published?(program, pub_type)
+    end
+    pubs
+  end
+
+  def self.pub_published?(program, pub)
+    case pub.to_s
       when 'Bible', 'New_testament', 'Old_testament'
         return true if program.publications.find_by(kind: :Scripture, scripture_kind: pub)
 
