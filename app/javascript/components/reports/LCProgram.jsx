@@ -2,6 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import BibleBooksTable from "./BibleBooksTable";
 import PubsTable from "./PubsTable";
+import { Link } from "react-router-dom";
 
 export default function LCProgram(props) {
   const program = props.program;
@@ -10,7 +11,9 @@ export default function LCProgram(props) {
 
   return (
     <div>
-      <h4>{program.name}</h4>
+      <h4>
+        <Link to={`/languages/${program.id}`}>{program.name}</Link>
+      </h4>
       <BibleBooksTable
         t={t}
         elements={report.elements}

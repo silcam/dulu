@@ -1,4 +1,4 @@
-export default {
+const Colors = {
   white: "#FFFFFF",
   red: "#A93226",
   orange: "#CA6F1E",
@@ -10,3 +10,16 @@ export default {
   purple: "#6C3483",
   grey: "#d3d4d9"
 };
+
+Colors.foreground = bgColor => {
+  switch (bgColor) {
+    case Colors.red:
+    case Colors.dark_green:
+    case Colors.dark_blue:
+    case Colors.purple:
+      return "#FFFFFF";
+  }
+  return "#000000";
+};
+
+export default Colors;

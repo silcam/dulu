@@ -19,15 +19,10 @@ export default function ReportSideBar(props) {
       )}
       <P>
         <label>{t("Clusters")}</label>
-        <SearchTextInput
-          queryPath="/api/clusters/search"
-          updateValue={props.addCluster}
-          placeholder={t("Add_cluster")}
-        />
         <ul>
           {report.clusters.map(cluster => (
             <li key={cluster.id}>
-              {cluster.name}
+              - {cluster.name}
               <DeleteIcon
                 onClick={() => props.dropCluster(cluster.id)}
                 iconSize="small"
@@ -35,18 +30,18 @@ export default function ReportSideBar(props) {
             </li>
           ))}
         </ul>
+        <SearchTextInput
+          queryPath="/api/clusters/search"
+          updateValue={props.addCluster}
+          placeholder={t("Add_cluster")}
+        />
       </P>
       <P>
         <label>{t("Languages")}</label>
-        <SearchTextInput
-          queryPath="/api/languages/search"
-          updateValue={props.addProgram}
-          placeholder={t("Add_language")}
-        />
         <ul>
           {report.programs.map(program => (
             <li key={program.id}>
-              {program.name}
+              - {program.name}
               <DeleteIcon
                 onClick={() => props.dropProgram(program.id)}
                 iconSize="small"
@@ -54,6 +49,11 @@ export default function ReportSideBar(props) {
             </li>
           ))}
         </ul>
+        <SearchTextInput
+          queryPath="/api/languages/search"
+          updateValue={props.addProgram}
+          placeholder={t("Add_language")}
+        />
       </P>
       <P>
         <label>{t("domains.Translation")}</label>
@@ -81,7 +81,7 @@ export default function ReportSideBar(props) {
           {Report.LanguageComparison.elements.publications.map(pub => (
             <li key={pub}>
               <CheckBoxInput
-                text={t(pub)}
+                text={Report.tPubName(pub, t)}
                 value={report.elements.publications[pub] || false}
                 handleCheck={e =>
                   props.updateElements(

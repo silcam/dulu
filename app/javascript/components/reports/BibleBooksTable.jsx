@@ -1,6 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import Activity from "../../models/Activity";
+import Colors from "../../util/Colors";
 
 export default function BibleBooksTable(props) {
   const t = props.t;
@@ -29,7 +30,13 @@ export default function BibleBooksTable(props) {
                   ? Activity.translationProgress[stage].color
                   : "white";
                 return (
-                  <td key={colIndex} style={{ backgroundColor: color }}>
+                  <td
+                    key={colIndex}
+                    style={{
+                      backgroundColor: color,
+                      color: Colors.foreground(color)
+                    }}
+                  >
                     {bookName.replace(" ", "").slice(0, 3)}
                   </td>
                 );

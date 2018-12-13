@@ -11,7 +11,10 @@ export default {
   All: "Tous",
   All_changes_saved: "Toute modification enregistrée",
   already_exists: "existe déjà",
+  Any_literacy: "Alphabétisation",
+  App: "Appli",
   As_of: "Depuis",
+  Audio: "Audio",
   AudioScripture: "Écriture audio",
   Bible: "Bible",
   bible_books: [
@@ -104,6 +107,7 @@ export default {
     "Êtes-vous certain que vous voulez supprimer %{name} ? Cette action ne peut pas être défaite.",
   Delete_workshop_confirmation: "Supprimer l'atelier %{name} ?",
   Description: "Description",
+  Dictionary: "Dictionaire",
   Domain: "Domaine",
   domains: {
     Literacy: "Alphabétisation",
@@ -267,6 +271,7 @@ export default {
   People: "Personnel",
   Person: "Personne",
   Position: "Poste",
+  Publications: "Publications",
   Report_name: "Nom du rapport",
   Report_options: "Parametres du rapport",
   Reports: "Rapports",

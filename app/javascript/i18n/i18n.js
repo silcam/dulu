@@ -33,10 +33,17 @@ export default function translator(setLocale) {
 function t(key, subs, locale) {
   let tStr = getString(strings[locale], key);
   if (tStr === undefined) {
-    console.error(`Missing translation key: ${key} for locale: ${locale}`);
-    return key;
+    if (locale != "en")
+      console.error(`Missing translation key: ${key} for locale: ${locale}`);
+    return spaceAndCapitalize(key);
   }
   return subs ? tSubs(tStr, subs) : tStr;
+}
+
+function spaceAndCapitalize(key) {
+  return key
+    .replace(/([a-z])([A-Z])/g, "$1 $2")
+    .replace(/_(\w)/g, (match, letter) => ` ${letter.toUpperCase()}`);
 }
 
 function getString(strings, key) {

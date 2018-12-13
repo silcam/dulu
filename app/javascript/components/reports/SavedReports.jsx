@@ -2,6 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import DuluAxios from "../../util/DuluAxios";
+import style from "./ReportsViewer.css";
 
 export default class SavedReports extends React.PureComponent {
   constructor(props) {
@@ -31,23 +32,25 @@ export default class SavedReports extends React.PureComponent {
     return (
       <div>
         <h2>{t("Saved_reports")}</h2>
-        <ul>
-          {reports.map(report => (
-            <li key={report.id}>
-              <h4>
-                <Link to={`/reports/${report.id}`}>{report.name}</Link>
-              </h4>
-            </li>
-          ))}
-        </ul>
-        {!this.state.expanded && this.props.savedReports.length > 5 && (
-          <button
-            className="link"
-            onClick={() => this.setState({ expanded: true })}
-          >
-            {t("See_all")}
-          </button>
-        )}
+        <div className={style.savedReportsList}>
+          <ul>
+            {reports.map(report => (
+              <li key={report.id}>
+                <h4>
+                  <Link to={`/reports/${report.id}`}>{report.name}</Link>
+                </h4>
+              </li>
+            ))}
+          </ul>
+          {!this.state.expanded && this.props.savedReports.length > 5 && (
+            <button
+              className="link"
+              onClick={() => this.setState({ expanded: true })}
+            >
+              {t("See_all")}
+            </button>
+          )}
+        </div>
       </div>
     );
   }
@@ -55,7 +58,7 @@ export default class SavedReports extends React.PureComponent {
 
 SavedReports.propTypes = {
   t: PropTypes.func.isRequired,
-  savedReports: PropTypes.object,
+  savedReports: PropTypes.array,
   setSavedReports: PropTypes.func.isRequired,
   setNetworkError: PropTypes.func.isRequired
 };

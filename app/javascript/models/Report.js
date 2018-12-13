@@ -16,6 +16,13 @@ export default class Report {
       clusters: report.clusters
     };
   }
+
+  static tPubName(pubName, t) {
+    if (pubName.startsWith("Audio_"))
+      return t("Audio") + " " + t(pubName.slice(6));
+    if (pubName.endsWith("Film")) return t(`films.${pubName}`);
+    return t(pubName);
+  }
 }
 
 Report.LanguageComparison = {
