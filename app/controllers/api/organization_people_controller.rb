@@ -16,7 +16,7 @@ class Api::OrganizationPeopleController < ApplicationController
     @org_person = OrganizationPerson.find(params[:id])
     authorize! :update, @org_person.person
     @org_person.destroy
-    head :no_content, status: :ok
+    response_ok
   end
 
   private

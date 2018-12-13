@@ -109,11 +109,15 @@ export default class DuluApp extends React.Component {
             )}
           />
           <Route
-            path="/reports"
-            render={() => (
+            path="/reports/:id?"
+            render={({ match, history, location }) => (
               <ReportsViewer
+                key={match.params.id || ""}
                 t={this.state.t}
                 setNetworkError={this.setNetworkError}
+                id={match.params.id}
+                history={history}
+                location={location}
               />
             )}
           />

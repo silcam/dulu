@@ -1,8 +1,8 @@
 class Report < ApplicationRecord
-
+  belongs_to :author, class_name: 'Person'
   has_many :viewed_reports
 
-  validates :params, presence: true, allow_blank: false
+  validates :report, presence: true, allow_blank: false
   validates :name, presence: true, allow_blank: false
 
   TYPES = %i( LanguageComparison )

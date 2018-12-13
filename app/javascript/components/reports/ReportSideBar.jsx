@@ -14,6 +14,9 @@ export default function ReportSideBar(props) {
   return (
     <div>
       <h3>{t("Report_options")}</h3>
+      {showSaveButton(report) && (
+        <button onClick={props.save}>{t("Save")}</button>
+      )}
       <P>
         <label>{t("Clusters")}</label>
         <SearchTextInput
@@ -55,7 +58,7 @@ export default function ReportSideBar(props) {
       <P>
         <label>{t("domains.Translation")}</label>
         <ul>
-          {Report.lc.elements.activities.map(testament => (
+          {Report.LanguageComparison.elements.activities.map(testament => (
             <li key={testament}>
               <CheckBoxInput
                 text={t(testament)}
@@ -75,7 +78,7 @@ export default function ReportSideBar(props) {
       <P>
         <label>{t("Publications")}</label>
         <ul>
-          {Report.lc.elements.publications.map(pub => (
+          {Report.LanguageComparison.elements.publications.map(pub => (
             <li key={pub}>
               <CheckBoxInput
                 text={t(pub)}
@@ -96,6 +99,18 @@ export default function ReportSideBar(props) {
   );
 }
 
+function showSaveButton(report) {
+  return (
+    (report.clusters.length > 0 || report.programs.length > 0) &&
+    (Object.keys(report.elements.activities).some(
+      testament => report.elements.activities[testament]
+    ) ||
+      Object.keys(report.elements.publications).some(
+        pub => report.elements.publications[pub]
+      ))
+  );
+}
+
 ReportSideBar.propTypes = {
   t: PropTypes.func.isRequired,
   report: PropTypes.object.isRequired,
@@ -103,5 +118,6 @@ ReportSideBar.propTypes = {
   addProgram: PropTypes.func.isRequired, // addProgram(id)
   dropCluster: PropTypes.func.isRequired, // dropCluster(id)
   dropProgram: PropTypes.func.isRequired, // dropProgram(id)
-  updateElements: PropTypes.func.isRequired
+  updateElements: PropTypes.func.isRequired,
+  save: PropTypes.func.isRequired
 };

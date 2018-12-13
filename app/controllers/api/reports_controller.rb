@@ -1,9 +1,18 @@
 class Api::ReportsController < ApplicationController
+  def create
+    @report = Report.new(report_params)
+    @report.author = current_user
+    @report.save!
+    render json: { report: {id: @report.id}}
+  end
+
+  def index
+    @reports = current_user.reports
+  end
+
   def show
     @report = Report.find(params[:id])
-    # @saved_reports = current_user.reports.where.not(id: @report.id)
     ViewedReport.mark_viewed(@report, current_user)
-    @data = @report.generate
   end
 
   def report_data
@@ -13,5 +22,11 @@ class Api::ReportsController < ApplicationController
       @data = Report.get_cluster_report(params[:report_type], Cluster.find(params[:cluster_id]))
     end
     render json: @data
+  end
+
+  private
+
+  def report_params
+    params.require(:report).permit(:name, report: {})
   end
 end

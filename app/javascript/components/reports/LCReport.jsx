@@ -7,7 +7,16 @@ export default function LCReport(props) {
   const t = props.t;
   return (
     <div>
-      <h2>{t("lc")}</h2>
+      <h2>{report.name ? report.name : t("LanguageComparison")}</h2>
+      {report.author && (
+        <h5>
+          {t("Created_by", { name: report.author.full_name })}
+          <br />
+          {t("Share_this_report", {
+            url: `https://dulu.sil.org/reports/${report.id}`
+          })}
+        </h5>
+      )}
       <div>
         {report.clusters.map(cluster => (
           <div key={cluster.id}>

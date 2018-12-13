@@ -34,6 +34,10 @@ class ApplicationController < ActionController::Base
     I18n.locale = current_user.try(:ui_language) || I18n.default_locale
   end
 
+  def response_ok
+    head :no_content, status: :ok
+  end
+
   rescue_from "AccessGranted::AccessDenied" do |exception|
     redirect_to not_allowed_path
   end

@@ -38,14 +38,14 @@ class Api::PeopleController < ApplicationController
     @person = Person.find(params[:id])
     authorize! :destroy, @person
     @person.destroy!
-    head :no_content, status: :ok
+    response_ok
   end
 
   def update_view_prefs
     params.permit!
     current_user.view_prefs.merge!(params[:view_prefs])
     current_user.save
-    head :no_content, status: :ok
+    response_ok
   end
 
   def search

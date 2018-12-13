@@ -24,7 +24,7 @@ class Api::EventsController < ApplicationController
     @event = Event.find(params[:id])
     authorize! :destroy, @event
     @event.destroy!
-    head :no_content, status: :ok
+    response_ok
   end
 
   private

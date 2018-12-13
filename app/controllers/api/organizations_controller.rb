@@ -25,7 +25,7 @@ class Api::OrganizationsController < ApplicationController
     @org = Organization.find(params[:id])
     authorize! :destroy, @org
     @org.destroy!
-    head :no_content, status: :ok
+    response_ok
   end
 
   def search

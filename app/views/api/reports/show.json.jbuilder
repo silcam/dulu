@@ -1,21 +1,13 @@
+json.report do
+  json.author do
+    json.call(@report.author, :id, :full_name)
+  end
 
-# json.elements @data[:elements]
-# json.clusters @data[:clusters] do |cluster, programs|
-#   json.call(cluster, :id, :name)
-#   json.programs programs do |program, report|
-#     json.call(program, :id, :name)
-#     json.report do
-#       json.publications report[:publications]
-#       json.activities do
-#         report[:activities].each do |testament, books|
-#           json.set! testament do
-#             new_books = books.collect do |book|
-#               book[:stage] ? book[:stage][:name] : ''
-#             end
-#             json.array! new_books
-#           end
-#         end
-#       end
-#     end
-#   end
-# end
+  json.call(@report, :id, :name)
+  json.type @report.report['type']
+  json.elements @report.report['elements']
+
+  json.clusters(@report.report['clusters'].collect{ |c_id| Report.lc_cluster_report(Cluster.find(c_id)) })
+
+  json.programs(@report.report['programs'].collect{ |p_id| Report.lc_program_report(Program.find(p_id)) })
+end

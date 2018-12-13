@@ -32,10 +32,10 @@ EditActionBar.propTypes = {
   can: PropTypes.object.isRequired,
   editing: PropTypes.bool,
   saving: PropTypes.bool,
-  save: PropTypes.func.isRequired,
+  save: PropTypes.func,
   saveDisabled: PropTypes.bool,
-  cancel: PropTypes.func.isRequired,
+  cancel: PropTypes.func,
   edit: PropTypes.func.isRequired,
   delete: PropTypes.func, // Not required if not needed
-  t: PropTypes.func.isRequired
+  t: PropTypes.func
 };
