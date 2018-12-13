@@ -9,6 +9,7 @@ import thingBoard from "../shared/thingBoard";
 import AddIcon from "../shared/icons/AddIcon";
 import { Link } from "react-router-dom";
 import TextFilter from "../shared/TextFilter";
+import FlexSpacer from "../shared/FlexSpacer";
 
 class Board extends React.PureComponent {
   state = {};
@@ -42,9 +43,9 @@ class Board extends React.PureComponent {
     return (
       <div className={styles.container}>
         <div className={styles.headerBar}>
-          <Link to="/people">
-            <h2>{this.props.t("People")}</h2>
-          </Link>
+          <h2>
+            <Link to="/people">{this.props.t("People")}</Link>
+          </h2>
           <TextFilter
             placeholder={this.props.t("Find")}
             updateFilter={filter => this.setState({ filter: filter })}
@@ -54,6 +55,10 @@ class Board extends React.PureComponent {
               <AddIcon iconSize="large" />
             </Link>
           )}
+          <FlexSpacer />
+          <h3>
+            <Link to="/organizations">{this.props.t("Organizations")}</Link>
+          </h3>
         </div>
         <div className={styles.masterDetailContainer}>
           <div className={styles.master}>

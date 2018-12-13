@@ -8,6 +8,7 @@ import thingBoard from "../shared/thingBoard";
 import { languageCompare } from "../../models/language";
 import LanguagesTable from "./LanguagesTable";
 import LanguagePage from "./LanguagePage";
+import FlexSpacer from "../shared/FlexSpacer";
 
 class Board extends React.PureComponent {
   state = {};
@@ -17,9 +18,10 @@ class Board extends React.PureComponent {
     return (
       <div className={styles.container}>
         <div className={styles.headerBar}>
-          <Link to="/languages">
-            <h2>{this.props.t("Languages")}</h2>
-          </Link>
+          <h2>
+            <Link to="/languages">{this.props.t("Languages")}</Link>
+          </h2>
+
           <TextFilter
             placeholder={this.props.t("Find")}
             updateFilter={filter => this.setState({ filter: filter })}
@@ -29,6 +31,12 @@ class Board extends React.PureComponent {
               <AddIcon iconSize="large" />
             </Link>
           )}
+          <FlexSpacer />
+          <h3>
+            <Link to={"/regions"}>{this.props.t("Regions")}</Link>
+            &nbsp;&nbsp;&nbsp;&nbsp;
+            <Link to={"/clusters"}>{this.props.t("Clusters")}</Link>
+          </h3>
         </div>
         <div className={styles.masterDetailContainer}>
           <div className={styles.master}>

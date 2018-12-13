@@ -17,10 +17,11 @@ div.headerBar h2 {
     margin: 8px 16px 0 0;
 }
 
-div.headerBar a,
-div.header a:hover {
+div.headerBar h2 a,
+div.header h2 a:hover {
     color: black;
     text-decoration: none;
+    font-weight: inherit;
 }
 
 div.headerBar svg {

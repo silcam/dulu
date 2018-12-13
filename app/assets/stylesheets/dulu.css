@@ -115,6 +115,10 @@ h4 {
     margin: 8px 0;
 }
 
+h3 a:hover {
+    text-decoration: none;
+}
+
 input[type=text] {
     width: calc(100% - 12px);
     margin: 0;

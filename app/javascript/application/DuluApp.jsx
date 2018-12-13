@@ -11,6 +11,8 @@ import DuluAxios from "../util/DuluAxios";
 import LanguagesBoard from "../components/languages/LanguagesBoard";
 import ReportsViewer from "../components/reports/ReportsViewer";
 import EventsPage from "../components/events/EventsPage";
+import RegionsBoard from "../components/regions/RegionsBoard";
+import ClustersBoard from "../components/clusters/ClustersBoard";
 
 export default class DuluApp extends React.Component {
   constructor(props) {
@@ -70,6 +72,18 @@ export default class DuluApp extends React.Component {
               <LanguagesBoard
                 history={history}
                 location={location}
+                {...matchParamsForChild(match)}
+                t={this.state.t}
+                setNetworkError={this.setNetworkError}
+              />
+            )}
+          />
+          <Route path="/regions" render={() => <RegionsBoard />} />
+          <Route
+            path="/clusters/:idOrAction?"
+            render={({ history, match }) => (
+              <ClustersBoard
+                history={history}
                 {...matchParamsForChild(match)}
                 t={this.state.t}
                 setNetworkError={this.setNetworkError}

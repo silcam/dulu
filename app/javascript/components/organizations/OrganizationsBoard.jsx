@@ -18,9 +18,10 @@ class Board extends React.PureComponent {
     return (
       <div className={styles.container}>
         <div className={styles.headerBar}>
-          <Link to="/organizations">
-            <h2>{this.props.t("Organizations")}</h2>
-          </Link>
+          <h2>
+            <Link to="/organizations">{this.props.t("Organizations")}</Link>
+          </h2>
+
           <TextFilter
             placeholder={this.props.t("Find")}
             updateFilter={filter => this.setState({ filter: filter })}

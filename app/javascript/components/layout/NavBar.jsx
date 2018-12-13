@@ -26,9 +26,6 @@ export default function NavBar(props) {
           <Link to="/people">{props.t("People")}</Link>
         </li>
         <li>
-          <Link to="/organizations">{props.t("Organizations")}</Link>
-        </li>
-        <li>
           <Link to="/events">{props.t("Events")}</Link>
         </li>
         <li>

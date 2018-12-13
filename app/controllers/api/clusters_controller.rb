@@ -1,4 +1,8 @@
 class Api::ClustersController < ApplicationController
+  def index
+    @clusters = Cluster.all
+  end
+
   def dashboard
     @cluster = Cluster.find params[:id]
   end
