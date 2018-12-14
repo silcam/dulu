@@ -4,12 +4,14 @@ import thingBoard from "../shared/thingBoard";
 import Cluster from "../../models/Cluster";
 import ClustersTable from "./ClustersTable";
 import style from "../shared/MasterDetail.css";
+import ClusterPage from "./ClusterPage";
 
 class _ClustersBoard extends React.PureComponent {
   state = {};
 
   render() {
     const t = this.props.t;
+    const selectedCluster = this.props.selected;
 
     return (
       <div className={style.container}>
@@ -24,6 +26,17 @@ class _ClustersBoard extends React.PureComponent {
               clusters={this.props.clusters}
               can={this.props.can}
             />
+          </div>
+          <div className={style.detail}>
+            {selectedCluster && selectedCluster.loaded && (
+              <ClusterPage
+                key={selectedCluster.id}
+                cluster={selectedCluster}
+                t={t}
+                replaceCluster={this.props.replace}
+                setNetworkError={this.props.setNetworkError}
+              />
+            )}
           </div>
         </div>
       </div>
@@ -41,8 +54,11 @@ export default ClustersBoard;
 _ClustersBoard.propTypes = {
   t: PropTypes.func.isRequired,
   id: PropTypes.string,
+  setNetworkError: PropTypes.func.isRequired,
 
   // Supplied by thingBoard
   clusters: PropTypes.array,
-  can: PropTypes.object
+  can: PropTypes.object,
+  selected: PropTypes.object,
+  replace: PropTypes.func
 };

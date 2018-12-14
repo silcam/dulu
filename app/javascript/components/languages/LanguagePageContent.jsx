@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import styles from "./LanguagePageContent.css";
 import ActivitiesTable from "./ActivitiesTable";
 import EventsTable from "./EventsTable";
-import PeopleTable from "./PeopleTable";
+import ParticipantsTable from "./ParticipantsTable";
 import TranslationStatus from "./TranslationStatus";
 import Event from "../../models/Event";
 
@@ -35,7 +35,12 @@ export default function LanguagePageContent(props) {
         )}
         domain={props.tab}
       />
-      <PeopleTable {...props} />
+      <ParticipantsTable
+        t={props.t}
+        domain={props.tab}
+        participants={props.language.participants}
+        language={props.language}
+      />
       {props.tab == "Translation" && <TranslationStatus {...props} />}
     </div>
   );

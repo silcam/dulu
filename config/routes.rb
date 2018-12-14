@@ -33,6 +33,8 @@ Rails.application.routes.draw do
 
     resources :organization_people
 
+    resources :participants
+
     resources :people do
       put 'update_view_prefs', on: :collection
       get 'search', on: :collection
