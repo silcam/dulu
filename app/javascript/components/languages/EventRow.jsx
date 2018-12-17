@@ -1,9 +1,13 @@
 import React from "react";
 import PropTypes from "prop-types";
 import eventDateString from "../../util/eventDateString";
-import { toggleStateFlag } from "../../util/toggleStateFlag";
 import style from "./EventsTable.css";
 import EventsParticipantsTable from "../events/EventsParticipantsTable";
+import { Link } from "react-router-dom";
+
+/*
+  Expanded state is deprecated
+*/
 
 export default class EventRow extends React.PureComponent {
   constructor(props) {
@@ -20,12 +24,7 @@ export default class EventRow extends React.PureComponent {
       <React.Fragment>
         <tr>
           <td className={this.state.expanded ? style.eventTitle : undefined}>
-            <button
-              className="link"
-              onClick={() => toggleStateFlag(this, "expanded")}
-            >
-              {event.name}
-            </button>
+            <Link to={`/events/${event.id}`}>{event.name}</Link>
           </td>
           <td>
             {eventDateString(

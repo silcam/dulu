@@ -17,6 +17,15 @@ export default function LanguagePageRouter(props) {
           />
         )}
       />
+      {/* <Route
+        path={props.basePath + "/events/:eventId"}
+        render={({match, history}) => (
+          <LanguageEventPage
+            eventId={match.params.eventId}
+            history={history}
+            {...props}
+            />
+        )} /> */}
       <Route
         render={({ history }) => <LanguagePage history={history} {...props} />}
       />
