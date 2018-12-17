@@ -4,7 +4,7 @@ import thingBoard from "../shared/thingBoard";
 import Cluster from "../../models/Cluster";
 import ClustersTable from "./ClustersTable";
 import style from "../shared/MasterDetail.css";
-import ClusterPage from "./ClusterPage";
+import ClusterPageRouter from "./ClusterPageRouter";
 
 class _ClustersBoard extends React.PureComponent {
   state = {};
@@ -29,12 +29,13 @@ class _ClustersBoard extends React.PureComponent {
           </div>
           <div className={style.detail}>
             {selectedCluster && selectedCluster.loaded && (
-              <ClusterPage
+              <ClusterPageRouter
                 key={selectedCluster.id}
                 cluster={selectedCluster}
                 t={t}
                 replaceCluster={this.props.replace}
                 setNetworkError={this.props.setNetworkError}
+                basePath={this.props.basePath}
               />
             )}
           </div>
@@ -55,6 +56,7 @@ _ClustersBoard.propTypes = {
   t: PropTypes.func.isRequired,
   id: PropTypes.string,
   setNetworkError: PropTypes.func.isRequired,
+  basePath: PropTypes.string.isRequired,
 
   // Supplied by thingBoard
   clusters: PropTypes.array,

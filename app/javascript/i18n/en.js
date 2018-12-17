@@ -72,6 +72,8 @@ export default {
   ],
   Can_login: "Can log in to Dulu",
   confirm_delete_event: "Delete %{name}?",
+  confirm_delete_participant:
+    "Delete %{person} from %{program}? %{person} never worked in %{program}?",
   confirm_delete_org_person:
     "Delete %{org} from %{person}'s organizations? %{person} was never in %{org}?",
   confirm_delete_role: "Remove the %{role} role?",
@@ -141,6 +143,7 @@ export default {
   network_error_message: "Failed to connect to Dulu server.",
   No_media_activities: "No media activities",
   No_participants: "No active participants",
+  No_roles_assigned: "No roles assigned",
   No_scripture: "No Scripture",
   No_translation_activities: "No translation activities",
   notifications: {

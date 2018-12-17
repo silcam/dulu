@@ -81,9 +81,10 @@ export default class DuluApp extends React.Component {
           <Route path="/regions" render={() => <RegionsBoard />} />
           <Route
             path="/clusters/:idOrAction?"
-            render={({ history, match }) => (
+            render={({ history, match, location }) => (
               <ClustersBoard
                 history={history}
+                location={location}
                 {...matchParamsForChild(match)}
                 t={this.state.t}
                 setNetworkError={this.setNetworkError}

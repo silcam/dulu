@@ -40,6 +40,11 @@ export default function LanguagePageContent(props) {
         domain={props.tab}
         participants={props.language.participants}
         language={props.language}
+        can={props.language.can}
+        setNetworkError={props.setNetworkError}
+        replace={props.replaceLanguage}
+        basePath={`/languages/${props.language.id}`}
+        history={props.history}
       />
       {props.tab == "Translation" && <TranslationStatus {...props} />}
     </div>
@@ -50,5 +55,8 @@ LanguagePageContent.propTypes = {
   t: PropTypes.func.isRequired,
   language: PropTypes.object.isRequired,
   tab: PropTypes.string.isRequired,
-  location: PropTypes.object.isRequired
+  location: PropTypes.object.isRequired,
+  setNetworkError: PropTypes.func.isRequired,
+  replaceLanguage: PropTypes.func.isRequired,
+  history: PropTypes.object.isRequired
 };

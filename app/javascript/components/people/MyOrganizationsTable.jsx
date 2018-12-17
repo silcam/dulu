@@ -1,6 +1,6 @@
 import React from "react";
 import MyOrganizationsTableRow from "./MyOrganizationsTableRow";
-import { findIndexById } from "../../util/findById";
+import { findIndexById } from "../../util/arrayUtils";
 import update from "immutability-helper";
 import SearchTextInput from "../shared/SearchTextInput";
 import SmallSaveAndCancel from "../shared/SmallSaveAndCancel";

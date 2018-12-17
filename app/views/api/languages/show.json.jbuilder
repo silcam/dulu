@@ -9,7 +9,7 @@ json.language do
   json.partial! 'api/workshops_activities/index', activities: @program.workshops_activities
 
 
-  json.participants @program.all_current_participants, partial: 'api/participants/participant', as: :participant
+  json.participants @program.all_participants, partial: 'api/participants/participant', as: :participant
 
   json.events do
     json.current @program.all_events.current, partial: 'api/events/event', as: :event

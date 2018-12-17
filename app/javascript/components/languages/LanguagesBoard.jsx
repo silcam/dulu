@@ -7,8 +7,8 @@ import Loading from "../shared/Loading";
 import thingBoard from "../shared/thingBoard";
 import { languageCompare } from "../../models/language";
 import LanguagesTable from "./LanguagesTable";
-import LanguagePage from "./LanguagePage";
 import FlexSpacer from "../shared/FlexSpacer";
+import LanguagePageRouter from "./LanguagePageRouter";
 
 class Board extends React.PureComponent {
   state = {};
@@ -58,7 +58,7 @@ class Board extends React.PureComponent {
             )} */}
             {selectedLanguage &&
               (selectedLanguage.loaded ? (
-                <LanguagePage
+                <LanguagePageRouter
                   key={selectedLanguage.id}
                   language={selectedLanguage}
                   t={this.props.t}
@@ -66,6 +66,7 @@ class Board extends React.PureComponent {
                   setNetworkError={this.props.setNetworkError}
                   basePath={this.props.basePath}
                   location={this.props.location}
+                  history={this.props.history}
                 />
               ) : (
                 <Loading t={this.props.t} />

@@ -56,6 +56,10 @@ export default class FuzzyDateInput extends React.PureComponent {
     this.setState({ [e.target.name]: e.target.value }, this.pushDate);
   };
 
+  clearDate = () => {
+    this.setState({ year: "", day: "", month: "" }, this.pushDate);
+  };
+
   dateIsInvalid = () => {
     if (this.props.dateIsInvalid) {
       this.props.dateIsInvalid();
@@ -119,6 +123,11 @@ export default class FuzzyDateInput extends React.PureComponent {
           value={this.state.year}
           t={this.props.t}
         />
+        {this.props.allowBlank && this.props.date && (
+          <button className="link" onClick={this.clearDate}>
+            {this.props.t("Clear")}
+          </button>
+        )}
         <br />
         <span className={showErrors && styles.errorMessage}>
           {showErrors ? this.state.errorMessage : ""

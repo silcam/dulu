@@ -46,6 +46,7 @@ export default class LanguagePage extends React.PureComponent {
                     setNetworkError={this.props.setNetworkError}
                     location={this.props.location}
                     basePath={match.url}
+                    history={this.props.history}
                   />
                 </TabPanel>
               ))}
@@ -68,5 +69,6 @@ LanguagePage.propTypes = {
   basePath: PropTypes.string.isRequired,
   t: PropTypes.func.isRequired,
   language: PropTypes.object.isRequired,
-  location: PropTypes.object.isRequired
+  location: PropTypes.object.isRequired,
+  history: PropTypes.object.isRequired
 };

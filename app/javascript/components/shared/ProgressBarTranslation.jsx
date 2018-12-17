@@ -9,7 +9,9 @@ export default function ProgressBarTranslation(props) {
     .map(stage => ({
       color: Activity.translationProgress[stage].color,
       percent: props.progress[stage] || 0,
-      tooltip: `${props.t(stage)}: ${Math.round(props.progress[stage])}%`
+      tooltip: `${props.t(`stage_names.${stage}`)}: ${Math.round(
+        props.progress[stage]
+      )}%`
     }));
   return <ProgressBarMulti bars={bars} />;
 }

@@ -89,6 +89,8 @@ export default class ClusterPage extends React.PureComponent {
           replace={this.replaceCluster}
           setNetworkError={this.props.setNetworkError}
           can={cluster.can}
+          basePath={this.props.basePath}
+          history={this.props.history}
         />
       </div>
     );
@@ -99,5 +101,7 @@ ClusterPage.propTypes = {
   setNetworkError: PropTypes.func.isRequired,
   replaceCluster: PropTypes.func.isRequired,
   cluster: PropTypes.object.isRequired,
-  t: PropTypes.func.isRequired
+  t: PropTypes.func.isRequired,
+  basePath: PropTypes.string.isRequired,
+  history: PropTypes.object.isRequired
 };

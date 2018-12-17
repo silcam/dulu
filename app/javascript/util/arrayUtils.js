@@ -8,7 +8,7 @@ import update from "immutability-helper";
 export function arrayDelete(array, item) {
   let index = array.indexOf(item);
   if (index == -1) return array;
-  return array.slice(0, index) + array.slice(index + 1);
+  return update(array, { $splice: [[index, 1]] });
 }
 
 export function itemAfter(array, item) {
@@ -27,4 +27,24 @@ export function insertInto(array, newItem, compare) {
 export function print(array, t, keyPrefix) {
   keyPrefix = keyPrefix ? keyPrefix + "." : "";
   return array.map(item => t(keyPrefix + item)).join(", ");
+}
+
+export function findById(array, id) {
+  return array[findIndexById(array, id)];
+}
+
+export function findIndexById(array, id) {
+  return array.findIndex(item => item.id == id);
+}
+
+export function deleteFrom(array, id) {
+  const deleteIndex = findIndexById(array, id);
+  return deleteIndex >= 0
+    ? update(array, { $splice: [[deleteIndex, 1]] })
+    : array;
+}
+
+export function replace(array, item) {
+  const index = findIndexById(array, item.id);
+  return update(array, { [index]: { $set: item } });
 }

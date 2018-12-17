@@ -6,7 +6,7 @@ import {
   findIndexById,
   insertInto,
   deleteFrom
-} from "../../util/findById";
+} from "../../util/arrayUtils";
 import DuluAxios from "../../util/DuluAxios";
 
 export default function thingBoard(Board, thingParams) {

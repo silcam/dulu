@@ -3,6 +3,8 @@ import PropTypes from "prop-types";
 import InlineAddIcon from "../shared/icons/InlineAddIcon";
 import NewParticipantForm from "./NewParticipantForm";
 import update from "immutability-helper";
+import Role from "../../models/Role";
+import { Link } from "react-router-dom";
 
 /*
   Used by LanguagePageContent and ClusterPage!
@@ -17,6 +19,9 @@ export default class ParticipantsTable extends React.PureComponent {
     const clusterProgram = this.props.cluster || this.props.language;
     this.props.replace(
       update(clusterProgram, { participants: { $push: [participant] } })
+    );
+    this.props.history.push(
+      `${this.props.basePath}/participants/${participant.id}`
     );
   };
 
@@ -52,7 +57,11 @@ export default class ParticipantsTable extends React.PureComponent {
             {participants.map(participant => (
               <tr key={participant.id}>
                 <td>
-                  {participant.person.full_name}{" "}
+                  <Link
+                    to={`${this.props.basePath}/participants/${participant.id}`}
+                  >
+                    {participant.person.full_name}
+                  </Link>{" "}
                   {this.showCluster(participant) &&
                     `(${participant.cluster.name})`}
                 </td>
@@ -73,39 +82,8 @@ export default class ParticipantsTable extends React.PureComponent {
 function domainPeople(participants, domain) {
   if (!domain) return participants;
   return participants.filter(participant =>
-    participant.roles.some(role => domainFromRole(role) == domain)
+    participant.roles.some(role => Role.domainFromRole(role) == domain)
   );
-}
-
-function domainFromRole(role) {
-  const roleDomains = {
-    Administration: "",
-    BackTranslator: "Translation",
-    DuluAdmin: "",
-    Cluster_coordinator: "All",
-    Cluster_facilitator: "All",
-    Exegete: "Translation",
-    Facilitator: "",
-    LanguageProgramCommittee: "All",
-    LanguageProgramFacilitator: "All",
-    Leader: "",
-    Linguist: "Linguistics",
-    LinguisticConsultant: "Linguistics",
-    LinguisticConsultantTraining: "Linguistics",
-    Literacy_specialist: "Literacy",
-    Literacy_consultant: "Literacy",
-    MediaConsultant: "Media",
-    MediaSpecialist: "Media",
-    ProjectCoordinator: "All",
-    Scripture_engagement_specialist: "Scripture_use",
-    Student: "",
-    Translator: "Translation",
-    TranslationConsultant: "Translation",
-    TranslationConsultantTraining: "Translation"
-  };
-  let domain = roleDomains[role];
-  if (domain === undefined) console.error("No domain listed for role: " + role);
-  return domain;
 }
 
 ParticipantsTable.propTypes = {
@@ -116,5 +94,7 @@ ParticipantsTable.propTypes = {
   cluster: PropTypes.object,
   replace: PropTypes.func.isRequired,
   setNetworkError: PropTypes.func.isRequired,
-  can: PropTypes.object.isRequired
+  can: PropTypes.object.isRequired,
+  basePath: PropTypes.string.isRequired,
+  history: PropTypes.object.isRequired
 };

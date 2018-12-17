@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import ActivityRow from "./ActivityRow";
 import update from "immutability-helper";
-import { findIndexById } from "../../util/findById";
+import { findIndexById } from "../../util/arrayUtils";
 import InlineAddIcon from "../shared/icons/InlineAddIcon";
 import Activity from "../../models/Activity";
 import DuluAxios from "../../util/DuluAxios";
