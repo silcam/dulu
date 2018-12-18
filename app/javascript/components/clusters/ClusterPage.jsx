@@ -6,9 +6,9 @@ import TextOrEditText from "../shared/TextOrEditText";
 import update from "immutability-helper";
 import DuluAxios from "../../util/DuluAxios";
 // import styles from "./PersonPage.css";
-import { Link } from "react-router-dom";
 import ClusterLanguagesTable from "./ClusterLanguagesTable";
 import ParticipantsTable from "../languages/ParticipantsTable";
+import Cluster from "../../models/Cluster";
 
 export default class ClusterPage extends React.PureComponent {
   state = {
@@ -32,7 +32,7 @@ export default class ClusterPage extends React.PureComponent {
       const data = await DuluAxios.put(
         `/api/clusters/${this.state.cluster.id}`,
         {
-          cluster: this.state.cluster
+          cluster: Cluster.clusterParams(this.state.cluster)
         }
       );
       this.props.replaceCluster(data.cluster);
@@ -81,17 +81,24 @@ export default class ClusterPage extends React.PureComponent {
             validateNotBlank
           />
         </h2>
-        <ClusterLanguagesTable cluster={cluster} t={t} />
-        <ParticipantsTable
-          t={t}
-          participants={cluster.participants}
+        <ClusterLanguagesTable
           cluster={cluster}
-          replace={this.replaceCluster}
-          setNetworkError={this.props.setNetworkError}
-          can={cluster.can}
-          basePath={this.props.basePath}
-          history={this.props.history}
+          t={t}
+          editing={this.state.editing}
+          updateCluster={this.updateCluster}
         />
+        {!this.state.editing && (
+          <ParticipantsTable
+            t={t}
+            participants={cluster.participants}
+            cluster={cluster}
+            replace={this.replaceCluster}
+            setNetworkError={this.props.setNetworkError}
+            can={cluster.can}
+            basePath={this.props.basePath}
+            history={this.props.history}
+          />
+        )}
       </div>
     );
   }

@@ -10,4 +10,9 @@ class Api::LanguagesController < ApplicationController
   def search
     @programs = Language.search(params[:q])
   end
+
+  # Transitional necessity - this one returns language.id, not program.id
+  def lang_search
+    @programs = Language.search(params[:q])
+  end
 end

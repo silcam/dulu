@@ -20,6 +20,7 @@ Rails.application.routes.draw do
 
     resources :languages do
       get 'search', on: :collection
+      get 'lang_search', on: :collection
     end
 
     resources :notifications do
