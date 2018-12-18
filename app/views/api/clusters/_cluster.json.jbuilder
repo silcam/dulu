@@ -14,6 +14,7 @@ json.participants cluster.participants, partial: 'api/participants/participant',
 
 json.can do
   json.update can?(:update, cluster)
+  json.destroy can?(:destroy, cluster)
   json.manage_participants can?(:manage_participants, cluster)
 end
 

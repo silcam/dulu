@@ -32,7 +32,6 @@ export default class NewParticipantForm extends React.PureComponent {
         participant: this.state.participant
       });
       this.props.addParticipant(data.participant);
-      this.props.cancel();
     } catch (error) {
       this.props.setNetworkError(error);
       this.setState({ saving: false });

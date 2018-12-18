@@ -33,9 +33,9 @@ class Board extends React.PureComponent {
           )}
           <FlexSpacer />
           <h3>
-            <Link to={"/regions"}>{this.props.t("Regions")}</Link>
+            <Link to="/regions">{this.props.t("Regions")}</Link>
             &nbsp;&nbsp;&nbsp;&nbsp;
-            <Link to={"/clusters"}>{this.props.t("Clusters")}</Link>
+            <Link to="/clusters">{this.props.t("Clusters")}</Link>
           </h3>
         </div>
         <div className={styles.masterDetailContainer}>

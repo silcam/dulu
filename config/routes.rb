@@ -56,6 +56,8 @@ Rails.application.routes.draw do
       get 'dashboard', on: :member
     end
 
+    resources :regions
+
     resources :reports do
       get 'report_data', on: :collection
     end

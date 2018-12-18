@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import DeleteIcon from "../shared/icons/DeleteIcon";
 import { deleteFrom } from "../../util/arrayUtils";
 import SearchTextInput from "../shared/SearchTextInput";
+import InlineAddIcon from "../shared/icons/InlineAddIcon";
 
 export default function ClusterLanguagesTable(props) {
   const cluster = props.cluster;
@@ -24,7 +25,10 @@ export default function ClusterLanguagesTable(props) {
 
   return (
     <div>
-      <h3>{t("Languages")}</h3>
+      <h3>
+        {t("Languages")}
+        {!props.editing && <InlineAddIcon onClick={props.edit} />}
+      </h3>
       {props.editing ? (
         <table>
           <tbody>
@@ -54,11 +58,13 @@ export default function ClusterLanguagesTable(props) {
       ) : (
         <table>
           <tbody>
-            <tr>
-              <th />
-              <th>{t("Old_testament")}</th>
-              <th>{t("New_testament")}</th>
-            </tr>
+            {cluster.languages.length > 0 && (
+              <tr>
+                <th />
+                <th>{t("Old_testament")}</th>
+                <th>{t("New_testament")}</th>
+              </tr>
+            )}
             {cluster.languages.map(language => (
               <tr key={language.id}>
                 <td>
@@ -95,5 +101,6 @@ ClusterLanguagesTable.propTypes = {
   cluster: PropTypes.object.isRequired,
   t: PropTypes.func.isRequired,
   editing: PropTypes.bool,
-  updateCluster: PropTypes.func.isRequired
+  updateCluster: PropTypes.func.isRequired,
+  edit: PropTypes.func.isRequired
 };

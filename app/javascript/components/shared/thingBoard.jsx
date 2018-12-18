@@ -84,7 +84,7 @@ export default function thingBoard(Board, thingParams) {
             savingNew: false
           };
         });
-        this.props.history.push(`${baseUrl}/show/${newThing.id}`);
+        this.props.history.push(`${baseUrl}/${newThing.id}`);
         return newThing;
       } catch (error) {
         this.handleNetworkError(() => this.add(thing));

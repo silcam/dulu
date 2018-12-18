@@ -47,6 +47,17 @@ export default class ClusterPage extends React.PureComponent {
     }
   };
 
+  delete = () => {
+    if (
+      confirm(
+        this.props.t("confirm_delete_cluster", {
+          name: this.props.cluster.name
+        })
+      )
+    )
+      this.props.deleteCluster(this.props.cluster.id);
+  };
+
   invalid = () => {
     return this.state.cluster.name.length == 0;
   };
@@ -65,6 +76,7 @@ export default class ClusterPage extends React.PureComponent {
           t={t}
           edit={() => this.setState({ editing: true })}
           save={this.save}
+          delete={this.delete}
           cancel={() => {
             this.setState({
               editing: false,
@@ -86,6 +98,7 @@ export default class ClusterPage extends React.PureComponent {
           t={t}
           editing={this.state.editing}
           updateCluster={this.updateCluster}
+          edit={() => this.setState({ editing: true })}
         />
         {!this.state.editing && (
           <ParticipantsTable
@@ -110,5 +123,6 @@ ClusterPage.propTypes = {
   cluster: PropTypes.object.isRequired,
   t: PropTypes.func.isRequired,
   basePath: PropTypes.string.isRequired,
-  history: PropTypes.object.isRequired
+  history: PropTypes.object.isRequired,
+  deleteCluster: PropTypes.func.isRequired
 };

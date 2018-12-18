@@ -1,4 +1,10 @@
 class Api::ClustersController < ApplicationController
+  def create
+    authorize! :create, Cluster
+    @cluster = Cluster.create!(cluster_params)
+    render :show
+  end
+
   def index
     @clusters = Cluster.all
   end
@@ -20,6 +26,13 @@ class Api::ClustersController < ApplicationController
     authorize! :update, @cluster
     @cluster.update(cluster_params)
     render :show
+  end
+
+  def destroy
+    @cluster = Cluster.find(params[:id])
+    authorize! :destroy, @cluster
+    @cluster.destroy!
+    response_ok
   end
 
   private

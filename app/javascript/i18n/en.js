@@ -71,11 +71,13 @@ export default {
     "Revelation"
   ],
   Can_login: "Can log in to Dulu",
+  confirm_delete_cluster: "Delete %{name}?",
   confirm_delete_event: "Delete %{name}?",
   confirm_delete_participant:
     "Delete %{person} from %{program}? %{person} never worked in %{program}?",
   confirm_delete_org_person:
     "Delete %{org} from %{person}'s organizations? %{person} was never in %{org}?",
+  confirm_delete_region: "Delete %{name}?",
   confirm_delete_role: "Remove the %{role} role?",
   confirm_different_person: "This is a different person.",
   Created_by: "Created by %{name}",
