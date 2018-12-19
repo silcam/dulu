@@ -1,16 +1,17 @@
 .container {
     display: flex;
     flex-direction: row;
-    height: 100%;
+    flex-grow: 1;
     min-height: 0;
 }
 
 .sidebar {
     display: inline-block;
     padding: 8px 8px 0;
-    height: calc(100%-8px);
+    /* height: calc(100% - 8px); */
+    align-self: stretch;
     border-right: 2px solid #ddd;
-    overflow-y: scroll;
+    overflow-y: auto;
 }
 
 .sidebar input[type=text] {
@@ -26,11 +27,14 @@
 }
 
 .main {
-    display: inline-block;
+    display: flex;
+    flex-direction: column;
     flex-grow: 1;
+    flex-shrink: 1;
     padding: 8px 8px 0;
-    height: calc(100%-8px);
-    overflow-y: scroll;
+    /* height: calc(100%-8px); */
+    align-self: stretch;
+    overflow-y: auto;
 }
 
 .savedReportsList {
@@ -40,13 +44,15 @@
 .lcReport {
     display: flex;
     flex-direction: column;
+    flex-shrink: 1;
+    flex-grow: 1;
     height: 100%;
 }
 
 .lcBody {
     flex-grow: 1;
     flex-shrink: 1;
-    overflow-y: scroll;
+    overflow-y: auto;
 }
 
 .lcReportSubheader {
