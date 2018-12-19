@@ -11,12 +11,7 @@ export default function NavBar(props) {
       <ul>
         <li>
           <Link to="/" className={styles.duluLink}>
-            <img
-              src={require("./dulu.png")}
-              alt="Dulu"
-              width="107"
-              height="40"
-            />
+            <img src={require("./dulu.png")} alt="Dulu" />
           </Link>
         </li>
         <li>

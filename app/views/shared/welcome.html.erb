@@ -1,11 +1,51 @@
-<table id="welcome">
-  <tr><td valign="top">
+<style>
+  .container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
+  .topBar {
+    background-color: #000;
+    padding: 8px;
+  }
+
+  .main {
+    flex-grow: 1;
+    padding: 0 16px;
+  }
+
+  .lead {
+    font-size: 22px;
+  }
+
+  .red {
+    color: #A93226;
+  }
+
+  hr {
+    border: 0;
+    border-top: 1px solid #eee;
+    margin: 12px;
+  }
+
+  ul.list-inline li {
+    display: inline-block;
+    padding: 12px;
+  }
+</style>
+
+<div class="container">
+  <div class="topBar">
+    <%= image_tag 'dulu.png', alt: 'Dulu '%>
+  </div>
+  <div class="main">
       <h1 class="welcome"><strong>Welcome to Dulu</strong></h1>
 
       <p class="lead welcome">Dulu is a tool developed by SIL Cameroon for tracking and managing the many language development programs in Cameroon. To gain access, contact the Cameroon Branch Computer Services Department.</p>
 
     <% if @failed_login_email %>
-        <p class="lead bs-callout callout-red">
+        <p class="lead red">
           Sorry, but no one is authorized to log in to Dulu with the address <%= @failed_login_email %>. Are you using the correct SIL email address?
         </p>
     <% end %>
@@ -18,8 +58,8 @@
         </a>
       </p>
 
-  </td></tr>
-  <tr><td valign="bottom">
+  </div>
+  <div>
     <hr>
     <ul class="list-inline">
       <li class="lead"><%= link_to 'SIL Cameroon', 'http://silcam.org' %></li>
@@ -27,5 +67,5 @@
       <li class="lead"><%= link_to 'Wycliffe Global Alliance', 'http://wycliffe.net' %></li>
       <li class="lead"><%= link_to 'Ethnologue', 'http://ethnologue.com' %></li>
     </ul>
-  </td></tr>
-</table>
+  </div>
+</div>
