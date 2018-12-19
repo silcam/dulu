@@ -24,7 +24,9 @@ export default class EventRow extends React.PureComponent {
       <React.Fragment>
         <tr>
           <td className={this.state.expanded ? style.eventTitle : undefined}>
-            <Link to={`/events/${event.id}`}>{event.name}</Link>
+            <Link to={`${this.props.basePath}/events/${event.id}`}>
+              {event.name}
+            </Link>
           </td>
           <td>
             {eventDateString(
@@ -51,5 +53,6 @@ export default class EventRow extends React.PureComponent {
 
 EventRow.propTypes = {
   t: PropTypes.func.isRequired,
-  event: PropTypes.object.isRequired
+  event: PropTypes.object.isRequired,
+  basePath: PropTypes.string.isRequired
 };

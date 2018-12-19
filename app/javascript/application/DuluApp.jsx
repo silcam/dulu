@@ -13,31 +13,21 @@ import ReportsViewer from "../components/reports/ReportsViewer";
 import EventsPage from "../components/events/EventsPage";
 import RegionsBoard from "../components/regions/RegionsBoard";
 import ClustersBoard from "../components/clusters/ClustersBoard";
+import update from "immutability-helper";
 
 export default class DuluApp extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      t: translator("en"),
-      locale: "en"
-    };
-  }
-
-  componentDidMount() {
     const user = getUser();
-    this.setState(prevState => {
-      const t =
-        user.ui_language == prevState.locale
-          ? prevState.t
-          : translator(user.ui_language);
-      return {
-        user: user,
-        t: t,
-        locale: user.ui_language
-      };
-    });
+
     DuluAxios.clearNetworkError = () => {
       this.setState({ networkError: undefined });
+    };
+
+    this.state = {
+      user: user,
+      t: translator(user.ui_language),
+      locale: user.ui_language
     };
   }
 
@@ -47,6 +37,20 @@ export default class DuluApp extends React.Component {
         locale: locale,
         t: translator(locale)
       });
+  };
+
+  updateViewPrefs = mergeViewPrefs => {
+    this.setState(prevState => {
+      const newUser = update(prevState.user, {
+        view_prefs: { $merge: mergeViewPrefs }
+      });
+      DuluAxios.put("/api/people/update_view_prefs", {
+        view_prefs: newUser.view_prefs
+      });
+      return {
+        user: newUser
+      };
+    });
   };
 
   setNetworkError = networkError => {
@@ -75,6 +79,8 @@ export default class DuluApp extends React.Component {
                 {...matchParamsForChild(match)}
                 t={this.state.t}
                 setNetworkError={this.setNetworkError}
+                viewPrefs={this.state.user.view_prefs}
+                updateViewPrefs={this.updateViewPrefs}
               />
             )}
           />
@@ -152,7 +158,8 @@ export default class DuluApp extends React.Component {
               <Dashboard
                 {...props}
                 t={this.state.t}
-                viewPrefs={{}}
+                viewPrefs={this.state.user.view_prefs}
+                updateViewPrefs={this.updateViewPrefs}
                 setNetworkError={this.setNetworkError}
               />
             )}

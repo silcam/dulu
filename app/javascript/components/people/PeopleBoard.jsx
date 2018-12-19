@@ -93,9 +93,7 @@ class Board extends React.PureComponent {
               ) : (
                 <Loading t={this.props.t} />
               ))}
-            {!this.props.action && (
-              <span>Placeholder for PeopleBoard summary</span>
-            )}
+            {!this.props.action && <span />}
           </div>
         </div>
       </div>

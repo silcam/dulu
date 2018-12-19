@@ -1,14 +1,16 @@
 import React from "react";
+import { Link } from "react-router-dom";
+import style from "./Dashboard.css";
 
 function WorkshopEventLink(props) {
   const workshop = props.workshop;
   return (
-    <a
-      href={`/programs/${props.programId}/events/${workshop.event_id}`}
+    <Link
+      to={`/programs/${props.programId}/events/${workshop.event_id}`}
       className={props.className}
     >
       {workshop.name}
-    </a>
+    </Link>
   );
 }
 
@@ -27,12 +29,12 @@ class WorkshopsActivityRow extends React.PureComponent {
     return (
       <tr>
         <td>
-          <a href={`/programs/${activity.program_id}`}>
+          <Link to={`/programs/${activity.program_id}`}>
             {activity.program_name}
-          </a>
+          </Link>
         </td>
         <td>
-          <a href={`/activities/${activity.id}`}>{activity.title}</a>
+          <Link to={`/activities/${activity.id}`}>{activity.title}</Link>
         </td>
         <td>
           <CompletedText workshops={activity.workshops} />
@@ -58,7 +60,7 @@ class WorkshopsActivityRow extends React.PureComponent {
             );
           })}
         </td>
-        <td className="reallySmall rightCol">
+        <td className={style.reallySmall + " " + style.rightCol}>
           <i>{activity.last_update.slice(0, 10)}</i>
         </td>
       </tr>

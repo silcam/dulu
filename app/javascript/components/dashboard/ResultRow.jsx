@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 function ResultRow(props) {
   const result = props.result;
@@ -6,7 +7,7 @@ function ResultRow(props) {
     <tr>
       <td style={{ paddingLeft: props.padding }}>
         {result.route ? (
-          <a href={result.route}>{result.title}</a>
+          <Link to={result.route}>{result.title}</Link>
         ) : (
           result.title
         )}

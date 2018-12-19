@@ -1,10 +1,10 @@
 import React from "react";
-
 import PlusMinusButton from "../shared/PlusMinusButton";
-
 import DashboardSidebarProgram from "./DashboardSidebarProgram";
+import style from "./Dashboard.css";
+import PropTypes from "prop-types";
 
-class DashboardSidebarCluster extends React.PureComponent {
+export default class DashboardSidebarCluster extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
@@ -19,7 +19,6 @@ class DashboardSidebarCluster extends React.PureComponent {
   }
 
   onPlusMinusClick = () => {
-    console.log("onPlusMinusClick");
     this.setState((prevState, props) => {
       return {
         isExpanded: !prevState.isExpanded
@@ -40,15 +39,15 @@ class DashboardSidebarCluster extends React.PureComponent {
     const indentString = new Array(indent).fill("\u00A0").join("");
     return (
       <React.Fragment>
-        <li className={this.props.selection == cluster ? "active" : ""}>
+        <li className={this.props.selection == cluster ? style.active : ""}>
           {indentString}
           <PlusMinusButton
             isExpanded={this.state.isExpanded}
             handleClick={this.onPlusMinusClick}
           />
-          <a href="#" onClick={this.handleClick}>
+          <button className="link" onClick={this.handleClick}>
             {cluster.display_name}
-          </a>
+          </button>
         </li>
         {this.state.isExpanded &&
           cluster.programs.map(program => {
@@ -67,4 +66,12 @@ class DashboardSidebarCluster extends React.PureComponent {
   }
 }
 
-export default DashboardSidebarCluster;
+DashboardSidebarCluster.propTypes = {
+  onProgramSelected: PropTypes.func.isRequired,
+  selection: PropTypes.object,
+  indent: PropTypes.number,
+  onClusterSelected: PropTypes.func.isRequired,
+  cluster: PropTypes.object.isRequired,
+  startExpanded: PropTypes.bool,
+  startSelected: PropTypes.bool
+};

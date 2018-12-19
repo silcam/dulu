@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 class ParticipantRow extends React.PureComponent {
   render() {
@@ -6,20 +7,20 @@ class ParticipantRow extends React.PureComponent {
     return (
       <tr>
         <td>
-          <a href={`/programs/${participant.program_id}/`}>
+          <Link to={`/programs/${participant.program_id}/`}>
             {participant.program_name}
-          </a>
+          </Link>
           &nbsp;
           {participant.clusterId && (
-            <a href={`/clusters/${participant.cluster_id}/`}>
+            <Link to={`/clusters/${participant.cluster_id}/`}>
               ({participant.cluster_name})
-            </a>
+            </Link>
           )}
         </td>
         <td>
-          <a href={`/participants/${participant.id}/`}>
+          <Link to={`/participants/${participant.id}/`}>
             {participant.full_name}
-          </a>
+          </Link>
         </td>
         <td>{participant.roles.join(", ")}</td>
       </tr>

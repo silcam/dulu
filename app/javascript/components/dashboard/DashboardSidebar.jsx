@@ -1,10 +1,9 @@
 import axios from "axios";
 import React from "react";
-
+import PropTypes from "prop-types";
 import DashboardSidebarSection from "./DashboardSidebarSection";
-import updateViewPrefs from "../../util/updateViewPrefs";
 
-class DashboardSidebar extends React.PureComponent {
+export default class DashboardSidebar extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
@@ -25,7 +24,7 @@ class DashboardSidebar extends React.PureComponent {
     this.setState({
       selection: program
     });
-    updateViewPrefs({ dashboardSelection: program.selectionTag });
+    this.props.updateViewPrefs({ dashboardSelection: program.selectionTag });
   };
 
   onClusterSelected = cluster => {
@@ -33,7 +32,7 @@ class DashboardSidebar extends React.PureComponent {
     this.setState({
       selection: cluster
     });
-    updateViewPrefs({ dashboardSelection: cluster.selectionTag });
+    this.props.updateViewPrefs({ dashboardSelection: cluster.selectionTag });
   };
 
   sectionClustersAndPrograms = section => {
@@ -68,7 +67,7 @@ class DashboardSidebar extends React.PureComponent {
     this.setState({
       selection: section
     });
-    updateViewPrefs({ dashboardSelection: section.selectionTag });
+    this.props.updateViewPrefs({ dashboardSelection: section.selectionTag });
   };
 
   render() {
@@ -106,4 +105,10 @@ class DashboardSidebar extends React.PureComponent {
   }
 }
 
-export default DashboardSidebar;
+DashboardSidebar.propTypes = {
+  // t: PropTypes.func.isRequired,
+  setSelectedProgram: PropTypes.func.isRequired,
+  setSelectedCluster: PropTypes.func.isRequired,
+  setSelectedMultiple: PropTypes.func.isRequired,
+  updateViewPrefs: PropTypes.func.isRequired
+};

@@ -350,6 +350,7 @@ export default {
   Start_date: "Date de commencement",
   Status: "Statut",
   Title: "Titre",
+  Translation: "Traduction",
   Try_again: "Réessayer",
   Upcoming_events: "Événements futurs",
   Update: "Mettre à jour",

@@ -20,3 +20,28 @@
     width: 70%;
     padding: 0 16px 0 16px;
 }
+
+.sidebar ul li {
+    padding: 6px;
+}
+
+.sidebar li.active,
+.sidebar li.active:hover {
+    background-color: #428bca;
+}
+
+.sidebar li.active button {
+    color: white;
+}
+
+.sidebar li button:hover {
+    text-decoration: none;
+}
+
+td.rightCol {
+    text-align: right;
+}
+
+.reallySmall {
+    font-size: 10px;
+}

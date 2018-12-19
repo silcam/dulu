@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import LanguagePage from "./LanguagePage";
 import { Switch, Route } from "react-router-dom";
 import LanguageParticipantPage from "./LanguageParticipantPage";
+import LanguageEventPage from "./LanguageEventPage";
 
 export default function LanguagePageRouter(props) {
   return (
@@ -17,15 +18,16 @@ export default function LanguagePageRouter(props) {
           />
         )}
       />
-      {/* <Route
+      <Route
         path={props.basePath + "/events/:eventId"}
-        render={({match, history}) => (
+        render={({ match, history }) => (
           <LanguageEventPage
             eventId={match.params.eventId}
             history={history}
             {...props}
-            />
-        )} /> */}
+          />
+        )}
+      />
       <Route
         render={({ history }) => <LanguagePage history={history} {...props} />}
       />

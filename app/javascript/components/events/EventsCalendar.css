@@ -19,7 +19,7 @@ div.calendar {
 div.calendar > div {
     flex-grow: 1;
     width: 100%;
-    margin: 12px 12px 12px 0;
+    margin: 12px 12px 0 0;
     padding: 8px;
     background-color: white;
     overflow-y: scroll;

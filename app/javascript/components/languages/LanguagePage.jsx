@@ -25,8 +25,12 @@ export default class LanguagePage extends React.PureComponent {
           path={this.props.basePath + "/:domain?"}
           render={({ match, history }) => (
             <Tabs
-              selectedIndex={selectedTab(match.params.domain)}
+              selectedIndex={selectedTab(
+                match.params.domain,
+                this.props.viewPrefs.dashboardTab
+              )}
               onSelect={index => {
+                this.props.updateViewPrefs({ dashboardTab: tabs[index] });
                 history.push(`${this.props.basePath}/${tabs[index]}`);
                 return true;
               }}
@@ -58,7 +62,8 @@ export default class LanguagePage extends React.PureComponent {
   }
 }
 
-function selectedTab(domain) {
+function selectedTab(urlDomain, viewPrefsDomain) {
+  let domain = urlDomain || viewPrefsDomain;
   const index = tabs.indexOf(domain);
   return index < 0 ? 0 : index;
 }
@@ -70,5 +75,7 @@ LanguagePage.propTypes = {
   t: PropTypes.func.isRequired,
   language: PropTypes.object.isRequired,
   location: PropTypes.object.isRequired,
-  history: PropTypes.object.isRequired
+  history: PropTypes.object.isRequired,
+  viewPrefs: PropTypes.object.isRequired,
+  updateViewPrefs: PropTypes.func.isRequired
 };

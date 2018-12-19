@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 /*
     Required props:
@@ -9,12 +10,12 @@ import React from "react";
 */
 
 function dateText(date, eventPath) {
-  return eventPath ? <a href={eventPath}>{date}</a> : date;
+  return eventPath ? <Link to={eventPath}>{date}</Link> : date;
 }
 
 function addEventLink(eventPath, canUpdate, newEventText, newEventPath) {
   return canUpdate && !eventPath ? (
-    <a href={newEventPath}>{newEventText}</a>
+    <Link to={newEventPath}>{newEventText}</Link>
   ) : (
     ""
   );

@@ -9,8 +9,8 @@ class Api::SearchesController < ApplicationController
                  Person.search(@query) +
                  Organization.search(@query) +
                  Cluster.search(@query) +
-                 Activity.search(@query) +
-                 Publication.search(@query) +
+                #  Activity.search(@query) +
+                #  Publication.search(@query) +
                  Event.search(@query)
     end
   end

@@ -1,27 +1,28 @@
 import React from "react";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
-
+import PropTypes from "prop-types";
 import EventsTable from "./EventsTable";
 import LinguisticsTable from "./LinguisticsTable";
 import ParticipantsTable from "./ParticipantsTable";
 import MediaTable from "./MediaTable";
 import TranslationActivitiesTable from "./TranslationActivitiesTable";
-import updateViewPrefs from "../../util/updateViewPrefs";
 
-class MainContent extends React.PureComponent {
+const tabs = ["Translation", "Linguistics", "Media", "Participants", "Events"];
+
+export default class MainContent extends React.PureComponent {
   constructor(props) {
     super(props);
-    const tab = props.viewPrefs.dashboardTab || 0;
+    const tabIndex = tabs.indexOf(props.viewPrefs.dashboardTab);
     this.state = {
-      tab: tab
+      tab: tabIndex >= 0 ? tabIndex : 0
     };
   }
 
-  selectTab = tab => {
+  selectTab = tabIndex => {
     this.setState({
-      tab: tab
+      tab: tabIndex
     });
-    updateViewPrefs({ dashboardTab: tab });
+    this.props.updateViewPrefs({ dashboardTab: tabs[tabIndex] });
   };
 
   render() {
@@ -30,17 +31,12 @@ class MainContent extends React.PureComponent {
     return (
       <Tabs selectedIndex={this.state.tab} onSelect={this.selectTab}>
         <TabList>
-          <Tab>{props.t('Bible_translation')}</Tab>
-          <Tab>{props.t('Linguistics')}</Tab>
-          <Tab>{props.t('Media')}</Tab>
-          <Tab>{props.t('Participants')}</Tab>
-          <Tab>{props.t('Events')}</Tab>
+          {tabs.map(tab => (
+            <Tab key={tab}>{props.t(tab)}</Tab>
+          ))}
         </TabList>
         <TabPanel>
-          <TranslationActivitiesTable
-            programs={props.programs}
-            t={props.t}
-          />
+          <TranslationActivitiesTable programs={props.programs} t={props.t} />
         </TabPanel>
         <TabPanel>
           <LinguisticsTable programs={props.programs} t={props.t} />
@@ -49,10 +45,7 @@ class MainContent extends React.PureComponent {
           <MediaTable programs={props.programs} t={props.t} />
         </TabPanel>
         <TabPanel>
-          <ParticipantsTable
-            programs={props.programs}
-            t={props.t}
-          />
+          <ParticipantsTable programs={props.programs} t={props.t} />
         </TabPanel>
         <TabPanel>
           <EventsTable programs={props.programs} t={props.t} />
@@ -62,4 +55,8 @@ class MainContent extends React.PureComponent {
   }
 }
 
-export default MainContent;
+MainContent.propTypes = {
+  t: PropTypes.func.isRequired,
+  viewPrefs: PropTypes.object.isRequired,
+  updateViewPrefs: PropTypes.func.isRequired
+};

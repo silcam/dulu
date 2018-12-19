@@ -5,6 +5,7 @@ import NewEventForm from "./NewEventForm";
 import Event from "../../models/Event";
 import update from "immutability-helper";
 import EventRow from "./EventRow";
+import { insertInto } from "../../util/arrayUtils";
 
 export default class EventsTable extends React.PureComponent {
   constructor(props) {
@@ -13,14 +14,15 @@ export default class EventsTable extends React.PureComponent {
   }
 
   addNewEvent = event => {
-    const newEvents = Event.addEventToEventsObj(
+    const newEvents = insertInto(
       this.props.language.events,
-      event
+      event,
+      Event.revCompare
     );
     this.props.replaceLanguage(
       update(this.props.language, { events: { $set: newEvents } })
     );
-    this.setState({ showNewForm: false });
+    this.props.history.push(`${this.props.basePath}/events/${event.id}`);
   };
 
   render() {
@@ -48,7 +50,12 @@ export default class EventsTable extends React.PureComponent {
         <table>
           <tbody>
             {this.props.events.map(event => (
-              <EventRow key={event.id} event={event} t={t} />
+              <EventRow
+                key={event.id}
+                event={event}
+                t={t}
+                basePath={this.props.basePath}
+              />
             ))}
           </tbody>
         </table>
@@ -62,5 +69,7 @@ EventsTable.propTypes = {
   t: PropTypes.func.isRequired,
   replaceLanguage: PropTypes.func.isRequired,
   setNetworkError: PropTypes.func.isRequired,
-  domain: PropTypes.string
+  domain: PropTypes.string,
+  basePath: PropTypes.string.isRequired,
+  history: PropTypes.object.isRequired
 };

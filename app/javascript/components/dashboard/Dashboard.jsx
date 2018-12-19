@@ -1,6 +1,6 @@
 import axios from "axios";
 import React from "react";
-
+import PropTypes from "prop-types";
 import DashboardSidebar from "./DashboardSidebar";
 import MainContent from "./MainContent";
 import NotificationsSidebar from "./NotificationsSidebar";
@@ -8,7 +8,7 @@ import Searcher from "./Searcher";
 import { arrayDelete } from "../../util/arrayUtils";
 import styles from "./Dashboard.css";
 
-class Dashboard extends React.PureComponent {
+export default class Dashboard extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
@@ -177,6 +177,7 @@ class Dashboard extends React.PureComponent {
             setSelectedProgram={this.setSelectedProgram}
             setSelectedCluster={this.setSelectedCluster}
             setSelectedMultiple={this.setSelectedMultiple}
+            updateViewPrefs={this.props.updateViewPrefs}
           />
         </div>
         <div className={styles.main}>
@@ -188,6 +189,7 @@ class Dashboard extends React.PureComponent {
             programs={this.state.programs}
             t={this.props.t}
             viewPrefs={this.props.viewPrefs}
+            updateViewPrefs={this.props.updateViewPrefs}
           />
         </div>
         <div className={styles.sidebar}>
@@ -198,4 +200,8 @@ class Dashboard extends React.PureComponent {
   }
 }
 
-export default Dashboard;
+Dashboard.propTypes = {
+  t: PropTypes.func.isRequired,
+  viewPrefs: PropTypes.object.isRequired,
+  updateViewPrefs: PropTypes.func.isRequired
+};

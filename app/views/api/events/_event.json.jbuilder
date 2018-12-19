@@ -15,4 +15,8 @@ json.event_participants event.event_participants do |participant|
   json.person_id participant.person.id
 end
 
+json.can do
+  json.update can?(:update, event)
+  json.destroy can?(:destroy, event)
+end
 

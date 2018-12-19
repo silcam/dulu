@@ -1,26 +1,9 @@
 import FuzzyDate from "../util/FuzzyDate";
 import update from "immutability-helper";
-import { insertInto } from "../util/arrayUtils";
 
 export default class Event {
   static domainEvents(allEvents, domain) {
     return allEvents.filter(e => e.domain == domain);
-  }
-
-  static flattenEvents(eventsObj) {
-    return eventsObj.upcoming.concat(eventsObj.current).concat(eventsObj.past);
-  }
-
-  static addEventToEventsObj(eventsObj, event) {
-    const pastCurrentFutureVal = this.isPastCurrentFuture(event);
-    const arrayKey =
-      pastCurrentFutureVal < 0
-        ? "past"
-        : pastCurrentFutureVal == 0
-        ? "current"
-        : "future";
-    const newArray = insertInto(eventsObj[arrayKey], event, this.compare);
-    return update(eventsObj, { [arrayKey]: { $set: newArray } });
   }
 
   // Sorts by start_date, then by end_date
@@ -29,6 +12,10 @@ export default class Event {
     return startDateCompare == 0
       ? a.end_date.localeCompare(b.end_date)
       : startDateCompare;
+  }
+
+  static revCompare(a, b) {
+    return Event.compare(b, a);
   }
 
   // Returns <0 for past, 0 for current, >0 for future

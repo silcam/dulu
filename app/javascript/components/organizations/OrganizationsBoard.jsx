@@ -9,6 +9,7 @@ import OrganizationPage from "./OrganizationPage";
 import { Link } from "react-router-dom";
 import AddIcon from "../shared/icons/AddIcon";
 import TextFilter from "../shared/TextFilter";
+import FlexSpacer from "../shared/FlexSpacer";
 
 class Board extends React.PureComponent {
   state = {};
@@ -31,6 +32,10 @@ class Board extends React.PureComponent {
               <AddIcon iconSize="large" />
             </Link>
           )}
+          <FlexSpacer />
+          <h3>
+            <Link to="/people">{this.props.t("People")}</Link>
+          </h3>
         </div>
         <div className={styles.masterDetailContainer}>
           <div className={styles.master}>
@@ -63,9 +68,7 @@ class Board extends React.PureComponent {
               ) : (
                 <Loading t={this.props.t} />
               ))}
-            {!this.props.action && (
-              <span>Placeholder for OrgsBoard summary</span>
-            )}
+            {!this.props.action && <span />}
           </div>
         </div>
       </div>

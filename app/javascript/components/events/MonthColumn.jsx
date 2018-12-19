@@ -10,7 +10,7 @@ export default function MonthColumn(props) {
   return (
     <div>
       <h2>{monthName(props.month.month, props.t) + " " + props.month.year}</h2>
-      {props.events.map(event => (
+      {props.events.map((event, index) => (
         <div key={event.id}>
           <h3 className={style.dateTitle}>{dateTitle(event, props.month)}</h3>
           <h4 className={style.eventTitle}>
@@ -23,7 +23,7 @@ export default function MonthColumn(props) {
           )}
           <p>{participants(event)}</p>
           <p>{event.note}</p>
-          <hr />
+          {index < props.events.length - 1 && <hr />}
         </div>
       ))}
     </div>

@@ -7,7 +7,7 @@ function ResultsRows(props) {
     <React.Fragment>
       {props.results.map((result, index) => {
         return (
-          <React.Fragment>
+          <React.Fragment key={result.title + result.route}>
             <ResultRow
               result={result}
               padding={props.padding}

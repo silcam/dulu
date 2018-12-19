@@ -4,6 +4,7 @@ import PlusMinusButton from "../shared/PlusMinusButton";
 
 import DashboardSidebarCluster from "./DashboardSidebarCluster";
 import DashboardSidebarProgram from "./DashboardSidebarProgram";
+import style from "./Dashboard.css";
 
 class DashboardSidebarSection extends React.PureComponent {
   constructor(props) {
@@ -45,9 +46,7 @@ class DashboardSidebarSection extends React.PureComponent {
       <React.Fragment>
         <li
           className={
-            this.props.header +
-            " " +
-            (this.props.selection == this.props.section && "active")
+            this.props.selection == this.props.section ? style.active : ""
           }
         >
           {indentString}
@@ -55,9 +54,9 @@ class DashboardSidebarSection extends React.PureComponent {
             isExpanded={this.state.isExpanded}
             handleClick={this.onPlusMinusClick}
           />
-          <a href="#" onClick={this.handleClick}>
+          <button className="link" onClick={this.handleClick}>
             {this.props.section.name}
-          </a>
+          </button>
         </li>
         {showSections &&
           this.props.section.sections.map(section => {

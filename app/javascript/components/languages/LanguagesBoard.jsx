@@ -67,13 +67,13 @@ class Board extends React.PureComponent {
                   basePath={this.props.basePath}
                   location={this.props.location}
                   history={this.props.history}
+                  viewPrefs={this.props.viewPrefs}
+                  updateViewPrefs={this.props.updateViewPrefs}
                 />
               ) : (
                 <Loading t={this.props.t} />
               ))}
-            {!this.props.action && !selectedLanguage && (
-              <span>Placeholder for Languages summary</span>
-            )}
+            {!this.props.action && !selectedLanguage && <span />}
           </div>
         </div>
       </div>

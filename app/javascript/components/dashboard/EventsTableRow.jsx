@@ -1,26 +1,31 @@
 import React from "react";
-
+import PropTypes from "prop-types";
 import eventDateString from "../../util/eventDateString";
+import { Link } from "react-router-dom";
 
-class EventsTableRow extends React.PureComponent {
+export default class EventsTableRow extends React.PureComponent {
   render() {
     const event = this.props.event;
+    const t = this.props.t;
     const monthNames = this.props.t("month_names_short");
     return (
       <tr>
         <td>
-          <a href={`/programs/${event.program_id}`}>{event.program_name}</a>
+          <Link to={`/programs/${event.program_id}`}>{event.program_name}</Link>
         </td>
         <td>
-          <a href={`/programs/${event.program_id}/events/${event.id}`}>
+          <Link to={`/programs/${event.program_id}/events/${event.id}`}>
             {event.name}
-          </a>
+          </Link>
         </td>
-        <td>{event.domain}</td>
+        <td>{t(`domains.${event.domain}`)}</td>
         <td>{eventDateString(event.start_date, event.end_date, monthNames)}</td>
       </tr>
     );
   }
 }
 
-export default EventsTableRow;
+EventsTableRow.propTypes = {
+  t: PropTypes.func.isRequired,
+  event: PropTypes.object.isRequired
+};

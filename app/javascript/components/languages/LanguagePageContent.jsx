@@ -29,10 +29,7 @@ export default function LanguagePageContent(props) {
       )}
       <EventsTable
         {...props}
-        events={Event.domainEvents(
-          Event.flattenEvents(props.language.events),
-          props.tab
-        )}
+        events={Event.domainEvents(props.language.events, props.tab)}
         domain={props.tab}
       />
       <ParticipantsTable
