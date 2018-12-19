@@ -8,6 +8,7 @@ import update from "immutability-helper";
 import style from "./ParticipantView.css";
 import TextOrFuzzyDateInput from "../shared/TextOrFuzzyDateInput";
 import Participant from "../../models/Participant";
+import { Link } from "react-router-dom";
 
 export default class ParticipantView extends React.PureComponent {
   constructor(props) {
@@ -90,7 +91,11 @@ export default class ParticipantView extends React.PureComponent {
           delete={this.delete}
           t={t}
         />
-        <h2>{participant.person.full_name}</h2>
+        <h2>
+          <Link className="notBlue" to={`/people/${participant.person.id}`}>
+            {participant.person.full_name}
+          </Link>
+        </h2>
         <ParticipantRoles
           t={t}
           participant={participant}

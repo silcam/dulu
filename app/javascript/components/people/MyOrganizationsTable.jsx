@@ -90,6 +90,11 @@ export default class MyOrganizationsTable extends React.PureComponent {
                       this.setState({ newOrganization: { id: id, name: name } })
                     }
                     queryPath="/api/organizations/search"
+                    text={
+                      this.state.newOrganization
+                        ? this.state.newOrganization.name
+                        : ""
+                    }
                     autoFocus
                     allowBlank
                   />

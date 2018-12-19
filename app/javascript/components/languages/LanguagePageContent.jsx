@@ -28,7 +28,12 @@ export default function LanguagePageContent(props) {
         </div>
       )}
       <EventsTable
-        {...props}
+        language={props.language}
+        t={props.t}
+        replaceLanguage={props.replaceLanguage}
+        setNetworkError={props.setNetworkError}
+        basePath={`/languages/${props.language.id}`}
+        history={props.history}
         events={Event.domainEvents(props.language.events, props.tab)}
         domain={props.tab}
       />

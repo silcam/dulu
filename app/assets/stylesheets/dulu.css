@@ -92,11 +92,16 @@ a:hover, button.link:hover, button.link:hover:active {
     color: #23527c;
 }
 
+a.notBlue {
+    color: inherit;
+}
+
 button.small {
     font-size: 11px;
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1, h2, h3, h4, h5, h6,
+h2 a, h3 a {
     font-weight: 500;
     line-height: 1.1;
 }

@@ -22,17 +22,20 @@ export default class RolesTable extends React.PureComponent {
     }
   };
 
+  canUpdateRoles = person =>
+    person.can.update && person.grantable_roles.length > 0;
+
   render() {
     const person = this.props.person;
     const t = this.props.t;
 
-    if (!person.can.update && person.roles.length == 0) return null;
+    if (!this.canUpdateRoles(person) && person.roles.length == 0) return null;
 
     return (
       <div id="rolesTable">
         <h3>
           {t("Roles")}
-          {person.can.update && (
+          {this.canUpdateRoles(person) && (
             <InlineAddIcon onClick={() => this.setState({ addingNew: true })} />
           )}
         </h3>

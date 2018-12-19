@@ -6,6 +6,10 @@ class Api::ParticipantsController < ApplicationController
     render :show
   end
 
+  def show
+    @participant = Participant.find(params[:id])
+  end
+
   def update
     @participant = Participant.find(params[:id])
     authorize! :manage_participants, @participant.cluster_program

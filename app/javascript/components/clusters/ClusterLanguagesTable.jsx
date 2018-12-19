@@ -27,7 +27,9 @@ export default function ClusterLanguagesTable(props) {
     <div>
       <h3>
         {t("Languages")}
-        {!props.editing && <InlineAddIcon onClick={props.edit} />}
+        {!props.editing && cluster.can.update && (
+          <InlineAddIcon onClick={props.edit} />
+        )}
       </h3>
       {props.editing ? (
         <table>

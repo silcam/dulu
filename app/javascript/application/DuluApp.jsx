@@ -14,6 +14,7 @@ import EventsPage from "../components/events/EventsPage";
 import RegionsBoard from "../components/regions/RegionsBoard";
 import ClustersBoard from "../components/clusters/ClustersBoard";
 import update from "immutability-helper";
+import ParticipantPage from "../components/participants/ParticipantPage";
 
 export default class DuluApp extends React.Component {
   constructor(props) {
@@ -150,6 +151,17 @@ export default class DuluApp extends React.Component {
                 id={match.params.id}
                 history={history}
                 location={location}
+              />
+            )}
+          />
+          <Route
+            path="/participants/:id"
+            render={({ match, history }) => (
+              <ParticipantPage
+                t={this.state.t}
+                history={history}
+                setNetworkError={this.setNetworkError}
+                id={match.params.id}
               />
             )}
           />

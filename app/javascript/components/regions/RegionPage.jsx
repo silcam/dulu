@@ -9,6 +9,7 @@ import update from "immutability-helper";
 import Region from "../../models/Region";
 import ProgramList from "./ProgramList";
 import P from "../shared/P";
+import { Link } from "react-router-dom";
 
 export default class RegionPage extends React.PureComponent {
   constructor(props) {
@@ -98,7 +99,13 @@ export default class RegionPage extends React.PureComponent {
             />
           ) : (
             <h3>
-              {t("LPF")}: {this.state.region.person.name}
+              {t("LPF")}:{" "}
+              <Link
+                className="notBlue"
+                to={`/people/${this.state.region.person.id}`}
+              >
+                {this.state.region.person.name}
+              </Link>
             </h3>
           )}
         </P>

@@ -34,6 +34,7 @@ export default function ReportSideBar(props) {
           queryPath="/api/clusters/search"
           updateValue={props.addCluster}
           placeholder={t("Add_cluster")}
+          text=""
         />
       </P>
       <P>
@@ -53,6 +54,7 @@ export default function ReportSideBar(props) {
           queryPath="/api/languages/search"
           updateValue={props.addProgram}
           placeholder={t("Add_language")}
+          text=""
         />
       </P>
       <P>
