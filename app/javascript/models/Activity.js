@@ -1,6 +1,6 @@
 import Colors from "../util/Colors";
 import BibleBook from "./BibleBook";
-import { itemAfter } from "../util/arrayUtils";
+import { itemAfter, findById } from "../util/arrayUtils";
 import FuzzyDate from "../util/FuzzyDate";
 
 export default class Activity {
@@ -99,6 +99,20 @@ export default class Activity {
   static workshopsStageDate(activity) {
     const firstIncomplete = activity.workshops.find(ws => !ws.completed);
     return firstIncomplete ? firstIncomplete.date : "";
+  }
+
+  static findActivity(language, id) {
+    const types = [
+      "translation_activities",
+      "media_activities",
+      "research_activities",
+      "workshops_activities"
+    ];
+    for (let i = 0; i < types.length; ++i) {
+      let activity = findById(language[types[i]], id);
+      if (activity) return activity;
+    }
+    return undefined;
   }
 }
 

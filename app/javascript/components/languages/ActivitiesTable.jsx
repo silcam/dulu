@@ -117,6 +117,7 @@ export default class ActivitiesTable extends React.PureComponent {
                 t={t}
                 replaceActivity={this.replaceActivity}
                 setNetworkError={this.props.setNetworkError}
+                basePath={this.props.basePath}
               />
             ))}
           </tbody>
@@ -133,5 +134,6 @@ ActivitiesTable.propTypes = {
   replaceLanguage: PropTypes.func.isRequired,
   t: PropTypes.func.isRequired,
   setNetworkError: PropTypes.func.isRequired,
-  heading: PropTypes.string // Default "Activities"
+  heading: PropTypes.string, // Default "Activities"
+  basePath: PropTypes.string.isRequired
 };

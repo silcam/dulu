@@ -11,7 +11,11 @@ export default function LanguagePageContent(props) {
   return (
     <div className={styles.pageContent}>
       {(props.tab == "Translation" || props.tab == "Media") && (
-        <ActivitiesTable {...props} type={props.tab.toLowerCase()} />
+        <ActivitiesTable
+          {...props}
+          type={props.tab.toLowerCase()}
+          basePath={`/languages/${props.language.id}`}
+        />
       )}
       {props.tab == "Linguistics" && (
         <div>
@@ -19,11 +23,13 @@ export default function LanguagePageContent(props) {
             {...props}
             type="research"
             heading={props.t("Research_activities")}
+            basePath={`/languages/${props.language.id}`}
           />
           <ActivitiesTable
             {...props}
             type="workshops"
             heading={props.t("Workshops_activities")}
+            basePath={`/languages/${props.language.id}`}
           />
         </div>
       )}

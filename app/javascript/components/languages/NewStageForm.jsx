@@ -12,31 +12,30 @@ export default function NewStageForm(props) {
   switch (props.formState) {
     case "stage":
       return (
-        <div>
+        <div className={styles.rowExpansion}>
           <label>{t("Update_stage")}</label>
-          <div className={styles.verticalSpace}>
-            <SelectInput
-              handleChange={e =>
-                props.updateNextStage({ name: e.target.value })
-              }
-              value={props.stage.name}
-              options={SelectInput.translatedOptions(
-                Activity.stages(props.activity),
-                t,
-                "stage_names"
-              )}
-            />
-          </div>
+          <SelectInput
+            handleChange={e => props.updateNextStage({ name: e.target.value })}
+            value={props.stage.name}
+            options={SelectInput.translatedOptions(
+              Activity.stages(props.activity),
+              t,
+              "stage_names"
+            )}
+          />
           <button className="small" onClick={() => props.setFormState("date")}>
             {t("Update")}
+          </button>
+          <button className="small btnRed" onClick={props.cancel}>
+            {t("Cancel")}
           </button>
         </div>
       );
     case "date":
       return (
-        <div>
+        <div className={styles.rowExpansion}>
           <label>{t("As_of")}</label>
-          <div className={styles.verticalSpace}>
+          <div className={styles.inline}>
             <FuzzyDateInput
               date={props.stage.start_date}
               handleDateInput={date =>
@@ -49,12 +48,14 @@ export default function NewStageForm(props) {
               t={t}
             />
           </div>
-          <SmallSaveAndCancel
-            handleSave={props.save}
-            handleCancel={() => props.setFormState("stage")}
-            t={t}
-            saveDisabled={props.stage.invalidDate}
-          />
+          <div className={styles.inline}>
+            <SmallSaveAndCancel
+              handleSave={props.save}
+              handleCancel={props.cancel}
+              t={t}
+              saveDisabled={props.stage.invalidDate}
+            />
+          </div>
         </div>
       );
     case "saving":
@@ -72,5 +73,6 @@ NewStageForm.propTypes = {
   stage: PropTypes.object.isRequired,
   updateNextStage: PropTypes.func.isRequired,
   setFormState: PropTypes.func.isRequired,
-  save: PropTypes.func.isRequired
+  save: PropTypes.func.isRequired,
+  cancel: PropTypes.func.isRequired
 };

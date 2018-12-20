@@ -3,8 +3,16 @@ td.rowExpansion {
     padding: 0 30px;
 }
 
-div.verticalSpace {
+div.rowExpansion {
     margin: 12px 0;
+}
+
+div.rowExpansion select {
+    margin: 0 12px;
+}
+
+div.inline {
+    display: inline-block;
 }
 
 div.newActivityForm {

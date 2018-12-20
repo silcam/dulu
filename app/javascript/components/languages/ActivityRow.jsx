@@ -7,6 +7,8 @@ import ProgressBar from "../shared/ProgressBar";
 import NewStageForm from "./NewStageForm";
 import styles from "./ActivitiesTable.css";
 import WorkshopActivity from "../workshops/WorkshopActivity";
+import Spacer from "../shared/Spacer";
+import { Link } from "react-router-dom";
 
 export default class ActivityRow extends React.PureComponent {
   constructor(props) {
@@ -60,6 +62,13 @@ export default class ActivityRow extends React.PureComponent {
       <React.Fragment>
         <tr>
           <td>
+            <Link to={`${this.props.basePath}/activities/${activity.id}`}>
+              {Activity.name(activity, t)}
+            </Link>
+          </td>
+          <td>
+            <ProgressBar {...Activity.progress(activity)} />
+            <Spacer width="20px" />
             {this.props.can.update ? (
               <button
                 className="link"
@@ -69,16 +78,12 @@ export default class ActivityRow extends React.PureComponent {
                   }))
                 }
               >
-                {Activity.name(activity, t)}
+                {Activity.currentStageName(activity, t)}
               </button>
             ) : (
-              Activity.name(activity, t)
+              Activity.currentStageName(activity, t)
             )}
           </td>
-          <td>
-            <ProgressBar {...Activity.progress(activity)} />
-          </td>
-          <td>{Activity.currentStageName(activity, t)}</td>
           <td>{Activity.stageDate(activity)}</td>
         </tr>
         {this.state.expanded && (
@@ -104,6 +109,7 @@ export default class ActivityRow extends React.PureComponent {
                       this.setState({ updateFormState: formState })
                     }
                     save={this.addNextStage}
+                    cancel={() => this.setState(this.freshState(this.props))}
                   />
                 )}
               </div>
@@ -120,5 +126,6 @@ ActivityRow.propTypes = {
   t: PropTypes.func.isRequired,
   can: PropTypes.object.isRequired,
   replaceActivity: PropTypes.func.isRequired,
-  setNetworkError: PropTypes.func.isRequired
+  setNetworkError: PropTypes.func.isRequired,
+  basePath: PropTypes.string.isRequired
 };
