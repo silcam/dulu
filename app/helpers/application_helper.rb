@@ -88,8 +88,13 @@ module ApplicationHelper
     return JSON.generate(h).html_safe
   end
 
-  def model_path(instance)
-    return "/#{instance.class.name.pluralize.underscore}/#{instance.id}"
+  # Returns path like /events/123
+  # Or given multiple instances, like /programs/4/events/123
+  def model_path(*instances)
+    return instances.collect do |instance|
+      "/#{instance.class.name.pluralize.underscore}/#{instance.id}"
+    end
+    .join
   end
 
   def model_url(instance)

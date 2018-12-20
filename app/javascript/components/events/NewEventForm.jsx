@@ -16,17 +16,19 @@ import Event from "../../models/Event";
 export default class NewEventForm extends React.PureComponent {
   constructor(props) {
     super(props);
+    let event = {
+      domain: Object.keys(props.t("domains"))[0],
+      name: "",
+      start_date: "",
+      end_date: "",
+      note: "",
+      clusters: [],
+      programs: [],
+      event_participants: []
+    };
+    if (props.startEvent) Object.assign(event, props.startEvent);
     this.state = {
-      event: {
-        domain: Object.keys(props.t("domains"))[0],
-        name: "",
-        start_date: "",
-        end_date: "",
-        note: "",
-        clusters: [],
-        programs: [],
-        event_participants: []
-      }
+      event: event
     };
   }
 
@@ -48,8 +50,10 @@ export default class NewEventForm extends React.PureComponent {
         event: Event.prepareEventParams(this.state.event)
       });
       this.props.addEvent(data.event);
+      if (data.workshop) this.props.replaceWorkshop(data.workshop);
       this.props.cancelForm();
     } catch (error) {
+      console.error(error);
       this.props.setNetworkError(error);
       this.setState({ saveInProgress: false });
     }
@@ -102,6 +106,7 @@ export default class NewEventForm extends React.PureComponent {
           t={t}
           replaceEvent={event => this.setState({ event: event })}
         />
+
         <SaveButton
           t={t}
           handleClick={this.save}
@@ -121,5 +126,7 @@ NewEventForm.propTypes = {
   t: PropTypes.func.isRequired,
   setNetworkError: PropTypes.func.isRequired,
   addEvent: PropTypes.func.isRequired,
-  cancelForm: PropTypes.func.isRequired
+  cancelForm: PropTypes.func.isRequired,
+  replaceWorkshop: PropTypes.func.isRequired,
+  startEvent: PropTypes.object
 };

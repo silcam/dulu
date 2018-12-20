@@ -4,6 +4,7 @@ import { findById, replace, deleteFrom } from "../../util/arrayUtils";
 import EventView from "../events/EventView";
 import update from "immutability-helper";
 import { Link } from "react-router-dom";
+import Workshop from "../../models/Workshop";
 
 export default function LanguageEventPage(props) {
   const t = props.t;
@@ -16,8 +17,12 @@ export default function LanguageEventPage(props) {
 
   const replaceEvent = newEvent => {
     props.replaceLanguage(
-      update(language, { events: replace(language.events, newEvent) })
+      update(language, { events: { $set: replace(language.events, newEvent) } })
     );
+  };
+
+  const replaceWorkshop = workshop => {
+    props.replaceLanguage(Workshop.refresh(language, workshop));
   };
 
   const removeEvent = () => {
@@ -41,6 +46,7 @@ export default function LanguageEventPage(props) {
         can={event.can}
         replaceEvent={replaceEvent}
         removeEvent={removeEvent}
+        replaceWorkshop={replaceWorkshop}
       />
     </div>
   );

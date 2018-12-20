@@ -52,6 +52,7 @@ export default class EventView extends React.PureComponent {
         event: event
       });
       this.props.replaceEvent(data.event);
+      if (data.workshop) this.props.replaceWorkshop(data.workshop);
       this.setState({
         event: deepcopy(data.event),
         editing: false,
@@ -70,8 +71,11 @@ export default class EventView extends React.PureComponent {
       )
     ) {
       try {
-        await DuluAxios.delete(`/api/events/${this.state.event.id}`);
+        const data = await DuluAxios.delete(
+          `/api/events/${this.state.event.id}`
+        );
         this.props.removeEvent(this.props.event.id);
+        if (data.workshop) this.props.replaceWorkshop(data.workshop);
       } catch (error) {
         this.props.setNetworkError(error);
       }
@@ -176,5 +180,6 @@ EventView.propTypes = {
   event: PropTypes.object.isRequired,
   can: PropTypes.object.isRequired,
   replaceEvent: PropTypes.func.isRequired,
+  replaceWorkshop: PropTypes.func.isRequired,
   removeEvent: PropTypes.func.isRequired
 };

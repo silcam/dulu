@@ -359,6 +359,7 @@ export default {
   validation: {
     Not_blank: "Ça ne peut pas être vide"
   },
+  Workshop: "Atelier",
   Workshop_date: "Date d'atelier",
   Workshop_name: "Nom d'atelier",
   Workshops: "Ateliers",

@@ -119,6 +119,8 @@ export default function EditEventParticipantsTable(props) {
                 queryPath="/api/clusters/search"
                 updateValue={addCluster}
                 placeholder={t("Add_cluster")}
+                text=""
+                addBox
               />
             </td>
             <td>
@@ -126,6 +128,8 @@ export default function EditEventParticipantsTable(props) {
                 queryPath="/api/languages/search"
                 updateValue={addLanguage}
                 placeholder={t("Add_language")}
+                text=""
+                addBox
               />
             </td>
             <td>
@@ -133,6 +137,8 @@ export default function EditEventParticipantsTable(props) {
                 queryPath="/api/people/search"
                 updateValue={addPerson}
                 placeholder={t("Add_person")}
+                text=""
+                addBox
               />
             </td>
           </tr>

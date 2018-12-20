@@ -7,7 +7,7 @@ class Event < ApplicationRecord
   accepts_nested_attributes_for :event_participants, allow_destroy: true
   has_many :people, through: :event_participants
   belongs_to :creator, required: false, class_name: 'Person'
-  has_one :workshop
+  has_one :workshop, dependent: :nullify
 
   audited
 
@@ -156,11 +156,12 @@ class Event < ApplicationRecord
   def self.month_filter(year, month)
     month_text = FuzzyDate.new(year, month).to_s
     next_month_text = get_next_month_text(year, month)
-    "start_date < '#{next_month_text}' AND end_date >= '#{month_text}'"
+    "(start_date < '#{next_month_text}') AND 
+     (end_date >= '#{month_text}' OR end_date = '#{year}')"
   end
 
   def self.get_next_month_text(year, month)
-    return month == 12 ? FuzzyDate.new(year + 1, 1).to_s : FuzzyDate.new(year, month + 1).to_s
+    return month == 12 ? FuzzyDate.new(year + 1).to_s : FuzzyDate.new(year, month + 1).to_s
   end
       
 

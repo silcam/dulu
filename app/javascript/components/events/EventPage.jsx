@@ -49,6 +49,7 @@ export default class EventPage extends React.PureComponent {
         can={this.state.can}
         replaceEvent={this.replaceEvent}
         removeEvent={this.removeEvent}
+        replaceWorkshop={() => {}}
       />
     );
   }

@@ -193,7 +193,11 @@ export default class Workshop extends React.PureComponent {
             <DateCell
               date={this.props.workshop.formattedDate}
               eventPath={this.props.workshop.eventPath}
-              newEventPath={this.props.workshop.newEventPath}
+              newEventLocation={newEventLocation(
+                this.props.workshop,
+                this.props.language,
+                this.props.t
+              )}
               canUpdate={this.props.workshop.can.update}
               t={this.props.t}
             />
@@ -219,11 +223,26 @@ export default class Workshop extends React.PureComponent {
   }
 }
 
+function newEventLocation(workshop, language, t) {
+  return {
+    pathname: `/languages/${language.id}/events/new`,
+    state: {
+      event: {
+        programs: [{ id: language.id, name: language.name }],
+        domain: "Linguistics",
+        name: `${t("Workshop")}: ${workshop.name}`,
+        workshop_id: workshop.id
+      }
+    }
+  };
+}
+
 Workshop.propTypes = {
   workshop: PropTypes.object.isRequired,
   displayDelete: PropTypes.bool,
   setNetworkError: PropTypes.func.isRequired,
   handleUpdatedWorkshop: PropTypes.func.isRequired,
   deleteWorkshop: PropTypes.func.isRequired,
-  t: PropTypes.func.isRequired
+  t: PropTypes.func.isRequired,
+  language: PropTypes.object.isRequired
 };

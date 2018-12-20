@@ -27,7 +27,7 @@ function DateCell(props) {
     props.eventPath,
     props.canUpdate,
     props.t("Add_event"),
-    props.newEventPath
+    props.newEventLocation
   );
   return (
     <div>

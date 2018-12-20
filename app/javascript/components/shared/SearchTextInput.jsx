@@ -90,7 +90,7 @@ class BasicSearchTextInput extends React.PureComponent {
 
   save = item => {
     this.setState({
-      text: item.name,
+      text: this.props.addBox ? "" : item.name,
       showResults: false
     });
     this.props.updateValue(item.id, item.name);
@@ -143,7 +143,9 @@ BasicSearchTextInput.propTypes = {
   results: PropTypes.array,
   updateValue: PropTypes.func,
   placeholder: PropTypes.string,
-  autoFocus: PropTypes.bool
+  autoFocus: PropTypes.bool,
+  allowBlank: PropTypes.bool,
+  addBox: PropTypes.bool
 };
 
 const SearchTextInput = searchInterface(BasicSearchTextInput, 2);
@@ -154,7 +156,8 @@ SearchTextInput.propTypes = {
   updateValue: PropTypes.func.isRequired, // updateValue(id, name)
   placeholder: PropTypes.string,
   autoFocus: PropTypes.bool,
-  allowBlank: PropTypes.bool
+  allowBlank: PropTypes.bool,
+  addBox: PropTypes.bool
 };
 
 export default SearchTextInput;

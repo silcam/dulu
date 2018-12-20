@@ -119,6 +119,7 @@ export default class EventsCalendar extends React.PureComponent {
               cancelForm={() => this.setState({ addingNew: false })}
               addEvent={this.addEvent}
               setNetworkError={this.props.setNetworkError}
+              replaceWorkshop={() => {}}
             />
           )}
           <Link to={`/events/cal/${left.year}/${left.month}`} className="btn">

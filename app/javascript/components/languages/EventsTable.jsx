@@ -1,7 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
 import InlineAddIcon from "../shared/icons/InlineAddIcon";
-import NewEventForm from "./NewEventForm";
 import Event from "../../models/Event";
 import update from "immutability-helper";
 import EventRow from "./EventRow";
@@ -33,20 +32,12 @@ export default class EventsTable extends React.PureComponent {
           {t("Events")}
           {!this.state.showNewForm && this.props.language.can.event.create && (
             <InlineAddIcon
-              onClick={() => this.setState({ showNewForm: true })}
+              onClick={() =>
+                this.props.history.push(`${this.props.basePath}/events/new`)
+              }
             />
           )}
         </h3>
-        {this.state.showNewForm && (
-          <NewEventForm
-            t={t}
-            cancelForm={() => this.setState({ showNewForm: false })}
-            addNewEvent={this.addNewEvent}
-            setNetworkError={this.props.setNetworkError}
-            programId={this.props.language.id}
-            defaultDomain={this.props.domain}
-          />
-        )}
         <table>
           <tbody>
             {this.props.events.map(event => (

@@ -5,6 +5,7 @@ import { Switch, Route } from "react-router-dom";
 import LanguageParticipantPage from "./LanguageParticipantPage";
 import LanguageEventPage from "./LanguageEventPage";
 import LanguageActivityPage from "./LanguageActivityPage";
+import LanguageNewEventPage from "./LanguageNewEventPage";
 
 export default function LanguagePageRouter(props) {
   return (
@@ -16,6 +17,16 @@ export default function LanguagePageRouter(props) {
             participantId={match.params.participantId}
             history={history}
             {...props}
+          />
+        )}
+      />
+      <Route
+        path={props.basePath + "/events/new"}
+        render={({ location, history }) => (
+          <LanguageNewEventPage
+            {...props}
+            location={location}
+            history={history}
           />
         )}
       />

@@ -36,6 +36,7 @@ export default function ProgramList(props) {
                 text=""
                 placeholder={t(`Add_${props.thing}`)}
                 updateValue={addThing}
+                addBox
               />
             </td>
           </tr>

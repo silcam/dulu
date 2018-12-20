@@ -35,6 +35,7 @@ export default function ReportSideBar(props) {
           updateValue={props.addCluster}
           placeholder={t("Add_cluster")}
           text=""
+          addBox
         />
       </P>
       <P>
@@ -55,6 +56,7 @@ export default function ReportSideBar(props) {
           updateValue={props.addProgram}
           placeholder={t("Add_language")}
           text=""
+          addBox
         />
       </P>
       <P>

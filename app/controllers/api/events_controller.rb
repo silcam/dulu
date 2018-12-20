@@ -9,7 +9,9 @@ class Api::EventsController < ApplicationController
   
   def create
     authorize! :create, Event
-    @event = Event.create! event_params
+    @event = Event.new event_params
+    @event.workshop = Workshop.find(params[:event][:workshop_id]) if params[:event][:workshop_id]
+    @event.save!
     render :show
   end
 
@@ -24,7 +26,6 @@ class Api::EventsController < ApplicationController
     @event = Event.find(params[:id])
     authorize! :destroy, @event
     @event.destroy!
-    response_ok
   end
 
   private
@@ -33,7 +34,7 @@ class Api::EventsController < ApplicationController
     return params
             .require(:event)
             .permit(
-                :name, :domain, :note, :start_date, :end_date, 
+                :name, :domain, :note, :start_date, :end_date,
                 program_ids: [], cluster_ids: [], 
                 event_participants_attributes: [
                   :id, :person_id, :_destroy, roles: []

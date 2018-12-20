@@ -86,6 +86,7 @@ export default class WorkshopActivity extends React.PureComponent {
                   displayDelete={this.props.activity.workshops.length > 1}
                   setNetworkError={this.props.setNetworkError}
                   t={this.props.t}
+                  language={this.props.language}
                 />
               );
             })}
@@ -109,5 +110,6 @@ WorkshopActivity.propTypes = {
   t: PropTypes.func.isRequired,
   can: PropTypes.object.isRequired,
   setNetworkError: PropTypes.func.isRequired,
-  replaceActivity: PropTypes.func.isRequired
+  replaceActivity: PropTypes.func.isRequired,
+  language: PropTypes.object.isRequired
 };

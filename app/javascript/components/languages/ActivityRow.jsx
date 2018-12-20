@@ -69,7 +69,7 @@ export default class ActivityRow extends React.PureComponent {
           <td>
             <ProgressBar {...Activity.progress(activity)} />
             <Spacer width="20px" />
-            {this.props.can.update ? (
+            {this.props.can.update && !Activity.isWorkshops(activity) ? (
               <button
                 className="link"
                 onClick={() =>
@@ -90,15 +90,7 @@ export default class ActivityRow extends React.PureComponent {
           <tr>
             <td colSpan="4" className={styles.rowExpansion}>
               <div>
-                {Activity.isWorkshops(activity) ? (
-                  <WorkshopActivity
-                    activity={activity}
-                    t={t}
-                    can={this.props.can}
-                    replaceActivity={this.props.replaceActivity}
-                    setNetworkError={this.props.setNetworkError}
-                  />
-                ) : (
+                {
                   <NewStageForm
                     t={t}
                     activity={this.props.activity}
@@ -111,7 +103,7 @@ export default class ActivityRow extends React.PureComponent {
                     save={this.addNextStage}
                     cancel={() => this.setState(this.freshState(this.props))}
                   />
-                )}
+                }
               </div>
             </td>
           </tr>

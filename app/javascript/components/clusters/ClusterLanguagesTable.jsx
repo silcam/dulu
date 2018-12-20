@@ -43,6 +43,7 @@ export default function ClusterLanguagesTable(props) {
                     addLanguage({ id: id, name: name })
                   }
                   placeholder={t("Add_language")}
+                  addBox
                 />
               </td>
             </tr>
