@@ -107,13 +107,10 @@ export default class OrganizationPage extends React.PureComponent {
             <TextOrSearchInput
               editing={this.state.editing}
               text={organization.parent.name}
-              updateValue={(id, name) =>
+              updateValue={org =>
                 this.updateOrganization({
-                  parent: {
-                    id: id,
-                    name: name
-                  },
-                  parent_id: id
+                  parent: org,
+                  parent_id: org.id
                 })
               }
               queryPath="/api/organizations/search"
@@ -127,13 +124,10 @@ export default class OrganizationPage extends React.PureComponent {
               editing={this.state.editing}
               text={organization.country.name}
               queryPath="/api/countries/search"
-              updateValue={(id, name) =>
+              updateValue={country =>
                 this.updateOrganization({
-                  country: {
-                    name: name,
-                    id: id
-                  },
-                  country_id: id
+                  country: country,
+                  country_id: country.id
                 })
               }
               allowBlank

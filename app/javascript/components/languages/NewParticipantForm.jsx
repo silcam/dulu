@@ -49,8 +49,11 @@ export default class NewParticipantForm extends React.PureComponent {
         <SearchTextInput
           queryPath="/api/people/search"
           placeholder={t("Name")}
-          updateValue={(id, name) =>
-            this.updateParticipant({ person_id: id, person_name: name })
+          updateValue={person =>
+            this.updateParticipant({
+              person_id: person.id,
+              person_name: person.name
+            })
           }
           text={this.state.participant.person_name}
           autoFocus

@@ -86,9 +86,7 @@ export default class MyOrganizationsTable extends React.PureComponent {
               <tr>
                 <td colSpan="4">
                   <SearchTextInput
-                    updateValue={(id, name) =>
-                      this.setState({ newOrganization: { id: id, name: name } })
-                    }
+                    updateValue={org => this.setState({ newOrganization: org })}
                     queryPath="/api/organizations/search"
                     text={
                       this.state.newOrganization

@@ -19,13 +19,10 @@ function PersonBasicInfo(props) {
               editing={props.editing}
               text={home_country.name}
               queryPath="/api/countries/search"
-              updateValue={(id, name) =>
+              updateValue={country =>
                 props.updatePerson({
-                  home_country: {
-                    id: id,
-                    name: name
-                  },
-                  country_id: id
+                  home_country: country,
+                  country_id: country.id
                 })
               }
               allowBlank

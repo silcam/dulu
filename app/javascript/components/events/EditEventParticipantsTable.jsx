@@ -12,19 +12,17 @@ export default function EditEventParticipantsTable(props) {
   const event = props.event;
   const t = props.t;
 
-  const addCluster = (id, name) => {
+  const addCluster = cluster => {
+    props.replaceEvent(update(props.event, { clusters: { $push: [cluster] } }));
+  };
+
+  const addLanguage = language => {
     props.replaceEvent(
-      update(props.event, { clusters: { $push: [{ id: id, name: name }] } })
+      update(props.event, { programs: { $push: [language] } })
     );
   };
 
-  const addLanguage = (id, name) => {
-    props.replaceEvent(
-      update(props.event, { programs: { $push: [{ id: id, name: name }] } })
-    );
-  };
-
-  const addPerson = (id, name) => {
+  const addPerson = person => {
     props.replaceEvent(
       update(props.event, {
         event_participants: {

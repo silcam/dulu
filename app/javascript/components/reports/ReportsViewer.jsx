@@ -51,11 +51,11 @@ export default class ReportsViewer extends React.PureComponent {
   subtractLoading = () =>
     this.setState(prevState => ({ loading: prevState.loading - 1 }));
 
-  addProgram = async id => {
+  addProgram = async program => {
     this.addLoading();
     try {
       const data = await DuluAxios.get("/api/reports/report_data", {
-        program_id: id,
+        program_id: program.id,
         report_type: this.state.report.type
       });
       this.replaceReport(
@@ -70,11 +70,11 @@ export default class ReportsViewer extends React.PureComponent {
     }
   };
 
-  addCluster = async id => {
+  addCluster = async cluster => {
     this.addLoading();
     try {
       const data = await DuluAxios.get("/api/reports/report_data", {
-        cluster_id: id,
+        cluster_id: cluster.id,
         report_type: this.state.report.type
       });
       this.replaceReport(

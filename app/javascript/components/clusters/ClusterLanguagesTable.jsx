@@ -39,9 +39,7 @@ export default function ClusterLanguagesTable(props) {
                 <SearchTextInput
                   queryPath="/api/languages/lang_search"
                   text=""
-                  updateValue={(id, name) =>
-                    addLanguage({ id: id, name: name })
-                  }
+                  updateValue={language => addLanguage(language)}
                   placeholder={t("Add_language")}
                   addBox
                 />

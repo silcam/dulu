@@ -10,9 +10,9 @@ export default function ProgramList(props) {
   const things = plural(props.thing);
   const list = props.region[things];
 
-  const addThing = (id, name) => {
+  const addThing = thing => {
     props.updateRegion({
-      [things]: [{ id: id, name: name }].concat(list)
+      [things]: [thing].concat(list)
     });
   };
 
