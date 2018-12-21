@@ -43,8 +43,8 @@ export default function thingBoard(Board, thingParams) {
       }
     };
 
-    async componentDidUpdate() {
-      this.fetchThingIfNeeded();
+    async componentDidUpdate(prevProps) {
+      if (prevProps.id != this.props.id) this.fetchThingIfNeeded();
     }
 
     fetchThingIfNeeded = () => {

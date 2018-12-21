@@ -3,6 +3,7 @@ import axios from "axios";
 export default function DuluAxios() {}
 
 DuluAxios.get = async (url, params) => {
+  console.log(`GET ${url}`);
   const response = await axios.get(url, {
     params: params
   });
@@ -11,6 +12,7 @@ DuluAxios.get = async (url, params) => {
 };
 
 DuluAxios.post = async (url, data) => {
+  console.log(`POST ${url}`);
   data.authenticity_token = getAuthToken();
   const response = await axios.post(url, data);
   assertStatusOK(response);
@@ -18,6 +20,7 @@ DuluAxios.post = async (url, data) => {
 };
 
 DuluAxios.put = async (url, data) => {
+  console.log(`PUT ${url}`);
   data.authenticity_token = getAuthToken();
   const response = await axios.put(url, data);
   assertStatusOK(response);
@@ -25,6 +28,7 @@ DuluAxios.put = async (url, data) => {
 };
 
 DuluAxios.delete = async url => {
+  console.log(`DELETE ${url}`);
   const response = await axios({
     method: "delete",
     url: url,
