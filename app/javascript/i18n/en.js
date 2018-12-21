@@ -140,6 +140,7 @@ export default {
     "Nov",
     "Dec"
   ],
+  More_events: "+ More Events",
   Name_not_blank: "Name can't be blank.",
   need_email_for_login: "An email is required before enabling Dulu login.",
   network_error_message: "Failed to connect to Dulu server.",

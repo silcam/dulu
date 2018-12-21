@@ -11,13 +11,9 @@ json.language do
 
   json.participants @program.all_participants, partial: 'api/participants/participant', as: :participant
 
-  # json.events do
-  #   json.current @program.all_events.current, partial: 'api/events/event', as: :event
-  #   json.upcoming @program.all_events.upcoming, partial: 'api/events/event', as: :event
-  #   json.past @program.all_events.past.limit(5), partial: 'api/events/event', as: :event
-  # end
-
-  json.events @program.all_events.limit(15), partial: 'api/events/event', as: :event
+  events = @program.all_events.limit(16).to_a
+  json.haveAllEvents events.count < 16
+  json.events events.slice(0, 16), partial: 'api/events/event', as: :event
 
   json.publications @program.publications.where(kind: [:Scripture, :Media]) do |pub|
     json.call(pub, :id, :name, :kind, :scripture_kind, :media_kind, :film_kind, :year)

@@ -8,6 +8,16 @@ import TranslationStatus from "./TranslationStatus";
 import Event from "../../models/Event";
 
 export default function LanguagePageContent(props) {
+  if (props.tab == "Events") {
+    return (
+      <EventsTable
+        {...props}
+        basePath={`/languages/${props.language.id}`}
+        events={props.language.events}
+        superEventsTable
+      />
+    );
+  }
   return (
     <div className={styles.pageContent}>
       {(props.tab == "Translation" || props.tab == "Media") && (

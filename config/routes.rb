@@ -19,6 +19,7 @@ Rails.application.routes.draw do
     end
 
     resources :languages do
+      get 'more_events', on: :member
       get 'get_event', on: :member
       get 'search', on: :collection
       get 'lang_search', on: :collection

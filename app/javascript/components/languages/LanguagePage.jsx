@@ -5,7 +5,13 @@ import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import LanguagePageContent from "./LanguagePageContent";
 import { Route } from "react-router-dom";
 
-const tabs = [/*"All",*/ "Translation", "Linguistics", "Literacy", "Media"];
+const tabs = [
+  /*"All",*/ "Translation",
+  "Linguistics",
+  "Literacy",
+  "Media",
+  "Events"
+];
 
 export default class LanguagePage extends React.PureComponent {
   state = {};
@@ -37,7 +43,7 @@ export default class LanguagePage extends React.PureComponent {
             >
               <TabList>
                 {tabs.map(name => (
-                  <Tab key={name}>{t(`domains.${name}`)}</Tab>
+                  <Tab key={name}>{t(name)}</Tab>
                 ))}
               </TabList>
               {tabs.map(name => (
