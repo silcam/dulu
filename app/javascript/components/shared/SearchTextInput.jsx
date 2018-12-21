@@ -72,7 +72,8 @@ class BasicSearchTextInput extends React.PureComponent {
   };
 
   handleBlur = () => {
-    if (this.state.text.length == 0) this.save({ name: "", id: null });
+    if (this.props.allowBlank && this.state.text.length == 0)
+      this.save({ name: "", id: null });
     this.setState(this.freshState());
   };
 
@@ -81,7 +82,7 @@ class BasicSearchTextInput extends React.PureComponent {
       this.save(this.props.results[this.state.selection]);
     } else if (this.props.results[0]) {
       this.save(this.props.results[0]);
-    } else {
+    } else if (this.props.allowBlank) {
       this.save({
         name: "",
         id: null
