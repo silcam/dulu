@@ -9,7 +9,7 @@ export default function TextArea(props) {
         rows={rows}
         name={props.name}
         onChange={props.handleInput}
-        value={props.value}
+        value={props.value || ""}
       />
     </div>
   );

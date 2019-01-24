@@ -7,7 +7,7 @@ import PropTypes from "prop-types";
 export default function EditActionBar(props) {
   if (!props.can) return null;
   return props.editing ? (
-    <div className={styles.actionBar}>
+    <div className={styles.actionBar} data-div-name="editActionBar">
       <button
         onClick={props.save}
         disabled={(props.saveDisabled || props.saving) && "disabled"}
@@ -19,7 +19,7 @@ export default function EditActionBar(props) {
       </button>
     </div>
   ) : (
-    <div className={styles.actionBar}>
+    <div className={styles.actionBar} data-div-name="editActionBar">
       {props.can.update && <EditIcon iconSize="large" onClick={props.edit} />}
       {props.can.destroy && (
         <DeleteIcon iconSize="large" onClick={props.delete} />

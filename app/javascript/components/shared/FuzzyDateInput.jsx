@@ -53,7 +53,18 @@ export default class FuzzyDateInput extends React.PureComponent {
   }
 
   handleInput = e => {
-    this.setState({ [e.target.name]: e.target.value }, this.pushDate);
+    const field = e.target.name;
+    const value = e.target.value;
+    this.setState(prevState => {
+      if (field == "month" && prevState.day > daysInMonth(value))
+        return {
+          day: daysInMonth(value),
+          month: value
+        };
+      return {
+        [field]: value
+      };
+    }, this.pushDate);
   };
 
   clearDate = () => {

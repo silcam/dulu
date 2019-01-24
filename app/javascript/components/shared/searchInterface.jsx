@@ -16,6 +16,11 @@ export default function searchInterface(WrappedComponent, minQueryLength) {
       };
     }
 
+    componentWillUnmount() {
+      // Prevent any pending state updates
+      this.displayedQuery = this.queryNum + 1;
+    }
+
     getQueryNum = () => {
       this.queryNum += 1;
       return this.queryNum;

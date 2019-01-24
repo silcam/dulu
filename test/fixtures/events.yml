@@ -22,6 +22,13 @@ HdiCurrentChecking:
   programs: Hdi
   name: Check a book now
 
+LanceMadeAnEvent:
+  start_date: 2019-01
+  end_date: 2019-01
+  domain: Translation
+  name: Lance's Event
+  creator: Lance
+
 EwondoNounWS:
   start_date: 2018-01-05
   end_date: 2018-01-21

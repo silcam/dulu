@@ -10,114 +10,114 @@ class ParticipantIntTest < Capybara::Rails::TestCase
     I18n.locale = :en
   end
 
-  test "Regression Test: Add to program with no activities" do
-    none_program = programs :NoActivityProgram
-    assert none_program.activities.empty?, "This test is for a program with no activities"
-    visit new_program_participant_path(none_program)
-    assert_current_path new_program_participant_path(none_program)
-  end
+  # test "Regression Test: Add to program with no activities" do
+  #   none_program = programs :NoActivityProgram
+  #   assert none_program.activities.empty?, "This test is for a program with no activities"
+  #   visit new_program_participant_path(none_program)
+  #   assert_current_path new_program_participant_path(none_program)
+  # end
 
-  def setup_show_page
-    @drew_hdi = participants(:DrewHdi)
-    visit participant_path(@drew_hdi)
-  end
+  # def setup_show_page
+  #   @drew_hdi = participants(:DrewHdi)
+  #   visit participant_path(@drew_hdi)
+  # end
 
-  test "Show Page: Remove Role...Add Role" do
-    setup_show_page
-    find('h3', text: 'Roles').click_on('Edit')
-    find('tr', text: 'Translation Consultant').click_on('Remove')
-    within('div.showable-form-section', text: 'Roles') do
-      assert_text 'None'
-      refute_text 'Translation Consultant'
-    end
+  # test "Show Page: Remove Role...Add Role" do
+  #   setup_show_page
+  #   find('h3', text: 'Roles').click_on('Edit')
+  #   find('tr', text: 'Translation Consultant').click_on('Remove')
+  #   within('div.showable-form-section', text: 'Roles') do
+  #     assert_text 'None'
+  #     refute_text 'Translation Consultant'
+  #   end
 
-    find('h3', text: 'Roles').click_on('Add')
-    select 'Translation Consultant', from: 'role'
-    click_button 'Add'
-    within('div.showable-form-section', text: 'Roles') do
-      assert_text 'Translation Consultant'
-    end
-  end
+  #   find('h3', text: 'Roles').click_on('Add')
+  #   select 'Translation Consultant', from: 'role'
+  #   click_button 'Add'
+  #   within('div.showable-form-section', text: 'Roles') do
+  #     assert_text 'Translation Consultant'
+  #   end
+  # end
 
-  test "Add Activity" do
-    setup_show_page
-    find('h3', text: 'Activities').click_on('Edit')
-    select 'Genesis', from: 'activity_id'
-    click_button 'Add'
-    within('div.showable-form-section', text: 'Activities') do
-      assert_text 'Genesis'
-    end
-  end
+  # test "Add Activity" do
+  #   setup_show_page
+  #   find('h3', text: 'Activities').click_on('Edit')
+  #   select 'Genesis', from: 'activity_id'
+  #   click_button 'Add'
+  #   within('div.showable-form-section', text: 'Activities') do
+  #     assert_text 'Genesis'
+  #   end
+  # end
 
-  test "Remove Activity" do
-    setup_show_page
-    find('h3', text: 'Activities').click_on('Edit')
-    find('tr', text: 'Ezra').click_on('Remove')
-    within('div.showable-form-section', text: 'Activities') do
-      refute_text 'Ezra'
-    end
-  end
+  # test "Remove Activity" do
+  #   setup_show_page
+  #   find('h3', text: 'Activities').click_on('Edit')
+  #   find('tr', text: 'Ezra').click_on('Remove')
+  #   within('div.showable-form-section', text: 'Activities') do
+  #     refute_text 'Ezra'
+  #   end
+  # end
 
-  test "Add Activity to Cluster Participant" do
-    @drew_ndop = participants :DrewNdop
-    @bangolan = programs :Bangolan
-    visit participant_path @drew_ndop
-    find('h3', text: 'Activities').click_on('Add')
-    select 'Bangolan', from: 'activity_program_id'
-    find("select#program_#{@bangolan.id}_activity_id").select 'Exodus'
-    click_button 'Add'
-    within('div.showable-form-section', text: 'Activities') do
-      assert_text 'Bangolan'
-      assert_text 'Exodus'
-    end
-  end
+  # test "Add Activity to Cluster Participant" do
+  #   @drew_ndop = participants :DrewNdop
+  #   @bangolan = programs :Bangolan
+  #   visit participant_path @drew_ndop
+  #   find('h3', text: 'Activities').click_on('Add')
+  #   select 'Bangolan', from: 'activity_program_id'
+  #   find("select#program_#{@bangolan.id}_activity_id").select 'Exodus'
+  #   click_button 'Add'
+  #   within('div.showable-form-section', text: 'Activities') do
+  #     assert_text 'Bangolan'
+  #     assert_text 'Exodus'
+  #   end
+  # end
 
-  test "Permissions" do
-    setup_show_page
-    find('h2').assert_text 'Edit'
-    find('h2').assert_text 'Left Program'
-    find('h3', text: 'Roles').assert_text 'Edit'
-    find('h3', text: 'Activities').assert_text 'Edit'
+  # test "Permissions" do
+  #   setup_show_page
+  #   find('h2').assert_text 'Edit'
+  #   find('h2').assert_text 'Left Program'
+  #   find('h3', text: 'Roles').assert_text 'Edit'
+  #   find('h3', text: 'Activities').assert_text 'Edit'
 
-    log_in people(:Lance)
-    setup_show_page
-    find('h2').assert_no_text 'Edit'
-    find('h2').assert_no_text 'Left Program'
-    find('h3', text: 'Roles').assert_no_text 'Edit'
-    find('h3', text: 'Activities').assert_no_text 'Edit'
-    visit edit_participant_path @drew_hdi
-    assert_current_path not_allowed_path
-    visit finish_participant_path @drew_hdi
-    assert_current_path not_allowed_path
-  end
+  #   log_in people(:Lance)
+  #   setup_show_page
+  #   find('h2').assert_no_text 'Edit'
+  #   find('h2').assert_no_text 'Left Program'
+  #   find('h3', text: 'Roles').assert_no_text 'Edit'
+  #   find('h3', text: 'Activities').assert_no_text 'Edit'
+  #   visit edit_participant_path @drew_hdi
+  #   assert_current_path not_allowed_path
+  #   visit finish_participant_path @drew_hdi
+  #   assert_current_path not_allowed_path
+  # end
 
-  test "Delete DrewHdi Participant" do
-    visit program_participants_path(programs(:Hdi))
-    find('table').assert_text 'Drew Maust'
-    setup_show_page
-    find('h2').click_on('Edit')
-    page.accept_confirm do
-      click_button('Delete Drew Maust from Hdi')
-    end
-    assert_current_path program_participants_path(programs(:Hdi))
-    find('table').assert_no_text('Drew Maust')
-  end
+  # test "Delete DrewHdi Participant" do
+  #   visit program_participants_path(programs(:Hdi))
+  #   find('table').assert_text 'Drew Maust'
+  #   setup_show_page
+  #   find('h2').click_on('Edit')
+  #   page.accept_confirm do
+  #     click_button('Delete Drew Maust from Hdi')
+  #   end
+  #   assert_current_path program_participants_path(programs(:Hdi))
+  #   find('table').assert_no_text('Drew Maust')
+  # end
 
-  test "Olga can't delete participant" do
-    drew_hdi = participants(:DrewHdi)
-    log_in people(:Rick)
-    visit edit_participant_path(drew_hdi)
-    assert page.has_button? 'Delete Drew Maust from Hdi'
-    log_in people(:Olga)
-    visit edit_participant_path(drew_hdi)
-    refute page.has_button? 'Delete Drew Maust from Hdi'
-  end
+  # test "Olga can't delete participant" do
+  #   drew_hdi = participants(:DrewHdi)
+  #   log_in people(:Rick)
+  #   visit edit_participant_path(drew_hdi)
+  #   assert page.has_button? 'Delete Drew Maust from Hdi'
+  #   log_in people(:Olga)
+  #   visit edit_participant_path(drew_hdi)
+  #   refute page.has_button? 'Delete Drew Maust from Hdi'
+  # end
 
-  test "Add, update and remove Drew from Zulgo Ezra" do
-    add_drew
-    modify_drew
-    remove_drew
-  end
+  # test "Add, update and remove Drew from Zulgo Ezra" do
+  #   add_drew
+  #   modify_drew
+  #   remove_drew
+  # end
 
   def add_drew
     visit program_participants_path @zulgo_program

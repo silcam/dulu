@@ -63,10 +63,11 @@ export default class NewEventForm extends React.PureComponent {
     const event = this.state.event;
     const t = this.props.t;
     return (
-      <div>
+      <div id="NewEventForm">
         <h3>{t("New_event")}</h3>
         <ValidatedTextInputGroup
           value={event.name}
+          name="Name"
           handleInput={e => this.updateEvent({ name: e.target.value })}
           placeholder={t("Name")}
           validateNotBlank

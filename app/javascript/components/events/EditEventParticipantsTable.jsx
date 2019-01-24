@@ -26,7 +26,7 @@ export default function EditEventParticipantsTable(props) {
     props.replaceEvent(
       update(props.event, {
         event_participants: {
-          $push: [{ person_id: id, full_name: name, roles: [] }]
+          $push: [{ person_id: person.id, full_name: person.name, roles: [] }]
         }
       })
     );

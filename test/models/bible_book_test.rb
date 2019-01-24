@@ -20,8 +20,8 @@ class BibleBookTest < ActiveSupport::TestCase
   end
 
   test 'testament' do
-    assert_equal :ot, @ezra.testament
-    assert_equal :nt, @john.testament
+    assert_equal :Old_testament, @ezra.testament
+    assert_equal :New_testament, @john.testament
   end
 
   test 'percent of testament' do

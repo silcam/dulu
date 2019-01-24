@@ -80,8 +80,6 @@ end
 group :test do
   gem 'minitest-reporters'
   gem 'minitest-rails-capybara'
-  gem 'capybara-webkit'
+  gem 'selenium-webdriver'
   gem 'brakeman', require: false
-  # gem 'win32console', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
-  gem 'capybara-screenshot'
 end

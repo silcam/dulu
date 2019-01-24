@@ -1,6 +1,6 @@
-require 'test_helper'
+require "application_system_test_case"
 
-class LoginTest < Capybara::Rails::TestCase
+class LoginsTest < ApplicationSystemTestCase
   def setup
     @auth_user = people(:Rick)
     @unauth_user = people(:Abanda)
@@ -11,9 +11,10 @@ class LoginTest < Capybara::Rails::TestCase
     visit root_path
     click_link('google-signin-link')
     assert page.has_content?(@auth_user.first_name), "Expect to see user's first name"
-    click_link('Log out')
+
+    click_on('Logout')
     assert_current_path root_path
-    assert page.must_have_selector('#google-signin-link'), "Expect to see log in button"
+    assert_selector '#google-signin-link'
   end
 
   test "invalid log in" do
@@ -21,7 +22,7 @@ class LoginTest < Capybara::Rails::TestCase
     visit root_path
     click_link 'google-signin-link'
     assert_current_path root_path
-    assert page.must_have_selector('.callout-red'), "Expect to see error message for failed log in"
+    assert page.must_have_selector('.red'), "Expect to see error message for failed log in"
   end
 
   test "login redirect" do

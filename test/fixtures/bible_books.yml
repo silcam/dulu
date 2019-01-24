@@ -1,4 +1,5 @@
 Genesis:
+  id: 1
   english_name: 'Genesis'
   french_name: 'Genèse'
   usfm_number: 1
@@ -6,6 +7,7 @@ Genesis:
   number_of_verses: 1533
 
 Exodus:
+  id: 2
   english_name: 'Exodus'
   french_name: 'Exode'
   usfm_number: 2
@@ -13,6 +15,7 @@ Exodus:
   number_of_verses: 1000
 
 Ezra:
+  id: 15
   english_name: 'Ezra'
   french_name: 'Esdras'
   usfm_number: 15
@@ -20,6 +23,7 @@ Ezra:
   number_of_verses: 280
 
 John:
+  id: 43
   english_name: 'John'
   french_name: 'Jean'
   usfm_number: 44

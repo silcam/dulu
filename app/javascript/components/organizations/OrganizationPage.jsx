@@ -7,6 +7,8 @@ import SaveIndicator from "../shared/SaveIndicator";
 import DangerButton from "../shared/DangerButton";
 import TextOrSearchInput from "../shared/TextOrSearchInput";
 import TextOrTextArea from "../shared/TextOrTextArea";
+import SearchTextInput from "../shared/SearchTextInput";
+import { Link } from "react-router-dom";
 
 export default class OrganizationPage extends React.PureComponent {
   state = {
@@ -80,6 +82,7 @@ export default class OrganizationPage extends React.PureComponent {
         <h2>
           <TextOrEditText
             editing={this.state.editing}
+            name="short_name"
             value={organization.short_name}
             updateValue={value =>
               this.updateOrganization({ short_name: value })
@@ -104,18 +107,26 @@ export default class OrganizationPage extends React.PureComponent {
           <li>
             <strong>{this.props.t("Parent_organization")}:</strong>
             &nbsp;
-            <TextOrSearchInput
-              editing={this.state.editing}
-              text={organization.parent.name}
-              updateValue={org =>
-                this.updateOrganization({
-                  parent: org,
-                  parent_id: org.id
-                })
-              }
-              queryPath="/api/organizations/search"
-              allowBlank
-            />
+            {this.state.editing ? (
+              <SearchTextInput
+                editing={this.state.editing}
+                text={organization.parent.name}
+                updateValue={org =>
+                  this.updateOrganization({
+                    parent: org,
+                    parent_id: org.id
+                  })
+                }
+                queryPath="/api/organizations/search"
+                allowBlank
+              />
+            ) : (
+              organization.parent.id && (
+                <Link to={`/organizations/${organization.parent.id}`}>
+                  {organization.parent.name}
+                </Link>
+              )
+            )}
           </li>
           <li>
             <strong>{this.props.t("Country")}:</strong>

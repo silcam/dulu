@@ -103,6 +103,7 @@ export default class EventView extends React.PureComponent {
             />
             <h2>
               <TextOrEditText
+                name="name"
                 editing={this.state.editing}
                 value={event.name}
                 updateValue={value => this.updateEvent({ name: value })}

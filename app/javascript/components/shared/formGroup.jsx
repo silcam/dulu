@@ -15,8 +15,12 @@ function formGroup(WrappedInput) {
       const { label, ...otherProps } = this.props;
       return (
         <div className={styles.formGroup}>
-          <label>{label}</label>
-          <WrappedInput {...otherProps} />
+          <label>
+            {label}
+            <div>
+              <WrappedInput {...otherProps} />
+            </div>
+          </label>
         </div>
       );
     }
