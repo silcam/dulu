@@ -7,7 +7,7 @@ import ParticipantsTable from "./ParticipantsTable";
 import MediaTable from "./MediaTable";
 import TranslationActivitiesTable from "./TranslationActivitiesTable";
 
-const tabs = ["Translation", "Linguistics", "Media", "Participants", "Events"];
+const tabs = ["Translation", "Linguistics", "Media", "People", "Events"];
 
 export default class MainContent extends React.PureComponent {
   constructor(props) {

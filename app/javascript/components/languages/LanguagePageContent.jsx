@@ -18,6 +18,17 @@ export default function LanguagePageContent(props) {
       />
     );
   }
+  if (props.tab == "People") {
+    return (
+      <ParticipantsTable
+        {...props}
+        participants={props.language.participants}
+        can={props.language.can}
+        replace={props.replaceLanguage}
+        basePath={`/languages/${props.language.id}`}
+      />
+    );
+  }
   return (
     <div className={styles.pageContent}>
       {(props.tab == "Translation" || props.tab == "Media") && (

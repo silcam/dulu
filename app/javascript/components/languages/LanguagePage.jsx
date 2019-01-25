@@ -10,6 +10,7 @@ const tabs = [
   "Linguistics",
   "Literacy",
   "Media",
+  "People",
   "Events"
 ];
 
