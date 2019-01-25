@@ -41,7 +41,7 @@ DuluAxios.delete = async url => {
 };
 
 function assertStatusOK(response) {
-  if (!statusOK(response)) throw Non200ResponseException(response);
+  if (!statusOK(response)) throw new Non200ResponseException(response);
   clearNetworkError();
 }
 
