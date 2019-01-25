@@ -1,8 +1,19 @@
 require 'application_system_test_case'
 
-class ActivityIntTest < ApplicationSystemTestCase
+class TranslationActivityIntTest < ApplicationSystemTestCase
   def setup
     @hdi = programs(:Hdi)
+    @zulgo = programs(:Zulgo)
+  end
+
+  test "New Translation Activity" do
+    log_in(people(:Olga))
+    visit "#{model_path(@zulgo)}/Translation"
+    assert_no_selector('tr', text: 'Genesis Planned')
+    within('h3', text: 'Activities') { click_icon('addIcon') }
+    find('select').select 'Genesis'
+    click_on 'Save'
+    assert_selector('tr', text: 'Genesis Planned')
   end
 
   test "Rick Deletes Hdi Exodus" do

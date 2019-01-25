@@ -95,7 +95,7 @@ export default class OrganizationPage extends React.PureComponent {
         <h3>
           <TextOrEditText
             editing={this.state.editing}
-            value={organization.long_name}
+            value={organization.long_name || ""}
             label={this.props.t("Long_name")}
             updateValue={value => {
               this.updateOrganization({ long_name: value });

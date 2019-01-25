@@ -10,7 +10,7 @@ class PersonIntTest < ApplicationSystemTestCase
   test 'Kevin edits self' do
     log_in @kevin
     click_on 'Kevin'
-    action_bar_edit_click
+    action_bar_click_edit
     fill_in 'first_name', with: 'Da Boss'
     click_on 'Save'
     assert_changes_saved
@@ -84,7 +84,7 @@ class PersonIntTest < ApplicationSystemTestCase
     log_in @rick
     visit model_path @olga
     assert_selector('tr', text: 'Nka, Olga')  # Sidebar list
-    action_bar_delete_click
+    action_bar_click_delete
     check "I'm sure"
     click_on "Permanently Delete Olga Nka"
     assert_no_selector('tr', text: 'Nka, Olga')
@@ -95,7 +95,11 @@ class PersonIntTest < ApplicationSystemTestCase
     log_in @olga
     visit model_path(@kevin)
     assert_raises(Capybara::ElementNotFound) do
-      action_bar_delete_click
+      action_bar_click_delete
     end
+  end
+
+  test "Change my language" do 
+    postpone_failure(Date.new(2019, 1, 31))
   end
 end

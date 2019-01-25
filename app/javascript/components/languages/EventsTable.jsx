@@ -31,7 +31,7 @@ export default class EventsTable extends React.PureComponent {
       const data = await DuluAxios.get(
         `/api/languages/${this.props.language.id}/more_events`,
         {
-          offset: this.props.events.length
+          offset: this.props.language.events.length
         }
       );
       this.props.replaceLanguage(

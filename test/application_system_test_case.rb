@@ -102,11 +102,15 @@ class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
     return "span[data-icon-name='#{icon_name}']"
   end
 
-  def action_bar_edit_click
+  def click_icon(icon_name)
+    find(icon_selector(icon_name)).click
+  end
+
+  def action_bar_click_edit
     find('div[data-div-name=editActionBar]').find(icon_selector('editIcon')).click
   end
 
-  def action_bar_delete_click
+  def action_bar_click_delete
     find('div[data-div-name=editActionBar]').find(icon_selector('deleteIcon')).click
   end
 end

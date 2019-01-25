@@ -16,7 +16,7 @@ export default function TextOrEditText(props) {
 
 TextOrEditText.propTypes = {
   editing: PropTypes.bool,
-  value: PropTypes.string,
+  value: PropTypes.string.isRequired,
   updateValue: PropTypes.func.isRequired,
   // optional
   t: PropTypes.func, // required for validation

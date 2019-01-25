@@ -23,7 +23,7 @@ class OrgIntTest < ApplicationSystemTestCase
   test 'Update Organization' do
     log_in people(:Drew)
     visit model_path(@sil)
-    action_bar_edit_click
+    action_bar_click_edit
     fill_in 'short_name', with: 'The Evil Empire'
     fill_in 'Long Name', with: 'The Most Evilly Evil Empire of all Time'
     within('li', text: 'Parent Organization') { fill_in_search_input('Lutheran Bi') }
@@ -45,7 +45,7 @@ class OrgIntTest < ApplicationSystemTestCase
     visit model_path(@sil)
     assert_selector('tr', text: 'SIL') # Sidebar list
 
-    action_bar_delete_click
+    action_bar_click_delete
     check "I'm sure"
     click_on "Permanently Delete SIL"
 
