@@ -17,6 +17,7 @@ class BibleBookTest < ActiveSupport::TestCase
     assert_equal 'Ezra', @ezra.name
     I18n.locale = :fr
     assert_equal 'Esdras', @ezra.name
+    I18n.locale = :en # Reset for future tests
   end
 
   test 'testament' do
