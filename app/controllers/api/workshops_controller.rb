@@ -23,7 +23,7 @@ class Api::WorkshopsController < ApplicationController
     @workshop = Workshop.find(params[:id])
     authorize! :update, @workshop.linguistic_activity
     @workshop.destroy
-    head :no_content, status: :ok
+    response_ok
   end
 
   private

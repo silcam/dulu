@@ -39,7 +39,7 @@ gem 'jbuilder', '~> 2.5'
 # Internationalization
 gem 'rails-i18n', '~> 5.0.4'
 # Google authentication
-gem 'omniauth-google-oauth2', '~> 0.5.0'
+gem 'omniauth-google-oauth2', '~> 0.5'
 # User roles
 gem 'access-granted', '~> 1.2.0'
 # Activity Log
@@ -80,8 +80,6 @@ end
 group :test do
   gem 'minitest-reporters'
   gem 'minitest-rails-capybara'
-  gem 'capybara-webkit'
+  gem 'selenium-webdriver'
   gem 'brakeman', require: false
-  # gem 'win32console', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
-  gem 'capybara-screenshot'
 end

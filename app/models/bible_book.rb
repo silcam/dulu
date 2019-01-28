@@ -24,17 +24,17 @@ class BibleBook < ApplicationRecord
   def testament
     case usfm_number
       when (1 .. 39)
-        return :ot
+        return :Old_testament
       when (41 .. 67)
-        return :nt
+        return :New_testament
     end
   end
 
   def percent_of_testament
     case testament
-      when :ot
+      when :Old_testament
         return number_of_verses.to_f / VERSES_OT * 100
-      when :nt
+      when :New_testament
         return number_of_verses.to_f / VERSES_NT * 100
     end
   end

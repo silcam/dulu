@@ -1,6 +1,7 @@
 json.(workshop, :id, :name, :number)
 
 json.completed workshop.completed?
+json.activityId workshop.linguistic_activity_id
 
 json.date workshop.f_date.to_s
 json.formattedDate workshop.f_date.try(:pretty_print)
@@ -13,9 +14,7 @@ end
 
 program = workshop.linguistic_activity.program
 if workshop.event
-  json.eventPath program_event_path(program, workshop.event)
+  json.eventPath model_path(program, workshop.event)
 else
-  json.newEventPath new_program_event_path(program, 
-                                            workshop: workshop, 
-                                            referred_by: activity_path(workshop.linguistic_activity))
+  json.newEventPath model_path(program) + "/events/new"
 end

@@ -1,0 +1,23 @@
+.plusMinusBtn, 
+.plusMinusBtn:focus,
+.plusMinusBtn:active{
+    color: #888888;
+    cursor: pointer;
+    font-weight: bold;
+    background: none;
+    border: none;
+    padding: 0;
+    width: 14px;
+    box-shadow: none;
+    outline: none;
+    margin: 0;
+    vertical-align: unset;
+}
+
+
+.plusMinusBtn:hover, 
+.plusMinusBtn:hover:active {
+    color: #428bca;
+    background: none;
+    outline: none;
+}

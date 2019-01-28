@@ -10,6 +10,7 @@ class Api::OrganizationsController < ApplicationController
   def create
     authorize! :create, Organization
     @org = Organization.create!(org_params)
+    render :show
   end
 
   def update
@@ -24,7 +25,7 @@ class Api::OrganizationsController < ApplicationController
     @org = Organization.find(params[:id])
     authorize! :destroy, @org
     @org.destroy!
-    head :no_content, status: :ok
+    response_ok
   end
 
   def search

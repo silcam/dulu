@@ -4,7 +4,7 @@ class SessionsControllerTest < ActionDispatch::IntegrationTest
 
   test "should redirect to login" do
 
-    get people_path
+    get "/people"
     assert_redirected_to 'http://www.example.com/auth/google_oauth2'
 
   end

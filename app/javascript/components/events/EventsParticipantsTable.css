@@ -1,0 +1,18 @@
+table.eventParticipants {
+    width: auto !important;
+}
+
+table.eventParticipants tbody tr th, 
+table.eventParticipants tbody tr td {
+    border: none;
+    padding: 0 4px 4px ;
+    text-align: left;
+}
+
+span.listItem::after {
+    content: ", ";
+}
+
+span.listItem:last-child::after {
+    content: '';
+}

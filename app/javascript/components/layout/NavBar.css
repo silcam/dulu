@@ -1,0 +1,49 @@
+.nav {
+    background-color: black;
+  }
+
+.nav ul {
+  display: inline-block;
+}
+
+.ulRight {
+  float: right;
+}
+
+.nav li {
+  display: inline-block;
+  vertical-align: top;
+  font-size: 18px;
+}
+
+.nav a {
+  display: block;
+  color: white;
+  padding: 12px 8px;
+  height: 24px;
+}
+
+.nav a:hover {
+  background-color: #aaa;
+  text-decoration: none;
+}
+
+.nav a.duluLink {
+  padding: 4px;
+  height: 40px;
+}
+
+.nav a.duluLink:hover {
+  background-color: black;
+}
+
+/* Not currently used
+  .nav :global(a.active) {
+    text-decoration: underline;
+  }
+
+  .nav :global(a.active):hover {
+    cursor: default;
+    font-weight: normal;
+  }
+*/

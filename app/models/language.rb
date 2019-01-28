@@ -49,4 +49,8 @@ class Language < ApplicationRecord
     new_alt_names.append(name).sort!
     self.alt_names = new_alt_names.join(', ')
   end
+
+  def self.search(query)
+    Program.joins(:language).where("unaccent(languages.name) ILIKE unaccent(?)", "%#{query}%")
+  end
 end

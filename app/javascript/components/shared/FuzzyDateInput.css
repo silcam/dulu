@@ -1,0 +1,8 @@
+.errorMessage {
+    composes: errorMessage from "./formElements.css";
+}
+
+.fuzzyDate input[type=text], select {
+    width: auto;
+    margin-right: 8px;
+}

@@ -1,8 +1,0 @@
-<%= render 'search_form' %>
-<% if @results %>
-  <h2><%= t :Search_results %></h2>
-    <%= t(:No_results) if @results.empty?%>
-  <table class="table">
-    <%= render 'results_table', results: @results %>
-  </table>
-<% end %>

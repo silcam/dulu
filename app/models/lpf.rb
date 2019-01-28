@@ -1,7 +1,7 @@
 class Lpf < ApplicationRecord
   belongs_to :person, required: false
-  has_many :clusters
-  has_many :programs
+  has_many :clusters, dependent: :nullify
+  has_many :programs, dependent: :nullify
 
   default_scope { order :name }
 

@@ -1,0 +1,44 @@
+.icon {
+    display: inline-block;
+    cursor: pointer;
+}
+
+.icon path {
+    fill: #aaa;
+}
+
+.iconBlue {
+    composes: icon;
+}
+
+.iconBlue:hover path {
+    fill: #337ab7
+}
+
+.iconBlue:hover:active path {
+    fill: #286090
+}
+
+.iconYellow {
+    composes: icon;
+}
+
+.iconYellow:hover path {
+    fill: #f0ad4e;
+}
+
+.iconYellow:hover:active path {
+    fill: #ec971f;
+}
+
+.iconRed {
+    composes: icon
+}
+
+.iconRed:hover path {
+    fill: #dc3545;
+}
+
+.iconRed:hover:active path {
+    fill: #c9302c;
+}

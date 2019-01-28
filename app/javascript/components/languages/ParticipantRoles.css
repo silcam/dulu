@@ -1,0 +1,7 @@
+table.simple {
+    width: auto !important;
+}
+
+table.simple tbody tr td {
+    padding-left: 0;
+}

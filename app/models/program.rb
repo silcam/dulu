@@ -56,6 +56,14 @@ class Program < ApplicationRecord
     translation_activities.joins(:bible_book).order('bible_books.usfm_number')
   end
 
+  def research_activities
+    linguistic_activities.where(category: :Research)
+  end
+
+  def workshops_activities
+    linguistic_activities.where(category: :Workshops)
+  end
+
   def sorted_pubs(kind)
     publications.where(kind: kind).order('year DESC')
   end

@@ -21,8 +21,9 @@ json.person do
     json.partial! '/api/organization_people/org_person', org_person: org_person
   end
 
-  roles = @person.roles.collect { |r| {value: r, display: t(r) } }
-  json.roles roles
+  json.roles do
+    json.partial! '/api/person_roles/roles', roles: @person.roles
+  end
   json.grantable_roles Role
                         .grantable_roles(current_user, @person)
                         .collect{ |r| { value: r, display: t(r) } }
@@ -40,9 +41,11 @@ json.person do
     json.upcoming @person.events.upcoming, partial: 'api/people/event', as: :event
     json.past @person.events.past.limit(5), partial: 'api/people/event', as: :event
   end
-end
 
-json.can do
-  json.update can?(:update, @person)
-  json.destroy can?(:destroy, @person)
+  json.can do
+    json.update can?(:update, @person)
+    json.destroy can?(:destroy, @person)
+  end
+
+  json.loaded true
 end

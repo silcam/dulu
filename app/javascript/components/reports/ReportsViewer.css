@@ -1,0 +1,71 @@
+.container {
+    display: flex;
+    flex-direction: row;
+    flex-grow: 1;
+    min-height: 0;
+}
+
+.sidebar {
+    display: inline-block;
+    padding: 8px 8px 0;
+    /* height: calc(100% - 8px); */
+    align-self: stretch;
+    border-right: 2px solid #ddd;
+    overflow-y: auto;
+}
+
+.sidebar input[type=text] {
+    margin: 8px 0;
+}
+
+.sidebar ul li {
+    margin-left: 8px;
+}
+
+.sidebar ul li svg {
+    margin-bottom: -2px;
+}
+
+.main {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    flex-shrink: 1;
+    padding: 8px 8px 0;
+    /* height: calc(100%-8px); */
+    align-self: stretch;
+    overflow-y: auto;
+}
+
+.savedReportsList {
+    padding-left: 16px;
+}
+
+.lcReport {
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 1;
+    flex-grow: 1;
+    height: 100%;
+}
+
+.lcBody {
+    flex-grow: 1;
+    flex-shrink: 1;
+    overflow-y: auto;
+}
+
+.lcReportSubheader {
+    margin-top: -20px;
+}
+
+.lcReport table {
+    border-collapse: collapse;
+    margin-bottom: 16px;
+}
+
+.lcReport table tbody tr th,
+.lcReport table tbody tr td {
+    border: 1px solid #ddd;
+    padding: 8px;
+}

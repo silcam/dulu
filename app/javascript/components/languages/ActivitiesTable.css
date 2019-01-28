@@ -1,0 +1,24 @@
+td.rowExpansion {
+    border: none;
+    padding: 0 30px;
+}
+
+div.rowExpansion {
+    margin: 12px 0;
+}
+
+div.rowExpansion select {
+    margin: 0 12px;
+}
+
+div.inline {
+    display: inline-block;
+}
+
+div.newActivityForm {
+    padding: 0 30px;
+}
+
+table.workshopsTable tbody tr td {
+    border: none;
+}

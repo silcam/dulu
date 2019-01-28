@@ -4,9 +4,10 @@ class Event < ApplicationRecord
   has_and_belongs_to_many :programs
   has_and_belongs_to_many :clusters
   has_many :event_participants, autosave: true, dependent: :destroy
+  accepts_nested_attributes_for :event_participants, allow_destroy: true
   has_many :people, through: :event_participants
   belongs_to :creator, required: false, class_name: 'Person'
-  has_one :workshop
+  has_one :workshop, dependent: :nullify
 
   audited
 
@@ -111,6 +112,10 @@ class Event < ApplicationRecord
     where(current_filter)
   end
 
+  def self.for_month(year, month)
+    where(month_filter(year.to_i, month.to_i))
+  end
+
   def self.search(query)
     events = Event.multi_word_where(query, 'name')
     results = []
@@ -126,19 +131,39 @@ class Event < ApplicationRecord
 
   private
 
+  # SQL Injection?
+  # Ok because inserted text comes from Date.to_s which does not produce malicious SQL
   def self.upcoming_filter
     "start_date > '#{Date.today.to_s}'"
   end
 
+  # SQL Injection?
+  # Ok because inserted texts all come from self.today_texts which does not produce malicious SQL
   def self.past_filter
     today, year_month, year = today_texts
     "end_date < '#{today}' AND end_date != '#{year_month}' AND end_date != '#{year}'"
   end
 
+  # SQL Injection?
+  # Ok because inserted texts all come self.today_texts which does not produce malicious SQL
   def self.current_filter
     today, year_month, year = today_texts
     "start_date <= '#{today}' AND (end_date >= '#{today}' OR end_date = '#{year_month}' OR end_date = '#{year}')"
   end
+
+  # SQL Injection?
+  # Ok because inserted texts all come from FuzzyDate.to_s which does not produce malicious SQL
+  def self.month_filter(year, month)
+    month_text = FuzzyDate.new(year, month).to_s
+    next_month_text = get_next_month_text(year, month)
+    "(start_date < '#{next_month_text}') AND 
+     (end_date >= '#{month_text}' OR end_date = '#{year}')"
+  end
+
+  def self.get_next_month_text(year, month)
+    return month == 12 ? FuzzyDate.new(year + 1).to_s : FuzzyDate.new(year, month + 1).to_s
+  end
+      
 
   def self.today_texts
     today = Date.today.to_s

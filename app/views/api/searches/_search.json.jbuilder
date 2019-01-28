@@ -7,7 +7,7 @@ json.array! results do |result|
   if result[:route]
     json.route result[:route]
   elsif result[:model]
-    json.route polymorphic_path(result[:model])
+    json.route model_path(result[:model])
   end
   
   if result[:subresults]

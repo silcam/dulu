@@ -3,6 +3,7 @@ env:
   browser: true
   es6: true
   amd: true
+  jest: true
 extends: 
   - 'eslint:recommended'
   - 'plugin:react/recommended'
@@ -13,13 +14,14 @@ parserOptions:
   sourceType: module
 plugins:
   - react
+  - jest
 globals:
   module: true
 rules:
   react/jsx-uses-vars:
     - error
   react/prop-types:
-    - 0
+    - warn
   react/display-name:
     - 0
   no-console:

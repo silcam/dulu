@@ -1,1 +1,0 @@
-json.partial! 'org', org: @org

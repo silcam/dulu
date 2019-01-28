@@ -4,8 +4,8 @@
     <title>Dulu</title>
     <%= csrf_meta_tags %>
 
-    <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
-    <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
+    <%= stylesheet_link_tag    'application', media: 'all' %>
+    <%= javascript_include_tag 'application' %>
     <!--[if lt IE 9]>
       <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/r29/html5.min.js">
       </script>
@@ -13,12 +13,5 @@
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
   </head>
-
-  <% page_name = "#{controller_name}##{action_name}" %>
-  <body data-page-name="<%= page_name %>">
-    <%= render 'layouts/navbar' %>
-    <div class="container-fluid" class="Frame">
-      <%= yield %>
-    </div>
-  </body>
+  <body><%= yield %></body>
 </html>

@@ -87,4 +87,17 @@ module ApplicationHelper
     keys.each{ |key| h.merge!(I18n.t(key)) }
     return JSON.generate(h).html_safe
   end
+
+  # Returns path like /events/123
+  # Or given multiple instances, like /programs/4/events/123
+  def model_path(*instances)
+    return instances.collect do |instance|
+      "/#{instance.class.name.pluralize.underscore}/#{instance.id}"
+    end
+    .join
+  end
+
+  def model_url(instance)
+    return "dulu.sil.org" + model_path(instance)
+  end
 end

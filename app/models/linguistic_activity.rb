@@ -5,6 +5,7 @@ class LinguisticActivity < Activity
   default_scope{ where(archived: false) }
 
   has_many :workshops
+  accepts_nested_attributes_for :workshops
 
   validates :title, presence: true, allow_blank: false
   validates :category, inclusion: CATEGORIES

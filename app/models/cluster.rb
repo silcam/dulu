@@ -2,7 +2,7 @@ class Cluster < ApplicationRecord
   include ClusterProgram
   include MultiWordSearch
 
-  has_many :languages
+  has_many :languages, dependent: :nullify
   has_many :programs, through: :languages
 
   audited
@@ -44,5 +44,9 @@ class Cluster < ApplicationRecord
                   subresults: subresults}
     end
     results
+  end
+
+  def self.basic_search(query)
+    Cluster.where("unaccent(name) ILIKE unaccent(?)", "%#{query}%")
   end
 end

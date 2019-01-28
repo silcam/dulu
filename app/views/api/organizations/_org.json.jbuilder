@@ -20,3 +20,10 @@ json.parent do
     json.name ''
   end
 end
+
+json.can do
+  json.update can?(:update, org)
+  json.destroy can?(:destroy, org)
+end
+
+json.loaded true

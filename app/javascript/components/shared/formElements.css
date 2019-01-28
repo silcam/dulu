@@ -1,0 +1,16 @@
+.errorMessage {
+    color: #c9302c;
+}
+
+h2 .errorMessage {
+    font-size: 14px;
+}
+
+.errorMessage input {
+    border-color: #c9302c;
+    border-style: solid;
+}
+
+.errorMessage input:focus {
+    outline-color: #c9302c;
+}

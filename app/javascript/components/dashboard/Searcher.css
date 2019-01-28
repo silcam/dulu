@@ -1,0 +1,6 @@
+.searcher input {
+    width: calc(100% - 28px);
+    font-size: 18px;
+    margin: 8px 4px;
+    padding: 8px;
+}

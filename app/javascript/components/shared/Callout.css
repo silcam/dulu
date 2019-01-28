@@ -1,0 +1,34 @@
+.callout {
+  padding: 8px;
+  margin: 0;
+  border: 1px solid #eee;
+  border-left-width: 5px;
+  border-radius: 3px;
+}
+
+.calloutBlue {
+  composes: callout;
+  border-color: #a76610;
+}
+
+.calloutBlue h1,
+.calloutBlue h2,
+.calloutBlue h3,
+.calloutBlue h4,
+.calloutBlue h5,
+.calloutBlue h6 {
+  color: #a76610;
+}
+
+.calloutRed {
+  composes: callout;    
+  border-left-color: #ce4844;
+}
+.calloutRed h1,
+.calloutRed h2,
+.calloutRed h3,
+.calloutRed h4,
+.calloutRed h5,
+.calloutRed h6 {
+  color: #ce4844;
+}

@@ -40,6 +40,12 @@ class Stage < ApplicationRecord
   validates :kind, inclusion: [:Translation, :Linguistic, :Media]
   # validate :name_is_on_the_list
 
+  def self.new_stage(params)
+    stage = Stage.new(params)
+    stage.kind = stage.activity.kind
+    return stage
+  end
+
   def kind
     self.attributes['kind'].try(:to_sym)
   end

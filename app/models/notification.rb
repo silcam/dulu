@@ -48,7 +48,9 @@ class Notification < ApplicationRecord
 
   class << self
     include TranslationHelper
-    delegate :url_helpers, to: 'Rails.application.routes'
+    def model_path(instance)
+      return ApplicationController.helpers.model_path(instance)
+    end
 
     def global
       where(person: nil)
@@ -64,9 +66,9 @@ class Notification < ApplicationRecord
           program_name: program.name
         },
         links: {
-          user_name: url_helpers.person_path(user),
-          participant_name: url_helpers.participant_path(participant),
-          program_name: url_helpers.program_path(program)
+          user_name: model_path(user),
+          participant_name: model_path(participant),
+          program_name: model_path(program)
         }
       }
       people = cluster_program_people(program, user, participant.person)
@@ -87,9 +89,9 @@ class Notification < ApplicationRecord
           cluster_name: cluster.name
         },
         links: {
-          user_name: url_helpers.person_path(user),
-          participant_name: url_helpers.participant_path(participant),
-          cluster_name: url_helpers.cluster_path(cluster)
+          user_name: model_path(user),
+          participant_name: model_path(participant),
+          cluster_name: model_path(cluster)
         }
       }
       people = cluster_program_people(cluster, user, participant.person)
@@ -112,9 +114,9 @@ class Notification < ApplicationRecord
           program_name: program.name
         },
         links: {
-          user_name: url_helpers.person_path(user),
-          activity_name: url_helpers.activity_path(activity),
-          program_name: url_helpers.program_path(program)          
+          user_name: model_path(user),
+          activity_name: model_path(activity),
+          program_name: model_path(program)          
         }
       }
       send_notification n_params, cluster_program_people(program, user)      
@@ -131,9 +133,9 @@ class Notification < ApplicationRecord
           program_name: program.name
         },
         links: {
-          user_name: url_helpers.person_path(user),
-          workshop_name: url_helpers.activity_path(workshop.linguistic_activity),
-          program_name: url_helpers.program_path(program)
+          user_name: model_path(user),
+          workshop_name: model_path(workshop.linguistic_activity),
+          program_name: model_path(program)
         }
       }
       send_notification n_params, cluster_program_people(program, user)
@@ -150,9 +152,9 @@ class Notification < ApplicationRecord
           activity_name: activity_name(activity)
         },
         links: {
-          user_name: url_helpers.person_path(user),
-          program_name: url_helpers.program_path(program),
-          activity_name: url_helpers.activity_path(activity)
+          user_name: model_path(user),
+          program_name: model_path(program),
+          activity_name: model_path(activity)
         }
       }
       send_notification n_params, cluster_program_people(program, user)
@@ -169,8 +171,8 @@ class Notification < ApplicationRecord
           testament: t_hash(testament)
         },
         links: {
-          user_name: url_helpers.person_path(user),
-          program_name: url_helpers.program_path(program)
+          user_name: model_path(user),
+          program_name: model_path(program)
         }
       }
       send_notification n_params, cluster_program_people(program, user)
@@ -187,9 +189,9 @@ class Notification < ApplicationRecord
           person_name: person.full_name
         },
         links: {
-          user_name: url_helpers.person_path(user),
-          your_info: url_helpers.person_path(person),
-          person_name: url_helpers.person_path(person)
+          user_name: model_path(user),
+          your_info: model_path(person),
+          person_name: model_path(person)
         }
       }
       send_notification n_params, [person], true, :updated_person
@@ -204,7 +206,7 @@ class Notification < ApplicationRecord
           his: t_hash("notification.his.#{user.gender}")
         },
         links: {
-          user_name: url_helpers.person_path(user)
+          user_name: model_path(user)
         }
       }
       send_notification n_params, []  # Global only
@@ -220,8 +222,8 @@ class Notification < ApplicationRecord
           person_name: person.full_name
         },
         links: {
-          user_name: url_helpers.person_path(user),
-          person_name: url_helpers.person_path(person)
+          user_name: model_path(user),
+          person_name: model_path(person)
         }
       }
       send_notification n_params, [person], true, :gave_person_role
@@ -237,7 +239,7 @@ class Notification < ApplicationRecord
           role_name: t_hash(role)
         },
         links: {
-          user_name: url_helpers.person_path(user)
+          user_name: model_path(user)
         }
       }
       send_notification n_params, []  # Global only
@@ -255,10 +257,10 @@ class Notification < ApplicationRecord
           program_name: program.name
         },
         links: {
-          user_name: url_helpers.person_path(user),
-          person_name: url_helpers.person_path(person),
-          activity_name: url_helpers.activity_path(activity),
-          program_name: url_helpers.program_path(program)
+          user_name: model_path(user),
+          person_name: model_path(person),
+          activity_name: model_path(activity),
+          program_name: model_path(program)
         }
       }
       people = cluster_program_people(activity.program, user, person)
@@ -279,9 +281,9 @@ class Notification < ApplicationRecord
           program_name: activity.program.name
         },
         links: {
-          user_name: url_helpers.person_path(user),
-          activity_name: url_helpers.activity_path(activity),
-          program_name: url_helpers.program_path(activity.program)
+          user_name: model_path(user),
+          activity_name: model_path(activity),
+          program_name: model_path(activity.program)
         }
       }
       people = cluster_program_people(activity.program, user)
@@ -300,9 +302,9 @@ class Notification < ApplicationRecord
           event_name: event.name
         },
         links: {
-          user_name: url_helpers.person_path(user),
-          person_name: url_helpers.person_path(person),
-          event_name: url_helpers.event_path(event)
+          user_name: model_path(user),
+          person_name: model_path(person),
+          event_name: model_path(event)
         }
       }
       people = event.people - [user, person]
@@ -322,8 +324,8 @@ class Notification < ApplicationRecord
           event_name: event_participant.event.name
         },
         links: {
-          user_name: url_helpers.person_path(user),
-          event_name: url_helpers.event_path(event_participant.event)
+          user_name: model_path(user),
+          event_name: model_path(event_participant.event)
         }
       }
       people = event_participant.event.people - [user]
@@ -339,9 +341,9 @@ class Notification < ApplicationRecord
           program_name: program.name
         },
         links: {
-          user_name: url_helpers.person_path(user),
-          event_name: url_helpers.program_event_path(program, event),
-          program_name: url_helpers.program_path(program)
+          user_name: model_path(user),
+          event_name: model_path(program) + model_path(event),
+          program_name: model_path(program)
         }
       } 
       send_notification n_params, cluster_program_people(program, user)
@@ -357,9 +359,9 @@ class Notification < ApplicationRecord
           event_name: event.name
         },
         links: {
-          user_name: url_helpers.person_path(user),
-          program_name: url_helpers.program_path(program),
-          event_name: url_helpers.program_event_path(program, event)
+          user_name: model_path(user),
+          program_name: model_path(program),
+          event_name: model_path(program) + model_path(event)
         }
       }
       send_notification n_params, cluster_program_event_people(program, event, user)
@@ -375,9 +377,9 @@ class Notification < ApplicationRecord
           event_name: event.name
         },
         links: {
-          user_name: url_helpers.person_path(user),
-          cluster_name: url_helpers.cluster_path(cluster),
-          event_name: url_helpers.event_path(event)
+          user_name: model_path(user),
+          cluster_name: model_path(cluster),
+          event_name: model_path(event)
         }
       }
       send_notification n_params, cluster_program_event_people(cluster, event, user)

@@ -1,0 +1,158 @@
+html {
+    height: 100%;
+}
+
+body {
+    height: 100%;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 14px;
+    margin: 0;
+}
+
+div.fullHeight {
+    height: 100%;
+}
+
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+button, a.btn {
+    display: inline-block;
+    text-align: center;
+    vertical-align: middle;
+    cursor: pointer;
+    color: white;
+    background-color: #337ab7;
+    /* border: 1px solid #2e6da4; */
+    border-width: 0;
+    padding: 6px 12px;
+    font-size: 14px;
+    margin: 0 8px 8px 0;
+    box-shadow: 1px 1px 0 #00000033;
+}
+
+button:disabled, a.btn:disabled,
+button:hover:disabled, a.btn:hover:disabled  {
+    cursor: not-allowed;
+    opacity: 0.65;
+    background-color: #337ab7;
+    border-color: #2e6da4;
+}
+
+button:hover, a.btn:hover {
+    color: white;
+    text-decoration: none;
+    background-color: #286090;
+    border-color: #204d74;
+}
+
+button:hover:active, a.btn:hover:active {
+    background-color: #204d74;
+    border-color: #122b40;
+}
+
+button.btnRed, 
+a.btnRed, 
+button.btnRed:hover:disabled, 
+a.btnRed:hover:disabled{
+    background-color: #d9534f;
+    border-color: #d43f3a;
+}
+
+button.btnRed:hover, a.btnRed:hover {
+    background-color: #c9302c;
+    border-color: #ac2925;
+}
+
+button.btnRed:hover:active, a.btnRed:hover:active {
+    background-color: #ac2925;
+    border-color: #761c19;
+}
+
+a, button.link, button.link:active, button.link:focus {
+    color: #337ab7;
+    text-decoration: none;
+    border-width: 0;
+    background-color: transparent;
+    box-shadow: none;
+    font-weight: normal;
+    border-radius: 0;
+    text-align: left;
+    margin: 0;
+    padding: 0;
+    outline: none;
+    vertical-align: baseline;
+}
+
+a:hover, button.link:hover, button.link:hover:active {
+    text-decoration: underline;
+    color: #23527c;
+}
+
+a.notBlue {
+    color: inherit;
+}
+
+button.small {
+    font-size: 11px;
+}
+
+h1, h2, h3, h4, h5, h6,
+h2 a, h3 a {
+    font-weight: 500;
+    line-height: 1.1;
+}
+
+h1 {
+    font-size: 36px;
+}
+
+h2, h2 input[type=text] {
+    font-size: 30px;
+}
+
+h3 {
+    font-size: 25px;
+    margin: 12px 0;
+}
+
+h4 {
+    font-size: 20px;
+    margin: 8px 0;
+}
+
+h3 a:hover {
+    text-decoration: none;
+}
+
+input[type=text] {
+    width: calc(100% - 12px);
+    margin: 0;
+    padding: 4px;
+    font-size: 14px;
+}
+
+textarea {
+    width: calc(100% - 12px);
+    margin: 0;
+    padding: 4px;
+    font-size: 14px;
+}
+
+select {
+    width: calc(100% - 2px);
+    font-size: 14px;
+    margin: 0;
+    /* padding: 4px; Not supported */
+}
+
+label {
+    font-weight: bold;
+}
+
+h3 label {
+    font-size: 14px;
+}
