@@ -7,8 +7,8 @@ export default function ProgressBar(props) {
     <div
       style={{
         display: "inline-block",
-        width: "100px",
-        height: "15px",
+        width: props.small ? "40px" : "100px",
+        height: props.small ? "4px" : "15px",
         backgroundColor: "#ddd"
       }}
     >
@@ -21,5 +21,6 @@ export default function ProgressBar(props) {
 
 ProgressBar.propTypes = {
   percent: PropTypes.number.isRequired,
-  color: PropTypes.string.isRequired
+  color: PropTypes.string.isRequired,
+  small: PropTypes.bool
 };

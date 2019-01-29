@@ -1,4 +1,4 @@
-json.call(participant, :id, :roles, :start_date, :end_date)
+json.call(participant, :id, :roles, :start_date, :end_date, :activity_ids)
 
 json.person do
   json.call(participant.person, :id, :full_name)

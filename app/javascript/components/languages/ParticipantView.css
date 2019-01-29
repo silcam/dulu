@@ -11,3 +11,11 @@ table.simple tbody tr th {
     padding-left: 0;
     padding-bottom: 0;
 }
+
+ul.stdList li {
+    margin-bottom: 8px;
+}
+
+ul.stdList li a {
+    font-size: larger;
+}

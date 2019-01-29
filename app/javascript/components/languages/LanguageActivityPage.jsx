@@ -2,11 +2,10 @@ import React from "react";
 import PropTypes from "prop-types";
 import Activity from "../../models/Activity";
 import { Link } from "react-router-dom";
-import EditActionBar from "../shared/EditActionBar";
 import WorkshopActivity from "../workshops/WorkshopActivity";
-import ProgressBar from "../shared/ProgressBar";
 import update from "immutability-helper";
 import { replace } from "../../util/arrayUtils";
+import ActivityView from "./ActivityView";
 
 export default class LanguageActivityPage extends React.PureComponent {
   activity = () =>
@@ -47,10 +46,12 @@ export default class LanguageActivityPage extends React.PureComponent {
             language={language}
           />
         ) : (
-          <div>
-            <ProgressBar {...Activity.progress(activity)} />
-            <p>{Activity.currentStageName(activity, t)}</p>
-          </div>
+          <ActivityView
+            basePath={this.props.basePath}
+            language={language}
+            activity={activity}
+            t={t}
+          />
         )}
       </div>
     );

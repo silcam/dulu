@@ -114,6 +114,23 @@ export default class Activity {
     }
     return undefined;
   }
+
+  // Activities may be different types!
+  static compare(a, b) {
+    const domainCompare = a.type.localeCompare(b.type);
+    if (domainCompare != 0) return domainCompare;
+
+    if (a.type == "TranslationActivity") {
+      return a.bible_book_id - b.bible_book_id;
+    }
+
+    if (a.type == "LinguisticActivity") {
+      const categoryCompare = a.category.localeCompare(b.category);
+      if (categoryCompare != 0) return categoryCompare;
+    }
+
+    return Activity.name(a).localeCompare(Activity.name(b));
+  }
 }
 
 Activity.mediaCategories = ["AudioScripture", "Film"];

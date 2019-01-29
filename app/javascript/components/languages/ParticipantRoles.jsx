@@ -40,11 +40,11 @@ export default function ParticipantRoles(props) {
       </table>
     </div>
   ) : (
-    <label>
+    <div style={{ fontSize: "larger" }}>
       {participant.roles.length > 0
         ? participant.roles.map(role => t(`roles.${role}`)).join(", ")
         : t("No_roles_assigned")}
-    </label>
+    </div>
   );
 }
 

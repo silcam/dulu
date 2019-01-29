@@ -50,6 +50,7 @@ export default class LanguageParticipantPage extends React.PureComponent {
         </h4>
         <ParticipantView
           participant={participant}
+          language={language}
           t={t}
           can={this.participantCan()}
           replaceParticipant={this.replaceParticipant}

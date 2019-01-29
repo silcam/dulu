@@ -9,7 +9,9 @@ import style from "./ParticipantView.css";
 import TextOrFuzzyDateInput from "../shared/TextOrFuzzyDateInput";
 import Participant from "../../models/Participant";
 import { Link } from "react-router-dom";
-
+import Activity from "../../models/Activity";
+import Spacer from "../shared/Spacer";
+import ProgressBar from "../shared/ProgressBar";
 export default class ParticipantView extends React.PureComponent {
   constructor(props) {
     super(props);
@@ -139,6 +141,25 @@ export default class ParticipantView extends React.PureComponent {
             )}
           </tbody>
         </table>
+        {this.props.language && !this.state.editing && (
+          <div>
+            <h3>{t("Activities")}</h3>
+            <ul className={style.stdList}>
+              {Participant.activitiesForParticipant(
+                this.props.language,
+                participant
+              ).map(activity => (
+                <li key={activity.id}>
+                  <ProgressBar {...Activity.progress(activity)} small />
+                  <Spacer width="10px" />
+                  <Link to={`${this.props.basePath}/activities/${activity.id}`}>
+                    {Activity.name(activity, t)}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
       </div>
     );
   }
@@ -152,5 +173,6 @@ ParticipantView.propTypes = {
   setNetworkError: PropTypes.func.isRequired,
   history: PropTypes.object.isRequired,
   basePath: PropTypes.string.isRequired,
-  removeParticipant: PropTypes.func.isRequired
+  removeParticipant: PropTypes.func.isRequired,
+  language: PropTypes.object // If in a language context
 };

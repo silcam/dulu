@@ -138,3 +138,38 @@ test("find that activity", () => {
   expect(Activity.findActivity(myLang, 303)).toBe(workshopsActivity);
   expect(Activity.findActivity(myLang, 404)).toBe(mediaActivity);
 });
+
+test("Compare: diff domains", () => {
+  expect(Activity.compare(translationActivity, mediaActivity)).toBeGreaterThan(
+    0
+  );
+});
+
+test("Compare: research & workshops", () => {
+  expect(Activity.compare(researchActivity, workshopsActivity)).toBeLessThan(0);
+});
+
+test("Compare: translation activities", () => {
+  expect(
+    Activity.compare(translationActivity, {
+      type: "TranslationActivity",
+      bible_book_id: 2
+    })
+  ).toBeLessThan(0);
+});
+
+test("Compare: compare by name", () => {
+  expect(
+    Activity.compare(mediaActivity, {
+      type: "MediaActivity",
+      name: "Magdalena Film"
+    })
+  ).toBeLessThan(0);
+  expect(
+    Activity.compare(researchActivity, {
+      type: "LinguisticActivity",
+      category: "Research",
+      title: "AAA"
+    })
+  ).toBeGreaterThan(0);
+});
