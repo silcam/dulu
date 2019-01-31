@@ -5,7 +5,7 @@ import NewPersonForm from "./NewPersonForm";
 import PersonPage from "./PersonPage";
 import Loading from "../shared/Loading";
 import { personCompare, sameName } from "../../models/person";
-import thingBoard from "../shared/thingBoard";
+import thingBoardRedux from "../shared/thingBoardRedux";
 import AddIcon from "../shared/icons/AddIcon";
 import { Link } from "react-router-dom";
 import TextFilter from "../shared/TextFilter";
@@ -101,7 +101,7 @@ class Board extends React.PureComponent {
   }
 }
 
-const PeopleBoard = thingBoard(Board, {
+const PeopleBoard = thingBoardRedux(Board, {
   name: "person",
   pluralName: "people",
   compare: personCompare

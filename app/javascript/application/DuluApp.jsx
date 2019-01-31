@@ -2,7 +2,7 @@ import React from "react";
 import { Switch, Route } from "react-router-dom";
 import NavBar from "../components/layout/NavBar";
 import Dashboard from "../components/dashboard/Dashboard";
-import PeopleBoard from "../components/people/PeopleBoard";
+import PeopleContainer from "../components/people/PeopleContainer";
 import translator from "../i18n/i18n";
 import styles from "./DuluApp.css";
 import OrganizationsBoard from "../components/organizations/OrganizationsBoard";
@@ -113,7 +113,7 @@ export default class DuluApp extends React.Component {
           <Route
             path="/people/:actionOrId?/:id?"
             render={({ match, history }) => (
-              <PeopleBoard
+              <PeopleContainer
                 history={history}
                 {...routeActionAndId(match.params)}
                 t={this.state.t}
