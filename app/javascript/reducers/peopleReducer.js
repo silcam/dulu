@@ -5,70 +5,23 @@ import {
   DELETE_PERSON
 } from "../actions/peopleActions";
 import { personCompare } from "../models/person";
-import update from "immutability-helper";
+import { setList, addItem, setItem, deleteItem } from "./reducerUtil";
 
 const emptyState = {
-  peopleIds: [],
-  peopleById: {}
+  list: [],
+  byId: {}
 };
 
 export default function peopleReducer(state = emptyState, action) {
   switch (action.type) {
     case SET_PEOPLE:
-      return setPeople(state, action.people);
+      return setList(state, action.people);
     case ADD_PERSON:
-      return addPerson(state, action.person);
+      return addItem(state, action.person, personCompare);
     case SET_PERSON:
-      return setPerson(state, action.person);
+      return setItem(state, action.person, personCompare);
     case DELETE_PERSON:
-      return deletePerson(state, action.id);
+      return deleteItem(state, action.id);
   }
   return state;
-}
-
-function setPeople(state, people) {
-  return {
-    peopleIds: people.map(person => person.id),
-    peopleById: people.reduce((accum, person) => {
-      const oldPerson = state.peopleById[person.id] || {};
-      accum[person.id] = { ...oldPerson, ...person };
-      return accum;
-    }, {})
-  };
-}
-
-function addPerson(state, person) {
-  let peopleIds = [...state.peopleIds, person.id];
-  const peopleById = { ...state.peopleById, [person.id]: person };
-  sortPeopleIds(peopleIds, peopleById);
-  return {
-    peopleIds: peopleIds,
-    peopleById: peopleById
-  };
-}
-
-function setPerson(state, person) {
-  let peopleIds = [...state.peopleIds];
-  const peopleById = update(state.peopleById, {
-    [person.id]: { $merge: person }
-  });
-  sortPeopleIds(peopleIds, peopleById);
-  return {
-    peopleIds: peopleIds,
-    peopleById: peopleById
-  };
-}
-
-function deletePerson(state, id) {
-  const index = state.peopleIds.indexOf(id);
-  if (index < 0) return state;
-  return {
-    peopleIds: update(state.peopleIds, { $splice: [[index, 1]] }),
-    peopleById: update(state.peopleById, { [id]: { $set: undefined } })
-  };
-}
-
-// Sorts in place!
-function sortPeopleIds(peopleIds, peopleById) {
-  peopleIds.sort((a, b) => personCompare(peopleById[a], peopleById[b]));
 }

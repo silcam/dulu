@@ -8,8 +8,8 @@ import {
 
 test("empty state", () => {
   expect(peopleReducer(undefined, {})).toEqual({
-    peopleIds: [],
-    peopleById: {}
+    list: [],
+    byId: {}
   });
 });
 
@@ -21,8 +21,8 @@ const peopleData = [rick, brian];
 
 test("initial SET PEOPLE", () => {
   const state = peopleReducer(undefined, setPeople(peopleData));
-  expect(state.peopleIds).toEqual([101, 202]);
-  expect(state.peopleById[101]).toEqual({
+  expect(state.list).toEqual([101, 202]);
+  expect(state.byId[101]).toEqual({
     id: 101,
     first_name: "Rick",
     last_name: "Conrad"
@@ -30,8 +30,8 @@ test("initial SET PEOPLE", () => {
 });
 
 const initialState = {
-  peopleIds: [101, 303],
-  peopleById: {
+  list: [101, 303],
+  byId: {
     101: fullRick,
     303: neil
   }
@@ -39,8 +39,8 @@ const initialState = {
 
 test("subsequent SET PEOPLE", () => {
   const state = peopleReducer(initialState, setPeople(peopleData));
-  expect(state.peopleIds).toEqual([101, 202]);
-  expect(state.peopleById).toEqual({
+  expect(state.list).toEqual([101, 202]);
+  expect(state.byId).toEqual({
     101: fullRick,
     202: brian
   });
@@ -48,8 +48,8 @@ test("subsequent SET PEOPLE", () => {
 
 test("ADD PERSON", () => {
   const state = peopleReducer(initialState, addPerson(brian));
-  expect(state.peopleIds).toEqual([101, 202, 303]);
-  expect(state.peopleById[202]).toEqual(brian);
+  expect(state.list).toEqual([101, 202, 303]);
+  expect(state.byId[202]).toEqual(brian);
 });
 
 test("SET PERSON", () => {
@@ -57,8 +57,8 @@ test("SET PERSON", () => {
     initialState,
     setPerson({ id: 303, last_name: "Applegate" })
   );
-  expect(state.peopleIds).toEqual([303, 101]);
-  expect(state.peopleById[303]).toEqual({
+  expect(state.list).toEqual([303, 101]);
+  expect(state.byId[303]).toEqual({
     id: 303,
     first_name: "Neil",
     last_name: "Applegate"
@@ -67,8 +67,8 @@ test("SET PERSON", () => {
 
 test("DELETE PERSON", () => {
   const state = peopleReducer(initialState, deletePerson(101));
-  expect(state.peopleIds).toEqual([303]);
-  expect(state.peopleById).toEqual({
+  expect(state.list).toEqual([303]);
+  expect(state.byId).toEqual({
     303: neil
   });
 });

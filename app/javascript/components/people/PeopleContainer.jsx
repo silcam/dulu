@@ -3,7 +3,7 @@ import * as peopleActionCreators from "../../actions/peopleActions";
 import PeopleBoard from "./PeopleBoard";
 
 const mapStateToProps = state => ({
-  people: state.people.peopleIds.map(id => state.people.peopleById[id])
+  people: state.people.list.map(id => state.people.byId[id])
 });
 
 const mapDispatchToProps = peopleActionCreators;
