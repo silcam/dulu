@@ -2,44 +2,36 @@ import React from "react";
 import styles from "../shared/MasterDetail.css";
 import PeopleTable from "./PeopleTable";
 import NewPersonForm from "./NewPersonForm";
-import PersonPage from "./PersonPage";
-import Loading from "../shared/Loading";
-import { personCompare, sameName } from "../../models/person";
-import thingBoardRedux from "../shared/thingBoardRedux";
 import AddIcon from "../shared/icons/AddIcon";
 import { Link } from "react-router-dom";
 import TextFilter from "../shared/TextFilter";
 import FlexSpacer from "../shared/FlexSpacer";
+import DuluAxios from "../../util/DuluAxios";
+import PropTypes from "prop-types";
+import PersonContainer from "./PersonContainer";
 
-class Board extends React.PureComponent {
-  state = {};
-
-  findDuplicate = newPerson => {
-    return this.props.people.find(person => sameName(person, newPerson));
+export default class PeopleBoard extends React.PureComponent {
+  state = {
+    can: {}
   };
 
-  addPerson = async person => {
-    const duplicate = !person.not_a_duplicate && this.findDuplicate(person);
-    if (duplicate) {
-      this.setState({ duplicatePerson: duplicate });
-    } else {
-      this.props.add(person);
-    }
-  };
-
-  replacePerson = async person => {
-    this.props.replace(person);
-    this.updateLanguageIfNecessary(person);
-  };
-
-  updateLanguageIfNecessary(newPerson) {
-    if (newPerson && newPerson.isUser) {
-      this.props.updateLanguage(newPerson.ui_language);
+  async componentDidMount() {
+    try {
+      const data = await DuluAxios.get("/api/people");
+      this.setState({
+        can: data.can
+      });
+      this.props.setPeople(data.people);
+    } catch (error) {
+      this.handleNetworkError(error);
     }
   }
 
+  handleNetworkError(tryAgain) {
+    this.props.setNetworkError({ tryAgain: tryAgain });
+  }
+
   render() {
-    const selectedPerson = this.props.selected;
     return (
       <div className={styles.container}>
         <div className={styles.headerBar}>
@@ -50,7 +42,7 @@ class Board extends React.PureComponent {
             placeholder={this.props.t("Find")}
             updateFilter={filter => this.setState({ filter: filter })}
           />
-          {this.props.can.create && (
+          {this.state.can.create && (
             <Link to="/people/new">
               <AddIcon iconSize="large" />
             </Link>
@@ -66,7 +58,7 @@ class Board extends React.PureComponent {
               t={this.props.t}
               id={this.props.id}
               people={this.props.people}
-              can={this.props.can}
+              can={this.state.can}
               filter={this.state.filter}
             />
           </div>
@@ -74,25 +66,22 @@ class Board extends React.PureComponent {
             {this.props.action == "new" && (
               <NewPersonForm
                 t={this.props.t}
-                saving={this.props.savingNew}
-                addPerson={this.addPerson}
-                duplicatePerson={this.state.duplicatePerson}
+                people={this.props.people}
+                addPerson={this.props.addPerson}
+                setNetworkError={this.props.setNetworkError}
+                history={this.props.history}
               />
             )}
-            {this.props.action == "show" &&
-              selectedPerson &&
-              (selectedPerson.loaded ? (
-                <PersonPage
-                  key={selectedPerson.id}
-                  person={selectedPerson}
-                  t={this.props.t}
-                  replacePerson={this.replacePerson}
-                  deletePerson={this.props.delete}
-                  setNetworkError={this.props.setNetworkError}
-                />
-              ) : (
-                <Loading t={this.props.t} />
-              ))}
+            {this.props.action == "show" && (
+              <PersonContainer
+                key={this.props.id}
+                id={this.props.id}
+                t={this.props.t}
+                setNetworkError={this.props.setNetworkError}
+                updateLanguage={this.props.updateLanguage}
+                history={this.props.history}
+              />
+            )}
             {!this.props.action && <span />}
           </div>
         </div>
@@ -101,10 +90,16 @@ class Board extends React.PureComponent {
   }
 }
 
-const PeopleBoard = thingBoardRedux(Board, {
-  name: "person",
-  pluralName: "people",
-  compare: personCompare
-});
-
-export default PeopleBoard;
+PeopleBoard.propTypes = {
+  setPeople: PropTypes.func.isRequired,
+  addPerson: PropTypes.func.isRequired,
+  setPerson: PropTypes.func.isRequired,
+  deletePerson: PropTypes.func.isRequired,
+  setNetworkError: PropTypes.func.isRequired,
+  updateLanguage: PropTypes.func.isRequired,
+  people: PropTypes.array.isRequired,
+  id: PropTypes.string,
+  action: PropTypes.string,
+  history: PropTypes.object.isRequired,
+  t: PropTypes.func.isRequired
+};

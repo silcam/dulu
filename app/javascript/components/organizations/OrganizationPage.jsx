@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import EditActionBar from "../shared/EditActionBar";
 import deepcopy from "../../util/deepcopy";
 import TextOrEditText from "../shared/TextOrEditText";
@@ -9,11 +10,25 @@ import TextOrSearchInput from "../shared/TextOrSearchInput";
 import TextOrTextArea from "../shared/TextOrTextArea";
 import SearchTextInput from "../shared/SearchTextInput";
 import { Link } from "react-router-dom";
+import DuluAxios from "../../util/DuluAxios";
+import Loading from "../shared/Loading";
 
 export default class OrganizationPage extends React.PureComponent {
   state = {
-    organization: deepcopy(this.props.organization)
+    organization: this.props.organization
+      ? deepcopy(this.props.organization)
+      : undefined
   };
+
+  async componentDidMount() {
+    try {
+      const data = await DuluAxios.get(`/api/organizations/${this.props.id}`);
+      this.props.setOrganization(data.organization);
+      this.setState({ organization: data.organization });
+    } catch (error) {
+      this.props.setNetworkError(error);
+    }
+  }
 
   updateOrganization = mergeOrg => {
     this.setState(prevState => ({
@@ -24,13 +39,35 @@ export default class OrganizationPage extends React.PureComponent {
   save = async () => {
     if (!this.validate()) return;
     this.setState({ saving: true });
-    const newOrganization = await this.props.update(this.state.organization);
-    this.setState({
-      editing: false,
-      saving: false,
-      savedChanges: true,
-      organization: newOrganization
-    });
+    try {
+      const data = await DuluAxios.put(
+        `/api/organizations/${this.state.organization.id}`,
+        {
+          organization: this.state.organization
+        }
+      );
+      this.props.setOrganization(data.organization);
+      this.setState({
+        editing: false,
+        saving: false,
+        savedChanges: true,
+        organization: data.organization
+      });
+    } catch (error) {
+      this.props.setNetworkError(error);
+    }
+  };
+
+  delete = async () => {
+    try {
+      await DuluAxios.delete(
+        `/api/organizations/${this.state.organization.id}`
+      );
+      this.props.history.push("/organizations");
+      this.props.deleteOrganization(this.state.organization.id);
+    } catch (error) {
+      this.props.setNetworkError(error);
+    }
   };
 
   validate = () => {
@@ -39,6 +76,8 @@ export default class OrganizationPage extends React.PureComponent {
 
   render() {
     const organization = this.state.organization;
+
+    if (!organization) return <Loading t={this.props.t} />;
 
     return (
       <div>
@@ -59,9 +98,7 @@ export default class OrganizationPage extends React.PureComponent {
 
         {this.state.deleting && (
           <DangerButton
-            handleClick={() => {
-              this.props.delete(organization.id);
-            }}
+            handleClick={this.delete}
             handleCancel={() => this.setState({ deleting: false })}
             message={this.props.t("delete_person_warning", {
               name: organization.short_name
@@ -159,3 +196,13 @@ export default class OrganizationPage extends React.PureComponent {
     );
   }
 }
+
+OrganizationPage.propTypes = {
+  id: PropTypes.string.isRequired,
+  organization: PropTypes.object,
+  t: PropTypes.func.isRequired,
+  setOrganization: PropTypes.func.isRequired,
+  deleteOrganization: PropTypes.func.isRequired,
+  setNetworkError: PropTypes.func.isRequired,
+  history: PropTypes.object.isRequired
+};

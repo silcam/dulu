@@ -1,4 +1,5 @@
 import update from "immutability-helper";
+import mergeOrSet from "../util/mergeOrSet";
 
 export function setList(state, items) {
   return {
@@ -8,6 +9,19 @@ export function setList(state, items) {
       accum[item.id] = update(oldItem, { $merge: item });
       return accum;
     }, {})
+  };
+}
+
+export function addItems(state, items, compare) {
+  const byId = items.reduce(
+    (byId, item) => update(byId, { [item.id]: mergeOrSet(item) }),
+    state.byId
+  );
+  let list = Object.keys(byId);
+  if (compare !== undefined) sortList(list, byId, compare);
+  return {
+    list: list,
+    byId: byId
   };
 }
 
@@ -22,6 +36,7 @@ export function addItem(state, item, compare) {
 }
 
 export function setItem(state, item, compare) {
+  if (!state.byId[item.id]) return addItem(state, item, compare);
   const byId = update(state.byId, { [item.id]: { $merge: item } });
   let list = state.list;
   if (compare !== undefined) {

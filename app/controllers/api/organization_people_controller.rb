@@ -1,4 +1,8 @@
 class Api::OrganizationPeopleController < ApplicationController
+  def index
+    @org_people = Person.find(params[:person_id]).organization_people
+  end
+
   def create
     set_person_and_org
     authorize! :update, @person

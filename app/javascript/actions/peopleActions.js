@@ -1,4 +1,5 @@
 export const SET_PEOPLE = "SET_PEOPLE";
+export const ADD_PEOPLE = "ADD_PEOPLE";
 export const ADD_PERSON = "ADD_PERSON";
 export const SET_PERSON = "SET_PERSON";
 export const DELETE_PERSON = "DELETE_PERSON";
@@ -6,6 +7,13 @@ export const DELETE_PERSON = "DELETE_PERSON";
 export function setPeople(people) {
   return {
     type: SET_PEOPLE,
+    people: people
+  };
+}
+
+export function addPeople(people) {
+  return {
+    type: ADD_PEOPLE,
     people: people
   };
 }

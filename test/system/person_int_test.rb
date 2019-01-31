@@ -100,6 +100,6 @@ class PersonIntTest < ApplicationSystemTestCase
   end
 
   test "Change my language" do 
-    postpone_failure(Date.new(2019, 2, 4))
+    postpone_failure(Date.new(2019, 1, 1))
   end
 end

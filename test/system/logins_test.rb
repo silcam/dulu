@@ -7,6 +7,7 @@ class LoginsTest < ApplicationSystemTestCase
   end
 
   test "valid user logs in" do
+    log_in(@unauth_user) # Ensure that nobody is logged in by trying to log-in invalid user
     simulate_oauth(@auth_user)
     visit root_path
     click_link('google-signin-link')

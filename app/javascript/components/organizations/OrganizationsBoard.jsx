@@ -1,21 +1,33 @@
 import React from "react";
 import styles from "../shared/MasterDetail.css";
-import Loading from "../shared/Loading";
-import thingBoard from "../shared/thingBoard";
 import OrganizationsTable from "./OrganizationsTable";
 import NewOrganizationForm from "./NewOrganizationForm";
-import { organizationCompare } from "../../models/organization";
-import OrganizationPage from "./OrganizationPage";
 import { Link } from "react-router-dom";
 import AddIcon from "../shared/icons/AddIcon";
 import TextFilter from "../shared/TextFilter";
 import FlexSpacer from "../shared/FlexSpacer";
+import PropTypes from "prop-types";
+import DuluAxios from "../../util/DuluAxios";
+import OrganizationContainer from "./OrganizationContainer";
 
-class Board extends React.PureComponent {
-  state = {};
+export default class OrganizationsBoard extends React.PureComponent {
+  state = {
+    can: {}
+  };
+
+  async componentDidMount() {
+    try {
+      const data = await DuluAxios.get("/api/organizations");
+      this.setState({
+        can: data.can
+      });
+      this.props.setOrganizations(data.organizations);
+    } catch (error) {
+      this.props.setNetworkError(error);
+    }
+  }
 
   render() {
-    const selectedOrganization = this.props.selected;
     return (
       <div className={styles.container}>
         <div className={styles.headerBar}>
@@ -27,7 +39,7 @@ class Board extends React.PureComponent {
             placeholder={this.props.t("Find")}
             updateFilter={filter => this.setState({ filter: filter })}
           />
-          {this.props.can.create && (
+          {this.state.can.create && (
             <Link to="/organizations/new">
               <AddIcon iconSize="large" />
             </Link>
@@ -43,7 +55,7 @@ class Board extends React.PureComponent {
               t={this.props.t}
               id={this.props.id}
               organizations={this.props.organizations}
-              can={this.props.can}
+              can={this.state.can}
               filter={this.state.filter}
             />
           </div>
@@ -51,23 +63,20 @@ class Board extends React.PureComponent {
             {this.props.action == "new" && (
               <NewOrganizationForm
                 t={this.props.t}
-                saving={this.props.savingNew}
-                addOrganization={this.props.add}
+                addOrganization={this.props.addOrganization}
+                setNetworkError={this.props.setNetworkError}
+                history={this.props.history}
               />
             )}
-            {this.props.action == "show" &&
-              selectedOrganization &&
-              (selectedOrganization.loaded ? (
-                <OrganizationPage
-                  key={selectedOrganization.id}
-                  organization={selectedOrganization}
-                  t={this.props.t}
-                  update={this.props.update}
-                  delete={this.props.delete}
-                />
-              ) : (
-                <Loading t={this.props.t} />
-              ))}
+            {this.props.action == "show" && (
+              <OrganizationContainer
+                key={this.props.id}
+                id={this.props.id}
+                t={this.props.t}
+                setNetworkError={this.props.setNetworkError}
+                history={this.props.history}
+              />
+            )}
             {!this.props.action && <span />}
           </div>
         </div>
@@ -76,9 +85,13 @@ class Board extends React.PureComponent {
   }
 }
 
-const OrganizationsBoard = thingBoard(Board, {
-  name: "organization",
-  compare: organizationCompare
-});
-
-export default OrganizationsBoard;
+OrganizationsBoard.propTypes = {
+  setOrganizations: PropTypes.func.isRequired,
+  addOrganization: PropTypes.func.isRequired,
+  setNetworkError: PropTypes.func.isRequired,
+  organizations: PropTypes.array.isRequired,
+  id: PropTypes.string,
+  action: PropTypes.string,
+  history: PropTypes.object.isRequired,
+  t: PropTypes.func.isRequired
+};

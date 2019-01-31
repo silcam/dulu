@@ -1,7 +1,6 @@
 import React from "react";
+import PropTypes from "prop-types";
 import MyOrganizationsTableRow from "./MyOrganizationsTableRow";
-import { findIndexById } from "../../util/arrayUtils";
-import update from "immutability-helper";
 import SearchTextInput from "../shared/SearchTextInput";
 import SmallSaveAndCancel from "../shared/SmallSaveAndCancel";
 import DuluAxios from "../../util/DuluAxios";
@@ -9,6 +8,19 @@ import InlineAddIcon from "../shared/icons/InlineAddIcon";
 
 export default class MyOrganizationsTable extends React.PureComponent {
   state = {};
+
+  async componentDidMount() {
+    try {
+      const data = await DuluAxios.get(`/api/organization_people`, {
+        person_id: this.props.person.id
+      });
+      this.props.addPeople(data.people);
+      this.props.addOrganizations(data.organizations);
+      this.props.addOrganizationPeople(data.organization_people);
+    } catch (error) {
+      this.props.setNetworkError(error);
+    }
+  }
 
   createOrganizationPerson = async () => {
     try {
@@ -20,42 +32,11 @@ export default class MyOrganizationsTable extends React.PureComponent {
       const data = await DuluAxios.post("/api/organization_people", {
         organization_person: organizationPerson
       });
-      const newOrganizationPerson = data.organization_person;
-      this.props.replaceOrganizationPeople(
-        update(this.props.person.organization_people, {
-          $push: [newOrganizationPerson]
-        })
-      );
+      this.props.addOrganizations([data.organization]);
+      this.props.setOrganizationPerson(data.organization_person);
       this.setState({ addingNew: false });
     } catch (error) {
-      this.props.setNetworkError({ tryAgain: this.createOrganizationPerson });
-    }
-  };
-
-  replaceOrganizationPerson = organizationPerson => {
-    this.props.replaceOrganizationPeople(
-      update(this.props.person.organization_people, {
-        [findIndexById(
-          this.props.person.organization_people,
-          organizationPerson.id
-        )]: { $set: organizationPerson }
-      })
-    );
-  };
-
-  deleteOrganizationPerson = async id => {
-    try {
-      await DuluAxios.delete(`/api/organization_people/${id}`);
-      const index = findIndexById(this.props.person.organization_people, id);
-      this.props.replaceOrganizationPeople(
-        update(this.props.person.organization_people, {
-          $splice: [[index, 1]]
-        })
-      );
-    } catch (error) {
-      this.props.setNetworkError({
-        tryAgain: () => this.deleteOrganizationPerson(id)
-      });
+      this.props.setNetworkError(error);
     }
   };
 
@@ -70,15 +51,18 @@ export default class MyOrganizationsTable extends React.PureComponent {
         </h3>
         <table>
           <tbody>
-            {this.props.person.organization_people.map(org_person => (
+            {this.props.organizationPeople.map(org_person => (
               <MyOrganizationsTableRow
                 key={org_person.id}
                 t={this.props.t}
                 canUpdate={this.props.person.can.update}
-                editing={this.props.editing}
                 org_person={org_person}
-                replaceOrganizationPerson={this.replaceOrganizationPerson}
-                deleteOrganizationPerson={this.deleteOrganizationPerson}
+                organization={
+                  this.props.organizationsById[org_person.organization_id]
+                }
+                person={this.props.person}
+                setOrganizationPerson={this.props.setOrganizationPerson}
+                deleteOrganizationPerson={this.props.deleteOrganizationPerson}
                 setNetworkError={this.props.setNetworkError}
               />
             ))}
@@ -112,3 +96,16 @@ export default class MyOrganizationsTable extends React.PureComponent {
     );
   }
 }
+
+MyOrganizationsTable.propTypes = {
+  person: PropTypes.object.isRequired,
+  organizationPeople: PropTypes.array.isRequired,
+  organizationsById: PropTypes.object.isRequired,
+  setNetworkError: PropTypes.func.isRequired,
+  t: PropTypes.func.isRequired,
+  addOrganizationPeople: PropTypes.func.isRequired,
+  setOrganizationPerson: PropTypes.func.isRequired,
+  deleteOrganizationPerson: PropTypes.func.isRequired,
+  addPeople: PropTypes.func.isRequired,
+  addOrganizations: PropTypes.func.isRequired
+};

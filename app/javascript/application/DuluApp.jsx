@@ -5,7 +5,6 @@ import Dashboard from "../components/dashboard/Dashboard";
 import PeopleContainer from "../components/people/PeopleContainer";
 import translator from "../i18n/i18n";
 import styles from "./DuluApp.css";
-import OrganizationsBoard from "../components/organizations/OrganizationsBoard";
 import NetworkErrorAlert from "../components/shared/NetworkErrorAlert";
 import DuluAxios from "../util/DuluAxios";
 import LanguagesBoard from "../components/languages/LanguagesBoard";
@@ -16,6 +15,7 @@ import ClustersBoard from "../components/clusters/ClustersBoard";
 import update from "immutability-helper";
 import ParticipantPage from "../components/participants/ParticipantPage";
 import ActivityPage from "../components/activities/ActivityPage";
+import OrganizationsContainer from "../components/organizations/OrganizationsContainer";
 
 export default class DuluApp extends React.Component {
   constructor(props) {
@@ -125,7 +125,7 @@ export default class DuluApp extends React.Component {
           <Route
             path="/organizations/:actionOrId?/:id?"
             render={({ match, history }) => (
-              <OrganizationsBoard
+              <OrganizationsContainer
                 history={history}
                 {...routeActionAndId(match.params)}
                 t={this.state.t}

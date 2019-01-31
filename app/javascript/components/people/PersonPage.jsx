@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import EditActionBar from "../shared/EditActionBar";
 import deepcopy from "../../util/deepcopy";
 import TextOrEditText from "../shared/TextOrEditText";
@@ -7,18 +8,29 @@ import SaveIndicator from "../shared/SaveIndicator";
 import PersonBasicInfo from "./PersonBasicInfo";
 import DangerButton from "../shared/DangerButton";
 import { fullName } from "../../models/person";
-import MyOrganizationsTable from "./MyOrganizationsTable";
 import update from "immutability-helper";
 import ParticipantsTable from "./ParticipantsTable";
 import EventsTable from "./EventsTable";
 import DuluAxios from "../../util/DuluAxios";
 import RolesTable from "./RolesTable";
-import styles from "./PersonPage.css";
+import Loading from "../shared/Loading";
+import OrgPeopleContainer from "./OrgPeopleContainer";
+// import styles from "./PersonPage.css";
 
 export default class PersonPage extends React.PureComponent {
   state = {
     person: deepcopy(this.props.person)
   };
+
+  async componentDidMount() {
+    try {
+      const data = await DuluAxios.get(`/api/people/${this.props.id}`);
+      this.props.setPerson(data.person);
+      this.setState({ person: data.person });
+    } catch (error) {
+      this.props.setNetworkError(error);
+    }
+  }
 
   updatePerson = mergePerson => {
     this.setState(prevState => ({
@@ -33,10 +45,20 @@ export default class PersonPage extends React.PureComponent {
       const data = await DuluAxios.put(`/api/people/${this.state.person.id}`, {
         person: this.state.person
       });
-      this.props.replacePerson(data.person);
+      this.props.setPerson(data.person);
       this.setStateAfterSave(data.person);
     } catch (error) {
       this.props.setNetworkError({ tryAgain: this.save });
+    }
+  };
+
+  deletePerson = async () => {
+    try {
+      await DuluAxios.delete(`/api/people/${this.state.person.id}`);
+      this.props.history.push("/people");
+      this.props.deletePerson(this.state.person.id);
+    } catch (error) {
+      this.props.setNetworkError(error);
     }
   };
 
@@ -59,28 +81,20 @@ export default class PersonPage extends React.PureComponent {
     });
   };
 
-  replaceOrganizationPeople = newOrganizationsPeople => {
-    const newPerson = update(this.props.person, {
-      organization_people: { $set: newOrganizationsPeople }
-    });
-    this.setState({
-      person: deepcopy(newPerson)
-    });
-    this.props.replacePerson(newPerson);
-  };
-
   replaceRoles = newRoles => {
     const newPerson = update(this.props.person, {
       roles: { $set: newRoles }
     });
     this.setState({
-      person: deepcopy(newPerson)
+      person: newPerson
     });
-    this.props.replacePerson(newPerson);
+    this.props.setPerson(newPerson);
   };
 
   render() {
     const person = this.state.person;
+
+    if (!person || !person.loaded) return <Loading t={this.props.t} />;
 
     return (
       <div>
@@ -103,9 +117,7 @@ export default class PersonPage extends React.PureComponent {
 
         {this.state.deleting && (
           <DangerButton
-            handleClick={() => {
-              this.props.deletePerson(person.id);
-            }}
+            handleClick={this.deletePerson}
             handleCancel={() => this.setState({ deleting: false })}
             message={this.props.t("delete_person_warning", {
               name: fullName(person)
@@ -149,10 +161,9 @@ export default class PersonPage extends React.PureComponent {
           updatePerson={this.updatePerson}
         />
 
-        <MyOrganizationsTable
+        <OrgPeopleContainer
           t={this.props.t}
           person={person}
-          replaceOrganizationPeople={this.replaceOrganizationPeople}
           setNetworkError={this.props.setNetworkError}
         />
 
@@ -170,3 +181,14 @@ export default class PersonPage extends React.PureComponent {
     );
   }
 }
+
+PersonPage.propTypes = {
+  id: PropTypes.string.isRequired,
+  person: PropTypes.object,
+  t: PropTypes.func.isRequired,
+  setPerson: PropTypes.func.isRequired,
+  deletePerson: PropTypes.func.isRequired,
+  setNetworkError: PropTypes.func.isRequired,
+  updateLanguage: PropTypes.func.isRequired,
+  history: PropTypes.object.isRequired
+};

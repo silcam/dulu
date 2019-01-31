@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import { TextInputGroup, FuzzyDateGroup } from "../shared/formGroup";
 import deepcopy from "../../util/deepcopy";
 import merge from "deepmerge";
@@ -37,13 +38,13 @@ export default class MyOrganizationForm extends React.PureComponent {
     return (
       <tr>
         <td colSpan="4">
-          <label>{org_person.organization.name}</label>
+          <label>{this.props.organization.short_name}</label>
           <TextInputGroup
             label={t("Position")}
             handleInput={e =>
               this.updateOrganizationPerson({ position: e.target.value })
             }
-            value={org_person.position}
+            value={org_person.position || ""}
           />
           <FuzzyDateGroup
             label={t("Start_date")}
@@ -82,3 +83,11 @@ export default class MyOrganizationForm extends React.PureComponent {
     );
   }
 }
+
+MyOrganizationForm.propTypes = {
+  organization_person: PropTypes.object.isRequired,
+  updateOrganizationPerson: PropTypes.func.isRequired,
+  t: PropTypes.func.isRequired,
+  cancelEdit: PropTypes.func.isRequired,
+  organization: PropTypes.object.isRequired
+};

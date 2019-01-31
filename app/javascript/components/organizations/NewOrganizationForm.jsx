@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import {
   TextAreaGroup,
   TextInputGroup,
@@ -6,6 +7,7 @@ import {
 } from "../shared/formGroup";
 import SaveButton from "../shared/SaveButton";
 import CancelButton from "../shared/CancelButton";
+import DuluAxios from "../../util/DuluAxios";
 
 export default class NewOrganizationForm extends React.Component {
   constructor(props) {
@@ -41,12 +43,16 @@ export default class NewOrganizationForm extends React.Component {
     return this.state.organization.short_name.length > 0;
   };
 
-  clickSave = () => {
-    if (!this.inputValid()) {
-      this.setState({ failedSave: true });
-    } else {
-      this.setState({ saving: true });
-      this.props.addOrganization(this.state.organization);
+  clickSave = async () => {
+    this.setState({ saving: true });
+    try {
+      const data = await DuluAxios.post("/api/organizations", {
+        organization: this.state.organization
+      });
+      this.props.addOrganization(data.organization);
+      this.props.history.push(`/organizations/${data.organization.id}`);
+    } catch (error) {
+      this.props.setNetworkError(error);
     }
   };
 
@@ -90,6 +96,7 @@ export default class NewOrganizationForm extends React.Component {
             handleClick={this.clickSave}
             saveInProgress={this.state.saving}
             t={t}
+            disabled={!this.inputValid()}
           />
 
           <CancelButton t={t} />
@@ -98,3 +105,10 @@ export default class NewOrganizationForm extends React.Component {
     );
   }
 }
+
+NewOrganizationForm.propTypes = {
+  addOrganization: PropTypes.func.isRequired,
+  history: PropTypes.object.isRequired,
+  setNetworkError: PropTypes.func.isRequired,
+  t: PropTypes.func.isRequired
+};

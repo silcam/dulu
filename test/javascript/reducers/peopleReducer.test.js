@@ -3,7 +3,8 @@ import {
   setPeople,
   addPerson,
   setPerson,
-  deletePerson
+  deletePerson,
+  addPeople
 } from "../../../app/javascript/actions/peopleActions";
 
 test("empty state", () => {
@@ -46,23 +47,44 @@ test("subsequent SET PEOPLE", () => {
   });
 });
 
+test("ADD PEOPLE", () => {
+  const state = peopleReducer(initialState, addPeople(peopleData));
+  expect(state.list).toEqual(["101", "202", "303"]);
+  expect(state.byId).toEqual({
+    101: fullRick,
+    202: brian,
+    303: neil
+  });
+});
+
 test("ADD PERSON", () => {
   const state = peopleReducer(initialState, addPerson(brian));
   expect(state.list).toEqual([101, 202, 303]);
   expect(state.byId[202]).toEqual(brian);
 });
 
+test("ADD PERSON to empty state", () => {
+  const state = peopleReducer(undefined, addPerson(brian));
+  expect(state.list).toEqual([202]);
+  expect(state.byId).toEqual({ 202: brian });
+});
+
+test("SET PERSON to empty state", () => {
+  const state = peopleReducer(undefined, setPerson(brian));
+  expect(state.list).toEqual([202]);
+  expect(state.byId).toEqual({ 202: brian });
+});
+
 test("SET PERSON", () => {
-  const state = peopleReducer(
-    initialState,
-    setPerson({ id: 303, last_name: "Applegate" })
-  );
+  const updatedNeil = { id: 303, last_name: "Applegate" };
+  const state = peopleReducer(initialState, setPerson(updatedNeil));
   expect(state.list).toEqual([303, 101]);
   expect(state.byId[303]).toEqual({
     id: 303,
     first_name: "Neil",
     last_name: "Applegate"
   });
+  expect(state.byId[303]).not.toBe(updatedNeil);
 });
 
 test("DELETE PERSON", () => {

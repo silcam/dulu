@@ -17,10 +17,6 @@ json.person do
     json.home_country nil
   end
 
-  json.organization_people @person.organization_people do |org_person|
-    json.partial! '/api/organization_people/org_person', org_person: org_person
-  end
-
   json.roles do
     json.partial! '/api/person_roles/roles', roles: @person.roles
   end

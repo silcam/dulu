@@ -9,6 +9,8 @@ import SaveButton from "../shared/SaveButton";
 import selectOptionsFromObject from "../../util/selectOptionsFromObject";
 import DuplicateWarning from "./DuplicateWarning";
 import CancelButton from "../shared/CancelButton";
+import DuluAxios from "../../util/DuluAxios";
+import { sameName } from "../../models/person";
 
 export default class NewPersonForm extends React.Component {
   state = {
@@ -20,7 +22,8 @@ export default class NewPersonForm extends React.Component {
       email: "",
       ui_language: "en"
     },
-    failedSave: false
+    failedSave: false,
+    saving: false
   };
 
   handleInput = e => {
@@ -58,11 +61,32 @@ export default class NewPersonForm extends React.Component {
     );
   };
 
-  clickSave = () => {
-    if (!this.inputValid()) {
-      this.setState({ failedSave: true });
+  findDuplicate = () => {
+    return this.props.people.find(person =>
+      sameName(person, this.state.person)
+    );
+  };
+
+  clickSave = async () => {
+    const duplicate = this.findDuplicate();
+    if (!this.state.person.not_a_duplicate && duplicate) {
+      this.setState({ duplicatePerson: duplicate });
     } else {
-      this.props.addPerson(this.state.person);
+      this.save();
+    }
+  };
+
+  save = async () => {
+    this.setState({ saving: true });
+    try {
+      const data = await DuluAxios.post("/api/people", {
+        person: this.state.person
+      });
+      this.props.addPerson(data.person);
+      this.props.history.push(`/people/${data.person.id}`);
+    } catch (error) {
+      this.props.setNetworkError(error);
+      this.setState({ saving: false });
     }
   };
 
@@ -132,10 +156,10 @@ export default class NewPersonForm extends React.Component {
           </div>
         )}
 
-        {this.props.duplicatePerson && (
+        {this.state.duplicatePerson && (
           <DuplicateWarning
             t={t}
-            duplicatePerson={this.props.duplicatePerson}
+            duplicatePerson={this.state.duplicatePerson}
             not_a_duplicate={person.not_a_duplicate}
             handleCheck={this.handleCheck}
           />
@@ -143,8 +167,11 @@ export default class NewPersonForm extends React.Component {
         <p>
           <SaveButton
             handleClick={this.clickSave}
-            saveInProgress={this.props.saving}
-            disabled={this.props.duplicatePerson && !person.not_a_duplicate}
+            saveInProgress={this.state.saving}
+            disabled={
+              !this.inputValid() ||
+              (this.state.duplicatePerson && !person.not_a_duplicate)
+            }
             t={t}
           />
 
@@ -156,8 +183,9 @@ export default class NewPersonForm extends React.Component {
 }
 
 NewPersonForm.propTypes = {
-  duplicatePerson: PropTypes.bool,
-  t: PropTypes.func,
-  addPerson: PropTypes.func,
-  saving: PropTypes.bool
+  people: PropTypes.array.isRequired,
+  t: PropTypes.func.isRequired,
+  addPerson: PropTypes.func.isRequired,
+  setNetworkError: PropTypes.func.isRequired,
+  history: PropTypes.object.isRequired
 };
