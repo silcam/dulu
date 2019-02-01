@@ -19,10 +19,17 @@ Rails.application.routes.draw do
     end
 
     resources :languages do
+      resources :media_activities
+      resources :research_activities
+      resources :translation_activities
+      resources :workshops_activities
       get 'more_events', on: :member
       get 'get_event', on: :member
       get 'search', on: :collection
       get 'lang_search', on: :collection
+      get 'dashboard_list', on: :collection
+      get 'dashboard', on: :member
+      get 'find_language_id', on: :collection
     end
 
     resources :notifications do
@@ -47,15 +54,6 @@ Rails.application.routes.draw do
 
     resources :person_roles do
       post 'finish', on: :collection
-    end
-
-    resources :programs, shallow: true do
-      resources :media_activities
-      resources :research_activities
-      resources :translation_activities
-      resources :workshops_activities
-      get 'dashboard_list', on: :collection
-      get 'dashboard', on: :member
     end
 
     resources :regions

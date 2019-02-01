@@ -40,14 +40,14 @@ class ParticipantsTable extends React.PureComponent {
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
-    if (prevState.programs != nextProps.programs) {
+    if (prevState.languages != nextProps.languages) {
       let participants = [];
-      for (let program of nextProps.programs) {
-        participants = participants.concat(program.participants);
+      for (let language of nextProps.languages) {
+        participants = participants.concat(language.participants);
       }
       sortParticipants(prevState.sort, participants);
       return {
-        programs: nextProps.programs,
+        languages: nextProps.languages,
         participants: participants
       };
     }
@@ -79,7 +79,7 @@ class ParticipantsTable extends React.PureComponent {
             {this.state.participants.map(participant => {
               return (
                 <ParticipantRow
-                  key={`${participant.program_id}-${participant.id}`}
+                  key={`${participant.language_id}-${participant.id}`}
                   participant={participant}
                 />
               );

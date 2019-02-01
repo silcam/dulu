@@ -1,16 +1,17 @@
 class Api::TranslationActivitiesController < ApplicationController
 
   def index
-    @program = Program.find(params[:program_id])
-    @translation_activities = @program.translation_activities.order(:bible_book_id)
+    @language = Language.find(params[:language_id])
+    @translation_activities = @language.translation_activities.order(:bible_book_id)
   end
 
   def create
-    @program = Program.find(params[:program_id])
-    authorize! :create_activity, @program
-    TranslationActivity.create! program: @program, bible_book_id: translation_activity_params[:bible_book_id]
-    @translation_activities = @program.translation_activities.order(:bible_book_id)
+    @language = Language.find(params[:language_id])
+    authorize! :create_activity, @language
+    @activity = TranslationActivity.create! language: @language, bible_book_id: translation_activity_params[:bible_book_id]
+    @translation_activities = @language.translation_activities.order(:bible_book_id)
     render :index
+    Notification.new_activity(current_user, @activity)
   end
 
   private

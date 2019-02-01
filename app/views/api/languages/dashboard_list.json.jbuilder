@@ -1,6 +1,6 @@
 participants = current_user.participants
 cluster_participants = participants.select { |p| p.cluster_id }
-program_participants = participants.select { |p| p.program_id }
+language_participants = participants.select { |p| p.language_id }
 
 selection = current_user.view_prefs['dashboardSelection'] || 'current_user'
 
@@ -15,15 +15,15 @@ json.user do
     c_tag = "current_user>cluster#{participant.cluster.id}"
     json.partial! 'selection_params', tag: c_tag, selection: selection
 
-    json.programs participant.cluster.programs do |program|
-      json.call(program, :id, :name)
-      p_tag = c_tag + ">program#{program.id}"
+    json.languages participant.cluster.languages do |language|
+      json.call(language, :id, :name)
+      p_tag = c_tag + ">language#{language.id}"
       json.partial! 'selection_params', tag: p_tag, selection: selection
     end
   end
-  json.programs program_participants do |participant|
-    json.call(participant.program, :id, :name)
-    tag = "current_user>program#{participant.program.id}"
+  json.languages language_participants do |participant|
+    json.call(participant.language, :id, :name)
+    tag = "current_user>language#{participant.language.id}"
     json.partial! 'selection_params', tag: tag, selection: selection
   end
 end
@@ -47,16 +47,16 @@ json.countries user_countries do |country|
       c_tag = lpf_tag + ">cluster#{cluster.id}"
       json.partial! 'selection_params', tag: c_tag, selection: selection
 
-      json.programs cluster.programs do |program|
-        json.call(program, :id, :name)
-        p_tag = c_tag + ">program#{program.id}"
+      json.languages cluster.languages do |language|
+        json.call(language, :id, :name)
+        p_tag = c_tag + ">language#{language.id}"
         json.partial! 'selection_params', tag: p_tag, selection: selection
       end
     end
 
-    json.programs lpf.programs do |program|
-      json.call(program, :id, :name)
-      p_tag = lpf_tag + ">program#{program.id}"
+    json.languages lpf.languages do |language|
+      json.call(language, :id, :name)
+      p_tag = lpf_tag + ">language#{language.id}"
       json.partial! 'selection_params', tag: p_tag, selection: selection
     end
   end

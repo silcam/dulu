@@ -5,7 +5,7 @@ class UpdateStageTest < ApplicationSystemTestCase
     @hdi_ezra = translation_activities(:HdiEzra)
     @fdate = FuzzyDate.new(2017, 7)
     log_in(people(:Drew))
-    visit "#{model_path(programs(:Hdi))}/Translation"
+    visit "#{model_path(languages(:Hdi))}/Translation"
   end
 
   test "Modify Stage" do

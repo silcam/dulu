@@ -2,7 +2,7 @@ require 'application_system_test_case'
 
 class EventsIntegrationTest < ApplicationSystemTestCase
   def setup
-    @hdi = programs :Hdi
+    @hdi = languages :Hdi
     @genesis_consult = events :HdiGenesisChecking
   end
 

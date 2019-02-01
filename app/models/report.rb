@@ -25,14 +25,14 @@ class Report < ApplicationRecord
       when 'LanguageComparison'
         name="%{LanguageComparison}: "
         name += Cluster.where(id: params[:cluster_ids]).collect{ |c| c.display_name }.join(', ')
-        name += ', ' if params[:cluster_ids] && params[:program_ids]
-        name += Program.where(id: params[:program_ids]).collect{ |p| p.name }.join(', ')
+        name += ', ' if params[:cluster_ids] && params[:language_ids]
+        name += Language.where(id: params[:language_ids]).collect{ |p| p.name }.join(', ')
         name
     end
   end
 
-  def self.get_program_report(report_type, program)
-    return lc_program_report(program)
+  def self.get_language_report(report_type, language)
+    return lc_language_report(language)
   end
 
   def self.get_cluster_report(report_type, cluster)
@@ -42,16 +42,16 @@ class Report < ApplicationRecord
   private
 
   def generate_language_comparison
-    report = {clusters: {}, programs: {}}
+    report = {clusters: {}, languages: {}}
     report[:elements] = params[:elements]
     Cluster.where(id: params[:cluster_ids]).each do |cluster|
       report[:clusters][cluster] = {}
-      cluster.programs.each do |program|
-        report[:clusters][cluster][program] = lc_program_report(program)
+      cluster.languages.each do |language|
+        report[:clusters][cluster][language] = lc_language_report(language)
       end
     end
-    Program.where(id: params[:program_ids]).each do |program|
-      report[:programs][program] = lc_program_report(program)
+    Language.where(id: params[:language_ids]).each do |language|
+      report[:languages][language] = lc_language_report(language)
     end
     report
   end
@@ -60,61 +60,61 @@ class Report < ApplicationRecord
     {
       id: cluster.id,
       name: cluster.name,
-      programs: cluster.programs.collect do |program|
-        lc_program_report(program)
+      languages: cluster.languages.collect do |language|
+        lc_language_report(language)
       end
     }
   end
 
-  def self.lc_program_report(program)
+  def self.lc_language_report(language)
     {
-      id: program.id,
-      name: program.name,
+      id: language.id,
+      name: language.name,
       report: {
-        publications: pubs_report(program),
+        publications: pubs_report(language),
         activities: {
-          Old_testament: bible_books_report(program, BibleBook.get_old_testament),
-          New_testament: bible_books_report(program, BibleBook.get_new_testament)
+          Old_testament: bible_books_report(language, BibleBook.get_old_testament),
+          New_testament: bible_books_report(language, BibleBook.get_new_testament)
         }
       }
     }
   end
 
-  def self.bible_books_report(program, bible_books)
+  def self.bible_books_report(language, bible_books)
     bible_books.collect do |book|
-      ta = program.translation_activities.find{ |a| a.bible_book==book }
+      ta = language.translation_activities.find{ |a| a.bible_book==book }
       ta ? ta.current_stage.name : ""
     end
   end
 
-  def self.pubs_report(program)
+  def self.pubs_report(language)
     pubs = {}
     PUBLICATIONS.each do |pub_type|
-      pubs[pub_type] = pub_published?(program, pub_type)
+      pubs[pub_type] = pub_published?(language, pub_type)
     end
     pubs
   end
 
-  def self.pub_published?(program, pub)
+  def self.pub_published?(language, pub)
     case pub.to_s
       when 'Bible', 'New_testament', 'Old_testament'
-        return true if program.publications.find_by(kind: :Scripture, scripture_kind: pub)
+        return true if language.publications.find_by(kind: :Scripture, scripture_kind: pub)
 
       when 'Any_scripture'
-        return true if program.publications.find_by(kind: :Scripture)
+        return true if language.publications.find_by(kind: :Scripture)
 
       when 'Audio_Bible', 'Audio_New_testament', 'Audio_Old_testament'
         key = pub[(6..-1)] # Chop off 'Audio_'
-        return true if program.publications.find_by(media_kind: :AudioScripture, scripture_kind: key)
+        return true if language.publications.find_by(media_kind: :AudioScripture, scripture_kind: key)
 
       when 'JesusFilm', 'LukeFilm'
-        return true if program.publications.find_by(film_kind: pub)
+        return true if language.publications.find_by(film_kind: pub)
 
       when 'App'
-        return true if program.publications.find_by(kind: :Media, media_kind: :App)
+        return true if language.publications.find_by(kind: :Media, media_kind: :App)
 
       when 'Dictionary'
-        return program
+        return language
                    .publications
                    .where("kind='Linguistic' AND (english_name ILIKE ? OR french_name ILIKE ?)",
                                           "%#{I18n.t(pub, locale: :en)}%",
@@ -122,7 +122,7 @@ class Report < ApplicationRecord
                    ).count > 0
 
       when 'Any_literacy'
-        return true if program.publications.find_by(kind: :Literacy)
+        return true if language.publications.find_by(kind: :Literacy)
     end
   end
 end

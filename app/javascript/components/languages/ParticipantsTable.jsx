@@ -47,7 +47,7 @@ export default class ParticipantsTable extends React.PureComponent {
             t={t}
             cancel={() => this.setState({ showNewForm: false })}
             addParticipant={this.addParticipant}
-            program_id={this.props.language && this.props.language.id}
+            language_id={this.props.language && this.props.language.id}
             cluster_id={this.props.cluster && this.props.cluster.id}
             setNetworkError={this.props.setNetworkError}
           />

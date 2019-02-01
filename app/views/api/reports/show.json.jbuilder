@@ -9,5 +9,5 @@ json.report do
 
   json.clusters(@report.report['clusters'].collect{ |c_id| Report.lc_cluster_report(Cluster.find(c_id)) })
 
-  json.programs(@report.report['programs'].collect{ |p_id| Report.lc_program_report(Program.find(p_id)) })
+  json.languages(@report.report['languages'].collect{ |p_id| Report.lc_language_report(Language.find(p_id)) })
 end

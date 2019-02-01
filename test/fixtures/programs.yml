@@ -1,28 +1,28 @@
-Hdi:
-  language: Hdi
-  updated_at: 2017-07-01 08:00:00.000000
-  lpf: NorthRegion
+# Hdi:
+#   language: Hdi
+#   updated_at: 2017-07-01 08:00:00.000000
+#   lpf: NorthRegion
 
-Ewondo:
-  language: Ewondo
-  lpf: SouthRegion
+# Ewondo:
+#   language: Ewondo
+#   lpf: SouthRegion
 
-Zulgo:
-  language: Zulgo
-  lpf: NorthRegion
+# Zulgo:
+#   language: Zulgo
+#   lpf: NorthRegion
 
-NoActivityProgram:
-  language: NoActivity
-  updated_at: 2015-07-01 08:00:00.000000
+# NoActivityProgram:
+#   language: NoActivity
+#   updated_at: 2015-07-01 08:00:00.000000
 
-ReallyOldProgram:
-  language: ReallyOld
-  updated_at: 2017-06-01 08:00:00.000000
+# ReallyOldProgram:
+#   language: ReallyOld
+#   updated_at: 2017-06-01 08:00:00.000000
 
-Bangolan:
-  language: Bangolan
-  # Ndop Cluster
+# Bangolan:
+#   language: Bangolan
+#   # Ndop Cluster
 
-Bambalang:
-  language: Bambalang
-  # Ndop Cluster
+# Bambalang:
+#   language: Bambalang
+#   # Ndop Cluster

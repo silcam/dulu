@@ -3,14 +3,14 @@ require 'test_helper'
 class ParticipantTest < ActiveSupport::TestCase
   def setup
     @drew_hdi = participants :DrewHdi
-    @hdi_program = programs(:Hdi)
+    @hdi_language = languages(:Hdi)
     @drew = people :Drew
   end
 
   test 'Relations' do
     hdi_ezra = translation_activities :HdiEzra
     assert_equal @drew, @drew_hdi.person
-    assert_equal @hdi_program, @drew_hdi.program
+    assert_equal @hdi_language, @drew_hdi.language
     assert_includes @drew_hdi.activities, hdi_ezra
   end
 
@@ -19,18 +19,18 @@ class ParticipantTest < ActiveSupport::TestCase
   end
 
   test 'Valid if belongs to cluster' do
-    params = some_valid_params program: nil, cluster: clusters(:Ndop)
+    params = some_valid_params language: nil, cluster: clusters(:Ndop)
     assert Participant.new(params).valid?
   end
 
-  test 'Invalid if neither program nor cluster' do
-    params = some_valid_params program: nil
+  test 'Invalid if neither language nor cluster' do
+    params = some_valid_params language: nil
     refute Participant.new(params).valid?
   end
 
   test 'End Date Validation' do
     rick = people :Rick
-    participant = Participant.new(person: rick, program: @hdi_program,
+    participant = Participant.new(person: rick, language: @hdi_language,
                     start_date: '2017', end_date: 'abc')
     refute participant.save, "Should not save with invalid end date"
     participant.end_date = '2017'
@@ -86,7 +86,7 @@ class ParticipantTest < ActiveSupport::TestCase
 
   def some_valid_params(merge_params = {})
     rick = people(:Rick)
-    {person: rick, program: @hdi_program,
+    {person: rick, language: @hdi_language,
               start_date: '2017'}.merge merge_params
   end
 end

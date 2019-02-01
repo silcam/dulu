@@ -29,6 +29,7 @@ class OrgIntTest < ApplicationSystemTestCase
     within('li', text: 'Parent Organization') { fill_in_search_input('Lutheran Bi') }
     within('li', text: 'Country') { fill_in_search_input('Cameroon') }
     fill_in 'Description', with: 'Gonna Take over the galaxy, yo!'
+    fill_in 'short_name', with: 'The Evil Empire'  # Set this a second time - some kind of race condition messes up the first one.
     click_on 'Save'
 
     assert_selector('h2', text: 'The Evil Empire')
@@ -46,6 +47,9 @@ class OrgIntTest < ApplicationSystemTestCase
     assert_selector('tr', text: 'SIL') # Sidebar list
 
     action_bar_click_delete
+    # Try to dodge race condition caused by loading both SIL and organizations list
+    check "dangerButtonCheckbox"
+    check "dangerButtonCheckbox"
     check "dangerButtonCheckbox"
     click_on "Permanently Delete SIL"
 

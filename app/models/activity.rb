@@ -1,13 +1,13 @@
 class Activity < ApplicationRecord
   include ApplicationHelper
 
-  belongs_to :program, required: true, touch: true
+  belongs_to :language, required: true, touch: true
   # belongs_to :bible_book, required: false
   has_many :stages
   has_and_belongs_to_many :participants
   has_many :people, through: :participants
 
-  audited associated_with: :program
+  audited associated_with: :language
 
   validates :type, presence: true
 

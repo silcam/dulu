@@ -50,11 +50,11 @@ export default class DashboardSidebarCluster extends React.PureComponent {
           </button>
         </li>
         {this.state.isExpanded &&
-          cluster.programs.map(program => {
+          cluster.languages.map(language => {
             return (
               <DashboardSidebarProgram
-                key={program.id}
-                program={program}
+                key={language.id}
+                language={language}
                 indent={indent + 2}
                 selection={this.props.selection}
                 onProgramSelected={this.props.onProgramSelected}

@@ -69,9 +69,7 @@ export default function ClusterLanguagesTable(props) {
             {cluster.languages.map(language => (
               <tr key={language.id}>
                 <td>
-                  <Link to={`/languages/${language.program_id}`}>
-                    {language.name}
-                  </Link>
+                  <Link to={`/languages/${language.id}`}>{language.name}</Link>
                 </td>
                 <td>
                   {language.progress.Old_testament && (

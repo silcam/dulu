@@ -2,8 +2,8 @@
 
 json.call(event, :id, :name, :start_date, :end_date)
 
-cluster_programs = event.programs + event.clusters
-json.cluster_programs cluster_programs do |cluster_program|
-  json.name cluster_program.display_name
-  json.path model_path(cluster_program)
+cluster_languages = event.languages + event.clusters
+json.cluster_languages cluster_languages do |cluster_language|
+  json.name cluster_language.display_name
+  json.path model_path(cluster_language)
 end

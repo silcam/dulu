@@ -228,7 +228,7 @@ function newEventLocation(workshop, language, t) {
     pathname: `/languages/${language.id}/events/new`,
     state: {
       event: {
-        programs: [{ id: language.id, name: language.name }],
+        languages: [{ id: language.id, name: language.name }],
         domain: "Linguistics",
         name: `${t("Workshop")}: ${workshop.name}`,
         workshop_id: workshop.id

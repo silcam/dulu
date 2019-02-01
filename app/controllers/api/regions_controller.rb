@@ -30,6 +30,6 @@ class Api::RegionsController < ApplicationController
   private
 
   def region_params
-    params.require(:region).permit(:name, :person_id, cluster_ids: [], program_ids: [])
+    params.require(:region).permit(:name, :person_id, cluster_ids: [], language_ids: [])
   end
 end

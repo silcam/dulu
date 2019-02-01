@@ -7,7 +7,7 @@ function sortActivities(sort, activities, sortFunctions) {
 }
 
 function languageSort(a, b) {
-  return a.program_name.localeCompare(b.program_name);
+  return a.language_name.localeCompare(b.language_name);
 }
 
 function stageSort(a, b) {

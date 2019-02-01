@@ -53,7 +53,7 @@ export default class ParticipantView extends React.PureComponent {
       confirm(
         this.props.t("confirm_delete_participant", {
           person: this.state.participant.person.full_name,
-          program: Participant.clusterProgram(this.state.participant).name
+          language: Participant.clusterProgram(this.state.participant).name
         })
       )
     ) {

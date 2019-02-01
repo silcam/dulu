@@ -2,7 +2,7 @@ require 'test_helper'
 
 class DomainUpdateTest < ActiveSupport::TestCase
   def setup
-    @hdi = programs :Hdi
+    @hdi = languages :Hdi
   end
 
   test "Required fields Validation" do
@@ -29,6 +29,6 @@ class DomainUpdateTest < ActiveSupport::TestCase
   private
 
   def some_valid_params(other_params={})
-    {program: @hdi, status: 'Going good', date: '2017', domain: 'Literacy', author: people(:Drew)}.merge other_params
+    {language: @hdi, status: 'Going good', date: '2017', domain: 'Literacy', author: people(:Drew)}.merge other_params
   end
 end

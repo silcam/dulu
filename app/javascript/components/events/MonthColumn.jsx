@@ -43,7 +43,7 @@ function dateTitle(event, month) {
 
 function participants(event) {
   const clusterLinks = makeLinks(event.clusters, "clusters");
-  const languageLinks = makeLinks(event.programs, "languages");
+  const languageLinks = makeLinks(event.languages, "languages");
   const peopleLinks = makeLinks(event.event_participants, "people");
   return clusterLinks.concat(languageLinks).concat(peopleLinks);
 }

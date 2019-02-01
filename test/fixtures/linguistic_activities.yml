@@ -1,13 +1,13 @@
 EwondoGrammarIntro:
   type: LinguisticActivity
-  program: Ewondo
+  language: Ewondo
   category: Workshops
   title: Grammar Intro
   participants: KendallEwondo
 
 LePaper:
   type: LinguisticActivity
-  program: Ewondo
+  language: Ewondo
   category: Research
   title: Lə the Complementizer
   participants: KendallEwondo

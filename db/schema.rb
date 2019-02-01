@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20181213083339) do
+ActiveRecord::Schema.define(version: 20190201081644) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -28,6 +28,7 @@ ActiveRecord::Schema.define(version: 20181213083339) do
     t.string "scripture"
     t.string "film"
     t.boolean "archived", default: false
+    t.integer "language_id"
     t.index ["bible_book_id"], name: "index_activities_on_bible_book_id"
     t.index ["program_id"], name: "index_activities_on_program_id"
   end
@@ -131,6 +132,7 @@ ActiveRecord::Schema.define(version: 20181213083339) do
     t.datetime "updated_at", null: false
     t.string "domain"
     t.integer "author_id"
+    t.integer "language_id"
     t.index ["program_id"], name: "index_domain_updates_on_program_id"
     t.index ["status_parameter_id"], name: "index_domain_updates_on_status_parameter_id"
   end
@@ -156,11 +158,12 @@ ActiveRecord::Schema.define(version: 20181213083339) do
     t.integer "creator_id"
   end
 
-  create_table "events_programs", id: :serial, force: :cascade do |t|
+  create_table "events_languages", id: :serial, force: :cascade do |t|
     t.integer "event_id"
     t.integer "program_id"
-    t.index ["event_id"], name: "index_events_programs_on_event_id"
-    t.index ["program_id"], name: "index_events_programs_on_program_id"
+    t.integer "language_id"
+    t.index ["event_id"], name: "index_events_languages_on_event_id"
+    t.index ["program_id"], name: "index_events_languages_on_program_id"
   end
 
   create_table "language_statuses", id: :serial, force: :cascade do |t|
@@ -188,6 +191,7 @@ ActiveRecord::Schema.define(version: 20181213083339) do
     t.string "alt_names"
     t.integer "parent_id"
     t.integer "cluster_id"
+    t.integer "lpf_id"
     t.index ["cluster_id"], name: "index_languages_on_cluster_id"
     t.index ["country_id"], name: "index_languages_on_country_id"
     t.index ["language_status_id"], name: "index_languages_on_language_status_id"
@@ -254,6 +258,7 @@ ActiveRecord::Schema.define(version: 20181213083339) do
     t.datetime "updated_at", null: false
     t.integer "cluster_id"
     t.string "roles_field"
+    t.integer "language_id"
     t.index ["cluster_id"], name: "index_participants_on_cluster_id"
     t.index ["person_id"], name: "index_participants_on_person_id"
     t.index ["program_id"], name: "index_participants_on_program_id"
@@ -313,6 +318,7 @@ ActiveRecord::Schema.define(version: 20181213083339) do
     t.string "media_kind"
     t.string "scripture_kind"
     t.string "film_kind"
+    t.integer "language_id"
     t.index ["program_id"], name: "index_publications_on_program_id"
   end
 
@@ -368,6 +374,7 @@ ActiveRecord::Schema.define(version: 20181213083339) do
     t.integer "person_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "language_id"
     t.index ["person_id"], name: "index_survey_completions_on_person_id"
     t.index ["program_id"], name: "index_survey_completions_on_program_id"
     t.index ["survey_id"], name: "index_survey_completions_on_survey_id"

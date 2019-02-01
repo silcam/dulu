@@ -96,13 +96,13 @@ class PersonTest < ActiveSupport::TestCase
     assert_not_empty participants
   end
 
-  test "Current Programs" do
+  test "Current Languages" do
     ndop = clusters :Ndop
-    drew_programs = @drew.current_programs
-    assert_includes drew_programs, programs(:Hdi)
-    assert_includes drew_programs, programs(:Bangolan)
+    drew_languages = @drew.current_languages
+    assert_includes drew_languages, languages(:Hdi)
+    assert_includes drew_languages, languages(:Bangolan)
 
-    assert_empty people(:Kevin).current_programs
+    assert_empty people(:Kevin).current_languages
   end
 
   test "To Hash" do
@@ -127,9 +127,9 @@ class PersonTest < ActiveSupport::TestCase
     results = Person.search 'drew'
     assert_equal 1, results.count
     assert_equal 'Drew Maust', results[0][:title]
-    hdi_program = programs :Hdi
+    hdi_language = languages :Hdi
     assert_includes results[0][:subresults],
-                    {title: 'Hdi', model: hdi_program,
+                    {title: 'Hdi', model: hdi_language,
                         description: 'Translation Consultant'}
   end
 end

@@ -6,7 +6,7 @@ function WorkshopEventLink(props) {
   const workshop = props.workshop;
   return (
     <Link
-      to={`/programs/${props.programId}/events/${workshop.event_id}`}
+      to={`/languages/${props.languageId}/events/${workshop.event_id}`}
       className={props.className}
     >
       {workshop.name}
@@ -29,8 +29,8 @@ class WorkshopsActivityRow extends React.PureComponent {
     return (
       <tr>
         <td>
-          <Link to={`/programs/${activity.program_id}`}>
-            {activity.program_name}
+          <Link to={`/languages/${activity.language_id}`}>
+            {activity.language_name}
           </Link>
         </td>
         <td>
@@ -49,7 +49,7 @@ class WorkshopsActivityRow extends React.PureComponent {
                 {workshop.event_id ? (
                   <WorkshopEventLink
                     workshop={workshop}
-                    programId={activity.program_id}
+                    languageId={activity.language_id}
                     className={spanClass}
                   />
                 ) : (

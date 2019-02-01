@@ -13,7 +13,6 @@ class ClusterTest < ActiveSupport::TestCase
   test "Relations" do
     bangolan = languages :Bangolan
     assert_includes @ndop.languages, bangolan
-    assert_includes @ndop.programs, bangolan.program
   end
 
   test "Sorted Cluster Activities" do
@@ -34,7 +33,7 @@ class ClusterTest < ActiveSupport::TestCase
     assert_equal 'Ndop Cluster', ndop[:title]
     assert_equal @ndop, ndop[:model]
     assert_equal 2, ndop[:subresults].length
-    bangolan = programs :Bangolan
+    bangolan = languages :Bangolan
     bang_res = {title: 'Bangolan', model: bangolan, description: 'Language Program'}
     assert_includes ndop[:subresults], bang_res
   end

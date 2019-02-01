@@ -29,18 +29,18 @@ export default function LCReport(props) {
             <h3>
               <Link to={`/clusters/${cluster.id}`}>{cluster.name}</Link>
             </h3>
-            {cluster.programs.map(program => (
+            {cluster.languages.map(language => (
               <LCProgram
-                key={program.id}
-                program={program}
+                key={language.id}
+                language={language}
                 t={t}
                 report={report}
               />
             ))}
           </div>
         ))}
-        {report.programs.map(program => (
-          <LCProgram key={program.id} program={program} t={t} report={report} />
+        {report.languages.map(language => (
+          <LCProgram key={language.id} language={language} t={t} report={report} />
         ))}
       </div>
     </div>

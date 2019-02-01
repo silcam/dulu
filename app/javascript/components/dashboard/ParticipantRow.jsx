@@ -7,8 +7,8 @@ class ParticipantRow extends React.PureComponent {
     return (
       <tr>
         <td>
-          <Link to={`/programs/${participant.program_id}/`}>
-            {participant.program_name}
+          <Link to={`/languages/${participant.language_id}/`}>
+            {participant.language_name}
           </Link>
           &nbsp;
           {participant.clusterId && (

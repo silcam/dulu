@@ -8,12 +8,12 @@ class LinguisticsTable extends React.PureComponent {
       <div>
         <ResearchActivitiesTable
           t={this.props.t}
-          programs={this.props.programs}
+          languages={this.props.languages}
         />
 
         <WorkshopsActivitiesTable
           t={this.props.t}
-          programs={this.props.programs}
+          languages={this.props.languages}
         />
       </div>
     );

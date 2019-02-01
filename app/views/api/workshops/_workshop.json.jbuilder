@@ -12,9 +12,9 @@ json.can do
   json.delete manage
 end
 
-program = workshop.linguistic_activity.program
+language = workshop.linguistic_activity.language
 if workshop.event
-  json.eventPath model_path(program, workshop.event)
+  json.eventPath model_path(language, workshop.event)
 else
-  json.newEventPath model_path(program) + "/events/new"
+  json.newEventPath model_path(language) + "/events/new"
 end

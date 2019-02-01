@@ -96,7 +96,7 @@ export default {
   confirm_delete_cluster: "Supprimer %{name} ?",
   confirm_delete_event: "Supprimer %{name} ?",
   confirm_delete_participant:
-    "Supprimer %{person} de %{program} ? %{person} n'a jamais travaillé dans %{program} ?",
+    "Supprimer %{person} de %{language} ? %{person} n'a jamais travaillé dans %{language} ?",
   confirm_delete_org_person:
     "Supprimer %{org} des organisations de %{person} ? %{person} n'était jamais dans %{org} ?",
   confirm_delete_region: "Supprimer %{name} ?",
@@ -238,8 +238,6 @@ export default {
       "%{user_name} a mis à jour l'atelier %{workshop_name} pour le programme %{program_name} comme réalisé.",
     new_activity:
       "%{user_name} a ajouté une nouvelle activité au programme %{program_name} : %{activity_name}.",
-    added_a_testament:
-      "%{user_name} a ajouté une nouvelle activité au programme %{program_name} : %{testament}.",
     updated_you: "%{user_name} a mis à jour %{your_info}.",
     updated_person: "%{user_name} a mis à jour les infos pour %{person_name}.",
     updated_himself: "%{user_name} a mis à jour ses propres infos.",

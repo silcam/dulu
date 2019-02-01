@@ -15,13 +15,13 @@ export default class LanguageNewEventPage extends React.PureComponent {
     this.startEventInProps()
       ? this.props.location.state.event
       : {
-          programs: [
+          languages: [
             { id: this.props.language.id, name: this.props.language.name }
           ]
         };
 
   addEvent = event => {
-    if (findById(event.programs, this.props.language.id)) {
+    if (findById(event.languages, this.props.language.id)) {
       this.props.replaceLanguage(
         update(this.props.language, {
           events: {

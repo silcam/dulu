@@ -16,8 +16,8 @@ class Api::ReportsController < ApplicationController
   end
 
   def report_data
-    if params[:program_id]
-      @data = Report.get_program_report(params[:report_type], Program.find(params[:program_id]))
+    if params[:language_id]
+      @data = Report.get_language_report(params[:report_type], Language.find(params[:language_id]))
     elsif params[:cluster_id]
       @data = Report.get_cluster_report(params[:report_type], Cluster.find(params[:cluster_id]))
     end

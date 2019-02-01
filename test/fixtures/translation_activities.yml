@@ -1,44 +1,44 @@
 HdiGenesis:
   type: TranslationActivity
-  program: Hdi
+  language: Hdi
   bible_book_id: 1
 
 HdiExodus:
   type: TranslationActivity
-  program: Hdi
+  language: Hdi
   bible_book_id: 2
 
 HdiEzra:
   type: TranslationActivity
-  program: Hdi
+  language: Hdi
   bible_book_id: 15
 
 ZulgoEzra:
   type: TranslationActivity
-  program: Zulgo
+  language: Zulgo
   bible_book_id: 15
 
 ReallyOldActivity:
   type: TranslationActivity
-  program: ReallyOldProgram
+  language: ReallyOld
   bible_book_id: 1
 
 BangolanGenesis:
   type: TranslationActivity
-  program: Bangolan
+  language: Bangolan
   bible_book_id: 1
 
 BangolanExodus:
   type: TranslationActivity
-  program: Bangolan
+  language: Bangolan
   bible_book_id: 2
 
 BambalangGenesis:
   type: TranslationActivity
-  program: Bambalang
+  language: Bambalang
   bible_book_id: 1
 
 BambalangExodus:
   type: TranslationActivity
-  program: Bambalang
+  language: Bambalang
   bible_book_id: 2

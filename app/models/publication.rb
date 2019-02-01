@@ -1,9 +1,9 @@
 class Publication < ApplicationRecord
   include MultiWordSearch
 
-  belongs_to :program, touch: true, required: false
+  belongs_to :language, touch: true, required: false
 
-  audited associated_with: :program
+  audited associated_with: :language
 
   default_scope{ order(:year, :created_at)}
 
@@ -48,10 +48,10 @@ class Publication < ApplicationRecord
   end
 
   def self.search(query)
-    pubs = Publication.multi_word_where(query, 'english_name', 'french_name', 'nl_name').includes(:program)
+    pubs = Publication.multi_word_where(query, 'english_name', 'french_name', 'nl_name').includes(:language)
     results = []
     pubs.each do |pub|
-      title = "#{pub.name} : #{pub.program.name}"
+      title = "#{pub.name} : #{pub.language.name}"
       description = I18n.t(pub.kind)
       description += ' - ' + pub.year.to_s if pub.year
       results << {title: title, description: description, model: pub}

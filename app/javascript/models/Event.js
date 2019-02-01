@@ -40,7 +40,7 @@ export default class Event {
 
   static prepareEventParams(event, oldEvent) {
     const cluster_ids = event.clusters.map(c => c.id);
-    const program_ids = event.programs.map(p => p.id);
+    const language_ids = event.languages.map(p => p.id);
     let eventParticipantsAttributes = event.event_participants.reduce(
       (accum, participant, index) => {
         accum[index] = participant;
@@ -61,7 +61,7 @@ export default class Event {
     }
     return update(event, {
       cluster_ids: { $set: cluster_ids },
-      program_ids: { $set: program_ids },
+      language_ids: { $set: language_ids },
       event_participants_attributes: { $set: eventParticipantsAttributes }
     });
   }

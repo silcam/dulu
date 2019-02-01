@@ -3,7 +3,6 @@ class Cluster < ApplicationRecord
   include MultiWordSearch
 
   has_many :languages, dependent: :nullify
-  has_many :programs, through: :languages
 
   audited
 
@@ -22,11 +21,11 @@ class Cluster < ApplicationRecord
   end
 
   def sorted_activities
-    Activity.where(program_id: self.programs).order('program_id, type DESC, bible_book_id')
+    Activity.where(language_id: self.languages).order('language_id, type DESC, bible_book_id')
   end
 
   def sorted_translation_activities
-    TranslationActivity.where(program_id: self.programs).joins(:bible_book).order('activities.program_id, bible_books.usfm_number')
+    TranslationActivity.where(language_id: self.languages).joins(:bible_book).order('activities.language_id, bible_books.usfm_number')
   end
 
   def self.search(query)
@@ -34,9 +33,9 @@ class Cluster < ApplicationRecord
     results = []
     clusters.each do |cluster|
       subresults = []
-      cluster.programs.each do |program|
-        subresults << {title: program.name,
-                       model: program,
+      cluster.languages.each do |language|
+        subresults << {title: language.name,
+                       model: language,
                        description: I18n.t(:Language_program)}
       end
       results << {title: I18n.t(:Cluster_x, name: cluster.name),

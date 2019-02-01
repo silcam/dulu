@@ -7,12 +7,13 @@ import NotificationsSidebar from "./NotificationsSidebar";
 import Searcher from "./Searcher";
 import { arrayDelete } from "../../util/arrayUtils";
 import styles from "./Dashboard.css";
+import Loading from "../shared/Loading";
 
 export default class Dashboard extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      programs: [],
+      languages: [],
       loading: 0,
       neededProgramIds: [],
       neededClusterIds: []
@@ -21,13 +22,13 @@ export default class Dashboard extends React.PureComponent {
 
   cache = {
     clusters: {},
-    programs: {}
+    languages: {}
   };
 
-  cacheCluster = (id, programs) => {
-    this.cache.clusters[id] = programs;
-    for (let program of programs) {
-      this.cache.programs[program.id] = program;
+  cacheCluster = (id, languages) => {
+    this.cache.clusters[id] = languages;
+    for (let language of languages) {
+      this.cache.languages[language.id] = language;
     }
   };
 
@@ -50,15 +51,15 @@ export default class Dashboard extends React.PureComponent {
   fetchProgram = id => {
     this.addLoading();
     axios
-      .get(`/api/programs/${id}/dashboard/`)
+      .get(`/api/languages/${id}/dashboard/`)
       .then(response => {
         this.removeLoading();
-        this.cache.programs[id] = response.data;
+        this.cache.languages[id] = response.data;
         this.setState(prevState => {
           if (prevState.neededProgramIds.includes(id)) {
             let neededProgramIds = arrayDelete(prevState.neededProgramIds, id);
             return {
-              programs: prevState.programs.concat([response.data]),
+              languages: prevState.languages.concat([response.data]),
               neededProgramIds: neededProgramIds
             };
           }
@@ -77,12 +78,12 @@ export default class Dashboard extends React.PureComponent {
       .get(`/api/clusters/${id}/dashboard/`)
       .then(response => {
         this.removeLoading();
-        this.cacheCluster(id, response.data.programs);
+        this.cacheCluster(id, response.data.languages);
         this.setState(prevState => {
           if (prevState.neededClusterIds.includes(id)) {
             let neededClusterIds = arrayDelete(prevState.neededClusterIds, id);
             return {
-              programs: prevState.programs.concat(response.data.programs),
+              languages: prevState.languages.concat(response.data.languages),
               neededClusterIds: neededClusterIds
             };
           }
@@ -100,11 +101,11 @@ export default class Dashboard extends React.PureComponent {
       this.setState({
         neededClusterIds: [],
         neededProgramIds: [],
-        programs: this.cache.clusters[id]
+        languages: this.cache.clusters[id]
       });
     } else {
       this.setState({
-        programs: [],
+        languages: [],
         neededClusterIds: [id],
         neededProgramIds: []
       });
@@ -113,17 +114,17 @@ export default class Dashboard extends React.PureComponent {
   };
 
   setSelectedProgram = id => {
-    if (this.cache.programs[id]) {
+    if (this.cache.languages[id]) {
       this.setState({
         neededClusterIds: [],
         neededProgramIds: [],
-        programs: [this.cache.programs[id]]
+        languages: [this.cache.languages[id]]
       });
     } else {
       this.setState({
         neededClusterIds: [],
         neededProgramIds: [id],
-        programs: []
+        languages: []
       });
       this.fetchProgram(id);
     }
@@ -133,13 +134,15 @@ export default class Dashboard extends React.PureComponent {
     this.setState({
       neededClusterIds: [],
       neededProgramIds: [],
-      programs: []
+      languages: []
     });
     for (let clusterId of selection.clusterIds) {
       if (this.cache.clusters[clusterId]) {
         this.setState(prevState => {
           return {
-            programs: prevState.programs.concat(this.cache.clusters[clusterId])
+            languages: prevState.languages.concat(
+              this.cache.clusters[clusterId]
+            )
           };
         });
       } else {
@@ -151,20 +154,22 @@ export default class Dashboard extends React.PureComponent {
         this.fetchCluster(clusterId);
       }
     }
-    for (let programId of selection.programIds) {
-      if (this.cache.programs[programId]) {
+    for (let languageId of selection.languageIds) {
+      if (this.cache.languages[languageId]) {
         this.setState(prevState => {
           return {
-            programs: prevState.programs.concat(this.cache.programs[programId])
+            languages: prevState.languages.concat(
+              this.cache.languages[languageId]
+            )
           };
         });
       } else {
         this.setState(prevState => {
           return {
-            neededProgramIds: prevState.neededProgramIds.concat([programId])
+            neededProgramIds: prevState.neededProgramIds.concat([languageId])
           };
         });
-        this.fetchProgram(programId);
+        this.fetchProgram(languageId);
       }
     }
   };
@@ -182,11 +187,9 @@ export default class Dashboard extends React.PureComponent {
         </div>
         <div className={styles.main}>
           <Searcher t={this.props.t} queryPath="/api/search" />
-          {this.state.loading > 0 && (
-            <p className="alertBox alertYellow">{this.props.t("Loading")}</p>
-          )}
+          {this.state.loading > 0 && <Loading t={this.props.t} />}
           <MainContent
-            programs={this.state.programs}
+            languages={this.state.languages}
             t={this.props.t}
             viewPrefs={this.props.viewPrefs}
             updateViewPrefs={this.props.updateViewPrefs}

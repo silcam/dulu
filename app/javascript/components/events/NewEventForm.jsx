@@ -23,7 +23,7 @@ export default class NewEventForm extends React.PureComponent {
       end_date: "",
       note: "",
       clusters: [],
-      programs: [],
+      languages: [],
       event_participants: []
     };
     if (props.startEvent) Object.assign(event, props.startEvent);

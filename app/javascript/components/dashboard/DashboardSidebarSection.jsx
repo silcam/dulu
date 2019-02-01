@@ -38,7 +38,7 @@ class DashboardSidebarSection extends React.PureComponent {
   render() {
     const showSections = this.state.isExpanded && this.props.section.sections;
     const showClusters = this.state.isExpanded && this.props.section.clusters;
-    const showPrograms = this.state.isExpanded && this.props.section.programs;
+    const showPrograms = this.state.isExpanded && this.props.section.languages;
 
     const indent = this.props.indent || 0;
     const indentString = new Array(indent).fill("\u00A0").join("");
@@ -88,11 +88,11 @@ class DashboardSidebarSection extends React.PureComponent {
             );
           })}
         {showPrograms &&
-          this.props.section.programs.map(program => {
+          this.props.section.languages.map(language => {
             return (
               <DashboardSidebarProgram
-                key={program.id}
-                program={program}
+                key={language.id}
+                language={language}
                 indent={indent + 2}
                 selection={this.props.selection}
                 onProgramSelected={this.props.onProgramSelected}

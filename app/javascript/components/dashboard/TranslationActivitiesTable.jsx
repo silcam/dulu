@@ -9,14 +9,14 @@ import StyledTable from "../shared/StyledTable";
 
 const sortFunctions = {
   language: (a, b) => {
-    if (a.program_name == b.program_name) {
+    if (a.language_name == b.language_name) {
       return intCompare(a.bible_book_id, b.bible_book_id);
     }
-    return a.program_name.localeCompare(b.program_name);
+    return a.language_name.localeCompare(b.language_name);
   },
   book: (a, b) => {
     if (a.bible_book_id == b.bible_book_id)
-      return a.program_name.localeCompare(b.program_name);
+      return a.language_name.localeCompare(b.language_name);
     return intCompare(a.bible_book_id, b.bible_book_id);
   },
   stage: stageSort,
@@ -43,15 +43,15 @@ class TranslationActivitiesTable extends React.PureComponent {
 
   static getDerivedStateFromProps(nextProps, prevState) {
     // console.log('GetDerivedStateFromProps called...')
-    if (prevState.programs !== nextProps.programs) {
+    if (prevState.languages !== nextProps.languages) {
       // console.log('Assembling and sorting activities...')
       let activities = [];
-      for (let program of nextProps.programs) {
-        activities = activities.concat(program.translation_activities);
+      for (let language of nextProps.languages) {
+        activities = activities.concat(language.translation_activities);
       }
       sortActivities(prevState.sort, activities);
       return {
-        programs: nextProps.programs,
+        languages: nextProps.languages,
         activities: activities
       };
     }

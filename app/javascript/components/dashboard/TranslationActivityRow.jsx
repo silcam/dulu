@@ -10,8 +10,8 @@ class TranslationActivityRow extends React.PureComponent {
     return (
       <tr>
         <td>
-          <Link to={`/programs/${activity.program_id}/`}>
-            {activity.program_name}
+          <Link to={`/languages/${activity.language_id}/`}>
+            {activity.language_name}
           </Link>
         </td>
         <td>

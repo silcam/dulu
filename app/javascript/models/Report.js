@@ -3,7 +3,7 @@ export default class Report {
     return {
       type: report.type,
       elements: report.elements,
-      programs: report.programs.map(p => p.id),
+      languages: report.languages.map(p => p.id),
       clusters: report.clusters.map(c => c.id)
     };
   }
@@ -12,7 +12,7 @@ export default class Report {
     return {
       type: report.type,
       elements: report.elements,
-      programs: report.programs,
+      languages: report.languages,
       clusters: report.clusters
     };
   }

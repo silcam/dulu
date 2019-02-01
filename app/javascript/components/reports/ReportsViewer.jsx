@@ -51,16 +51,16 @@ export default class ReportsViewer extends React.PureComponent {
   subtractLoading = () =>
     this.setState(prevState => ({ loading: prevState.loading - 1 }));
 
-  addProgram = async program => {
+  addProgram = async language => {
     this.addLoading();
     try {
       const data = await DuluAxios.get("/api/reports/report_data", {
-        program_id: program.id,
+        language_id: language.id,
         report_type: this.state.report.type
       });
       this.replaceReport(
         update(this.state.report, {
-          programs: { $push: [data] }
+          languages: { $push: [data] }
         })
       );
     } catch (error) {
@@ -92,7 +92,7 @@ export default class ReportsViewer extends React.PureComponent {
   dropProgram = id => {
     this.replaceReport(
       update(this.state.report, {
-        programs: { $set: this.state.report.programs.filter(p => p.id != id) }
+        languages: { $set: this.state.report.languages.filter(p => p.id != id) }
       })
     );
   };
@@ -143,7 +143,7 @@ export default class ReportsViewer extends React.PureComponent {
             />
           )}
           {this.state.report.clusters.length +
-            this.state.report.programs.length >
+            this.state.report.languages.length >
           0 ? (
             <LCReport t={this.props.t} report={this.state.report} />
           ) : (
@@ -173,7 +173,7 @@ function blankReport() {
       publications: {}
     },
     clusters: [],
-    programs: []
+    languages: []
   };
 }
 

@@ -16,6 +16,7 @@ import update from "immutability-helper";
 import ParticipantPage from "../components/participants/ParticipantPage";
 import ActivityPage from "../components/activities/ActivityPage";
 import OrganizationsContainer from "../components/organizations/OrganizationsContainer";
+import ProgramsRedirect from "../components/languages/ProgramsRedirect";
 
 export default class DuluApp extends React.Component {
   constructor(props) {
@@ -73,7 +74,7 @@ export default class DuluApp extends React.Component {
         )}
         <Switch>
           <Route
-            path="/(languages|programs)/:idOrAction?"
+            path="/languages/:idOrAction?"
             render={({ match, history, location }) => (
               <LanguagesBoard
                 history={history}
@@ -83,6 +84,16 @@ export default class DuluApp extends React.Component {
                 setNetworkError={this.setNetworkError}
                 viewPrefs={this.state.user.view_prefs}
                 updateViewPrefs={this.updateViewPrefs}
+              />
+            )}
+          />
+          <Route
+            path="/programs/:idOrAction?"
+            render={({ match }) => (
+              <ProgramsRedirect
+                t={this.state.t}
+                setNetworkError={this.setNetworkError}
+                match={match}
               />
             )}
           />
@@ -167,7 +178,7 @@ export default class DuluApp extends React.Component {
             )}
           />
           <Route
-            path="/activities/:id"
+            path="/*activities/:id"
             render={({ match, history }) => (
               <ActivityPage
                 t={this.state.t}

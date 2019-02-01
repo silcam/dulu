@@ -1,5 +1,5 @@
 EwondoNT:
-  program: Ewondo
+  language: Ewondo
   english_name: Ewondo New Testament
   french_name: Nouveau Testament en Ewondo
   nl_name: Abc Abcd
@@ -7,7 +7,7 @@ EwondoNT:
   kind: Scripture
 
 EwondoLukeFilm:
-  program: Ewondo
+  language: Ewondo
   french_name: Luc
   year: 2005
   kind: Media

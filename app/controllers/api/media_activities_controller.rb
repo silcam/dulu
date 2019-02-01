@@ -1,16 +1,17 @@
 class Api::MediaActivitiesController < ApplicationController
 
   def index
-    @program = Program.find(params[:program_id])
-    @media_activities = @program.media_activities
+    @language = Language.find(params[:language_id])
+    @media_activities = @language.media_activities
   end
 
   def create
-    @program = Program.find(params[:program_id])
-    authorize! :create_activity, @program
-    @program.media_activities.create!(media_activity_params)
-    @media_activities = @program.media_activities
+    @language = Language.find(params[:language_id])
+    authorize! :create_activity, @language
+    @activity = @language.media_activities.create!(media_activity_params)
+    @media_activities = @language.media_activities
     render :index
+    Notification.new_activity(current_user, @activity)
   end
 
   private

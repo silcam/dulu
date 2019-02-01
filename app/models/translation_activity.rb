@@ -13,13 +13,13 @@ class TranslationActivity < Activity
   end
 
   def next
-    list = self.program.sorted_translation_activities
+    list = self.language.sorted_translation_activities
     index = list.index(self)
     return list[index + 1] # This returns nil when we go off the back
   end
 
   def prev
-    list = self.program.sorted_translation_activities
+    list = self.language.sorted_translation_activities
     index = list.index(self)
     return index==0 ? nil : list[index - 1]
   end
@@ -28,18 +28,18 @@ class TranslationActivity < Activity
     Stage.stages(:Translation)
   end
 
-  def self.build(params, program, participants)
+  def self.build(params, language, participants)
     activity = nil
     if ['nt', 'ot'].include? params[:bible_book_id]
       books = (params[:bible_book_id] == 'nt') ? BibleBook.get_new_testament : BibleBook.get_old_testament
       books.each do |book|
-        unless program.is_translating? book
-          activity = TranslationActivity.create! program: program, participants: participants, bible_book: book
+        unless language.is_translating? book
+          activity = TranslationActivity.create! language: language, participants: participants, bible_book: book
         end
       end
       activity
     else
-      TranslationActivity.create! program: program, participants: participants, bible_book_id: params[:bible_book_id]
+      TranslationActivity.create! language: language, participants: participants, bible_book_id: params[:bible_book_id]
     end
   end
 
@@ -63,13 +63,13 @@ class TranslationActivity < Activity
     joins(:bible_book).where(bible_books: {usfm_number: usfm_range})
   end
 
-  def self.archivable?(program, testament)
-    activities = program.translation_activities.by_testament(testament)
+  def self.archivable?(language, testament)
+    activities = language.translation_activities.by_testament(testament)
     activities.count > 0 && !activities.any?{ |ta| !ta.archivable? }
   end
 
-  def self.archive(program, testament)
-    activities = program.translation_activities.by_testament(testament)
+  def self.archive(language, testament)
+    activities = language.translation_activities.by_testament(testament)
     activities.update archived: true
   end
 
@@ -80,7 +80,7 @@ class TranslationActivity < Activity
       subresults = []
       activities = TranslationActivity.where bible_book: book
       activities.each do |activity|
-        subresults << {title: activity.program.name,
+        subresults << {title: activity.language.name,
                        description: I18n.t(activity.stage_name),
                        route: "/activities/#{activity.id}"}
       end

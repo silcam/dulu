@@ -4,8 +4,8 @@ import style from "./Dashboard.css";
 
 export default class DashboardSidebarProgram extends React.PureComponent {
   componentDidMount() {
-    if (this.props.program.startSelected) {
-      this.props.onProgramSelected(this.props.program);
+    if (this.props.language.startSelected) {
+      this.props.onProgramSelected(this.props.language);
     }
   }
 
@@ -16,17 +16,17 @@ export default class DashboardSidebarProgram extends React.PureComponent {
     return (
       <li
         className={
-          "programItem " + (props.selection == props.program && style.active)
+          "languageItem " + (props.selection == props.language && style.active)
         }
       >
         {indentString}
         <button
           className="link"
           onClick={() => {
-            props.onProgramSelected(props.program);
+            props.onProgramSelected(props.language);
           }}
         >
-          {props.program.name}
+          {props.language.name}
         </button>
       </li>
     );
@@ -34,6 +34,6 @@ export default class DashboardSidebarProgram extends React.PureComponent {
 }
 
 DashboardSidebarProgram.propTypes = {
-  program: PropTypes.object.isRequired,
+  language: PropTypes.object.isRequired,
   onProgramSelected: PropTypes.func.isRequired
 };

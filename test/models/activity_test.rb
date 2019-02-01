@@ -7,8 +7,8 @@ class ActivityTest < ActiveSupport::TestCase
   end
 
   test 'relations' do
-    assert_equal(programs(:Hdi),
-                 @hdi_ezra.program)
+    assert_equal(languages(:Hdi),
+                 @hdi_ezra.language)
     assert_equal(stages(:HdiOne),
                  @hdi_ezra.stages.first)
     assert(@hdi_ezra.participants.include?(participants(:DrewHdi)),
@@ -18,11 +18,11 @@ class ActivityTest < ActiveSupport::TestCase
   end
 
   test 'validations' do
-    no_program = Activity.new(type: 'TranslationActivity')
-    no_type = Activity.new(program: programs(:Hdi))
-    refute(no_program.save, 'Should not save activity with no program')
+    no_language = Activity.new(type: 'TranslationActivity')
+    no_type = Activity.new(language: languages(:Hdi))
+    refute(no_language.save, 'Should not save activity with no language')
     refute(no_type.save, 'Should not save activity with no type')
-    assert_raises (Exception) {Activity.new(program: programs(:Hdi), type: 'FakeActivity')}
+    assert_raises (Exception) {Activity.new(language: languages(:Hdi), type: 'FakeActivity')}
   end
 
   test 'current stage' do
@@ -98,9 +98,9 @@ class ActivityTest < ActiveSupport::TestCase
   end
 
   def hdi_john
-    hdi = programs(:Hdi)
+    hdi = languages(:Hdi)
     john = bible_books(:John)
-    TranslationActivity.create!(program: hdi, bible_book: john)
+    TranslationActivity.create!(language: hdi, bible_book: john)
   end
 
   test "Can delete brand new activity" do

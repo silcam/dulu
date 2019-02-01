@@ -1,15 +1,16 @@
 class Api::WorkshopsActivitiesController < ApplicationController
   def index
-    @program = Program.find(params[:program_id])
+    @language = Language.find(params[:language_id])
     @workshops_activities = get_workshops_activities
   end
 
   def create
-    @program = Program.find(params[:program_id])
-    authorize! :create_activity, @program
-    @program.linguistic_activities.create!(workshops_activity_params)
+    @language = Language.find(params[:language_id])
+    authorize! :create_activity, @language
+    @activity = @language.linguistic_activities.create!(workshops_activity_params)
     @workshops_activities = get_workshops_activities
     render :index
+    Notification.new_activity(current_user, @activity)
   end
 
   private
@@ -21,6 +22,6 @@ class Api::WorkshopsActivitiesController < ApplicationController
   end
 
   def get_workshops_activities
-    @program.workshops_activities
+    @language.workshops_activities
   end
 end

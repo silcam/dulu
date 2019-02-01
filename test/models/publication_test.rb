@@ -7,7 +7,7 @@ class PublicationTest < ActiveSupport::TestCase
   end
 
   test 'Relations' do
-    assert_equal programs(:Ewondo), @ewondo_nt.program
+    assert_equal languages(:Ewondo), @ewondo_nt.language
   end
 
   test 'Validations' do

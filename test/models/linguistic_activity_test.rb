@@ -3,7 +3,7 @@ require 'test_helper'
 class LinguisticActivityTest < ActiveSupport::TestCase
 
   def setup
-    @ewondo = programs(:Ewondo)
+    @ewondo = languages(:Ewondo)
     @grammar_ws = linguistic_activities(:EwondoGrammarIntro)
     @le_paper = linguistic_activities(:LePaper)
   end
@@ -36,7 +36,7 @@ class LinguisticActivityTest < ActiveSupport::TestCase
   end
 
   test "New Research Activity is Empty" do
-    assert LinguisticActivity.create!(program: @ewondo, category: 'Research', title: 'Title').empty_activity?
+    assert LinguisticActivity.create!(language: @ewondo, category: 'Research', title: 'Title').empty_activity?
   end
 
   test "Workshop Activity with a workshop is not Empty" do
@@ -56,7 +56,7 @@ class LinguisticActivityTest < ActiveSupport::TestCase
     participants = [participants(:KendallEwondo)]
     LinguisticActivity.build(params, @ewondo, participants)
     cool_stuff = LinguisticActivity.find_by title: 'Cool Stuff'
-    assert_equal @ewondo, cool_stuff.program
+    assert_equal @ewondo, cool_stuff.language
     assert_equal :Research, cool_stuff.category
     assert_includes cool_stuff.participants, participants(:KendallEwondo)
   end
@@ -66,7 +66,7 @@ class LinguisticActivityTest < ActiveSupport::TestCase
     params['workshops'] = ['ws1', 'ws2']
     LinguisticActivity.build(params, @ewondo, [])
     cool_shops = LinguisticActivity.find_by title: 'Cool Workshops'
-    assert_equal @ewondo, cool_shops.program
+    assert_equal @ewondo, cool_shops.language
     assert_equal :Workshops, cool_shops.category
     exp = %w[ ws1 ws2 ]
     assert_equal exp, cool_shops.workshops.collect{|ws| ws.name}

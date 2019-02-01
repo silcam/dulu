@@ -30,14 +30,14 @@ class MediaTable extends React.PureComponent {
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
-    if (prevState.programs !== nextProps.programs) {
+    if (prevState.languages !== nextProps.languages) {
       let activities = [];
-      for (let program of nextProps.programs) {
-        activities = activities.concat(program.media_activities);
+      for (let language of nextProps.languages) {
+        activities = activities.concat(language.media_activities);
       }
       sortActivities(prevState.sort, activities, sortFunctions);
       return {
-        programs: nextProps.programs,
+        languages: nextProps.languages,
         activities: activities
       };
     }

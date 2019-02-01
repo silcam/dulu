@@ -23,11 +23,11 @@ function EventRows(props) {
               )}
             </td>
             <td className="subtle-links">
-              {event.cluster_programs.map((program, index) => {
+              {event.cluster_languages.map((program, index) => {
                 return (
                   <React.Fragment key={program.path}>
                     <Link to={program.path}>{program.name}</Link>
-                    {index < event.cluster_programs.length - 1 && ", "}
+                    {index < event.cluster_languages.length - 1 && ", "}
                   </React.Fragment>
                 );
               })}

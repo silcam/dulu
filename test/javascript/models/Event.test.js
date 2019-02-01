@@ -46,7 +46,7 @@ test("prepareEventParams", () => {
   const event = {
     name: "My Event",
     clusters: [{ id: 101 }, { id: 202 }],
-    programs: [{ id: 303 }, { id: 404 }],
+    languages: [{ id: 303 }, { id: 404 }],
     event_participants: [{ id: 505 }, { id: 606 }]
   };
   const oldEvent = update(event, {
@@ -57,7 +57,7 @@ test("prepareEventParams", () => {
   let params = Event.prepareEventParams(event);
   expect(params.name).toEqual("My Event");
   expect(params.cluster_ids).toEqual([101, 202]);
-  expect(params.program_ids).toEqual([303, 404]);
+  expect(params.language_ids).toEqual([303, 404]);
   expect(params.event_participants_attributes).toEqual({
     0: { id: 505 },
     1: { id: 606 }

@@ -4,7 +4,7 @@ class HasParticipantsTest < ActiveSupport::TestCase
 
   def setup
     # Program model uses this concern
-    @hdi = programs :Hdi
+    @hdi = languages :Hdi
   end
 
   test 'Unassociated People' do

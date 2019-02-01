@@ -94,10 +94,10 @@ class LinguisticActivity < Activity
     end
   end
 
-  def self.build(params, program, participants)
+  def self.build(params, language, participants)
     activity = LinguisticActivity.new
     LinguisticActivity.transaction do
-      la_params = params.permit(:category, :title).merge(program: program, participants: participants)
+      la_params = params.permit(:category, :title).merge(language: language, participants: participants)
       activity = LinguisticActivity.create(la_params)
       if activity.category == :Workshops
         n = 1
@@ -118,7 +118,7 @@ class LinguisticActivity < Activity
     activities.each do |activity|
       results << {
           title: activity.name,
-          description: "#{activity.program.name} - #{activity.current_stage.name}",
+          description: "#{activity.language.name} - #{activity.current_stage.name}",
           route: "/activities/#{activity.id}"}
     end
     results

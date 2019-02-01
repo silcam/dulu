@@ -11,10 +11,10 @@ export default class EventsTableRow extends React.PureComponent {
     return (
       <tr>
         <td>
-          <Link to={`/programs/${event.program_id}`}>{event.program_name}</Link>
+          <Link to={`/languages/${event.language_id}`}>{event.language_name}</Link>
         </td>
         <td>
-          <Link to={`/programs/${event.program_id}/events/${event.id}`}>
+          <Link to={`/languages/${event.language_id}/events/${event.id}`}>
             {event.name}
           </Link>
         </td>

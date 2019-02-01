@@ -7,9 +7,10 @@ class LoginsTest < ApplicationSystemTestCase
   end
 
   test "valid user logs in" do
-    log_in(@unauth_user) # Ensure that nobody is logged in by trying to log-in invalid user
-    simulate_oauth(@auth_user)
-    visit root_path
+    log_in(@auth_user) # Ensure that nobody is logged in by trying to log-in invalid user
+    click_on('Logout')
+    assert_selector '#google-signin-link'
+
     click_link('google-signin-link')
     assert page.has_content?(@auth_user.first_name), "Expect to see user's first name"
 

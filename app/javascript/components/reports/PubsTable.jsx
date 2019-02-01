@@ -5,7 +5,7 @@ import Report from "../../models/Report";
 
 export default function PubsTable(props) {
   const t = props.t;
-  const program = props.program;
+  const language = props.language;
   const pubs = Object.keys(props.elements.publications).filter(
     pub => props.elements.publications[pub]
   );
@@ -16,7 +16,7 @@ export default function PubsTable(props) {
           <tr>
             <th>{t("Published")}</th>
             {pubs.map(pub => {
-              let color = program.report.publications[pub]
+              let color = language.report.publications[pub]
                 ? Colors.purple
                 : "white";
               return (
@@ -41,5 +41,5 @@ export default function PubsTable(props) {
 PubsTable.propTypes = {
   t: PropTypes.func.isRequired,
   elements: PropTypes.object.isRequired,
-  program: PropTypes.object.isRequired
+  language: PropTypes.object.isRequired
 };

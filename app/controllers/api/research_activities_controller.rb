@@ -1,15 +1,16 @@
 class Api::ResearchActivitiesController < ApplicationController
   def index
-    @program = Program.find(params[:program_id])
-    @research_activities = @program.research_activities
+    @language = Language.find(params[:language_id])
+    @research_activities = @language.research_activities
   end
 
   def create
-    @program = Program.find(params[:program_id])
-    authorize! :create_activity, @program
-    @program.linguistic_activities.create!(research_activity_params)
-    @research_activities = @program.research_activities
+    @language = Language.find(params[:language_id])
+    authorize! :create_activity, @language
+    @activity = @language.linguistic_activities.create!(research_activity_params)
+    @research_activities = @language.research_activities
     render :index
+    Notification.new_activity(current_user, @activity)
   end
 
   private

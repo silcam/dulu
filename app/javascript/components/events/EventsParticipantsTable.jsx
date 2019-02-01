@@ -23,11 +23,11 @@ export default function EventsParticipantsTable(props) {
         <tr>
           <th>{props.t("Languages")}</th>
           <td>
-            {props.event.programs.length == 0
+            {props.event.languages.length == 0
               ? props.t("None")
-              : props.event.programs.map(program => (
-                  <span className={style.listItem} key={program.id}>
-                    <Link to={`/languages/${program.id}`}>{program.name}</Link>
+              : props.event.languages.map(language => (
+                  <span className={style.listItem} key={language.id}>
+                    <Link to={`/languages/${language.id}`}>{language.name}</Link>
                   </span>
                 ))}
           </td>

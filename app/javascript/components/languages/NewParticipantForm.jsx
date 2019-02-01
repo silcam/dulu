@@ -13,7 +13,7 @@ export default class NewParticipantForm extends React.PureComponent {
     super(props);
     this.state = {
       participant: {
-        program_id: props.program_id,
+        language_id: props.language_id,
         cluster_id: props.cluster_id,
         start_date: "",
         person_name: "",
@@ -113,7 +113,7 @@ NewParticipantForm.propTypes = {
   t: PropTypes.func.isRequired,
   cancel: PropTypes.func.isRequired,
   addParticipant: PropTypes.func.isRequired,
-  program_id: PropTypes.number,
+  language_id: PropTypes.number,
   cluster_id: PropTypes.number,
   setNetworkError: PropTypes.func.isRequired
 };

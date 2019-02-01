@@ -1,7 +1,7 @@
 class Event < ApplicationRecord
   include MultiWordSearch
 
-  has_and_belongs_to_many :programs
+  has_and_belongs_to_many :languages
   has_and_belongs_to_many :clusters
   has_many :event_participants, autosave: true, dependent: :destroy
   accepts_nested_attributes_for :event_participants, allow_destroy: true
@@ -47,8 +47,8 @@ class Event < ApplicationRecord
     date_text
   end
 
-  def cluster_programs
-    clusters + programs
+  def cluster_languages
+    clusters + languages
   end
 
   def f_start_date
@@ -67,16 +67,16 @@ class Event < ApplicationRecord
     end
   end
 
-  def all_programs
-    all = programs
+  def all_languages
+    all = languages
     clusters.each do |c|
-      all += c.programs
+      all += c.languages
     end
     all
   end
 
-  def unassoc_programs
-    Program.where.not(id: programs)
+  def unassoc_languages
+    Language.where.not(id: languages)
   end
 
   def unassoc_clusters
@@ -91,10 +91,10 @@ class Event < ApplicationRecord
     return true if creator == user
     return true if self.people.include? user
 
-    person_programs_list = user.current_programs
-    self.programs.each{ |p| return true if person_programs_list.include? p }
+    person_languages_list = user.current_languages
+    self.languages.each{ |p| return true if person_languages_list.include? p }
     self.clusters.each do |c|
-      c.programs.each{ |p| return true if person_programs_list.include? p }
+      c.languages.each{ |p| return true if person_languages_list.include? p }
     end
 
     false
@@ -122,7 +122,7 @@ class Event < ApplicationRecord
     events.each do |event|
       title = "#{event.name}"
       description = event.dates_display_text
-      description_cluster_progs = (event.clusters + event.programs).collect{ |cp| cp.display_name }.join(', ')
+      description_cluster_progs = (event.clusters + event.languages).collect{ |cp| cp.display_name }.join(', ')
       description += ' - ' + description_cluster_progs unless description_cluster_progs.blank?
       results << {title: title, description: description, model: event}
     end

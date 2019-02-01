@@ -14,8 +14,8 @@ class ParticipantsTable extends React.PureComponent {
         <table className="table">
           <tbody>
             {person.participants.map(participant => {
-              const clusterProgramPath = participant.program_id
-                ? `/programs/${participant.program_id}`
+              const clusterProgramPath = participant.language_id
+                ? `/languages/${participant.language_id}`
                 : `/clusters/${participant.cluster_id}`;
               return (
                 <tr key={participant.id}>

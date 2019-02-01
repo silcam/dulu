@@ -5,7 +5,7 @@ class Api::SearchesController < ApplicationController
     if(@query.blank?)
       @results = []
     else
-      @results = Program.search(@query) +
+      @results = Language.search(@query) +
                  Person.search(@query) +
                  Organization.search(@query) +
                  Cluster.search(@query) +

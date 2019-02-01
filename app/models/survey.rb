@@ -20,11 +20,11 @@ class Survey < ApplicationRecord
   def report(which_report)
     case which_report
       when 'publications'
-        pubs = Publication.where(year: (2015..2017)).order("program_id, year DESC")
+        pubs = Publication.where(year: (2015..2017)).order("language_id, year DESC")
         data = [['Language', 'Name', 'English Name', 'French Name', 'Year',
                    'Type', 'Media Type']]
         pubs.each do |pub|
-          data << [pub.program.name, pub.nl_name, pub.english_name, pub.french_name,
+          data << [pub.language.name, pub.nl_name, pub.english_name, pub.french_name,
                    pub.year, I18n.t(pub.kind), safe_t(pub.media_kind)]
         end
         return data
@@ -35,11 +35,11 @@ class Survey < ApplicationRecord
         data = [['Languages', 'Name', 'Domain', 'Start', 'End', 'Notes']]
         events.each do |event|
           clusters = event.clusters.collect{|c| c.display_name}.join(', ')
-          programs = event.programs.collect{|p| p.name}.join(', ')
-          clusters_and_programs = clusters +
-              ((clusters.blank? || programs.blank?)? '' : ', ') +
-              programs
-          data << [clusters_and_programs, event.name, I18n.t(event.domain),
+          languages = event.languages.collect{|p| p.name}.join(', ')
+          clusters_and_languages = clusters +
+              ((clusters.blank? || languages.blank?)? '' : ', ') +
+              languages
+          data << [clusters_and_languages, event.name, I18n.t(event.domain),
            event.f_start_date.pretty_print, event.f_end_date.pretty_print,
            event.note]
         end
@@ -53,7 +53,7 @@ class Survey < ApplicationRecord
         updates.each do |update|
           prev_update = update.previous
           item = update.status_parameter.nil? ? 'Other' : update.status_parameter.prompt
-          data << [update.program.name, I18n.t(update.domain), item, update.f_date.pretty_print,
+          data << [update.language.name, I18n.t(update.domain), item, update.f_date.pretty_print,
            prev_update.try(:f_date).try(:pretty_print), update.number, prev_update.try(:number),
            update.status, prev_update.try(:status), update.note,
            prev_update.try(:note)]
@@ -65,11 +65,11 @@ class Survey < ApplicationRecord
   def get_csv_report(which_report)
     case which_report
       when 'publications'
-        pubs = Publication.where(year: (2015..2017)).order("program_id, year DESC")
+        pubs = Publication.where(year: (2015..2017)).order("language_id, year DESC")
         headers = ['Language', 'Name', 'English Name', 'French Name', 'Year',
                     'Type', 'Media Type']
         return csv_report(pubs, headers) do |pub|
-          [pub.program.name, pub.nl_name, pub.english_name, pub.french_name,
+          [pub.language.name, pub.nl_name, pub.english_name, pub.french_name,
            pub.year, I18n.t(pub.kind), safe_t(pub.media_kind)]
         end
 
@@ -79,11 +79,11 @@ class Survey < ApplicationRecord
         headers = ['Languages', 'Name', 'Domain', 'Start', 'End', 'Notes']
         return csv_report(events, headers) do |event|
           clusters = event.clusters.collect{|c| c.display_name}.join(', ')
-          programs = event.programs.collect{|p| p.name}.join(', ')
-          clusters_and_programs = clusters +
-              ((clusters.blank? || programs.blank?)? '' : ', ') +
-              programs
-          [clusters_and_programs, event.name, I18n.t(event.domain),
+          languages = event.languages.collect{|p| p.name}.join(', ')
+          clusters_and_languages = clusters +
+              ((clusters.blank? || languages.blank?)? '' : ', ') +
+              languages
+          [clusters_and_languages, event.name, I18n.t(event.domain),
            event.f_start_date.pretty_print, event.f_end_date.pretty_print,
            sanitize(event.note)]
         end
@@ -94,7 +94,7 @@ class Survey < ApplicationRecord
         return csv_report(updates, headers) do |update|
           prev_update = update.previous
           item = update.status_parameter.nil? ? 'Other' : update.status_parameter.prompt
-          [update.program.name, I18n.t(update.domain), item, update.f_date.pretty_print,
+          [update.language.name, I18n.t(update.domain), item, update.f_date.pretty_print,
             prev_update.try(:f_date).try(:pretty_print), update.number, prev_update.try(:number),
             update.status, prev_update.try(:status), sanitize(update.note),
              sanitize(prev_update.try(:note))]

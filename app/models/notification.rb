@@ -57,7 +57,7 @@ class Notification < ApplicationRecord
     end
 
     def new_program_participant(user, participant)
-      program = participant.program
+      program = participant.language
       n_params = {
         kind: :new_program_participant,
         vars: {
@@ -104,7 +104,7 @@ class Notification < ApplicationRecord
 
     def new_stage(user, stage)
       activity = stage.activity
-      program = activity.program
+      program = activity.language
       n_params = {
         kind: :new_stage,
         vars: {
@@ -124,7 +124,7 @@ class Notification < ApplicationRecord
     handle_asynchronously :new_stage
 
     def workshop_complete(user, workshop)
-      program = workshop.linguistic_activity.program
+      program = workshop.linguistic_activity.language
       n_params = {
         kind: :workshop_complete,
         vars: {
@@ -143,7 +143,7 @@ class Notification < ApplicationRecord
     handle_asynchronously :workshop_complete
 
     def new_activity(user, activity)
-      program = activity.program
+      program = activity.language
       n_params = {
         kind: :new_activity,
         vars: {
@@ -161,23 +161,23 @@ class Notification < ApplicationRecord
     end
     handle_asynchronously :new_activity
 
-    # testament one of :New_testament or :Old_testament
-    def added_a_testament(user, testament, program)
-      n_params = {
-        kind: :added_a_testament,
-        vars: {
-          user_name: user.full_name,
-          program_name: program.name,
-          testament: t_hash(testament)
-        },
-        links: {
-          user_name: model_path(user),
-          program_name: model_path(program)
-        }
-      }
-      send_notification n_params, cluster_program_people(program, user)
-    end
-    handle_asynchronously :added_a_testament
+    # # testament one of :New_testament or :Old_testament
+    # def added_a_testament(user, testament, program)
+    #   n_params = {
+    #     kind: :added_a_testament,
+    #     vars: {
+    #       user_name: user.full_name,
+    #       program_name: program.name,
+    #       testament: t_hash(testament)
+    #     },
+    #     links: {
+    #       user_name: model_path(user),
+    #       program_name: model_path(program)
+    #     }
+    #   }
+    #   send_notification n_params, cluster_program_people(program, user)
+    # end
+    # handle_asynchronously :added_a_testament
 
     def updated_you(user, person)
       return updated_himself(user) if user == person
@@ -247,7 +247,7 @@ class Notification < ApplicationRecord
 
     def added_person_to_activity(user, person, activity)
       return added_himself_to_activity(user, activity) if user == person
-      program = activity.program
+      program = activity.language
       n_params = {
         kind: :added_person_to_activity,
         vars: {
@@ -263,7 +263,7 @@ class Notification < ApplicationRecord
           program_name: model_path(program)
         }
       }
-      people = cluster_program_people(activity.program, user, person)
+      people = cluster_program_people(activity.language, user, person)
       send_notification n_params, people
 
       n_params[:kind] = :added_you_to_activity
@@ -278,15 +278,15 @@ class Notification < ApplicationRecord
           user_name: user.full_name,
           himself: t_hash("notification.himself.#{user.gender}"),
           activity_name: activity_name(activity),
-          program_name: activity.program.name
+          program_name: activity.language.name
         },
         links: {
           user_name: model_path(user),
           activity_name: model_path(activity),
-          program_name: model_path(activity.program)
+          program_name: model_path(activity.language)
         }
       }
-      people = cluster_program_people(activity.program, user)
+      people = cluster_program_people(activity.language, user)
       send_notification n_params, people
     end
 

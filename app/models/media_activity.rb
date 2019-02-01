@@ -32,9 +32,9 @@ class MediaActivity < Activity
     Stage.stages(:Media)
   end
 
-  def self.build(params, program, participants)
+  def self.build(params, language, participants)
     bible_books = params[:bible_book_ids].nil? ? [] : BibleBook.where(id: params[:bible_book_ids])
-    ma_params = params.permit(:category, :scripture, :film).merge(program: program, participants: participants, bible_books: bible_books)
+    ma_params = params.permit(:category, :scripture, :film).merge(language: language, participants: participants, bible_books: bible_books)
     MediaActivity.create(ma_params)
   end
 
@@ -43,7 +43,7 @@ class MediaActivity < Activity
     activities.collect do |activity|
       {
           title: activity.name,
-          description: "#{activity.program.name} - #{activity.current_stage.name}",
+          description: "#{activity.language.name} - #{activity.current_stage.name}",
           route: "activities/#{activity.id}"
       }
     end

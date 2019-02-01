@@ -1,3 +1,3 @@
 json.(@cluster, :id, :display_name)
 
-json.programs @cluster.programs, partial: 'api/programs/dashboard', as: :program
+json.languages @cluster.languages, partial: 'api/languages/dashboard', as: :language

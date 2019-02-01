@@ -1,6 +1,6 @@
 class Statistic
 
-  attr_reader :number, :title, :path, :description, :model, :program
+  attr_reader :number, :title, :path, :description, :model, :language
 
   def initialize(stat)
     send(stat)
@@ -37,20 +37,20 @@ class Statistic
     @model = Publication.where("kind='Scripture' and year IS NOT NULL").last
     @title = I18n.t(:Published_scripture)
     @description = "#{@model.name}"
-    @program = @model.program
+    @language = @model.language
   end
 
   def latest_media
     @model = Publication.where("kind='Media' and year IS NOT NULL").last
     @title = I18n.t(:Published_media)
     @description = "#{@model.name}"
-    @program = @model.program
+    @language = @model.language
   end
 
   def latest_translation_started
     @model = Stage.order("start_date DESC").find_by(name: 'Drafting').activity
     @title = I18n.t(:Translation_started)
     @description = "#{@model.bible_book.name}"
-    @program = @model.program
+    @language = @model.language
   end
 end

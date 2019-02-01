@@ -2,12 +2,12 @@
 
 json.call(cluster, :id, :name)
 
-percents = Program.percentages(cluster.programs)
+percents = Language.percentages(cluster.languages)
 
 json.languages cluster.languages do |language|
   json.call(language, :id, :name)
-  json.program_id language.program.id
-  json.progress percents[language.program.id]
+  json.language_id language.id
+  json.progress percents[language.id]
 end
 
 json.participants cluster.participants, partial: 'api/participants/participant', as: :participant

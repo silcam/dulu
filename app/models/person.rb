@@ -8,7 +8,7 @@ class Person < ApplicationRecord
   has_many :organizations, through: :organization_people
 
   has_many :participants, dependent: :destroy
-  has_many :programs, through: :participants
+  has_many :languages, through: :participants
 
   has_many :person_roles, dependent: :destroy
 
@@ -65,16 +65,16 @@ class Person < ApplicationRecord
     participants.where("end_date IS NULL OR end_date=''")
   end
 
-  def current_programs
-    programs = []
+  def current_languages
+    languages = []
     current_participants.each do |participant|
-      if participant.program
-        programs << participant.program
+      if participant.language
+        languages << participant.language
       else
-        programs += participant.cluster.programs
+        languages += participant.cluster.languages
       end
     end
-    programs
+    languages
   end
 
   def to_hash
@@ -93,8 +93,8 @@ class Person < ApplicationRecord
     people.each do |person|
       subresults = []
       person.current_participants.each do |participant|
-        subresults << {title: participant.cluster_program.display_name,
-                       model: participant.cluster_program,
+        subresults << {title: participant.cluster_language.display_name,
+                       model: participant.cluster_language,
                        description: participant.roles_text}
       end
       results << {title: person.name,

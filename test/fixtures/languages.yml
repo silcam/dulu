@@ -5,6 +5,7 @@ Hdi:
   language_status: Developing
   code: xed
   alt_names: 'Hedi, Hide, Turu-Hide, Xadi, Xdi, Xedi'
+  lpf: NorthRegion
 
 HdiDialect:
   name: HdiDialect
@@ -22,9 +23,11 @@ Bambalang:
 
 Ewondo:
   name: Ewondo
+  lpf: SouthRegion
 
 Zulgo:
   name: Zulgo
+  lpf: NorthRegion
 
 NoActivity:
   name: No Activity

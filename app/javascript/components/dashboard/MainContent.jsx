@@ -27,7 +27,7 @@ export default class MainContent extends React.PureComponent {
 
   render() {
     const props = this.props;
-    if (props.programs.length == 0) return <div />;
+    if (props.languages.length == 0) return <div />;
     return (
       <Tabs selectedIndex={this.state.tab} onSelect={this.selectTab}>
         <TabList>
@@ -36,19 +36,19 @@ export default class MainContent extends React.PureComponent {
           ))}
         </TabList>
         <TabPanel>
-          <TranslationActivitiesTable programs={props.programs} t={props.t} />
+          <TranslationActivitiesTable languages={props.languages} t={props.t} />
         </TabPanel>
         <TabPanel>
-          <LinguisticsTable programs={props.programs} t={props.t} />
+          <LinguisticsTable languages={props.languages} t={props.t} />
         </TabPanel>
         <TabPanel>
-          <MediaTable programs={props.programs} t={props.t} />
+          <MediaTable languages={props.languages} t={props.t} />
         </TabPanel>
         <TabPanel>
-          <ParticipantsTable programs={props.programs} t={props.t} />
+          <ParticipantsTable languages={props.languages} t={props.t} />
         </TabPanel>
         <TabPanel>
-          <EventsTable programs={props.programs} t={props.t} />
+          <EventsTable languages={props.languages} t={props.t} />
         </TabPanel>
       </Tabs>
     );

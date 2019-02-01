@@ -8,7 +8,7 @@ class EventsTable extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      programs: null,
+      languages: null,
       currentEvents: [],
       upcomingEvents: [],
       domainFilter: "All"
@@ -20,17 +20,17 @@ class EventsTable extends React.PureComponent {
   };
 
   static getDerivedStateFromProps(nextProps, prevState) {
-    if (nextProps.programs == prevState.programs) return null;
+    if (nextProps.languages == prevState.languages) return null;
     let currentEvents = [];
     let upcomingEvents = [];
-    for (const program of nextProps.programs) {
-      currentEvents = currentEvents.concat(program.events.current);
-      upcomingEvents = upcomingEvents.concat(program.events.upcoming);
+    for (const language of nextProps.languages) {
+      currentEvents = currentEvents.concat(language.events.current);
+      upcomingEvents = upcomingEvents.concat(language.events.upcoming);
     }
     currentEvents.sort(EventsTable.eventSort);
     upcomingEvents.sort(EventsTable.eventSort);
     return {
-      programs: nextProps.programs,
+      languages: nextProps.languages,
       currentEvents: currentEvents,
       upcomingEvents: upcomingEvents
     };

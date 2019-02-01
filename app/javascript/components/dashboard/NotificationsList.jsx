@@ -2,6 +2,7 @@ import React from "react";
 import styles from "./NotificationsList.css";
 import Notification from "./Notification";
 import PropTypes from "prop-types";
+import Loading from "../shared/Loading";
 
 export default class NotificationsList extends React.PureComponent {
   clickSeeMore = e => {
@@ -35,17 +36,16 @@ export default class NotificationsList extends React.PureComponent {
             })}
             <tr>
               <td>
-                {this.props.loading && <p>{t("Loading")}</p>}
-                {this.props.moreAvailable &&
-                  !this.props.loading && (
-                    <button
-                      className="link"
-                      onClick={this.clickSeeMore}
-                      style={{ padding: 0 }}
-                    >
-                      {this.props.t("See_more")}
-                    </button>
-                  )}
+                {this.props.loading && <Loading t={t} />}
+                {this.props.moreAvailable && !this.props.loading && (
+                  <button
+                    className="link"
+                    onClick={this.clickSeeMore}
+                    style={{ padding: 0 }}
+                  >
+                    {this.props.t("See_more")}
+                  </button>
+                )}
               </td>
             </tr>
           </tbody>

@@ -18,7 +18,7 @@ export default function EditEventParticipantsTable(props) {
 
   const addLanguage = language => {
     props.replaceEvent(
-      update(props.event, { programs: { $push: [language] } })
+      update(props.event, { languages: { $push: [language] } })
     );
   };
 
@@ -40,9 +40,9 @@ export default function EditEventParticipantsTable(props) {
   };
 
   const dropLanguage = id => {
-    const newPrograms = props.event.programs.filter(p => p.id != id);
+    const newPrograms = props.event.languages.filter(p => p.id != id);
     props.replaceEvent(
-      update(props.event, { programs: { $set: newPrograms } })
+      update(props.event, { languages: { $set: newPrograms } })
     );
   };
 
@@ -162,13 +162,13 @@ export default function EditEventParticipantsTable(props) {
             <td>
               <table>
                 <tbody>
-                  {event.programs.map(program => (
-                    <tr key={program.id}>
-                      <td>{program.name}</td>
+                  {event.languages.map(language => (
+                    <tr key={language.id}>
+                      <td>{language.name}</td>
                       <td>
                         <DeleteIcon
                           onClick={() => {
-                            dropLanguage(program.id);
+                            dropLanguage(language.id);
                           }}
                         />
                       </td>

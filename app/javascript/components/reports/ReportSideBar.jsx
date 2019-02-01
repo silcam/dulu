@@ -41,11 +41,11 @@ export default function ReportSideBar(props) {
       <P>
         <label>{t("Languages")}</label>
         <ul>
-          {report.programs.map(program => (
-            <li key={program.id}>
-              - {program.name}
+          {report.languages.map(language => (
+            <li key={language.id}>
+              - {language.name}
               <DeleteIcon
-                onClick={() => props.dropProgram(program.id)}
+                onClick={() => props.dropProgram(language.id)}
                 iconSize="small"
               />
             </li>
@@ -105,7 +105,7 @@ export default function ReportSideBar(props) {
 
 function showSaveButton(report) {
   return (
-    (report.clusters.length > 0 || report.programs.length > 0) &&
+    (report.clusters.length > 0 || report.languages.length > 0) &&
     (Object.keys(report.elements.activities).some(
       testament => report.elements.activities[testament]
     ) ||

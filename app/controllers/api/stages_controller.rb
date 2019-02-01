@@ -8,6 +8,7 @@ class Api::StagesController < ApplicationController
     authorize! :update, @stage.activity
     @stage.save!
     render :show
+    Notification.new_stage(current_user, @stage)
   end
 
   private

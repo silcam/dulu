@@ -23,9 +23,9 @@ class OrganizationTest < ActiveSupport::TestCase
   # end
 
   test 'Current Programs' do
-    assert(Date.today < Date.new(2019, 2, 15), "Redo this test with new organization-program relationship")
-    # hdi_program = programs :Hdi
-    # assert_includes @sil.current_programs, hdi_program
+    assert(Date.today < Date.new(2019, 2, 15), "Redo this test with new organization-language relationship")
+    # hdi_language = languages :Hdi
+    # assert_includes @sil.current_languages, hdi_language
   end
 
   test 'Search' do

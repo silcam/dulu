@@ -26,8 +26,8 @@ json.person do
                         .sort{ |a, b| a[:display] <=> b[:display] }
 
   json.participants @person.participants do |participant|
-    json.call(participant, :id, :program_id, :cluster_id)
-    json.name participant.cluster_program.display_name
+    json.call(participant, :id, :language_id, :cluster_id)
+    json.name participant.cluster_language.display_name
     roles = participant.roles.collect { |r| t(r) }
     json.roles roles
   end

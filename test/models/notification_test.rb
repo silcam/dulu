@@ -7,7 +7,7 @@ class NotificationTest < ActiveSupport::TestCase
     @rick = people :Rick
     @lance = people :Lance
     @andreas = people :Andreas
-    @hdi = programs :Hdi
+    @hdi = languages :Hdi
     # @old_count = Notification.count #It will be 0
   end
 
@@ -19,7 +19,7 @@ class NotificationTest < ActiveSupport::TestCase
   end
 
   test 'New participant program' do
-    lance_hdi = Participant.create(person: @lance, program: @hdi, start_date: '2018')
+    lance_hdi = Participant.create(person: @lance, language: @hdi, start_date: '2018')
     Notification.new_program_participant(@drew, lance_hdi)
     assert_equal 3, Notification.where(kind: :new_program_participant).count
     assert_equal 1, Notification.where(kind: :added_you_to_program).count
@@ -55,20 +55,13 @@ class NotificationTest < ActiveSupport::TestCase
   end
 
   test 'New activity' do
-    dvu_study = LinguisticActivity.create(category: :Research, title: 'Dvu', program: @hdi)
+    dvu_study = LinguisticActivity.create(category: :Research, title: 'Dvu', language: @hdi)
     # alternate version :
-    # dvu_study = TranslationActivity.create(program: @hdi, bible_book: bible_books(:John))
+    # dvu_study = TranslationActivity.create(language: @hdi, bible_book: bible_books(:John))
     Notification.new_activity(@drew, dvu_study)
     assert_equal 3, Notification.count
     assert_equal 1, people(:Abanda).notifications.count
     assert_equal 1, @andreas.notifications.count # LPF
-  end
-
-  test 'Added a testament' do
-    Notification.added_a_testament(@rick, :Old_testament, programs(:Ewondo))
-    assert_equal 3, Notification.count
-    assert_equal 1, people(:Kendall).notifications.count
-    assert_equal 1, people(:Olga).notifications.count # LPF
   end
 
   test 'Updated you' do
@@ -100,7 +93,7 @@ class NotificationTest < ActiveSupport::TestCase
   end
 
   # test 'Added you to program' do
-  #   lance_hdi = Participant.create(person: @lance, program: @hdi, start_date: '2018')
+  #   lance_hdi = Participant.create(person: @lance, language: @hdi, start_date: '2018')
   #   Notification.added_you_to_program(@drew, lance_hdi)
   #   assert_equal 1, Notification.count
   #   assert_equal 1, @lance.notifications.count

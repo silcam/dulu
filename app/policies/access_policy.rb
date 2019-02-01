@@ -13,7 +13,7 @@ class AccessPolicy
 
     role :supervisor, proc{ |u| u.has_role_among?(Role::SUPERVISOR_ROLES) } do
       can [:grant_login], Person
-      can [:create_activity, :manage_participants, :manage_surveys, :update_activities], Program
+      can [:create_activity, :manage_participants, :manage_surveys, :update_activities], Language
       can [:manage_participants, :create, :update], Cluster
       can :manage, Activity
       can :manage, Language
@@ -30,8 +30,8 @@ class AccessPolicy
 
       can [:create, :read, :update], Organization
 
-      can [:manage_participants, :create_activity, :manage_surveys, :update_activities], Program do |program, user|
-        program.all_current_people.include? user
+      can [:manage_participants, :create_activity, :manage_surveys, :update_activities], Language do |language, user|
+        language.all_current_people.include? user
       end
 
       can [:manage_participants], Cluster do |cluster, user|
@@ -39,11 +39,11 @@ class AccessPolicy
       end
 
       can :manage, Language do |language, user|
-        language.program.all_current_people.include? user
+        language.all_current_people.include? user
       end
 
       can [:update, :destroy], Activity do |activity, user|
-        activity.program.all_current_people.include? user
+        activity.language.all_current_people.include? user
       end
 
       can [:update, :destroy], Event do |event, user|
@@ -53,11 +53,11 @@ class AccessPolicy
       can :create, Event
 
       can :manage, Publication do |pub, user|
-        pub.program.all_current_people.include? user
+        pub.language.all_current_people.include? user
       end
 
       can :create, DomainUpdate do |domain_update, user|
-        domain_update.program.all_current_people.include? user
+        domain_update.language.all_current_people.include? user
       end
 
       can [:update, :destroy], DomainUpdate do |domain_update, user|

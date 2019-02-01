@@ -16,7 +16,7 @@ class RoleTest < ActiveSupport::TestCase
     available = Role.available drew_hdi, @drew.program_roles
     assert_empty available
 
-    drew_bangolan = Participant.new(person: @drew, program: programs(:Bangolan))
+    drew_bangolan = Participant.new(person: @drew, language: languages(:Bangolan))
     available = Role.available drew_bangolan, @drew.program_roles
     assert_includes available, :TranslationConsultant
   end

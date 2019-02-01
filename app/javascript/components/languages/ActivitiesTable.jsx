@@ -46,7 +46,7 @@ export default class ActivitiesTable extends React.PureComponent {
     this.setState({ newFormSaving: true });
     try {
       const data = await DuluAxios.post(
-        `/api/programs/${this.props.language.id}/${this.x_activities()}/`,
+        `/api/languages/${this.props.language.id}/${this.x_activities()}/`,
         {
           [this.x_activity()]: activity
         }

@@ -28,16 +28,16 @@ class WorkshopsActivitiesTable extends React.PureComponent {
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
-    if (prevState.programs == nextProps.programs) return null;
+    if (prevState.languages == nextProps.languages) return null;
 
     let activities = [];
-    for (let program of nextProps.programs)
+    for (let language of nextProps.languages)
       activities = activities.concat(
-        program.linguistic_activities.workshops_activities
+        language.linguistic_activities.workshops_activities
       );
     sortActivities(prevState.sort, activities);
     return {
-      programs: nextProps.programs,
+      languages: nextProps.languages,
       activities: activities
     };
   }

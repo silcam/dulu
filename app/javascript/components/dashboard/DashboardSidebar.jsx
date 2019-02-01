@@ -12,19 +12,19 @@ export default class DashboardSidebar extends React.PureComponent {
   }
 
   componentDidMount() {
-    axios.get(`/api/programs/dashboard_list/`).then(response => {
+    axios.get(`/api/languages/dashboard_list/`).then(response => {
       this.setState({
         menu: response.data
       });
     });
   }
 
-  onProgramSelected = program => {
-    this.props.setSelectedProgram(program.id);
+  onProgramSelected = language => {
+    this.props.setSelectedProgram(language.id);
     this.setState({
-      selection: program
+      selection: language
     });
-    this.props.updateViewPrefs({ dashboardSelection: program.selectionTag });
+    this.props.updateViewPrefs({ dashboardSelection: language.selectionTag });
   };
 
   onClusterSelected = cluster => {
@@ -37,18 +37,18 @@ export default class DashboardSidebar extends React.PureComponent {
 
   sectionClustersAndPrograms = section => {
     let clusters = section.clusters || [];
-    let programs = section.programs || [];
+    let languages = section.languages || [];
     let subSections = section.sections || [];
     for (let subSection of subSections) {
       let subSectionClustersAndPrograms = this.sectionClustersAndPrograms(
         subSection
       );
       clusters = clusters.concat(subSectionClustersAndPrograms.clusters);
-      programs = programs.concat(subSectionClustersAndPrograms.programs);
+      languages = languages.concat(subSectionClustersAndPrograms.languages);
     }
     return {
       clusters: clusters,
-      programs: programs
+      languages: languages
     };
   };
 
@@ -57,12 +57,12 @@ export default class DashboardSidebar extends React.PureComponent {
     const clusterIds = clustersAndPrograms.clusters.map(cluster => {
       return cluster.id;
     });
-    const programIds = clustersAndPrograms.programs.map(program => {
-      return program.id;
+    const languageIds = clustersAndPrograms.languages.map(language => {
+      return language.id;
     });
     this.props.setSelectedMultiple({
       clusterIds: clusterIds,
-      programIds: programIds
+      languageIds: languageIds
     });
     this.setState({
       selection: section
@@ -74,7 +74,7 @@ export default class DashboardSidebar extends React.PureComponent {
     const menu = this.state.menu;
     if (!menu.user) return <div />;
     const userHasParticipants =
-      menu.user.clusters.length > 0 || menu.user.programs.length > 0;
+      menu.user.clusters.length > 0 || menu.user.languages.length > 0;
     return (
       <ul className="list-unstyled">
         {menu.countries.map(country => {

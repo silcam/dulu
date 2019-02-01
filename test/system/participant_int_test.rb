@@ -3,7 +3,7 @@ require 'application_system_test_case'
 class ParticipantIntTest < ApplicationSystemTestCase
   def setup
     log_in people(:Rick)
-    @zulgo_program = programs :Zulgo
+    @zulgo = languages :Zulgo
     @zulgo_ezra = translation_activities :ZulgoEzra
     @drew = people :Drew
   end
@@ -95,13 +95,13 @@ class ParticipantIntTest < ApplicationSystemTestCase
   # end
 
   test "Delete DrewHdi Participant" do
-    visit "#{model_path(programs(:Hdi))}/Translation"
+    visit "#{model_path(languages(:Hdi))}/Translation"
     assert_text 'Drew Maust'
     setup_show_page
     page.accept_confirm do
       action_bar_click_delete
     end
-    visit "#{model_path(programs(:Hdi))}/Translation"
+    visit "#{model_path(languages(:Hdi))}/Translation"
     assert_no_text 'Drew Maust'
     assert_nil Participant.find_by(id: @drew_hdi)
   end
@@ -123,7 +123,7 @@ class ParticipantIntTest < ApplicationSystemTestCase
   end
 
   def add_drew
-    visit "#{model_path(programs(:Zulgo))}/Translation"
+    visit "#{model_path(languages(:Zulgo))}/Translation"
     within(parent(find('h3', text: 'People'))) do
        click_icon('addIcon')
        fill_in_search_input('Drew Maust')
@@ -133,11 +133,11 @@ class ParticipantIntTest < ApplicationSystemTestCase
     assert_selector('h2', text: 'Drew Maust')
     assert_text 'Translation Consultant'
     assert_text 'Joined Program 2016-07-31'
-    @drew_zulgo = Participant.find_by(person: @drew, program: @zulgo_program)
+    @drew_zulgo = Participant.find_by(person: @drew, language: @zulgo)
   end
 
   def modify_drew
-    visit "#{model_path(@zulgo_program)}/Translation"
+    visit "#{model_path(@zulgo)}/Translation"
     click_link 'Drew Maust'
     action_bar_click_edit
     within('tr', text: 'Joined Program') { fill_in_date(FuzzyDate.new(2016, 8, 31)) }
@@ -151,7 +151,7 @@ class ParticipantIntTest < ApplicationSystemTestCase
     within('tr', text: 'Left Program') { fill_in_date(FuzzyDate.new(2017, 7, 31)) }
     click_button 'Save'
     assert_text "Left Program 2017-07-31"
-    @zulgo_program.reload
-    refute @zulgo_program.current_people.include?(@drew)
+    @zulgo.reload
+    refute @zulgo.current_people.include?(@drew)
   end
 end

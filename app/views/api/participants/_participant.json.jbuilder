@@ -4,9 +4,9 @@ json.person do
   json.call(participant.person, :id, :full_name)
 end
 
-if participant.program
+if participant.language
   json.language do
-    json.call(participant.program, :id, :name)
+    json.call(participant.language, :id, :name)
   end
 end
 

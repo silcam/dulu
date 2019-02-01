@@ -5,7 +5,6 @@ import {
   lastUpdateSort,
   nameSort
 } from "util/sortFunctions";
-import { postponeFailure } from "../testUtil";
 
 const oneActivity = {
   progress: { percent: 30 },
@@ -42,7 +41,7 @@ test("sortActivities desc", () => {
 
 test("languageSort", () => {
   expect(
-    languageSort({ program_name: "French" }, { program_name: "English" })
+    languageSort({ language_name: "French" }, { language_name: "English" })
   ).toBeGreaterThan(0);
 });
 

@@ -1,9 +1,9 @@
-# Locals: event, program
+# Locals: event, language
 
 json.call(event, :id, :name, :domain, :start_date, :end_date, :note)
 
-json.programs event.programs do |program|
-  json.call(program, :id, :name)
+json.languages event.languages do |language|
+  json.call(language, :id, :name)
 end
 
 json.clusters event.clusters do |cluster|

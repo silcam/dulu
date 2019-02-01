@@ -26,7 +26,7 @@ class TranslationActivityTest < ActiveSupport::TestCase
 
   test "Build One" do
     john = bible_books :John
-    hdi = programs :Hdi
+    hdi = languages :Hdi
     drew_hdi = participants :DrewHdi
     params = {type: 'TranslationActivity', bible_book_id: john.id.to_s}
     participants = [drew_hdi]
@@ -38,21 +38,21 @@ class TranslationActivityTest < ActiveSupport::TestCase
 
   test "Repeat Build" do
     genesis = bible_books :Genesis
-    hdi = programs :Hdi
+    hdi = languages :Hdi
     params = {type: 'TranslationActivity', bible_book_id: 'ot'}
-    assert_equal 1, TranslationActivity.where(program: hdi, bible_book: genesis).count
+    assert_equal 1, TranslationActivity.where(language: hdi, bible_book: genesis).count
     TranslationActivity.build(params, hdi, [])
-    assert_equal 1, TranslationActivity.where(program: hdi, bible_book: genesis).count
+    assert_equal 1, TranslationActivity.where(language: hdi, bible_book: genesis).count
   end
 
   test "Build All" do
-    ewondo_program = programs :Ewondo
+    ewondo_language = languages :Ewondo
     params = {type: 'TranslationActivity', bible_book_id: 'ot'}
-    TranslationActivity.build(params, ewondo_program,[])
+    TranslationActivity.build(params, ewondo_language,[])
     ezra = bible_books :Ezra
     genesis = bible_books :Genesis
-    refute_nil ewondo_program.translation_activities.find_by(bible_book: ezra), "Should be an Ewondo Ezra Activity"
-    refute_nil ewondo_program.translation_activities.find_by(bible_book: genesis), "Should be an Ewondo Genesis Activty"
+    refute_nil ewondo_language.translation_activities.find_by(bible_book: ezra), "Should be an Ewondo Ezra Activity"
+    refute_nil ewondo_language.translation_activities.find_by(bible_book: genesis), "Should be an Ewondo Genesis Activty"
   end
 
   test "Search" do

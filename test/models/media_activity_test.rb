@@ -2,7 +2,7 @@ require 'test_helper'
 
 class MediaActivityTest < ActiveSupport::TestCase
   def setup
-    @hdi = programs(:Hdi)
+    @hdi = languages(:Hdi)
     @drew_hdi = participants(:DrewHdi)
   end
 
@@ -13,7 +13,7 @@ class MediaActivityTest < ActiveSupport::TestCase
     film = MediaActivity.order('id').last
     assert_equal :Film, film.category
     assert_equal :JesusFilm, film.film
-    assert_equal @hdi, film.program
+    assert_equal @hdi, film.language
     assert_includes film.participants, @drew_hdi
   end
 
@@ -24,7 +24,7 @@ class MediaActivityTest < ActiveSupport::TestCase
     film = MediaActivity.order('id').last
     assert_equal :Film, film.category
     assert_equal :JesusFilm, film.film
-    assert_equal @hdi, film.program
+    assert_equal @hdi, film.language
     assert_empty film.participants
   end
 
@@ -34,7 +34,7 @@ class MediaActivityTest < ActiveSupport::TestCase
     audio = MediaActivity.order('id').last
     assert_equal :AudioScripture, audio.category
     assert_equal :New_testament, audio.scripture
-    assert_equal @hdi, audio.program
+    assert_equal @hdi, audio.language
   end
 
   test "Create Audio Genesis-Exodus" do

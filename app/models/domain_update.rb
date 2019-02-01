@@ -1,10 +1,10 @@
 class DomainUpdate < ApplicationRecord
 
-  belongs_to :program, required: true, touch: true
+  belongs_to :language, required: true, touch: true
   belongs_to :status_parameter, required: false
   belongs_to :author, required: true, class_name: 'Person'
 
-  audited associated_with: :program
+  audited associated_with: :language
 
   validates :number, numericality: true, allow_nil: true
   validates :date, presence: true
@@ -28,11 +28,11 @@ class DomainUpdate < ApplicationRecord
   end
 
   def previous
-    DomainUpdate.where("program_id=:p AND " +
+    DomainUpdate.where("language_id=:p AND " +
                            "domain=:d AND " +
                            "status_parameter_id#{status_parameter.nil? ? ' IS NULL':'=:sp'} AND " +
                            "date<:date",
-                       {p: program.id, d: domain, sp: status_parameter.try(:id), date: date})
+                       {p: language.id, d: domain, sp: status_parameter.try(:id), date: date})
                 .first
   end
 

@@ -2,8 +2,8 @@ require 'application_system_test_case'
 
 class TranslationActivityIntTest < ApplicationSystemTestCase
   def setup
-    @hdi = programs(:Hdi)
-    @zulgo = programs(:Zulgo)
+    @hdi = languages(:Hdi)
+    @zulgo = languages(:Zulgo)
   end
 
   test "New Translation Activity" do

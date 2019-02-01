@@ -13,7 +13,7 @@ json.region do
     json.call(cluster, :id, :name)
   end
 
-  json.languages @region.programs do |language|
+  json.languages @region.languages do |language|
     json.call(language, :id, :name)
   end
 

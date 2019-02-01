@@ -4,7 +4,7 @@ HdiGenesisChecking:
   start_date: 2018-01-15
   end_date: 2018-01-30
   domain: Translation
-  programs: Hdi
+  languages: Hdi
   name: Genesis Checking
   creator: Olga
 
@@ -12,14 +12,14 @@ HdiPastChecking:
   start_date: 2017-01
   end_date: 2017-02
   domain: Translation
-  programs: Hdi
+  languages: Hdi
   name: Check another book
 
 HdiCurrentChecking:
   start_date: 2017-07
   end_date: 2017-07
   domain: Translation
-  programs: Hdi
+  languages: Hdi
   name: Check a book now
 
 LanceMadeAnEvent:
@@ -33,12 +33,12 @@ EwondoNounWS:
   start_date: 2018-01-05
   end_date: 2018-01-21
   domain: Linguistic
-  programs: Ewondo
+  languages: Ewondo
   name: 'Workshop: Noun'
 
 EwondoVerbWS:
   start_date: 2018-03
   end_date: 2018-03
   domain: Linguistic
-  programs: Ewondo
+  languages: Ewondo
   name: 'Workshop: Verb'

@@ -1,3 +1,3 @@
-json.array! @programs do |program|
-  json.call(program, :id, :name)
+json.array! @languages do |language|
+  json.call(language, :id, :name)
 end

@@ -74,7 +74,7 @@ export default {
   confirm_delete_cluster: "Delete %{name}?",
   confirm_delete_event: "Delete %{name}?",
   confirm_delete_participant:
-    "Delete %{person} from %{program}? %{person} never worked in %{program}?",
+    "Delete %{person} from %{language}? %{person} never worked in %{language}?",
   confirm_delete_org_person:
     "Delete %{org} from %{person}'s organizations? %{person} was never in %{org}?",
   confirm_delete_region: "Delete %{name}?",
@@ -164,8 +164,6 @@ export default {
       "%{user_name} updated the %{workshop_name} workshop for the %{program_name} program as complete.",
     new_activity:
       "%{user_name} added a new activity to the %{program_name} program: %{activity_name}.",
-    added_a_testament:
-      "%{user_name} added a new activity to the %{program_name} program: %{testament}.",
     updated_you: "%{user_name} updated %{your_info}.",
     updated_person: "%{user_name} updated the info for %{person_name}.",
     updated_himself: "%{user_name} updated %{his} own info.",

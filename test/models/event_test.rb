@@ -3,7 +3,7 @@ require 'test_helper'
 class EventTest < ActiveSupport::TestCase
   def setup
     @genesis_check = events :HdiGenesisChecking
-    @hdi = programs :Hdi
+    @hdi = languages :Hdi
     I18n.locale = :en
   end
 
@@ -11,7 +11,7 @@ class EventTest < ActiveSupport::TestCase
     drew_genesis_check = event_participants :DrewHdiGenesis
     drew = people :Drew
 
-    assert_includes @genesis_check.programs, @hdi
+    assert_includes @genesis_check.languages, @hdi
     assert_includes @genesis_check.event_participants, drew_genesis_check
     assert_includes @genesis_check.people, drew
     assert_equal people(:Olga), @genesis_check.creator
@@ -47,9 +47,9 @@ class EventTest < ActiveSupport::TestCase
     assert_nil Event.new.f_end_date
   end
 
-  test "Unassoc Programs" do
-    ewondo = programs :Ewondo
-    unassoc = @genesis_check.unassoc_programs
+  test "Unassoc Languages" do
+    ewondo = languages :Ewondo
+    unassoc = @genesis_check.unassoc_languages
     assert_includes unassoc, ewondo
     refute_includes unassoc, @hdi
   end
@@ -123,10 +123,10 @@ class EventTest < ActiveSupport::TestCase
     assert @genesis_check.associated_with?(rick), "Rick is directly associated with the event"
   end
 
-  test "User Program Association" do
+  test "User Language Association" do
     rick = people :Rick
-    Participant.create(person: rick, program: @hdi, start_date: '2017')
-    assert @genesis_check.associated_with?(rick), "Rick is associated with Event program"
+    Participant.create!(person: rick, language: @hdi, start_date: '2017')
+    assert @genesis_check.associated_with?(rick)
   end
 
   test "Search" do
