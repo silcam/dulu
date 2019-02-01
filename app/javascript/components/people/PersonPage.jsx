@@ -47,9 +47,18 @@ export default class PersonPage extends React.PureComponent {
       });
       this.props.setPerson(data.person);
       this.setStateAfterSave(data.person);
+      this.updateLanguageIfNecessary();
     } catch (error) {
       this.props.setNetworkError({ tryAgain: this.save });
     }
+  };
+
+  updateLanguageIfNecessary = () => {
+    if (
+      this.props.person.isUser &&
+      this.props.person.ui_language != this.props.t.locale
+    )
+      this.props.updateLanguage(this.props.person.ui_language);
   };
 
   deletePerson = async () => {

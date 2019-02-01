@@ -100,6 +100,12 @@ class PersonIntTest < ApplicationSystemTestCase
   end
 
   test "Change my language" do 
-    postpone_failure(Date.new(2019, 1, 1))
+    log_in @kevin
+    visit model_path(@kevin)
+    action_bar_click_edit
+    find('tr', text: 'Preferred language').find('select').select('Français')
+    click_on 'Save'
+    refute_text('Home Country')
+    assert_text("Pays d'origine")
   end
 end

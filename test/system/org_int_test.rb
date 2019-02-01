@@ -46,7 +46,7 @@ class OrgIntTest < ApplicationSystemTestCase
     assert_selector('tr', text: 'SIL') # Sidebar list
 
     action_bar_click_delete
-    check "I'm sure"
+    check "dangerButtonCheckbox"
     click_on "Permanently Delete SIL"
 
     assert_no_selector('tr', text: 'SIL')
@@ -57,8 +57,8 @@ class OrgIntTest < ApplicationSystemTestCase
     log_in people(:Rick)
     visit '/organizations'
     find(icon_selector('addIcon')).click
-    click_on 'Save'
-    find('label', text: 'Short Name').assert_text("Can't be blank")
+    refute_selector('button:enabled', text: 'Save')
+    assert_selector('button:disabled', text: 'Save')
   end
 
   test 'Kevin cant!' do
