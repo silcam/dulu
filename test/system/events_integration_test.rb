@@ -110,7 +110,7 @@ class EventsIntegrationTest < ApplicationSystemTestCase
     assert_selector(icon_selector('editIcon'))
     assert_selector(icon_selector('deleteIcon'))
 
-    force_log_in people(:Lance)
+    log_in people(:Lance)
     visit model_path(@genesis_consult)
     find('h2', text: 'Genesis Checking')
     assert_no_selector(icon_selector('editIcon'))

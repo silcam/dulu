@@ -12,7 +12,7 @@ class ProgramPermissionTest < ApplicationSystemTestCase
     visit "#{model_path(@hdi_language)}/Translation"
     find('h3', text: 'Activities').assert_selector(icon_selector('addIcon'))
 
-    force_log_in @kevin
+    log_in @kevin
     visit "#{model_path(@hdi_language)}/Translation"
     find('h3', text: 'Activities').assert_no_selector(icon_selector('addIcon'))
   end

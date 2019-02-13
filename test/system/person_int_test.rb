@@ -8,7 +8,7 @@ class PersonIntTest < ApplicationSystemTestCase
   end
 
   test 'Kevin edits self' do
-    force_log_in @kevin
+    log_in @kevin
     click_on 'Kevin'
     action_bar_click_edit
     fill_in 'first_name', with: 'Da Boss'
@@ -33,7 +33,7 @@ class PersonIntTest < ApplicationSystemTestCase
     sleep 0.2 # Necessary to prevent db rollback from deleting ol' Will before the api request for his page completes
 
     @william = Person.find_by first_name: 'William'
-    force_log_in @william
+    log_in @william
     find('nav').assert_text 'William'
   end
 

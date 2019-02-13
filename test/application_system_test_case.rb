@@ -33,13 +33,9 @@ class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
   end
 
   def log_in(user)
+    Capybara.current_session.driver.browser.manage.delete_all_cookies
     simulate_oauth user
     visit '/events/new' # A page that doesn't turn around and load a bunch of junk
-  end
-
-  def force_log_in(user)
-    simulate_oauth user
-    visit '/auth/google_oauth2'
   end
 
   def page_has_link?(path)

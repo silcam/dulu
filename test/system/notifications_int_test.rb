@@ -24,11 +24,13 @@ class NotificationsIntTest < ApplicationSystemTestCase
       click_on 'Save'
     end
 
-    force_log_in lance
+    log_in lance
+    visit "/"
     assert_notification 'Rick Conrad added you to the Hdi program.'
     # log_out
 
-    force_log_in people(:Drew)
+    log_in people(:Drew)
+    visit "/"
     assert_notification 'Rick Conrad added Lance Freeland to the Hdi program.'
   end
 
@@ -44,10 +46,12 @@ class NotificationsIntTest < ApplicationSystemTestCase
       click_on 'Save'
     end
 
-    force_log_in lance
+    log_in lance
+    visit "/"
     assert_notification 'Rick Conrad added you to the Ndop cluster.'
 
-    force_log_in people(:Drew)
+    log_in people(:Drew)
+    visit "/"
     assert_notification 'Rick Conrad added Lance Freeland to the Ndop cluster.'
   end
 
@@ -62,7 +66,8 @@ class NotificationsIntTest < ApplicationSystemTestCase
     end
     find('tr', text: 'As of').click_on('Save')
 
-    force_log_in people(:Drew)
+    log_in people(:Drew)
+    visit "/"
     assert_notification 'Rick Conrad updated Genesis to the Consultant Checked stage for the Hdi program.'
   end
 
@@ -72,7 +77,8 @@ class NotificationsIntTest < ApplicationSystemTestCase
     click_on "Grammar Intro"
     find('tr', text: 'Verb').click_on("Completed")
 
-    force_log_in people(:Kendall)
+    log_in people(:Kendall)
+    visit "/"
     assert_notification 'Rick Conrad updated the Verb workshop for the Ewondo program as complete.'
   end
 
@@ -85,7 +91,8 @@ class NotificationsIntTest < ApplicationSystemTestCase
       click_on 'Save'
     end
 
-    force_log_in people(:Drew)
+    log_in people(:Drew)
+    visit "/"
     assert_notification 'Rick Conrad added a new activity to the Hdi program: Research: Words for Pizza'
   end
 
@@ -96,7 +103,8 @@ class NotificationsIntTest < ApplicationSystemTestCase
     fill_in 'first_name', with: 'Mista'
     click_on 'Save'
 
-    force_log_in people(:Drew)
+    log_in people(:Drew)
+    visit "/"
     assert_notification 'Rick Conrad updated your info'
     assert_notification 'Rick Conrad updated the info for Mista Maust', true
   end
@@ -109,6 +117,7 @@ class NotificationsIntTest < ApplicationSystemTestCase
     click_on 'Save'
     # edit_editable_text('email', 'rick_conrad@sil.org', 'rick2000@aol.com')
     visit root_path
+    visit "/"
     assert_notification 'Rick Conrad updated his own info', true
   end
 
@@ -122,7 +131,8 @@ class NotificationsIntTest < ApplicationSystemTestCase
       click_on 'Save'
     end
 
-    force_log_in people(:Drew)
+    log_in people(:Drew)
+    visit "/"
     assert_notification 'Rick Conrad gave you the Dulu Admin role'
     assert_notification 'Rick Conrad gave the Dulu Admin role to Drew Maust', true
   end

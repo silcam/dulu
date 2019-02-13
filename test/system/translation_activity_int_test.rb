@@ -28,7 +28,7 @@ class TranslationActivityIntTest < ApplicationSystemTestCase
   end
 
   test "Kendall can't delete Exodus" do
-    force_log_in people(:Kendall)
+    log_in people(:Kendall)
     visit model_path(translation_activities(:HdiExodus))
     postpone_failure(Date.new(2019, 2, 15), "Need to test deleting activities once we can do that")
     assert_no_selector('input[value="Delete Exodus"]')
