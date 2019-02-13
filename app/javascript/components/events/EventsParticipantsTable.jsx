@@ -11,9 +11,9 @@ export default function EventsParticipantsTable(props) {
         <tr>
           <th>{props.t("Clusters")}</th>
           <td>
-            {props.event.clusters.length == 0
+            {props.eventClusters == 0
               ? props.t("None")
-              : props.event.clusters.map(cluster => (
+              : props.eventClusters.map(cluster => (
                   <span key={cluster.id} className={style.listItem}>
                     <Link to={`/clusters/${cluster.id}`}>{cluster.name}</Link>
                   </span>
@@ -23,11 +23,13 @@ export default function EventsParticipantsTable(props) {
         <tr>
           <th>{props.t("Languages")}</th>
           <td>
-            {props.event.languages.length == 0
+            {props.eventLanguages.length == 0
               ? props.t("None")
-              : props.event.languages.map(language => (
+              : props.eventLanguages.map(language => (
                   <span className={style.listItem} key={language.id}>
-                    <Link to={`/languages/${language.id}`}>{language.name}</Link>
+                    <Link to={`/languages/${language.id}`}>
+                      {language.name}
+                    </Link>
                   </span>
                 ))}
           </td>
@@ -35,9 +37,9 @@ export default function EventsParticipantsTable(props) {
         <tr>
           <th>{props.t("People")}</th>
           <td>
-            {props.event.event_participants.length == 0
+            {props.eventParticipants.length == 0
               ? props.t("None")
-              : props.event.event_participants.map(participant => (
+              : props.eventParticipants.map(participant => (
                   <span key={participant.id} className={style.listItem}>
                     <Link to={`/people/${participant.person_id}`}>
                       {participant.full_name}
@@ -55,5 +57,8 @@ export default function EventsParticipantsTable(props) {
 
 EventsParticipantsTable.propTypes = {
   t: PropTypes.func.isRequired,
-  event: PropTypes.object.isRequired
+  event: PropTypes.object.isRequired,
+  eventClusters: PropTypes.array.isRequired,
+  eventLanguages: PropTypes.array.isRequired,
+  eventParticipants: PropTypes.array.isRequired
 };

@@ -1,5 +1,8 @@
 import Event from "../../models/Event";
 
+// TODO - How many of these are no longer used?
+// TODO - Prbly move the rest to util/Date.js
+
 // return month object for the month prior to given month object
 export function monthBefore(month) {
   return month.month == 1
@@ -46,4 +49,17 @@ export function eventInMonth(event, monthKey) {
 
 function titleize(word) {
   return word.slice(0, 1).toUpperCase() + word.slice(1);
+}
+
+export function periodToGetParams(period) {
+  let params = {};
+  if (period.start) {
+    params.start_year = period.start.year;
+    params.start_month = period.start.month;
+  }
+  if (period.end) {
+    params.end_year = period.end.year;
+    params.end_month = period.end.month;
+  }
+  return params;
 }

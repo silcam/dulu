@@ -7,7 +7,7 @@ import update from "immutability-helper";
 import DuluAxios from "../../util/DuluAxios";
 // import styles from "./PersonPage.css";
 import ClusterLanguagesTable from "./ClusterLanguagesTable";
-import ParticipantsTable from "../languages/ParticipantsTable";
+import ParticipantsContainer from "../languages/ParticipantsContainer";
 import Cluster from "../../models/Cluster";
 
 export default class ClusterPage extends React.PureComponent {
@@ -101,7 +101,7 @@ export default class ClusterPage extends React.PureComponent {
           edit={() => this.setState({ editing: true })}
         />
         {!this.state.editing && (
-          <ParticipantsTable
+          <ParticipantsContainer
             t={t}
             participants={cluster.participants}
             cluster={cluster}

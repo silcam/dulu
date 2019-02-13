@@ -1,95 +1,68 @@
 import React from "react";
 import PropTypes from "prop-types";
 import DuluAxios from "../../util/DuluAxios";
-import MonthColumn from "./MonthColumn";
-import update from "immutability-helper";
 import style from "./EventsCalendar.css";
 import { Link } from "react-router-dom";
 import {
-  monthKey,
   monthBefore,
   monthAfter,
   monthName,
-  eventInMonth
+  periodToGetParams
 } from "./dateUtils";
 import AddIcon from "../shared/icons/AddIcon";
-import IfAllowed from "../shared/IfAllowed";
-import NewEventForm from "./NewEventForm";
-import Event from "../../models/Event";
-import { insertInto } from "../../util/arrayUtils";
+import NewEventFormContainer from "./NewEventFormContainer";
+import MonthColumnContainer from "./MonthColumnContainer";
 
 export default class EventsCalendar extends React.PureComponent {
   constructor(props) {
     super(props);
-    this.state = {
-      events: {},
-      can: {}
-    };
+    this.state = {};
   }
 
   componentDidMount() {
-    this.updateEvents();
+    const period = {
+      start: monthBefore(this.centerMonth()),
+      end: monthAfter(this.centerMonth())
+    };
+    this.getEvents(period);
+    this.preloadEvents();
   }
 
-  componentDidUpdate() {
-    this.updateEvents();
+  componentDidUpdate(prevProps) {
+    if (
+      this.props.year != prevProps.year ||
+      this.props.month != prevProps.month
+    )
+      this.preloadEvents();
   }
 
-  centerMonth = () => ({
-    year: parseInt(this.props.year),
-    month: parseInt(this.props.month)
-  });
-
-  updateEvents = async () => {
-    const center = this.centerMonth();
-    const monthsToUpdate = [monthBefore(center), center, monthAfter(center)];
-    monthsToUpdate.forEach(month => {
-      if (this.state.events[monthKey(month)] === undefined)
-        this.fetchEvents(month);
-    });
+  preloadEvents = () => {
+    const leftOfLeft = monthBefore(monthBefore(this.centerMonth()));
+    const rightOfRight = monthAfter(monthAfter(this.centerMonth()));
+    this.getEvents({ start: leftOfLeft, end: leftOfLeft });
+    this.getEvents({ start: rightOfRight, end: rightOfRight });
   };
 
-  fetchEvents = async month => {
-    this.setEvents(month, []);
+  getEvents = async period => {
     try {
       const data = await DuluAxios.get(
-        `/api/events/find/${month.year}/${month.month}`
+        "/api/events",
+        periodToGetParams(period)
       );
-      this.setEvents(month, data.events);
+      this.props.addPeople(data.people);
+      this.props.addLanguages(data.languages);
+      this.props.addClusters(data.clusters);
+      this.props.setEventsCan(data.can);
+      this.props.addEvents(data.events, period);
     } catch (error) {
       this.props.setNetworkError(error);
     }
   };
 
-  setEvents = (month, events) => {
-    this.setState(prevState => ({
-      events: update(prevState.events, {
-        [monthKey(month)]: { $set: events }
-      })
-    }));
-  };
-
-  eventsFor(month) {
-    return this.state.events[monthKey(month)] || [];
-  }
-
-  addEvent = event => {
-    this.setState(prevState => {
-      const newEvents = {};
-      Object.keys(prevState.events).forEach(monthKey => {
-        if (eventInMonth(event, monthKey)) {
-          newEvents[monthKey] = insertInto(
-            prevState.events[monthKey],
-            event,
-            Event.compare
-          );
-        }
-      });
-      return {
-        events: update(prevState.events, { $merge: newEvents })
-      };
-    });
-  };
+  centerMonth = () => ({
+    year: parseInt(this.props.year),
+    month: parseInt(this.props.month)
+  });
 
   render() {
     const center = this.centerMonth();
@@ -101,23 +74,17 @@ export default class EventsCalendar extends React.PureComponent {
         <div className={style.header}>
           <h2>
             {t("Events")}
-            <IfAllowed
-              can={this.state.can}
-              permission="Event:create"
-              setCan={can => this.setState({ can: can })}
-              setNetworkError={this.props.setNetworkError}
-            >
+            {this.props.can.create && (
               <AddIcon
                 iconSize="large"
                 onClick={() => this.setState({ addingNew: true })}
               />
-            </IfAllowed>
+            )}
           </h2>
           {this.state.addingNew && (
-            <NewEventForm
+            <NewEventFormContainer
               t={t}
               cancelForm={() => this.setState({ addingNew: false })}
-              addEvent={this.addEvent}
               setNetworkError={this.props.setNetworkError}
               replaceWorkshop={() => {}}
             />
@@ -134,21 +101,9 @@ export default class EventsCalendar extends React.PureComponent {
           </Link>
         </div>
         <div className={style.calendar}>
-          <MonthColumn
-            t={this.props.t}
-            events={this.eventsFor(left)}
-            month={left}
-          />
-          <MonthColumn
-            t={this.props.t}
-            events={this.eventsFor(center)}
-            month={center}
-          />
-          <MonthColumn
-            t={this.props.t}
-            events={this.eventsFor(right)}
-            month={right}
-          />
+          <MonthColumnContainer t={this.props.t} month={left} />
+          <MonthColumnContainer t={this.props.t} month={center} />
+          <MonthColumnContainer t={this.props.t} month={right} />
         </div>
       </div>
     );
@@ -159,5 +114,11 @@ EventsCalendar.propTypes = {
   t: PropTypes.func.isRequired,
   setNetworkError: PropTypes.func.isRequired,
   year: PropTypes.string.isRequired,
-  month: PropTypes.string.isRequired
+  month: PropTypes.string.isRequired,
+  addEvents: PropTypes.func.isRequired,
+  setEventsCan: PropTypes.func.isRequired,
+  addPeople: PropTypes.func.isRequired,
+  addLanguages: PropTypes.func.isRequired,
+  addClusters: PropTypes.func.isRequired,
+  can: PropTypes.object.isRequired
 };

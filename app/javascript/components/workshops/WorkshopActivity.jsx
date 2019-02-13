@@ -4,10 +4,11 @@ import update from "immutability-helper";
 import Workshop from "./Workshop";
 import NewWorkshopForm from "./NewWorkshopForm";
 import DuluAxios from "../../util/DuluAxios";
+import Activity from "../../models/Activity";
 
 export default class WorkshopActivity extends React.PureComponent {
   handleNewWorkshop = workshop => {
-    this.props.replaceActivity(
+    this.props.setActivity(
       update(this.props.activity, { workshops: { $push: [workshop] } })
     );
   };
@@ -47,7 +48,7 @@ export default class WorkshopActivity extends React.PureComponent {
     workshops = update(workshops, {
       $splice: [[newIndex, 0, workshop]]
     });
-    this.props.replaceActivity(
+    this.props.setActivity(
       update(this.props.activity, {
         workshops: {
           $set: workshops
@@ -60,7 +61,7 @@ export default class WorkshopActivity extends React.PureComponent {
     try {
       await DuluAxios.delete(`/api/workshops/${id}`);
       const i = this.props.activity.workshops.findIndex(ws => ws.id === id);
-      this.props.replaceActivity(
+      this.props.setActivity(
         update(this.props.activity, {
           workshops: { $splice: [[i, 1]] }
         })
@@ -71,8 +72,10 @@ export default class WorkshopActivity extends React.PureComponent {
   };
 
   render() {
+    const can = this.props.activity.can || {};
     return (
       <div>
+        <h2>{Activity.name(this.props.activity, this.props.t)}</h2>
         <h3>{this.props.t("Workshops")}</h3>
         <table className="table">
           <tbody>
@@ -81,6 +84,7 @@ export default class WorkshopActivity extends React.PureComponent {
                 <Workshop
                   key={workshop.id}
                   workshop={workshop}
+                  can={can}
                   handleUpdatedWorkshop={this.handleUpdatedWorkshop}
                   deleteWorkshop={this.deleteWorkshop}
                   displayDelete={this.props.activity.workshops.length > 1}
@@ -92,7 +96,7 @@ export default class WorkshopActivity extends React.PureComponent {
             })}
           </tbody>
         </table>
-        {this.props.can.update && (
+        {can.update && (
           <NewWorkshopForm
             handleNewWorkshop={this.handleNewWorkshop}
             activity_id={this.props.activity.id}
@@ -108,8 +112,7 @@ export default class WorkshopActivity extends React.PureComponent {
 WorkshopActivity.propTypes = {
   activity: PropTypes.object.isRequired,
   t: PropTypes.func.isRequired,
-  can: PropTypes.object.isRequired,
   setNetworkError: PropTypes.func.isRequired,
-  replaceActivity: PropTypes.func.isRequired,
-  language: PropTypes.object.isRequired
+  language: PropTypes.object.isRequired,
+  setActivity: PropTypes.func.isRequired
 };

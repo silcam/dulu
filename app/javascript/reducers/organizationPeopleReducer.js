@@ -4,22 +4,16 @@ import {
   DELETE_ORGANIZATION_PERSON
 } from "../actions/organizationPeopleActions";
 import update from "immutability-helper";
-import mergeOrSet from "../util/mergeOrSet";
+import { addItemsNoList, setItemNoList } from "./reducerUtil";
 
 const emptyState = {};
 
 export default function organizationPeopleReducer(state = emptyState, action) {
   switch (action.type) {
     case ADD_ORGANIZATION_PEOPLE:
-      return action.organizationPeople.reduce(
-        (accumState, orgPerson) =>
-          update(accumState, { [orgPerson.id]: mergeOrSet(orgPerson) }),
-        state
-      );
+      return addItemsNoList(state, action.organizationPeople);
     case SET_ORGANIZATION_PERSON:
-      return update(state, {
-        [action.organizationPerson.id]: mergeOrSet(action.organizationPerson)
-      });
+      return setItemNoList(state, action.organizationPerson);
     case DELETE_ORGANIZATION_PERSON:
       return update(state, { $unset: [action.id] });
   }

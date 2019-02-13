@@ -49,7 +49,7 @@ test("subsequent SET PEOPLE", () => {
 
 test("ADD PEOPLE", () => {
   const state = peopleReducer(initialState, addPeople(peopleData));
-  expect(state.list).toEqual(["101", "202", "303"]);
+  expect(state.list).toEqual([101, 202, 303]);
   expect(state.byId).toEqual({
     101: fullRick,
     202: brian,

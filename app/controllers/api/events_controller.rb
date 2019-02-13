@@ -1,4 +1,14 @@
 class Api::EventsController < ApplicationController
+  def index
+    event_src = get_event_src
+    @events = event_src.for_period(params[:start_year], params[:start_month], params[:end_year], params[:end_month])
+    @start_year = params[:start_year].to_i
+    if (@events.count == 0) 
+      @events = event_src.for_period(nil, nil, params[:end_year], params[:end_month])
+      @start_year = nil
+    end
+  end
+
   def find
     @events = Event.for_month(params[:year], params[:month]).reverse
   end
@@ -29,6 +39,16 @@ class Api::EventsController < ApplicationController
   end
 
   private
+
+  def get_event_src
+    if params[:language_id]
+      return Language.find(params[:language_id]).events
+    elsif params[:person_id]
+      return Person.find(params[:person_id]).events
+    else
+      return Event
+    end
+  end
 
   def event_params
     return params

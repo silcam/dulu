@@ -1,22 +1,36 @@
 import React from "react";
 import PropTypes from "prop-types";
+import DuluAxios from "../../util/DuluAxios";
 
-export default function TranslationStatus(props) {
-  const biblePubs = props.language.publications.filter(
-    pub => pub.kind == "Scripture"
-  );
-  return (
-    <div>
-      <h3>{props.t("Status")}</h3>
-      <table>
-        <tbody>
-          <tr>
-            <td>{status(biblePubs, props.t)}</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  );
+export default class TranslationStatus extends React.Component {
+  state = { pubs: [] };
+
+  async componentDidMount() {
+    try {
+      const data = await DuluAxios.get(
+        `/api/languages/${this.props.language.id}/pubs`
+      );
+      this.setState({ pubs: data.pubs });
+    } catch (error) {
+      this.props.setNetworkError(error);
+    }
+  }
+
+  render() {
+    const biblePubs = this.state.pubs.filter(pub => pub.kind == "Scripture");
+    return (
+      <div>
+        <h3>{this.props.t("Status")}</h3>
+        <table>
+          <tbody>
+            <tr>
+              <td>{status(biblePubs, this.props.t)}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    );
+  }
 }
 
 function status(pubs, t) {
@@ -39,5 +53,6 @@ function pubText(pub, t) {
 
 TranslationStatus.propTypes = {
   language: PropTypes.object.isRequired,
-  t: PropTypes.func.isRequired
+  t: PropTypes.func.isRequired,
+  setNetworkError: PropTypes.func.isRequired
 };

@@ -1,20 +1,32 @@
 import React from "react";
+import PropTypes from "prop-types";
 import styles from "../shared/MasterDetail.css";
 import { Link } from "react-router-dom";
 import TextFilter from "../shared/TextFilter";
 import AddIcon from "../shared/icons/AddIcon";
-import Loading from "../shared/Loading";
-import thingBoard from "../shared/thingBoard";
-import { languageCompare } from "../../models/language";
 import LanguagesTable from "./LanguagesTable";
 import FlexSpacer from "../shared/FlexSpacer";
-import LanguagePageRouter from "./LanguagePageRouter";
+import DuluAxios from "../../util/DuluAxios";
+import LanguageContainer from "./LanguageContainer";
 
-class Board extends React.PureComponent {
-  state = {};
+export default class LanguagesBoard extends React.PureComponent {
+  state = {
+    can: {}
+  };
+
+  async componentDidMount() {
+    try {
+      const data = await DuluAxios.get("/api/languages");
+      this.setState({
+        can: data.can
+      });
+      this.props.setLanguages(data.languages);
+    } catch (error) {
+      this.props.setNetworkError(error);
+    }
+  }
 
   render() {
-    const selectedLanguage = this.props.selected;
     return (
       <div className={styles.container}>
         <div className={styles.headerBar}>
@@ -26,7 +38,7 @@ class Board extends React.PureComponent {
             placeholder={this.props.t("Find")}
             updateFilter={filter => this.setState({ filter: filter })}
           />
-          {this.props.can.create && (
+          {this.state.can.create && (
             <Link to="/languages/new">
               <AddIcon iconSize="large" />
             </Link>
@@ -44,7 +56,7 @@ class Board extends React.PureComponent {
               t={this.props.t}
               id={this.props.id}
               languages={this.props.languages}
-              can={this.props.can}
+              can={this.state.can}
               filter={this.state.filter}
             />
           </div>
@@ -56,24 +68,19 @@ class Board extends React.PureComponent {
                 addLanguage={this.addLanguage}
               />
             )} */}
-            {selectedLanguage &&
-              (selectedLanguage.loaded ? (
-                <LanguagePageRouter
-                  key={selectedLanguage.id}
-                  language={selectedLanguage}
-                  t={this.props.t}
-                  replaceLanguage={this.props.replace}
-                  setNetworkError={this.props.setNetworkError}
-                  basePath={this.props.basePath}
-                  location={this.props.location}
-                  history={this.props.history}
-                  viewPrefs={this.props.viewPrefs}
-                  updateViewPrefs={this.props.updateViewPrefs}
-                />
-              ) : (
-                <Loading t={this.props.t} />
-              ))}
-            {!this.props.action && !selectedLanguage && <span />}
+            {this.props.id && (
+              <LanguageContainer
+                key={this.props.id}
+                id={this.props.id}
+                t={this.props.t}
+                setNetworkError={this.props.setNetworkError}
+                basePath={this.props.basePath}
+                location={this.props.location}
+                history={this.props.history}
+                viewPrefs={this.props.viewPrefs}
+                updateViewPrefs={this.props.updateViewPrefs}
+              />
+            )}
           </div>
         </div>
       </div>
@@ -81,10 +88,16 @@ class Board extends React.PureComponent {
   }
 }
 
-const LanguagesBoard = thingBoard(Board, {
-  name: "language",
-  pluralName: "languages",
-  compare: languageCompare
-});
-
-export default LanguagesBoard;
+LanguagesBoard.propTypes = {
+  languages: PropTypes.array.isRequired,
+  setLanguages: PropTypes.func.isRequired,
+  setNetworkError: PropTypes.func.isRequired,
+  t: PropTypes.func.isRequired,
+  action: PropTypes.string,
+  id: PropTypes.string,
+  basePath: PropTypes.string.isRequired,
+  location: PropTypes.object.isRequired,
+  history: PropTypes.object.isRequired,
+  viewPrefs: PropTypes.object.isRequired,
+  updateViewPrefs: PropTypes.func.isRequired
+};

@@ -116,6 +116,30 @@ class Event < ApplicationRecord
     where(month_filter(year.to_i, month.to_i))
   end
 
+  def self.for_period(start_year=nil, start_month=nil, end_year=nil, end_month=nil)
+    s_filter = start_year ?
+      start_filter(start_year, start_month) :
+      nil
+    e_filter = end_year ?
+      end_filter(end_year, end_month) :
+      nil
+    if (s_filter && e_filter)
+      where(s_filter + " AND " + e_filter)
+    elsif (!s_filter && !e_filter)
+      all
+    else
+      where(s_filter || e_filter)
+    end
+  end
+
+  # def self.for_year(year)
+  #   where(year_filter(year.to_i))
+  # end
+
+  # def self.for_year_and_later(year)
+  #   where(year_and_later_filter(year.to_i))
+  # end
+
   def self.search(query)
     events = Event.multi_word_where(query, 'name')
     results = []
@@ -129,46 +153,80 @@ class Event < ApplicationRecord
     results
   end
 
-  private
+  class << self
+    private
 
-  # SQL Injection?
-  # Ok because inserted text comes from Date.to_s which does not produce malicious SQL
-  def self.upcoming_filter
-    "start_date > '#{Date.today.to_s}'"
-  end
+    ## DELETE ALL THIS ========================
+    # SQL Injection?
+    # Ok because inserted text comes from Date.to_s which does not produce malicious SQL
+    def upcoming_filter
+      "start_date > '#{Date.today}'"
+    end
 
-  # SQL Injection?
-  # Ok because inserted texts all come from self.today_texts which does not produce malicious SQL
-  def self.past_filter
-    today, year_month, year = today_texts
-    "end_date < '#{today}' AND end_date != '#{year_month}' AND end_date != '#{year}'"
-  end
+    # SQL Injection?
+    # Ok because inserted texts all come from self.today_texts which does not produce malicious SQL
+    def past_filter
+      today, year_month, year = today_texts
+      "end_date < '#{today}' AND end_date != '#{year_month}' AND end_date != '#{year}'"
+    end
 
-  # SQL Injection?
-  # Ok because inserted texts all come self.today_texts which does not produce malicious SQL
-  def self.current_filter
-    today, year_month, year = today_texts
-    "start_date <= '#{today}' AND (end_date >= '#{today}' OR end_date = '#{year_month}' OR end_date = '#{year}')"
-  end
+    # SQL Injection?
+    # Ok because inserted texts all come self.today_texts which does not produce malicious SQL
+    def current_filter
+      today, year_month, year = today_texts
+      "start_date <= '#{today}' AND (end_date >= '#{today}' OR end_date = '#{year_month}' OR end_date = '#{year}')"
+    end
+    ## DOWN TO HERE ==============================
 
-  # SQL Injection?
-  # Ok because inserted texts all come from FuzzyDate.to_s which does not produce malicious SQL
-  def self.month_filter(year, month)
-    month_text = FuzzyDate.new(year, month).to_s
-    next_month_text = get_next_month_text(year, month)
-    "(start_date < '#{next_month_text}') AND 
-     (end_date >= '#{month_text}' OR end_date = '#{year}')"
-  end
+    # SQL Injection?
+    # Ok because inserted texts all come from FuzzyDate.to_s which does not produce malicious SQL
+    def month_filter(year, month)
+      month_text = FuzzyDate.new(year, month).to_s
+      next_month_text = get_next_month_text(year, month)
+      "(start_date < '#{next_month_text}') AND 
+      (end_date >= '#{month_text}' OR end_date = '#{year}')"
+    end
 
-  def self.get_next_month_text(year, month)
-    return month == 12 ? FuzzyDate.new(year + 1).to_s : FuzzyDate.new(year, month + 1).to_s
-  end
-      
+    # SQL Injection?
+    # Ok because inserted texts all come from FuzzyDate.to_s which does not produce malicious SQL
+    def start_filter(year, month=nil)
+      date_str = FuzzyDate.new(year, month).to_s
+      "(end_date >= '#{date_str}' OR end_date = '#{year.to_i}')"
+    end
 
-  def self.today_texts
-    today = Date.today.to_s
-    year_month = today[0, 7] # YYYY-MM
-    year = today[0, 4] # YYYY
-    return today, year_month, year
+    # SQL Injection?
+    # Ok because inserted texts all come from FuzzyDate.to_s which does not produce malicious SQL
+    def end_filter(year, month=nil)
+      month ||= 12
+      next_month_text = get_next_month_text(year, month)
+      "(start_date < '#{next_month_text}')"
+    end
+
+
+    # # SQL Injection?
+    # # Ok because year is an int
+    # def year_filter(year)
+    #   year = year.to_i
+    #   "(start_date < '#{year+1}') AND (end_date >= '#{year}')"
+    # end
+
+    # # SQL Injection?
+    # # Ok because year is an int
+    # def year_and_later_filter(year)
+    #   year = year.to_i
+    #   "end_date >= '#{year}'"
+    # end
+
+    def get_next_month_text(year, month)
+      return month.to_i == 12 ? FuzzyDate.new(year.to_i + 1).to_s : FuzzyDate.new(year, month.to_i + 1).to_s
+    end
+        
+
+    def today_texts
+      today = Date.today.to_s
+      year_month = today[0, 7] # YYYY-MM
+      year = today[0, 4] # YYYY
+      return today, year_month, year
+    end
   end
 end

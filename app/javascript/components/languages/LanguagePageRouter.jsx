@@ -1,13 +1,15 @@
 import React from "react";
-import PropTypes from "prop-types";
+// import PropTypes from "prop-types";
 import LanguagePage from "./LanguagePage";
 import { Switch, Route } from "react-router-dom";
 import LanguageParticipantPage from "./LanguageParticipantPage";
 import LanguageEventPage from "./LanguageEventPage";
 import LanguageActivityPage from "./LanguageActivityPage";
 import LanguageNewEventPage from "./LanguageNewEventPage";
+import Loading from "../shared/Loading";
 
 export default function LanguagePageRouter(props) {
+  if (!props.language) return <Loading t={props.t} />;
   return (
     <Switch>
       <Route

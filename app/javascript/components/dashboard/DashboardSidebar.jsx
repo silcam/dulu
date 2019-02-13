@@ -1,7 +1,7 @@
-import axios from "axios";
 import React from "react";
 import PropTypes from "prop-types";
 import DashboardSidebarSection from "./DashboardSidebarSection";
+import DuluAxios from "../../util/DuluAxios";
 
 export default class DashboardSidebar extends React.PureComponent {
   constructor(props) {
@@ -12,9 +12,9 @@ export default class DashboardSidebar extends React.PureComponent {
   }
 
   componentDidMount() {
-    axios.get(`/api/languages/dashboard_list/`).then(response => {
+    DuluAxios.get(`/api/languages/dashboard_list/`).then(data => {
       this.setState({
-        menu: response.data
+        menu: data
       });
     });
   }

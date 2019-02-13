@@ -4,8 +4,8 @@ export default class FuzzyDate {
   }
 
   static compare(a, b) {
-    a = toObject(a);
-    b = toObject(b);
+    a = a.year ? a : toObject(a);
+    b = b.year ? b : toObject(b);
     if (a.year != b.year) return a.year - b.year;
     if (!a.month || !b.month) return 0;
     if (a.month != b.month) return a.month - b.month;
@@ -16,6 +16,10 @@ export default class FuzzyDate {
   static toObject(date) {
     return toObject(date);
   }
+
+  static toString(date) {
+    return toString(date);
+  }
 }
 
 function toObject(date) {
@@ -25,6 +29,13 @@ function toObject(date) {
   if (date.length > 4) dateObj.month = parseInt(date.slice(5, 7));
   if (date.length > 7) dateObj.day = parseInt(date.slice(8, 10));
   return dateObj;
+}
+
+function toString(date) {
+  let s = `${date.year}`;
+  if (date.month) s += "-" + zeroPadHack(date.month);
+  if (date.day) s += "-" + zeroPadHack(date.day);
+  return s;
 }
 
 // Srsly?? Come on, javascript...

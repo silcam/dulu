@@ -8,7 +8,7 @@ class PersonIntTest < ApplicationSystemTestCase
   end
 
   test 'Kevin edits self' do
-    log_in @kevin
+    force_log_in @kevin
     click_on 'Kevin'
     action_bar_click_edit
     fill_in 'first_name', with: 'Da Boss'
@@ -30,9 +30,10 @@ class PersonIntTest < ApplicationSystemTestCase
     assert_text 'William Wallace'
     assert_text 'scotland_4ever@aol.com'
     find('tr', text: 'Dulu Account').assert_text('Yes')
+    sleep 0.2 # Necessary to prevent db rollback from deleting ol' Will before the api request for his page completes
 
     @william = Person.find_by first_name: 'William'
-    log_in @william
+    force_log_in @william
     find('nav').assert_text 'William'
   end
 
@@ -84,6 +85,7 @@ class PersonIntTest < ApplicationSystemTestCase
     log_in @rick
     visit model_path @olga
     assert_selector('tr', text: 'Nka, Olga')  # Sidebar list
+    sleep 0.2 # Make sure ajax finishes before Olga disappears
     action_bar_click_delete
     check "I'm sure"
     click_on "Permanently Delete Olga Nka"

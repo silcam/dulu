@@ -38,6 +38,29 @@ export default class Event {
     return 0;
   }
 
+  // Input {start?: {year: int, month?: int}, end?: {year: int, month?: int}}
+  // Output {start_date: yyyy-mm, end_date: yyyy-mm}
+  static comparisonEvent(period) {
+    return {
+      start_date: period.start ? FuzzyDate.toString(period.start) : "0000",
+      end_date: period.end ? FuzzyDate.toString(period.end) : "9999"
+    };
+  }
+
+  static overlapsMonth(event, year, month) {
+    return overlapsFuzzyDate(event, { year, month });
+  }
+
+  static overlapsYear(event, year) {
+    return overlapsFuzzyDate(event, { year });
+  }
+
+  static ensureEndDate(event) {
+    return event.end_date
+      ? event
+      : update(event, { end_date: { $set: event.start_date } });
+  }
+
   static prepareEventParams(event, oldEvent) {
     const cluster_ids = event.clusters.map(c => c.id);
     const language_ids = event.languages.map(p => p.id);
@@ -65,4 +88,19 @@ export default class Event {
       event_participants_attributes: { $set: eventParticipantsAttributes }
     });
   }
+
+  static languageBackToId(languageId) {
+    return `langauge-${languageId}`;
+  }
+
+  static personBackToId(personId) {
+    return `person=${personId}`;
+  }
+}
+
+function overlapsFuzzyDate(event, fdate) {
+  return (
+    FuzzyDate.compare(event.start_date, fdate) <= 0 &&
+    FuzzyDate.compare(event.end_date, fdate) >= 0
+  );
 }

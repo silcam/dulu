@@ -53,7 +53,6 @@ export default class LanguagePage extends React.PureComponent {
                     language={language}
                     tab={name}
                     t={t}
-                    replaceLanguage={this.props.replaceLanguage}
                     setNetworkError={this.props.setNetworkError}
                     location={this.props.location}
                     basePath={match.url}
@@ -76,7 +75,6 @@ function selectedTab(urlDomain, viewPrefsDomain) {
 }
 
 LanguagePage.propTypes = {
-  replaceLanguage: PropTypes.func.isRequired,
   setNetworkError: PropTypes.func.isRequired,
   basePath: PropTypes.string.isRequired,
   t: PropTypes.func.isRequired,

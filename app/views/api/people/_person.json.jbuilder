@@ -7,7 +7,7 @@ json.person do
                      :ui_language,
                      :email_pref)
 
-  json.isUser (@person == current_user)
+  json.isUser @person == current_user
 
   if @person.country
     json.home_country do
@@ -20,10 +20,10 @@ json.person do
   json.roles do
     json.partial! '/api/person_roles/roles', roles: @person.roles
   end
-  json.grantable_roles Role
+  json.grantable_roles(Role
                         .grantable_roles(current_user, @person)
                         .collect{ |r| { value: r, display: t(r) } }
-                        .sort{ |a, b| a[:display] <=> b[:display] }
+                        .sort_by{ |a| a[:display] })
 
   json.participants @person.participants do |participant|
     json.call(participant, :id, :language_id, :cluster_id)
@@ -32,11 +32,11 @@ json.person do
     json.roles roles
   end
 
-  json.events do
-    json.current @person.events.current, partial: 'api/people/event', as: :event
-    json.upcoming @person.events.upcoming, partial: 'api/people/event', as: :event
-    json.past @person.events.past.limit(5), partial: 'api/people/event', as: :event
-  end
+  # json.events do
+  #   json.current @person.events.current, partial: 'api/people/event', as: :event
+  #   json.upcoming @person.events.upcoming, partial: 'api/people/event', as: :event
+  #   json.past @person.events.past.limit(5), partial: 'api/people/event', as: :event
+  # end
 
   json.can do
     json.update can?(:update, @person)

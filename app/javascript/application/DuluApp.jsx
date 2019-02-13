@@ -7,7 +7,6 @@ import translator from "../i18n/i18n";
 import styles from "./DuluApp.css";
 import NetworkErrorAlert from "../components/shared/NetworkErrorAlert";
 import DuluAxios from "../util/DuluAxios";
-import LanguagesBoard from "../components/languages/LanguagesBoard";
 import ReportsViewer from "../components/reports/ReportsViewer";
 import EventsPage from "../components/events/EventsPage";
 import RegionsBoard from "../components/regions/RegionsBoard";
@@ -17,6 +16,7 @@ import ParticipantPage from "../components/participants/ParticipantPage";
 import ActivityPage from "../components/activities/ActivityPage";
 import OrganizationsContainer from "../components/organizations/OrganizationsContainer";
 import ProgramsRedirect from "../components/languages/ProgramsRedirect";
+import LanguagesContainer from "../components/languages/LanguagesContainer";
 
 export default class DuluApp extends React.Component {
   constructor(props) {
@@ -76,7 +76,7 @@ export default class DuluApp extends React.Component {
           <Route
             path="/languages/:idOrAction?"
             render={({ match, history, location }) => (
-              <LanguagesBoard
+              <LanguagesContainer
                 history={history}
                 location={location}
                 {...matchParamsForChild(match)}

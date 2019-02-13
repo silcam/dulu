@@ -2,9 +2,10 @@ import React from "react";
 import PropTypes from "prop-types";
 import InlineAddIcon from "../shared/icons/InlineAddIcon";
 import NewParticipantForm from "./NewParticipantForm";
-import update from "immutability-helper";
 import Role from "../../models/Role";
 import { Link } from "react-router-dom";
+import DuluAxios from "../../util/DuluAxios";
+import { fullName } from "../../models/person";
 
 /*
   Used by LanguagePageContent and ClusterPage!
@@ -13,17 +14,22 @@ import { Link } from "react-router-dom";
 export default class ParticipantsTable extends React.PureComponent {
   state = {};
 
-  showCluster = participant => !!this.props.language && !!participant.cluster;
+  async componentDidMount() {
+    try {
+      const url = this.props.language
+        ? `/api/languages/${this.props.language.id}/participants`
+        : `/api/clusters/${this.props.cluster.id}/participants`;
+      const data = await DuluAxios.get(url);
+      data.language && this.props.setLanguage(data.language);
+      data.cluster && this.props.setCluster(data.cluster);
+      this.props.addPeople(data.people);
+      this.props.addParticipants(data.participants);
+    } catch (error) {
+      this.props.setNetworkError(error);
+    }
+  }
 
-  addParticipant = participant => {
-    const clusterProgram = this.props.cluster || this.props.language;
-    this.props.replace(
-      update(clusterProgram, { participants: { $push: [participant] } })
-    );
-    this.props.history.push(
-      `${this.props.basePath}/participants/${participant.id}`
-    );
-  };
+  showCluster = participant => !!this.props.language && !!participant.cluster;
 
   render() {
     const participants = domainPeople(
@@ -46,10 +52,13 @@ export default class ParticipantsTable extends React.PureComponent {
           <NewParticipantForm
             t={t}
             cancel={() => this.setState({ showNewForm: false })}
-            addParticipant={this.addParticipant}
+            addParticipants={this.props.addParticipants}
+            addPeople={this.props.addPeople}
             language_id={this.props.language && this.props.language.id}
             cluster_id={this.props.cluster && this.props.cluster.id}
             setNetworkError={this.props.setNetworkError}
+            history={this.props.history}
+            basePath={this.props.basePath}
           />
         )}
         <table>
@@ -60,7 +69,7 @@ export default class ParticipantsTable extends React.PureComponent {
                   <Link
                     to={`${this.props.basePath}/participants/${participant.id}`}
                   >
-                    {participant.person.full_name}
+                    {fullName(this.props.people[participant.person_id])}
                   </Link>{" "}
                   {this.showCluster(participant) &&
                     `(${participant.cluster.name})`}
@@ -90,11 +99,15 @@ ParticipantsTable.propTypes = {
   t: PropTypes.func.isRequired,
   domain: PropTypes.string,
   participants: PropTypes.array.isRequired,
+  people: PropTypes.object.isRequired,
   language: PropTypes.object,
   cluster: PropTypes.object,
-  replace: PropTypes.func.isRequired,
   setNetworkError: PropTypes.func.isRequired,
   can: PropTypes.object.isRequired,
   basePath: PropTypes.string.isRequired,
-  history: PropTypes.object.isRequired
+  history: PropTypes.object.isRequired,
+  addParticipants: PropTypes.func.isRequired,
+  addPeople: PropTypes.func.isRequired,
+  setLanguage: PropTypes.func.isRequired,
+  setCluster: PropTypes.func.isRequired
 };

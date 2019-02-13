@@ -40,20 +40,22 @@ export default class NewEventForm extends React.PureComponent {
 
   eventInvalid = () => {
     const event = this.state.event;
-    return !event.name || !event.start_date || !event.end_date;
+    return !event.name || !event.start_date;
   };
 
   save = async () => {
     this.setState({ saveInProgress: true });
     try {
       const data = await DuluAxios.post("/api/events", {
-        event: Event.prepareEventParams(this.state.event)
+        event: Event.prepareEventParams(Event.ensureEndDate(this.state.event))
       });
-      this.props.addEvent(data.event);
-      if (data.workshop) this.props.replaceWorkshop(data.workshop);
+      this.props.addLanguages(data.languages);
+      this.props.addClusters(data.clusters);
+      this.props.addPeople(data.people);
+      this.props.addActivities(data.workshops_activities);
+      this.props.setEvent(data.event);
       this.props.cancelForm();
     } catch (error) {
-      console.error(error);
       this.props.setNetworkError(error);
       this.setState({ saveInProgress: false });
     }
@@ -126,8 +128,11 @@ export default class NewEventForm extends React.PureComponent {
 NewEventForm.propTypes = {
   t: PropTypes.func.isRequired,
   setNetworkError: PropTypes.func.isRequired,
-  addEvent: PropTypes.func.isRequired,
   cancelForm: PropTypes.func.isRequired,
-  replaceWorkshop: PropTypes.func.isRequired,
-  startEvent: PropTypes.object
+  startEvent: PropTypes.object,
+  setEvent: PropTypes.func.isRequired,
+  addLanguages: PropTypes.func.isRequired,
+  addPeople: PropTypes.func.isRequired,
+  addClusters: PropTypes.func.isRequired,
+  addActivities: PropTypes.func.isRequired
 };

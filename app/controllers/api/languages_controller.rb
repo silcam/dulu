@@ -35,8 +35,7 @@ class Api::LanguagesController < ApplicationController
     render json: {language_id: @language.id}
   end
 
-  # TODO-Fix: Transitional necessity - this one returns language.id, not program.id
-  # def lang_search
-  #   @programs = Language.search(params[:q])
-  # end
+  def pubs
+    @language = Language.find(params[:id])
+  end
 end

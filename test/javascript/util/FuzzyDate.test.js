@@ -49,3 +49,12 @@ test("toObject with full Date", () => {
     day: 25
   });
 });
+
+test("some toString's", () => {
+  let date = { year: 2019 };
+  expect(FuzzyDate.toString(date)).toEqual("2019");
+  date.month = 2;
+  expect(FuzzyDate.toString(date)).toEqual("2019-02");
+  date.day = 10;
+  expect(FuzzyDate.toString(date)).toEqual("2019-02-10");
+});

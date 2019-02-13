@@ -1,11 +1,9 @@
 import React from "react";
 import PropTypes from "prop-types";
 import InlineAddIcon from "../shared/icons/InlineAddIcon";
-import Event from "../../models/Event";
-import update from "immutability-helper";
 import EventRow from "./EventRow";
-import { insertInto } from "../../util/arrayUtils";
 import DuluAxios from "../../util/DuluAxios";
+import { lastYear } from "../../util/Date";
 
 export default class EventsTable extends React.PureComponent {
   constructor(props) {
@@ -13,35 +11,30 @@ export default class EventsTable extends React.PureComponent {
     this.state = {};
   }
 
-  addNewEvent = event => {
-    const newEvents = insertInto(
-      this.props.language.events,
-      event,
-      Event.revCompare
-    );
-    this.props.replaceLanguage(
-      update(this.props.language, { events: { $set: newEvents } })
-    );
-    this.props.history.push(`${this.props.basePath}/events/${event.id}`);
-  };
+  async componentDidMount() {
+    this.getEvents({ initialGet: true });
+  }
 
-  moreEvents = async () => {
+  getEvents = async ({ initialGet = false }) => {
     this.setState({ loadingMore: true });
+    const period =
+      !initialGet && this.props.eventsBackTo
+        ? {
+            start_year: this.props.eventsBackTo - 3,
+            end_year: this.props.eventsBackTo - 1
+          }
+        : { start_year: lastYear() };
     try {
-      const data = await DuluAxios.get(
-        `/api/languages/${this.props.language.id}/more_events`,
-        {
-          offset: this.props.language.events.length
-        }
-      );
-      this.props.replaceLanguage(
-        update(this.props.language, {
-          haveAllEvents: { $set: data.haveAllEvents },
-          events: { $push: data.events }
-        })
-      );
+      const data = await DuluAxios.get(this.props.eventsUrl, period);
+      this.props.addPeople(data.people);
+      this.props.addClusters(data.clusters);
+      this.props.addLanguages(data.languages);
+      this.props.setEventsCan(data.can);
+      this.props.addEventsFor(data.events, {
+        start: data.startYear ? { year: data.startYear } : undefined,
+        end: period.end_year ? { year: period.end_year } : undefined
+      });
     } catch (error) {
-      console.error(error);
       this.props.setNetworkError(error);
     } finally {
       this.setState({ loadingMore: false });
@@ -60,16 +53,15 @@ export default class EventsTable extends React.PureComponent {
   render() {
     const t = this.props.t;
     const years = this.yearGroups();
+    const basePath = this.props.basePath || "";
 
     return (
       <div>
         <h3>
           {t("Events")}
-          {!this.state.showNewForm && this.props.language.can.event.create && (
+          {this.props.can.create && !this.props.noAdd && (
             <InlineAddIcon
-              onClick={() =>
-                this.props.history.push(`${this.props.basePath}/events/new`)
-              }
+              onClick={() => this.props.history.push(`${basePath}/events/new`)}
             />
           )}
         </h3>
@@ -89,12 +81,12 @@ export default class EventsTable extends React.PureComponent {
                       key={event.id}
                       event={event}
                       t={t}
-                      basePath={this.props.basePath}
+                      basePath={basePath}
                     />
                   ))}
                 </React.Fragment>
               ))}
-            {!this.props.language.haveAllEvents && (
+            {!!this.props.eventsBackTo && (
               <tr>
                 <td>
                   {this.state.loadingMore ? (
@@ -102,7 +94,7 @@ export default class EventsTable extends React.PureComponent {
                   ) : (
                     <button
                       className="link"
-                      onClick={this.moreEvents}
+                      onClick={this.getEvents}
                       style={{ fontWeight: "bold" }}
                     >
                       {t("More_events")}
@@ -119,13 +111,19 @@ export default class EventsTable extends React.PureComponent {
   }
 }
 EventsTable.propTypes = {
-  language: PropTypes.object.isRequired,
   events: PropTypes.array.isRequired,
   t: PropTypes.func.isRequired,
-  replaceLanguage: PropTypes.func.isRequired,
   setNetworkError: PropTypes.func.isRequired,
-  domain: PropTypes.string,
-  basePath: PropTypes.string.isRequired,
+  basePath: PropTypes.string,
   history: PropTypes.object.isRequired,
-  superEventsTable: PropTypes.bool
+  addPeople: PropTypes.func.isRequired,
+  addClusters: PropTypes.func.isRequired,
+  addLanguages: PropTypes.func.isRequired,
+  setEventsCan: PropTypes.func.isRequired,
+  can: PropTypes.object.isRequired,
+  eventsBackTo: PropTypes.number,
+  // Comes from immediate parent:
+  eventsUrl: PropTypes.string.isRequired,
+  addEventsFor: PropTypes.func.isRequired, // (events, period) => void
+  noAdd: PropTypes.bool
 };

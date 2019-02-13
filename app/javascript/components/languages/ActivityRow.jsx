@@ -36,7 +36,8 @@ export default class ActivityRow extends React.PureComponent {
       const data = await DuluAxios.post("/api/stages", {
         stage: this.state.nextStage
       });
-      this.updateActivity({
+      this.props.setActivity({
+        id: this.props.activity.id,
         stage_name: data.stage.name,
         stage_date: data.stage.start_date,
         last_update: data.stage.last_update
@@ -46,13 +47,6 @@ export default class ActivityRow extends React.PureComponent {
       this.props.setNetworkError(error);
       this.setState({ updateFormState: "date" });
     }
-  };
-
-  updateActivity = mergeActivity => {
-    const newActivity = update(this.props.activity, {
-      $merge: mergeActivity
-    });
-    this.props.replaceActivity(newActivity);
   };
 
   render() {
@@ -69,7 +63,8 @@ export default class ActivityRow extends React.PureComponent {
           <td>
             <ProgressBar {...Activity.progress(activity)} />
             <Spacer width="20px" />
-            {this.props.can.update && !Activity.isWorkshops(activity) ? (
+            {this.props.can.update_activities &&
+            !Activity.isWorkshops(activity) ? (
               <button
                 className="link"
                 onClick={() =>
@@ -117,7 +112,7 @@ ActivityRow.propTypes = {
   activity: PropTypes.object.isRequired,
   t: PropTypes.func.isRequired,
   can: PropTypes.object.isRequired,
-  replaceActivity: PropTypes.func.isRequired,
+  setActivity: PropTypes.func.isRequired,
   setNetworkError: PropTypes.func.isRequired,
   basePath: PropTypes.string.isRequired
 };

@@ -42,6 +42,36 @@ test("some overlap comparisons", () => {
   expect(Event.overlapCompare(newYears, christmas)).toBeGreaterThan(0);
 });
 
+test("some comparison events", () => {
+  let period = { start: { year: 2018, month: 2 } };
+  let exp = { start_date: "2018-02", end_date: "9999" };
+  expect(Event.comparisonEvent(period)).toEqual(exp);
+  period.end = { year: "2020" };
+  exp.end_date = "2020";
+  expect(Event.comparisonEvent(period)).toEqual(exp);
+  period.start = undefined;
+  exp.start_date = "0000";
+  expect(Event.comparisonEvent(period)).toEqual(exp);
+});
+
+test("some month overlap checks", () => {
+  expect(Event.overlapsMonth(christmas, 2018, 11)).toBe(false);
+  expect(Event.overlapsMonth(christmas, 2018, 12)).toBe(true);
+  expect(Event.overlapsMonth(christmas, 2019, 1)).toBe(false);
+  expect(Event.overlapsMonth(decemberMonth, 2018, 11)).toBe(false);
+  expect(Event.overlapsMonth(decemberMonth, 2018, 12)).toBe(true);
+  expect(Event.overlapsMonth(decemberMonth, 2019, 1)).toBe(false);
+  expect(Event.overlapsMonth(twentyNineteen, 2018, 12)).toBe(false);
+  expect(Event.overlapsMonth(twentyNineteen, 2019, 1)).toBe(true);
+  expect(Event.overlapsMonth(twentyNineteen, 2020, 1)).toBe(false);
+});
+
+test("some overlaps year checks", () => {
+  expect(Event.overlapsYear(christmas, 2017)).toBe(false);
+  expect(Event.overlapsYear(decemberMonth, 2018)).toBe(true);
+  expect(Event.overlapsYear(twentyNineteen, 2010)).toBe(false);
+});
+
 test("prepareEventParams", () => {
   const event = {
     name: "My Event",

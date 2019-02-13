@@ -26,6 +26,21 @@ class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
       end
     end
   end
+  
+  def simulate_oauth(user)
+    OmniAuth.config.test_mode = true
+    OmniAuth.config.add_mock(:google_oauth2, {info: {email: user.email}})
+  end
+
+  def log_in(user)
+    simulate_oauth user
+    visit '/events/new' # A page that doesn't turn around and load a bunch of junk
+  end
+
+  def force_log_in(user)
+    simulate_oauth user
+    visit '/auth/google_oauth2'
+  end
 
   def page_has_link?(path)
     page.has_css? "a[href='#{path}']"

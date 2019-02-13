@@ -7,17 +7,30 @@ import ParticipantRoles from "./ParticipantRoles";
 import update from "immutability-helper";
 import style from "./ParticipantView.css";
 import TextOrFuzzyDateInput from "../shared/TextOrFuzzyDateInput";
-import Participant from "../../models/Participant";
 import { Link } from "react-router-dom";
 import Activity from "../../models/Activity";
 import Spacer from "../shared/Spacer";
 import ProgressBar from "../shared/ProgressBar";
+import Loading from "../shared/Loading";
+import { fullName } from "../../models/person";
+
 export default class ParticipantView extends React.PureComponent {
   constructor(props) {
     super(props);
-    this.state = {
-      participant: deepcopy(props.participant)
-    };
+    this.state = {};
+  }
+
+  async componentDidMount() {
+    try {
+      const data = await DuluAxios.get(`/api/participants/${this.props.id}`);
+      this.props.setPerson(data.person);
+      data.language && this.props.setLanguage(data.language);
+      data.cluster && this.props.setCluster(data.cluster);
+      this.props.addParticipants([data.participant]);
+      this.props.addActivities(data.activities);
+    } catch (error) {
+      this.props.setNetworkError(error);
+    }
   }
 
   updateParticipant = mergeParticipant => {
@@ -26,6 +39,12 @@ export default class ParticipantView extends React.PureComponent {
       edited: true
     }));
   };
+
+  edit = () =>
+    this.setState({
+      participant: deepcopy(this.props.participant),
+      editing: true
+    });
 
   save = async () => {
     this.setState({ saving: true });
@@ -36,10 +55,10 @@ export default class ParticipantView extends React.PureComponent {
           participant: this.state.participant
         }
       );
-      this.props.replaceParticipant(data.participant);
+      this.props.addParticipants([data.participant]);
       this.setState({
         editing: false,
-        participant: deepcopy(data.participant)
+        participant: undefined
       });
     } catch (error) {
       this.props.setNetworkError(error);
@@ -52,16 +71,14 @@ export default class ParticipantView extends React.PureComponent {
     if (
       confirm(
         this.props.t("confirm_delete_participant", {
-          person: this.state.participant.person.full_name,
-          language: Participant.clusterProgram(this.state.participant).name
+          person: fullName(this.props.person),
+          language: this.props.clusterLanguage.name
         })
       )
     ) {
       try {
-        await DuluAxios.delete(
-          `/api/participants/${this.state.participant.id}`
-        );
-        this.props.removeParticipant();
+        await DuluAxios.delete(`/api/participants/${this.props.id}`);
+        this.props.deleteParticipant(this.props.id);
         this.props.history.push(this.props.basePath);
       } catch (error) {
         this.props.setNetworkError(error);
@@ -69,16 +86,21 @@ export default class ParticipantView extends React.PureComponent {
     }
   };
 
-  invalid = () => !this.state.participant.start_date;
+  invalid = () => this.state.editing && !this.state.participant.start_date;
 
   render() {
     const t = this.props.t;
-    const participant = this.state.participant;
+    const participant = this.state.editing
+      ? this.state.participant
+      : this.props.participant;
+
+    if (!participant) return <Loading t={t} />;
+    const can = this.props.participant.can || {};
 
     return (
       <div>
         <EditActionBar
-          can={this.props.can}
+          can={can}
           editing={this.state.editing}
           saving={this.state.saving}
           save={this.save}
@@ -89,13 +111,13 @@ export default class ParticipantView extends React.PureComponent {
               participant: deepcopy(this.props.participant)
             })
           }
-          edit={() => this.setState({ editing: true })}
+          edit={this.edit}
           delete={this.delete}
           t={t}
         />
         <h2>
-          <Link className="notBlue" to={`/people/${participant.person.id}`}>
-            {participant.person.full_name}
+          <Link className="notBlue" to={`/people/${participant.person_id}`}>
+            {fullName(this.props.person)}
           </Link>
         </h2>
         <ParticipantRoles
@@ -142,13 +164,10 @@ export default class ParticipantView extends React.PureComponent {
           </tbody>
         </table>
         {this.props.language && !this.state.editing && (
-          <div>
+          <div style={{ paddingTop: "20px" }}>
             <h3>{t("Activities")}</h3>
             <ul className={style.stdList}>
-              {Participant.activitiesForParticipant(
-                this.props.language,
-                participant
-              ).map(activity => (
+              {this.props.activities.map(activity => (
                 <li key={activity.id}>
                   <ProgressBar {...Activity.progress(activity)} small />
                   <Spacer width="10px" />
@@ -167,12 +186,19 @@ export default class ParticipantView extends React.PureComponent {
 
 ParticipantView.propTypes = {
   t: PropTypes.func.isRequired,
-  participant: PropTypes.object.isRequired,
-  can: PropTypes.object.isRequired,
-  replaceParticipant: PropTypes.func.isRequired,
+  participant: PropTypes.object,
+  person: PropTypes.object,
+  activities: PropTypes.array,
+  clusterLanguage: PropTypes.object,
   setNetworkError: PropTypes.func.isRequired,
   history: PropTypes.object.isRequired,
   basePath: PropTypes.string.isRequired,
-  removeParticipant: PropTypes.func.isRequired,
+  setPerson: PropTypes.func.isRequired,
+  addParticipants: PropTypes.func.isRequired,
+  deleteParticipant: PropTypes.func.isRequired,
+  addActivities: PropTypes.func.isRequired,
+  setLanguage: PropTypes.func.isRequired,
+  setCluster: PropTypes.func.isRequired,
+
   language: PropTypes.object // If in a language context
 };

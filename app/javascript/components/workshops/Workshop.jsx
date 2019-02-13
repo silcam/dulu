@@ -191,27 +191,22 @@ export default class Workshop extends React.PureComponent {
           <td>{this.state.name}</td>
           <td>
             <DateCell
-              date={this.props.workshop.formattedDate}
-              eventPath={this.props.workshop.eventPath}
-              newEventLocation={newEventLocation(
-                this.props.workshop,
-                this.props.language,
-                this.props.t
-              )}
-              canUpdate={this.props.workshop.can.update}
+              workshop={this.props.workshop}
+              language={this.props.language}
+              canUpdate={this.props.can.update}
               t={this.props.t}
             />
           </td>
           <td>
             {this.state.completed
               ? this.props.t("Completed")
-              : this.props.workshop.can.update && (
+              : this.props.can.update && (
                   <button onClick={this.completeWorkshop}>
                     {this.props.t("Completed")}
                   </button>
                 )}
           </td>
-          {this.props.workshop.can.update && (
+          {this.props.can.update && (
             <td align="right" style={{ whiteSpace: "noWrap" }}>
               <EditIcon onClick={this.editMode} />
               {this.props.displayDelete && <DeleteIcon onClick={this.delete} />}
@@ -223,22 +218,9 @@ export default class Workshop extends React.PureComponent {
   }
 }
 
-function newEventLocation(workshop, language, t) {
-  return {
-    pathname: `/languages/${language.id}/events/new`,
-    state: {
-      event: {
-        languages: [{ id: language.id, name: language.name }],
-        domain: "Linguistics",
-        name: `${t("Workshop")}: ${workshop.name}`,
-        workshop_id: workshop.id
-      }
-    }
-  };
-}
-
 Workshop.propTypes = {
   workshop: PropTypes.object.isRequired,
+  can: PropTypes.object.isRequired,
   displayDelete: PropTypes.bool,
   setNetworkError: PropTypes.func.isRequired,
   handleUpdatedWorkshop: PropTypes.func.isRequired,

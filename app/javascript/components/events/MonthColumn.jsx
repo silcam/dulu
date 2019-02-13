@@ -5,6 +5,7 @@ import { monthName } from "./dateUtils";
 import FuzzyDate from "../../util/FuzzyDate";
 import style from "./EventsCalendar.css";
 import { Link } from "react-router-dom";
+import { fullName } from "../../models/person";
 
 export default function MonthColumn(props) {
   return (
@@ -21,7 +22,7 @@ export default function MonthColumn(props) {
             event.end_date,
             props.t("month_names_short")
           )}
-          <p>{participants(event)}</p>
+          <p>{participants(event, props)}</p>
           <p>{event.note}</p>
           {index < props.events.length - 1 && <hr />}
         </div>
@@ -41,21 +42,31 @@ function dateTitle(event, month) {
   return (days[0] ? days[0] : "<") + " - " + (days[1] ? days[1] : ">");
 }
 
-function participants(event) {
-  const clusterLinks = makeLinks(event.clusters, "clusters");
-  const languageLinks = makeLinks(event.languages, "languages");
-  const peopleLinks = makeLinks(event.event_participants, "people");
+function participants(event, props) {
+  const clusterLinks = makeLinks(
+    event.cluster_ids.map(id => ({ id: id, name: props.clusters[id].name })),
+    "clusters"
+  );
+  const languageLinks = makeLinks(
+    event.language_ids.map(id => ({ id: id, name: props.languages[id].name })),
+    "languages"
+  );
+  const peopleLinks = makeLinks(
+    event.event_participants.map(e_p => ({
+      id: e_p.person_id,
+      name: fullName(props.people[e_p.person_id])
+    })),
+    "people"
+  );
   return clusterLinks.concat(languageLinks).concat(peopleLinks);
 }
 
 function makeLinks(list, type) {
   const baseUrl = "/" + type;
   return list.map(item => {
-    const id = type == "people" ? item.person_id : item.id;
-    const name = type == "people" ? item.full_name : item.name;
     return (
-      <span key={type + id} className={style.linkListItem}>
-        <Link to={`${baseUrl}/${id}`}>{name}</Link>
+      <span key={type + item.id} className={style.linkListItem}>
+        <Link to={`${baseUrl}/${item.id}`}>{item.name}</Link>
       </span>
     );
   });
@@ -63,6 +74,9 @@ function makeLinks(list, type) {
 
 MonthColumn.propTypes = {
   events: PropTypes.array.isRequired,
+  people: PropTypes.object.isRequired,
+  languages: PropTypes.object.isRequired,
+  clusters: PropTypes.object.isRequired,
   t: PropTypes.func.isRequired,
   month: PropTypes.object.isRequired
 };

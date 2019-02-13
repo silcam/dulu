@@ -24,11 +24,11 @@ class NotificationsIntTest < ApplicationSystemTestCase
       click_on 'Save'
     end
 
-    log_in lance
+    force_log_in lance
     assert_notification 'Rick Conrad added you to the Hdi program.'
     # log_out
 
-    log_in people(:Drew)
+    force_log_in people(:Drew)
     assert_notification 'Rick Conrad added Lance Freeland to the Hdi program.'
   end
 
@@ -44,10 +44,10 @@ class NotificationsIntTest < ApplicationSystemTestCase
       click_on 'Save'
     end
 
-    log_in lance
+    force_log_in lance
     assert_notification 'Rick Conrad added you to the Ndop cluster.'
 
-    log_in people(:Drew)
+    force_log_in people(:Drew)
     assert_notification 'Rick Conrad added Lance Freeland to the Ndop cluster.'
   end
 
@@ -62,7 +62,7 @@ class NotificationsIntTest < ApplicationSystemTestCase
     end
     find('tr', text: 'As of').click_on('Save')
 
-    log_in people(:Drew)
+    force_log_in people(:Drew)
     assert_notification 'Rick Conrad updated Genesis to the Consultant Checked stage for the Hdi program.'
   end
 
@@ -72,7 +72,7 @@ class NotificationsIntTest < ApplicationSystemTestCase
     click_on "Grammar Intro"
     find('tr', text: 'Verb').click_on("Completed")
 
-    log_in people(:Kendall)
+    force_log_in people(:Kendall)
     assert_notification 'Rick Conrad updated the Verb workshop for the Ewondo program as complete.'
   end
 
@@ -85,7 +85,7 @@ class NotificationsIntTest < ApplicationSystemTestCase
       click_on 'Save'
     end
 
-    log_in people(:Drew)
+    force_log_in people(:Drew)
     assert_notification 'Rick Conrad added a new activity to the Hdi program: Research: Words for Pizza'
   end
 
@@ -96,7 +96,7 @@ class NotificationsIntTest < ApplicationSystemTestCase
     fill_in 'first_name', with: 'Mista'
     click_on 'Save'
 
-    log_in people(:Drew)
+    force_log_in people(:Drew)
     assert_notification 'Rick Conrad updated your info'
     assert_notification 'Rick Conrad updated the info for Mista Maust', true
   end
@@ -122,7 +122,7 @@ class NotificationsIntTest < ApplicationSystemTestCase
       click_on 'Save'
     end
 
-    log_in people(:Drew)
+    force_log_in people(:Drew)
     assert_notification 'Rick Conrad gave you the Dulu Admin role'
     assert_notification 'Rick Conrad gave the Dulu Admin role to Drew Maust', true
   end
@@ -141,7 +141,7 @@ class NotificationsIntTest < ApplicationSystemTestCase
   end
 
   test 'Added person to activity' do
-    postpone_failure(Date.new(2019, 2, 8))
+    postpone_failure(Date.new(2019, 2, 15))
     # log_in people(:Rick)
     # visit activity_path(translation_activities(:HdiGenesis))
     # within('h3', text: 'People') { click_on 'Edit' }
@@ -157,7 +157,7 @@ class NotificationsIntTest < ApplicationSystemTestCase
   end
 
   test 'Added himself to activity' do
-    postpone_failure(Date.new(2019, 2, 8))
+    postpone_failure(Date.new(2019, 2, 15))
     # log_in people(:Drew)
     # visit activity_path(translation_activities(:HdiGenesis))
     # within('h3', text: 'People') { click_on 'Edit' }
@@ -169,7 +169,7 @@ class NotificationsIntTest < ApplicationSystemTestCase
   end
 
   test 'Added you to event' do
-    postpone_failure(Date.new(2019, 2, 8))
+    postpone_failure(Date.new(2019, 2, 15))
     # log_in people(:Rick)
     # visit event_path(events(:HdiGenesisChecking))
     # within('h3', text: 'People') { click_on 'Edit' }
@@ -184,7 +184,7 @@ class NotificationsIntTest < ApplicationSystemTestCase
   end
 
   test 'Added himself to event' do
-    postpone_failure(Date.new(2019, 2, 8))
+    postpone_failure(Date.new(2019, 2, 15))
     # log_in people(:Rick)
     # visit event_path(events(:HdiGenesisChecking))
     # within('h3', text: 'People') { click_on 'Edit' }
@@ -196,7 +196,7 @@ class NotificationsIntTest < ApplicationSystemTestCase
   end
 
   test 'New event for program' do
-    postpone_failure(Date.new(2019, 2, 8))
+    postpone_failure(Date.new(2019, 2, 15))
     # log_in people(:Rick)
     # visit new_program_event_path(programs(:Hdi))
     # fill_in 'Name', with: 'Pizza Party'
@@ -209,7 +209,7 @@ class NotificationsIntTest < ApplicationSystemTestCase
   end
 
   test 'Add program to event' do
-    postpone_failure(Date.new(2019, 2, 8))
+    postpone_failure(Date.new(2019, 2, 15))
     # log_in people(:Rick)
     # visit event_path(events(:HdiGenesisChecking))
     # within('h3', text: 'Programs') { click_on 'Edit' }
@@ -221,7 +221,7 @@ class NotificationsIntTest < ApplicationSystemTestCase
   end
 
   test 'Add cluster to event' do
-    postpone_failure(Date.new(2019, 2, 8))
+    postpone_failure(Date.new(2019, 2, 15))
     # log_in people(:Rick)
     # visit event_path(events(:HdiGenesisChecking))
     # within('h3', text: 'Clusters') { click_on 'Add' }

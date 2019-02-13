@@ -41,6 +41,6 @@ Rails.application.configure do
   config.action_view.raise_on_missing_translations = true
 
   # Disable logging to make tests faster
-  config.logger = Logger.new(nil)
-  config.log_level = :fatal
+  # config.logger = Logger.new(nil)
+  # config.log_level = :fatal
 end

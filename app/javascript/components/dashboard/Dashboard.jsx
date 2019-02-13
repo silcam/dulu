@@ -1,4 +1,3 @@
-import axios from "axios";
 import React from "react";
 import PropTypes from "prop-types";
 import DashboardSidebar from "./DashboardSidebar";
@@ -8,6 +7,7 @@ import Searcher from "./Searcher";
 import { arrayDelete } from "../../util/arrayUtils";
 import styles from "./Dashboard.css";
 import Loading from "../shared/Loading";
+import DuluAxios from "../../util/DuluAxios";
 
 export default class Dashboard extends React.PureComponent {
   constructor(props) {
@@ -50,16 +50,15 @@ export default class Dashboard extends React.PureComponent {
 
   fetchProgram = id => {
     this.addLoading();
-    axios
-      .get(`/api/languages/${id}/dashboard/`)
-      .then(response => {
+    DuluAxios.get(`/api/languages/${id}/dashboard/`)
+      .then(data => {
         this.removeLoading();
-        this.cache.languages[id] = response.data;
+        this.cache.languages[id] = data;
         this.setState(prevState => {
           if (prevState.neededProgramIds.includes(id)) {
             let neededProgramIds = arrayDelete(prevState.neededProgramIds, id);
             return {
-              languages: prevState.languages.concat([response.data]),
+              languages: prevState.languages.concat([data]),
               neededProgramIds: neededProgramIds
             };
           }
@@ -74,16 +73,15 @@ export default class Dashboard extends React.PureComponent {
 
   fetchCluster = id => {
     this.addLoading();
-    axios
-      .get(`/api/clusters/${id}/dashboard/`)
-      .then(response => {
+    DuluAxios.get(`/api/clusters/${id}/dashboard/`)
+      .then(data => {
         this.removeLoading();
-        this.cacheCluster(id, response.data.languages);
+        this.cacheCluster(id, data.languages);
         this.setState(prevState => {
           if (prevState.neededClusterIds.includes(id)) {
             let neededClusterIds = arrayDelete(prevState.neededClusterIds, id);
             return {
-              languages: prevState.languages.concat(response.data.languages),
+              languages: prevState.languages.concat(data.languages),
               neededClusterIds: neededClusterIds
             };
           }

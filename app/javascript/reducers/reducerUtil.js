@@ -17,12 +17,19 @@ export function addItems(state, items, compare) {
     (byId, item) => update(byId, { [item.id]: mergeOrSet(item) }),
     state.byId
   );
-  let list = Object.keys(byId);
+  let list = Object.keys(byId).map(idStr => parseInt(idStr));
   if (compare !== undefined) sortList(list, byId, compare);
   return {
     list: list,
     byId: byId
   };
+}
+
+export function addItemsNoList(state, items) {
+  return items.reduce(
+    (accumState, item) => update(accumState, { [item.id]: mergeOrSet(item) }),
+    state
+  );
 }
 
 export function addItem(state, item, compare) {
@@ -47,6 +54,10 @@ export function setItem(state, item, compare) {
     list: list,
     byId: byId
   };
+}
+
+export function setItemNoList(state, item) {
+  return update(state, { [item.id]: mergeOrSet(item) });
 }
 
 export function deleteItem(state, id) {

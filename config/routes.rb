@@ -10,6 +10,7 @@ Rails.application.routes.draw do
     end
 
     resources :clusters do
+      resources :participants
       get 'dashboard', on: :member
       get 'search', on: :collection
     end
@@ -23,6 +24,8 @@ Rails.application.routes.draw do
       resources :research_activities
       resources :translation_activities
       resources :workshops_activities
+      resources :participants
+      resources :events
       get 'more_events', on: :member
       get 'get_event', on: :member
       get 'search', on: :collection
@@ -30,6 +33,7 @@ Rails.application.routes.draw do
       get 'dashboard_list', on: :collection
       get 'dashboard', on: :member
       get 'find_language_id', on: :collection
+      get 'pubs', on: :member
     end
 
     resources :notifications do
@@ -46,6 +50,7 @@ Rails.application.routes.draw do
     resources :participants
 
     resources :people do
+      resources :events
       put 'update_view_prefs', on: :collection
       get 'search', on: :collection
     end

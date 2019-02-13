@@ -1,14 +1,12 @@
 import React from "react";
 import PropTypes from "prop-types";
 import ActivityRow from "./ActivityRow";
-import update from "immutability-helper";
-import { findIndexById } from "../../util/arrayUtils";
 import InlineAddIcon from "../shared/icons/InlineAddIcon";
 import Activity from "../../models/Activity";
 import DuluAxios from "../../util/DuluAxios";
 import NewMediaActivityForm from "./NewMediaActivityForm";
 import NewTranslationActivityForm from "./NewTranslationActivityForm";
-import styles from "./ActivitiesTable.css";
+// import styles from "./ActivitiesTable.css";
 import NewResearchActivityForm from "./NewResearchActivityForm";
 import NewWorkshopsActivityForm from "./NewWorkshopsActivityForm";
 
@@ -18,6 +16,21 @@ export default class ActivitiesTable extends React.PureComponent {
     this.state = this.freshState(props);
   }
 
+  async componentDidMount() {
+    try {
+      const data = await DuluAxios.get(`/api/activities`, {
+        language_id: this.props.language.id
+      });
+      this.props.addActivities(data.translation_activities);
+      this.props.addActivities(data.media_activities);
+      this.props.addActivities(data.research_activities);
+      this.props.addActivities(data.workshops_activities);
+      this.props.setLanguage(data.language);
+    } catch (error) {
+      this.props.setNetworkError(error);
+    }
+  }
+
   freshState = () => {
     return {
       showNewForm: false,
@@ -25,19 +38,19 @@ export default class ActivitiesTable extends React.PureComponent {
     };
   };
 
-  x_activity = () => `${this.props.type}_activity`;
+  x_activity = () => `${this.props.type.toLowerCase()}_activity`;
 
-  x_activities = () => `${this.props.type}_activities`;
+  x_activities = () => `${this.props.type.toLowerCase()}_activities`;
 
   NewActivityForm = () => {
     switch (this.props.type) {
-      case "media":
+      case "Media":
         return NewMediaActivityForm;
-      case "research":
+      case "Research":
         return NewResearchActivityForm;
-      case "translation":
+      case "Translation":
         return NewTranslationActivityForm;
-      case "workshops":
+      case "Workshops":
         return NewWorkshopsActivityForm;
     }
   };
@@ -51,46 +64,27 @@ export default class ActivitiesTable extends React.PureComponent {
           [this.x_activity()]: activity
         }
       );
-      this.props.replaceLanguage(
-        update(this.props.language, {
-          [this.x_activities()]: { $set: data[this.x_activities()] }
-        })
-      );
+      this.props.setActivity(data.activity);
       this.setState(this.freshState(this.props));
     } catch (error) {
-      this.props.setNetworkError({});
+      this.props.setNetworkError(error);
       this.setState({ newFormSaving: false });
     }
   };
 
-  replaceActivity = newActivity => {
-    this.props.replaceLanguage(
-      update(this.props.language, {
-        [this.x_activities()]: {
-          [findIndexById(
-            this.props.language[this.x_activities()],
-            newActivity.id
-          )]: {
-            $set: newActivity
-          }
-        }
-      })
-    );
-  };
-
   render() {
-    const language = this.props.language;
     const t = this.props.t;
     const NewActivityForm = this.NewActivityForm();
     return (
       <div>
         <h3>
           {this.props.heading || t("Activities")}
-          {!this.state.showNewForm && this.props.language.can.update && (
-            <InlineAddIcon
-              onClick={() => this.setState({ showNewForm: true })}
-            />
-          )}
+          {!this.state.showNewForm &&
+            this.props.language.can.update_activities && (
+              <InlineAddIcon
+                onClick={() => this.setState({ showNewForm: true })}
+              />
+            )}
         </h3>
         {this.state.showNewForm && (
           <NewActivityForm
@@ -99,17 +93,14 @@ export default class ActivitiesTable extends React.PureComponent {
             cancelForm={() => this.setState({ showNewForm: false })}
             addNewActivity={this.addNewActivity}
             availableBooks={
-              this.props.type == "translation" &&
-              Activity.availableBooks(
-                this.props.language.translation_activities,
-                t
-              )
+              this.props.type == "Translation" &&
+              Activity.availableBooks(this.props.activities, t)
             }
           />
         )}
         <table>
           <tbody>
-            {language[this.x_activities()].map(activity => (
+            {this.props.activities.map(activity => (
               <ActivityRow
                 key={activity.id}
                 activity={activity}
@@ -118,6 +109,7 @@ export default class ActivitiesTable extends React.PureComponent {
                 replaceActivity={this.replaceActivity}
                 setNetworkError={this.props.setNetworkError}
                 basePath={this.props.basePath}
+                setActivity={this.props.setActivity}
               />
             ))}
           </tbody>
@@ -128,10 +120,13 @@ export default class ActivitiesTable extends React.PureComponent {
 }
 
 ActivitiesTable.propTypes = {
-  type: PropTypes.oneOf(["media", "research", "translation", "workshops"])
+  activities: PropTypes.array.isRequired,
+  addActivities: PropTypes.func.isRequired,
+  setActivity: PropTypes.func.isRequired,
+  setLanguage: PropTypes.func.isRequired,
+  type: PropTypes.oneOf(["Media", "Research", "Translation", "Workshops"])
     .isRequired,
   language: PropTypes.object.isRequired,
-  replaceLanguage: PropTypes.func.isRequired,
   t: PropTypes.func.isRequired,
   setNetworkError: PropTypes.func.isRequired,
   heading: PropTypes.string, // Default "Activities"

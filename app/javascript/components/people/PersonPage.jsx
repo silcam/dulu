@@ -10,11 +10,11 @@ import DangerButton from "../shared/DangerButton";
 import { fullName } from "../../models/person";
 import update from "immutability-helper";
 import ParticipantsTable from "./ParticipantsTable";
-import EventsTable from "./EventsTable";
 import DuluAxios from "../../util/DuluAxios";
 import RolesTable from "./RolesTable";
 import Loading from "../shared/Loading";
 import OrgPeopleContainer from "./OrgPeopleContainer";
+import PersonEventsContainer from "./PersonEventsContainer";
 // import styles from "./PersonPage.css";
 
 export default class PersonPage extends React.PureComponent {
@@ -185,7 +185,12 @@ export default class PersonPage extends React.PureComponent {
 
         <ParticipantsTable t={this.props.t} person={person} />
 
-        <EventsTable t={this.props.t} person={person} />
+        <PersonEventsContainer
+          t={this.props.t}
+          person={person}
+          setNetworkError={this.props.setNetworkError}
+          history={this.props.history}
+        />
       </div>
     );
   }
