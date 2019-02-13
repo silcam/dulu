@@ -6,8 +6,8 @@ class Stage < ApplicationRecord
 
   LINGUISTIC_STAGES = %i( Planned Research Drafting Review Published )
   MEDIA_STAGES = %i( Planned Application Script Scheduled Recording Mastering Published )
-  TRANSLATION_STAGES = %i( Planned Drafting Testing Review_committee Back_translating Ready_for_consultant_check
-                            Consultant_check Consultant_checked Published )
+  TRANSLATION_STAGES = %i( Planned Drafting Testing Review_committee Back_translating Prechecking 
+                           Ready_for_consultant_check Consultant_check Consultant_checked Ready_for_publication Published )
 
   # LINGUISTIC_STAGE_ROLES = {
   #                       Research: [:LinguisticConsultant, :LinguisticConsultantTraining],
@@ -132,15 +132,19 @@ class Stage < ApplicationRecord
       when :Testing
         return 20, :orange
       when :Review_committee
-        return 40, :yellow
+        return 40, :pale_orange
       when :Back_translating
-        return 60, :light_green
+        return 60, :yellow
+      when :Prechecking
+        return 70, :light_green
       when :Ready_for_consultant_check
         return 75, :dark_green
       when :Consultant_check
         return 80, :light_blue
       when :Consultant_checked
-        return 95, :dark_blue
+        return 90, :dark_blue
+      when :Ready_for_publication
+        return 95, :light_purple
     end
     return 100, :purple
   end

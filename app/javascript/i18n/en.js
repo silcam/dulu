@@ -242,9 +242,11 @@ export default {
     Testing: "Testing",
     Review_committee: "Review Committee",
     Back_translating: "Back-Translating",
+    Prechecking: "Prechecking",
     Ready_for_consultant_check: "Ready for Consultant Check",
     Consultant_check: "Consultant Check in Progress",
     Consultant_checked: "Consultant Checked",
+    Ready_for_publication: "Ready for Publication",
     Published: "Published"
   },
   Try_again: "Try again",

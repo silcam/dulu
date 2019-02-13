@@ -169,10 +169,12 @@ Activity.translationProgress = {
   Planned: { percent: 0, color: Colors.white },
   Drafting: { percent: 10, color: Colors.red },
   Testing: { percent: 20, color: Colors.orange },
-  Review_committee: { percent: 40, color: Colors.yellow },
-  Back_translating: { percent: 60, color: Colors.light_green },
+  Review_committee: { percent: 40, color: Colors.pale_orange },
+  Back_translating: { percent: 60, color: Colors.yellow },
+  Prechecking: { percent: 70, color: Colors.light_green },
   Ready_for_consultant_check: { percent: 75, color: Colors.dark_green },
   Consultant_check: { percent: 80, color: Colors.light_blue },
-  Consultant_checked: { percent: 95, color: Colors.dark_blue },
+  Consultant_checked: { percent: 90, color: Colors.dark_blue },
+  Ready_for_publication: { percent: 95, color: Colors.light_purple },
   Published: { percent: 100, color: Colors.purple }
 };

@@ -84,7 +84,7 @@ test("some progress", () => {
 
 test("translation stages", () => {
   const stages = Activity.stages(translationActivity);
-  expect(stages.length).toBe(9);
+  expect(stages.length).toBe(11);
   expect(stages[1]).toEqual("Drafting");
 });
 

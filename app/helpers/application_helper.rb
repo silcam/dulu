@@ -25,7 +25,9 @@ module ApplicationHelper
       when :red
         '#A93226'
       when :orange
-        '#CA6F1E'
+        '#D86613'
+      when :pale_orange
+        '#FA8C3B'
       when :yellow
         '#F4D03F'
       when :light_green
@@ -36,6 +38,8 @@ module ApplicationHelper
         '#5DADE2'
       when :dark_blue
         '#21618C'
+      when :light_purple
+        '#946BA4'
       when :purple
         '#6C3483'
     end
