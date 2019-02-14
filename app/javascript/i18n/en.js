@@ -229,6 +229,7 @@ export default {
   Search_prompt: "Search...",
   See_all: "+ See all",
   See_more: "See more",
+  server_error_message: "Dulu server error.",
   Share_this_report: "Share this report: %{url}",
   Sort: "Sort by",
   stage_names: {

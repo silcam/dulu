@@ -59,15 +59,9 @@ test("Delete", async () => {
   });
 });
 
-const non200ResponseException = {
-  name: "Non200ResponseException",
-  response: {
-    status: 404
-  }
-};
-
-test("404 throws exception", async () => {
-  axios.get.mockResolvedValue({ status: 404 });
-  expect.assertions(1);
-  await expect(DuluAxios.get(mockUrl)).rejects.toEqual(non200ResponseException);
-});
+// test("404 return undef", async () => {
+//   axios.get.mockResolvedValue({ status: 404 });
+//   expect.assertions(1);
+//   const data = DuluAxios.get(mockUrl);
+//   expect(data).toBeUndefined();
+// });

@@ -10,7 +10,8 @@ json.activity do
             :scripture, 
             :film,
             :participant_ids,
-            :stage_name)
+            :stage_name,
+            :language_id)
   json.stage_date @activity.current_stage.start_date
 
   json.can do

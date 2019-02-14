@@ -15,14 +15,12 @@ export default class LanguagesBoard extends React.PureComponent {
   };
 
   async componentDidMount() {
-    try {
-      const data = await DuluAxios.get("/api/languages");
+    const data = await DuluAxios.get("/api/languages");
+    if (data) {
       this.setState({
         can: data.can
       });
       this.props.setLanguages(data.languages);
-    } catch (error) {
-      this.props.setNetworkError(error);
     }
   }
 

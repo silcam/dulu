@@ -8,21 +8,23 @@ const strings = {
   fr: fr
 };
 
-// const I18n = {
-//   locale: "en",
+export interface T {
+  (key: string, subs?: any, locale?: string): string;
+  locale?: Locale;
+}
 
-//   setLocale: function(newLocale) {
-//     if (strings[newLocale]) this.locale = newLocale;
-//   },
+export enum Locale {
+  en = "en",
+  fr = "fr"
+}
 
-//   t: function(key, subs) {
-//     return translate(key, subs, this.locale);
-//   }
-// };
+interface Subs {
+  [key: string]: string;
+}
 
-export default function translator(setLocale) {
-  setLocale = strings[setLocale] ? setLocale : "en";
-  let exportedT = (key, subs, locale) => {
+export default function translator(setLocale: Locale) {
+  setLocale = strings[setLocale] ? setLocale : Locale.en;
+  let exportedT = <T>function(key: string, subs: Subs, locale: Locale) {
     let tLocale = locale && strings[locale] ? locale : setLocale;
     return t(key, subs, tLocale);
   };
@@ -30,7 +32,7 @@ export default function translator(setLocale) {
   return exportedT;
 }
 
-function t(key, subs, locale) {
+function t(key: string, subs: Subs, locale: Locale) {
   let tStr = getString(strings[locale], key);
   if (tStr === undefined) {
     if (locale != "en")
@@ -40,13 +42,13 @@ function t(key, subs, locale) {
   return subs ? tSubs(tStr, subs) : tStr;
 }
 
-function spaceAndCapitalize(key) {
+function spaceAndCapitalize(key: string) {
   return key
     .replace(/([a-z])([A-Z])/g, "$1 $2")
-    .replace(/_(\w)/g, (match, letter) => ` ${letter.toUpperCase()}`);
+    .replace(/_(\w)/g, (_match, letter) => ` ${letter.toUpperCase()}`);
 }
 
-function getString(strings, key) {
+function getString(strings: any, key: string) {
   try {
     return key.split(".").reduce((stringsAccum, k) => {
       return stringsAccum[k];
@@ -56,11 +58,9 @@ function getString(strings, key) {
   }
 }
 
-function tSubs(str, subs) {
+function tSubs(str: string, subs: Subs) {
   return Object.keys(subs).reduce((accumStr, subKey) => {
     const pattern = new RegExp("%{" + subKey + "}", "g");
     return accumStr.replace(pattern, subs[subKey]);
   }, str);
 }
-
-// export default I18n;
