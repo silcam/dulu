@@ -32,10 +32,14 @@ class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
     OmniAuth.config.add_mock(:google_oauth2, {info: {email: user.email}})
   end
 
-  def log_in(user)
+  def log_in(user, failed_once=false)
     Capybara.current_session.driver.browser.manage.delete_all_cookies
     simulate_oauth user
     visit '/events/new' # A page that doesn't turn around and load a bunch of junk
+    unless page.has_text?(user.first_name) || failed_once
+      puts 'LOG IN FAILURE - TRYING AGAIN'
+      log_in(user, true)
+    end
   end
 
   def page_has_link?(path)
