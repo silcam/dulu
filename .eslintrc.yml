@@ -15,6 +15,7 @@ parserOptions:
 plugins:
   - react
   - jest
+  - react-hooks
 globals:
   module: true
 rules:
@@ -24,6 +25,8 @@ rules:
     - warn
   react/display-name:
     - 0
+  react-hooks/rules-of-hooks:
+    - error
   no-console:
     - warn
   no-unused-vars:
