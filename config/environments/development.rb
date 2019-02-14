@@ -36,6 +36,7 @@ Rails.application.configure do
   # Don't care if the mailer can't send.
   config.action_mailer.raise_delivery_errors = false
 
+  config.action_mailer.delivery_method = :test
   # Commented bc we don't want to send real emails from development
   # config.action_mailer.delivery_method = :smtp
   # config.action_mailer.smtp_settings = {

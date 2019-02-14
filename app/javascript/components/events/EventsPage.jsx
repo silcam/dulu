@@ -4,6 +4,7 @@ import { Switch, Route, Redirect } from "react-router-dom";
 import { thisYear, thisMonth } from "./dateUtils";
 import EventPage from "./EventPage";
 import EventsCalendarContainer from "./EventsCalendarContainer";
+import CrashCauser from "./CrashCauser";
 
 export default function EventsPage(props) {
   return (
@@ -19,6 +20,10 @@ export default function EventsPage(props) {
         )}
       />
       <Route path="/events/new" render={() => "To be added..."} />
+
+      {/* For Testing purposes obviously! */}
+      <Route path="/events/crash-me-now" render={() => <CrashCauser />} />
+
       <Route
         path="/events/:id"
         render={({ match, history }) => (

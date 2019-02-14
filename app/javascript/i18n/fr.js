@@ -140,6 +140,8 @@ export default {
   },
   End_date: "Date de fin",
   Enter_valid_year: "Saisissez un an valide s'il vous plait.",
+  ErrorHeader: "Zut!",
+  ErrorMessage: "Dulu a experimenté une erreur. Désolé pour ça.",
   Events: "Événements",
   Film: "Film",
   films: {
@@ -285,6 +287,7 @@ export default {
   Position: "Poste",
   Publications: "Publications",
   Regions: "Régions",
+  Reload: "Recharger",
   Report_name: "Nom du rapport",
   Report_options: "Parametres du rapport",
   Reports: "Rapports",

@@ -4,6 +4,7 @@ Rails.application.routes.draw do
   namespace :api, defaults: {format: :json} do
     get 'search', to: 'searches#search'
     get 'countries/search', to: 'countries#search'
+    post 'errors', to: 'errors#create'
 
     resources :activities, shallow: true do
       resources :workshops

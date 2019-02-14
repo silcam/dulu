@@ -105,6 +105,8 @@ export default {
     weekly: "Weekly"
   },
   Enter_valid_year: "Please enter a valid year",
+  ErrorHeader: "Oh, bother!",
+  ErrorMessage: "Dulu ran into an error. Sorry about that.",
   films: {
     JesusFilm: "Jesus Film",
     LukeFilm: "Luke Film",
