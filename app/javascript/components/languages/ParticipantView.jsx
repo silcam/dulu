@@ -12,7 +12,7 @@ import Activity from "../../models/Activity";
 import Spacer from "../shared/Spacer";
 import ProgressBar from "../shared/ProgressBar";
 import Loading from "../shared/Loading";
-import { fullName } from "../../models/person";
+import { fullName } from "../../models/Person";
 
 export default class ParticipantView extends React.PureComponent {
   constructor(props) {

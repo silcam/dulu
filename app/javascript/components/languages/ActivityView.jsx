@@ -7,7 +7,7 @@ import styles from "./ActivityView.css";
 import * as ArrayUtils from "../../util/arrayUtils";
 import DuluAxios from "../../util/DuluAxios";
 import Loading from "../shared/Loading";
-import { fullName } from "../../models/person";
+import { fullName } from "../../models/Person";
 import WorkshopActivity from "../workshops/WorkshopActivity";
 
 export default class ActivityView extends React.PureComponent {

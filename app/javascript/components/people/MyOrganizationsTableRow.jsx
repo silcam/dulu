@@ -6,7 +6,7 @@ import MyOrganizationForm from "./MyOrganizationForm";
 import { Link } from "react-router-dom";
 import dateString from "../../util/dateString";
 import DuluAxios from "../../util/DuluAxios";
-import { fullName } from "../../models/person";
+import { fullName } from "../../models/Person";
 
 export default class MyOrganizationsTableRow extends React.PureComponent {
   state = {};

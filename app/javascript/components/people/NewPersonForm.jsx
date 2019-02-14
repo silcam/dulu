@@ -10,7 +10,7 @@ import selectOptionsFromObject from "../../util/selectOptionsFromObject";
 import DuplicateWarning from "./DuplicateWarning";
 import CancelButton from "../shared/CancelButton";
 import DuluAxios from "../../util/DuluAxios";
-import { sameName } from "../../models/person";
+import { sameName } from "../../models/Person";
 
 export default class NewPersonForm extends React.Component {
   state = {

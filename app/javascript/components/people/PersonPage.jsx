@@ -7,7 +7,7 @@ import merge from "deepmerge";
 import SaveIndicator from "../shared/SaveIndicator";
 import PersonBasicInfo from "./PersonBasicInfo";
 import DangerButton from "../shared/DangerButton";
-import { fullName } from "../../models/person";
+import { fullName } from "../../models/Person";
 import update from "immutability-helper";
 import ParticipantsTable from "./ParticipantsTable";
 import DuluAxios from "../../util/DuluAxios";

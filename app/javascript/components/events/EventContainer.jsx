@@ -1,5 +1,5 @@
 import { connect } from "react-redux";
-import { fullName } from "../../models/person";
+import { fullName } from "../../models/Person";
 import * as eventActionCreators from "../../actions/eventActions";
 import { addPeople } from "../../actions/peopleActions";
 import { addLanguages } from "../../actions/languageActions";

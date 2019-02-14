@@ -1,5 +1,5 @@
 import React from "react";
-import { fullName } from "../../models/person";
+import { fullName } from "../../models/Person";
 import styles from "../shared/Callout.css";
 
 function DuplicateWarning(props) {

@@ -5,7 +5,7 @@ import NewParticipantForm from "./NewParticipantForm";
 import Role from "../../models/Role";
 import { Link } from "react-router-dom";
 import DuluAxios from "../../util/DuluAxios";
-import { fullName } from "../../models/person";
+import { fullName } from "../../models/Person";
 
 /*
   Used by LanguagePageContent and ClusterPage!

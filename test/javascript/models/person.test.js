@@ -1,4 +1,4 @@
-import * as Person from "models/person";
+import * as Person from "models/Person";
 
 test("personCompare", () => {
   const rick = { first_name: "Rick", last_name: "Conrad" };

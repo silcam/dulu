@@ -5,7 +5,7 @@ import {
   DELETE_PERSON,
   ADD_PEOPLE
 } from "../actions/peopleActions";
-import { personCompare } from "../models/person";
+import { personCompare } from "../models/Person";
 import { setList, addItem, setItem, deleteItem, addItems } from "./reducerUtil";
 
 const emptyState = {

@@ -5,7 +5,7 @@ import { monthName } from "./dateUtils";
 import FuzzyDate from "../../util/FuzzyDate";
 import style from "./EventsCalendar.css";
 import { Link } from "react-router-dom";
-import { fullName } from "../../models/person";
+import { fullName } from "../../models/Person";
 
 export default function MonthColumn(props) {
   return (

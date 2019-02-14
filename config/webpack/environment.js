@@ -1,4 +1,5 @@
 const { environment } = require("@rails/webpacker");
+const typescript = require("./loaders/typescript");
 
 environment.loaders.append("styles", {
   test: /\.css$/,
@@ -18,4 +19,5 @@ environment.loaders.append("css", {
   ]
 });
 
+environment.loaders.append("typescript", typescript);
 module.exports = environment;
