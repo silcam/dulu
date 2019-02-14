@@ -25,10 +25,11 @@ class MainRouter extends React.Component {
     return { hasError: true };
   }
 
-  componentDidCatch(error) {
+  componentDidCatch(error, info) {
     const content = {
       error: error.toString(),
       stack: error.stack,
+      componentStack: info.componentStack,
       user: this.props.user,
       history: this.props.history
     };
