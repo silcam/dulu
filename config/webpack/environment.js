@@ -10,9 +10,10 @@ environment.loaders.append("css", {
   test: /\.css$/,
   use: [
     {
-      loader: "css-loader",
+      loader: "typings-for-css-modules-loader",
       query: {
         modules: true,
+        namedExport: true,
         localIdentName: "[name]__[local]___[hash:base64:5]"
       }
     }
