@@ -10,8 +10,6 @@ let component = {
 };
 
 test("toggle state flag", () => {
-  postponeFailure(new Date(2019, 1, 28));
-  // My JS skills are weak!
   expect(toggle).toBe(false);
   toggleStateFlag(component, "toggle");
   expect(toggle).toBe(true);

@@ -30,7 +30,6 @@ Rails.application.routes.draw do
       get 'more_events', on: :member
       get 'get_event', on: :member
       get 'search', on: :collection
-      get 'lang_search', on: :collection
       get 'dashboard_list', on: :collection
       get 'dashboard', on: :member
       get 'find_language_id', on: :collection

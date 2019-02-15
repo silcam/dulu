@@ -1,35 +1,60 @@
 import React from "react";
-import PropTypes from "prop-types";
 import InlineAddIcon from "../shared/icons/InlineAddIcon";
 import NewParticipantForm from "./NewParticipantForm";
 import Role from "../../models/Role";
 import { Link } from "react-router-dom";
 import DuluAxios from "../../util/DuluAxios";
-import { fullName } from "../../models/Person";
+import { fullName, Person } from "../../models/Person";
+import { T } from "../../i18n/i18n";
+import { BasicModel } from "../../models/BasicModel";
+import { ICluster } from "../../models/Cluster";
+import { History } from "history";
+import { IParticipantInflated } from "../../models/TypeBucket";
 
 /*
   Used by LanguagePageContent and ClusterPage!
 */
 
-export default class ParticipantsTable extends React.PureComponent {
-  state = {};
+interface IProps {
+  t: T;
+  domain?: string;
+  participants: IParticipantInflated[];
+  language?: BasicModel;
+  cluster?: ICluster;
+  can: { manage_participants?: boolean };
+  basePath: string;
+  history: History<any>;
+  addParticipants: (ptcpts: BasicModel[]) => void;
+  addPeople: (people: Person[]) => void;
+  setLanguage: (lang: BasicModel) => void;
+  setCluster: (cluster: ICluster) => void;
+}
+
+interface IState {
+  showNewForm?: boolean;
+}
+
+export default class ParticipantsTable extends React.PureComponent<
+  IProps,
+  IState
+> {
+  state: IState = {};
 
   async componentDidMount() {
-    try {
-      const url = this.props.language
-        ? `/api/languages/${this.props.language.id}/participants`
-        : `/api/clusters/${this.props.cluster.id}/participants`;
-      const data = await DuluAxios.get(url);
+    const url = this.props.language
+      ? `/api/languages/${this.props.language.id}/participants`
+      : `/api/clusters/${this.props.cluster!.id}/participants`;
+    const data = await DuluAxios.get(url);
+    if (data) {
       data.language && this.props.setLanguage(data.language);
       data.cluster && this.props.setCluster(data.cluster);
       this.props.addPeople(data.people);
       this.props.addParticipants(data.participants);
-    } catch (error) {
-      this.props.setNetworkError(error);
     }
   }
 
-  showCluster = participant => !!this.props.language && !!participant.cluster;
+  showCluster = (participant: IParticipantInflated) =>
+    !!this.props.language && !!participant.cluster;
 
   render() {
     const participants = domainPeople(
@@ -56,23 +81,22 @@ export default class ParticipantsTable extends React.PureComponent {
             addPeople={this.props.addPeople}
             language_id={this.props.language && this.props.language.id}
             cluster_id={this.props.cluster && this.props.cluster.id}
-            setNetworkError={this.props.setNetworkError}
             history={this.props.history}
             basePath={this.props.basePath}
           />
         )}
         <table>
           <tbody>
-            {participants.map(participant => (
+            {participants.map((participant: IParticipantInflated) => (
               <tr key={participant.id}>
                 <td>
                   <Link
                     to={`${this.props.basePath}/participants/${participant.id}`}
                   >
-                    {fullName(this.props.people[participant.person_id])}
+                    {fullName(participant.person)}
                   </Link>{" "}
                   {this.showCluster(participant) &&
-                    `(${participant.cluster.name})`}
+                    `(${participant.cluster!.name})`}
                 </td>
                 <td>
                   {participant.roles.map(role => t(`roles.${role}`)).join(", ")}
@@ -88,26 +112,9 @@ export default class ParticipantsTable extends React.PureComponent {
   }
 }
 
-function domainPeople(participants, domain) {
+function domainPeople(participants: IParticipantInflated[], domain?: string) {
   if (!domain) return participants;
   return participants.filter(participant =>
     participant.roles.some(role => Role.domainFromRole(role) == domain)
   );
 }
-
-ParticipantsTable.propTypes = {
-  t: PropTypes.func.isRequired,
-  domain: PropTypes.string,
-  participants: PropTypes.array.isRequired,
-  people: PropTypes.object.isRequired,
-  language: PropTypes.object,
-  cluster: PropTypes.object,
-  setNetworkError: PropTypes.func.isRequired,
-  can: PropTypes.object.isRequired,
-  basePath: PropTypes.string.isRequired,
-  history: PropTypes.object.isRequired,
-  addParticipants: PropTypes.func.isRequired,
-  addPeople: PropTypes.func.isRequired,
-  setLanguage: PropTypes.func.isRequired,
-  setCluster: PropTypes.func.isRequired
-};

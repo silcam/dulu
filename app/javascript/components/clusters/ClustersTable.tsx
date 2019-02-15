@@ -1,12 +1,19 @@
 import React from "react";
-import PropTypes from "prop-types";
-import { withRouter } from "react-router-dom";
+import { withRouter, RouteComponentProps } from "react-router-dom";
 import Loading from "../shared/Loading";
 import style from "../shared/MasterDetail.css";
+import { ICluster } from "../../models/Cluster";
+import { T } from "../../i18n/i18n";
+
+interface IProps extends RouteComponentProps<any> {
+  clusters: ICluster[];
+  id?: number;
+  t: T;
+}
 
 export default withRouter(ClustersTable);
 
-function ClustersTable(props) {
+function ClustersTable(props: IProps) {
   const clusters = props.clusters;
   const t = props.t;
 
@@ -30,10 +37,3 @@ function ClustersTable(props) {
     </div>
   );
 }
-
-ClustersTable.propTypes = {
-  clusters: PropTypes.array.isRequired,
-  t: PropTypes.func.isRequired,
-  id: PropTypes.string,
-  history: PropTypes.object.isRequired // Supplied by withRouter
-};

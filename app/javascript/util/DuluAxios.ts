@@ -1,10 +1,13 @@
 import axios, { AxiosError } from "axios";
+import { AnyObj } from "../models/TypeBucket";
+
+type MaybeAnyObj = AnyObj | undefined;
 
 interface IDuluAxios {
-  get: (url: string, params?: {}) => any;
-  post: (url: string, data: PostParams) => any;
-  put: (url: string, data: PostParams) => any;
-  delete: (url: string) => any;
+  get: (url: string, params?: {}) => Promise<MaybeAnyObj>;
+  post: (url: string, data: PostParams) => Promise<MaybeAnyObj>;
+  put: (url: string, data: PostParams) => Promise<MaybeAnyObj>;
+  delete: (url: string) => Promise<boolean>;
   authToken?: string;
   setNetworkError?: (error: DuluAxiosError) => void;
   clearNetworkError?: () => void;
@@ -60,7 +63,7 @@ const DuluAxios: IDuluAxios = {
   delete: async url => {
     try {
       console.log(`DELETE ${url}`);
-      const response = await axios({
+      await axios({
         method: "delete",
         url: url,
         data: {
@@ -68,9 +71,10 @@ const DuluAxios: IDuluAxios = {
         }
       });
       clearNetworkError();
-      return response.data;
+      return true;
     } catch (error) {
       handleError(error);
+      return false;
     }
   }
 };

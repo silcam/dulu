@@ -41,7 +41,7 @@ class ParticipantIntTest < ApplicationSystemTestCase
   end
 
   test "Add Activity" do
-    postpone_failure(Date.new(2019, 2, 15))
+    postpone_failure(Date.new(2019, 2, 28))
     # setup_show_page
     # find('h3', text: 'Activities').click_on('Edit')
     # select 'Genesis', from: 'activity_id'
@@ -52,7 +52,7 @@ class ParticipantIntTest < ApplicationSystemTestCase
   end
 
   test "Remove Activity" do
-    postpone_failure(Date.new(2019, 2, 15))
+    postpone_failure(Date.new(2019, 2, 28))
     # setup_show_page
     # find('h3', text: 'Activities').click_on('Edit')
     # find('tr', text: 'Ezra').click_on('Remove')

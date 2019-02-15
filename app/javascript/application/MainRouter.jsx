@@ -6,7 +6,6 @@ import PeopleContainer from "../components/people/PeopleContainer";
 import ReportsViewer from "../components/reports/ReportsViewer";
 import EventsPage from "../components/events/EventsPage";
 import RegionsBoard from "../components/regions/RegionsBoard";
-import ClustersBoard from "../components/clusters/ClustersBoard";
 import ParticipantPage from "../components/participants/ParticipantPage";
 import ActivityPage from "../components/activities/ActivityPage";
 import OrganizationsContainer from "../components/organizations/OrganizationsContainer";
@@ -14,6 +13,7 @@ import ProgramsRedirect from "../components/languages/ProgramsRedirect";
 import LanguagesContainer from "../components/languages/LanguagesContainer";
 import ErrorMessage from "./ErrorMessage";
 import axios from "axios";
+import ClustersContainer from "../components/clusters/ClustersContainer";
 
 class MainRouter extends React.Component {
   constructor(props) {
@@ -84,7 +84,7 @@ class MainRouter extends React.Component {
         <Route
           path="/clusters/:idOrAction?"
           render={({ history, match, location }) => (
-            <ClustersBoard
+            <ClustersContainer
               history={history}
               location={location}
               {...matchParamsForChild(match)}
@@ -188,8 +188,8 @@ function routeActionAndId(routeParams) {
 
 function matchParamsForChild(match) {
   let params = { basePath: match.url };
-  let id = parseInt(match.params.idOrAction);
-  if (id) params.id = match.params.idOrAction;
+  const id = parseInt(match.params.idOrAction);
+  if (id) params.id = id;
   else params.action = match.params.idOrAction;
   return params;
 }

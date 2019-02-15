@@ -6,8 +6,13 @@ import { addActivities } from "../../actions/activityActions";
 import { setLanguage } from "../../actions/languageActions";
 import { setCluster } from "../../actions/clusterActions";
 import ParticipantView from "./ParticipantView";
+import { AppState } from "../../reducers/clustersReducer";
 
-const mapStateToProps = (state, ownProps) => {
+interface IProps {
+  id: number;
+}
+
+const mapStateToProps = (state: AppState, ownProps: IProps) => {
   const participant = state.participants[ownProps.id];
   if (!participant) return { participant: participant };
   return {
@@ -15,12 +20,14 @@ const mapStateToProps = (state, ownProps) => {
     person: state.people.byId[participant.person_id],
     clusterLanguage: participant.cluster_id
       ? state.clusters.byId[participant.cluster_id]
-      : state.languages.byId[participant.language_id],
-    activities: Object.values(state.activities)
+      : state.languages.byId[participant.language_id!],
+    activities: (Object.values(state.activities) as {
+      participant_ids?: number[];
+    }[])
       .filter(
         activity =>
           activity.participant_ids &&
-          activity.participant_ids.includes(parseInt(ownProps.id))
+          activity.participant_ids.includes(ownProps.id)
       )
       .sort(Activity.compare)
   };

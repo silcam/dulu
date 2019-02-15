@@ -23,8 +23,10 @@ class Api::ClustersController < ApplicationController
 
   def update
     @cluster = Cluster.find(params[:id])
+    old_language_ids = @cluster.language_ids
     authorize! :update, @cluster
     @cluster.update(cluster_params)
+    @old_languages = Language.where(id: old_language_ids)
     render :show
   end
 

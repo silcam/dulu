@@ -1,23 +1,34 @@
 import React from "react";
-import PropTypes from "prop-types";
 import ProgressBarTranslation from "../shared/ProgressBarTranslation";
 import { Link } from "react-router-dom";
 import DeleteIcon from "../shared/icons/DeleteIcon";
 import { deleteFrom } from "../../util/arrayUtils";
 import SearchTextInput from "../shared/SearchTextInput";
 import InlineAddIcon from "../shared/icons/InlineAddIcon";
+import { IClusterInflated } from "../../models/Cluster";
+import { T } from "../../i18n/i18n";
+import { BasicModel } from "../../models/BasicModel";
+import { UpdaterFunc } from "../../models/TypeBucket";
 
-export default function ClusterLanguagesTable(props) {
+interface IProps {
+  cluster: IClusterInflated;
+  t: T;
+  editing?: boolean;
+  edit: () => void;
+  updateCluster: UpdaterFunc;
+}
+
+export default function ClusterLanguagesTable(props: IProps) {
   const cluster = props.cluster;
   const t = props.t;
 
-  const addLanguage = language => {
+  const addLanguage = (language: BasicModel) => {
     props.updateCluster({
       languages: [language].concat(props.cluster.languages)
     });
   };
 
-  const removeLanguage = id => {
+  const removeLanguage = (id: number) => {
     props.updateCluster({
       languages: deleteFrom(props.cluster.languages, id)
     });
@@ -35,11 +46,11 @@ export default function ClusterLanguagesTable(props) {
         <table>
           <tbody>
             <tr>
-              <td colSpan="2">
+              <td colSpan={2}>
                 <SearchTextInput
-                  queryPath="/api/languages/lang_search"
+                  queryPath="/api/languages/search"
                   text=""
-                  updateValue={language => addLanguage(language)}
+                  updateValue={(language: BasicModel) => addLanguage(language)}
                   placeholder={t("Add_language")}
                   addBox
                 />
@@ -72,7 +83,7 @@ export default function ClusterLanguagesTable(props) {
                   <Link to={`/languages/${language.id}`}>{language.name}</Link>
                 </td>
                 <td>
-                  {language.progress.Old_testament && (
+                  {language.progress && language.progress.Old_testament && (
                     <ProgressBarTranslation
                       progress={language.progress.Old_testament}
                       t={t}
@@ -80,7 +91,7 @@ export default function ClusterLanguagesTable(props) {
                   )}
                 </td>
                 <td>
-                  {language.progress.New_testament && (
+                  {language.progress && language.progress.New_testament && (
                     <ProgressBarTranslation
                       progress={language.progress.New_testament}
                       t={t}
@@ -95,11 +106,3 @@ export default function ClusterLanguagesTable(props) {
     </div>
   );
 }
-
-ClusterLanguagesTable.propTypes = {
-  cluster: PropTypes.object.isRequired,
-  t: PropTypes.func.isRequired,
-  editing: PropTypes.bool,
-  updateCluster: PropTypes.func.isRequired,
-  edit: PropTypes.func.isRequired
-};
