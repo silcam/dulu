@@ -9,7 +9,13 @@ import { T } from "../../i18n/i18n";
 import { BasicModel } from "../../models/BasicModel";
 import { ICluster } from "../../models/Cluster";
 import { History } from "history";
-import { IParticipantInflated } from "../../models/TypeBucket";
+import {
+  IParticipantInflated,
+  Adder,
+  IParticipant,
+  Setter
+} from "../../models/TypeBucket";
+import { ILanguage } from "../../models/language";
 
 /*
   Used by LanguagePageContent and ClusterPage!
@@ -24,10 +30,10 @@ interface IProps {
   can: { manage_participants?: boolean };
   basePath: string;
   history: History<any>;
-  addParticipants: (ptcpts: BasicModel[]) => void;
-  addPeople: (people: Person[]) => void;
-  setLanguage: (lang: BasicModel) => void;
-  setCluster: (cluster: ICluster) => void;
+  addParticipants: Adder<IParticipant>;
+  addPeople: Adder<Person>;
+  setLanguage: Setter<ILanguage>;
+  setCluster: Setter<ICluster>;
 }
 
 interface IState {

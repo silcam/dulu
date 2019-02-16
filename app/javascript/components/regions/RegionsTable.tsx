@@ -1,12 +1,20 @@
 import React from "react";
-import PropTypes from "prop-types";
 import { withRouter } from "react-router-dom";
 import Loading from "../shared/Loading";
 import style from "../shared/MasterDetail.css";
+import { T } from "../../i18n/i18n";
+import { IRegion } from "../../models/Region";
+import { RouteComponentProps } from "react-router";
+
+interface IProps extends RouteComponentProps {
+  t: T;
+  id?: number;
+  regions: IRegion[];
+}
 
 export default withRouter(RegionsTable);
 
-function RegionsTable(props) {
+function RegionsTable(props: IProps) {
   const regions = props.regions;
   const t = props.t;
 
@@ -30,12 +38,3 @@ function RegionsTable(props) {
     </div>
   );
 }
-
-RegionsTable.propTypes = {
-  regions: PropTypes.array.isRequired,
-  t: PropTypes.func.isRequired,
-  id: PropTypes.string,
-
-  // Supplied by withRouter
-  history: PropTypes.object.isRequired
-};

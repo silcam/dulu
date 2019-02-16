@@ -46,26 +46,16 @@ export interface IParticipantInflated extends IParticipant {
   language?: BasicModel;
 }
 
-export interface ILanguage {
-  id: number;
-  name: string;
-  cluster_id?: number;
-  progress?: {
-    Old_testament: any;
-    New_testament: any;
-  };
-}
-
 export interface AnyObj {
   [key: string]: any;
 }
 
-export interface GenericSet {
-  (item: AnyObj): void;
+export interface Setter<T> {
+  (item: T): void;
 }
 
-export interface GenericAdd {
-  (items: AnyObj[]): void;
+export interface Adder<T> {
+  (items: T[]): void;
 }
 
 export interface Deleter {

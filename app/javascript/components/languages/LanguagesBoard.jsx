@@ -92,7 +92,7 @@ LanguagesBoard.propTypes = {
   setNetworkError: PropTypes.func.isRequired,
   t: PropTypes.func.isRequired,
   action: PropTypes.string,
-  id: PropTypes.string,
+  id: PropTypes.number,
   basePath: PropTypes.string.isRequired,
   location: PropTypes.object.isRequired,
   history: PropTypes.object.isRequired,

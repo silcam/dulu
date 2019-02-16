@@ -11,12 +11,14 @@ import DuluAxios from "../../util/DuluAxios";
 import { BasicModel } from "../../models/BasicModel";
 import { ClusterAction } from "../../actions/clusterActions";
 import { ICluster } from "../../models/Cluster";
+import { History } from "history";
 
 interface IProps {
   t: T;
   id?: number;
   action: string;
   basePath: string;
+  history: History;
   clusters: ICluster[];
   setClusters: (clusters: BasicModel[]) => ClusterAction;
   setCluster: (cluster: BasicModel) => ClusterAction;
@@ -45,7 +47,9 @@ export default class ClustersBoard extends React.PureComponent<IProps, IState> {
     return (
       <div className={style.container}>
         <div className={style.headerBar}>
-          <h2>{t("Clusters")}</h2>
+          <h2>
+            <Link to="/clusters">{t("Clusters")}</Link>
+          </h2>
           {this.state.can.create && (
             <Link to="/clusters/new">
               <AddIcon iconSize="large" />
@@ -68,7 +72,11 @@ export default class ClustersBoard extends React.PureComponent<IProps, IState> {
           </div>
           <div className={style.detail}>
             {this.props.action == "new" && (
-              <NewClusterForm t={t} setCluster={this.props.setCluster} />
+              <NewClusterForm
+                t={t}
+                setCluster={this.props.setCluster}
+                history={this.props.history}
+              />
             )}
             {!!this.props.id && (
               <ClusterPageRouter

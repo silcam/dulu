@@ -2,11 +2,14 @@ import {
   SET_CLUSTERS,
   SET_CLUSTER,
   ADD_CLUSTERS,
-  ClusterAction
+  ClusterAction,
+  DELETE_CLUSTER
 } from "../actions/clusterActions";
 import Cluster, { ICluster } from "../models/Cluster";
 import { stdReducers } from "./stdReducers";
-import { ILanguage, IParticipant } from "../models/TypeBucket";
+import { IParticipant } from "../models/TypeBucket";
+import { LanguageState } from "./languagesReducer";
+import { RegionState } from "./regionsReducer";
 
 export interface ClusterState {
   list: number[];
@@ -15,7 +18,8 @@ export interface ClusterState {
 
 export interface AppState {
   clusters: ClusterState;
-  languages: { list: number[]; byId: { [id: string]: ILanguage } };
+  languages: LanguageState;
+  regions: RegionState;
   participants: { [id: string]: IParticipant };
   [otherState: string]: any;
 }
@@ -41,6 +45,8 @@ export default function clustersReducer(
       return stdClusterReducers.addItems(state, action.clusters as ICluster[]);
     case SET_CLUSTER:
       return stdClusterReducers.addItems(state, [action.cluster as ICluster]);
+    case DELETE_CLUSTER:
+      return stdClusterReducers.deleteItem(state, action.id!);
   }
   return state;
 }

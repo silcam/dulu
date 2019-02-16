@@ -1,10 +1,11 @@
 import { BasicModel } from "./BasicModel";
-import { ILanguage, IParticipant } from "./TypeBucket";
+import { IParticipant } from "./TypeBucket";
 import { AppState } from "../reducers/clustersReducer";
-import { languageCompare } from "./language";
+import Language, { ILanguage } from "./Language";
 
 export interface ICluster extends BasicModel {
   can: { update?: boolean; destroy?: boolean; manage_participants?: boolean };
+  region_id?: number;
 }
 
 export interface IClusterInflated extends ICluster {
@@ -33,9 +34,9 @@ function clusterParams(cluster: IClusterInflated) {
 function inflate(state: AppState, cluster: ICluster): IClusterInflated {
   return {
     ...cluster,
-    languages: Object.values(state.languages.byId)
+    languages: (Object.values(state.languages.byId) as ILanguage[])
       .filter(l => l.cluster_id == cluster.id)
-      .sort(languageCompare),
+      .sort(Language.compare),
     participants: Object.values(state.participants).filter(
       p => p.cluster_id == cluster.id
     )

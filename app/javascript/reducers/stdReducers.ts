@@ -1,12 +1,11 @@
 import update from "immutability-helper";
-import mergeOrSet from "../util/mergeOrSet";
 
 interface Item {
   id: number;
 }
 
 interface ById<T> {
-  [id: string]: T;
+  [id: string]: T | undefined;
 }
 
 interface State<T> {
@@ -62,12 +61,12 @@ function addItems<T extends Item>(
   };
 }
 
-function addItemsNoList<T extends Item>(state: ById<T>, items: T[]) {
-  return items.reduce(
-    (accumState, item) => update(accumState, { [item.id]: mergeOrSet(item) }),
-    state
-  );
-}
+// function addItemsNoList<T extends Item>(state: ById<T>, items: T[]) {
+//   return items.reduce(
+//     (accumState, item) => update(accumState, { [item.id]: mergeOrSet(item) }),
+//     state
+//   );
+// }
 
 // function addItem(state: State, item: Item, compare: CompareFunc) {
 //   let list = update(state.list, { $push: [item.id] });
@@ -102,7 +101,7 @@ function deleteItem<T extends Item>(state: State<T>, id: number): State<T> {
   if (index < 0) return state;
   return {
     list: update(state.list, { $splice: [[index, 1]] }) as number[],
-    byId: update(state.byId, { [id]: { $set: undefined } })
+    byId: update(state.byId, { $unset: [id] })
   };
 }
 
@@ -116,5 +115,5 @@ function sortList<T extends Item>(
   byId: ById<T>,
   compare: CompareFunc<T>
 ) {
-  list.sort((a, b) => compare(byId[a], byId[b]));
+  list.sort((a, b) => compare(byId[a]!, byId[b]!));
 }

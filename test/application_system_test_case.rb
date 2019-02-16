@@ -93,6 +93,11 @@ class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
     find('li', text: text).click
   end
 
+  def clear_search_input
+    fill_in('query', with: '')
+    find('input[name=query]').native.send_keys(:return)
+  end
+
   # def edit_editable_text_area(field, text, new_text)
   #   click_editable_text(text)
   #   within('.editableTextInput') do

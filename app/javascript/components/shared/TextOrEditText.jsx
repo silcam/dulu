@@ -21,5 +21,6 @@ TextOrEditText.propTypes = {
   // optional
   t: PropTypes.func, // required for validation
   label: PropTypes.string, // only displayed in edit mode
-  validateNotBlank: PropTypes.bool
+  validateNotBlank: PropTypes.bool,
+  name: PropTypes.string
 };

@@ -15,8 +15,12 @@ class Api::RegionsController < ApplicationController
 
   def update
     @region = Lpf.find(params[:id])
+    old_language_ids = @region.language_ids
+    old_cluster_ids = @region.cluster_ids
     authorize! :update, @region
     @region.update(region_params)
+    @old_languages = Language.where(id: old_language_ids)
+    @old_clusters = Cluster.where(id: old_cluster_ids)
     render :show
   end
 

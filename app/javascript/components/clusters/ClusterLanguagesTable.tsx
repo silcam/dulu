@@ -83,7 +83,7 @@ export default function ClusterLanguagesTable(props: IProps) {
                   <Link to={`/languages/${language.id}`}>{language.name}</Link>
                 </td>
                 <td>
-                  {language.progress && language.progress.Old_testament && (
+                  {language.progress.Old_testament && (
                     <ProgressBarTranslation
                       progress={language.progress.Old_testament}
                       t={t}
@@ -91,7 +91,7 @@ export default function ClusterLanguagesTable(props: IProps) {
                   )}
                 </td>
                 <td>
-                  {language.progress && language.progress.New_testament && (
+                  {language.progress.New_testament && (
                     <ProgressBarTranslation
                       progress={language.progress.New_testament}
                       t={t}

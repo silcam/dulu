@@ -7,11 +7,8 @@ import { addPeople } from "../../actions/peopleActions";
 import update from "immutability-helper";
 import { AppState } from "../../reducers/clustersReducer";
 import { ICluster } from "../../models/Cluster";
-import {
-  IParticipant,
-  ILanguage,
-  IParticipantInflated
-} from "../../models/TypeBucket";
+import { IParticipant, IParticipantInflated } from "../../models/TypeBucket";
+import { ILanguage } from "../../models/language";
 
 interface IProps {
   language?: ILanguage;

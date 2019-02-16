@@ -5,7 +5,6 @@ import Dashboard from "../components/dashboard/Dashboard";
 import PeopleContainer from "../components/people/PeopleContainer";
 import ReportsViewer from "../components/reports/ReportsViewer";
 import EventsPage from "../components/events/EventsPage";
-import RegionsBoard from "../components/regions/RegionsBoard";
 import ParticipantPage from "../components/participants/ParticipantPage";
 import ActivityPage from "../components/activities/ActivityPage";
 import OrganizationsContainer from "../components/organizations/OrganizationsContainer";
@@ -14,6 +13,7 @@ import LanguagesContainer from "../components/languages/LanguagesContainer";
 import ErrorMessage from "./ErrorMessage";
 import axios from "axios";
 import ClustersContainer from "../components/clusters/ClustersContainer";
+import RegionsContainer from "../components/regions/RegionsContainer";
 
 class MainRouter extends React.Component {
   constructor(props) {
@@ -72,7 +72,7 @@ class MainRouter extends React.Component {
         <Route
           path="/regions/:idOrAction?"
           render={({ history, match, location }) => (
-            <RegionsBoard
+            <RegionsContainer
               history={history}
               location={location}
               {...matchParamsForChild(match)}

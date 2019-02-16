@@ -1,22 +1,37 @@
 import React from "react";
-import PropTypes from "prop-types";
 import CommaList from "../shared/CommaList";
 import { Link } from "react-router-dom";
 import SearchTextInput from "../shared/SearchTextInput";
 import DeleteIcon from "../shared/icons/DeleteIcon";
 import { deleteFrom } from "../../util/arrayUtils";
+import { ICluster } from "../../models/Cluster";
+import { ILanguage } from "../../models/language";
+import { IRegionInflated } from "../../models/Region";
+import { T } from "../../i18n/i18n";
+import { AnyObj } from "../../models/TypeBucket";
 
-export default function ProgramList(props) {
-  const things = plural(props.thing);
-  const list = props.region[things];
+type ClusterLanguage = ICluster | ILanguage;
 
-  const addThing = thing => {
+interface IProps {
+  thing: "cluster" | "language";
+  region: IRegionInflated;
+  t: T;
+  editing?: boolean;
+  updateRegion: (r: AnyObj) => void;
+  noTrash?: boolean;
+}
+
+export default function ProgramList(props: IProps) {
+  const things = plural(props.thing) as ("clusters" | "languages");
+  const list = props.region[things] as ClusterLanguage[];
+
+  const addThing = (clusterLanguage: ClusterLanguage) => {
     props.updateRegion({
-      [things]: [thing].concat(list)
+      [things]: [clusterLanguage].concat(list)
     });
   };
 
-  const removeThing = id => {
+  const removeThing = (id: number) => {
     props.updateRegion({
       [things]: deleteFrom(list, id)
     });
@@ -30,7 +45,7 @@ export default function ProgramList(props) {
       <table>
         <tbody>
           <tr>
-            <td colSpan="2">
+            <td colSpan={2}>
               <SearchTextInput
                 queryPath={`/api/${things}/search`}
                 text=""
@@ -66,23 +81,14 @@ export default function ProgramList(props) {
   );
 }
 
-function url(things, id) {
+function url(things: string, id: number) {
   return `/${things}/${id}`;
 }
 
-function capitalize(word) {
+function capitalize(word: string) {
   return word.slice(0, 1).toUpperCase() + word.slice(1);
 }
 
-function plural(thing) {
+function plural(thing: string) {
   return thing + "s";
 }
-
-ProgramList.propTypes = {
-  editing: PropTypes.bool,
-  region: PropTypes.object.isRequired,
-  thing: PropTypes.string.isRequired,
-  t: PropTypes.func.isRequired,
-  updateRegion: PropTypes.func.isRequired,
-  noTrash: PropTypes.bool
-};

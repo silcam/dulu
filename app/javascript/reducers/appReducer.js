@@ -8,12 +8,14 @@ import activitiesReducer from "./activitiesReducer";
 import eventsReducer from "./eventsReducer";
 import clustersReducer, { ClusterState } from "./clustersReducer";
 import canReducer from "./canReducer";
+import regionsReducer from "./regionsReducer";
 
 // Find AppState interface in clustersReducer
 
 const appReducer = combineReducers({
   languages: languagesReducer,
   clusters: clustersReducer,
+  regions: regionsReducer,
   people: peopleReducer,
   organizations: organizationsReducer,
   organizationPeople: organizationPeopleReducer,

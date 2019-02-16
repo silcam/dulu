@@ -7,10 +7,12 @@ import { T } from "../../i18n/i18n";
 import { ICluster } from "../../models/Cluster";
 import { AnyObj, JSEvent } from "../../models/TypeBucket";
 import DuluAxios from "../../util/DuluAxios";
+import { History } from "history";
 
 interface IProps {
   t: T;
   setCluster: (c: ICluster) => void;
+  history: History;
 }
 
 interface IState {
@@ -42,8 +44,10 @@ export default class NewClusterForm extends React.PureComponent<
     });
     if (data) {
       this.props.setCluster(data.cluster);
+      this.props.history.push(`/clusters/${data.cluster.id}`);
+    } else {
+      this.setState({ saving: false });
     }
-    this.setState({ saving: false });
   };
 
   render() {
@@ -57,6 +61,7 @@ export default class NewClusterForm extends React.PureComponent<
             this.updateCluster({ name: e.target.value })
           }
           placeholder={t("Name")}
+          name="name"
           autoFocus
         />
         <SaveButton

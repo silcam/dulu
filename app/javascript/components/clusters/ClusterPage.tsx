@@ -11,16 +11,18 @@ import Cluster, { IClusterInflated, ICluster } from "../../models/Cluster";
 import { T } from "../../i18n/i18n";
 import { History } from "history";
 import Loading from "../shared/Loading";
-import { Deleter, GenericAdd } from "../../models/TypeBucket";
+import { Deleter, Adder, IParticipant } from "../../models/TypeBucket";
+import { Person } from "../../models/Person";
+import { ILanguage } from "../../models/language";
 
 interface IProps {
   id: number;
   cluster?: IClusterInflated;
   setCluster: (c: ICluster) => void;
   deleteCluster: Deleter;
-  addPeople: GenericAdd;
-  addParticipants: GenericAdd;
-  addLanguages: GenericAdd;
+  addPeople: Adder<Person>;
+  addParticipants: Adder<IParticipant>;
+  addLanguages: Adder<ILanguage>;
   t: T;
   basePath: string;
   history: History<any>;
@@ -83,6 +85,7 @@ export default class ClusterPage extends React.PureComponent<IProps, IState> {
       const data = await DuluAxios.delete(`/api/clusters/${this.props.id}`);
       if (data) {
         this.props.deleteCluster(this.props.id);
+        this.props.history.replace("/clusters");
       }
     }
   };
@@ -125,6 +128,7 @@ export default class ClusterPage extends React.PureComponent<IProps, IState> {
             value={cluster.name}
             updateValue={value => this.updateCluster({ name: value })}
             t={t}
+            name="name"
             validateNotBlank
           />
         </h2>
