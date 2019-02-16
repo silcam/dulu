@@ -6,6 +6,7 @@ import NetworkErrorAlerts from "./NetworkErrorAlerts";
 import DuluAxios, { DuluAxiosError } from "../util/DuluAxios";
 import update from "immutability-helper";
 import MainRouter from "./MainRouter";
+import I18nContext from "./I18nContext";
 
 interface IProps {}
 interface IState {
@@ -16,7 +17,7 @@ interface IState {
   serverError?: boolean;
 }
 
-interface User {
+export interface User {
   ui_language: Locale;
   view_prefs: any;
 }
@@ -68,22 +69,23 @@ export default class DuluApp extends React.Component<IProps, IState> {
 
   render() {
     return (
-      <div className={styles.container}>
-        <NavBar user={this.state.user} t={this.state.t} />
-        <NetworkErrorAlerts
-          t={this.state.t}
-          connectionError={this.state.connectionError}
-          serverError={this.state.serverError}
-          clearServerError={() => this.setState({ serverError: undefined })}
-        />
-        <MainRouter
-          t={this.state.t}
-          setNetworkError={this.setNetworkError}
-          user={this.state.user}
-          updateViewPrefs={this.updateViewPrefs}
-          updateLanguage={this.updateLanguage}
-        />
-      </div>
+      <I18nContext.Provider value={this.state.t}>
+        <div className={styles.container}>
+          <NavBar user={this.state.user} t={this.state.t} />
+          <NetworkErrorAlerts
+            t={this.state.t}
+            connectionError={this.state.connectionError}
+            serverError={this.state.serverError}
+            clearServerError={() => this.setState({ serverError: undefined })}
+          />
+          <MainRouter
+            t={this.state.t}
+            user={this.state.user}
+            updateViewPrefs={this.updateViewPrefs}
+            updateLanguage={this.updateLanguage}
+          />
+        </div>
+      </I18nContext.Provider>
     );
   }
 }

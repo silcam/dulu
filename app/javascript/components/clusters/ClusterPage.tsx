@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect, useContext } from "react";
 import EditActionBar from "../shared/EditActionBar";
 import deepcopy from "../../util/deepcopy";
 import TextOrEditText from "../shared/TextOrEditText";
@@ -8,12 +8,12 @@ import DuluAxios from "../../util/DuluAxios";
 import ClusterLanguagesTable from "./ClusterLanguagesTable";
 import ParticipantsContainer from "../languages/ParticipantsContainer";
 import Cluster, { IClusterInflated, ICluster } from "../../models/Cluster";
-import { T } from "../../i18n/i18n";
 import { History } from "history";
 import Loading from "../shared/Loading";
 import { Deleter, Adder, IParticipant } from "../../models/TypeBucket";
 import { Person } from "../../models/Person";
 import { ILanguage } from "../../models/language";
+import I18nContext from "../../application/I18nContext";
 
 interface IProps {
   id: number;
@@ -23,132 +23,124 @@ interface IProps {
   addPeople: Adder<Person>;
   addParticipants: Adder<IParticipant>;
   addLanguages: Adder<ILanguage>;
-  t: T;
   basePath: string;
   history: History<any>;
 }
 
-interface IState {
-  cluster?: IClusterInflated;
-  saving?: boolean;
-  editing?: boolean;
-  loading: boolean;
-}
+type MaybeIClusterInflated = IClusterInflated | undefined;
 
-export default class ClusterPage extends React.PureComponent<IProps, IState> {
-  state: IState = {
-    loading: true
-  };
+export default function ClusterPage(props: IProps) {
+  const t = useContext(I18nContext);
+  const [loading, setLoading] = useState(true);
+  const [editing, setEditing] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [draftCluster, setDraftCluster] = useState<MaybeIClusterInflated>(
+    undefined
+  );
 
-  async componentDidMount() {
-    const data = await DuluAxios.get(`/api/clusters/${this.props.id}`);
+  const fetchCluster = async () => {
+    const data = await DuluAxios.get(`/api/clusters/${props.id}`);
     if (data) {
-      this.props.addLanguages(data.languages);
-      this.props.setCluster(data.cluster);
+      props.addLanguages(data.languages);
+      props.setCluster(data.cluster);
+      setLoading(false);
     }
-    this.setState({ loading: false });
-  }
-
-  updateCluster = (mergeCluster: { [prop: string]: any }) => {
-    this.setState(prevState => ({
-      cluster: update(prevState.cluster, { $merge: mergeCluster })
-    }));
   };
 
-  edit = () =>
-    this.setState({ editing: true, cluster: deepcopy(this.props.cluster) });
+  useEffect(() => {
+    fetchCluster();
+  }, []);
 
-  save = async () => {
-    this.setState({ saving: true });
-    const data = await DuluAxios.put(`/api/clusters/${this.props.id}`, {
-      cluster: Cluster.clusterParams(this.state.cluster as IClusterInflated)
+  const updateCluster = (mergeCluster: { [prop: string]: any }) =>
+    setDraftCluster(update(draftCluster, { $merge: mergeCluster }));
+
+  const edit = () => {
+    setDraftCluster(deepcopy(props.cluster));
+    setEditing(true);
+  };
+
+  const cancelEdit = () => {
+    setEditing(false);
+    setDraftCluster(undefined);
+  };
+
+  const save = async () => {
+    setSaving(true);
+    const data = await DuluAxios.put(`/api/clusters/${props.id}`, {
+      cluster: Cluster.clusterParams(draftCluster as IClusterInflated)
     });
     if (data) {
-      this.props.addLanguages(data.languages);
-      this.props.setCluster(data.cluster);
-      this.setState({
-        editing: false,
-        cluster: undefined
-      });
+      props.addLanguages(data.languages);
+      props.setCluster(data.cluster);
+      cancelEdit();
     }
-    this.setState({ saving: false });
+    setSaving(false);
   };
 
-  delete = async () => {
+  const del = async () => {
     if (
       confirm(
-        this.props.t("confirm_delete_cluster", {
-          name: this.props.cluster!.name
+        t("confirm_delete_cluster", {
+          name: props.cluster!.name
         })
       )
     ) {
-      const data = await DuluAxios.delete(`/api/clusters/${this.props.id}`);
+      const data = await DuluAxios.delete(`/api/clusters/${props.id}`);
       if (data) {
-        this.props.deleteCluster(this.props.id);
-        this.props.history.replace("/clusters");
+        props.deleteCluster(props.id);
+        props.history.replace("/clusters");
       }
     }
   };
 
-  invalid = () => {
-    return this.state.cluster && this.state.cluster.name.length == 0;
+  const invalid = () => {
+    return draftCluster && draftCluster.name.length == 0;
   };
 
-  render() {
-    const cluster = this.state.editing
-      ? (this.state.cluster as IClusterInflated)
-      : this.props.cluster;
-    const t = this.props.t;
+  const cluster = editing ? draftCluster : props.cluster;
 
-    if (!cluster) return <Loading t={t} />;
+  if (!cluster) return <Loading t={t} />;
 
-    return (
-      <div>
-        {!this.state.loading && (
-          <EditActionBar
-            can={cluster.can}
-            editing={this.state.editing}
-            saveDisabled={this.invalid()}
-            saving={this.state.saving}
-            t={t}
-            edit={this.edit}
-            save={this.save}
-            delete={this.delete}
-            cancel={() => {
-              this.setState({
-                editing: false,
-                cluster: deepcopy(this.props.cluster)
-              });
-            }}
-          />
-        )}
-        <h2>
-          <TextOrEditText
-            editing={this.state.editing}
-            value={cluster.name}
-            updateValue={value => this.updateCluster({ name: value })}
-            t={t}
-            name="name"
-            validateNotBlank
-          />
-        </h2>
-        <ClusterLanguagesTable
-          cluster={cluster}
+  return (
+    <div>
+      {!loading && (
+        <EditActionBar
+          can={cluster.can}
+          editing={editing}
+          saveDisabled={invalid()}
+          saving={saving}
           t={t}
-          editing={this.state.editing}
-          updateCluster={this.updateCluster}
-          edit={this.edit}
+          edit={edit}
+          save={save}
+          delete={del}
+          cancel={cancelEdit}
         />
-        {!this.state.editing && (
-          <ParticipantsContainer
-            t={t}
-            cluster={cluster}
-            can={cluster.can}
-            basePath={this.props.basePath}
-            history={this.props.history}
-          />
-        )}
-      </div>
-    );
-  }
+      )}
+      <h2>
+        <TextOrEditText
+          editing={editing}
+          value={cluster.name}
+          updateValue={value => updateCluster({ name: value })}
+          t={t}
+          name="name"
+          validateNotBlank
+        />
+      </h2>
+      <ClusterLanguagesTable
+        cluster={cluster}
+        editing={editing}
+        updateCluster={updateCluster}
+        edit={edit}
+      />
+      {!editing && (
+        <ParticipantsContainer
+          cluster={cluster}
+          can={cluster.can}
+          basePath={props.basePath}
+          history={props.history}
+          t={t}
+        />
+      )}
+    </div>
+  );
 }

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import CommaList from "../shared/CommaList";
 import { Link } from "react-router-dom";
 import SearchTextInput from "../shared/SearchTextInput";
@@ -7,15 +7,14 @@ import { deleteFrom } from "../../util/arrayUtils";
 import { ICluster } from "../../models/Cluster";
 import { ILanguage } from "../../models/language";
 import { IRegionInflated } from "../../models/Region";
-import { T } from "../../i18n/i18n";
 import { AnyObj } from "../../models/TypeBucket";
+import I18nContext from "../../application/I18nContext";
 
 type ClusterLanguage = ICluster | ILanguage;
 
 interface IProps {
   thing: "cluster" | "language";
   region: IRegionInflated;
-  t: T;
   editing?: boolean;
   updateRegion: (r: AnyObj) => void;
   noTrash?: boolean;
@@ -24,6 +23,7 @@ interface IProps {
 export default function ProgramList(props: IProps) {
   const things = plural(props.thing) as ("clusters" | "languages");
   const list = props.region[things] as ClusterLanguage[];
+  const t = useContext(I18nContext);
 
   const addThing = (clusterLanguage: ClusterLanguage) => {
     props.updateRegion({
@@ -36,8 +36,6 @@ export default function ProgramList(props: IProps) {
       [things]: deleteFrom(list, id)
     });
   };
-
-  const t = props.t;
 
   return props.editing ? (
     <div>

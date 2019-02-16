@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { IRegion } from "../../models/Region";
 import style from "../shared/MasterDetail.css";
 import RegionsTable from "./RegionsTable";
@@ -7,16 +7,15 @@ import FlexSpacer from "../shared/FlexSpacer";
 import { Link } from "react-router-dom";
 import NewRegionForm from "./NewRegionForm";
 import RegionContainer from "./RegionContainer";
-import { T } from "../../i18n/i18n";
 import { Adder, Setter } from "../../models/TypeBucket";
 import API from "./RegionsAPI";
 import { Person } from "../../models/Person";
 import { ICluster } from "../../models/Cluster";
 import { ILanguage } from "../../models/language";
 import { History } from "history";
+import I18nContext from "../../application/I18nContext";
 
 interface IProps {
-  t: T;
   id?: number;
   basePath: string;
   history: History;
@@ -34,7 +33,7 @@ interface ICan {
 }
 
 export default function RegionsBoard(props: IProps) {
-  const t = props.t;
+  const t = useContext(I18nContext);
   const [can, setCan] = useState<ICan>({});
 
   useEffect(() => {
@@ -61,12 +60,11 @@ export default function RegionsBoard(props: IProps) {
       </div>
       <div className={style.masterDetailContainer}>
         <div className={style.master}>
-          <RegionsTable t={t} id={props.id} regions={props.regions} />
+          <RegionsTable id={props.id} regions={props.regions} />
         </div>
         <div className={style.detail}>
           {props.action == "new" && (
             <NewRegionForm
-              t={t}
               setRegion={props.setRegion}
               addPeople={props.addPeople}
               addClusters={props.addClusters}
@@ -78,7 +76,6 @@ export default function RegionsBoard(props: IProps) {
             <RegionContainer
               key={props.id}
               id={props.id}
-              t={t}
               history={props.history}
             />
           )}

@@ -8,10 +8,9 @@ import AddIcon from "../shared/icons/AddIcon";
 import NewClusterForm from "./NewClusterForm";
 import { T } from "../../i18n/i18n";
 import DuluAxios from "../../util/DuluAxios";
-import { BasicModel } from "../../models/BasicModel";
-import { ClusterAction } from "../../actions/clusterActions";
 import { ICluster } from "../../models/Cluster";
-import { History } from "history";
+import { History, Location } from "history";
+import { Adder, Setter } from "../../models/TypeBucket";
 
 interface IProps {
   t: T;
@@ -19,16 +18,17 @@ interface IProps {
   action: string;
   basePath: string;
   history: History;
+  location: Location;
   clusters: ICluster[];
-  setClusters: (clusters: BasicModel[]) => ClusterAction;
-  setCluster: (cluster: BasicModel) => ClusterAction;
+  setClusters: Adder<ICluster>;
+  setCluster: Setter<ICluster>;
 }
 
 interface IState {
   can: { create?: boolean };
 }
 
-export default class ClustersBoard extends React.PureComponent<IProps, IState> {
+export default class ClustersBoard extends React.Component<IProps, IState> {
   state: IState = {
     can: {}
   };

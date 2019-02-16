@@ -1,13 +1,12 @@
-import React from "react";
+import React, { useContext } from "react";
 import { withRouter } from "react-router-dom";
 import Loading from "../shared/Loading";
 import style from "../shared/MasterDetail.css";
-import { T } from "../../i18n/i18n";
 import { IRegion } from "../../models/Region";
 import { RouteComponentProps } from "react-router";
+import I18nContext from "../../application/I18nContext";
 
 interface IProps extends RouteComponentProps {
-  t: T;
   id?: number;
   regions: IRegion[];
 }
@@ -16,7 +15,7 @@ export default withRouter(RegionsTable);
 
 function RegionsTable(props: IProps) {
   const regions = props.regions;
-  const t = props.t;
+  const t = useContext(I18nContext);
 
   if (regions.length == 0) return <Loading t={t} />;
 

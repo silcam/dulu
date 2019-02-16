@@ -1,9 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import update from "immutability-helper";
 import { TextInputGroup } from "../shared/formGroup";
 import SaveButton from "../shared/SaveButton";
 import CancelButton from "../shared/CancelButton";
-import { T } from "../../i18n/i18n";
 import { IRegion } from "../../models/Region";
 import { JSEvent, Adder, Setter } from "../../models/TypeBucket";
 import { Person } from "../../models/Person";
@@ -11,9 +10,9 @@ import { ICluster } from "../../models/Cluster";
 import { ILanguage } from "../../models/language";
 import API from "./RegionsAPI";
 import { History } from "history";
+import I18nContext from "../../application/I18nContext";
 
 interface IProps {
-  t: T;
   addPeople: Adder<Person>;
   addClusters: Adder<ICluster>;
   addLanguages: Adder<ILanguage>;
@@ -26,6 +25,7 @@ type NewRegion = { name: string };
 export default function NewRegionForm(props: IProps) {
   const [saving, setSaving] = useState(false);
   const [region, setRegion] = useState({ name: "" });
+  const t = useContext(I18nContext);
 
   const updateRegion = (mergeRegion: NewRegion) =>
     setRegion(update(region, { $merge: mergeRegion }));
@@ -36,8 +36,6 @@ export default function NewRegionForm(props: IProps) {
     setSaving(false);
     if (newRegion) props.history.push(`/regions/${newRegion.id}`);
   };
-
-  const t = props.t;
 
   return (
     <div>

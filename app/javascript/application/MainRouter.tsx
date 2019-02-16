@@ -1,6 +1,10 @@
-import React from "react";
-import PropTypes from "prop-types";
-import { Switch, Route, withRouter } from "react-router-dom";
+import React, { ErrorInfo } from "react";
+import {
+  Switch,
+  Route,
+  withRouter,
+  RouteComponentProps
+} from "react-router-dom";
 import Dashboard from "../components/dashboard/Dashboard";
 import PeopleContainer from "../components/people/PeopleContainer";
 import ReportsViewer from "../components/reports/ReportsViewer";
@@ -14,9 +18,23 @@ import ErrorMessage from "./ErrorMessage";
 import axios from "axios";
 import ClustersContainer from "../components/clusters/ClustersContainer";
 import RegionsContainer from "../components/regions/RegionsContainer";
+import { T, Locale } from "../i18n/i18n";
+import { AnyObj } from "../models/TypeBucket";
+import { User } from "./DuluApp";
 
-class MainRouter extends React.Component {
-  constructor(props) {
+interface IProps extends RouteComponentProps {
+  t: T;
+  updateViewPrefs: (p: AnyObj) => void;
+  user: User;
+  updateLanguage: (l: Locale) => void;
+}
+
+interface IState {
+  hasError?: boolean;
+}
+
+class MainRouter extends React.Component<IProps, IState> {
+  constructor(props: IProps) {
     super(props);
     this.state = {};
   }
@@ -25,7 +43,7 @@ class MainRouter extends React.Component {
     return { hasError: true };
   }
 
-  componentDidCatch(error, info) {
+  componentDidCatch(error: Error, info: ErrorInfo) {
     const content = {
       error: error.toString(),
       stack: error.stack,
@@ -36,7 +54,7 @@ class MainRouter extends React.Component {
     axios.post("/api/errors", { content: content });
   }
 
-  componentDidUpdate(prevProps, prevState) {
+  componentDidUpdate(_prevProps: IProps, prevState: IState) {
     if (prevState.hasError) this.setState({ hasError: false });
   }
 
@@ -53,7 +71,7 @@ class MainRouter extends React.Component {
               location={location}
               {...matchParamsForChild(match)}
               t={this.props.t}
-              setNetworkError={this.props.setNetworkError}
+              setNetworkError={() => {}}
               viewPrefs={this.props.user.view_prefs}
               updateViewPrefs={this.props.updateViewPrefs}
             />
@@ -64,20 +82,17 @@ class MainRouter extends React.Component {
           render={({ match }) => (
             <ProgramsRedirect
               t={this.props.t}
-              setNetworkError={this.props.setNetworkError}
+              setNetworkError={() => {}}
               match={match}
             />
           )}
         />
         <Route
           path="/regions/:idOrAction?"
-          render={({ history, match, location }) => (
+          render={({ history, match }) => (
             <RegionsContainer
               history={history}
-              location={location}
               {...matchParamsForChild(match)}
-              t={this.props.t}
-              setNetworkError={this.props.setNetworkError}
             />
           )}
         />
@@ -89,7 +104,6 @@ class MainRouter extends React.Component {
               location={location}
               {...matchParamsForChild(match)}
               t={this.props.t}
-              setNetworkError={this.props.setNetworkError}
             />
           )}
         />
@@ -101,7 +115,7 @@ class MainRouter extends React.Component {
               {...routeActionAndId(match.params)}
               t={this.props.t}
               updateLanguage={this.props.updateLanguage}
-              setNetworkError={this.props.setNetworkError}
+              setNetworkError={() => {}}
             />
           )}
         />
@@ -112,17 +126,14 @@ class MainRouter extends React.Component {
               history={history}
               {...routeActionAndId(match.params)}
               t={this.props.t}
-              setNetworkError={this.props.setNetworkError}
+              setNetworkError={() => {}}
             />
           )}
         />
         <Route
           path="/events"
           render={() => (
-            <EventsPage
-              t={this.props.t}
-              setNetworkError={this.props.setNetworkError}
-            />
+            <EventsPage t={this.props.t} setNetworkError={() => {}} />
           )}
         />
         <Route
@@ -131,7 +142,7 @@ class MainRouter extends React.Component {
             <ReportsViewer
               key={match.params.id || ""}
               t={this.props.t}
-              setNetworkError={this.props.setNetworkError}
+              setNetworkError={() => {}}
               id={match.params.id}
               history={history}
               location={location}
@@ -144,7 +155,7 @@ class MainRouter extends React.Component {
             <ParticipantPage
               t={this.props.t}
               history={history}
-              setNetworkError={this.props.setNetworkError}
+              setNetworkError={() => {}}
               id={match.params.id}
             />
           )}
@@ -155,7 +166,6 @@ class MainRouter extends React.Component {
             <ActivityPage
               t={this.props.t}
               history={history}
-              setNetworkError={this.props.setNetworkError}
               id={match.params.id}
             />
           )}
@@ -167,7 +177,7 @@ class MainRouter extends React.Component {
               t={this.props.t}
               viewPrefs={this.props.user.view_prefs}
               updateViewPrefs={this.props.updateViewPrefs}
-              setNetworkError={this.props.setNetworkError}
+              setNetworkError={() => {}}
             />
           )}
         />
@@ -178,7 +188,7 @@ class MainRouter extends React.Component {
 
 export default withRouter(MainRouter);
 
-function routeActionAndId(routeParams) {
+function routeActionAndId(routeParams: AnyObj) {
   if (routeParams.actionOrId && routeParams.id)
     return { action: routeParams.actionOrId, id: routeParams.id };
   if (parseInt(routeParams.actionOrId))
@@ -186,20 +196,12 @@ function routeActionAndId(routeParams) {
   return { action: routeParams.actionOrId };
 }
 
-function matchParamsForChild(match) {
-  let params = { basePath: match.url };
+function matchParamsForChild(
+  match: any
+): { basePath: string; id?: number; action: string } {
+  let params: any = { basePath: match.url };
   const id = parseInt(match.params.idOrAction);
   if (id) params.id = id;
   else params.action = match.params.idOrAction;
   return params;
 }
-
-MainRouter.propTypes = {
-  t: PropTypes.func.isRequired,
-  setNetworkError: PropTypes.func.isRequired,
-  updateViewPrefs: PropTypes.func.isRequired,
-  user: PropTypes.object.isRequired,
-  updateLanguage: PropTypes.func.isRequired,
-  // From withRouter
-  history: PropTypes.object.isRequired
-};

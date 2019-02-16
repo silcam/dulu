@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import ProgressBarTranslation from "../shared/ProgressBarTranslation";
 import { Link } from "react-router-dom";
 import DeleteIcon from "../shared/icons/DeleteIcon";
@@ -6,13 +6,12 @@ import { deleteFrom } from "../../util/arrayUtils";
 import SearchTextInput from "../shared/SearchTextInput";
 import InlineAddIcon from "../shared/icons/InlineAddIcon";
 import { IClusterInflated } from "../../models/Cluster";
-import { T } from "../../i18n/i18n";
 import { BasicModel } from "../../models/BasicModel";
 import { UpdaterFunc } from "../../models/TypeBucket";
+import I18nContext from "../../application/I18nContext";
 
 interface IProps {
   cluster: IClusterInflated;
-  t: T;
   editing?: boolean;
   edit: () => void;
   updateCluster: UpdaterFunc;
@@ -20,7 +19,7 @@ interface IProps {
 
 export default function ClusterLanguagesTable(props: IProps) {
   const cluster = props.cluster;
-  const t = props.t;
+  const t = useContext(I18nContext);
 
   const addLanguage = (language: BasicModel) => {
     props.updateCluster({

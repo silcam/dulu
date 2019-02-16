@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import deepcopy from "../../util/deepcopy";
 import EditActionBar from "../shared/EditActionBar";
 import TextOrEditText from "../shared/TextOrEditText";
@@ -8,7 +8,6 @@ import { IRegionInflated, IRegion } from "../../models/Region";
 import ProgramList from "./ProgramList";
 import P from "../shared/P";
 import { Link } from "react-router-dom";
-import { T } from "../../i18n/i18n";
 import { Adder, Setter, Deleter, AnyObj } from "../../models/TypeBucket";
 import { Person, fullName } from "../../models/Person";
 import { ICluster } from "../../models/Cluster";
@@ -16,9 +15,9 @@ import { ILanguage } from "../../models/language";
 import Loading from "../shared/Loading";
 import API from "./RegionsAPI";
 import { History } from "history";
+import I18nContext from "../../application/I18nContext";
 
 interface IProps {
-  t: T;
   id: number;
   region?: IRegionInflated;
   addPeople: Adder<Person>;
@@ -35,6 +34,7 @@ export default function RegionPage(props: IProps) {
   );
   const [editing, setEditing] = useState(false);
   const [saving, setSaving] = useState(false);
+  const t = useContext(I18nContext);
 
   useEffect(() => {
     API.fetch(props.id, props);
@@ -63,15 +63,12 @@ export default function RegionPage(props: IProps) {
   };
 
   const del = async () => {
-    if (
-      confirm(props.t("confirm_delete_region", { name: props.region!.name }))
-    ) {
+    if (confirm(t("confirm_delete_region", { name: props.region!.name }))) {
       const success = await API.delete(props.id, props.deleteRegion);
       if (success) props.history.replace("/regions");
     }
   };
 
-  const t = props.t;
   const region = editing ? draftRegion : props.region;
 
   if (!region) return <Loading t={t} />;
@@ -124,14 +121,12 @@ export default function RegionPage(props: IProps) {
         editing={editing}
         region={region}
         thing="cluster"
-        t={t}
         updateRegion={updateRegion}
       />
       <ProgramList
         editing={editing}
         region={region}
         thing="language"
-        t={t}
         updateRegion={updateRegion}
       />
     </div>

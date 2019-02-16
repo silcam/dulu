@@ -19,7 +19,11 @@ export default function ClusterParticipantPage(props: IProps) {
       <h4>
         <Link to={props.basePath}>{`< ${cluster.name}`}</Link>
       </h4>
-      <ParticipantContainer {...props} id={props.participantId} />
+      <ParticipantContainer
+        {...props}
+        id={props.participantId}
+        setNetworkError={() => {}}
+      />
     </div>
   );
 }
