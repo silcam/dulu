@@ -4,7 +4,7 @@ import {
   ADD_LANGUAGES,
   LanguageAction
 } from "../actions/languageActions";
-import { ILanguage } from "../models/language";
+import { ILanguage } from "../models/Language";
 import { stdReducers } from "./stdReducers";
 import Language from "../models/Language";
 
@@ -29,7 +29,7 @@ export default function languagesReducer(
 ) {
   switch (action.type) {
     case SET_LANGUAGES:
-      return stdLanguageReducers.setList(action.languages!);
+      return stdLanguageReducers.setList(state, action.languages!);
     case ADD_LANGUAGES:
       return stdLanguageReducers.addItems(state, action.languages!);
     case SET_LANGUAGE:

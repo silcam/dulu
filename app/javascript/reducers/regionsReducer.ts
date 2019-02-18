@@ -7,7 +7,7 @@ export interface RegionState {
   byId: { [id: string]: IRegion | undefined };
 }
 
-const emptyState = {
+const emptyState: RegionState = {
   list: [],
   byId: {}
 };
@@ -20,7 +20,7 @@ export default function regionsReducer(
 ): RegionState {
   switch (action.type) {
     case RegionActionTypes.SetRegions:
-      return stdRegionReducers.setList(action.regions!);
+      return stdRegionReducers.setList(state, action.regions!);
     case RegionActionTypes.SetRegion:
       return stdRegionReducers.addItems(state, [action.region!]);
     case RegionActionTypes.DeleteRegion:

@@ -18,19 +18,25 @@ import PersonEventsContainer from "./PersonEventsContainer";
 // import styles from "./PersonPage.css";
 
 export default class PersonPage extends React.PureComponent {
-  state = {
-    person: deepcopy(this.props.person)
-  };
+  state = {};
 
   async componentDidMount() {
     try {
       const data = await DuluAxios.get(`/api/people/${this.props.id}`);
       this.props.setPerson(data.person);
-      this.setState({ person: data.person });
     } catch (error) {
       this.props.setNetworkError(error);
     }
   }
+
+  edit = () =>
+    this.setState({
+      editing: true,
+      edited: false,
+      person: deepcopy(this.props.person)
+    });
+
+  cancelEdit = () => this.setState({ editing: false, person: undefined });
 
   updatePerson = mergePerson => {
     this.setState(prevState => ({
@@ -46,7 +52,7 @@ export default class PersonPage extends React.PureComponent {
         person: this.state.person
       });
       this.props.setPerson(data.person);
-      this.setStateAfterSave(data.person);
+      this.setStateAfterSave();
       this.updateLanguageIfNecessary();
     } catch (error) {
       this.props.setNetworkError({ tryAgain: this.save });
@@ -63,9 +69,9 @@ export default class PersonPage extends React.PureComponent {
 
   deletePerson = async () => {
     try {
-      await DuluAxios.delete(`/api/people/${this.state.person.id}`);
+      await DuluAxios.delete(`/api/people/${this.props.person.id}`);
       this.props.history.push("/people");
-      this.props.deletePerson(this.state.person.id);
+      this.props.deletePerson(this.props.person.id);
     } catch (error) {
       this.props.setNetworkError(error);
     }
@@ -80,13 +86,13 @@ export default class PersonPage extends React.PureComponent {
     );
   };
 
-  setStateAfterSave = person => {
+  setStateAfterSave = () => {
     this.setState({
       editing: false,
       edited: false,
       saving: false,
       savedChanges: true,
-      person: person
+      person: undefined
     });
   };
 
@@ -101,9 +107,9 @@ export default class PersonPage extends React.PureComponent {
   };
 
   render() {
-    const person = this.state.person;
+    const person = this.state.editing ? this.state.person : this.props.person;
 
-    if (!person || !person.loaded) return <Loading t={this.props.t} />;
+    if (!person) return <Loading t={this.props.t} />;
 
     return (
       <div>
@@ -112,16 +118,10 @@ export default class PersonPage extends React.PureComponent {
           editing={this.state.editing}
           saveDisabled={!this.state.edited}
           t={this.props.t}
-          edit={() => this.setState({ editing: true })}
+          edit={this.edit}
           delete={() => this.setState({ deleting: true })}
           save={this.save}
-          cancel={() =>
-            this.setState({
-              editing: false,
-              edited: false,
-              person: deepcopy(this.props.person)
-            })
-          }
+          cancel={this.cancelEdit}
         />
 
         {this.state.deleting && (

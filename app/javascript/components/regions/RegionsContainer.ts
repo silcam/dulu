@@ -1,6 +1,6 @@
 import { connect } from "react-redux";
 import * as regionActionCreators from "../../actions/regionActions";
-import { AppState } from "../../reducers/clustersReducer";
+import { AppState } from "../../reducers/appReducer";
 import { IRegion } from "../../models/Region";
 import { addPeople } from "../../actions/peopleActions";
 import { addLanguages } from "../../actions/languageActions";

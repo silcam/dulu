@@ -6,7 +6,7 @@ import { addActivities } from "../../actions/activityActions";
 import { setLanguage } from "../../actions/languageActions";
 import { setCluster } from "../../actions/clusterActions";
 import ParticipantView from "./ParticipantView";
-import { AppState } from "../../reducers/clustersReducer";
+import { AppState } from "../../reducers/appReducer";
 
 interface IProps {
   id: number;

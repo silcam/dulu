@@ -1,4 +1,14 @@
 import intCompare from "./intCompare";
+// import { IActivity } from "../models/TypeBucket";
+
+// interface SortOptions {
+//   option: string;
+//   asc?: boolean;
+// }
+
+// interface SortFunction<T> {
+//   (a: T, b: T): number;
+// }
 
 function sortActivities(sort, activities, sortFunctions) {
   activities.sort(sortFunctions[sort.option.toLowerCase()]);

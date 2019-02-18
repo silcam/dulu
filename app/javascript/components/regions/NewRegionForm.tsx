@@ -7,7 +7,7 @@ import { IRegion } from "../../models/Region";
 import { JSEvent, Adder, Setter } from "../../models/TypeBucket";
 import { Person } from "../../models/Person";
 import { ICluster } from "../../models/Cluster";
-import { ILanguage } from "../../models/language";
+import { ILanguage } from "../../models/Language";
 import API from "./RegionsAPI";
 import { History } from "history";
 import I18nContext from "../../application/I18nContext";

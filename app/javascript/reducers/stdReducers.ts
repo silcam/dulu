@@ -22,19 +22,31 @@ export function stdReducers<T extends Item>(
   compare: CompareFunc<T>
 ) {
   return {
-    setList: (items: T[]) => setList(items, emptyItem),
+    setList: (state: State<T>, items: T[]) => setList(state, items, emptyItem),
     addItems: (state: State<T>, items: T[]) =>
       addItems(state, items, emptyItem, compare),
     deleteItem: deleteItem
   };
 }
 
-function setList<T extends Item>(items: T[], emptyItem: T): State<T> {
+export function stdReducersNoList<T extends Item>(emptyItem: T) {
+  return {
+    addItems: (state: ById<T>, items: T[]) =>
+      addItemsNoList(state, items, emptyItem),
+    deleteItem: deleteItemNoList
+  };
+}
+
+function setList<T extends Item>(
+  state: State<T>,
+  items: T[],
+  emptyItem: T
+): State<T> {
   return {
     list: items.map(item => item.id),
     byId: items.reduce(
       (accum, item) => {
-        accum[item.id] = updatedItem(accum, item, emptyItem);
+        accum[item.id] = updatedItem(state.byId, item, emptyItem);
         return accum;
       },
       {} as ById<T>
@@ -61,12 +73,19 @@ function addItems<T extends Item>(
   };
 }
 
-// function addItemsNoList<T extends Item>(state: ById<T>, items: T[]) {
-//   return items.reduce(
-//     (accumState, item) => update(accumState, { [item.id]: mergeOrSet(item) }),
-//     state
-//   );
-// }
+function addItemsNoList<T extends Item>(
+  state: ById<T>,
+  items: T[],
+  emptyItem: T
+) {
+  return items.reduce(
+    (accumState, item) =>
+      update(accumState, {
+        [item.id]: { $set: updatedItem(state, item, emptyItem) }
+      }),
+    state
+  );
+}
 
 // function addItem(state: State, item: Item, compare: CompareFunc) {
 //   let list = update(state.list, { $push: [item.id] });
@@ -103,6 +122,10 @@ function deleteItem<T extends Item>(state: State<T>, id: number): State<T> {
     list: update(state.list, { $splice: [[index, 1]] }) as number[],
     byId: update(state.byId, { $unset: [id] })
   };
+}
+
+function deleteItemNoList<T extends Item>(state: ById<T>, id: number): ById<T> {
+  return update(state, { $unset: [id] });
 }
 
 function updatedItem<T extends Item>(byId: ById<T>, item: T, emptyItem: T) {

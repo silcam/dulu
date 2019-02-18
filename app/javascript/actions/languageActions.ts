@@ -1,4 +1,4 @@
-import { ILanguage } from "../models/language";
+import { ILanguage } from "../models/Language";
 
 export const SET_LANGUAGES = "SET_LANGUAGES";
 export const SET_LANGUAGE = "SET_LANGUAGE";

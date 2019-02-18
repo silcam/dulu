@@ -1,9 +1,4 @@
-/**
- * Converts date string into format like 1 Jul 2018
- * @param {String} date in the format YYYY-MM-DD or YYYY-MM or YYYY
- * @param {Array} monthNames Translated month names/abbreviations
- */
-function dateString(date, monthNames) {
+function dateString(date: string, monthNames: string[]) {
   if (!date) return "";
 
   if (date.length == 4) return date;

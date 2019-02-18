@@ -3,43 +3,46 @@ import {
   addEvents,
   addEventsForLanguage
 } from "../../../app/javascript/actions/eventActions";
+import { emptyEvent } from "../../../app/javascript/reducers/eventsReducer";
 
-const newYears = {
+const makeEvent = obj => Object.assign(emptyEvent(), obj);
+
+const newYears = makeEvent({
   id: 101,
   start_date: "2019-01-01",
   end_date: "2019-01-01",
   language_ids: [888]
-};
-const jan = {
+});
+const jan = makeEvent({
   id: 202,
   start_date: "2019-01",
   end_date: "2019-01",
   language_ids: [888]
-};
-const school = {
+});
+const school = makeEvent({
   id: 404,
   start_date: "2019-01-07",
   end_date: "2019-06-01",
   language_ids: [888]
-};
-const dec = {
+});
+const dec = makeEvent({
   id: 303,
   start_date: "2018-12",
   end_date: "2018-12",
   language_ids: [888]
-};
-const valentines = {
+});
+const valentines = makeEvent({
   id: 505,
   start_date: "2019-02-14",
   end_date: "2019-02-14",
   language_ids: []
-};
-const twentyTwenty = {
+});
+const twentyTwenty = makeEvent({
   id: 606,
   start_date: "2020",
   end_date: "2020",
   language_ids: [888]
-};
+});
 
 test("addEventsByMonth", () => {
   const initialState = {

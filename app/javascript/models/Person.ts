@@ -1,9 +1,16 @@
 import baseCompare from "../util/baseCompare";
+import { IParticipant } from "./TypeBucket";
 
 export interface Person {
   id: number;
   first_name: string;
   last_name: string;
+  can: { update?: boolean; destroy?: boolean };
+  roles: string[];
+  email: string;
+  ui_language: string;
+  email_pref: string;
+  participants: IParticipant[]; // TODO - remove
 }
 
 export function personCompare(a: Person, b: Person): number {

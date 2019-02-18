@@ -1,5 +1,5 @@
-import update from "immutability-helper";
+// import update from "immutability-helper";
 
-export default function mergeOrSet(newItem) {
-  return item => (item ? update(item, { $merge: newItem }) : newItem);
-}
+// export default function mergeOrSet(newItem) {
+//   return item => (item ? update(item, { $merge: newItem }) : newItem);
+// }

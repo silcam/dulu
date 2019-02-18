@@ -60,7 +60,7 @@ class MainRouter extends React.Component<IProps, IState> {
 
   render() {
     return this.state.hasError ? (
-      <ErrorMessage t={this.props.t} />
+      <ErrorMessage />
     ) : (
       <Switch>
         <Route

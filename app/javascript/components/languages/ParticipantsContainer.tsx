@@ -5,10 +5,10 @@ import ParticipantsTable from "./ParticipantsTable";
 import { setCluster } from "../../actions/clusterActions";
 import { addPeople } from "../../actions/peopleActions";
 import update from "immutability-helper";
-import { AppState } from "../../reducers/clustersReducer";
+import { AppState } from "../../reducers/appReducer";
 import { ICluster } from "../../models/Cluster";
 import { IParticipant, IParticipantInflated } from "../../models/TypeBucket";
-import { ILanguage } from "../../models/language";
+import { ILanguage } from "../../models/Language";
 
 interface IProps {
   language?: ILanguage;

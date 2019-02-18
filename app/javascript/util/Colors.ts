@@ -10,20 +10,19 @@ const Colors = {
   dark_blue: "#21618C",
   light_purple: "#946BA4",
   purple: "#6C3483",
-  grey: "#d3d4d9"
-};
-
-Colors.foreground = bgColor => {
-  switch (bgColor) {
-    case Colors.red:
-    case Colors.orange:
-    case Colors.dark_green:
-    case Colors.dark_blue:
-    case Colors.light_purple:
-    case Colors.purple:
-      return "#FFFFFF";
+  grey: "#d3d4d9",
+  foreground: (bgColor: string) => {
+    switch (bgColor) {
+      case Colors.red:
+      case Colors.orange:
+      case Colors.dark_green:
+      case Colors.dark_blue:
+      case Colors.light_purple:
+      case Colors.purple:
+        return "#FFFFFF";
+    }
+    return "#000000";
   }
-  return "#000000";
 };
 
 export default Colors;

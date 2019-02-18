@@ -1,4 +1,4 @@
-function selectOptionsFromObject(object) {
+function selectOptionsFromObject(object: { [key: string]: string }) {
   return Object.keys(object).map(key => {
     return {
       value: key,

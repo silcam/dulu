@@ -1,7 +1,7 @@
 import { Person } from "./Person";
 import { ICluster } from "./Cluster";
-import { ILanguage } from "./language";
-import { AppState } from "../reducers/clustersReducer";
+import { ILanguage } from "./Language";
+import { AppState } from "../reducers/appReducer";
 
 export interface IRegion {
   id: number;

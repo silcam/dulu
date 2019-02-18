@@ -11,7 +11,7 @@ import { Link } from "react-router-dom";
 import { Adder, Setter, Deleter, AnyObj } from "../../models/TypeBucket";
 import { Person, fullName } from "../../models/Person";
 import { ICluster } from "../../models/Cluster";
-import { ILanguage } from "../../models/language";
+import { ILanguage } from "../../models/Language";
 import Loading from "../shared/Loading";
 import API from "./RegionsAPI";
 import { History } from "history";
@@ -41,7 +41,7 @@ export default function RegionPage(props: IProps) {
   }, [props.id]);
 
   const edit = () => {
-    setDraftRegion(deepcopy(props.region));
+    setDraftRegion(deepcopy(props.region!));
     setEditing(true);
   };
 

@@ -3,7 +3,7 @@ import Region, { IRegionInflated, IRegion } from "../../models/Region";
 import { Adder, Setter, Deleter, AnyObj } from "../../models/TypeBucket";
 import { Person } from "../../models/Person";
 import { ICluster } from "../../models/Cluster";
-import { ILanguage } from "../../models/language";
+import { ILanguage } from "../../models/Language";
 
 interface FetchRegionActions {
   addPeople: Adder<Person>;

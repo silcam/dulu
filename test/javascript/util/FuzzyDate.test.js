@@ -28,13 +28,13 @@ const cases = {
 test("Compare!", () => {
   for (let i = 0; i < cases.zero.length; ++i) {
     let testCase = cases.zero[i];
-    expect(FuzzyDate.compare(testCase[0], testCase[1])).toBe(0);
-    expect(FuzzyDate.compare(testCase[1], testCase[0])).toBe(0);
+    expect(FuzzyDate.compareStr(testCase[0], testCase[1])).toBe(0);
+    expect(FuzzyDate.compareStr(testCase[1], testCase[0])).toBe(0);
   }
   for (let i = 0; i < cases.negative.length; ++i) {
     let testCase = cases.negative[i];
-    expect(FuzzyDate.compare(testCase[0], testCase[1])).toBeLessThan(0);
-    expect(FuzzyDate.compare(testCase[1], testCase[0])).toBeGreaterThan(0);
+    expect(FuzzyDate.compareStr(testCase[0], testCase[1])).toBeLessThan(0);
+    expect(FuzzyDate.compareStr(testCase[1], testCase[0])).toBeGreaterThan(0);
   }
 });
 

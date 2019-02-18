@@ -15,7 +15,7 @@ import {
   IParticipant,
   Setter
 } from "../../models/TypeBucket";
-import { ILanguage } from "../../models/language";
+import { ILanguage } from "../../models/Language";
 
 /*
   Used by LanguagePageContent and ClusterPage!

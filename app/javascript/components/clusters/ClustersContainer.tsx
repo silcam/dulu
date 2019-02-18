@@ -1,7 +1,7 @@
 import { connect } from "react-redux";
 import * as clusterActionCreators from "../../actions/clusterActions";
 import ClustersBoard from "./ClustersBoard";
-import { AppState } from "../../reducers/clustersReducer";
+import { AppState } from "../../reducers/appReducer";
 import { ICluster } from "../../models/Cluster";
 
 const mapStateToProps = (state: AppState) => ({

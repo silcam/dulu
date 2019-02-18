@@ -71,3 +71,19 @@ export interface JSEvent {
 export interface UpdaterFunc {
   (arg: AnyObj): void;
 }
+
+export interface IActivity {
+  id: number;
+  workshops: {};
+}
+
+export interface IOrganization {
+  id: number;
+  name: string;
+}
+
+export interface IOrganizationPerson {
+  id: number;
+  person_id: number;
+  organization_id: number;
+}

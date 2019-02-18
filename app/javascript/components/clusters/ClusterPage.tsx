@@ -12,7 +12,7 @@ import { History } from "history";
 import Loading from "../shared/Loading";
 import { Deleter, Adder, IParticipant } from "../../models/TypeBucket";
 import { Person } from "../../models/Person";
-import { ILanguage } from "../../models/language";
+import { ILanguage } from "../../models/Language";
 import I18nContext from "../../application/I18nContext";
 
 interface IProps {
@@ -55,7 +55,7 @@ export default function ClusterPage(props: IProps) {
     setDraftCluster(update(draftCluster, { $merge: mergeCluster }));
 
   const edit = () => {
-    setDraftCluster(deepcopy(props.cluster));
+    setDraftCluster(deepcopy(props.cluster!));
     setEditing(true);
   };
 

@@ -1,7 +1,7 @@
 import { connect } from "react-redux";
 import * as clusterActionCreators from "../../actions/clusterActions";
 import ClusterPage from "./ClusterPage";
-import { AppState } from "../../reducers/clustersReducer";
+import { AppState } from "../../reducers/appReducer";
 import Cluster, { IClusterInflated } from "../../models/Cluster";
 import { addPeople } from "../../actions/peopleActions";
 import { addParticipants } from "../../actions/participantActions";

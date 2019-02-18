@@ -5,7 +5,7 @@ import SearchTextInput from "../shared/SearchTextInput";
 import DeleteIcon from "../shared/icons/DeleteIcon";
 import { deleteFrom } from "../../util/arrayUtils";
 import { ICluster } from "../../models/Cluster";
-import { ILanguage } from "../../models/language";
+import { ILanguage } from "../../models/Language";
 import { IRegionInflated } from "../../models/Region";
 import { AnyObj } from "../../models/TypeBucket";
 import I18nContext from "../../application/I18nContext";

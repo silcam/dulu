@@ -1,5 +1,5 @@
-import en from "./en.js";
-import fr from "./fr.js";
+import en from "./en";
+import fr from "./fr";
 
 // This is totally naive, fyi
 

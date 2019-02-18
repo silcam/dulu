@@ -1,6 +1,6 @@
 import { connect } from "react-redux";
 import ClusterParticipantPage from "./ClusterParticipantPage";
-import { AppState } from "../../reducers/clustersReducer";
+import { AppState } from "../../reducers/appReducer";
 
 interface IProps {
   id: number;

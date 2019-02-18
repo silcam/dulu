@@ -11,7 +11,7 @@ import { Adder, Setter } from "../../models/TypeBucket";
 import API from "./RegionsAPI";
 import { Person } from "../../models/Person";
 import { ICluster } from "../../models/Cluster";
-import { ILanguage } from "../../models/language";
+import { ILanguage } from "../../models/Language";
 import { History } from "history";
 import I18nContext from "../../application/I18nContext";
 

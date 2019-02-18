@@ -1,4 +1,4 @@
-function intCompare(a, b) {
+function intCompare(a: number, b: number) {
   return a - b;
 }
 
