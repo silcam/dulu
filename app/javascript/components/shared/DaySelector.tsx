@@ -1,7 +1,15 @@
-import React from "react";
-import PropTypes from "prop-types";
+import React, { useContext } from "react";
+import I18nContext from "../../application/I18nContext";
 
-export default function DaySelector(props) {
+interface IProps {
+  handleInput: (e: { target: { name: any; value: any } }) => void;
+  value: number | string;
+  maxValue: number;
+  name: string;
+}
+
+export default function DaySelector(props: IProps) {
+  const t = useContext(I18nContext);
   const name = props.name || "day";
   const maxValue = props.maxValue || 31;
 
@@ -23,16 +31,8 @@ export default function DaySelector(props) {
       value={String(props.value)}
       onChange={props.handleInput}
     >
-      <option value="">{props.t("Day")}</option>
+      <option value="">{t("Day")}</option>
       {optionsArray}
     </select>
   );
 }
-
-DaySelector.propTypes = {
-  handleInput: PropTypes.func.isRequired,
-  t: PropTypes.func.isRequired,
-  value: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-  maxValue: PropTypes.number,
-  name: PropTypes.string
-};

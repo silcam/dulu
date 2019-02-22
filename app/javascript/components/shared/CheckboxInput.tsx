@@ -1,8 +1,15 @@
 import React from "react";
-import PropTypes from "prop-types";
 import styles from "./CheckboxInput.css";
+import { JSEventHandler } from "../../models/TypeBucket";
 
-export default function CheckBoxInput(props) {
+interface IProps {
+  name?: string;
+  value: boolean;
+  handleCheck: JSEventHandler;
+  text: string;
+}
+
+export default function CheckBoxInput(props: IProps) {
   return (
     <label className={styles.checkbox}>
       <input
@@ -16,10 +23,3 @@ export default function CheckBoxInput(props) {
     </label>
   );
 }
-
-CheckBoxInput.propTypes = {
-  name: PropTypes.string,
-  value: PropTypes.bool,
-  handleCheck: PropTypes.func,
-  text: PropTypes.string
-};

@@ -1,6 +1,14 @@
 import React from "react";
+import { JSEventHandler } from "../../models/TypeBucket";
 
-function Checkbox(props) {
+interface IProps {
+  checked: boolean;
+  handleChange: JSEventHandler;
+  value: string;
+  label: string;
+}
+
+function Checkbox(props: IProps) {
   return (
     <label className="checkBoxLabel">
       <input

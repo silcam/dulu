@@ -1,6 +1,7 @@
 import { BasicModel } from "./BasicModel";
 import { ICluster } from "./Cluster";
 import { Person } from "./Person";
+import { SyntheticEvent } from "react";
 
 // interface BaseParticipant {
 //   id: number;
@@ -65,7 +66,12 @@ export interface Deleter {
 export interface JSEvent {
   target: {
     value: any;
+    target: any;
   };
+}
+
+export interface JSEventHandler {
+  (e: SyntheticEvent): void;
 }
 
 export interface UpdaterFunc {

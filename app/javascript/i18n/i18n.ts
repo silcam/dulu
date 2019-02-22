@@ -9,7 +9,7 @@ const strings = {
 };
 
 export interface T {
-  (key: string, subs?: any, locale?: string): string;
+  (key: string, subs?: any, locale?: string): any;
   locale?: Locale;
 }
 
