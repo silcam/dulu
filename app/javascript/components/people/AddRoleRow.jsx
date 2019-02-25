@@ -13,15 +13,13 @@ export default class AddRoleRow extends React.PureComponent {
   }
 
   addRole = async () => {
-    try {
-      const data = await DuluAxios.post("/api/person_roles", {
-        person_id: this.props.person.id,
-        role: this.state.role
-      });
+    const data = await DuluAxios.post("/api/person_roles", {
+      person_id: this.props.person.id,
+      role: this.state.role
+    });
+    if (data) {
       this.props.replaceRoles(data.roles);
       this.props.cancel();
-    } catch (error) {
-      this.props.setNetworkError({ tryAgain: this.addRole });
     }
   };
 
@@ -58,6 +56,6 @@ AddRoleRow.propTypes = {
   person: PropTypes.object.isRequired,
   t: PropTypes.func.isRequired,
   replaceRoles: PropTypes.func.isRequired,
-  setNetworkError: PropTypes.func.isRequired,
+
   cancel: PropTypes.func.isRequired
 };

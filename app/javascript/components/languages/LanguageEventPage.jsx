@@ -17,7 +17,6 @@ export default class LanguageEventPage extends React.PureComponent {
         <EventContainer
           id={this.props.eventId}
           t={t}
-          setNetworkError={this.props.setNetworkError}
           history={this.props.history}
         />
       </div>
@@ -30,6 +29,6 @@ LanguageEventPage.propTypes = {
   language: PropTypes.object.isRequired,
   eventId: PropTypes.string.isRequired,
   basePath: PropTypes.string.isRequired,
-  setNetworkError: PropTypes.func.isRequired,
+  
   history: PropTypes.object.isRequired
 };

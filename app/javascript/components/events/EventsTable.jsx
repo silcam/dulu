@@ -24,8 +24,8 @@ export default class EventsTable extends React.PureComponent {
             end_year: this.props.eventsBackTo - 1
           }
         : { start_year: lastYear() };
-    try {
-      const data = await DuluAxios.get(this.props.eventsUrl, period);
+    const data = await DuluAxios.get(this.props.eventsUrl, period);
+    if (data) {
       this.props.addPeople(data.people);
       this.props.addClusters(data.clusters);
       this.props.addLanguages(data.languages);
@@ -34,11 +34,8 @@ export default class EventsTable extends React.PureComponent {
         start: data.startYear ? { year: data.startYear } : undefined,
         end: period.end_year ? { year: period.end_year } : undefined
       });
-    } catch (error) {
-      this.props.setNetworkError(error);
-    } finally {
-      this.setState({ loadingMore: false });
     }
+    this.setState({ loadingMore: false });
   };
 
   yearGroups = () => {
@@ -113,7 +110,6 @@ export default class EventsTable extends React.PureComponent {
 EventsTable.propTypes = {
   events: PropTypes.array.isRequired,
   t: PropTypes.func.isRequired,
-  setNetworkError: PropTypes.func.isRequired,
   basePath: PropTypes.string,
   history: PropTypes.object.isRequired,
   addPeople: PropTypes.func.isRequired,

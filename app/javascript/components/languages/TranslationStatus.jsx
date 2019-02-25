@@ -6,13 +6,11 @@ export default class TranslationStatus extends React.Component {
   state = { pubs: [] };
 
   async componentDidMount() {
-    try {
-      const data = await DuluAxios.get(
-        `/api/languages/${this.props.language.id}/pubs`
-      );
+    const data = await DuluAxios.get(
+      `/api/languages/${this.props.language.id}/pubs`
+    );
+    if (data) {
       this.setState({ pubs: data.pubs });
-    } catch (error) {
-      this.props.setNetworkError(error);
     }
   }
 
@@ -53,6 +51,5 @@ function pubText(pub, t) {
 
 TranslationStatus.propTypes = {
   language: PropTypes.object.isRequired,
-  t: PropTypes.func.isRequired,
-  setNetworkError: PropTypes.func.isRequired
+  t: PropTypes.func.isRequired
 };

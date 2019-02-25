@@ -71,7 +71,6 @@ export default class LanguagesBoard extends React.PureComponent {
                 key={this.props.id}
                 id={this.props.id}
                 t={this.props.t}
-                setNetworkError={this.props.setNetworkError}
                 basePath={this.props.basePath}
                 location={this.props.location}
                 history={this.props.history}
@@ -89,7 +88,7 @@ export default class LanguagesBoard extends React.PureComponent {
 LanguagesBoard.propTypes = {
   languages: PropTypes.array.isRequired,
   setLanguages: PropTypes.func.isRequired,
-  setNetworkError: PropTypes.func.isRequired,
+  
   t: PropTypes.func.isRequired,
   action: PropTypes.string,
   id: PropTypes.number,

@@ -22,6 +22,5 @@ LanguageActivityPage.propTypes = {
   t: PropTypes.func.isRequired,
   language: PropTypes.object.isRequired,
   activityId: PropTypes.string.isRequired,
-  basePath: PropTypes.string.isRequired,
-  setNetworkError: PropTypes.func.isRequired
+  basePath: PropTypes.string.isRequired
 };

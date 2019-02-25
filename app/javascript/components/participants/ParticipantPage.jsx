@@ -13,11 +13,10 @@ export default class ParticipantPage extends React.PureComponent {
 
   async componentDidMount() {
     console.error(`Need to deprecate ParticipantPage!!!`);
-    try {
-      const data = await DuluAxios.get(`/api/participants/${this.props.id}`);
+    const data = await DuluAxios.get(`/api/participants/${this.props.id}`);
+    if (data) {
       this.props.history.replace(routeTo(data.participant));
-    } catch (error) {
-      this.props.setNetworkError(error);
+    } else {
       this.setState({ loading: false });
     }
   }
@@ -37,6 +36,6 @@ function routeTo(participant) {
 ParticipantPage.propTypes = {
   t: PropTypes.func.isRequired,
   history: PropTypes.object.isRequired,
-  setNetworkError: PropTypes.func.isRequired,
+
   id: PropTypes.string.isRequired
 };

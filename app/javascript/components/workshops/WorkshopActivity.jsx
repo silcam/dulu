@@ -58,16 +58,14 @@ export default class WorkshopActivity extends React.PureComponent {
   };
 
   deleteWorkshop = async id => {
-    try {
-      await DuluAxios.delete(`/api/workshops/${id}`);
+    const success = await DuluAxios.delete(`/api/workshops/${id}`);
+    if (success) {
       const i = this.props.activity.workshops.findIndex(ws => ws.id === id);
       this.props.setActivity(
         update(this.props.activity, {
           workshops: { $splice: [[i, 1]] }
         })
       );
-    } catch (error) {
-      this.props.setNetworkError(error);
     }
   };
 
@@ -88,7 +86,6 @@ export default class WorkshopActivity extends React.PureComponent {
                   handleUpdatedWorkshop={this.handleUpdatedWorkshop}
                   deleteWorkshop={this.deleteWorkshop}
                   displayDelete={this.props.activity.workshops.length > 1}
-                  setNetworkError={this.props.setNetworkError}
                   t={this.props.t}
                   language={this.props.language}
                 />
@@ -101,7 +98,6 @@ export default class WorkshopActivity extends React.PureComponent {
             handleNewWorkshop={this.handleNewWorkshop}
             activity_id={this.props.activity.id}
             t={this.props.t}
-            setNetworkError={this.props.setNetworkError}
           />
         )}
       </div>
@@ -112,7 +108,7 @@ export default class WorkshopActivity extends React.PureComponent {
 WorkshopActivity.propTypes = {
   activity: PropTypes.object.isRequired,
   t: PropTypes.func.isRequired,
-  setNetworkError: PropTypes.func.isRequired,
+
   language: PropTypes.object.isRequired,
   setActivity: PropTypes.func.isRequired
 };

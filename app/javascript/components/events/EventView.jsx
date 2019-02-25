@@ -25,12 +25,10 @@ export default class EventView extends React.PureComponent {
   }
 
   async componentDidMount() {
-    try {
-      const data = await DuluAxios.get(`/api/events/${this.props.id}`);
+    const data = await DuluAxios.get(`/api/events/${this.props.id}`);
+    if (data) {
       this.addEventFromData(data);
       this.setState({ loading: false });
-    } catch (error) {
-      this.props.setNetworkError(error);
     }
   }
 
@@ -76,18 +74,17 @@ export default class EventView extends React.PureComponent {
       this.state.event,
       this.state.eventBackup
     );
-    try {
-      const data = await DuluAxios.put(`/api/events/${this.props.event.id}`, {
-        event: event
-      });
+    const data = await DuluAxios.put(`/api/events/${this.props.event.id}`, {
+      event: event
+    });
+    if (data) {
       this.addEventFromData(data);
       this.setState({
         event: undefined,
         editing: false,
         saving: false
       });
-    } catch (error) {
-      this.props.setNetworkError(error);
+    } else {
       this.setState({ saving: false });
     }
   };
@@ -98,9 +95,9 @@ export default class EventView extends React.PureComponent {
         this.props.t("confirm_delete_event", { name: this.props.event.name })
       )
     ) {
-      try {
-        const event = this.props.event;
-        await DuluAxios.delete(`/api/events/${this.props.id}`);
+      const event = this.props.event;
+      const success = await DuluAxios.delete(`/api/events/${this.props.id}`);
+      if (success) {
         this.props.history.goBack();
         this.props.deleteEvent(this.props.id);
         if (event.workshop_id)
@@ -108,8 +105,6 @@ export default class EventView extends React.PureComponent {
             event.workshop_activity_id,
             event.workshop_id
           );
-      } catch (error) {
-        this.props.setNetworkError(error);
       }
     }
   };
@@ -209,7 +204,6 @@ export default class EventView extends React.PureComponent {
 EventView.propTypes = {
   t: PropTypes.func.isRequired,
   id: PropTypes.string.isRequired,
-  setNetworkError: PropTypes.func.isRequired,
   event: PropTypes.object,
   eventLanguages: PropTypes.array,
   eventClusters: PropTypes.array,

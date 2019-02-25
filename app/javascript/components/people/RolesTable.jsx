@@ -11,14 +11,12 @@ export default class RolesTable extends React.PureComponent {
   addRole = async () => {};
 
   deleteRole = async role => {
-    try {
-      const data = await DuluAxios.post(`/api/person_roles/finish`, {
-        person_id: this.props.person.id,
-        role: role
-      });
+    const data = await DuluAxios.post(`/api/person_roles/finish`, {
+      person_id: this.props.person.id,
+      role: role
+    });
+    if (data) {
       this.props.replaceRoles(data.roles);
-    } catch (error) {
-      this.props.setNetworkError({ tryAgain: () => this.deleteRole(role) });
     }
   };
 
@@ -69,7 +67,6 @@ export default class RolesTable extends React.PureComponent {
                 person={person}
                 t={t}
                 replaceRoles={this.props.replaceRoles}
-                setNetworkError={this.props.setNetworkError}
                 cancel={() => this.setState({ addingNew: false })}
               />
             )}
@@ -83,6 +80,5 @@ export default class RolesTable extends React.PureComponent {
 RolesTable.propTypes = {
   t: PropTypes.func.isRequired,
   person: PropTypes.object.isRequired,
-  replaceRoles: PropTypes.func.isRequired,
-  setNetworkError: PropTypes.func.isRequired
+  replaceRoles: PropTypes.func.isRequired
 };

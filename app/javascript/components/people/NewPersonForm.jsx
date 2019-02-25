@@ -78,14 +78,13 @@ export default class NewPersonForm extends React.Component {
 
   save = async () => {
     this.setState({ saving: true });
-    try {
-      const data = await DuluAxios.post("/api/people", {
-        person: this.state.person
-      });
+    const data = await DuluAxios.post("/api/people", {
+      person: this.state.person
+    });
+    if (data) {
       this.props.addPerson(data.person);
       this.props.history.push(`/people/${data.person.id}`);
-    } catch (error) {
-      this.props.setNetworkError(error);
+    } else {
       this.setState({ saving: false });
     }
   };
@@ -186,6 +185,6 @@ NewPersonForm.propTypes = {
   people: PropTypes.array.isRequired,
   t: PropTypes.func.isRequired,
   addPerson: PropTypes.func.isRequired,
-  setNetworkError: PropTypes.func.isRequired,
+
   history: PropTypes.object.isRequired
 };

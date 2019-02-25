@@ -12,11 +12,9 @@ export default class SavedReports extends React.PureComponent {
 
   async componentDidMount() {
     if (!this.props.savedReports) {
-      try {
-        const data = await DuluAxios.get("/api/reports");
+      const data = await DuluAxios.get("/api/reports");
+      if (data) {
         this.props.setSavedReports(data.reports);
-      } catch (error) {
-        this.props.setNetworkError(error);
       }
     }
   }
@@ -59,6 +57,5 @@ export default class SavedReports extends React.PureComponent {
 SavedReports.propTypes = {
   t: PropTypes.func.isRequired,
   savedReports: PropTypes.array,
-  setSavedReports: PropTypes.func.isRequired,
-  setNetworkError: PropTypes.func.isRequired
+  setSavedReports: PropTypes.func.isRequired
 };

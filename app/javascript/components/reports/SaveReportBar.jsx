@@ -16,16 +16,15 @@ class _SaveReportBar extends React.PureComponent {
 
   save = async () => {
     this.setState({ saving: true });
-    try {
-      const data = await DuluAxios.post("/api/reports", {
-        report: {
-          name: this.state.name,
-          report: Report.params(this.props.report)
-        }
-      });
+    const data = await DuluAxios.post("/api/reports", {
+      report: {
+        name: this.state.name,
+        report: Report.params(this.props.report)
+      }
+    });
+    if (data) {
       this.props.history.push(`/reports/${data.report.id}`);
-    } catch (error) {
-      this.props.setNetworkError(error);
+    } else {
       this.setState({ saving: false });
     }
   };
@@ -62,7 +61,7 @@ _SaveReportBar.propTypes = {
   t: PropTypes.func.isRequired,
   cancel: PropTypes.func.isRequired,
   report: PropTypes.object.isRequired,
-  setNetworkError: PropTypes.func.isRequired,
+
   history: PropTypes.object.isRequired // Supplied by withRouter()
 };
 

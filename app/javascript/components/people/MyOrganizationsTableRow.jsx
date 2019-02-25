@@ -12,28 +12,24 @@ export default class MyOrganizationsTableRow extends React.PureComponent {
   state = {};
 
   updateOrganizationPerson = async organization_person => {
-    try {
-      const data = await DuluAxios.put(
-        `/api/organization_people/${organization_person.id}`,
-        {
-          organization_person: organization_person
-        }
-      );
+    const data = await DuluAxios.put(
+      `/api/organization_people/${organization_person.id}`,
+      {
+        organization_person: organization_person
+      }
+    );
+    if (data) {
       this.props.setOrganizationPerson(data.organization_person);
       this.setState({ editing: false });
-    } catch (error) {
-      this.props.setNetworkError(error);
     }
   };
 
   deleteOrganizationPerson = async () => {
-    try {
-      await DuluAxios.delete(
-        `/api/organization_people/${this.props.org_person.id}`
-      );
+    const success = await DuluAxios.delete(
+      `/api/organization_people/${this.props.org_person.id}`
+    );
+    if (success) {
       this.props.deleteOrganizationPerson(this.props.org_person.id);
-    } catch (error) {
-      this.props.setNetworkError(error);
     }
   };
 
@@ -90,7 +86,6 @@ export default class MyOrganizationsTableRow extends React.PureComponent {
 }
 
 MyOrganizationsTableRow.propTypes = {
-  setNetworkError: PropTypes.func.isRequired,
   org_person: PropTypes.object.isRequired,
   organization: PropTypes.object.isRequired,
   t: PropTypes.func.isRequired,

@@ -16,14 +16,12 @@ export default class OrganizationsBoard extends React.PureComponent {
   };
 
   async componentDidMount() {
-    try {
-      const data = await DuluAxios.get("/api/organizations");
+    const data = await DuluAxios.get("/api/organizations");
+    if (data) {
       this.setState({
         can: data.can
       });
       this.props.setOrganizations(data.organizations);
-    } catch (error) {
-      this.props.setNetworkError(error);
     }
   }
 
@@ -64,7 +62,6 @@ export default class OrganizationsBoard extends React.PureComponent {
               <NewOrganizationForm
                 t={this.props.t}
                 addOrganization={this.props.addOrganization}
-                setNetworkError={this.props.setNetworkError}
                 history={this.props.history}
               />
             )}
@@ -73,7 +70,6 @@ export default class OrganizationsBoard extends React.PureComponent {
                 key={this.props.id}
                 id={this.props.id}
                 t={this.props.t}
-                setNetworkError={this.props.setNetworkError}
                 history={this.props.history}
               />
             )}
@@ -88,7 +84,7 @@ export default class OrganizationsBoard extends React.PureComponent {
 OrganizationsBoard.propTypes = {
   setOrganizations: PropTypes.func.isRequired,
   addOrganization: PropTypes.func.isRequired,
-  setNetworkError: PropTypes.func.isRequired,
+
   organizations: PropTypes.array.isRequired,
   id: PropTypes.string,
   action: PropTypes.string,

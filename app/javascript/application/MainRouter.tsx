@@ -71,7 +71,6 @@ class MainRouter extends React.Component<IProps, IState> {
               location={location}
               {...matchParamsForChild(match)}
               t={this.props.t}
-              setNetworkError={() => {}}
               viewPrefs={this.props.user.view_prefs}
               updateViewPrefs={this.props.updateViewPrefs}
             />
@@ -80,11 +79,7 @@ class MainRouter extends React.Component<IProps, IState> {
         <Route
           path="/programs/:idOrAction?"
           render={({ match }) => (
-            <ProgramsRedirect
-              t={this.props.t}
-              setNetworkError={() => {}}
-              match={match}
-            />
+            <ProgramsRedirect t={this.props.t} match={match} />
           )}
         />
         <Route
@@ -115,7 +110,6 @@ class MainRouter extends React.Component<IProps, IState> {
               {...routeActionAndId(match.params)}
               t={this.props.t}
               updateLanguage={this.props.updateLanguage}
-              setNetworkError={() => {}}
             />
           )}
         />
@@ -126,23 +120,16 @@ class MainRouter extends React.Component<IProps, IState> {
               history={history}
               {...routeActionAndId(match.params)}
               t={this.props.t}
-              setNetworkError={() => {}}
             />
           )}
         />
-        <Route
-          path="/events"
-          render={() => (
-            <EventsPage t={this.props.t} setNetworkError={() => {}} />
-          )}
-        />
+        <Route path="/events" render={() => <EventsPage t={this.props.t} />} />
         <Route
           path="/reports/:id?"
           render={({ match, history, location }) => (
             <ReportsViewer
               key={match.params.id || ""}
               t={this.props.t}
-              setNetworkError={() => {}}
               id={match.params.id}
               history={history}
               location={location}
@@ -155,7 +142,6 @@ class MainRouter extends React.Component<IProps, IState> {
             <ParticipantPage
               t={this.props.t}
               history={history}
-              setNetworkError={() => {}}
               id={match.params.id}
             />
           )}
@@ -177,7 +163,6 @@ class MainRouter extends React.Component<IProps, IState> {
               t={this.props.t}
               viewPrefs={this.props.user.view_prefs}
               updateViewPrefs={this.props.updateViewPrefs}
-              setNetworkError={() => {}}
             />
           )}
         />

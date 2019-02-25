@@ -54,7 +54,6 @@ export default function LanguagePageContent(props) {
       <LanguageEventsContainer
         language={props.language}
         t={props.t}
-        setNetworkError={props.setNetworkError}
         basePath={`/languages/${props.language.id}`}
         history={props.history}
         domain={props.tab}
@@ -64,7 +63,6 @@ export default function LanguagePageContent(props) {
         domain={props.tab}
         language={props.language}
         can={props.language.can}
-        setNetworkError={props.setNetworkError}
         basePath={`/languages/${props.language.id}`}
         history={props.history}
       />
@@ -79,6 +77,6 @@ LanguagePageContent.propTypes = {
   language: PropTypes.object.isRequired,
   tab: PropTypes.string.isRequired,
   location: PropTypes.object.isRequired,
-  setNetworkError: PropTypes.func.isRequired,
+  
   history: PropTypes.object.isRequired
 };

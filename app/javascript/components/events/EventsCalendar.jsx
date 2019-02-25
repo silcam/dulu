@@ -44,18 +44,13 @@ export default class EventsCalendar extends React.PureComponent {
   };
 
   getEvents = async period => {
-    try {
-      const data = await DuluAxios.get(
-        "/api/events",
-        periodToGetParams(period)
-      );
+    const data = await DuluAxios.get("/api/events", periodToGetParams(period));
+    if (data) {
       this.props.addPeople(data.people);
       this.props.addLanguages(data.languages);
       this.props.addClusters(data.clusters);
       this.props.setEventsCan(data.can);
       this.props.addEvents(data.events, period);
-    } catch (error) {
-      this.props.setNetworkError(error);
     }
   };
 
@@ -85,7 +80,6 @@ export default class EventsCalendar extends React.PureComponent {
             <NewEventFormContainer
               t={t}
               cancelForm={() => this.setState({ addingNew: false })}
-              setNetworkError={this.props.setNetworkError}
               replaceWorkshop={() => {}}
             />
           )}
@@ -112,7 +106,6 @@ export default class EventsCalendar extends React.PureComponent {
 
 EventsCalendar.propTypes = {
   t: PropTypes.func.isRequired,
-  setNetworkError: PropTypes.func.isRequired,
   year: PropTypes.string.isRequired,
   month: PropTypes.string.isRequired,
   addEvents: PropTypes.func.isRequired,

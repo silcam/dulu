@@ -7,22 +7,18 @@ export default class IfAllowed extends React.PureComponent {
   async componentDidMount() {
     const props = this.props;
     if (props.can[props.permission] === undefined) {
-      try {
-        const type = props.permission.slice(0, props.permission.indexOf(":"));
-        const doWhat = props.permission.slice(
-          props.permission.indexOf(":") + 1
-        );
-        const result = await DuluAxios.get("/api/permissions/check", {
-          type: type,
-          doWhat: doWhat
-        });
+      const type = props.permission.slice(0, props.permission.indexOf(":"));
+      const doWhat = props.permission.slice(props.permission.indexOf(":") + 1);
+      const result = await DuluAxios.get("/api/permissions/check", {
+        type: type,
+        doWhat: doWhat
+      });
+      if (result) {
         props.setCan(
           update(props.can, {
             [props.permission]: { $set: result }
           })
         );
-      } catch (error) {
-        props.setNetworkError(error);
       }
     }
   }
@@ -36,6 +32,5 @@ export default class IfAllowed extends React.PureComponent {
 IfAllowed.propTypes = {
   can: PropTypes.object.isRequired,
   permission: PropTypes.string.isRequired, // Format "Event:create"
-  setCan: PropTypes.func.isRequired,
-  setNetworkError: PropTypes.func.isRequired
+  setCan: PropTypes.func.isRequired
 };

@@ -45,18 +45,17 @@ export default class NewEventForm extends React.PureComponent {
 
   save = async () => {
     this.setState({ saveInProgress: true });
-    try {
-      const data = await DuluAxios.post("/api/events", {
-        event: Event.prepareEventParams(Event.ensureEndDate(this.state.event))
-      });
+    const data = await DuluAxios.post("/api/events", {
+      event: Event.prepareEventParams(Event.ensureEndDate(this.state.event))
+    });
+    if (data) {
       this.props.addLanguages(data.languages);
       this.props.addClusters(data.clusters);
       this.props.addPeople(data.people);
       this.props.addActivities(data.workshops_activities);
       this.props.setEvent(data.event);
       this.props.cancelForm();
-    } catch (error) {
-      this.props.setNetworkError(error);
+    } else {
       this.setState({ saveInProgress: false });
     }
   };
@@ -127,7 +126,6 @@ export default class NewEventForm extends React.PureComponent {
 
 NewEventForm.propTypes = {
   t: PropTypes.func.isRequired,
-  setNetworkError: PropTypes.func.isRequired,
   cancelForm: PropTypes.func.isRequired,
   startEvent: PropTypes.object,
   setEvent: PropTypes.func.isRequired,

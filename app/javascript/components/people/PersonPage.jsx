@@ -21,11 +21,9 @@ export default class PersonPage extends React.PureComponent {
   state = {};
 
   async componentDidMount() {
-    try {
-      const data = await DuluAxios.get(`/api/people/${this.props.id}`);
+    const data = await DuluAxios.get(`/api/people/${this.props.id}`);
+    if (data) {
       this.props.setPerson(data.person);
-    } catch (error) {
-      this.props.setNetworkError(error);
     }
   }
 
@@ -47,15 +45,13 @@ export default class PersonPage extends React.PureComponent {
 
   save = async () => {
     if (!this.validate()) return;
-    try {
-      const data = await DuluAxios.put(`/api/people/${this.state.person.id}`, {
-        person: this.state.person
-      });
+    const data = await DuluAxios.put(`/api/people/${this.state.person.id}`, {
+      person: this.state.person
+    });
+    if (data) {
       this.props.setPerson(data.person);
       this.setStateAfterSave();
       this.updateLanguageIfNecessary();
-    } catch (error) {
-      this.props.setNetworkError({ tryAgain: this.save });
     }
   };
 
@@ -68,12 +64,12 @@ export default class PersonPage extends React.PureComponent {
   };
 
   deletePerson = async () => {
-    try {
-      await DuluAxios.delete(`/api/people/${this.props.person.id}`);
+    const success = await DuluAxios.delete(
+      `/api/people/${this.props.person.id}`
+    );
+    if (success) {
       this.props.history.push("/people");
       this.props.deletePerson(this.props.person.id);
-    } catch (error) {
-      this.props.setNetworkError(error);
     }
   };
 
@@ -170,17 +166,12 @@ export default class PersonPage extends React.PureComponent {
           updatePerson={this.updatePerson}
         />
 
-        <OrgPeopleContainer
-          t={this.props.t}
-          person={person}
-          setNetworkError={this.props.setNetworkError}
-        />
+        <OrgPeopleContainer t={this.props.t} person={person} />
 
         <RolesTable
           t={this.props.t}
           person={person}
           replaceRoles={this.replaceRoles}
-          setNetworkError={this.props.setNetworkError}
         />
 
         <ParticipantsTable t={this.props.t} person={person} />
@@ -188,7 +179,6 @@ export default class PersonPage extends React.PureComponent {
         <PersonEventsContainer
           t={this.props.t}
           person={person}
-          setNetworkError={this.props.setNetworkError}
           history={this.props.history}
         />
       </div>
@@ -202,7 +192,7 @@ PersonPage.propTypes = {
   t: PropTypes.func.isRequired,
   setPerson: PropTypes.func.isRequired,
   deletePerson: PropTypes.func.isRequired,
-  setNetworkError: PropTypes.func.isRequired,
+
   updateLanguage: PropTypes.func.isRequired,
   history: PropTypes.object.isRequired
 };

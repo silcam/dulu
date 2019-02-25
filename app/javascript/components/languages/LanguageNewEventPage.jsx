@@ -28,7 +28,6 @@ export default class LanguageNewEventPage extends React.PureComponent {
         </h4>
         <NewEventFormContainer
           t={t}
-          setNetworkError={this.props.setNetworkError}
           cancelForm={() => this.props.history.goBack()}
           startEvent={this.startEvent()}
         />
@@ -41,7 +40,7 @@ LanguageNewEventPage.propTypes = {
   t: PropTypes.func.isRequired,
   location: PropTypes.object,
   history: PropTypes.object.isRequired,
-  setNetworkError: PropTypes.func.isRequired,
+  
   language: PropTypes.object.isRequired,
   basePath: PropTypes.string.isRequired
 };

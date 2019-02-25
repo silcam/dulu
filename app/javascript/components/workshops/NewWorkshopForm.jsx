@@ -41,13 +41,13 @@ export default class NewWorkshopForm extends React.PureComponent {
       name: this.state.name
     };
     this.setState({ saving: true });
-    try {
-      const data = await DuluAxios.post(
-        `/api/activities/${this.props.activity_id}/workshops`,
-        {
-          workshop: workshop
-        }
-      );
+    const data = await DuluAxios.post(
+      `/api/activities/${this.props.activity_id}/workshops`,
+      {
+        workshop: workshop
+      }
+    );
+    if (data) {
       this.props.handleNewWorkshop(data);
       this.setState({
         editing: false,
@@ -55,8 +55,7 @@ export default class NewWorkshopForm extends React.PureComponent {
         name: "",
         nameError: null
       });
-    } catch (error) {
-      this.props.setNetworkError(error);
+    } else {
       this.setState({
         saving: false
       });
@@ -93,7 +92,7 @@ export default class NewWorkshopForm extends React.PureComponent {
 
 NewWorkshopForm.propTypes = {
   handleNewWorkshop: PropTypes.func.isRequired,
-  setNetworkError: PropTypes.func.isRequired,
+
   activity_id: PropTypes.number.isRequired,
   t: PropTypes.func.isRequired
 };

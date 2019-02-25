@@ -43,17 +43,16 @@ export default class NewParticipantForm extends React.PureComponent {
 
   save = async () => {
     this.setState({ saving: true });
-    try {
-      const data = await DuluAxios.post("/api/participants", {
-        participant: this.state.participant
-      });
+    const data = await DuluAxios.post("/api/participants", {
+      participant: this.state.participant
+    });
+    if (data) {
       this.props.addPeople([data.person]);
       this.props.addParticipants([data.participant]);
       this.props.history.push(
         `${this.props.basePath}/participants/${data.participant.id}`
       );
-    } catch (error) {
-      this.props.setNetworkError(error);
+    } else {
       this.setState({ saving: false });
     }
   };
@@ -120,7 +119,7 @@ NewParticipantForm.propTypes = {
   addPeople: PropTypes.func.isRequired,
   language_id: PropTypes.number,
   cluster_id: PropTypes.number,
-  setNetworkError: PropTypes.func.isRequired,
+
   history: PropTypes.object.isRequired,
   basePath: PropTypes.string.isRequired
 };

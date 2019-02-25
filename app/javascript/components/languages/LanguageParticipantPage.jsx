@@ -24,7 +24,7 @@ LanguageParticipantPage.propTypes = {
   t: PropTypes.func.isRequired,
   language: PropTypes.object.isRequired,
   participantId: PropTypes.string.isRequired,
-  setNetworkError: PropTypes.func.isRequired,
+  
   history: PropTypes.object.isRequired,
   basePath: PropTypes.string.isRequired
 };

@@ -32,10 +32,10 @@ export default class ActivityRow extends React.PureComponent {
 
   addNextStage = async () => {
     this.setState({ updateFormState: "saving" });
-    try {
-      const data = await DuluAxios.post("/api/stages", {
-        stage: this.state.nextStage
-      });
+    const data = await DuluAxios.post("/api/stages", {
+      stage: this.state.nextStage
+    });
+    if (data) {
       this.props.setActivity({
         id: this.props.activity.id,
         stage_name: data.stage.name,
@@ -43,8 +43,7 @@ export default class ActivityRow extends React.PureComponent {
         last_update: data.stage.last_update
       });
       this.setState(this.freshState(this.props));
-    } catch (error) {
-      this.props.setNetworkError(error);
+    } else {
       this.setState({ updateFormState: "date" });
     }
   };
@@ -113,6 +112,6 @@ ActivityRow.propTypes = {
   t: PropTypes.func.isRequired,
   can: PropTypes.object.isRequired,
   setActivity: PropTypes.func.isRequired,
-  setNetworkError: PropTypes.func.isRequired,
+
   basePath: PropTypes.string.isRequired
 };

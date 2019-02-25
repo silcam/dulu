@@ -17,17 +17,15 @@ export default class ActivitiesTable extends React.PureComponent {
   }
 
   async componentDidMount() {
-    try {
-      const data = await DuluAxios.get(`/api/activities`, {
-        language_id: this.props.language.id
-      });
+    const data = await DuluAxios.get(`/api/activities`, {
+      language_id: this.props.language.id
+    });
+    if (data) {
       this.props.addActivities(data.translation_activities);
       this.props.addActivities(data.media_activities);
       this.props.addActivities(data.research_activities);
       this.props.addActivities(data.workshops_activities);
       this.props.setLanguage(data.language);
-    } catch (error) {
-      this.props.setNetworkError(error);
     }
   }
 
@@ -57,17 +55,16 @@ export default class ActivitiesTable extends React.PureComponent {
 
   addNewActivity = async activity => {
     this.setState({ newFormSaving: true });
-    try {
-      const data = await DuluAxios.post(
-        `/api/languages/${this.props.language.id}/${this.x_activities()}/`,
-        {
-          [this.x_activity()]: activity
-        }
-      );
+    const data = await DuluAxios.post(
+      `/api/languages/${this.props.language.id}/${this.x_activities()}/`,
+      {
+        [this.x_activity()]: activity
+      }
+    );
+    if (data) {
       this.props.setActivity(data.activity);
       this.setState(this.freshState(this.props));
-    } catch (error) {
-      this.props.setNetworkError(error);
+    } else {
       this.setState({ newFormSaving: false });
     }
   };
@@ -107,7 +104,6 @@ export default class ActivitiesTable extends React.PureComponent {
                 can={this.props.language.can}
                 t={t}
                 replaceActivity={this.replaceActivity}
-                setNetworkError={this.props.setNetworkError}
                 basePath={this.props.basePath}
                 setActivity={this.props.setActivity}
               />
@@ -128,7 +124,7 @@ ActivitiesTable.propTypes = {
     .isRequired,
   language: PropTypes.object.isRequired,
   t: PropTypes.func.isRequired,
-  setNetworkError: PropTypes.func.isRequired,
+  
   heading: PropTypes.string, // Default "Activities"
   basePath: PropTypes.string.isRequired
 };

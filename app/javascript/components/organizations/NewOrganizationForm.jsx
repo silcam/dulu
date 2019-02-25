@@ -45,14 +45,12 @@ export default class NewOrganizationForm extends React.Component {
 
   clickSave = async () => {
     this.setState({ saving: true });
-    try {
-      const data = await DuluAxios.post("/api/organizations", {
-        organization: this.state.organization
-      });
+    const data = await DuluAxios.post("/api/organizations", {
+      organization: this.state.organization
+    });
+    if (data) {
       this.props.addOrganization(data.organization);
       this.props.history.push(`/organizations/${data.organization.id}`);
-    } catch (error) {
-      this.props.setNetworkError(error);
     }
   };
 
@@ -109,6 +107,6 @@ export default class NewOrganizationForm extends React.Component {
 NewOrganizationForm.propTypes = {
   addOrganization: PropTypes.func.isRequired,
   history: PropTypes.object.isRequired,
-  setNetworkError: PropTypes.func.isRequired,
+
   t: PropTypes.func.isRequired
 };

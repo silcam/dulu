@@ -10,33 +10,29 @@ export default class MyOrganizationsTable extends React.PureComponent {
   state = {};
 
   async componentDidMount() {
-    try {
-      const data = await DuluAxios.get(`/api/organization_people`, {
-        person_id: this.props.person.id
-      });
+    const data = await DuluAxios.get(`/api/organization_people`, {
+      person_id: this.props.person.id
+    });
+    if (data) {
       this.props.addPeople(data.people);
       this.props.addOrganizations(data.organizations);
       this.props.addOrganizationPeople(data.organization_people);
-    } catch (error) {
-      this.props.setNetworkError(error);
     }
   }
 
   createOrganizationPerson = async () => {
-    try {
-      if (!this.state.newOrganization) return;
-      const organizationPerson = {
-        person_id: this.props.person.id,
-        organization_id: this.state.newOrganization.id
-      };
-      const data = await DuluAxios.post("/api/organization_people", {
-        organization_person: organizationPerson
-      });
+    if (!this.state.newOrganization) return;
+    const organizationPerson = {
+      person_id: this.props.person.id,
+      organization_id: this.state.newOrganization.id
+    };
+    const data = await DuluAxios.post("/api/organization_people", {
+      organization_person: organizationPerson
+    });
+    if (data) {
       this.props.addOrganizations([data.organization]);
       this.props.setOrganizationPerson(data.organization_person);
       this.setState({ addingNew: false });
-    } catch (error) {
-      this.props.setNetworkError(error);
     }
   };
 
@@ -63,7 +59,6 @@ export default class MyOrganizationsTable extends React.PureComponent {
                 person={this.props.person}
                 setOrganizationPerson={this.props.setOrganizationPerson}
                 deleteOrganizationPerson={this.props.deleteOrganizationPerson}
-                setNetworkError={this.props.setNetworkError}
               />
             ))}
             {this.state.addingNew && (
@@ -101,7 +96,7 @@ MyOrganizationsTable.propTypes = {
   person: PropTypes.object.isRequired,
   organizationPeople: PropTypes.array.isRequired,
   organizationsById: PropTypes.object.isRequired,
-  setNetworkError: PropTypes.func.isRequired,
+
   t: PropTypes.func.isRequired,
   addOrganizationPeople: PropTypes.func.isRequired,
   setOrganizationPerson: PropTypes.func.isRequired,

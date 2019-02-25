@@ -12,16 +12,14 @@ import WorkshopActivity from "../workshops/WorkshopActivity";
 
 export default class ActivityView extends React.PureComponent {
   async componentDidMount() {
-    try {
-      const data = await DuluAxios.get(
-        `/api/activities/${this.props.activityId}`
-      );
+    const data = await DuluAxios.get(
+      `/api/activities/${this.props.activityId}`
+    );
+    if (data) {
       this.props.setLanguage(data.language);
       this.props.addPeople(data.people);
       this.props.addParticipants(data.participants);
       this.props.setActivity(data.activity);
-    } catch (error) {
-      this.props.setNetworkError(error);
     }
   }
 

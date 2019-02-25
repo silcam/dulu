@@ -65,8 +65,6 @@ export default class DuluApp extends React.Component<IProps, IState> {
     });
   };
 
-  setNetworkError = () => {};
-
   render() {
     return (
       <I18nContext.Provider value={this.state.t}>

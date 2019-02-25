@@ -101,18 +101,17 @@ export default class Workshop extends React.PureComponent {
       completed: this.state.completed,
       date: this.state.date
     };
-    try {
-      const data = await DuluAxios.put(`/api/workshops/${id}/`, {
-        workshop: workshop
-      });
+    const data = await DuluAxios.put(`/api/workshops/${id}/`, {
+      workshop: workshop
+    });
+    if (data) {
       this.props.handleUpdatedWorkshop(data);
       this.setState({
         editing: false,
         enteringDate: false,
         saving: false
       });
-    } catch (error) {
-      this.props.setNetworkError(error);
+    } else {
       this.setState({ saving: false });
     }
   };
@@ -222,7 +221,7 @@ Workshop.propTypes = {
   workshop: PropTypes.object.isRequired,
   can: PropTypes.object.isRequired,
   displayDelete: PropTypes.bool,
-  setNetworkError: PropTypes.func.isRequired,
+
   handleUpdatedWorkshop: PropTypes.func.isRequired,
   deleteWorkshop: PropTypes.func.isRequired,
   t: PropTypes.func.isRequired,

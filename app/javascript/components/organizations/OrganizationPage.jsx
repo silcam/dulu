@@ -21,12 +21,10 @@ export default class OrganizationPage extends React.PureComponent {
   };
 
   async componentDidMount() {
-    try {
-      const data = await DuluAxios.get(`/api/organizations/${this.props.id}`);
+    const data = await DuluAxios.get(`/api/organizations/${this.props.id}`);
+    if (data) {
       this.props.setOrganization(data.organization);
       this.setState({ organization: data.organization });
-    } catch (error) {
-      this.props.setNetworkError(error);
     }
   }
 
@@ -39,13 +37,13 @@ export default class OrganizationPage extends React.PureComponent {
   save = async () => {
     if (!this.validate()) return;
     this.setState({ saving: true });
-    try {
-      const data = await DuluAxios.put(
-        `/api/organizations/${this.state.organization.id}`,
-        {
-          organization: this.state.organization
-        }
-      );
+    const data = await DuluAxios.put(
+      `/api/organizations/${this.state.organization.id}`,
+      {
+        organization: this.state.organization
+      }
+    );
+    if (data) {
       this.props.setOrganization(data.organization);
       this.setState({
         editing: false,
@@ -53,20 +51,16 @@ export default class OrganizationPage extends React.PureComponent {
         savedChanges: true,
         organization: data.organization
       });
-    } catch (error) {
-      this.props.setNetworkError(error);
     }
   };
 
   delete = async () => {
-    try {
-      await DuluAxios.delete(
-        `/api/organizations/${this.state.organization.id}`
-      );
+    const success = await DuluAxios.delete(
+      `/api/organizations/${this.state.organization.id}`
+    );
+    if (success) {
       this.props.history.push("/organizations");
       this.props.deleteOrganization(this.state.organization.id);
-    } catch (error) {
-      this.props.setNetworkError(error);
     }
   };
 
@@ -203,6 +197,6 @@ OrganizationPage.propTypes = {
   t: PropTypes.func.isRequired,
   setOrganization: PropTypes.func.isRequired,
   deleteOrganization: PropTypes.func.isRequired,
-  setNetworkError: PropTypes.func.isRequired,
+
   history: PropTypes.object.isRequired
 };

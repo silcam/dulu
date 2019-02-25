@@ -16,19 +16,13 @@ export default class PeopleBoard extends React.PureComponent {
   };
 
   async componentDidMount() {
-    try {
-      const data = await DuluAxios.get("/api/people");
+    const data = await DuluAxios.get("/api/people");
+    if (data) {
       this.setState({
         can: data.can
       });
       this.props.setPeople(data.people);
-    } catch (error) {
-      this.handleNetworkError(error);
     }
-  }
-
-  handleNetworkError(tryAgain) {
-    this.props.setNetworkError({ tryAgain: tryAgain });
   }
 
   render() {
@@ -68,7 +62,6 @@ export default class PeopleBoard extends React.PureComponent {
                 t={this.props.t}
                 people={this.props.people}
                 addPerson={this.props.addPerson}
-                setNetworkError={this.props.setNetworkError}
                 history={this.props.history}
               />
             )}
@@ -77,7 +70,6 @@ export default class PeopleBoard extends React.PureComponent {
                 key={this.props.id}
                 id={this.props.id}
                 t={this.props.t}
-                setNetworkError={this.props.setNetworkError}
                 updateLanguage={this.props.updateLanguage}
                 history={this.props.history}
               />
@@ -95,7 +87,7 @@ PeopleBoard.propTypes = {
   addPerson: PropTypes.func.isRequired,
   setPerson: PropTypes.func.isRequired,
   deletePerson: PropTypes.func.isRequired,
-  setNetworkError: PropTypes.func.isRequired,
+
   updateLanguage: PropTypes.func.isRequired,
   people: PropTypes.array.isRequired,
   id: PropTypes.string,

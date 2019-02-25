@@ -10,13 +10,11 @@ export default class ProgramsRedirect extends React.PureComponent {
   async componentDidMount() {
     const programId = parseInt(this.props.match.params.idOrAction);
     if (!programId) return;
-    try {
-      const data = await DuluAxios.get("/api/languages/find_language_id", {
-        program_id: programId
-      });
+    const data = await DuluAxios.get("/api/languages/find_language_id", {
+      program_id: programId
+    });
+    if (data) {
       this.setState({ language_id: data.language_id });
-    } catch (error) {
-      this.props.setNetworkError(error);
     }
   }
 
@@ -37,6 +35,6 @@ export default class ProgramsRedirect extends React.PureComponent {
 
 ProgramsRedirect.propTypes = {
   t: PropTypes.func.isRequired,
-  setNetworkError: PropTypes.func.isRequired,
+
   match: PropTypes.object.isRequired
 };

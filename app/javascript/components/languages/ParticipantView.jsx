@@ -21,15 +21,13 @@ export default class ParticipantView extends React.PureComponent {
   }
 
   async componentDidMount() {
-    try {
-      const data = await DuluAxios.get(`/api/participants/${this.props.id}`);
+    const data = await DuluAxios.get(`/api/participants/${this.props.id}`);
+    if (data) {
       this.props.setPerson(data.person);
       data.language && this.props.setLanguage(data.language);
       data.cluster && this.props.setCluster(data.cluster);
       this.props.addParticipants([data.participant]);
       this.props.addActivities(data.activities);
-    } catch (error) {
-      this.props.setNetworkError(error);
     }
   }
 
@@ -48,23 +46,20 @@ export default class ParticipantView extends React.PureComponent {
 
   save = async () => {
     this.setState({ saving: true });
-    try {
-      const data = await DuluAxios.put(
-        `/api/participants/${this.state.participant.id}`,
-        {
-          participant: this.state.participant
-        }
-      );
+    const data = await DuluAxios.put(
+      `/api/participants/${this.state.participant.id}`,
+      {
+        participant: this.state.participant
+      }
+    );
+    if (data) {
       this.props.addParticipants([data.participant]);
       this.setState({
         editing: false,
         participant: undefined
       });
-    } catch (error) {
-      this.props.setNetworkError(error);
-    } finally {
-      this.setState({ saving: false });
     }
+    this.setState({ saving: false });
   };
 
   delete = async () => {
@@ -76,12 +71,12 @@ export default class ParticipantView extends React.PureComponent {
         })
       )
     ) {
-      try {
-        await DuluAxios.delete(`/api/participants/${this.props.id}`);
+      const success = await DuluAxios.delete(
+        `/api/participants/${this.props.id}`
+      );
+      if (success) {
         this.props.deleteParticipant(this.props.id);
         this.props.history.push(this.props.basePath);
-      } catch (error) {
-        this.props.setNetworkError(error);
       }
     }
   };
@@ -190,7 +185,7 @@ ParticipantView.propTypes = {
   person: PropTypes.object,
   activities: PropTypes.array,
   clusterLanguage: PropTypes.object,
-  setNetworkError: PropTypes.func.isRequired,
+
   history: PropTypes.object.isRequired,
   basePath: PropTypes.string.isRequired,
   setPerson: PropTypes.func.isRequired,

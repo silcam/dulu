@@ -24,11 +24,9 @@ export default class ReportsViewer extends React.PureComponent {
 
   async componentDidMount() {
     if (this.props.id) {
-      try {
-        const data = await DuluAxios.get(`/api/reports/${this.props.id}`);
+      const data = await DuluAxios.get(`/api/reports/${this.props.id}`);
+      if (data) {
         this.setState({ report: data.report });
-      } catch (error) {
-        this.props.setNetworkError(error);
       }
     }
   }
@@ -53,40 +51,34 @@ export default class ReportsViewer extends React.PureComponent {
 
   addProgram = async language => {
     this.addLoading();
-    try {
-      const data = await DuluAxios.get("/api/reports/report_data", {
-        language_id: language.id,
-        report_type: this.state.report.type
-      });
+    const data = await DuluAxios.get("/api/reports/report_data", {
+      language_id: language.id,
+      report_type: this.state.report.type
+    });
+    if (data) {
       this.replaceReport(
         update(this.state.report, {
           languages: { $push: [data] }
         })
       );
-    } catch (error) {
-      this.props.setNetworkError(error);
-    } finally {
-      this.subtractLoading();
     }
+    this.subtractLoading();
   };
 
   addCluster = async cluster => {
     this.addLoading();
-    try {
-      const data = await DuluAxios.get("/api/reports/report_data", {
-        cluster_id: cluster.id,
-        report_type: this.state.report.type
-      });
+    const data = await DuluAxios.get("/api/reports/report_data", {
+      cluster_id: cluster.id,
+      report_type: this.state.report.type
+    });
+    if (data) {
       this.replaceReport(
         update(this.state.report, {
           clusters: { $push: [data] }
         })
       );
-    } catch (error) {
-      this.props.setNetworkError(error);
-    } finally {
-      this.subtractLoading();
     }
+    this.subtractLoading();
   };
 
   dropProgram = id => {
@@ -128,7 +120,6 @@ export default class ReportsViewer extends React.PureComponent {
               t={this.props.t}
               report={this.state.report}
               cancel={() => this.setState({ saving: false })}
-              setNetworkError={this.props.setNetworkError}
             />
           )}
           {this.state.loading > 0 && <Loading t={this.props.t} />}
@@ -153,7 +144,6 @@ export default class ReportsViewer extends React.PureComponent {
               setSavedReports={reports =>
                 this.setState({ savedReports: reports })
               }
-              setNetworkError={this.props.setNetworkError}
             />
           )}
         </div>
@@ -179,7 +169,7 @@ function blankReport() {
 
 ReportsViewer.propTypes = {
   t: PropTypes.func.isRequired,
-  setNetworkError: PropTypes.func.isRequired,
+
   id: PropTypes.string, // Only for viewing saved reports
   history: PropTypes.object,
   location: PropTypes.object

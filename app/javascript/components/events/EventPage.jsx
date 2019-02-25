@@ -7,12 +7,7 @@ export default class EventPage extends React.PureComponent {
     const t = this.props.t;
 
     return (
-      <EventContainer
-        id={this.props.id}
-        t={t}
-        setNetworkError={this.props.setNetworkError}
-        history={this.props.history}
-      />
+      <EventContainer id={this.props.id} t={t} history={this.props.history} />
     );
   }
 }
@@ -20,6 +15,5 @@ export default class EventPage extends React.PureComponent {
 EventPage.propTypes = {
   id: PropTypes.string.isRequired,
   t: PropTypes.func.isRequired,
-  setNetworkError: PropTypes.func.isRequired,
   history: PropTypes.object.isRequired
 };
