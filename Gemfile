@@ -15,21 +15,21 @@ gem 'pg'
 # Use Puma as the app server
 # gem 'puma', '~> 3.0'
 # Use SCSS for stylesheets
-gem 'bootstrap-sass', '~>3.3.7'
+# gem 'bootstrap-sass', '~>3.3.7'
 gem 'sass-rails', '~> 5.0'
 # Use Uglifier as compressor for JavaScript assets
-gem 'uglifier', '>= 1.3.0'
+# gem 'uglifier', '>= 1.3.0'
 # Use CoffeeScript for .coffee assets and views
-gem 'coffee-rails', '~> 4.2'
+# gem 'coffee-rails', '~> 4.2'
 # See https://github.com/rails/execjs#readme for more supported runtimes
 # gem 'therubyracer', platforms: :ruby
 
 # Use Webpacker
 gem 'webpacker'
 # Use jquery as the JavaScript library
-gem 'jquery-rails'
+# gem 'jquery-rails'
 # Turbolinks makes navigating your web application faster. Read more: https://github.com/turbolinks/turbolinks
-gem 'turbolinks', '~> 5'
+# gem 'turbolinks', '~> 5'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem 'jbuilder', '~> 2.5'
 # Use Redis adapter to run Action Cable in production
@@ -45,11 +45,11 @@ gem 'access-granted', '~> 1.2.0'
 # Activity Log
 gem 'audited', '~> 4.5'
 # xlsx Export
-gem 'rubyzip', '>= 1.2.1'
-gem 'axlsx', git: 'https://github.com/randym/axlsx.git', ref: '776037c0fc799bb09da8c9ea47980bd3bf296874'
-gem 'axlsx_rails', '~> 0.5'
+# gem 'rubyzip', '>= 1.2.1'
+# gem 'axlsx', git: 'https://github.com/randym/axlsx.git', ref: '776037c0fc799bb09da8c9ea47980bd3bf296874'
+# gem 'axlsx_rails', '~> 0.5'
 # Pagination
-gem 'kaminari', '~> 1.1'
+# gem 'kaminari', '~> 1.1'
 # Delayed Job for background jobs
 gem 'delayed_job_active_record', '~> 4.1'
 gem 'daemons', '~> 1.2'
