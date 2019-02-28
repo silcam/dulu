@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef } from "react";
 import DuluAxios from "../../util/DuluAxios";
 import update from "immutability-helper";
 
@@ -16,33 +16,38 @@ export default function useSearch<SearchResult>(
   query: string,
   minQueryLength: number
 ) {
-  const [resultsContainer, setResultsContainer] = useState<
-    ResultsContainer<SearchResult>
-  >({});
-  const updateResultsContainer = (query: string, results: SearchResult[]) =>
-    setResultsContainer(
-      update(resultsContainer, { [query]: { $set: results } })
-    );
+  const resultsContainer = useRef<ResultsContainer<SearchResult>>({});
 
   useEffect(() => {
     if (query.length < minQueryLength) return;
-    if (resultsContainer[query] !== undefined) return; // No need to search
+    if (resultsContainer.current[query] !== undefined) return; // No need to search
 
-    search(queryPath, query, updateResultsContainer);
+    search(queryPath, query).then(
+      results =>
+        (resultsContainer.current = updateResultsContainer(
+          resultsContainer.current,
+          query,
+          results
+        ))
+    );
   }, [query]);
 
-  return bestResults(query, resultsContainer);
+  return bestResults(query, resultsContainer.current);
 }
 
-async function search<SearchResult>(
-  queryPath: string,
-  query: string,
-  updateResultsContainer: (q: string, r: SearchResult[]) => void
-) {
+async function search(queryPath: string, query: string) {
   const data = await DuluAxios.get(queryPath, { q: query });
   if (data) {
-    updateResultsContainer(query, data.results);
+    return data.results;
   }
+}
+
+function updateResultsContainer(
+  resultsContainer: ResultsContainer<any>,
+  query: string,
+  results: any[]
+) {
+  return update(resultsContainer, { [query]: { $set: results } });
 }
 
 function bestResults<SearchResult>(
