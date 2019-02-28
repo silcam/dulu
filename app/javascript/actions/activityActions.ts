@@ -1,4 +1,4 @@
-import { IActivity } from "../models/TypeBucket";
+import { IActivity } from "../models/Activity";
 
 export const ADD_ACTIVITIES = "ADD_ACTIVITIES";
 export const SET_ACTIVITY = "SET_ACTIVITY";

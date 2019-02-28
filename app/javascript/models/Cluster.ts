@@ -1,5 +1,5 @@
 import { BasicModel } from "./BasicModel";
-import { IParticipant } from "./TypeBucket";
+import { IParticipant } from "./Participant";
 import { AppState } from "../reducers/appReducer";
 import Language, { ILanguage } from "./Language";
 

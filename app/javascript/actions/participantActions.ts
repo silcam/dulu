@@ -1,4 +1,4 @@
-import { IParticipant } from "../models/TypeBucket";
+import { IParticipant } from "../models/Participant";
 
 export const ADD_PARTICIPANTS = "ADD_PARTICIPANTS";
 export const DELETE_PARTICIPANT = "DELETE_PARTICIPANT";

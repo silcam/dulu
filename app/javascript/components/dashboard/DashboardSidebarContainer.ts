@@ -1,6 +1,6 @@
 import { connect } from "react-redux";
 import { AppState } from "../../reducers/appReducer";
-import { IParticipant } from "../../models/TypeBucket";
+import { IParticipant } from "../../models/Participant";
 import { ILanguage } from "../../models/Language";
 import { ICluster } from "../../models/Cluster";
 import { setRegions } from "../../actions/regionActions";

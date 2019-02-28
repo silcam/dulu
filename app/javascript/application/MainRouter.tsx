@@ -149,11 +149,7 @@ class MainRouter extends React.Component<IProps, IState> {
         <Route
           path="/*activities/:id"
           render={({ match, history }) => (
-            <ActivityPage
-              t={this.props.t}
-              history={history}
-              id={match.params.id}
-            />
+            <ActivityPage history={history} id={match.params.id} />
           )}
         />
         <Route

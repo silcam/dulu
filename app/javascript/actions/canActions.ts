@@ -2,6 +2,7 @@ export const SET_EVENTS_CAN = "SET_EVENTS_CAN";
 
 export interface ICan {
   create?: boolean;
+  update?: boolean;
 }
 
 export interface CanAction {

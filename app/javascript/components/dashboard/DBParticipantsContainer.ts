@@ -5,7 +5,7 @@ import { personCompare, Person } from "../../models/Person";
 import { addPeople } from "../../actions/peopleActions";
 import { addParticipants } from "../../actions/participantActions";
 import { connect } from "react-redux";
-import { IParticipant } from "../../models/TypeBucket";
+import { IParticipant } from "../../models/Participant";
 
 interface IProps {
   languageIds: number[];
@@ -24,7 +24,9 @@ const mapStateToProps = (state: AppState, ownProps: IProps) => {
   const participants = (ownProps.languageIds
     .map(id => state.languages.byId[id])
     .filter(lang => lang !== undefined) as ILanguage[])
-    .map(lang => Language.participants(state, lang.id, lang.cluster_id))
+    .map(lang =>
+      Language.participants(state.participants, lang.id, lang.cluster_id)
+    )
     .flat();
   const peopleParticipants = participants.reduce(
     (accum: PeopleParticipants, ptpt) => {

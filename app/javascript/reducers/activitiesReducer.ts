@@ -6,7 +6,7 @@ import {
 } from "../actions/activityActions";
 import { findIndexById } from "../util/arrayUtils";
 import update from "immutability-helper";
-import { IActivity } from "../models/TypeBucket";
+import { IActivity } from "../models/Activity";
 import { stdReducersNoList } from "./stdReducers";
 
 export interface ActivityState {
@@ -15,11 +15,17 @@ export interface ActivityState {
 
 const emptyActivity: IActivity = {
   id: 0,
+  type: "TranslationActivity",
   language_id: 0,
   bible_book_id: 0,
   name: "",
   stage_name: "",
-  workshops: []
+  stage_date: "",
+  title: "",
+  category: "",
+  workshops: [],
+  participant_ids: [],
+  can: {}
 };
 
 const emptyState: ActivityState = {};

@@ -1,7 +1,8 @@
 import baseCompare from "../util/baseCompare";
 import { AppState } from "../reducers/appReducer";
-import { IActivity, ActivityType, IParticipant } from "./TypeBucket";
-import Activity from "./Activity";
+import { IParticipant } from "./Participant";
+import Activity, { IActivity, ActivityType } from "./Activity";
+import { ById } from "./TypeBucket";
 
 interface Progress {
   [stage: string]: number;
@@ -40,8 +41,12 @@ function activities(state: AppState, languageId: number, type?: ActivityType) {
     .sort(Activity.compare);
 }
 
-function participants(state: AppState, languageId: number, clusterId?: number) {
-  return (Object.values(state.participants) as IParticipant[]).filter(
+function participants(
+  participants: ById<IParticipant>,
+  languageId: number,
+  clusterId?: number
+) {
+  return (Object.values(participants) as IParticipant[]).filter(
     ptpt =>
       ptpt.language_id == languageId ||
       (clusterId && ptpt.cluster_id == clusterId)

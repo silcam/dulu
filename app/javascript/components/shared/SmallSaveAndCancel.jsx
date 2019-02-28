@@ -1,11 +1,14 @@
-import React from "react";
+import React, { useContext } from "react";
 import PropTypes from "prop-types";
+import I18nContext from "../../application/I18nContext";
 
 export default function SmallSaveAndCancel(props) {
+  const t = useContext(I18nContext);
+
   const style = props.style || {};
   const saveCaption = props.saveInProgress
-    ? props.t("Saving")
-    : props.saveCaption || props.t("Save");
+    ? t("Saving")
+    : props.saveCaption || t("Save");
   const saveDisabled =
     (props.saveDisabled || props.saveInProgress) && "disabled";
   return (
@@ -22,7 +25,7 @@ export default function SmallSaveAndCancel(props) {
         className="btnRed"
         style={{ fontSize: "11px" }}
       >
-        {props.t("Cancel")}
+        {t("Cancel")}
       </button>
     </div>
   );
@@ -31,7 +34,6 @@ export default function SmallSaveAndCancel(props) {
 SmallSaveAndCancel.propTypes = {
   handleSave: PropTypes.func.isRequired,
   handleCancel: PropTypes.func.isRequired,
-  t: PropTypes.func.isRequired,
   saveDisabled: PropTypes.bool,
   saveInProgress: PropTypes.bool,
   style: PropTypes.object,
