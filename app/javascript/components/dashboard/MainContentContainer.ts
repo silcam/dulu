@@ -27,14 +27,16 @@ const mapStateToProps = (state: AppState, ownProps: IProps) => {
       languageIds = regionLanguages(state, ownProps.selection.id);
       selectedItem = state.regions.byId[ownProps.selection.id];
       break;
-    case "user":
-      languageIds = userLanguages(state, ownProps.userId);
-      break;
     case "cameroon":
-    default:
       languageIds = state.regions.list
         .map(id => regionLanguages(state, id))
         .flat();
+      break;
+    case "user":
+      languageIds = userLanguages(state, ownProps.userId);
+      break;
+    default:
+      languageIds = [] as number[];
   }
 
   return {
