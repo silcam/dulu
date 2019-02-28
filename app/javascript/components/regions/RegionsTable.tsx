@@ -17,7 +17,7 @@ function RegionsTable(props: IProps) {
   const regions = props.regions;
   const t = useContext(I18nContext);
 
-  if (regions.length == 0) return <Loading t={t} />;
+  if (regions.length == 0) return <Loading />;
 
   return (
     <div>

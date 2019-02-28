@@ -7,6 +7,7 @@ import DuluAxios, { DuluAxiosError } from "../util/DuluAxios";
 import update from "immutability-helper";
 import MainRouter from "./MainRouter";
 import I18nContext from "./I18nContext";
+import { Selection } from "../components/dashboard/Dashboard";
 
 interface IProps {}
 interface IState {
@@ -17,9 +18,22 @@ interface IState {
   serverError?: boolean;
 }
 
+export interface ViewPrefs {
+  dashboardSelection?: Selection;
+  dashboardTab?: string;
+  notificationsTab?: number;
+}
+
+export interface UpdateViewPrefs {
+  (mergeViewPrefs: any): void;
+}
+
 export interface User {
   ui_language: Locale;
-  view_prefs: any;
+  view_prefs: ViewPrefs;
+  id: number;
+  first_name: string;
+  last_name: string;
 }
 
 export default class DuluApp extends React.Component<IProps, IState> {

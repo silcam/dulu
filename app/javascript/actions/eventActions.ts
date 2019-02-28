@@ -1,6 +1,5 @@
 import Event from "../models/Event";
 import { IEvent, IPeriod } from "../models/Event";
-import { ILanguage } from "../models/Language";
 import { Person } from "../models/Person";
 
 export const ADD_EVENTS = "ADD_EVENTS";
@@ -13,7 +12,7 @@ export interface EventAction {
   type: string;
   events?: IEvent[];
   event?: IEvent;
-  language?: ILanguage;
+  languageId?: number;
   period?: IPeriod;
   backToId?: string;
   person?: Person;
@@ -37,14 +36,14 @@ export function addEvents(events: IEvent[], period: IPeriod): EventAction {
 
 export function addEventsForLanguage(
   events: IEvent[],
-  language: ILanguage,
+  languageId: number,
   period: IPeriod
 ): EventAction {
   return {
     type: ADD_EVENTS_FOR_LANGUAGE,
-    backToId: Event.languageBackToId(language.id),
+    backToId: Event.languageBackToId(languageId),
     events,
-    language,
+    languageId,
     period
   };
 }

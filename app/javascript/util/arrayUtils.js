@@ -48,3 +48,11 @@ export function replace(array, item) {
   const index = findIndexById(array, item.id);
   return update(array, { [index]: { $set: item } });
 }
+
+// export function overlap<T>(a: T[], b: T[]) {
+//   return a.some(aItem => b.includes(aItem));
+// }
+
+export function overlap(a, b) {
+  return a.some(aItem => b.includes(aItem));
+}

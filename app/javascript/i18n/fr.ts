@@ -87,6 +87,7 @@ export default {
   ],
   Bible_translation: "Traduction de la Bible",
   Book: "Livre",
+  Cameroon: "Cameroun",
   Can_login: "Compte pour se connecter à Dulu",
   Cancel: "Annuler",
   Clear: "Vider",

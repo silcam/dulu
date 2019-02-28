@@ -17,7 +17,7 @@ function ClustersTable(props: IProps) {
   const clusters = props.clusters;
   const t = props.t;
 
-  if (clusters.length == 0) return <Loading t={t} />;
+  if (clusters.length == 0) return <Loading />;
 
   return (
     <div>

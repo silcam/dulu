@@ -71,7 +71,7 @@ export default class OrganizationPage extends React.PureComponent {
   render() {
     const organization = this.state.organization;
 
-    if (!organization) return <Loading t={this.props.t} />;
+    if (!organization) return <Loading />;
 
     return (
       <div>

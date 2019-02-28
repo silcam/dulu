@@ -1,9 +1,8 @@
 import React from "react";
 import PropTypes from "prop-types";
-import InlineAddIcon from "../shared/icons/InlineAddIcon";
-import EventRow from "./EventRow";
 import DuluAxios from "../../util/DuluAxios";
 import { lastYear } from "../../util/Date";
+import BasicEventsTable from "./BasicEventsTable";
 
 export default class EventsTable extends React.PureComponent {
   constructor(props) {
@@ -38,72 +37,23 @@ export default class EventsTable extends React.PureComponent {
     this.setState({ loadingMore: false });
   };
 
-  yearGroups = () => {
-    return this.props.events.reduce((accum, event) => {
-      const year = event.start_date.slice(0, 4);
-      if (!accum[year]) accum[year] = [];
-      accum[year].push(event);
-      return accum;
-    }, {});
-  };
-
   render() {
-    const t = this.props.t;
-    const years = this.yearGroups();
-    const basePath = this.props.basePath || "";
-
     return (
-      <div>
-        <h3>
-          {t("Events")}
-          {this.props.can.create && !this.props.noAdd && (
-            <InlineAddIcon
-              onClick={() => this.props.history.push(`${basePath}/events/new`)}
-            />
-          )}
-        </h3>
-        <table>
-          <tbody>
-            {Object.keys(years)
-              .sort()
-              .reverse()
-              .map(year => (
-                <React.Fragment key={year}>
-                  <tr>
-                    <th>{year}</th>
-                    <td />
-                  </tr>
-                  {years[year].map(event => (
-                    <EventRow
-                      key={event.id}
-                      event={event}
-                      t={t}
-                      basePath={basePath}
-                    />
-                  ))}
-                </React.Fragment>
-              ))}
-            {!!this.props.eventsBackTo && (
-              <tr>
-                <td>
-                  {this.state.loadingMore ? (
-                    t("Loading")
-                  ) : (
-                    <button
-                      className="link"
-                      onClick={this.getEvents}
-                      style={{ fontWeight: "bold" }}
-                    >
-                      {t("More_events")}
-                    </button>
-                  )}
-                </td>
-                <td />
-              </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
+      <BasicEventsTable
+        events={this.props.events}
+        basePath={this.props.basePath}
+        can={this.props.can}
+        noAdd={this.props.noAdd}
+        history={this.props.history}
+        moreEventsState={
+          this.state.loadingMore
+            ? "loading"
+            : this.props.eventsBackTo
+            ? "button"
+            : "none"
+        }
+        moreEvents={this.getEvents}
+      />
     );
   }
 }

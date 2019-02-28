@@ -93,7 +93,8 @@ div.detail table {
     width: 100%;
 }
 
-div.detail table th, td {
+div.detail table th, 
+div.detail table td {
     padding: 8px;
     border-top: 1px solid #ddd;
     text-align: left;

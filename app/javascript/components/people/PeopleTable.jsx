@@ -9,7 +9,7 @@ export default function PeopleTable(props) {
   );
   const t = props.t;
   if (props.people.length == 0) {
-    return <Loading t={t} />;
+    return <Loading />;
   }
   if (people.length == 0) {
     return <p>{t("NoneFound")}</p>;

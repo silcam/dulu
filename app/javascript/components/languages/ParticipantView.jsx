@@ -89,7 +89,7 @@ export default class ParticipantView extends React.PureComponent {
       ? this.state.participant
       : this.props.participant;
 
-    if (!participant) return <Loading t={t} />;
+    if (!participant) return <Loading />;
     const can = this.props.participant.can || {};
 
     return (

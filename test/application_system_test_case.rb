@@ -22,7 +22,9 @@ class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
     errors = page.driver.browser.manage.logs.get(:browser)
     if errors.present?
       errors.each do |error|
-        puts "\e[31m#{error}\e[0m"
+        unless error.to_s.include?("Can't perform a React state update on an unmounted component.")
+          puts "\e[31m#{error}\e[0m"
+        end
       end
     end
   end

@@ -10,7 +10,7 @@ export default function OrganizationsTable(props) {
 
   const t = props.t;
   if (props.organizations.length == 0) {
-    return <Loading t={t} />;
+    return <Loading />;
   }
   if (organizations.length == 0) {
     return <p>{t("NoneFound")}</p>;

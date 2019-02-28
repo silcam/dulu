@@ -32,6 +32,16 @@ export default class Activity {
     }
   }
 
+  //export type ActivityType = "Translation" | "Media" | "Research" | "Workshops"
+  static matchesType(activity, type) {
+    // Translation or Media
+    if (activity.type.startsWith(type)) return true;
+    // Research or Workshops
+    if (activity.category == type) return true;
+
+    return false;
+  }
+
   static progress(activity) {
     switch (activity.type) {
       case "LinguisticActivity":

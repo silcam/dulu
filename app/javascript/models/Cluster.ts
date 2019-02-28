@@ -43,9 +43,16 @@ function inflate(state: AppState, cluster: ICluster): IClusterInflated {
   };
 }
 
+function languages(state: AppState, clusterId: number) {
+  return (Object.values(state.languages.byId) as ILanguage[]).filter(
+    lang => lang.cluster_id == clusterId
+  );
+}
+
 export default {
   emptyCluster,
   compare,
   clusterParams,
-  inflate
+  inflate,
+  languages
 };

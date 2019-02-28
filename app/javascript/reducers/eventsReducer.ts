@@ -19,6 +19,7 @@ export function emptyEvent(): IEvent {
     start_date: "",
     end_date: "",
     language_ids: [],
+    cluster_ids: [],
     event_participants: []
   };
 }
@@ -88,7 +89,7 @@ function addEventsFor(
 
 function addEventsForLanguage(state: EventState, action: EventAction) {
   const langFilter = (event: IEvent) =>
-    event.language_ids.includes(action.language!.id);
+    event.language_ids.includes(action.languageId!);
   return addEventsFor(state, action, langFilter);
 }
 

@@ -5,7 +5,6 @@ import ParticipantContainer from "./ParticipantContainer";
 
 export default class LanguageParticipantPage extends React.PureComponent {
   render() {
-    const t = this.props.t;
     const language = this.props.language;
 
     return (
@@ -24,7 +23,7 @@ LanguageParticipantPage.propTypes = {
   t: PropTypes.func.isRequired,
   language: PropTypes.object.isRequired,
   participantId: PropTypes.string.isRequired,
-  
+
   history: PropTypes.object.isRequired,
   basePath: PropTypes.string.isRequired
 };

@@ -72,11 +72,10 @@ test("addEventsForLanguageByYear", () => {
   expect(
     eventsReducer(
       initialState,
-      addEventsForLanguage(
-        [newYears, school],
-        { id: 888 },
-        { start: { year: 2019 }, end: { year: 2019 } }
-      )
+      addEventsForLanguage([newYears, school], 888, {
+        start: { year: 2019 },
+        end: { year: 2019 }
+      })
     ).byId
   ).toEqual({
     101: newYears,
@@ -100,11 +99,7 @@ test("addEventsForLanguageFromYear", () => {
   expect(
     eventsReducer(
       initialState,
-      addEventsForLanguage(
-        [newYears, school],
-        { id: 888 },
-        { start: { year: 2019 } }
-      )
+      addEventsForLanguage([newYears, school], 888, { start: { year: 2019 } })
     ).byId
   ).toEqual({
     101: newYears,

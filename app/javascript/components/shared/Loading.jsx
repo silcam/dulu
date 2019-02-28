@@ -1,11 +1,8 @@
-import React from "react";
-import PropTypes from "prop-types";
+import React, { useContext } from "react";
 import AlertBox from "./AlertBox";
+import I18nContext from "../../application/I18nContext";
 
-export default function Loading(props) {
-  return <AlertBox text={props.t("Loading")} />;
+export default function Loading() {
+  const t = useContext(I18nContext);
+  return <AlertBox text={t("Loading")} />;
 }
-
-Loading.propTypes = {
-  t: PropTypes.func.isRequired
-};

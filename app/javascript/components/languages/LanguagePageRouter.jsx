@@ -9,7 +9,7 @@ import LanguageNewEventPage from "./LanguageNewEventPage";
 import Loading from "../shared/Loading";
 
 export default function LanguagePageRouter(props) {
-  if (!props.language) return <Loading t={props.t} />;
+  if (!props.language) return <Loading />;
   return (
     <Switch>
       <Route

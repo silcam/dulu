@@ -71,7 +71,7 @@ export default function RegionPage(props: IProps) {
 
   const region = editing ? draftRegion : props.region;
 
-  if (!region) return <Loading t={t} />;
+  if (!region) return <Loading />;
 
   return (
     <div>

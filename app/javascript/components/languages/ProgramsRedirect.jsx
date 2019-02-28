@@ -29,7 +29,7 @@ export default class ProgramsRedirect extends React.PureComponent {
     if (this.state.language_id)
       return <Redirect to={`/languages/${this.state.language_id}`} />;
 
-    return <Loading t={this.props.t} />;
+    return <Loading />;
   }
 }
 

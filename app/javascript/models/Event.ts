@@ -22,6 +22,7 @@ export interface IEvent {
   start_date: string;
   end_date: string;
   language_ids: number[];
+  cluster_ids: number[];
   event_participants: IEventParticipant[];
 }
 

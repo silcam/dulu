@@ -11,7 +11,7 @@ function LanguagesTable(props) {
     language.name.match(filter)
   );
   if (props.languages.length == 0) {
-    return <Loading t={props.t} />;
+    return <Loading />;
   }
   if (languages.length == 0) {
     return <p>{props.t("NoneFound")}</p>;

@@ -1,6 +1,31 @@
-.searcher input {
-    width: calc(100% - 28px);
-    font-size: 18px;
+.searcher {
     margin: 8px 4px;
+}
+
+.searcher input {
+    width: 100%;
+    font-size: 18px;
     padding: 8px;
+    box-sizing: border-box;
+}
+
+.searcher table {
+    width: 100%;
+    border-style: solid;
+    border-color: #ddd;
+    border-width: 0 1px 1px;
+    border-spacing: 0;
+}
+
+.searcher table td {
+    border-top: solid 1px #ddd;
+    padding: 8px;
+}
+
+.searcher table td.selected {
+    background-color: #eee;
+}
+
+.searcher table tr:first-child td {
+    border-top: none;
 }

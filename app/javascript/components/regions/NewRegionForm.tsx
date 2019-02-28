@@ -53,7 +53,7 @@ export default function NewRegionForm(props: IProps) {
         saveInProgress={saving}
         disabled={region.name.length == 0}
       />
-      <CancelButton t={t} />
+      <CancelButton />
     </div>
   );
 }

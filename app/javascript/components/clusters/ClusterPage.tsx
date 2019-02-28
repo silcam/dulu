@@ -99,7 +99,7 @@ export default function ClusterPage(props: IProps) {
 
   const cluster = editing ? draftCluster : props.cluster;
 
-  if (!cluster) return <Loading t={t} />;
+  if (!cluster) return <Loading />;
 
   return (
     <div>

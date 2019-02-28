@@ -25,7 +25,7 @@ export interface DuluAxiosError {
 const DuluAxios: IDuluAxios = {
   get: async (url, params) => {
     try {
-      console.log(`GET ${url}`);
+      console.log(`GET ${url} ${params ? JSON.stringify(params) : ""}`);
       const response = await axios.get(url, {
         params: params
       });
@@ -38,7 +38,7 @@ const DuluAxios: IDuluAxios = {
 
   post: async (url, data) => {
     try {
-      console.log(`POST ${url}`);
+      console.log(`POST ${url} ${JSON.stringify(data)}`);
       data.authenticity_token = getAuthToken();
       const response = await axios.post(url, data);
       clearNetworkError();
@@ -50,7 +50,7 @@ const DuluAxios: IDuluAxios = {
 
   put: async (url, data) => {
     try {
-      console.log(`PUT ${url}`);
+      console.log(`PUT ${url} ${JSON.stringify(data)}`);
       data.authenticity_token = getAuthToken();
       const response = await axios.put(url, data);
       clearNetworkError();

@@ -4,6 +4,7 @@ import styles from "./TextInput.css";
 
 export default function TextInput(props) {
   const handleKeyDown = e => {
+    if (props.handleKeyDown) props.handleKeyDown(e.key);
     if (e.key == "Enter" && props.handleEnter) {
       props.handleEnter();
     }
@@ -27,7 +28,9 @@ export default function TextInput(props) {
         onBlur={props.handleBlur}
         autoFocus={autoFocus}
       />
-      <div style={{ marginTop: "4px" }}>{props.errorMessage}</div>
+      {props.errorMessage && (
+        <div style={{ marginTop: "4px" }}>{props.errorMessage}</div>
+      )}
     </div>
   );
 }
@@ -38,6 +41,7 @@ TextInput.propTypes = {
   name: PropTypes.string,
   // Optional
   handleEnter: PropTypes.func,
+  handleKeyDown: PropTypes.func,
   handleBlur: PropTypes.func,
   placeholder: PropTypes.string,
   errorMessage: PropTypes.string,

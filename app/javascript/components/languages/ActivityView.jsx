@@ -27,7 +27,7 @@ export default class ActivityView extends React.PureComponent {
     const activity = this.props.activity;
     const t = this.props.t;
 
-    if (!activity) return <Loading t={t} />;
+    if (!activity) return <Loading />;
 
     if (Activity.isWorkshops(activity))
       return <WorkshopActivity {...this.props} />;

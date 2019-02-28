@@ -105,7 +105,7 @@ export default class PersonPage extends React.PureComponent {
   render() {
     const person = this.state.editing ? this.state.person : this.props.person;
 
-    if (!person) return <Loading t={this.props.t} />;
+    if (!person) return <Loading />;
 
     return (
       <div>

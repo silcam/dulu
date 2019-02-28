@@ -42,7 +42,7 @@ class Api::EventsController < ApplicationController
 
   def get_event_src
     if params[:language_id]
-      return Language.find(params[:language_id]).events
+      return Language.find(params[:language_id]).all_events
     elsif params[:person_id]
       return Person.find(params[:person_id]).events
     else

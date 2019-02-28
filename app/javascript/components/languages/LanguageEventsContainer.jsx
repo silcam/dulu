@@ -12,7 +12,8 @@ const mapStateToProps = (state, ownProps) => {
     events: Object.values(state.events.byId)
       .filter(
         event =>
-          event.language_ids.includes(ownProps.language.id) &&
+          (event.language_ids.includes(ownProps.language.id) ||
+            event.cluster_ids.includes(ownProps.language.cluster_id)) &&
           (!ownProps.domain || ownProps.domain == event.domain)
       )
       .sort(Event.revCompare),

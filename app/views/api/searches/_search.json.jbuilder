@@ -1,6 +1,6 @@
 # Locals: results
 
-json.array! results do |result|
+json.results results do |result|
   json.title result[:title]
   json.description result[:description]
 

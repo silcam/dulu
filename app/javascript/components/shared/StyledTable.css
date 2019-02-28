@@ -6,6 +6,7 @@
 
 .normal th {
     text-align: left;
+    padding-left: 8px;
 }
 
 .normal td {

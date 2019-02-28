@@ -157,10 +157,9 @@ class MainRouter extends React.Component<IProps, IState> {
           )}
         />
         <Route
-          render={props => (
+          render={() => (
             <Dashboard
-              {...props}
-              t={this.props.t}
+              user={this.props.user}
               viewPrefs={this.props.user.view_prefs}
               updateViewPrefs={this.props.updateViewPrefs}
             />

@@ -8,7 +8,7 @@ export default function LanguageEventsTable(props) {
       {...props}
       eventsUrl={`/api/languages/${props.language.id}/events`}
       addEventsFor={(events, period) =>
-        props.addEventsForLanguage(events, props.language, period)
+        props.addEventsForLanguage(events, props.language.id, period)
       }
     />
   );

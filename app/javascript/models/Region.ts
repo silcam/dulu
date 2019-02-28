@@ -48,9 +48,23 @@ function inflate(state: AppState, region: IRegion): IRegionInflated {
   };
 }
 
+function clusters(state: AppState, regionId: number) {
+  return (Object.values(state.clusters.byId) as ICluster[]).filter(
+    c => c.region_id == regionId
+  );
+}
+
+function languages(state: AppState, regionId: number) {
+  return (Object.values(state.languages.byId) as ILanguage[]).filter(
+    lang => lang.region_id == regionId
+  );
+}
+
 export default {
   emptyRegion,
   compare,
   regionParams,
-  inflate
+  inflate,
+  clusters,
+  languages
 };

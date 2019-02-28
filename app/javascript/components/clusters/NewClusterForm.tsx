@@ -70,7 +70,7 @@ export default class NewClusterForm extends React.PureComponent<
           saveInProgress={this.state.saving}
           disabled={this.state.cluster.name.length == 0}
         />
-        <CancelButton t={t} />
+        <CancelButton />
       </div>
     );
   }

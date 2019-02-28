@@ -122,7 +122,7 @@ export default class ReportsViewer extends React.PureComponent {
               cancel={() => this.setState({ saving: false })}
             />
           )}
-          {this.state.loading > 0 && <Loading t={this.props.t} />}
+          {this.state.loading > 0 && <Loading />}
           {this.props.id && (
             <EditActionBar
               can={{ update: true }}

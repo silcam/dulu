@@ -78,10 +78,22 @@ export interface UpdaterFunc {
   (arg: AnyObj): void;
 }
 
+export interface Workshop {
+  id: number;
+  name: string;
+  completed: boolean;
+}
+
 export interface IActivity {
   id: number;
-  workshops: {};
+  language_id: number;
+  stage_name: string;
+  bible_book_id: number;
+  name: string;
+  workshops: Workshop[];
 }
+
+export type ActivityType = "Translation" | "Media" | "Research" | "Workshops";
 
 export interface IOrganization {
   id: number;

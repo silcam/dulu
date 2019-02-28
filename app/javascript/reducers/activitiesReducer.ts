@@ -15,7 +15,11 @@ export interface ActivityState {
 
 const emptyActivity: IActivity = {
   id: 0,
-  workshops: {}
+  language_id: 0,
+  bible_book_id: 0,
+  name: "",
+  stage_name: "",
+  workshops: []
 };
 
 const emptyState: ActivityState = {};

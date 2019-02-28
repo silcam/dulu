@@ -112,7 +112,7 @@ export default class EventView extends React.PureComponent {
   render() {
     const t = this.props.t;
     const event = this.state.editing ? this.state.event : this.props.event;
-    if (!event) return <Loading t={t} />;
+    if (!event) return <Loading />;
     return (
       <div className={style.eventPage}>
         <div>

@@ -23,7 +23,7 @@ export default class ParticipantPage extends React.PureComponent {
 
   render() {
     const t = this.props.t;
-    return this.state.loading ? <Loading t={t} /> : null;
+    return this.state.loading ? <Loading /> : null;
   }
 }
 

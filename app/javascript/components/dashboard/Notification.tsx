@@ -1,26 +1,44 @@
-import React from "react";
+import React, { useContext } from "react";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import styles from "./NotificationsList.css";
+import { AnyObj } from "../../models/TypeBucket";
+import I18nContext from "../../application/I18nContext";
 
-export default function Notification(props) {
+export interface INotification {
+  id: number;
+  message: {
+    key: string;
+    t_vars: AnyObj;
+    links: AnyObj;
+  };
+  created_at: string;
+  read?: boolean;
+}
+
+interface IProps {
+  notification: INotification;
+}
+
+export default function Notification(props: IProps) {
+  const t = useContext(I18nContext);
   const pieces = arrayize(
-    props.t(`notifications.${props.notification.message.key}`),
+    t(`notifications.${props.notification.message.key}`),
     props.notification.message.t_vars,
     props.notification.message.links
   );
   return (
     <tr>
       <td>
-        <span className="notificationDate">
+        <span className={styles.notificationDate}>
           {props.notification.created_at.slice(0, 10)}
         </span>
         <br />
-        <span
-          className={props.notification.read ? "" : styles.unreadNotification}
-        >
-          {pieces.map(
-            (piece, index) =>
+        <div className={styles.notificationText}>
+          <span
+            className={props.notification.read ? "" : styles.unreadNotification}
+          >
+            {pieces.map((piece, index) =>
               piece.href ? (
                 <Link to={piece.href} key={index}>
                   {piece.text}
@@ -28,14 +46,15 @@ export default function Notification(props) {
               ) : (
                 piece
               )
-          )}
-        </span>
+            )}
+          </span>
+        </div>
       </td>
     </tr>
   );
 }
 
-function arrayize(text, vars, links) {
+function arrayize(text: string, vars: AnyObj, links: AnyObj) {
   const pattern = /%{.+?}/g;
   let pieces = [];
   let match;
@@ -50,7 +69,7 @@ function arrayize(text, vars, links) {
   return pieces;
 }
 
-function matchedPiece(match, vars, links) {
+function matchedPiece(match: string, vars: AnyObj, links: AnyObj) {
   const key = match.slice(2, -1); // Strip off %{}
   if (!vars[key]) return match;
   if (!links[key]) return vars[key];

@@ -6,7 +6,6 @@ import DuluAxios from "../../util/DuluAxios";
 import ProgressBar from "../shared/ProgressBar";
 import NewStageForm from "./NewStageForm";
 import styles from "./ActivitiesTable.css";
-import WorkshopActivity from "../workshops/WorkshopActivity";
 import Spacer from "../shared/Spacer";
 import { Link } from "react-router-dom";
 

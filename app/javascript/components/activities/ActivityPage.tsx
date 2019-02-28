@@ -33,6 +33,6 @@ export default class ActivityPage extends React.PureComponent<IProps, IState> {
 
   render() {
     const t = this.props.t;
-    return this.state.loading ? <Loading t={t} /> : null;
+    return this.state.loading ? <Loading /> : null;
   }
 }

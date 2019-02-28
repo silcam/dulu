@@ -5,7 +5,7 @@ class NotificationsIntTest < ApplicationSystemTestCase
 
   def assert_notification(text, global=false)
     # click_on 'show-notifications-btn'
-    within '#notificationsSidebar' do
+    within parent(find('h3', text: 'Notifications')) do
       find('li', text: 'All').click if global
       assert_text text
     end

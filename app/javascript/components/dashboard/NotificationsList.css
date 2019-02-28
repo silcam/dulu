@@ -1,5 +1,30 @@
+div.container {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+}
+
+div.container :global(.react-tabs), 
+div.container :global(.react-tabs__tab-panel--selected) {
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 1;
+    min-height: 0;
+}
+
+div.notificationsListContainer {
+    overflow-y: scroll;
+    height: 100%;
+}
+
 table.notificationsList {
     font-size: 14px;
+    margin-bottom: 40px;
+}
+
+table.notificationsList td {
+    border-top: solid 1px #ddd;
 }
 
 .unreadNotification {
@@ -12,4 +37,13 @@ table.notificationsList {
 
 .unreadNotification a:hover {
     font-weight: bold;
+}
+
+.notificationDate {
+    font-size: 12px;
+    color: #888;
+}
+
+.notificationText {
+    padding: 8px 0;
 }
