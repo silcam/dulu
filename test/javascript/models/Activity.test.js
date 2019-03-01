@@ -126,19 +126,6 @@ test("some stage dates", () => {
   expect(Activity.stageDate(workshopsActivity)).toEqual("2019-06");
 });
 
-test("find that activity", () => {
-  const myLang = {
-    translation_activities: [translationActivity],
-    media_activities: [mediaActivity],
-    research_activities: [researchActivity],
-    workshops_activities: [workshopsActivity]
-  };
-  expect(Activity.findActivity(myLang, 101)).toBe(translationActivity);
-  expect(Activity.findActivity(myLang, 202)).toBe(researchActivity);
-  expect(Activity.findActivity(myLang, 303)).toBe(workshopsActivity);
-  expect(Activity.findActivity(myLang, 404)).toBe(mediaActivity);
-});
-
 test("Compare: diff domains", () => {
   expect(Activity.compare(translationActivity, mediaActivity)).toBeGreaterThan(
     0

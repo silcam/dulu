@@ -9,7 +9,7 @@ class UpdateStageTest < ApplicationSystemTestCase
   end
 
   test "Modify Stage" do
-    postpone_failure(Date.new(2019, 2, 28))
+    postpone_failure(Date.new(2019, 3, 28))
     # hdi_drafting = @hdi_ezra.current_stage
     # find(:css, "button[data-edit-stage-id='#{hdi_drafting.id}']").click
     # fill_in_date 'stage_start_date', @fdate
@@ -20,7 +20,7 @@ class UpdateStageTest < ApplicationSystemTestCase
   end
 
   test "Remove Stage" do
-    postpone_failure(Date.new(2019, 2, 28))
+    postpone_failure(Date.new(2019, 3, 28))
   #   hdi_drafting = @hdi_ezra.current_stage
   #   within(:css, "form[action='#{stage_path(hdi_drafting)}']") do
   #     page.accept_confirm do

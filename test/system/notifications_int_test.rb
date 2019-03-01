@@ -179,7 +179,7 @@ class NotificationsIntTest < ApplicationSystemTestCase
   end
 
   test 'Added you to event' do
-    postpone_failure(Date.new(2019, 2, 28))
+    postpone_failure(Date.new(2019, 3, 28))
     # log_in people(:Rick)
     # visit event_path(events(:HdiGenesisChecking))
     # within('h3', text: 'People') { click_on 'Edit' }
@@ -194,7 +194,7 @@ class NotificationsIntTest < ApplicationSystemTestCase
   end
 
   test 'Added himself to event' do
-    postpone_failure(Date.new(2019, 2, 28))
+    postpone_failure(Date.new(2019, 3, 28))
     # log_in people(:Rick)
     # visit event_path(events(:HdiGenesisChecking))
     # within('h3', text: 'People') { click_on 'Edit' }
@@ -206,7 +206,7 @@ class NotificationsIntTest < ApplicationSystemTestCase
   end
 
   test 'New event for program' do
-    postpone_failure(Date.new(2019, 2, 28))
+    postpone_failure(Date.new(2019, 3, 28))
     # log_in people(:Rick)
     # visit new_program_event_path(programs(:Hdi))
     # fill_in 'Name', with: 'Pizza Party'
@@ -219,7 +219,7 @@ class NotificationsIntTest < ApplicationSystemTestCase
   end
 
   test 'Add program to event' do
-    postpone_failure(Date.new(2019, 2, 28))
+    postpone_failure(Date.new(2019, 3, 28))
     # log_in people(:Rick)
     # visit event_path(events(:HdiGenesisChecking))
     # within('h3', text: 'Programs') { click_on 'Edit' }
@@ -231,7 +231,7 @@ class NotificationsIntTest < ApplicationSystemTestCase
   end
 
   test 'Add cluster to event' do
-    postpone_failure(Date.new(2019, 2, 28))
+    postpone_failure(Date.new(2019, 3, 28))
     # log_in people(:Rick)
     # visit event_path(events(:HdiGenesisChecking))
     # within('h3', text: 'Clusters') { click_on 'Add' }
