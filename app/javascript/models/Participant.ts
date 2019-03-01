@@ -1,4 +1,4 @@
-import { Person } from "./Person";
+import { IPerson } from "./Person";
 import { ICluster } from "./Cluster";
 import { BasicModel } from "./BasicModel";
 import { ById } from "./TypeBucket";
@@ -14,7 +14,7 @@ export interface IParticipant {
 }
 
 export interface IParticipantInflated extends IParticipant {
-  person: Person;
+  person: IPerson;
   cluster?: ICluster;
   language?: BasicModel;
 }
@@ -25,12 +25,12 @@ function clusterProgram(participant: IParticipantInflated) {
 
 interface PtptPerson {
   participant: IParticipant;
-  person: Person;
+  person: IPerson;
 }
 function participantPeople(
   ids: number[],
   participants: ById<IParticipant>,
-  people: ById<Person>
+  people: ById<IPerson>
 ) {
   return ids.reduce((accum: PtptPerson[], id) => {
     const ptpt = participants[id];

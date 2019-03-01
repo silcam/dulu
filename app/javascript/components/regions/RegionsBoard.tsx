@@ -9,7 +9,7 @@ import NewRegionForm from "./NewRegionForm";
 import RegionContainer from "./RegionContainer";
 import { Adder, Setter } from "../../models/TypeBucket";
 import API from "./RegionsAPI";
-import { Person } from "../../models/Person";
+import { IPerson } from "../../models/Person";
 import { ICluster } from "../../models/Cluster";
 import { ILanguage } from "../../models/Language";
 import { History } from "history";
@@ -22,7 +22,7 @@ interface IProps {
   action: string;
   regions: IRegion[];
   setRegions: Adder<IRegion>;
-  addPeople: Adder<Person>;
+  addPeople: Adder<IPerson>;
   addClusters: Adder<ICluster>;
   addLanguages: Adder<ILanguage>;
   setRegion: Setter<IRegion>;

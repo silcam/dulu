@@ -1,7 +1,7 @@
 import baseCompare from "../util/baseCompare";
 import { IParticipant } from "./Participant";
 
-export interface Person {
+export interface IPerson {
   id: number;
   first_name: string;
   last_name: string;
@@ -13,7 +13,7 @@ export interface Person {
   participants: IParticipant[]; // TODO - remove
 }
 
-export function personCompare(a: Person, b: Person): number {
+export function personCompare(a: IPerson, b: IPerson): number {
   const lastNameComparison = baseCompare(a.last_name, b.last_name);
   if (lastNameComparison != 0) return lastNameComparison;
   const firstNameComparison = baseCompare(a.first_name, b.first_name);
@@ -21,7 +21,7 @@ export function personCompare(a: Person, b: Person): number {
   return b.id - a.id;
 }
 
-export function sameName(a: Person, b: Person): boolean {
+export function sameName(a: IPerson, b: IPerson): boolean {
   return (
     baseCompare(a.last_name, b.last_name) == 0 &&
     baseCompare(a.first_name, b.first_name) == 0

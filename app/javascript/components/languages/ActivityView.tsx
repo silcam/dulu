@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import ProgressBar from "../shared/ProgressBar";
 import Activity, { IActivity } from "../../models/Activity";
 import Loading from "../shared/Loading";
-import { Person } from "../../models/Person";
+import { IPerson } from "../../models/Person";
 import WorkshopActivity from "../workshops/WorkshopActivity";
 import { Setter, Adder, ById } from "../../models/TypeBucket";
 import { ILanguage } from "../../models/Language";
@@ -17,14 +17,14 @@ interface IProps {
   activityId: number;
   activity: IActivity | undefined;
   participants: ById<IParticipant>;
-  people: ById<Person>;
+  people: ById<IPerson>;
   basePath: string;
   language: ILanguage;
 
   setActivity: Setter<IActivity>;
   setLanguage: Setter<ILanguage>;
   addParticipants: Adder<IParticipant>;
-  addPeople: Adder<Person>;
+  addPeople: Adder<IPerson>;
   setCluster: Setter<ICluster>;
 }
 

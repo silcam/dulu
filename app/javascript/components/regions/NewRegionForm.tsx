@@ -5,7 +5,7 @@ import SaveButton from "../shared/SaveButton";
 import CancelButton from "../shared/CancelButton";
 import { IRegion } from "../../models/Region";
 import { JSEvent, Adder, Setter } from "../../models/TypeBucket";
-import { Person } from "../../models/Person";
+import { IPerson } from "../../models/Person";
 import { ICluster } from "../../models/Cluster";
 import { ILanguage } from "../../models/Language";
 import API from "./RegionsAPI";
@@ -13,7 +13,7 @@ import { History } from "history";
 import I18nContext from "../../application/I18nContext";
 
 interface IProps {
-  addPeople: Adder<Person>;
+  addPeople: Adder<IPerson>;
   addClusters: Adder<ICluster>;
   addLanguages: Adder<ILanguage>;
   setRegion: Setter<IRegion>;

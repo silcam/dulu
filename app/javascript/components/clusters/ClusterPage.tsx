@@ -11,7 +11,7 @@ import Cluster, { IClusterInflated, ICluster } from "../../models/Cluster";
 import { History } from "history";
 import Loading from "../shared/Loading";
 import { Deleter, Adder } from "../../models/TypeBucket";
-import { Person } from "../../models/Person";
+import { IPerson } from "../../models/Person";
 import { ILanguage } from "../../models/Language";
 import I18nContext from "../../application/I18nContext";
 import { IParticipant } from "../../models/Participant";
@@ -21,7 +21,7 @@ interface IProps {
   cluster?: IClusterInflated;
   setCluster: (c: ICluster) => void;
   deleteCluster: Deleter;
-  addPeople: Adder<Person>;
+  addPeople: Adder<IPerson>;
   addParticipants: Adder<IParticipant>;
   addLanguages: Adder<ILanguage>;
   basePath: string;

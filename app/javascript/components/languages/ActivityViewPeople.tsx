@@ -5,7 +5,7 @@ import Spacer from "../shared/Spacer";
 import EditIcon from "../shared/icons/EditIcon";
 import styles from "./ActivityView.css";
 import { Link } from "react-router-dom";
-import { Person, fullName } from "../../models/Person";
+import { IPerson, fullName } from "../../models/Person";
 import CommaList from "../shared/CommaList";
 import { IActivity } from "../../models/Activity";
 import Participant, { IParticipant } from "../../models/Participant";
@@ -17,7 +17,7 @@ interface IProps {
   activity: IActivity;
   language: ILanguage;
   participants: ById<IParticipant>;
-  people: ById<Person>;
+  people: ById<IPerson>;
   basePath: string;
   actions: ActionPack;
 }

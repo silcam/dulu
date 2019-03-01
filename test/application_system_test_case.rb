@@ -109,7 +109,7 @@ class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
   # end
 
   def assert_changes_saved
-    assert find('p', text: 'All changes saved.')
+    assert_text 'All changes saved.'
   end
 
   def parent(node)

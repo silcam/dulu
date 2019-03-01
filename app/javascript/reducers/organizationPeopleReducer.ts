@@ -4,7 +4,7 @@ import {
   DELETE_ORGANIZATION_PERSON,
   OrganizationPeopleAction
 } from "../actions/organizationPeopleActions";
-import { IOrganizationPerson } from "../models/TypeBucket";
+import { IOrganizationPerson } from "../models/Organization";
 import { stdReducersNoList } from "./stdReducers";
 
 const emptyOrganizationPerson: IOrganizationPerson = {

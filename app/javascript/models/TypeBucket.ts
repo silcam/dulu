@@ -31,17 +31,6 @@ export interface UpdaterFunc {
   (arg: AnyObj): void;
 }
 
-export interface IOrganization {
-  id: number;
-  name: string;
-}
-
-export interface IOrganizationPerson {
-  id: number;
-  person_id: number;
-  organization_id: number;
-}
-
 export interface ById<T> {
   [id: string]: T | undefined;
 }

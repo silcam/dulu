@@ -1,4 +1,4 @@
-import { Person } from "./Person";
+import { IPerson } from "./Person";
 import { ICluster } from "./Cluster";
 import { ILanguage } from "./Language";
 import { AppState } from "../reducers/appReducer";
@@ -11,7 +11,7 @@ export interface IRegion {
 }
 
 export interface IRegionInflated extends IRegion {
-  person?: Person;
+  person?: IPerson;
   clusters: ICluster[];
   languages: ILanguage[];
 }

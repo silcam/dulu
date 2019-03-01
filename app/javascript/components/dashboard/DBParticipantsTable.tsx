@@ -1,19 +1,19 @@
 import React, { useState, useEffect, useContext } from "react";
 import DomainFilterer from "./DomainFilterer";
 import { Link } from "react-router-dom";
-import { fullName, Person } from "../../models/Person";
+import { fullName, IPerson } from "../../models/Person";
 import CommaList from "../shared/CommaList";
 import { PeopleParticipants } from "./DBParticipantsContainer";
 import { Adder } from "../../models/TypeBucket";
 import DuluAxios from "../../util/DuluAxios";
-import Role from "../../models/Role";
+import { domainFromRole } from "../../models/Role";
 import I18nContext from "../../application/I18nContext";
 import StyledTable from "../shared/StyledTable";
 import { IParticipant } from "../../models/Participant";
 
 export interface IProps extends PeopleParticipants {
   languageIds: number[];
-  addPeople: Adder<Person>;
+  addPeople: Adder<IPerson>;
   addParticipants: Adder<IParticipant>;
 }
 
@@ -30,7 +30,7 @@ export default function DBParticipantsTable(props: IProps) {
       ? props.people
       : props.people.filter(person =>
           props.participants[person.id].some(ptpt =>
-            ptpt.roles.some(role => Role.domainFromRole(role) == domainFilter)
+            ptpt.roles.some(role => domainFromRole(role) == domainFilter)
           )
         );
 

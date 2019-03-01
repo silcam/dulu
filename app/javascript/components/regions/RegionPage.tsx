@@ -9,7 +9,7 @@ import ProgramList from "./ProgramList";
 import P from "../shared/P";
 import { Link } from "react-router-dom";
 import { Adder, Setter, Deleter, AnyObj } from "../../models/TypeBucket";
-import { Person, fullName } from "../../models/Person";
+import { IPerson, fullName } from "../../models/Person";
 import { ICluster } from "../../models/Cluster";
 import { ILanguage } from "../../models/Language";
 import Loading from "../shared/Loading";
@@ -20,7 +20,7 @@ import I18nContext from "../../application/I18nContext";
 interface IProps {
   id: number;
   region?: IRegionInflated;
-  addPeople: Adder<Person>;
+  addPeople: Adder<IPerson>;
   addClusters: Adder<ICluster>;
   addLanguages: Adder<ILanguage>;
   setRegion: Setter<IRegion>;
@@ -102,7 +102,7 @@ export default function RegionPage(props: IProps) {
             label={t("LPF")}
             queryPath="/api/people/search"
             text={region.person ? fullName(region.person) : ""}
-            updateValue={(person: Person) => updateRegion({ person: person })}
+            updateValue={(person: IPerson) => updateRegion({ person: person })}
             placeholder={t("Name")}
             allowBlank
           />

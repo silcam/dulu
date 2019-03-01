@@ -1,7 +1,7 @@
 import React, { useState, useContext, useEffect } from "react";
 import { ById } from "../../models/TypeBucket";
 import I18nContext from "../../application/I18nContext";
-import { Person, fullName } from "../../models/Person";
+import { IPerson, fullName } from "../../models/Person";
 import { IActivity } from "../../models/Activity";
 import Participant, { IParticipant } from "../../models/Participant";
 import DeleteIcon from "../shared/icons/DeleteIcon";
@@ -17,7 +17,7 @@ interface IProps {
   activity: IActivity;
   language: ILanguage;
   participants: ById<IParticipant>;
-  people: ById<Person>;
+  people: ById<IPerson>;
   basePath: string;
   actions: ActionPack;
 }

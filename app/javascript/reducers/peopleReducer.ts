@@ -6,7 +6,7 @@ import {
   ADD_PEOPLE,
   PeopleAction
 } from "../actions/peopleActions";
-import { personCompare, Person } from "../models/Person";
+import { personCompare, IPerson } from "../models/Person";
 import { stdReducers } from "./stdReducers";
 
 const emptyPerson = {
@@ -24,7 +24,7 @@ const emptyPerson = {
 export interface PersonState {
   list: number[];
   byId: {
-    [id: string]: Person | undefined;
+    [id: string]: IPerson | undefined;
   };
 }
 

@@ -1,10 +1,10 @@
 import React from "react";
 import InlineAddIcon from "../shared/icons/InlineAddIcon";
 import NewParticipantForm from "./NewParticipantForm";
-import Role from "../../models/Role";
+import { domainFromRole } from "../../models/Role";
 import { Link } from "react-router-dom";
 import DuluAxios from "../../util/DuluAxios";
-import { fullName, Person } from "../../models/Person";
+import { fullName, IPerson } from "../../models/Person";
 import { T } from "../../i18n/i18n";
 import { BasicModel } from "../../models/BasicModel";
 import { ICluster } from "../../models/Cluster";
@@ -27,7 +27,7 @@ interface IProps {
   basePath: string;
   history: History<any>;
   addParticipants: Adder<IParticipant>;
-  addPeople: Adder<Person>;
+  addPeople: Adder<IPerson>;
   setLanguage: Setter<ILanguage>;
   setCluster: Setter<ICluster>;
 }
@@ -117,6 +117,6 @@ export default class ParticipantsTable extends React.PureComponent<
 function domainPeople(participants: IParticipantInflated[], domain?: string) {
   if (!domain) return participants;
   return participants.filter(participant =>
-    participant.roles.some(role => Role.domainFromRole(role) == domain)
+    participant.roles.some(role => domainFromRole(role) == domain)
   );
 }

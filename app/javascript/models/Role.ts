@@ -1,4 +1,8 @@
-const roleDomains = {
+interface StrObj {
+  [key: string]: string;
+}
+
+const roleDomains: StrObj = {
   Administration: "",
   BackTranslator: "Translation",
   DuluAdmin: "",
@@ -24,11 +28,8 @@ const roleDomains = {
   TranslationConsultantTraining: "Translation"
 };
 
-export default class Role {
-  static domainFromRole(role) {
-    let domain = roleDomains[role];
-    if (domain === undefined)
-      console.error("No domain listed for role: " + role);
-    return domain;
-  }
+export function domainFromRole(role: string) {
+  let domain = roleDomains[role];
+  if (domain === undefined) console.error("No domain listed for role: " + role);
+  return domain;
 }

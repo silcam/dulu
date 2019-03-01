@@ -3,7 +3,7 @@ import { IEvent, IPeriod } from "../../models/Event";
 import DuluAxios from "../../util/DuluAxios";
 import { lastYear } from "../../util/Date";
 import { Adder, Setter } from "../../models/TypeBucket";
-import { Person } from "../../models/Person";
+import { IPerson } from "../../models/Person";
 import { ICan } from "../../actions/canActions";
 import BasicEventsTable from "../events/BasicEventsTable";
 import DomainFilterer from "./DomainFilterer";
@@ -14,7 +14,7 @@ interface IProps {
   eventsBackTo: number | undefined;
   can: ICan;
 
-  addPeople: Adder<Person>;
+  addPeople: Adder<IPerson>;
   setEventsCan: Setter<ICan>;
   addEventsForLanguage: (e: IEvent[], lid: number, p: IPeriod) => void;
 }

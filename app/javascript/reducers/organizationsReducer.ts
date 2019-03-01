@@ -6,13 +6,12 @@ import {
   ADD_ORGANIZATIONS,
   OrganizationAction
 } from "../actions/organizationActions";
-import { organizationCompare } from "../models/organization";
-import { IOrganization } from "../models/TypeBucket";
+import Organization, { IOrganization } from "../models/Organization";
 import { stdReducers } from "./stdReducers";
 
 const emptyOrganization: IOrganization = {
   id: 0,
-  name: ""
+  short_name: ""
 };
 
 export interface OrganizationState {
@@ -27,7 +26,7 @@ const emptyState: OrganizationState = {
 
 const stdOrganizationReducers = stdReducers(
   emptyOrganization,
-  organizationCompare
+  Organization.compare
 );
 
 export default function organizationsReducer(

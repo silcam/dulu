@@ -9,7 +9,7 @@ import { LoadedCluster, LoadedRegion } from "./DashboardSidebarContainer";
 import I18nContext from "../../application/I18nContext";
 import DashboardSidebarList from "./DashboardSidebarList";
 import DashboardSidebarItem from "./DashboardSidebarItem";
-import { fullName, Person } from "../../models/Person";
+import { fullName, IPerson } from "../../models/Person";
 import { Selection } from "./Dashboard";
 import Loading from "../shared/Loading";
 import { IParticipant } from "../../models/Participant";
@@ -26,7 +26,7 @@ interface IProps {
   setRegions: Adder<IRegion>;
   setClusters: Adder<ICluster>;
   setLanguages: Adder<ILanguage>;
-  addPeople: Adder<Person>;
+  addPeople: Adder<IPerson>;
   addParticipants: Adder<IParticipant>;
 }
 

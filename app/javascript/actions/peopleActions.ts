@@ -1,4 +1,4 @@
-import { Person } from "../models/Person";
+import { IPerson } from "../models/Person";
 
 export const SET_PEOPLE = "SET_PEOPLE";
 export const ADD_PEOPLE = "ADD_PEOPLE";
@@ -8,33 +8,33 @@ export const DELETE_PERSON = "DELETE_PERSON";
 
 export interface PeopleAction {
   type: string;
-  people?: Person[];
-  person?: Person;
+  people?: IPerson[];
+  person?: IPerson;
   id?: number;
 }
 
-export function setPeople(people: Person[]): PeopleAction {
+export function setPeople(people: IPerson[]): PeopleAction {
   return {
     type: SET_PEOPLE,
     people: people
   };
 }
 
-export function addPeople(people: Person[]): PeopleAction {
+export function addPeople(people: IPerson[]): PeopleAction {
   return {
     type: ADD_PEOPLE,
     people: people
   };
 }
 
-export function addPerson(person: Person): PeopleAction {
+export function addPerson(person: IPerson): PeopleAction {
   return {
     type: ADD_PERSON,
     person: person
   };
 }
 
-export function setPerson(person: Person): PeopleAction {
+export function setPerson(person: IPerson): PeopleAction {
   return {
     type: SET_PERSON,
     person: person

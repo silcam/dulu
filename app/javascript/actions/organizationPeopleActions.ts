@@ -1,4 +1,4 @@
-import { IOrganizationPerson } from "../models/TypeBucket";
+import { IOrganizationPerson } from "../models/Organization";
 
 export const ADD_ORGANIZATION_PEOPLE = "ADD_ORGANIZATION_PEOPLE";
 export const SET_ORGANIZATION_PERSON = "SET_ORGANIZATION_PERSON";

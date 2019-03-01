@@ -1,12 +1,12 @@
 import DuluAxios from "../../util/DuluAxios";
 import Region, { IRegionInflated, IRegion } from "../../models/Region";
 import { Adder, Setter, Deleter, AnyObj } from "../../models/TypeBucket";
-import { Person } from "../../models/Person";
+import { IPerson } from "../../models/Person";
 import { ICluster } from "../../models/Cluster";
 import { ILanguage } from "../../models/Language";
 
 interface FetchRegionActions {
-  addPeople: Adder<Person>;
+  addPeople: Adder<IPerson>;
   addClusters: Adder<ICluster>;
   addLanguages: Adder<ILanguage>;
   setRegion: Setter<IRegion>;

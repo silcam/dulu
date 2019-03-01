@@ -1,7 +1,7 @@
 import { AppState } from "../../reducers/appReducer";
 import Language, { ILanguage } from "../../models/Language";
 import DBParticipantsTable from "./DBParticipantsTable";
-import { personCompare, Person } from "../../models/Person";
+import { personCompare, IPerson } from "../../models/Person";
 import { addPeople } from "../../actions/peopleActions";
 import { addParticipants } from "../../actions/participantActions";
 import { connect } from "react-redux";
@@ -16,7 +16,7 @@ interface ProgramParticipant extends IParticipant {
 }
 
 export interface PeopleParticipants {
-  people: Person[];
+  people: IPerson[];
   participants: { [personId: string]: ProgramParticipant[] };
 }
 
