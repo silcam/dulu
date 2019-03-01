@@ -245,31 +245,31 @@ class Notification < ApplicationRecord
       send_notification n_params, []  # Global only
     end
 
-    def added_person_to_activity(user, person, activity)
-      return added_himself_to_activity(user, activity) if user == person
-      program = activity.language
+    def added_people_to_activity(user, people, activity)
+      return added_himself_to_activity(user, activity) if people == [user]
+      language = activity.language
       n_params = {
-        kind: :added_person_to_activity,
+        kind: :added_people_to_activity,
         vars: {
           user_name: user.full_name,
-          person_name: person.full_name,
+          person_names: people.map { |p| p.full_name },
           activity_name: activity_name(activity),
-          program_name: program.name
+          program_name: language.name
         },
         links: {
           user_name: model_path(user),
-          person_name: model_path(person),
+          person_names: people.map { |p| model_path(p) },
           activity_name: model_path(activity),
-          program_name: model_path(program)
+          program_name: model_path(language)
         }
       }
-      people = cluster_program_people(activity.language, user, person)
-      send_notification n_params, people
+      target_people = cluster_program_people(activity.language, user, *people)
+      send_notification n_params, target_people
 
       n_params[:kind] = :added_you_to_activity
-      send_notification n_params, [person], false
+      send_notification n_params, people, false
     end
-    handle_asynchronously :added_person_to_activity
+    handle_asynchronously :added_people_to_activity
 
     def added_himself_to_activity(user, activity)
       n_params = {
@@ -290,30 +290,30 @@ class Notification < ApplicationRecord
       send_notification n_params, people
     end
 
-    def added_person_to_event(user, event_participant)
-      return added_himself_to_event(user, event_participant) if user == event_participant.person
-      person = event_participant.person
-      event = event_participant.event
+    def added_people_to_event(user, event_participants)
+      return added_himself_to_event(user, event_participant) if event_participants.length == 1 && user == event_participants[0].person
+      people = event_participants.map{ |ep| ep.person }
+      event = event_participants[0].event
       n_params = {
-        kind: :added_person_to_event,
+        kind: :added_people_to_event,
         vars: {
           user_name: user.full_name,
-          person_name: person.full_name,
+          person_names: people.map { |p| p.full_name },
           event_name: event.name
         },
         links: {
           user_name: model_path(user),
-          person_name: model_path(person),
+          person_names: people.map { |p| model_path(p) },
           event_name: model_path(event)
         }
       }
-      people = event.people - [user, person]
-      send_notification n_params, people
+      target_people = event.people - [user] - people
+      send_notification n_params, target_people
       
       n_params[:kind] = :added_you_to_event
-      send_notification n_params, [person], false
+      send_notification n_params, people, false
     end
-    handle_asynchronously :added_person_to_event
+    handle_asynchronously :added_people_to_event
 
     def added_himself_to_event(user, event_participant)
       n_params = {

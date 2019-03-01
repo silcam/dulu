@@ -45,7 +45,7 @@ class PersonIntTest < ApplicationSystemTestCase
     log_in @rick
     visit model_path @rick
     within(parent(main_div('Rick Conrad').find('h3', text: 'Organizations'))) do
-      assert_no_selector('a', text: 'Lutheran Bible Translators')
+      safe_assert_no_selector('a', text: 'Lutheran Bible Translators')
       find(icon_selector('addIcon')).click
       fill_in_search_input('Lutheran Bible Translators')
       click_on 'Save'
@@ -76,7 +76,7 @@ class PersonIntTest < ApplicationSystemTestCase
           .click
       end
     end
-    assert_no_selector('tr', text: 'Language Program Facilitator')
+    safe_assert_no_selector('tr', text: 'Language Program Facilitator')
     @olga.reload
     refute @olga.roles.include?(:LanguageProgramFacilitator)
   end
@@ -89,7 +89,7 @@ class PersonIntTest < ApplicationSystemTestCase
     action_bar_click_delete
     check "I'm sure"
     click_on "Permanently Delete Olga Nka"
-    assert_no_selector('tr', text: 'Nka, Olga')
+    safe_assert_no_selector('tr', text: 'Nka, Olga')
     assert_nil Person.find_by(id: @olga.id)
   end
 

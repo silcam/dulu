@@ -53,7 +53,7 @@ class OrgIntTest < ApplicationSystemTestCase
     check "dangerButtonCheckbox"
     click_on "Permanently Delete SIL"
 
-    assert_no_selector('tr', text: 'SIL')
+    safe_assert_no_selector('tr', text: 'SIL')
     assert_nil Organization.find_by(short_name: 'SIL')
   end
 
@@ -68,15 +68,15 @@ class OrgIntTest < ApplicationSystemTestCase
   test 'Kevin cant!' do
     log_in people(:Kevin)
     visit '/organizations'
-    assert_no_selector(icon_selector('addIcon'))
+    safe_assert_no_selector(icon_selector('addIcon'))
     visit model_path(@sil)
-    assert_no_selector(icon_selector('editIcon'))
-    assert_no_selector(icon_selector('deleteIcon'))
+    safe_assert_no_selector(icon_selector('editIcon'))
+    safe_assert_no_selector(icon_selector('deleteIcon'))
   end
 
   test 'Drew cant!' do
     log_in people(:Drew)
     visit model_path(@sil)
-    assert_no_selector(icon_selector('deleteIcon'))
+    safe_assert_no_selector(icon_selector('deleteIcon'))
   end
 end

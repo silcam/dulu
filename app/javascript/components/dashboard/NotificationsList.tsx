@@ -30,11 +30,7 @@ export default function NotificationsList(props: IProps) {
         <tbody>
           {props.notifications.map(notification => {
             return (
-              <Notification
-                key={notification.id}
-                notification={notification}
-                t={t}
-              />
+              <Notification key={notification.id} notification={notification} />
             );
           })}
           <tr>

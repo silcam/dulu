@@ -21,7 +21,7 @@ class ClusterSysTest < ApplicationSystemTestCase
       action_bar_click_delete
     end
     assert_current_path '/clusters'
-    assert_no_selector('tr', text: 'Ndop')
+    safe_assert_no_selector('tr', text: 'Ndop')
   end
 
   test "Update Cluster Name" do
@@ -35,7 +35,7 @@ class ClusterSysTest < ApplicationSystemTestCase
 
   test "Add Language to Cluster" do
     go_to_page
-    assert_no_selector('a', text: 'Ewondo')
+    safe_assert_no_selector('a', text: 'Ewondo')
     action_bar_click_edit
     fill_in_search_input('Ewond')
     click_on 'Save'
@@ -48,7 +48,7 @@ class ClusterSysTest < ApplicationSystemTestCase
     action_bar_click_edit
     within('tr', text: 'Bangolan'){ click_icon('deleteIcon') }
     click_on 'Save'
-    assert_no_selector('a', text: 'Bangolan')
+    safe_assert_no_selector('a', text: 'Bangolan')
   end
 
   test "Add Cluster Participant" do
@@ -68,7 +68,7 @@ class ClusterSysTest < ApplicationSystemTestCase
   test "Olga can't Delete Cluster" do
     go_to_page
     sleep(0.2) # Give time for action bar to appear
-    assert_no_selector(icon_selector('deleteIcon'))
+    safe_assert_no_selector(icon_selector('deleteIcon'))
   end
 
   test "Drew can't Edit Cluster" do
@@ -76,7 +76,7 @@ class ClusterSysTest < ApplicationSystemTestCase
     visit '/clusters'
     find("tr", text: 'Ndop').click
     sleep(0.2) # Give time for action bar to appear
-    assert_no_selector(icon_selector('editIcon'))
+    safe_assert_no_selector(icon_selector('editIcon'))
   end
 
   def go_to_page

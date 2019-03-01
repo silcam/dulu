@@ -1,16 +1,39 @@
 <%=
   # Locals: notification, email
 
-  i18n_vars = {}
-  email = false unless defined? email
-  
-  notification.t_vars.each do |key, text|
+  def add_string_sub(notification, key, text, email)
     if (notification.links[key])
       link = notification.links[key]
       link = 'https://dulu.sil.org' + link if email
-      i18n_vars[key] = link_to(text, link)
+      return link_to(text, link)
     else
-      i18n_vars[key] = text
+      return text
+    end
+  end
+
+  def add_array_sub(notification, key, texts, email)
+    if (notification.links[key])
+      links = notification.links[key]
+      links.map! { |ln| 'https://dulu.sil.org' + ln } if email
+      return commasAndJoin((0..texts.length-1).map { |i| link_to(texts[i], links[i]) })
+    else
+      return commasAndJoin(texts)
+    end
+  end
+
+  def commasAndJoin(texts)
+    return texts[0] if texts.length == 1
+    texts[0..-2].join(', ') + " #{t('and')} " + texts[-1]
+  end
+
+  i18n_vars = {}
+  email = false unless defined? email
+  
+  notification.t_vars.each do |key, value|
+    if value.is_a? String
+      i18n_vars[key] = add_string_sub(notification, key, value, email)
+    else # array of strings
+      i18n_vars[key] = add_array_sub(notification, key, value, email)
     end
   end
 

@@ -19,7 +19,7 @@ class RegionSysTest < ApplicationSystemTestCase
       action_bar_click_delete
     end
     assert_current_path '/regions'
-    assert_no_selector('tr', text: 'North Region')
+    safe_assert_no_selector('tr', text: 'North Region')
   end
 
   test "Update Name" do
@@ -33,7 +33,7 @@ class RegionSysTest < ApplicationSystemTestCase
 
   test "Add Language" do
     go_to_page
-    assert_no_selector('a', text: 'Ewondo')
+    safe_assert_no_selector('a', text: 'Ewondo')
     action_bar_click_edit
     within parent(find('label', text: "Languages")) do
       fill_in_search_input('Ewond')
@@ -44,7 +44,7 @@ class RegionSysTest < ApplicationSystemTestCase
 
   test "Add and Remove Cluster" do
     go_to_page
-    assert_no_selector('a', text: 'Ndop')
+    safe_assert_no_selector('a', text: 'Ndop')
     action_bar_click_edit
     within parent(find('label', text: "Clusters")) do
       fill_in_search_input('Ndo')
@@ -56,7 +56,7 @@ class RegionSysTest < ApplicationSystemTestCase
     action_bar_click_edit
     within('tr', text: 'Ndop'){ click_icon('deleteIcon') }
     click_on 'Save'
-    assert_no_selector('a', text: 'Ndop')
+    safe_assert_no_selector('a', text: 'Ndop')
   end
 
   test "Remove Language" do
@@ -65,7 +65,7 @@ class RegionSysTest < ApplicationSystemTestCase
     action_bar_click_edit
     within('tr', text: 'Hdi'){ click_icon('deleteIcon') }
     click_on 'Save'
-    assert_no_selector('a', text: 'Hdi')
+    safe_assert_no_selector('a', text: 'Hdi')
   end
 
   test "Change LPF" do
@@ -87,13 +87,13 @@ class RegionSysTest < ApplicationSystemTestCase
       clear_search_input
     end
     click_on 'Save'
-    assert_no_text("LPF:")
+    safe_assert_no_text("LPF:")
   end
 
   test "Olga can't Delete Region" do
     go_to_page
     sleep(0.2) # Give time for action bar to appear
-    assert_no_selector(icon_selector('deleteIcon'))
+    safe_assert_no_selector(icon_selector('deleteIcon'))
   end
 
   test "Drew can't Edit Region" do
@@ -101,7 +101,7 @@ class RegionSysTest < ApplicationSystemTestCase
     visit '/regions'
     find("tr", text: 'North Region').click
     sleep(0.2) # Give time for action bar to appear
-    assert_no_selector(icon_selector('editIcon'))
+    safe_assert_no_selector(icon_selector('editIcon'))
   end
 
   def go_to_page

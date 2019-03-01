@@ -30,7 +30,7 @@ class UpdateStageTest < ApplicationSystemTestCase
 
   #   within(:css, 'span#current-stage') do
   #     assert_text 'Planned'
-  #     assert_no_text 'Drafting'
+  #     safe_assert_no_text 'Drafting'
   #   end
   end
 end

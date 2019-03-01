@@ -11,6 +11,12 @@ class NotificationsIntTest < ApplicationSystemTestCase
     end
   end
 
+  def assert_notification_for(person, text)
+    log_in person
+    visit "/"
+    assert_notification(text)
+  end
+
   test 'New participant program AND added you to program' do
     hdi = languages :Hdi
     lance = people :Lance
@@ -150,32 +156,29 @@ class NotificationsIntTest < ApplicationSystemTestCase
     assert_notification 'Rick Conrad gave himself the Literacy Specialist role', true
   end
 
-  test 'Added person to activity' do
-    postpone_failure(Date.new(2019, 2, 28))
-    # log_in people(:Rick)
-    # visit activity_path(translation_activities(:HdiGenesis))
-    # within('h3', text: 'People') { click_on 'Edit' }
+  test 'Added people to activity' do
+    log_in people(:Rick)
+    visit model_path(translation_activities(:HdiExodus))
+    within('h3', text: 'People') { click_icon('editIcon') }
+    find('select').select('Drew Maust')
+    click_on 'Add'
+    find('select').select('Abanda Dunno')
+    click_on 'Add'
+    click_on 'Save'
 
-    # select 'Maust, Drew', from: 'participant_id'
-    # click_on 'Add'
-
-    # log_in people(:Drew)
-    # assert_notification 'Rick Conrad added you to Genesis for the Hdi program'
-
-    # log_in people(:Andreas)
-    # assert_notification 'Rick Conrad added Drew Maust to Genesis for the Hdi program'
+    assert_notification_for people(:Drew), 'Rick Conrad added you to Exodus for the Hdi program'
+    assert_notification_for people(:Andreas), 'Rick Conrad added Abanda Dunno and Drew Maust to Exodus for the Hdi program'
   end
 
   test 'Added himself to activity' do
-    postpone_failure(Date.new(2019, 2, 28))
-    # log_in people(:Drew)
-    # visit activity_path(translation_activities(:HdiGenesis))
-    # within('h3', text: 'People') { click_on 'Edit' }
-    # select 'Maust, Drew', from: 'participant_id'
-    # click_on 'Add'
+    log_in people(:Drew)
+    visit model_path(translation_activities(:HdiExodus))
+    within('h3', text: 'People') { click_icon('editIcon') }
+    find('select').select('Drew Maust')
+    click_on 'Add'
+    click_on 'Save'
 
-    # log_in people(:Andreas)
-    # assert_notification 'Drew Maust added himself to Genesis for the Hdi program'
+    assert_notification_for people(:Andreas), 'Drew Maust added himself to Exodus for the Hdi program'
   end
 
   test 'Added you to event' do

@@ -135,4 +135,14 @@ class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
   def action_bar_click_delete
     find('div[data-div-name=editActionBar]').find(icon_selector('deleteIcon')).click
   end
+
+  def safe_assert_no_selector(*args)
+    sleep(0.2)
+    assert_no_selector(*args)
+  end
+
+  def safe_assert_no_text(*args)
+    sleep(0.2)
+    assert_no_text(*args)
+  end
 end

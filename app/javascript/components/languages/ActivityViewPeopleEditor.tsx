@@ -99,7 +99,7 @@ export default function ActivityViewPeopleEditor(props: IProps) {
                     display: fullName(ptptPerson.person)
                   }))}
                   value={addPtptId}
-                  handleChange={e => setAddPtptId(e.target.value)}
+                  handleChange={e => setAddPtptId(parseInt(e.target.value))}
                 />
                 <button
                   onClick={() =>

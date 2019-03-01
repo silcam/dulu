@@ -20,14 +20,14 @@ class ParticipantIntTest < ApplicationSystemTestCase
     action_bar_click_edit
     within('table', text: 'Translation Consultant') { click_icon('deleteIcon') }
     click_on 'Save'
-    assert_no_text 'Translation Consultant'
+    safe_assert_no_text 'Translation Consultant'
     @drew_hdi.reload
     refute @drew_hdi.roles.include?(:TranslationConsultant)
   end
 
   test "Show Page: Add Role" do
     setup_show_page
-    assert_no_text 'Linguist'
+    safe_assert_no_text 'Linguist'
     refute @drew_hdi.roles.include?(:Linguist)
     action_bar_click_edit
     within('table', text: 'Translation Consultant') do
@@ -42,7 +42,7 @@ class ParticipantIntTest < ApplicationSystemTestCase
 
   test "Add Activity" do
     visit model_path(translation_activities(:HdiGenesis))
-    assert_no_text 'Drew Maust'
+    safe_assert_no_text 'Drew Maust'
     within('h3', text: 'People') { click_icon('editIcon') }
     find('select').select('Drew Maust')
     click_on 'Add'
@@ -56,7 +56,13 @@ class ParticipantIntTest < ApplicationSystemTestCase
     within('h3', text: 'People') { click_icon('editIcon') }
     within('tr', text: 'Drew Maust') { click_icon('deleteIcon') }
     click_on 'Save'
-    assert_no_text 'Drew Maust'
+    safe_assert_no_text 'Drew Maust' 
+  end
+
+  test "Kevin can't edit ActivityPeople" do
+    log_in people(:Kevin)
+    visit model_path(translation_activities(:HdiEzra))
+    safe_assert_no_selector(icon_selector('editIcon'))
   end
 
   # test "Add Activity to Cluster Participant" do
@@ -100,7 +106,7 @@ class ParticipantIntTest < ApplicationSystemTestCase
       action_bar_click_delete
     end
     visit "#{model_path(languages(:Hdi))}/Translation"
-    assert_no_text 'Drew Maust'
+    safe_assert_no_text 'Drew Maust'
     assert_nil Participant.find_by(id: @drew_hdi)
   end
 
