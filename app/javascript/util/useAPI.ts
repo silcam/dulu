@@ -4,6 +4,7 @@ import DuluAxios from "./DuluAxios";
 
 const actionByDataKey: { [key: string]: string | string[] | undefined } = {
   activity: "setActivity",
+  cluster: "setCluster",
   language: "setLanguage",
   participants: "addParticipants",
   people: ["addPeople", "setPeople"]
@@ -27,6 +28,22 @@ export function useAPIGet(
     });
   }, refresh);
   return loading;
+}
+
+export function useAPIPost(
+  url: string,
+  data: AnyObj,
+  actions: ActionPack
+): [boolean, () => Promise<boolean>] {
+  const [saving, setSaving] = useState(false);
+  const save = async () => {
+    setSaving(true);
+    const responseData = await DuluAxios.post(url, data);
+    if (responseData) updateStore(responseData, actions);
+    setSaving(false);
+    return true;
+  };
+  return [saving, save];
 }
 
 export function useAPIPut(

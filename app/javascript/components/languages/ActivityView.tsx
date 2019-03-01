@@ -11,6 +11,7 @@ import VSpacer from "../shared/VSpacer";
 import ActivityViewPeople from "./ActivityViewPeople";
 import { IParticipant } from "../../models/Participant";
 import { useAPIGet } from "../../util/useAPI";
+import { ICluster } from "../../models/Cluster";
 
 interface IProps {
   activityId: number;
@@ -24,6 +25,7 @@ interface IProps {
   setLanguage: Setter<ILanguage>;
   addParticipants: Adder<IParticipant>;
   addPeople: Adder<Person>;
+  setCluster: Setter<ICluster>;
 }
 
 export default function ActivityView(props: IProps) {
@@ -32,7 +34,8 @@ export default function ActivityView(props: IProps) {
     setActivity: props.setActivity,
     setLanguage: props.setLanguage,
     addParticipants: props.addParticipants,
-    addPeople: props.addPeople
+    addPeople: props.addPeople,
+    setCluster: props.setCluster
   };
 
   useAPIGet(`/api/activities/${props.activityId}`, {}, actions, [
@@ -42,7 +45,7 @@ export default function ActivityView(props: IProps) {
   if (!props.activity) return <Loading />;
 
   if (Activity.isWorkshops(props.activity))
-    return <WorkshopActivity {...props} />;
+    return <WorkshopActivity {...props} actions={actions} />;
 
   return (
     <div>

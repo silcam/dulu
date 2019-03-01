@@ -5,6 +5,7 @@ import ActivityView from "./ActivityView";
 import { addParticipants } from "../../actions/participantActions";
 import { addPeople } from "../../actions/peopleActions";
 import { AppState } from "../../reducers/appReducer";
+import { setCluster } from "../../actions/clusterActions";
 
 interface IProps {
   activityId: number;
@@ -20,7 +21,8 @@ const mapDispatchToProps = {
   setActivity: activityActionCreators.setActivity,
   setLanguage,
   addParticipants,
-  addPeople
+  addPeople,
+  setCluster
 };
 
 const ActivityContainer = connect(

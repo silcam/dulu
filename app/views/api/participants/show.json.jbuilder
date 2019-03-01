@@ -34,4 +34,8 @@ if @participant.cluster
   json.cluster do
     json.call(@participant.cluster, :id, :name)
   end
+
+  json.languages @participant.cluster.languages do |language|
+    json.call(language, :id, :name)
+  end
 end

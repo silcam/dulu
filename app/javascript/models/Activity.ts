@@ -31,17 +31,17 @@ interface ProgressContainer {
   [stage: string]: IProgress;
 }
 
-// const mediaCategories = ["AudioScripture", "Film"];
-// const mediaFilms = [
-//   "JesusFilm",
-//   "LukeFilm",
-//   "ActsFilm",
-//   "GenesisFilm",
-//   "StoryOfGenesisFilm",
-//   "BookOfJohn",
-//   "MagdalenaFilm"
-// ];
-// const mediaScriptures = ["Bible", "Old_testament", "New_testament", "Other"];
+const mediaCategories = ["AudioScripture", "Film"];
+const mediaFilms = [
+  "JesusFilm",
+  "LukeFilm",
+  "ActsFilm",
+  "GenesisFilm",
+  "StoryOfGenesisFilm",
+  "BookOfJohn",
+  "MagdalenaFilm"
+];
+const mediaScriptures = ["Bible", "Old_testament", "New_testament", "Other"];
 const mediaProgress: ProgressContainer = {
   Planned: { percent: 0, color: Colors.white },
   Application: { percent: 20, color: Colors.red },
@@ -197,6 +197,11 @@ function compare(a: IActivity, b: IActivity) {
 }
 
 export default {
+  translationProgress,
+  mediaCategories,
+  mediaFilms,
+  mediaScriptures,
+
   availableBooks,
   nextStage,
   name,

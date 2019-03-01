@@ -5,6 +5,8 @@ import Workshop from "./Workshop";
 import NewWorkshopForm from "./NewWorkshopForm";
 import DuluAxios from "../../util/DuluAxios";
 import Activity from "../../models/Activity";
+import VSpacer from "../shared/VSpacer";
+import ActivityViewPeople from "../languages/ActivityViewPeople";
 
 export default class WorkshopActivity extends React.PureComponent {
   handleNewWorkshop = workshop => {
@@ -100,6 +102,8 @@ export default class WorkshopActivity extends React.PureComponent {
             t={this.props.t}
           />
         )}
+        <VSpacer height={40} />
+        <ActivityViewPeople {...this.props} />
       </div>
     );
   }
