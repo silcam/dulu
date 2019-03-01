@@ -15,7 +15,7 @@ json.activity do
   json.stage_date @activity.current_stage.start_date
 
   json.can do
-    json.update can?(:update_activities, @activity.language)
+    json.update can?(:update, @activity)
   end
 
   if @activity.category == :Workshops

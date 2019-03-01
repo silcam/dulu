@@ -70,10 +70,7 @@ export default class EventView extends React.PureComponent {
 
   save = async () => {
     this.setState({ saving: true });
-    const event = Event.prepareEventParams(
-      this.state.event,
-      this.state.eventBackup
-    );
+    const event = Event.prepareEventParams(this.state.event, this.props.event);
     const data = await DuluAxios.put(`/api/events/${this.props.event.id}`, {
       event: event
     });

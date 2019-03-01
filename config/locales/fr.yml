@@ -37,6 +37,7 @@ fr:
   Select: Choisier...
   Category: Catégorie
   Topic: Sujet
+  and: et
 
   #Dates
   Date: Date
@@ -403,9 +404,11 @@ fr:
     gave_person_role: "%{user_name} a donné le rôle %{role_name} à %{person_name}."
     gave_himself_role: "%{user_name} a donné le rôle %{role_name} à %{himself}."
     added_person_to_activity: "%{user_name} a ajouté %{person_name} à %{activity_name} pour le programme %{program_name}."
-    added_you_to_activity: "%{user_name} vous a ajouté à %{activity_name} pour le programme %{program_name}."
+    added_people_to_activity: "%{user_name} a ajouté %{person_names} à %{activity_name} pour le programme %{program_name}."
+    added_you_to_activity: "%{user_name} vous a ajouté à %{activity_name} pour le programme %{language_name}."
     added_himself_to_activity: "%{user_name} a ajouté %{himself} à %{activity_name} pour le programme %{program_name}."
     added_person_to_event: "%{user_name} a ajouté %{person_name} à l'événement %{event_name}."
+    added_people_to_event: "%{user_name} a ajouté %{person_names} à l'événement %{event_name}."
     added_you_to_event: "%{user_name} vous a ajouté à l'événement %{event_name}."
     added_himself_to_event: "%{user_name} a ajouté %{himself} à l'événement %{event_name}."
     new_event_for_program: "%{user_name} a créé l'événement %{event_name} pour le programme %{program_name}."

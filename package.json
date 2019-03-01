@@ -47,7 +47,8 @@
   "jest": {
     "preset": "ts-jest/presets/js-with-babel",
     "roots": [
-      "test/javascript"
+      "test/javascript",
+      "app/javascript"
     ],
     "moduleDirectories": [
       "node_modules",

@@ -57,7 +57,7 @@ class EventsIntegrationTest < ApplicationSystemTestCase
     setup_edit
     find('tr tr', text: 'Hdi').find(icon_selector('deleteIcon')).click
     click_on 'Save'
-    assert_no_text 'Hdi'
+    safe_assert_no_text 'Hdi'
   end
 
   test "Add and Remove Event Cluster" do
@@ -69,7 +69,7 @@ class EventsIntegrationTest < ApplicationSystemTestCase
     find(icon_selector('editIcon')).click
     find('tr tr', text: 'Ndop').find(icon_selector('deleteIcon')).click
     click_on 'Save'
-    assert_no_text 'Ndop'
+    safe_assert_no_text 'Ndop'
   end
 
   test "Add Rick" do
@@ -89,9 +89,9 @@ class EventsIntegrationTest < ApplicationSystemTestCase
   test "Remove Abanda" do
     setup_edit
     find('tr tr', text: 'Abanda').find(icon_selector('deleteIcon')).click
-    assert_no_text 'Abanda'
+    safe_assert_no_text 'Abanda'
     click_on 'Save'
-    assert_no_text 'Abanda'
+    safe_assert_no_text 'Abanda'
   end
 
   test "Create permission" do
@@ -101,7 +101,7 @@ class EventsIntegrationTest < ApplicationSystemTestCase
 
     log_in people(:Kevin)
     visit '/events'
-    assert_no_selector(icon_selector('addIcon'))
+    safe_assert_no_selector(icon_selector('addIcon'))
   end
 
   test "Edit and Delete Permissions" do
@@ -113,8 +113,8 @@ class EventsIntegrationTest < ApplicationSystemTestCase
     log_in people(:Lance)
     visit model_path(@genesis_consult)
     find('h2', text: 'Genesis Checking')
-    assert_no_selector(icon_selector('editIcon'))
-    assert_no_selector(icon_selector('deleteIcon'))
+    safe_assert_no_selector(icon_selector('editIcon'))
+    safe_assert_no_selector(icon_selector('deleteIcon'))
   end
 
   test "Delete Event" do
@@ -126,7 +126,7 @@ class EventsIntegrationTest < ApplicationSystemTestCase
       find(icon_selector('deleteIcon')).click
     end
     visit "/events/cal/2018/1"
-    assert_no_selector('a', text: 'Genesis Checking') # Should no longer see deleted event
+    safe_assert_no_selector('a', text: 'Genesis Checking') # Should no longer see deleted event
   end
 
   test "Delete Event I created" do
@@ -137,7 +137,7 @@ class EventsIntegrationTest < ApplicationSystemTestCase
       find(icon_selector('deleteIcon')).click
     end
     visit "/events/cal/2019/1"
-    assert_no_selector('a', text: "Lance's Event") # Should no longer see deleted event
+    safe_assert_no_selector('a', text: "Lance's Event") # Should no longer see deleted event
   end
 
   test "Don't change Event Creator when updating" do
@@ -149,7 +149,7 @@ class EventsIntegrationTest < ApplicationSystemTestCase
   end
 
   test "Can't make New Event with End Date before Start Date" do
-    postpone_failure(Date.new(2019, 2, 28), "Event form validates end date after start date")
+    postpone_failure(Date.new(2019, 3, 28), "Event form validates end date after start date")
     # my_setup
     # click_on 'Add Event'
     # fill_in_date 'event_start_date', FuzzyDate.new(2017,8, 1)

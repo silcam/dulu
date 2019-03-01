@@ -6,7 +6,7 @@ import ActivityContainer from "./ActivityContainer";
 export default class LanguageActivityPage extends React.PureComponent {
   render() {
     return (
-      <div>
+      <div className="padBottom">
         <h4>
           <Link to={this.props.basePath}>{`< ${
             this.props.language.name

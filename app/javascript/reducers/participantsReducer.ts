@@ -3,7 +3,7 @@ import {
   DELETE_PARTICIPANT,
   ParticipantAction
 } from "../actions/participantActions";
-import { IParticipant } from "../models/TypeBucket";
+import { IParticipant } from "../models/Participant";
 import { stdReducersNoList } from "./stdReducers";
 
 const emptyParticipant: IParticipant = {

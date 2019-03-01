@@ -2,7 +2,7 @@ import { Selection } from "./Dashboard";
 import { AppState } from "../../reducers/appReducer";
 import Cluster from "../../models/Cluster";
 import Region from "../../models/Region";
-import { IParticipant } from "../../models/TypeBucket";
+import { IParticipant } from "../../models/Participant";
 import { connect } from "react-redux";
 import MainContent from "./MainContent";
 

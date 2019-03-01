@@ -11,6 +11,7 @@ export default {
   All: "Tous",
   All_changes_saved: "Toute modification enregistrée",
   already_exists: "existe déjà",
+  and: "et",
   Any_literacy: "Alphabétisation",
   App: "Appli",
   As_of: "Depuis",
@@ -253,12 +254,16 @@ export default {
       "%{user_name} a donné le rôle %{role_name} à %{himself}.",
     added_person_to_activity:
       "%{user_name} a ajouté %{person_name} à %{activity_name} pour le programme %{program_name}.",
+    added_people_to_activity:
+      "%{user_name} a ajouté %{person_names} à %{activity_name} pour le programme %{program_name}.",
     added_you_to_activity:
       "%{user_name} vous a ajouté à %{activity_name} pour le programme %{program_name}.",
     added_himself_to_activity:
       "%{user_name} a ajouté %{himself} à %{activity_name} pour le programme %{program_name}.",
     added_person_to_event:
       "%{user_name} a ajouté %{person_name} à l'événement %{event_name}.",
+    added_people_to_event:
+      "%{user_name} a ajouté %{person_names} à l'événement %{event_name}.",
     added_you_to_event:
       "%{user_name} vous a ajouté à l'événement %{event_name}.",
     added_himself_to_event:

@@ -10,10 +10,11 @@ import ParticipantsContainer from "../languages/ParticipantsContainer";
 import Cluster, { IClusterInflated, ICluster } from "../../models/Cluster";
 import { History } from "history";
 import Loading from "../shared/Loading";
-import { Deleter, Adder, IParticipant } from "../../models/TypeBucket";
+import { Deleter, Adder } from "../../models/TypeBucket";
 import { Person } from "../../models/Person";
 import { ILanguage } from "../../models/Language";
 import I18nContext from "../../application/I18nContext";
+import { IParticipant } from "../../models/Participant";
 
 interface IProps {
   id: number;

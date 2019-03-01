@@ -6,10 +6,10 @@ class ParticipantIntTest < ApplicationSystemTestCase
     @zulgo = languages :Zulgo
     @zulgo_ezra = translation_activities :ZulgoEzra
     @drew = people :Drew
+    @drew_hdi = participants(:DrewHdi)
   end
 
   def setup_show_page
-    @drew_hdi = participants(:DrewHdi)
     visit model_path(@drew_hdi)
   end
 
@@ -20,14 +20,14 @@ class ParticipantIntTest < ApplicationSystemTestCase
     action_bar_click_edit
     within('table', text: 'Translation Consultant') { click_icon('deleteIcon') }
     click_on 'Save'
-    assert_no_text 'Translation Consultant'
+    safe_assert_no_text 'Translation Consultant'
     @drew_hdi.reload
     refute @drew_hdi.roles.include?(:TranslationConsultant)
   end
 
   test "Show Page: Add Role" do
     setup_show_page
-    assert_no_text 'Linguist'
+    safe_assert_no_text 'Linguist'
     refute @drew_hdi.roles.include?(:Linguist)
     action_bar_click_edit
     within('table', text: 'Translation Consultant') do
@@ -41,24 +41,28 @@ class ParticipantIntTest < ApplicationSystemTestCase
   end
 
   test "Add Activity" do
-    postpone_failure(Date.new(2019, 2, 28))
-    # setup_show_page
-    # find('h3', text: 'Activities').click_on('Edit')
-    # select 'Genesis', from: 'activity_id'
-    # click_button 'Add'
-    # within('div.showable-form-section', text: 'Activities') do
-    #   assert_text 'Genesis'
-    # end
+    visit model_path(translation_activities(:HdiGenesis))
+    safe_assert_no_text 'Drew Maust'
+    within('h3', text: 'People') { click_icon('editIcon') }
+    find('select').select('Drew Maust')
+    click_on 'Add'
+    click_on 'Save'
+    assert_selector('li', text: 'Drew Maust - Translation Consultant');
   end
 
   test "Remove Activity" do
-    postpone_failure(Date.new(2019, 2, 28))
-    # setup_show_page
-    # find('h3', text: 'Activities').click_on('Edit')
-    # find('tr', text: 'Ezra').click_on('Remove')
-    # within('div.showable-form-section', text: 'Activities') do
-    #   refute_text 'Ezra'
-    # end
+    visit model_path(translation_activities(:HdiEzra))
+    assert_text 'Drew Maust'
+    within('h3', text: 'People') { click_icon('editIcon') }
+    within('tr', text: 'Drew Maust') { click_icon('deleteIcon') }
+    click_on 'Save'
+    safe_assert_no_text 'Drew Maust' 
+  end
+
+  test "Kevin can't edit ActivityPeople" do
+    log_in people(:Kevin)
+    visit model_path(translation_activities(:HdiEzra))
+    safe_assert_no_selector(icon_selector('editIcon'))
   end
 
   # test "Add Activity to Cluster Participant" do
@@ -102,7 +106,7 @@ class ParticipantIntTest < ApplicationSystemTestCase
       action_bar_click_delete
     end
     visit "#{model_path(languages(:Hdi))}/Translation"
-    assert_no_text 'Drew Maust'
+    safe_assert_no_text 'Drew Maust'
     assert_nil Participant.find_by(id: @drew_hdi)
   end
 

@@ -16,7 +16,7 @@ export default function LanguagePageRouter(props) {
         path={props.basePath + "/participants/:participantId"}
         render={({ match, history }) => (
           <LanguageParticipantPage
-            participantId={match.params.participantId}
+            participantId={parseInt(match.params.participantId)}
             history={history}
             {...props}
           />

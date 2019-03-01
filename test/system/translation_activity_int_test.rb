@@ -9,7 +9,7 @@ class TranslationActivityIntTest < ApplicationSystemTestCase
   test "New Translation Activity" do
     log_in(people(:Olga))
     visit "#{model_path(@zulgo)}/Translation"
-    assert_no_selector('tr', text: 'Genesis Planned')
+    safe_assert_no_selector('tr', text: 'Genesis Planned')
     within('h3', text: 'Activities') { click_icon('addIcon') }
     find('select').select 'Genesis'
     click_on 'Save'
@@ -19,7 +19,7 @@ class TranslationActivityIntTest < ApplicationSystemTestCase
   test "Rick Deletes Hdi Exodus" do
     log_in people(:Rick)
     visit model_path(translation_activities(:HdiExodus))
-    postpone_failure(Date.new(2019, 2, 28), "Need to test deleting activities once we can do that")
+    postpone_failure(Date.new(2019, 3, 28), "Need to test deleting activities once we can do that")
     # assert_selector('input[value="Delete Exodus"]')
     # click_on 'Delete Exodus'
     # # accept_js_confirm
@@ -30,8 +30,8 @@ class TranslationActivityIntTest < ApplicationSystemTestCase
   test "Kendall can't delete Exodus" do
     log_in people(:Kendall)
     visit model_path(translation_activities(:HdiExodus))
-    postpone_failure(Date.new(2019, 2, 28), "Need to test deleting activities once we can do that")
-    assert_no_selector('input[value="Delete Exodus"]')
+    postpone_failure(Date.new(2019, 3, 28), "Need to test deleting activities once we can do that")
+    safe_assert_no_selector('input[value="Delete Exodus"]')
   end
 
   test "Drew updates stage for Hdi Ezra" do 

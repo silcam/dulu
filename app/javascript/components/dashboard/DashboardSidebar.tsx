@@ -1,6 +1,6 @@
 import React, { useEffect, useContext } from "react";
 import DuluAxios from "../../util/DuluAxios";
-import { Adder, IParticipant } from "../../models/TypeBucket";
+import { Adder } from "../../models/TypeBucket";
 import { IRegion } from "../../models/Region";
 import { ICluster } from "../../models/Cluster";
 import { ILanguage } from "../../models/Language";
@@ -12,6 +12,7 @@ import DashboardSidebarItem from "./DashboardSidebarItem";
 import { fullName, Person } from "../../models/Person";
 import { Selection } from "./Dashboard";
 import Loading from "../shared/Loading";
+import { IParticipant } from "../../models/Participant";
 
 interface IProps {
   selection: Selection;

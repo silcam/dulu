@@ -26,6 +26,7 @@ export default class ParticipantView extends React.PureComponent {
       this.props.setPerson(data.person);
       data.language && this.props.setLanguage(data.language);
       data.cluster && this.props.setCluster(data.cluster);
+      data.languages && this.props.addLanguages(data.languages);
       this.props.addParticipants([data.participant]);
       this.props.addActivities(data.activities);
     }
@@ -158,7 +159,7 @@ export default class ParticipantView extends React.PureComponent {
             )}
           </tbody>
         </table>
-        {this.props.language && !this.state.editing && (
+        {!this.state.editing && (
           <div style={{ paddingTop: "20px" }}>
             <h3>{t("Activities")}</h3>
             <ul className={style.stdList}>
@@ -166,7 +167,14 @@ export default class ParticipantView extends React.PureComponent {
                 <li key={activity.id}>
                   <ProgressBar {...Activity.progress(activity)} small />
                   <Spacer width="10px" />
-                  <Link to={`${this.props.basePath}/activities/${activity.id}`}>
+                  {this.props.languages[activity.language_id] &&
+                    this.props.languages[activity.language_id].name}
+                  <Spacer width="10px" />
+                  <Link
+                    to={`/languages/${activity.language_id}/activities/${
+                      activity.id
+                    }`}
+                  >
                     {Activity.name(activity, t)}
                   </Link>
                 </li>
@@ -185,6 +193,7 @@ ParticipantView.propTypes = {
   person: PropTypes.object,
   activities: PropTypes.array,
   clusterLanguage: PropTypes.object,
+  languages: PropTypes.object, // ById<ILanguage>
 
   history: PropTypes.object.isRequired,
   basePath: PropTypes.string.isRequired,
@@ -194,6 +203,8 @@ ParticipantView.propTypes = {
   addActivities: PropTypes.func.isRequired,
   setLanguage: PropTypes.func.isRequired,
   setCluster: PropTypes.func.isRequired,
+  addLanguages: PropTypes.func.isRequired,
 
-  language: PropTypes.object // If in a language context
+  language: PropTypes.object, // If in a language context
+  cluster: PropTypes.object
 };

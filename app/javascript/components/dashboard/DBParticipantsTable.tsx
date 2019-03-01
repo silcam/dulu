@@ -4,11 +4,12 @@ import { Link } from "react-router-dom";
 import { fullName, Person } from "../../models/Person";
 import CommaList from "../shared/CommaList";
 import { PeopleParticipants } from "./DBParticipantsContainer";
-import { Adder, IParticipant } from "../../models/TypeBucket";
+import { Adder } from "../../models/TypeBucket";
 import DuluAxios from "../../util/DuluAxios";
 import Role from "../../models/Role";
 import I18nContext from "../../application/I18nContext";
 import StyledTable from "../shared/StyledTable";
+import { IParticipant } from "../../models/Participant";
 
 export interface IProps extends PeopleParticipants {
   languageIds: number[];

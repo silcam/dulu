@@ -9,13 +9,9 @@ import { T } from "../../i18n/i18n";
 import { BasicModel } from "../../models/BasicModel";
 import { ICluster } from "../../models/Cluster";
 import { History } from "history";
-import {
-  IParticipantInflated,
-  Adder,
-  IParticipant,
-  Setter
-} from "../../models/TypeBucket";
+import { Adder, Setter } from "../../models/TypeBucket";
 import { ILanguage } from "../../models/Language";
+import { IParticipantInflated, IParticipant } from "../../models/Participant";
 
 /*
   Used by LanguagePageContent and ClusterPage!

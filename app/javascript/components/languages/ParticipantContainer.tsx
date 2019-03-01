@@ -1,9 +1,9 @@
 import { connect } from "react-redux";
-import Activity from "../../models/Activity";
+import Activity, { IActivity } from "../../models/Activity";
 import * as participantActionCreators from "../../actions/participantActions";
 import { setPerson } from "../../actions/peopleActions";
 import { addActivities } from "../../actions/activityActions";
-import { setLanguage } from "../../actions/languageActions";
+import { setLanguage, addLanguages } from "../../actions/languageActions";
 import { setCluster } from "../../actions/clusterActions";
 import ParticipantView from "./ParticipantView";
 import { AppState } from "../../reducers/appReducer";
@@ -21,15 +21,12 @@ const mapStateToProps = (state: AppState, ownProps: IProps) => {
     clusterLanguage: participant.cluster_id
       ? state.clusters.byId[participant.cluster_id]
       : state.languages.byId[participant.language_id!],
-    activities: (Object.values(state.activities) as {
-      participant_ids?: number[];
-    }[])
-      .filter(
-        activity =>
-          activity.participant_ids &&
-          activity.participant_ids.includes(ownProps.id)
-      )
-      .sort(Activity.compare)
+    activities: (Object.values(state.activities) as IActivity[])
+      .filter(activity => {
+        return activity.participant_ids.includes(ownProps.id);
+      })
+      .sort(Activity.compare),
+    languages: state.languages.byId
   };
 };
 
@@ -38,6 +35,7 @@ const mapDispatchToProps = {
   addActivities,
   setPerson,
   setLanguage,
+  addLanguages,
   setCluster
 };
 

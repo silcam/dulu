@@ -64,11 +64,7 @@ export default class ClustersBoard extends React.Component<IProps, IState> {
         </div>
         <div className={style.masterDetailContainer}>
           <div className={style.master}>
-            <ClustersTable
-              t={t}
-              id={this.props.id}
-              clusters={this.props.clusters}
-            />
+            <ClustersTable id={this.props.id} clusters={this.props.clusters} />
           </div>
           <div className={style.detail}>
             {this.props.action == "new" && (

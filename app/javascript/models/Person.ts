@@ -1,5 +1,5 @@
 import baseCompare from "../util/baseCompare";
-import { IParticipant } from "./TypeBucket";
+import { IParticipant } from "./Participant";
 
 export interface Person {
   id: number;

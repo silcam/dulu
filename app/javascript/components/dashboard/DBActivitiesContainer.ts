@@ -3,7 +3,7 @@ import Language from "../../models/Language";
 import { addActivities } from "../../actions/activityActions";
 import { connect } from "react-redux";
 import DBActivitiesTable from "./DBActivitiesTable";
-import { ActivityType } from "../../models/TypeBucket";
+import { ActivityType } from "../../models/Activity";
 
 interface IProps {
   languageIds: number[];

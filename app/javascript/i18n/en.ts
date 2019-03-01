@@ -176,12 +176,16 @@ export default {
     gave_himself_role: "%{user_name} gave %{himself} the %{role_name} role.",
     added_person_to_activity:
       "%{user_name} added %{person_name} to %{activity_name} for the %{program_name} program.",
+    added_people_to_activity:
+      "%{user_name} added %{person_names} to %{activity_name} for the %{program_name} program.",
     added_you_to_activity:
       "%{user_name} added you to %{activity_name} for the %{program_name} program.",
     added_himself_to_activity:
       "%{user_name} added %{himself} to %{activity_name} for the %{program_name} program.",
     added_person_to_event:
       "%{user_name} added %{person_name} to the %{event_name} event.",
+    added_people_to_event:
+      "%{user_name} added %{person_names} to the %{event_name} event.",
     added_you_to_event: "%{user_name} added you to the %{event_name} event.",
     added_himself_to_event:
       "%{user_name} added %{himself} to the %{event_name} event.",

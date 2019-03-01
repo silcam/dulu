@@ -13,6 +13,10 @@ div.fullHeight {
     height: 100%;
 }
 
+div.padBottom {
+    padding-bottom: 40px;
+}
+
 ul {
     list-style-type: none;
     margin: 0;

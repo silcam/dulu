@@ -1,4 +1,4 @@
-import { IActivity } from "../../models/TypeBucket";
+import { IActivity } from "../../models/Activity";
 import { ILanguage } from "../../models/Language";
 import baseCompare from "../../util/baseCompare";
 import intCompare from "../../util/intCompare";
