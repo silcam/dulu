@@ -71,7 +71,7 @@ const DuluAxios: IDuluAxios = {
         }
       });
       clearNetworkError();
-      return response.data;
+      return response.data || true;
     } catch (error) {
       handleError(error);
       return false;

@@ -22,13 +22,6 @@ class OrganizationTest < ActiveSupport::TestCase
   #   assert_includes @sil.current_participants, drew_hdi
   # end
 
-  test 'Current Programs' do
-    postpone_failure(Date.new(2019, 3, 7))
-    # assert(Date.today < Date.new(2019, 2, 15), "Redo this test with new organization-language relationship")
-    # hdi_language = languages :Hdi
-    # assert_includes @sil.current_languages, hdi_language
-  end
-
   test 'Search' do
     orgs = Organization.search('sil')
     assert_equal 1, orgs.count
