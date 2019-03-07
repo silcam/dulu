@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import DuluAxios from "../../util/DuluAxios";
 import update from "immutability-helper";
 
@@ -17,19 +17,20 @@ export default function useSearch<SearchResult>(
   minQueryLength: number
 ) {
   const resultsContainer = useRef<ResultsContainer<SearchResult>>({});
+  const [, setLastResultsUpdate] = useState(0); // The resultsContainer is not in state, so we need to update something in state to trigger a rerender
 
   useEffect(() => {
     if (query.length < minQueryLength) return;
     if (resultsContainer.current[query] !== undefined) return; // No need to search
 
-    search(queryPath, query).then(
-      results =>
-        (resultsContainer.current = updateResultsContainer(
-          resultsContainer.current,
-          query,
-          results
-        ))
-    );
+    search(queryPath, query).then(results => {
+      resultsContainer.current = updateResultsContainer(
+        resultsContainer.current,
+        query,
+        results
+      );
+      setLastResultsUpdate(new Date().valueOf());
+    });
   }, [query]);
 
   return bestResults(query, resultsContainer.current);
