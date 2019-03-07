@@ -5,7 +5,7 @@ export interface IBibleBook {
   name: string;
 }
 
-function name(id: number, t: T) {
+function name(id: number, t: T): string {
   const index = id - 1; // Genesis has id 1
   return t("bible_books")[index];
 }

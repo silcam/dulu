@@ -1,11 +1,10 @@
 import React from "react";
 import styles from "./CheckboxInput.css";
-import { JSEventHandler } from "../../models/TypeBucket";
 
 interface IProps {
   name?: string;
   value: boolean;
-  handleCheck: JSEventHandler;
+  setValue: (v: boolean) => void;
   text: string;
 }
 
@@ -16,7 +15,7 @@ export default function CheckBoxInput(props: IProps) {
         type="checkbox"
         name={props.name}
         checked={props.value}
-        onChange={props.handleCheck}
+        onChange={e => props.setValue(e.target.checked)}
       />
       &nbsp;
       {props.text}

@@ -1,10 +1,11 @@
 import React from "react";
 import PropTypes from "prop-types";
 import styles from "./LanguagePageContent.css";
-import TranslationStatus from "./TranslationStatus";
 import ActivitiesContainer from "./ActivitiesContainer";
 import ParticipantsContainer from "./ParticipantsContainer";
 import LanguageEventsContainer from "./LanguageEventsContainer";
+import DomainStatusContainer from "./DomainStatusContainer";
+import { DSICategories } from "../../models/DomainStatusItem";
 
 export default function LanguagePageContent(props) {
   if (props.tab == "Events") {
@@ -25,8 +26,9 @@ export default function LanguagePageContent(props) {
       />
     );
   }
+
   return (
-    <div className={styles.pageContent}>
+    <div className={`padBottom ${styles.pageContent}`}>
       {(props.tab == "Translation" || props.tab == "Media") && (
         <ActivitiesContainer
           {...props}
@@ -67,9 +69,32 @@ export default function LanguagePageContent(props) {
         history={props.history}
       />
 
-      {props.tab == "Translation" && <TranslationStatus {...props} />}
+      <DomainStatusContainer
+        {...props}
+        categories={categoriesByDomain(props.tab)}
+      />
     </div>
   );
+}
+
+function categoriesByDomain(domain) {
+  switch (domain) {
+    case "Translation":
+      return [
+        DSICategories.PublishedScripture,
+        DSICategories.ScriptureApp,
+        DSICategories.AudioScripture,
+        DSICategories.Film
+      ];
+    case "Media":
+      return [
+        DSICategories.AudioScripture,
+        DSICategories.Film,
+        DSICategories.ScriptureApp
+      ];
+    default:
+      return [];
+  }
 }
 
 LanguagePageContent.propTypes = {
@@ -77,6 +102,6 @@ LanguagePageContent.propTypes = {
   language: PropTypes.object.isRequired,
   tab: PropTypes.string.isRequired,
   location: PropTypes.object.isRequired,
-  
+
   history: PropTypes.object.isRequired
 };

@@ -1,0 +1,24 @@
+td.categoryHeader {
+    max-width: 200px;
+    vertical-align: top;
+    font-size: 17px;
+}
+
+div.subcategory {
+    padding-bottom: 8px;
+}
+
+.subcategoryHeader {
+    font-size: 14px;
+    font-weight: bold;
+    margin: 0;
+}
+
+.subcategoryHeaderUnchecked {
+    composes: subcategoryHeader;
+    color: gray
+}
+
+li.ds_item {
+    padding-left: 20px;
+}

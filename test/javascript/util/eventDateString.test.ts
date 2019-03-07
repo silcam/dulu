@@ -1,5 +1,5 @@
-import eventDateString from "util/eventDateString";
 import { monthNames } from "../testUtil";
+import eventDateString from "../../../app/javascript/util/eventDateString";
 const months = monthNames();
 
 test("eventDateString with one date", () => {

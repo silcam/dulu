@@ -1,21 +1,25 @@
-import React from "react";
+import React, { useContext } from "react";
 import EditIcon from "../shared/icons/EditIcon";
 import DeleteIcon from "../shared/icons/DeleteIcon";
 import styles from "./EditActionBar.css";
 import PropTypes from "prop-types";
+import I18nContext from "../../application/I18nContext";
 
 export default function EditActionBar(props) {
-  if (!props.can) return null;
+  const t = useContext(I18nContext);
+
+  if (!props.editing && !props.can) return null;
+
   return props.editing ? (
     <div className={styles.actionBar} data-div-name="editActionBar">
       <button
         onClick={props.save}
         disabled={(props.saveDisabled || props.saving) && "disabled"}
       >
-        {props.saving ? props.t("Saving") : props.t("Save")}
+        {props.saving ? t("Saving") : t("Save")}
       </button>
       <button className="btnRed" onClick={props.cancel}>
-        {props.t("Cancel")}
+        {t("Cancel")}
       </button>
     </div>
   ) : (
@@ -29,13 +33,12 @@ export default function EditActionBar(props) {
 }
 
 EditActionBar.propTypes = {
-  can: PropTypes.object.isRequired,
+  can: PropTypes.object,
   editing: PropTypes.bool,
   saving: PropTypes.bool,
   save: PropTypes.func,
   saveDisabled: PropTypes.bool,
   cancel: PropTypes.func,
-  edit: PropTypes.func.isRequired,
-  delete: PropTypes.func, // Not required if not needed
-  t: PropTypes.func
+  edit: PropTypes.func,
+  delete: PropTypes.func // Not required if not needed
 };

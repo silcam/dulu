@@ -80,7 +80,6 @@ export default function RegionPage(props: IProps) {
         editing={editing}
         saveDisabled={invalid}
         saving={saving}
-        t={t}
         edit={edit}
         save={save}
         delete={del}

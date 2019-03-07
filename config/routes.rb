@@ -27,6 +27,7 @@ Rails.application.routes.draw do
       resources :workshops_activities
       resources :participants
       resources :events
+      resources :domain_status_items, shallow: true
       get 'more_events', on: :member
       get 'get_event', on: :member
       get 'search', on: :collection

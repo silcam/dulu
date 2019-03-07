@@ -1,0 +1,24 @@
+{
+    "compilerOptions": {
+      "allowJs": true,
+      "allowSyntheticDefaultImports": true,
+      "checkJs": false,
+      "declaration": false,
+      "lib": ["esnext", "dom"],
+      "module": "es6",
+      "moduleResolution": "node",
+      "noEmit": true,
+      "sourceMap": true,
+      "target": "es3",
+      "jsx": "react",
+      "strict": true
+    },
+    "exclude": [
+      "**/*.spec.ts",
+      "node_modules",
+      "vendor",
+      "public"
+    ],
+    "compileOnSave": true
+  }
+  

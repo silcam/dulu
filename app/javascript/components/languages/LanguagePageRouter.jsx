@@ -7,6 +7,7 @@ import LanguageEventPage from "./LanguageEventPage";
 import LanguageActivityPage from "./LanguageActivityPage";
 import LanguageNewEventPage from "./LanguageNewEventPage";
 import Loading from "../shared/Loading";
+import { DomainStatusItemPageContainer } from "./DomainStatusContainer";
 
 export default function LanguagePageRouter(props) {
   if (!props.language) return <Loading />;
@@ -47,6 +48,16 @@ export default function LanguagePageRouter(props) {
         render={({ match }) => (
           <LanguageActivityPage
             activityId={match.params.activityId}
+            {...props}
+          />
+        )}
+      />
+      <Route
+        path={props.basePath + "/domain_status_items/:domainStatusItemId"}
+        render={({ match, history }) => (
+          <DomainStatusItemPageContainer
+            domainStatusItemId={parseInt(match.params.domainStatusItemId)}
+            history={history}
             {...props}
           />
         )}

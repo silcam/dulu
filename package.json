@@ -46,6 +46,11 @@
   },
   "jest": {
     "preset": "ts-jest/presets/js-with-babel",
+    "globals": {
+      "ts-jest": {
+        "tsConfig": "tsconfig.test.json"
+      }
+    },
     "roots": [
       "test/javascript",
       "app/javascript"

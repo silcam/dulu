@@ -9,7 +9,7 @@ import {
 import Organization, { IOrganization } from "../models/Organization";
 import { stdReducers } from "./stdReducers";
 
-const emptyOrganization: IOrganization = {
+export const emptyOrganization: IOrganization = {
   id: 0,
   short_name: ""
 };
