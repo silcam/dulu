@@ -9,7 +9,7 @@ import {
 import { personCompare, IPerson } from "../models/Person";
 import { stdReducers } from "./stdReducers";
 
-const emptyPerson = {
+export const emptyPerson = {
   id: 0,
   first_name: "",
   last_name: "",

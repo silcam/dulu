@@ -50,7 +50,7 @@ export default function DomainStatus(props: DSProps) {
     <div>
       <h3>
         {t("Status")}
-        {props.language.can.update && (
+        {props.language.can.update && !addingNew && (
           <React.Fragment>
             <Spacer width="10px" />
             <AddIcon onClick={() => setAddingNew(true)} />

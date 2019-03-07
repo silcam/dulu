@@ -14,7 +14,7 @@ export interface IDomainStatusItem {
   platforms: string;
   organization_id: number | null;
   person_id: number | null;
-  creator_id: number | null;
+  creator_id: number;
   bible_book_ids: number[];
 }
 

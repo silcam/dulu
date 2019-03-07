@@ -143,21 +143,25 @@ export default function DomainStatusItemForm(props: IProps) {
       </P>
 
       <P>
-        <label>{t("Person")}</label>
-        <PersonPicker
-          selectedId={personId}
-          setSelected={setPersonId}
-          allowBlank
-        />
+        <label>
+          {t("Person")}
+          <PersonPicker
+            selectedId={personId}
+            setSelected={setPersonId}
+            allowBlank
+          />
+        </label>
       </P>
 
       <P>
-        <label>{t("Organization")}</label>
-        <OrganizationPicker
-          selectedId={organizationId}
-          setSelected={setOrganizationId}
-          allowBlank
-        />
+        <label>
+          {t("Organization")}
+          <OrganizationPicker
+            selectedId={organizationId}
+            setSelected={setOrganizationId}
+            allowBlank
+          />
+        </label>
       </P>
 
       {!props.useEditActionBar && (

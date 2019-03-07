@@ -37,7 +37,7 @@ export default function BooksSelector(props: IProps) {
     <div>
       <div>
         {props.bookIds.map(id => (
-          <span style={{ marginRight: "8px" }}>
+          <span style={{ marginRight: "8px" }} key={id}>
             {BibleBook.name(id, t)}
             <DeleteIcon
               iconSize="small"
@@ -53,6 +53,7 @@ export default function BooksSelector(props: IProps) {
               value={addingId}
               options={availableBookOptions}
               handleChange={e => setAddingId(parseInt(e.target.value))}
+              name="BibleBook"
               autoFocus
             />
             <button onClick={add}>{t("Add")}</button>
