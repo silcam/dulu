@@ -13,6 +13,7 @@ class Language < ApplicationRecord
   has_many :linguistic_activities
   has_many :media_activities
   has_many :bible_books, through: :translation_activities
+  has_many :domain_status_items
 
   has_many :publications
   has_many :domain_updates

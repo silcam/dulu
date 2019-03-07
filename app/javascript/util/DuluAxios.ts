@@ -7,7 +7,7 @@ interface IDuluAxios {
   get: (url: string, params?: {}) => Promise<MaybeAnyObj>;
   post: (url: string, data: PostParams) => Promise<MaybeAnyObj>;
   put: (url: string, data: PostParams) => Promise<MaybeAnyObj>;
-  delete: (url: string) => Promise<boolean>;
+  delete: (url: string) => Promise<MaybeAnyObj>;
   authToken?: string;
   setNetworkError?: (error: DuluAxiosError) => void;
   clearNetworkError?: () => void;
@@ -63,7 +63,7 @@ const DuluAxios: IDuluAxios = {
   delete: async url => {
     try {
       console.log(`DELETE ${url}`);
-      await axios({
+      const response = await axios({
         method: "delete",
         url: url,
         data: {
@@ -71,7 +71,7 @@ const DuluAxios: IDuluAxios = {
         }
       });
       clearNetworkError();
-      return true;
+      return response.data;
     } catch (error) {
       handleError(error);
       return false;

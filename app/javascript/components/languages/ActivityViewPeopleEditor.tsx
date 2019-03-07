@@ -114,7 +114,7 @@ export default function ActivityViewPeopleEditor(props: IProps) {
         </tbody>
       </table>
       <SmallSaveAndCancel
-        handleSave={() => save().then(props.cancelEdit)}
+        handleSave={() => save(props.cancelEdit)}
         handleCancel={props.cancelEdit}
         saveInProgress={saving}
       />

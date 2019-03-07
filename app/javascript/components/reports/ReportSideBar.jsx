@@ -1,11 +1,11 @@
 import React from "react";
 import PropTypes from "prop-types";
-import SearchTextInput from "../shared/SearchTextInput";
 import P from "../shared/P";
 import DeleteIcon from "../shared/icons/DeleteIcon";
 import Report from "../../models/Report";
 import CheckBoxInput from "../shared/CheckboxInput";
 import update from "immutability-helper";
+import { LanguagePicker, ClusterPicker } from "../shared/SearchPickers";
 
 export default function ReportSideBar(props) {
   const t = props.t;
@@ -30,12 +30,11 @@ export default function ReportSideBar(props) {
             </li>
           ))}
         </ul>
-        <SearchTextInput
-          queryPath="/api/clusters/search"
-          updateValue={props.addCluster}
+        <ClusterPicker
+          selectedId={undefined}
+          setSelected={id => props.addCluster({ id: id })}
           placeholder={t("Add_cluster")}
-          text=""
-          addBox
+          autoClear
         />
       </P>
       <P>
@@ -51,12 +50,11 @@ export default function ReportSideBar(props) {
             </li>
           ))}
         </ul>
-        <SearchTextInput
-          queryPath="/api/languages/search"
-          updateValue={props.addProgram}
+        <LanguagePicker
+          selectedId={undefined}
+          setSelected={id => props.addProgram({ id: id })}
           placeholder={t("Add_language")}
-          text=""
-          addBox
+          autoClear
         />
       </P>
       <P>
@@ -67,10 +65,10 @@ export default function ReportSideBar(props) {
               <CheckBoxInput
                 text={t(testament)}
                 value={report.elements.activities[testament]}
-                handleCheck={e =>
+                handleCheck={checked =>
                   props.updateElements(
                     update(report.elements, {
-                      activities: { [testament]: { $set: e.target.checked } }
+                      activities: { [testament]: { $set: checked } }
                     })
                   )
                 }
@@ -87,10 +85,10 @@ export default function ReportSideBar(props) {
               <CheckBoxInput
                 text={Report.tPubName(pub, t)}
                 value={report.elements.publications[pub] || false}
-                handleCheck={e =>
+                handleCheck={checked =>
                   props.updateElements(
                     update(report.elements, {
-                      publications: { [pub]: { $set: e.target.checked } }
+                      publications: { [pub]: { $set: checked } }
                     })
                   )
                 }

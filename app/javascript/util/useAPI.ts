@@ -5,7 +5,10 @@ import DuluAxios from "./DuluAxios";
 const actionByDataKey: { [key: string]: string | string[] | undefined } = {
   activity: "setActivity",
   cluster: "setCluster",
+  clusters: ["setClusters", "addClusters"],
   language: "setLanguage",
+  languages: ["addLanguages", "setLanguages"],
+  organizations: ["addOrganizations", "setOrganizations"],
   participants: "addParticipants",
   people: ["addPeople", "setPeople"]
 };
@@ -30,36 +33,63 @@ export function useAPIGet(
   return loading;
 }
 
+interface SaveFunction {
+  (cb?: () => void, otherData?: AnyObj): void;
+}
+
 export function useAPIPost(
   url: string,
   data: AnyObj,
   actions: ActionPack
-): [boolean, () => Promise<boolean>] {
-  const [saving, setSaving] = useState(false);
-  const save = async () => {
-    setSaving(true);
-    const responseData = await DuluAxios.post(url, data);
-    if (responseData) updateStore(responseData, actions);
-    setSaving(false);
-    return true;
-  };
-  return [saving, save];
+): [boolean, SaveFunction] {
+  return useAPIPostOrPut(url, data, actions, DuluAxios.post);
 }
 
 export function useAPIPut(
   url: string,
   data: AnyObj,
   actions: ActionPack
-): [boolean, () => Promise<boolean>] {
+): [boolean, SaveFunction] {
+  return useAPIPostOrPut(url, data, actions, DuluAxios.put);
+}
+
+function useAPIPostOrPut(
+  url: string,
+  data: AnyObj,
+  actions: ActionPack,
+  apiCall: (url: string, data: AnyObj) => Promise<AnyObj | undefined>
+): [boolean, SaveFunction] {
   const [saving, setSaving] = useState(false);
-  const save = async () => {
+  const save = async (successCallback?: () => void, otherData?: AnyObj) => {
+    const putData = otherData || data;
     setSaving(true);
-    const responseData = await DuluAxios.put(url, data);
-    if (responseData) updateStore(responseData, actions);
+    const responseData = await apiCall(url, putData);
     setSaving(false);
-    return true;
+    if (responseData) {
+      updateStore(responseData, actions);
+      if (successCallback) successCallback();
+    }
   };
   return [saving, save];
+}
+
+export function useAPIDelete(
+  url: string,
+  actions: ActionPack,
+  confirmMessage?: string
+): [boolean, (cb: () => void) => void] {
+  const [deleting, setDeleting] = useState(false);
+  const deleteItem = async (successCallback?: () => void) => {
+    if (confirmMessage && !confirm(confirmMessage)) return;
+    setDeleting(true);
+    const responseData = await DuluAxios.delete(url);
+    if (responseData) {
+      if (successCallback) successCallback();
+      updateStore(responseData, actions);
+    }
+    setDeleting(false);
+  };
+  return [deleting, deleteItem];
 }
 
 function updateStore(data: AnyObj, actions: ActionPack) {

@@ -93,8 +93,8 @@ export default class NewParticipantForm extends React.PureComponent {
               <CheckBoxInput
                 value={participant.roles.includes(role)}
                 text={t(`roles.${role}`)}
-                handleCheck={e =>
-                  e.target.checked ? this.addRole(role) : this.dropRole(role)
+                handleCheck={checked =>
+                  checked ? this.addRole(role) : this.dropRole(role)
                 }
               />
             </li>

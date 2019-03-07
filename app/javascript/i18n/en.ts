@@ -72,6 +72,7 @@ export default {
   ],
   Can_login: "Can log in to Dulu",
   confirm_delete_cluster: "Delete %{name}?",
+  confirm_delete_domain_status_item: "Delete this %{category}?",
   confirm_delete_event: "Delete %{name}?",
   confirm_delete_participant:
     "Delete %{person} from %{language}? %{person} never worked in %{language}?",

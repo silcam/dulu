@@ -3,6 +3,7 @@ import { AppState } from "../reducers/appReducer";
 import { IParticipant } from "./Participant";
 import Activity, { IActivity, ActivityType } from "./Activity";
 import { ById } from "./TypeBucket";
+import { IDomainStatusItem } from "./DomainStatusItem";
 
 interface Progress {
   [stage: string]: number;
@@ -17,13 +18,19 @@ export interface ILanguage {
     Old_testament?: Progress;
     New_testament?: Progress;
   };
-  can: { update_activites?: boolean; manage_participants?: boolean };
+  domain_status_items: IDomainStatusItem[];
+  can: {
+    update_activites?: boolean;
+    manage_participants?: boolean;
+    update?: boolean;
+  };
 }
 
 const emptyLanguage: ILanguage = {
   id: 0,
   name: "",
   progress: {},
+  domain_status_items: [],
   can: {}
 };
 

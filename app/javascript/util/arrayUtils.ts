@@ -13,7 +13,7 @@ interface WithId {
 export function arrayDelete<T>(array: T[], item: T) {
   let index = array.indexOf(item);
   if (index == -1) return array;
-  return update(array, { $splice: [[index, 1]] });
+  return update(array, { $splice: [[index, 1]] }) as T[];
 }
 
 export function itemAfter<T>(array: T[], item: T) {

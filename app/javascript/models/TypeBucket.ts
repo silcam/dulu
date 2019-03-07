@@ -34,3 +34,5 @@ export interface UpdaterFunc {
 export interface ById<T> {
   [id: string]: T | undefined;
 }
+
+export type AnyJSX = JSX.Element | JSX.Element[] | string;

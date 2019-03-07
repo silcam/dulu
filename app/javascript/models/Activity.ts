@@ -5,6 +5,7 @@ import FuzzyDate from "../util/FuzzyDate";
 import { IWorkshop } from "./Workshop";
 import { ICan } from "../actions/canActions";
 import { T } from "../i18n/i18n";
+import DomainStatusItem, { DSICategories } from "./DomainStatusItem";
 
 export interface IActivity {
   id: number;
@@ -32,15 +33,7 @@ interface ProgressContainer {
 }
 
 const mediaCategories = ["AudioScripture", "Film"];
-const mediaFilms = [
-  "JesusFilm",
-  "LukeFilm",
-  "ActsFilm",
-  "GenesisFilm",
-  "StoryOfGenesisFilm",
-  "BookOfJohn",
-  "MagdalenaFilm"
-];
+const mediaFilms = DomainStatusItem.categoryList[DSICategories.Film];
 const mediaScriptures = ["Bible", "Old_testament", "New_testament", "Other"];
 const mediaProgress: ProgressContainer = {
   Planned: { percent: 0, color: Colors.white },

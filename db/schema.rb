@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190201081644) do
+ActiveRecord::Schema.define(version: 20190304101325) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -28,8 +28,9 @@ ActiveRecord::Schema.define(version: 20190201081644) do
     t.string "scripture"
     t.string "film"
     t.boolean "archived", default: false
-    t.integer "language_id"
+    t.bigint "language_id"
     t.index ["bible_book_id"], name: "index_activities_on_bible_book_id"
+    t.index ["language_id"], name: "index_activities_on_language_id"
     t.index ["program_id"], name: "index_activities_on_program_id"
   end
 
@@ -77,6 +78,11 @@ ActiveRecord::Schema.define(version: 20190201081644) do
     t.integer "usfm_number"
   end
 
+  create_table "bible_books_domain_status_items", id: false, force: :cascade do |t|
+    t.bigint "bible_book_id", null: false
+    t.bigint "domain_status_item_id", null: false
+  end
+
   create_table "clusters", id: :serial, force: :cascade do |t|
     t.string "name"
     t.datetime "created_at", null: false
@@ -121,6 +127,20 @@ ActiveRecord::Schema.define(version: 20190201081644) do
     t.index ["priority", "run_at"], name: "delayed_jobs_priority"
   end
 
+  create_table "domain_status_items", force: :cascade do |t|
+    t.string "category"
+    t.string "subcategory"
+    t.integer "year"
+    t.string "platforms"
+    t.bigint "language_id"
+    t.integer "creator_id"
+    t.bigint "organization_id"
+    t.bigint "person_id"
+    t.index ["language_id"], name: "index_domain_status_items_on_language_id"
+    t.index ["organization_id"], name: "index_domain_status_items_on_organization_id"
+    t.index ["person_id"], name: "index_domain_status_items_on_person_id"
+  end
+
   create_table "domain_updates", id: :serial, force: :cascade do |t|
     t.integer "program_id"
     t.integer "status_parameter_id"
@@ -132,7 +152,8 @@ ActiveRecord::Schema.define(version: 20190201081644) do
     t.datetime "updated_at", null: false
     t.string "domain"
     t.integer "author_id"
-    t.integer "language_id"
+    t.bigint "language_id"
+    t.index ["language_id"], name: "index_domain_updates_on_language_id"
     t.index ["program_id"], name: "index_domain_updates_on_program_id"
     t.index ["status_parameter_id"], name: "index_domain_updates_on_status_parameter_id"
   end
@@ -161,8 +182,9 @@ ActiveRecord::Schema.define(version: 20190201081644) do
   create_table "events_languages", id: :serial, force: :cascade do |t|
     t.integer "event_id"
     t.integer "program_id"
-    t.integer "language_id"
+    t.bigint "language_id"
     t.index ["event_id"], name: "index_events_languages_on_event_id"
+    t.index ["language_id"], name: "index_events_languages_on_language_id"
     t.index ["program_id"], name: "index_events_languages_on_program_id"
   end
 
@@ -192,6 +214,7 @@ ActiveRecord::Schema.define(version: 20190201081644) do
     t.integer "parent_id"
     t.integer "cluster_id"
     t.integer "lpf_id"
+    t.integer "program_id"
     t.index ["cluster_id"], name: "index_languages_on_cluster_id"
     t.index ["country_id"], name: "index_languages_on_country_id"
     t.index ["language_status_id"], name: "index_languages_on_language_status_id"
@@ -258,8 +281,9 @@ ActiveRecord::Schema.define(version: 20190201081644) do
     t.datetime "updated_at", null: false
     t.integer "cluster_id"
     t.string "roles_field"
-    t.integer "language_id"
+    t.bigint "language_id"
     t.index ["cluster_id"], name: "index_participants_on_cluster_id"
+    t.index ["language_id"], name: "index_participants_on_language_id"
     t.index ["person_id"], name: "index_participants_on_person_id"
     t.index ["program_id"], name: "index_participants_on_program_id"
   end
@@ -318,7 +342,8 @@ ActiveRecord::Schema.define(version: 20190201081644) do
     t.string "media_kind"
     t.string "scripture_kind"
     t.string "film_kind"
-    t.integer "language_id"
+    t.bigint "language_id"
+    t.index ["language_id"], name: "index_publications_on_language_id"
     t.index ["program_id"], name: "index_publications_on_program_id"
   end
 
@@ -374,7 +399,8 @@ ActiveRecord::Schema.define(version: 20190201081644) do
     t.integer "person_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "language_id"
+    t.bigint "language_id"
+    t.index ["language_id"], name: "index_survey_completions_on_language_id"
     t.index ["person_id"], name: "index_survey_completions_on_person_id"
     t.index ["program_id"], name: "index_survey_completions_on_program_id"
     t.index ["survey_id"], name: "index_survey_completions_on_survey_id"
