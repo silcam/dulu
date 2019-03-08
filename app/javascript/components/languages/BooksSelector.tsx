@@ -14,23 +14,25 @@ interface IProps {
 export default function BooksSelector(props: IProps) {
   const t = useContext(I18nContext);
   const [adding, setAdding] = useState(false);
-  const [addingId, setAddingId] = useState(0);
+  const [addingIndex, setAddingIndex] = useState(0);
   const availableBookOptions = BibleBook.books(t)
     .filter(b => !props.bookIds.includes(b.id))
-    .map(b => ({
-      value: b.id,
-      display: b.name
+    .map((b, index) => ({
+      id: b.id,
+      display: b.name,
+      value: index
     }));
 
   const startAdding = () => {
     setAdding(true);
-    setAddingId(availableBookOptions[0].value);
   };
 
   const add = () => {
+    const addingId = availableBookOptions[addingIndex].id;
     props.setBookIds(props.bookIds.concat([addingId]));
-    setAdding(false);
-    setAddingId(0);
+
+    if (addingIndex == availableBookOptions.length - 1)
+      setAddingIndex(addingIndex - 1);
   };
 
   return (
@@ -50,9 +52,9 @@ export default function BooksSelector(props: IProps) {
         {adding ? (
           <React.Fragment>
             <SelectInput
-              value={addingId}
+              value={addingIndex}
               options={availableBookOptions}
-              handleChange={e => setAddingId(parseInt(e.target.value))}
+              handleChange={e => setAddingIndex(parseInt(e.target.value))}
               name="BibleBook"
               autoFocus
             />
