@@ -3,7 +3,7 @@ import * as eventActionCreators from "../../actions/eventActions";
 import { addPeople } from "../../actions/peopleActions";
 import { addLanguages } from "../../actions/languageActions";
 import { addClusters } from "../../actions/clusterActions";
-import { setEventsCan } from "../../actions/canActions";
+import { setCan } from "../../actions/canActions";
 import Event, { IEvent } from "../../models/Event";
 import { AppState } from "../../reducers/appReducer";
 import { ILanguage } from "../../models/Language";
@@ -55,7 +55,7 @@ const mapDispatchToProps = {
   addPeople,
   addLanguages,
   addClusters,
-  setEventsCan
+  setCan
 };
 
 const LanguageEventsContainer = connect(

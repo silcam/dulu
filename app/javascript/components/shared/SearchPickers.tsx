@@ -1,17 +1,18 @@
 import React from "react";
 import SearchPicker, { PickerProps } from "./SearchPicker";
-import { ById, Adder } from "../../models/TypeBucket";
+import { ById, Adder, SetCan } from "../../models/TypeBucket";
 import { IOrganization } from "../../models/Organization";
 import { connect } from "react-redux";
 import { AppState } from "../../reducers/appReducer";
 import { setOrganizations } from "../../actions/organizationActions";
-import { useAPIGet } from "../../util/useAPI";
+import { useAPIGet, setCanFor } from "../../util/useAPI";
 import { IPerson, fullName } from "../../models/Person";
 import { ILanguage } from "../../models/Language";
 import { setLanguages } from "../../actions/languageActions";
 import { setPeople } from "../../actions/peopleActions";
 import { ICluster } from "../../models/Cluster";
 import { setClusters } from "../../actions/clusterActions";
+import { setCan } from "../../actions/canActions";
 
 interface LangPickerProps extends PickerProps {
   languages: ById<ILanguage>;
@@ -23,7 +24,7 @@ export const LanguagePicker = connect(
     list: state.languages.list,
     languages: state.languages.byId
   }),
-  { setLanguages: setLanguages }
+  { setLanguages: setLanguages, setCan: () => {} }
 )((props: LangPickerProps) => {
   useAPIGet("/api/languages", {}, { setLanguages: props.setLanguages });
   return <SearchPicker {...props} nameOf={id => props.languages[id]!.name} />;
@@ -44,7 +45,7 @@ export const OrganizationPicker = connect(
   useAPIGet(
     "/api/organizations",
     {},
-    { setOrganizations: props.setOrganizations }
+    { setOrganizations: props.setOrganizations, setCan: () => {} }
   );
   return (
     <SearchPicker
@@ -57,15 +58,20 @@ export const OrganizationPicker = connect(
 interface PersonPickerProps extends PickerProps {
   people: ById<IPerson>;
   setPeople: Adder<IPerson>;
+  setCan: SetCan;
 }
 export const PersonPicker = connect(
   (state: AppState) => ({
     list: state.people.list,
     people: state.people.byId
   }),
-  { setPeople: setPeople }
+  { setPeople: setPeople, setCan: setCan }
 )((props: PersonPickerProps) => {
-  useAPIGet("/api/people", {}, { setPeople: props.setPeople });
+  useAPIGet(
+    "/api/people",
+    {},
+    { setPeople: props.setPeople, setCan: setCanFor(props.setCan, "people") }
+  );
   return <SearchPicker {...props} nameOf={id => fullName(props.people[id]!)} />;
 });
 
@@ -78,7 +84,7 @@ export const ClusterPicker = connect(
     list: state.clusters.list,
     clusters: state.clusters.byId
   }),
-  { setClusters: setClusters }
+  { setClusters: setClusters, setCan: () => {} }
 )((props: ClusterPickerProps) => {
   useAPIGet("/api/clusters", {}, { setClusters: props.setClusters });
   return <SearchPicker {...props} nameOf={id => props.clusters[id]!.name} />;

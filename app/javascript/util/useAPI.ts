@@ -1,9 +1,11 @@
-import { Setter, Adder, AnyObj } from "../models/TypeBucket";
+import { Setter, Adder, AnyObj, SetCan } from "../models/TypeBucket";
 import { useEffect, useState } from "react";
 import DuluAxios from "./DuluAxios";
+import { ICan } from "../actions/canActions";
 
 const actionByDataKey: { [key: string]: string | string[] | undefined } = {
   activity: "setActivity",
+  can: "setCan",
   cluster: "setCluster",
   clusters: ["setClusters", "addClusters"],
   language: "setLanguage",
@@ -115,4 +117,8 @@ function updateStore(data: AnyObj, actions: ActionPack) {
         throw `useAPI: actionByDataKey has no entry for ${key}`;
     }
   });
+}
+
+export function setCanFor(setCan: SetCan, key: string) {
+  return (can: ICan) => setCan(key, can);
 }

@@ -1,6 +1,12 @@
 import DuluAxios from "../../util/DuluAxios";
 import Region, { IRegionInflated, IRegion } from "../../models/Region";
-import { Adder, Setter, Deleter, AnyObj } from "../../models/TypeBucket";
+import {
+  Adder,
+  Setter,
+  Deleter,
+  AnyObj,
+  SetCan
+} from "../../models/TypeBucket";
 import { IPerson } from "../../models/Person";
 import { ICluster } from "../../models/Cluster";
 import { ILanguage } from "../../models/Language";
@@ -12,14 +18,11 @@ interface FetchRegionActions {
   setRegion: Setter<IRegion>;
 }
 
-async function fetchAll(
-  setRegions: Adder<IRegion>,
-  setCan: (c: AnyObj) => void
-) {
+async function fetchAll(setRegions: Adder<IRegion>, setCan: SetCan) {
   const data = await DuluAxios.get("/api/regions");
   if (data) {
     setRegions(data.regions);
-    setCan(data.can);
+    setCan("regions", data.can);
   }
 }
 

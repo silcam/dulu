@@ -11,16 +11,12 @@ import DuluAxios from "../../util/DuluAxios";
 import OrganizationContainer from "./OrganizationContainer";
 
 export default class OrganizationsBoard extends React.PureComponent {
-  state = {
-    can: {}
-  };
+  state = {};
 
   async componentDidMount() {
     const data = await DuluAxios.get("/api/organizations");
     if (data) {
-      this.setState({
-        can: data.can
-      });
+      this.props.setCan("organizations", data.can);
       this.props.setOrganizations(data.organizations);
     }
   }
@@ -37,7 +33,7 @@ export default class OrganizationsBoard extends React.PureComponent {
             placeholder={this.props.t("Find")}
             updateFilter={filter => this.setState({ filter: filter })}
           />
-          {this.state.can.create && (
+          {this.props.can.create && (
             <Link to="/organizations/new">
               <AddIcon iconSize="large" />
             </Link>
@@ -53,7 +49,7 @@ export default class OrganizationsBoard extends React.PureComponent {
               t={this.props.t}
               id={this.props.id}
               organizations={this.props.organizations}
-              can={this.state.can}
+              can={this.props.can}
               filter={this.state.filter}
             />
           </div>
@@ -84,10 +80,12 @@ export default class OrganizationsBoard extends React.PureComponent {
 OrganizationsBoard.propTypes = {
   setOrganizations: PropTypes.func.isRequired,
   addOrganization: PropTypes.func.isRequired,
+  setCan: PropTypes.func.isRequired,
 
   organizations: PropTypes.array.isRequired,
   id: PropTypes.string,
   action: PropTypes.string,
   history: PropTypes.object.isRequired,
-  t: PropTypes.func.isRequired
+  t: PropTypes.func.isRequired,
+  can: PropTypes.object.isRequired
 };

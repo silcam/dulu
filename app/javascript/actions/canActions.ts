@@ -1,4 +1,4 @@
-export const SET_EVENTS_CAN = "SET_EVENTS_CAN";
+export const SET_CAN = "SET_CAN";
 
 export interface ICan {
   create?: boolean;
@@ -7,12 +7,14 @@ export interface ICan {
 
 export interface CanAction {
   type: string;
+  key: string;
   can: ICan;
 }
 
-export function setEventsCan(can: ICan) {
+export function setCan(key: string, can: ICan) {
   return {
-    type: SET_EVENTS_CAN,
-    can: can
+    type: SET_CAN,
+    key,
+    can
   };
 }

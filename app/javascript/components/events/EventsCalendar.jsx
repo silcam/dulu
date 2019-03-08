@@ -49,7 +49,7 @@ export default class EventsCalendar extends React.PureComponent {
       this.props.addPeople(data.people);
       this.props.addLanguages(data.languages);
       this.props.addClusters(data.clusters);
-      this.props.setEventsCan(data.can);
+      this.props.setCan("events", data.can);
       this.props.addEvents(data.events, period);
     }
   };
@@ -109,7 +109,7 @@ EventsCalendar.propTypes = {
   year: PropTypes.string.isRequired,
   month: PropTypes.string.isRequired,
   addEvents: PropTypes.func.isRequired,
-  setEventsCan: PropTypes.func.isRequired,
+  setCan: PropTypes.func.isRequired,
   addPeople: PropTypes.func.isRequired,
   addLanguages: PropTypes.func.isRequired,
   addClusters: PropTypes.func.isRequired,

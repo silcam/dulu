@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { IEvent, IPeriod } from "../../models/Event";
 import DuluAxios from "../../util/DuluAxios";
 import { lastYear } from "../../util/Date";
-import { Adder, Setter } from "../../models/TypeBucket";
+import { Adder, SetCan } from "../../models/TypeBucket";
 import { IPerson } from "../../models/Person";
 import { ICan } from "../../actions/canActions";
 import BasicEventsTable from "../events/BasicEventsTable";
@@ -15,7 +15,7 @@ interface IProps {
   can: ICan;
 
   addPeople: Adder<IPerson>;
-  setEventsCan: Setter<ICan>;
+  setCan: SetCan;
   addEventsForLanguage: (e: IEvent[], lid: number, p: IPeriod) => void;
 }
 
@@ -74,7 +74,7 @@ async function getEvents(
       const data = await DuluAxios.get(`/api/languages/${id}/events`, params);
       if (data) {
         props.addPeople(data.people);
-        props.setEventsCan(data.can);
+        props.setCan("events", data.can);
         props.addEventsForLanguage(data.events, id, {
           start: data.startYear ? { year: data.startYear } : undefined,
           end: year ? { year: year } : undefined

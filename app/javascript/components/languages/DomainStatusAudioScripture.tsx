@@ -8,7 +8,6 @@ import DomainStatusItem, {
 import DomainStatusCategory from "./DomainStatusCategory";
 import DomainStatusSubcategory from "./DomainStatusSubcategory";
 import { orBlank } from "../../util/orBlank";
-import BibleBook from "../../models/BibleBook";
 import { Link } from "react-router-dom";
 import { ById } from "../../models/TypeBucket";
 import { IOrganization } from "../../models/Organization";

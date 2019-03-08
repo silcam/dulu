@@ -14,11 +14,7 @@ import DuluAxios from "../../util/DuluAxios";
 import Loading from "../shared/Loading";
 
 export default class OrganizationPage extends React.PureComponent {
-  state = {
-    organization: this.props.organization
-      ? deepcopy(this.props.organization)
-      : undefined
-  };
+  state = {};
 
   async componentDidMount() {
     const data = await DuluAxios.get(`/api/organizations/${this.props.id}`);
@@ -33,6 +29,12 @@ export default class OrganizationPage extends React.PureComponent {
       organization: merge(prevState.organization, mergeOrg)
     }));
   };
+
+  edit = () =>
+    this.setState({
+      organization: deepcopy(this.props.organization),
+      editing: true
+    });
 
   save = async () => {
     if (!this.validate()) return;
@@ -56,11 +58,11 @@ export default class OrganizationPage extends React.PureComponent {
 
   delete = async () => {
     const success = await DuluAxios.delete(
-      `/api/organizations/${this.state.organization.id}`
+      `/api/organizations/${this.props.organization.id}`
     );
     if (success) {
       this.props.history.push("/organizations");
-      this.props.deleteOrganization(this.state.organization.id);
+      this.props.deleteOrganization(this.props.organization.id);
     }
   };
 
@@ -69,9 +71,15 @@ export default class OrganizationPage extends React.PureComponent {
   };
 
   render() {
-    const organization = this.state.organization;
+    const organization = this.state.editing
+      ? this.state.organization
+      : this.props.organization;
 
     if (!organization) return <Loading />;
+
+    const parent = organization.parent_id
+      ? this.props.organizations[organization.parent_id]
+      : null;
 
     return (
       <div>
@@ -79,13 +87,12 @@ export default class OrganizationPage extends React.PureComponent {
           can={organization.can}
           editing={this.state.editing}
           t={this.props.t}
-          edit={() => this.setState({ editing: true })}
+          edit={this.edit}
           delete={() => this.setState({ deleting: true })}
           save={this.save}
           cancel={() =>
             this.setState({
-              editing: false,
-              organization: deepcopy(this.props.organization)
+              editing: false
             })
           }
         />
@@ -141,10 +148,9 @@ export default class OrganizationPage extends React.PureComponent {
             {this.state.editing ? (
               <SearchTextInput
                 editing={this.state.editing}
-                text={organization.parent.name}
+                text={parent ? parent.short_name : ""}
                 updateValue={org =>
                   this.updateOrganization({
-                    parent: org,
                     parent_id: org.id
                   })
                 }
@@ -152,9 +158,9 @@ export default class OrganizationPage extends React.PureComponent {
                 allowBlank
               />
             ) : (
-              organization.parent.id && (
-                <Link to={`/organizations/${organization.parent.id}`}>
-                  {organization.parent.name}
+              parent && (
+                <Link to={`/organizations/${parent.id}`}>
+                  {parent.short_name}
                 </Link>
               )
             )}
@@ -164,7 +170,7 @@ export default class OrganizationPage extends React.PureComponent {
             &nbsp;
             <TextOrSearchInput
               editing={this.state.editing}
-              text={organization.country.name}
+              text={organization.country ? organization.country.name : ""}
               queryPath="/api/countries/search"
               updateValue={country =>
                 this.updateOrganization({
@@ -194,6 +200,7 @@ export default class OrganizationPage extends React.PureComponent {
 OrganizationPage.propTypes = {
   id: PropTypes.string.isRequired,
   organization: PropTypes.object,
+  organizations: PropTypes.object,
   t: PropTypes.func.isRequired,
   setOrganization: PropTypes.func.isRequired,
   deleteOrganization: PropTypes.func.isRequired,

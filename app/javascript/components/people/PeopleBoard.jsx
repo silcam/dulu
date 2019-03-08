@@ -11,16 +11,12 @@ import PropTypes from "prop-types";
 import PersonContainer from "./PersonContainer";
 
 export default class PeopleBoard extends React.PureComponent {
-  state = {
-    can: {}
-  };
+  state = {};
 
   async componentDidMount() {
     const data = await DuluAxios.get("/api/people");
     if (data) {
-      this.setState({
-        can: data.can
-      });
+      this.props.setCan("people", data.can);
       this.props.setPeople(data.people);
     }
   }
@@ -36,7 +32,7 @@ export default class PeopleBoard extends React.PureComponent {
             placeholder={this.props.t("Find")}
             updateFilter={filter => this.setState({ filter: filter })}
           />
-          {this.state.can.create && (
+          {this.props.can.create && (
             <Link to="/people/new">
               <AddIcon iconSize="large" />
             </Link>
@@ -52,7 +48,7 @@ export default class PeopleBoard extends React.PureComponent {
               t={this.props.t}
               id={this.props.id}
               people={this.props.people}
-              can={this.state.can}
+              can={this.props.can}
               filter={this.state.filter}
             />
           </div>
@@ -84,6 +80,7 @@ export default class PeopleBoard extends React.PureComponent {
 
 PeopleBoard.propTypes = {
   setPeople: PropTypes.func.isRequired,
+  setCan: PropTypes.func.isRequired,
   addPerson: PropTypes.func.isRequired,
   setPerson: PropTypes.func.isRequired,
   deletePerson: PropTypes.func.isRequired,
@@ -93,5 +90,6 @@ PeopleBoard.propTypes = {
   id: PropTypes.string,
   action: PropTypes.string,
   history: PropTypes.object.isRequired,
-  t: PropTypes.func.isRequired
+  t: PropTypes.func.isRequired,
+  can: PropTypes.object.isRequired
 };

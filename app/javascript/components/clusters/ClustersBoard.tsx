@@ -10,7 +10,8 @@ import { T } from "../../i18n/i18n";
 import DuluAxios from "../../util/DuluAxios";
 import { ICluster } from "../../models/Cluster";
 import { History, Location } from "history";
-import { Adder, Setter } from "../../models/TypeBucket";
+import { Adder, Setter, SetCan } from "../../models/TypeBucket";
+import { ICan } from "../../actions/canActions";
 
 interface IProps {
   t: T;
@@ -22,21 +23,15 @@ interface IProps {
   clusters: ICluster[];
   setClusters: Adder<ICluster>;
   setCluster: Setter<ICluster>;
+  setCan: SetCan;
+  can: ICan;
 }
 
-interface IState {
-  can: { create?: boolean };
-}
-
-export default class ClustersBoard extends React.Component<IProps, IState> {
-  state: IState = {
-    can: {}
-  };
-
+export default class ClustersBoard extends React.Component<IProps> {
   async componentDidMount() {
     const data = await DuluAxios.get("/api/clusters");
     if (data) {
-      this.setState({ can: data.can });
+      this.props.setCan("clusters", data.can);
       this.props.setClusters(data.clusters);
     }
   }
@@ -50,7 +45,7 @@ export default class ClustersBoard extends React.Component<IProps, IState> {
           <h2>
             <Link to="/clusters">{t("Clusters")}</Link>
           </h2>
-          {this.state.can.create && (
+          {this.props.can.create && (
             <Link to="/clusters/new">
               <AddIcon iconSize="large" />
             </Link>

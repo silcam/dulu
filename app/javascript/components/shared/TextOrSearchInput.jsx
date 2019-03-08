@@ -4,11 +4,7 @@ import SearchTextInput from "./SearchTextInput";
 
 export default function TextOrSearchInput(props) {
   return props.editing ? (
-    <SearchTextInput
-      text={props.text}
-      updateValue={props.updateValue}
-      queryPath={props.queryPath}
-    />
+    <SearchTextInput {...props} />
   ) : (
     <span>{props.text}</span>
   );

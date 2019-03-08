@@ -1,29 +1,17 @@
 # Locals: org
 
-json.call(org, :id, :short_name, :long_name, :description)
+json.call(org, :id, :short_name, :long_name, :description, :parent_id)
 
 
-json.country do
-  if org.country
+if org.country
+  json.country do
     json.call(org.country, :id, :name)
-  else
-    json.id nil
-    json.name ''
   end
-end
-
-json.parent do
-  if org.parent
-    json.call(org.parent, :id, :name)
-  else
-    json.id nil
-    json.name ''
-  end
+else
+  json.country nil
 end
 
 json.can do
   json.update can?(:update, org)
   json.destroy can?(:destroy, org)
 end
-
-json.loaded true

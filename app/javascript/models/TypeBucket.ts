@@ -1,7 +1,12 @@
 import { SyntheticEvent } from "react";
+import { ICan } from "../actions/canActions";
 
 export interface AnyObj {
   [key: string]: any;
+}
+
+export interface SetCan {
+  (key: string, can: ICan): void;
 }
 
 export interface Setter<T> {

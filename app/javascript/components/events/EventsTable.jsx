@@ -28,7 +28,7 @@ export default class EventsTable extends React.PureComponent {
       this.props.addPeople(data.people);
       this.props.addClusters(data.clusters);
       this.props.addLanguages(data.languages);
-      this.props.setEventsCan(data.can);
+      this.props.setCan("events", data.can);
       this.props.addEventsFor(data.events, {
         start: data.startYear ? { year: data.startYear } : undefined,
         end: period.end_year ? { year: period.end_year } : undefined
@@ -65,7 +65,7 @@ EventsTable.propTypes = {
   addPeople: PropTypes.func.isRequired,
   addClusters: PropTypes.func.isRequired,
   addLanguages: PropTypes.func.isRequired,
-  setEventsCan: PropTypes.func.isRequired,
+  setCan: PropTypes.func.isRequired,
   can: PropTypes.object.isRequired,
   eventsBackTo: PropTypes.number,
   // Comes from immediate parent:

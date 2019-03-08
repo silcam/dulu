@@ -1,8 +1,14 @@
 import baseCompare from "../util/baseCompare";
+import { ICan } from "../actions/canActions";
 
 export interface IOrganization {
   id: number;
   short_name: string;
+  long_name: string;
+  description: string;
+  parent_id: number | null;
+  country: { name: string } | null;
+  can: ICan;
 }
 
 export interface IOrganizationPerson {

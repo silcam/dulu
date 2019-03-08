@@ -6,16 +6,19 @@ import { addPeople } from "../../actions/peopleActions";
 import { addLanguages } from "../../actions/languageActions";
 import { addClusters } from "../../actions/clusterActions";
 import RegionsBoard from "./RegionsBoard";
+import { setCan } from "../../actions/canActions";
 
 const mapStateToProps = (state: AppState) => ({
-  regions: state.regions.list.map(id => state.regions.byId[id]) as IRegion[]
+  regions: state.regions.list.map(id => state.regions.byId[id]) as IRegion[],
+  can: state.can.regions
 });
 
 const mapDispatchToProps = {
   ...regionActionCreators,
   addPeople,
   addLanguages,
-  addClusters
+  addClusters,
+  setCan
 };
 
 const RegionsContainer = connect(

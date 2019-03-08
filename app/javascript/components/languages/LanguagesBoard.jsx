@@ -10,16 +10,12 @@ import DuluAxios from "../../util/DuluAxios";
 import LanguageContainer from "./LanguageContainer";
 
 export default class LanguagesBoard extends React.PureComponent {
-  state = {
-    can: {}
-  };
+  state = {};
 
   async componentDidMount() {
     const data = await DuluAxios.get("/api/languages");
     if (data) {
-      this.setState({
-        can: data.can
-      });
+      this.props.setCan("languages", data.can);
       this.props.setLanguages(data.languages);
     }
   }
@@ -36,7 +32,7 @@ export default class LanguagesBoard extends React.PureComponent {
             placeholder={this.props.t("Find")}
             updateFilter={filter => this.setState({ filter: filter })}
           />
-          {this.state.can.create && (
+          {this.props.can.create && (
             <Link to="/languages/new">
               <AddIcon iconSize="large" />
             </Link>
@@ -54,7 +50,7 @@ export default class LanguagesBoard extends React.PureComponent {
               t={this.props.t}
               id={this.props.id}
               languages={this.props.languages}
-              can={this.state.can}
+              can={this.props.can}
               filter={this.state.filter}
             />
           </div>
@@ -88,7 +84,9 @@ export default class LanguagesBoard extends React.PureComponent {
 LanguagesBoard.propTypes = {
   languages: PropTypes.array.isRequired,
   setLanguages: PropTypes.func.isRequired,
-  
+  setCan: PropTypes.func.isRequired,
+
+  can: PropTypes.object.isRequired,
   t: PropTypes.func.isRequired,
   action: PropTypes.string,
   id: PropTypes.number,

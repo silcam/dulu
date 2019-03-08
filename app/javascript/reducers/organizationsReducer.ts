@@ -11,7 +11,12 @@ import { stdReducers } from "./stdReducers";
 
 export const emptyOrganization: IOrganization = {
   id: 0,
-  short_name: ""
+  short_name: "",
+  long_name: "",
+  description: "",
+  parent_id: null,
+  country: null,
+  can: {}
 };
 
 export interface OrganizationState {

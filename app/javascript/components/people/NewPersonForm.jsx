@@ -11,6 +11,7 @@ import DuplicateWarning from "./DuplicateWarning";
 import CancelButton from "../shared/CancelButton";
 import DuluAxios from "../../util/DuluAxios";
 import { sameName } from "../../models/Person";
+import update from "immutability-helper";
 
 export default class NewPersonForm extends React.Component {
   state = {
@@ -36,15 +37,10 @@ export default class NewPersonForm extends React.Component {
     });
   };
 
-  handleCheck = e => {
-    const name = e.target.name;
-    const checked = e.target.checked;
-    this.setState(prevState => {
-      let person = prevState.person;
-      person[name] = checked;
-      return { person: person };
-    });
-  };
+  updatePerson = mergePerson =>
+    this.setState(prevState => ({
+      person: update(prevState.person, { $merge: mergePerson })
+    }));
 
   handleKeyDown = e => {
     if (e.key == "Enter") {
@@ -127,7 +123,7 @@ export default class NewPersonForm extends React.Component {
 
         <CheckboxGroup
           label={t("Dulu_account")}
-          handleCheck={this.handleCheck}
+          setValue={value => this.updatePerson({ has_login: value })}
           name="has_login"
           value={person.has_login}
           text={t("Can_login")}
