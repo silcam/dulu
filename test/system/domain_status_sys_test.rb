@@ -34,7 +34,7 @@ class DomainStatusSysTest < ApplicationSystemTestCase
   test "Edit Hdi NT" do
     log_in people(:Drew)
     visit "#{model_path(languages(:Hdi))}/translation"
-    within(parent(find('h3', text: 'Status'))) { click_link 'New Testament' }
+    within(parent(find('h3', text: 'Status'))) { click_link '2005' }
     safe_assert_no_text 'Bible'
     action_bar_click_edit
     within('label', text: 'Subcategory'){ find('select').select('Bible') }
@@ -45,12 +45,12 @@ class DomainStatusSysTest < ApplicationSystemTestCase
   test "Delete Hdi NT from Translation Status" do
     log_in people(:Drew)
     visit "#{model_path(languages(:Hdi))}/translation"
-    within(parent(find('h3', text: 'Status'))) { click_link 'New Testament' }
+    within(parent(find('h3', text: 'Status'))) { click_link '2005' }
     page.accept_confirm do
       action_bar_click_delete
     end
     assert_current_path model_path(languages(:Hdi))
-    within(parent(find('h3', text: 'Status'))) { safe_assert_no_selector('a', text: 'New Testament') }
+    within(parent(find('h3', text: 'Status'))) { safe_assert_no_selector('a', text: '2005') }
   end
 
   test "Kevin no can create/edit/delete" do
@@ -58,7 +58,7 @@ class DomainStatusSysTest < ApplicationSystemTestCase
     visit "#{model_path(languages(:Hdi))}/translation"
     within(parent(find('h3', text: 'Status'))) do
       safe_assert_no_selector(icon_selector('addIcon'))
-      click_link 'New Testament'
+      click_link '2005'
     end
     safe_assert_no_selector(icon_selector('editIcon'))
     safe_assert_no_selector(icon_selector('deleteIcon'))
