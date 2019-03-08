@@ -29,19 +29,19 @@ class PersonTest < ActiveSupport::TestCase
   end
 
   test "Duplicate Email" do
-    drew2 = Person.new(last_name: 'Maust', first_name: 'DrewToo', gender: 'M', email: 'drew_maust@sil.org')
+    drew2 = Person.new(last_name: 'Mambo', first_name: 'DrewToo', gender: 'M', email: 'drew_mambo@sil.org')
     refute drew2.save, "Should not save person with duplicate email"
-    drew2.email = "drew_maust_too@sil.org"
+    drew2.email = "drew_mambo_too@sil.org"
     assert drew2.save, "Should save with unique email."
   end
 
   test 'Full Names' do
-    assert_equal 'Drew Maust', @drew.full_name
-    assert_equal 'Maust, Drew', @drew.full_name_rev
+    assert_equal 'Drew Mambo', @drew.full_name
+    assert_equal 'Mambo, Drew', @drew.full_name_rev
   end
 
   test "Default Scope" do
-    kevin = people :Kevin
+    kevin = people :Lance
     assert_equal kevin, Person.first
   end
 
@@ -110,7 +110,7 @@ class PersonTest < ActiveSupport::TestCase
     exp = {
             id: @drew.id,
             first_name: 'Drew',
-            last_name: 'Maust',
+            last_name: 'Mambo',
             roles: [{
                       role: :TranslationConsultant,
                       t_role: 'Translation Consultant'
@@ -126,7 +126,7 @@ class PersonTest < ActiveSupport::TestCase
   test "Search" do
     results = Person.search 'drew'
     assert_equal 1, results.count
-    assert_equal 'Drew Maust', results[0][:title]
+    assert_equal 'Drew Mambo', results[0][:title]
     hdi_language = languages :Hdi
     assert_includes results[0][:subresults],
                     {title: 'Hdi', model: hdi_language,

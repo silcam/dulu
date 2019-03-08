@@ -55,11 +55,11 @@ class ClusterSysTest < ApplicationSystemTestCase
     go_to_page
     within(parent(find('h3', text: 'People'))) do
        click_icon('addIcon')
-       fill_in_search_input('Lance Fre')
+       fill_in_search_input('Lance')
        fill_in_date(FuzzyDate.new(2016, 7, 31))
        click_on 'Save'
     end
-    assert_selector('h2', text: 'Lance Freeland')
+    assert_selector('h2', text: 'Lance Armstrong')
     assert_text 'Translation Consultant'
     assert_text 'Joined Program 2016-07-31'
   end

@@ -152,6 +152,7 @@ export default class PersonPage extends React.PureComponent {
           {!this.state.editing && " "}
           <TextOrEditText
             editing={this.state.editing}
+            name="last_name"
             value={person.last_name}
             updateValue={value => this.updatePerson({ last_name: value })}
             t={this.props.t}

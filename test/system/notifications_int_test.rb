@@ -25,7 +25,7 @@ class NotificationsIntTest < ApplicationSystemTestCase
     visit "#{model_path(hdi)}/People"
     within(parent(find('h3', text: 'People'))) do
       click_icon('addIcon')
-      fill_in_search_input('Lance Freeland')
+      fill_in_search_input('Lance Armstrong')
       fill_in_date(FuzzyDate.new(2018))
       click_on 'Save'
     end
@@ -37,7 +37,7 @@ class NotificationsIntTest < ApplicationSystemTestCase
 
     log_in people(:Drew)
     visit "/"
-    assert_notification 'Rick Conrad added Lance Freeland to the Hdi program.'
+    assert_notification 'Rick Conrad added Lance Armstrong to the Hdi program.'
   end
 
   test 'New participant cluster AND Added you to cluster' do
@@ -47,7 +47,7 @@ class NotificationsIntTest < ApplicationSystemTestCase
     visit model_path(clusters(:Ndop))
     within(parent(find('h3', text: 'People'))) do
       click_icon('addIcon')
-      fill_in_search_input('Lance Freeland')
+      fill_in_search_input('Lance Armstrong')
       fill_in_date(FuzzyDate.new(2018))
       click_on 'Save'
     end
@@ -58,7 +58,7 @@ class NotificationsIntTest < ApplicationSystemTestCase
 
     log_in people(:Drew)
     visit "/"
-    assert_notification 'Rick Conrad added Lance Freeland to the Ndop cluster.'
+    assert_notification 'Rick Conrad added Lance Armstrong to the Ndop cluster.'
   end
 
   test 'New Stage' do
@@ -106,13 +106,13 @@ class NotificationsIntTest < ApplicationSystemTestCase
     log_in people(:Rick)
     visit model_path(people(:Drew))
     action_bar_click_edit
-    fill_in 'first_name', with: 'Mista'
+    fill_in 'last_name', with: 'Jones'
     click_on 'Save'
 
     log_in people(:Drew)
     visit "/"
     assert_notification 'Rick Conrad updated your info'
-    assert_notification 'Rick Conrad updated the info for Mista Maust', true
+    assert_notification 'Rick Conrad updated the info for Drew Jones', true
   end
 
   test 'Updated himself' do
@@ -140,7 +140,7 @@ class NotificationsIntTest < ApplicationSystemTestCase
     log_in people(:Drew)
     visit "/"
     assert_notification 'Rick Conrad gave you the Dulu Admin role'
-    assert_notification 'Rick Conrad gave the Dulu Admin role to Drew Maust', true
+    assert_notification 'Rick Conrad gave the Dulu Admin role to Drew Mambo', true
   end
 
   test 'Gave himself role' do 
@@ -160,25 +160,25 @@ class NotificationsIntTest < ApplicationSystemTestCase
     log_in people(:Rick)
     visit model_path(translation_activities(:HdiExodus))
     within('h3', text: 'People') { click_icon('editIcon') }
-    find('select').select('Drew Maust')
+    find('select').select('Drew Mambo')
     click_on 'Add'
     find('select').select('Abanda Dunno')
     click_on 'Add'
     click_on 'Save'
 
     assert_notification_for people(:Drew), 'Rick Conrad added you to Exodus for the Hdi program'
-    assert_notification_for people(:Andreas), 'Rick Conrad added Abanda Dunno and Drew Maust to Exodus for the Hdi program'
+    assert_notification_for people(:Andreas), 'Rick Conrad added Abanda Dunno and Drew Mambo to Exodus for the Hdi program'
   end
 
   test 'Added himself to activity' do
     log_in people(:Drew)
     visit model_path(translation_activities(:HdiExodus))
     within('h3', text: 'People') { click_icon('editIcon') }
-    find('select').select('Drew Maust')
+    find('select').select('Drew Mambo')
     click_on 'Add'
     click_on 'Save'
 
-    assert_notification_for people(:Andreas), 'Drew Maust added himself to Exodus for the Hdi program'
+    assert_notification_for people(:Andreas), 'Drew Mambo added himself to Exodus for the Hdi program'
   end
 
   test 'Added you to event' do
@@ -186,14 +186,14 @@ class NotificationsIntTest < ApplicationSystemTestCase
     # log_in people(:Rick)
     # visit event_path(events(:HdiGenesisChecking))
     # within('h3', text: 'People') { click_on 'Edit' }
-    # select 'Isaac, Kendall', from: 'event_person_id'
+    # select 'Ingles, Kendall', from: 'event_person_id'
     # click_button 'Add'
 
     # log_in people(:Kendall)
     # assert_notification 'Rick Conrad added you to the Genesis Checking event.'
 
     # log_in people(:Drew)
-    # assert_notification 'Rick Conrad added Kendall Isaac to the Genesis Checking event.'
+    # assert_notification 'Rick Conrad added Kendall Ingles to the Genesis Checking event.'
   end
 
   test 'Added himself to event' do

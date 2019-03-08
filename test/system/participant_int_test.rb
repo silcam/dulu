@@ -42,21 +42,21 @@ class ParticipantIntTest < ApplicationSystemTestCase
 
   test "Add Activity" do
     visit model_path(translation_activities(:HdiGenesis))
-    safe_assert_no_text 'Drew Maust'
+    safe_assert_no_text 'Drew Mambo'
     within('h3', text: 'People') { click_icon('editIcon') }
-    find('select').select('Drew Maust')
+    find('select').select('Drew Mambo')
     click_on 'Add'
     click_on 'Save'
-    assert_selector('li', text: 'Drew Maust - Translation Consultant');
+    assert_selector('li', text: 'Drew Mambo - Translation Consultant');
   end
 
   test "Remove Activity" do
     visit model_path(translation_activities(:HdiEzra))
-    assert_text 'Drew Maust'
+    assert_text 'Drew Mambo'
     within('h3', text: 'People') { click_icon('editIcon') }
-    within('tr', text: 'Drew Maust') { click_icon('deleteIcon') }
+    within('tr', text: 'Drew Mambo') { click_icon('deleteIcon') }
     click_on 'Save'
-    safe_assert_no_text 'Drew Maust' 
+    safe_assert_no_text 'Drew Mambo' 
   end
 
   test "Kevin can't edit ActivityPeople" do
@@ -100,13 +100,13 @@ class ParticipantIntTest < ApplicationSystemTestCase
 
   test "Delete DrewHdi Participant" do
     visit "#{model_path(languages(:Hdi))}/Translation"
-    assert_text 'Drew Maust'
+    assert_text 'Drew Mambo'
     setup_show_page
     page.accept_confirm do
       action_bar_click_delete
     end
     visit "#{model_path(languages(:Hdi))}/Translation"
-    safe_assert_no_text 'Drew Maust'
+    safe_assert_no_text 'Drew Mambo'
     assert_nil Participant.find_by(id: @drew_hdi)
   end
 
@@ -114,10 +114,10 @@ class ParticipantIntTest < ApplicationSystemTestCase
   #   drew_hdi = participants(:DrewHdi)
   #   log_in people(:Rick)
   #   visit edit_participant_path(drew_hdi)
-  #   assert page.has_button? 'Delete Drew Maust from Hdi'
+  #   assert page.has_button? 'Delete Drew Mambo from Hdi'
   #   log_in people(:Olga)
   #   visit edit_participant_path(drew_hdi)
-  #   refute page.has_button? 'Delete Drew Maust from Hdi'
+  #   refute page.has_button? 'Delete Drew Mambo from Hdi'
   # end
 
   test "Add, update and remove Drew from Zulgo Ezra" do
@@ -130,11 +130,11 @@ class ParticipantIntTest < ApplicationSystemTestCase
     visit "#{model_path(languages(:Zulgo))}/Translation"
     within(parent(find('h3', text: 'People'))) do
        click_icon('addIcon')
-       fill_in_search_input('Drew Maust')
+       fill_in_search_input('Drew Mambo')
        fill_in_date(FuzzyDate.new(2016, 7, 31))
        click_on 'Save'
     end
-    assert_selector('h2', text: 'Drew Maust')
+    assert_selector('h2', text: 'Drew Mambo')
     assert_text 'Translation Consultant'
     assert_text 'Joined Program 2016-07-31'
     @drew_zulgo = Participant.find_by(person: @drew, language: @zulgo)
@@ -142,7 +142,7 @@ class ParticipantIntTest < ApplicationSystemTestCase
 
   def modify_drew
     visit "#{model_path(@zulgo)}/Translation"
-    click_link 'Drew Maust'
+    click_link 'Drew Mambo'
     action_bar_click_edit
     within('tr', text: 'Joined Program') { fill_in_date(FuzzyDate.new(2016, 8, 31)) }
     click_on 'Save'

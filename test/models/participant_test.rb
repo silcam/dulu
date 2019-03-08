@@ -55,7 +55,7 @@ class ParticipantTest < ActiveSupport::TestCase
   end
 
   test 'Full name' do
-    assert_equal 'Drew Maust', @drew_hdi.full_name
+    assert_equal 'Drew Mambo', @drew_hdi.full_name
   end
 
   test 'Fuzzy Dates' do

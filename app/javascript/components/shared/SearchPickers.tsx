@@ -24,9 +24,13 @@ export const LanguagePicker = connect(
     list: state.languages.list,
     languages: state.languages.byId
   }),
-  { setLanguages: setLanguages, setCan: () => {} }
+  { setLanguages: setLanguages }
 )((props: LangPickerProps) => {
-  useAPIGet("/api/languages", {}, { setLanguages: props.setLanguages });
+  useAPIGet(
+    "/api/languages",
+    {},
+    { setLanguages: props.setLanguages, setCan: () => {} }
+  );
   return <SearchPicker {...props} nameOf={id => props.languages[id]!.name} />;
 });
 
@@ -84,8 +88,12 @@ export const ClusterPicker = connect(
     list: state.clusters.list,
     clusters: state.clusters.byId
   }),
-  { setClusters: setClusters, setCan: () => {} }
+  { setClusters: setClusters }
 )((props: ClusterPickerProps) => {
-  useAPIGet("/api/clusters", {}, { setClusters: props.setClusters });
+  useAPIGet(
+    "/api/clusters",
+    {},
+    { setClusters: props.setClusters, setCan: () => {} }
+  );
   return <SearchPicker {...props} nameOf={id => props.clusters[id]!.name} />;
 });

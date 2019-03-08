@@ -11,9 +11,9 @@ Rick:
 
 Drew:
   first_name: Drew
-  last_name: Maust
+  last_name: Mambo
   gender: M
-  email: drew_maust@sil.org
+  email: drew_mambo@sil.org
   country: USA
   has_login: true
   roles_field: '|TranslationConsultant|'
@@ -34,18 +34,18 @@ Freddie:
 
 Olga:
   first_name: Olga
-  last_name: Nka
+  last_name: Ngombo
   gender: F
-  email: olga_nka@sil.org
+  email: olga_ngombo@sil.org
   has_login: true
   roles_field: '|LanguageProgramFacilitator|'
   ui_language: en
 
 Andreas:
   first_name: Andreas
-  last_name: Ernst
+  last_name: Everest
   gender: M
-  email: andreas_ernst@sil.org
+  email: andreas_everest@sil.org
   has_login: true
   roles_field: '|LanguageProgramFacilitator|'
   ui_language: en
@@ -58,26 +58,26 @@ FormerHdiTranslator:
 
 Kevin:
   first_name: Kevin
-  last_name: Bradford
+  last_name: Barnes
   gender: M
-  email: kevin_bradford@sil.org
+  email: kevin_barnes@sil.org
   has_login: true
   ui_language: en
 
 Lance:
   first_name: Lance
-  last_name: Freeland
+  last_name: Armstrong
   gender: M
-  email: lance_freeland@sil.org
+  email: lance_armstrong@sil.org
   has_login: true
   roles_field: '|TranslationConsultantTraining|'
   ui_language: en
 
 Kendall:
   first_name: Kendall
-  last_name: Isaac
+  last_name: Ingles
   gender: M
-  email: kendall_isaac@sil.org
+  email: kendall_ingles@sil.org
   has_login: true
   roles_field: '|LinguisticConsultantTraining|'
   ui_language: en

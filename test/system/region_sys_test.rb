@@ -70,18 +70,18 @@ class RegionSysTest < ApplicationSystemTestCase
 
   test "Change LPF" do
     go_to_page
-    assert_text("LPF: Andreas Ernst")
+    assert_text("LPF: Andreas Everest")
     action_bar_click_edit
     within('label', text: 'LPF') do
-      fill_in_search_input('Drew Maust')
+      fill_in_search_input('Drew M')
     end
     click_on 'Save'
-    assert_text("LPF: Drew Maust")
+    assert_text("LPF: Drew Mambo")
   end
 
   test "Remove LPF" do
     go_to_page
-    assert_text("LPF: Andreas Ernst")
+    assert_text("LPF: Andreas Everest")
     action_bar_click_edit
     within('label', text: 'LPF') do
       clear_search_input

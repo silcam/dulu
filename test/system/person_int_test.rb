@@ -14,7 +14,7 @@ class PersonIntTest < ApplicationSystemTestCase
     fill_in 'first_name', with: 'Da Boss'
     click_on 'Save'
     assert_changes_saved
-    assert_selector('h2', text: 'Da Boss Bradford')
+    assert_selector('h2', text: 'Da Boss Barnes')
   end
 
   test 'Rick create William Wallace' do
@@ -84,12 +84,12 @@ class PersonIntTest < ApplicationSystemTestCase
   test "Rick delete Olga" do
     log_in @rick
     visit model_path @olga
-    assert_selector('tr', text: 'Nka, Olga')  # Sidebar list
+    assert_selector('tr', text: 'Ngombo, Olga')  # Sidebar list
     sleep 0.2 # Make sure ajax finishes before Olga disappears
     action_bar_click_delete
     check "I'm sure"
-    click_on "Permanently Delete Olga Nka"
-    safe_assert_no_selector('tr', text: 'Nka, Olga')
+    click_on "Permanently Delete Olga Ngombo"
+    safe_assert_no_selector('tr', text: 'Ngombo, Olga')
     assert_nil Person.find_by(id: @olga.id)
   end
 
