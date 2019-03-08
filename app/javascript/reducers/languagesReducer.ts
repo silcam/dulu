@@ -5,17 +5,15 @@ import {
   LanguageAction
 } from "../actions/languageActions";
 import { ILanguage } from "../models/Language";
-import { stdReducers } from "./stdReducers";
+import { stdReducers, State } from "./stdReducers";
 import Language from "../models/Language";
 
-export interface LanguageState {
-  list: number[];
-  byId: { [id: string]: ILanguage | undefined };
-}
+export type LanguageState = State<ILanguage>;
 
 const emptyState: LanguageState = {
   list: [],
-  byId: {}
+  byId: {},
+  listSet: false
 };
 
 const stdLanguageReducers = stdReducers<ILanguage>(

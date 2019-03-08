@@ -7,7 +7,7 @@ import {
   OrganizationAction
 } from "../actions/organizationActions";
 import Organization, { IOrganization } from "../models/Organization";
-import { stdReducers } from "./stdReducers";
+import { stdReducers, State } from "./stdReducers";
 
 export const emptyOrganization: IOrganization = {
   id: 0,
@@ -19,14 +19,12 @@ export const emptyOrganization: IOrganization = {
   can: {}
 };
 
-export interface OrganizationState {
-  list: number[];
-  byId: { [id: string]: IOrganization | undefined };
-}
+export type OrganizationState = State<IOrganization>;
 
 const emptyState: OrganizationState = {
   list: [],
-  byId: {}
+  byId: {},
+  listSet: false
 };
 
 const stdOrganizationReducers = stdReducers(

@@ -174,6 +174,7 @@ export default {
     M: "Homme",
     F: "Femme"
   },
+  Go: "Aller",
   Home_country: "Pays d'origine",
   Im_sure: "Je suis certain.",
   Joined_program: "Rejoint le programme",

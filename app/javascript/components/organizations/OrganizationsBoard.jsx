@@ -4,11 +4,11 @@ import OrganizationsTable from "./OrganizationsTable";
 import NewOrganizationForm from "./NewOrganizationForm";
 import { Link } from "react-router-dom";
 import AddIcon from "../shared/icons/AddIcon";
-import TextFilter from "../shared/TextFilter";
 import FlexSpacer from "../shared/FlexSpacer";
 import PropTypes from "prop-types";
 import DuluAxios from "../../util/DuluAxios";
 import OrganizationContainer from "./OrganizationContainer";
+import GoBar from "../shared/GoBar";
 
 export default class OrganizationsBoard extends React.PureComponent {
   state = {};
@@ -28,16 +28,12 @@ export default class OrganizationsBoard extends React.PureComponent {
           <h2>
             <Link to="/organizations">{this.props.t("Organizations")}</Link>
           </h2>
-
-          <TextFilter
-            placeholder={this.props.t("Find")}
-            updateFilter={filter => this.setState({ filter: filter })}
-          />
           {this.props.can.create && (
             <Link to="/organizations/new">
               <AddIcon iconSize="large" />
             </Link>
           )}
+          <GoBar />
           <FlexSpacer />
           <h3>
             <Link to="/people">{this.props.t("People")}</Link>

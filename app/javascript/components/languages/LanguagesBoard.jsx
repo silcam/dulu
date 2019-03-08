@@ -2,12 +2,12 @@ import React from "react";
 import PropTypes from "prop-types";
 import styles from "../shared/MasterDetail.css";
 import { Link } from "react-router-dom";
-import TextFilter from "../shared/TextFilter";
 import AddIcon from "../shared/icons/AddIcon";
 import LanguagesTable from "./LanguagesTable";
 import FlexSpacer from "../shared/FlexSpacer";
 import DuluAxios from "../../util/DuluAxios";
 import LanguageContainer from "./LanguageContainer";
+import GoBar from "../shared/GoBar";
 
 export default class LanguagesBoard extends React.PureComponent {
   state = {};
@@ -27,16 +27,12 @@ export default class LanguagesBoard extends React.PureComponent {
           <h2>
             <Link to="/languages">{this.props.t("Languages")}</Link>
           </h2>
-
-          <TextFilter
-            placeholder={this.props.t("Find")}
-            updateFilter={filter => this.setState({ filter: filter })}
-          />
           {this.props.can.create && (
             <Link to="/languages/new">
               <AddIcon iconSize="large" />
             </Link>
           )}
+          <GoBar />
           <FlexSpacer />
           <h3>
             <Link to="/regions">{this.props.t("Regions")}</Link>

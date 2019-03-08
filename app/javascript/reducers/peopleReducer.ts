@@ -7,7 +7,7 @@ import {
   PeopleAction
 } from "../actions/peopleActions";
 import { personCompare, IPerson } from "../models/Person";
-import { stdReducers } from "./stdReducers";
+import { stdReducers, State } from "./stdReducers";
 
 export const emptyPerson = {
   id: 0,
@@ -21,16 +21,12 @@ export const emptyPerson = {
   participants: [] // TODO - remove
 };
 
-export interface PersonState {
-  list: number[];
-  byId: {
-    [id: string]: IPerson | undefined;
-  };
-}
+export type PersonState = State<IPerson>;
 
 const emptyState: PersonState = {
   list: [],
-  byId: {}
+  byId: {},
+  listSet: false
 };
 
 const stdPersonReducers = stdReducers(emptyPerson, personCompare);

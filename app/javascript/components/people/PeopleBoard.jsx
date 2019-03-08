@@ -4,11 +4,11 @@ import PeopleTable from "./PeopleTable";
 import NewPersonForm from "./NewPersonForm";
 import AddIcon from "../shared/icons/AddIcon";
 import { Link } from "react-router-dom";
-import TextFilter from "../shared/TextFilter";
 import FlexSpacer from "../shared/FlexSpacer";
 import DuluAxios from "../../util/DuluAxios";
 import PropTypes from "prop-types";
 import PersonContainer from "./PersonContainer";
+import GoBar from "../shared/GoBar";
 
 export default class PeopleBoard extends React.PureComponent {
   state = {};
@@ -28,15 +28,12 @@ export default class PeopleBoard extends React.PureComponent {
           <h2>
             <Link to="/people">{this.props.t("People")}</Link>
           </h2>
-          <TextFilter
-            placeholder={this.props.t("Find")}
-            updateFilter={filter => this.setState({ filter: filter })}
-          />
           {this.props.can.create && (
             <Link to="/people/new">
               <AddIcon iconSize="large" />
             </Link>
           )}
+          <GoBar />
           <FlexSpacer />
           <h3>
             <Link to="/organizations">{this.props.t("Organizations")}</Link>

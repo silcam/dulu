@@ -1,15 +1,13 @@
 import Region, { IRegion } from "../models/Region";
-import { stdReducers } from "./stdReducers";
+import { stdReducers, State } from "./stdReducers";
 import { RegionAction, RegionActionTypes } from "../actions/regionActions";
 
-export interface RegionState {
-  list: number[];
-  byId: { [id: string]: IRegion | undefined };
-}
+export type RegionState = State<IRegion>;
 
 const emptyState: RegionState = {
   list: [],
-  byId: {}
+  byId: {},
+  listSet: false
 };
 
 const stdRegionReducers = stdReducers(Region.emptyRegion, Region.compare);

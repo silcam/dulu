@@ -8,9 +8,10 @@ interface ById<T> {
   [id: string]: T | undefined;
 }
 
-interface State<T> {
+export interface State<T> {
   list: number[];
   byId: ById<T>;
+  listSet: boolean;
 }
 
 interface CompareFunc<T> {
@@ -50,7 +51,8 @@ function setList<T extends Item>(
         return accum;
       },
       {} as ById<T>
-    )
+    ),
+    listSet: true
   };
 }
 
@@ -69,7 +71,8 @@ function addItems<T extends Item>(
   if (compare !== undefined) sortList(list, byId, compare);
   return {
     list: list,
-    byId: byId
+    byId: byId,
+    listSet: state.listSet
   };
 }
 
@@ -120,7 +123,8 @@ function deleteItem<T extends Item>(state: State<T>, id: number): State<T> {
   if (index < 0) return state;
   return {
     list: update(state.list, { $splice: [[index, 1]] }) as number[],
-    byId: update(state.byId, { $unset: [id] })
+    byId: update(state.byId, { $unset: [id] }),
+    listSet: state.listSet
   };
 }
 

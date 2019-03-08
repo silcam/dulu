@@ -16,13 +16,18 @@ const initialState = {
   byId: {
     101: w101,
     303: w303
-  }
+  },
+  listSet: true
 };
 
 test("initial SET LIST", () => {
-  const state = stdWidgetReducers.setList({ list: [], byId: {} }, [w101, w202]);
+  const state = stdWidgetReducers.setList(
+    { list: [], byId: {}, listSet: false },
+    [w101, w202]
+  );
   expect(state.list).toEqual([101, 202]);
   expect(state.byId).toEqual({ 101: w101, 202: w202 });
+  expect(state.listSet).toBe(true);
 });
 
 test("subsequent SET LIST", () => {
@@ -32,11 +37,18 @@ test("subsequent SET LIST", () => {
 });
 
 test("ADD ITEMS to empty state", () => {
-  const state = stdWidgetReducers.addItems({ list: [], byId: {} }, [
-    w101,
-    w303
-  ]);
-  expect(state).toEqual(initialState);
+  const state = stdWidgetReducers.addItems(
+    { list: [], byId: {}, listSet: false },
+    [w101, w303]
+  );
+  expect(state).toEqual({
+    list: [101, 303],
+    byId: {
+      101: w101,
+      303: w303
+    },
+    listSet: false
+  });
 });
 
 test("ADD ITEMS", () => {
@@ -68,13 +80,16 @@ test("SET uses empty item as base", () => {
 });
 
 test("ADD uses empty item as base", () => {
-  const state = stdWidgetReducers.addItems({ list: [], byId: {} }, [wPartial]);
+  const state = stdWidgetReducers.addItems(
+    { list: [], byId: {}, listSet: false },
+    [wPartial]
+  );
   expect(state.byId[404]).toEqual({ id: 404, name: "" });
 });
 
 test("SET with partial does not override exisiting params", () => {
   const state = stdWidgetReducers.setList(
-    { list: [404], byId: { 404: w404 } },
+    { list: [404], byId: { 404: w404 }, listSet: false },
     [wPartial]
   );
   expect(state.byId[404]).toEqual({ id: 404, name: "w404" });
@@ -82,7 +97,7 @@ test("SET with partial does not override exisiting params", () => {
 
 test("ADD with partial does not override exisiting params", () => {
   const state = stdWidgetReducers.addItems(
-    { list: [404], byId: { 404: w404 } },
+    { list: [404], byId: { 404: w404 }, listSet: false },
     [wPartial]
   );
   expect(state.byId[404]).toEqual({ id: 404, name: "w404" });

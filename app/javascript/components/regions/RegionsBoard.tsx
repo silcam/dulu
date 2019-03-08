@@ -15,6 +15,7 @@ import { ILanguage } from "../../models/Language";
 import { History } from "history";
 import I18nContext from "../../application/I18nContext";
 import { ICan } from "../../actions/canActions";
+import GoBar from "../shared/GoBar";
 
 interface IProps {
   id?: number;
@@ -49,6 +50,7 @@ export default function RegionsBoard(props: IProps) {
             <AddIcon iconSize="large" />
           </Link>
         )}
+        <GoBar />
         <FlexSpacer />
         <h3>
           <Link to="/clusters">{t("Clusters")}</Link>

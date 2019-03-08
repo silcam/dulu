@@ -6,16 +6,14 @@ import {
   DELETE_CLUSTER
 } from "../actions/clusterActions";
 import Cluster, { ICluster } from "../models/Cluster";
-import { stdReducers } from "./stdReducers";
+import { stdReducers, State } from "./stdReducers";
 
-export interface ClusterState {
-  list: number[];
-  byId: { [id: string]: ICluster | undefined };
-}
+export type ClusterState = State<ICluster>;
 
 const emptyState: ClusterState = {
   list: [],
-  byId: {}
+  byId: {},
+  listSet: false
 };
 
 const stdClusterReducers = stdReducers<ICluster>(

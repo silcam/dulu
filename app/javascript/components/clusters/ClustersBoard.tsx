@@ -12,6 +12,7 @@ import { ICluster } from "../../models/Cluster";
 import { History, Location } from "history";
 import { Adder, Setter, SetCan } from "../../models/TypeBucket";
 import { ICan } from "../../actions/canActions";
+import GoBar from "../shared/GoBar";
 
 interface IProps {
   t: T;
@@ -50,6 +51,7 @@ export default class ClustersBoard extends React.Component<IProps> {
               <AddIcon iconSize="large" />
             </Link>
           )}
+          <GoBar />
           <FlexSpacer />
           <h3>
             <Link to="/regions">{t("Regions")}</Link>
