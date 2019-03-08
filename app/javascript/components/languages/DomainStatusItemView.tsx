@@ -41,6 +41,10 @@ export default function DomainStatusItemView(props: IProps) {
             </tr>
           )}
           <tr>
+            <th>{t("Description")}</th>
+            <td>{props.item.description}</td>
+          </tr>
+          <tr>
             <th>{t("Year")}</th>
             <td>{orBlank(props.item.year)}</td>
           </tr>

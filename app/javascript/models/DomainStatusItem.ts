@@ -10,6 +10,7 @@ export interface IDomainStatusItem {
   language_id: number;
   category: DSICategories;
   subcategory: DSISubcategories;
+  description: string;
   year: number | null;
   platforms: string;
   organization_id: number | null;

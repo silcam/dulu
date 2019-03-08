@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190307123640) do
+ActiveRecord::Schema.define(version: 20190308064131) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -131,11 +131,12 @@ ActiveRecord::Schema.define(version: 20190307123640) do
     t.string "category"
     t.string "subcategory"
     t.integer "year"
-    t.string "platforms"
+    t.string "platforms", default: ""
     t.bigint "language_id"
     t.integer "creator_id"
     t.bigint "organization_id"
     t.bigint "person_id"
+    t.string "description", default: ""
     t.index ["language_id"], name: "index_domain_status_items_on_language_id"
     t.index ["organization_id"], name: "index_domain_status_items_on_organization_id"
     t.index ["person_id"], name: "index_domain_status_items_on_person_id"

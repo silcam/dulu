@@ -10,6 +10,7 @@ json.language do
       :language_id,
       :category, 
       :subcategory, 
+      :description,
       :year,
       :platforms,
       :organization_id, 

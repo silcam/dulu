@@ -7,7 +7,7 @@ import DomainStatusItem, {
 } from "../../models/DomainStatusItem";
 import I18nContext from "../../application/I18nContext";
 import useKeepStateOnList from "../../util/useKeepStateOnList";
-import { SelectGroup } from "../shared/formGroup";
+import { SelectGroup, TextInputGroup } from "../shared/formGroup";
 import SelectInput from "../shared/SelectInput";
 import SmallSaveAndCancel from "../shared/SmallSaveAndCancel";
 import { OrganizationPicker, PersonPicker } from "../shared/SearchPickers";
@@ -59,6 +59,10 @@ export default function DomainStatusItemForm(props: IProps) {
       : false
   );
 
+  const [description, setDescription] = useState(
+    props.domainStatusItem ? props.domainStatusItem.description : ""
+  );
+
   const [year, setYear] = useState(
     props.domainStatusItem ? props.domainStatusItem.year : null
   );
@@ -75,6 +79,7 @@ export default function DomainStatusItemForm(props: IProps) {
     category,
     subcategory,
     year,
+    description: description,
     platforms: DomainStatusItem.platformsStr(android, ios),
     person_id: personId,
     organization_id: organizationId,
@@ -120,13 +125,19 @@ export default function DomainStatusItemForm(props: IProps) {
 
       {category == DSICategories.ScriptureApp && (
         <P>
-          <label>{t("Platform")}</label>
+          <label>{t("Platforms")}</label>
           <br />
           <CheckBoxInput value={android} setValue={setAndroid} text="Android" />
           <br />
           <CheckBoxInput value={ios} setValue={setIos} text="iOS" />
         </P>
       )}
+
+      <TextInputGroup
+        label={t("Description")}
+        value={description}
+        handleInput={(e: JSEvent) => setDescription(e.target.value)}
+      />
 
       <P>
         <label>

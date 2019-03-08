@@ -13,6 +13,7 @@ const mockDSI: IDomainStatusItem = {
   language_id: 0,
   category: DSICategories.PublishedScripture,
   subcategory: DSISubcategories.Portions,
+  description: "",
   year: 2000,
   platforms: "",
   organization_id: 303,

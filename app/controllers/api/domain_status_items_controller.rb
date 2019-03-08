@@ -35,6 +35,7 @@ class Api::DomainStatusItemsController < ApplicationController
         :subcategory, 
         :year, 
         :platforms,
+        :description,
         :organization_id,
         :person_id,
         bible_book_ids: []

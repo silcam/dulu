@@ -300,6 +300,7 @@ export default {
   Participants: "Participants",
   People: "Personnel",
   Person: "Personne",
+  Platforms: "Plateformes mobile",
   Portions: "Portions",
   Position: "Poste",
   Publications: "Publications",
