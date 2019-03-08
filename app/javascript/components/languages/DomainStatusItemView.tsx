@@ -30,7 +30,7 @@ export default function DomainStatusItemView(props: IProps) {
             <tr>
               <th>{t("Books")}</th>
               <td>
-                {DomainStatusItem.books(props.item, t).replace("-", ", ")}
+                {DomainStatusItem.books(props.item, t).replace(/-/g, ", ")}
               </td>
             </tr>
           )}
