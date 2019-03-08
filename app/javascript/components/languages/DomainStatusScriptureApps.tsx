@@ -11,6 +11,8 @@ import { ById } from "../../models/TypeBucket";
 import { IPerson } from "../../models/Person";
 import { IOrganization } from "../../models/Organization";
 import { Link } from "react-router-dom";
+import { orBlank } from "../../util/orBlank";
+import takeFirst from "../../util/takeFirst";
 
 interface IProps {
   domainStatusItems: IDomainStatusItem[];
@@ -40,9 +42,11 @@ export default function DomainStatusScriptureApps(props: IProps) {
               renderItem={item => (
                 <span>
                   <Link to={`${props.basePath}/${item.id}`}>
-                    {item.platforms.replace("|", " & ")}
+                    {takeFirst(item.platforms.replace("|", "-"), t("App"))}
                   </Link>
-                  {"  " + DomainStatusItem.books(item, t)}
+                  {orBlank(item.year, " ")}
+                  {subcategory == DSISubcategories.Portions &&
+                    "  " + DomainStatusItem.books(item, t)}
                 </span>
               )}
             />

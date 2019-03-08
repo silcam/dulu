@@ -62,7 +62,7 @@ export default function DomainStatusItemPage(props: IProps) {
   );
 
   return (
-    <div>
+    <div className="padBottom">
       <h4>
         <Link to={`/languages/${props.language.id}`}>{`< ${
           props.language.name

@@ -112,8 +112,12 @@ function platformsStr(android: boolean, ios: boolean) {
     .join("|");
 }
 
-function books(item: IDomainStatusItem, t: T) {
-  return item.bible_book_ids.map(id => BibleBook.name(id, t)).join("-");
+function books(item: IDomainStatusItem, t: T, max?: number) {
+  const ids = max ? item.bible_book_ids.slice(0, max) : item.bible_book_ids;
+  let names = ids.map(id => BibleBook.name(id, t)).join("-");
+  if (names.includes(" ")) names = names.replace(/-/g, ", ");
+  if (ids.length < item.bible_book_ids.length) names += "...";
+  return names;
 }
 
 function personName(item: IDomainStatusItem, people: ById<IPerson>) {

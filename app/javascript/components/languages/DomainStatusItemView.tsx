@@ -10,6 +10,7 @@ import { IOrganization } from "../../models/Organization";
 import { ILanguage } from "../../models/Language";
 import I18nContext from "../../application/I18nContext";
 import { orBlank } from "../../util/orBlank";
+import { Link } from "react-router-dom";
 
 interface IProps {
   language: ILanguage;
@@ -50,11 +51,23 @@ export default function DomainStatusItemView(props: IProps) {
           </tr>
           <tr>
             <th>{t("Organization")}</th>
-            <td>{DomainStatusItem.orgName(props.item, props.organizations)}</td>
+            <td>
+              {props.item.organization_id && (
+                <Link to={`/organizations/${props.item.organization_id}`}>
+                  {DomainStatusItem.orgName(props.item, props.organizations)}
+                </Link>
+              )}
+            </td>
           </tr>
           <tr>
             <th>{t("Person")}</th>
-            <td>{DomainStatusItem.personName(props.item, props.people)}</td>
+            <td>
+              {props.item.person_id && (
+                <Link to={`/people/${props.item.person_id}`}>
+                  {DomainStatusItem.personName(props.item, props.people)}
+                </Link>
+              )}
+            </td>
           </tr>
         </tbody>
       </table>

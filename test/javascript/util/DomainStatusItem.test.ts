@@ -42,8 +42,17 @@ test("DSI: platformsStr", () => {
 
 test("DSI books", () => {
   expect(DomainStatusItem.books(mockDSI, t)).toEqual("Genesis-Exodus");
+
   const noBooks = domainStatusItemFactory({ bible_book_ids: [] });
   expect(DomainStatusItem.books(noBooks, t)).toEqual("");
+
+  const corinthians = domainStatusItemFactory({ bible_book_ids: [46, 47] });
+  expect(DomainStatusItem.books(corinthians, t)).toEqual(
+    "1 Corinthians, 2 Corinthians"
+  );
+
+  const gospels = domainStatusItemFactory({ bible_book_ids: [40, 41, 42, 43] });
+  expect(DomainStatusItem.books(gospels, t, 2)).toEqual("Matthew-Mark...");
 });
 
 test("DSI: personName", () => {

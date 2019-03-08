@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import I18nContext from "../../application/I18nContext";
-import {
+import DomainStatusItem, {
   DSICategories,
   DSISubcategories,
   IDomainStatusItem
@@ -10,10 +10,14 @@ import DomainStatusSubcategory from "./DomainStatusSubcategory";
 import { orBlank } from "../../util/orBlank";
 import BibleBook from "../../models/BibleBook";
 import { Link } from "react-router-dom";
+import { ById } from "../../models/TypeBucket";
+import { IOrganization } from "../../models/Organization";
+import takeFirst from "../../util/takeFirst";
 
 interface IProps {
   domainStatusItems: IDomainStatusItem[];
   basePath: string;
+  organizations: ById<IOrganization>;
 }
 
 export default function DomainStatusAudioScripture(props: IProps) {
@@ -32,12 +36,14 @@ export default function DomainStatusAudioScripture(props: IProps) {
               <span>
                 <Link to={`${props.basePath}/${item.id}`}>
                   {item.bible_book_ids.length > 0
-                    ? item.bible_book_ids
-                        .map(id => BibleBook.name(id, t))
-                        .join("-")
+                    ? DomainStatusItem.books(item, t, 3)
                     : t("Portions")}
-                </Link>{" "}
-                {orBlank(item.year, " (", ")")}
+                </Link>
+                {orBlank(item.year, " ")}
+                {orBlank(
+                  DomainStatusItem.orgName(item, props.organizations),
+                  " - "
+                )}
               </span>
             )}
           />
@@ -48,9 +54,12 @@ export default function DomainStatusAudioScripture(props: IProps) {
             renderItem={item => (
               <span>
                 <Link to={`${props.basePath}/${item.id}`}>
-                  {t("New_testament")}
-                </Link>{" "}
-                {orBlank(item.year, " - ")}
+                  {takeFirst(item.year, t("New_testament"))}
+                </Link>
+                {orBlank(
+                  DomainStatusItem.orgName(item, props.organizations),
+                  " - "
+                )}
               </span>
             )}
           />
@@ -60,8 +69,13 @@ export default function DomainStatusAudioScripture(props: IProps) {
             domainStatusItems={domainStatusItems}
             renderItem={item => (
               <span>
-                <Link to={`${props.basePath}/${item.id}`}>{t("Bible")} </Link>
-                {orBlank(item.year, " - ")}
+                <Link to={`${props.basePath}/${item.id}`}>
+                  {takeFirst(item.year, t("Bible"))}
+                </Link>
+                {orBlank(
+                  DomainStatusItem.orgName(item, props.organizations),
+                  " - "
+                )}
               </span>
             )}
           />
