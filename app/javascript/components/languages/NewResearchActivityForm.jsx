@@ -34,7 +34,7 @@ export default class NewResearchActivityForm extends React.PureComponent {
           label={t("New_activity")}
           value={this.state.newActivity.title}
           placeholder={t("Title")}
-          handleInput={e => this.updateNewActivity({ title: e.target.value })}
+          setValue={title => this.updateNewActivity({ title })}
           autoFocus
         />
         <SmallSaveAndCancel

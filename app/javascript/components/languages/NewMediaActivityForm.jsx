@@ -36,18 +36,14 @@ export default class NewMediaActivityForm extends React.PureComponent {
         <SelectGroup
           label={t("Category")}
           value={this.state.newActivity.category}
-          handleChange={e =>
-            this.updateNewActivity({ category: e.target.value })
-          }
+          setValue={category => this.updateNewActivity({ category })}
           options={SelectInput.translatedOptions(Activity.mediaCategories, t)}
         />
         {this.state.newActivity.category == "AudioScripture" && (
           <SelectGroup
             label={t("Contents")}
             value={this.state.newActivity.scripture}
-            handleChange={e =>
-              this.updateNewActivity({ scripture: e.target.value })
-            }
+            setValue={scripture => this.updateNewActivity({ scripture })}
             options={SelectInput.translatedOptions(Activity.mediaScriptures, t)}
           />
         )}
@@ -55,7 +51,7 @@ export default class NewMediaActivityForm extends React.PureComponent {
           <SelectGroup
             label={t("Film")}
             value={this.state.newActivity.film}
-            handleChange={e => this.updateNewActivity({ film: e.target.value })}
+            setValue={film => this.updateNewActivity({ film })}
             options={SelectInput.translatedOptions(
               Activity.mediaFilms,
               t,

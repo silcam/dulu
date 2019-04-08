@@ -149,7 +149,7 @@ class EventsIntegrationTest < ApplicationSystemTestCase
   end
 
   test "Can't make New Event with End Date before Start Date" do
-    postpone_failure(Date.new(2019, 3, 28), "Event form validates end date after start date")
+    postpone_failure(Date.new(2019, 5, 28), "Event form validates end date after start date")
     # my_setup
     # click_on 'Add Event'
     # fill_in_date 'event_start_date', FuzzyDate.new(2017,8, 1)

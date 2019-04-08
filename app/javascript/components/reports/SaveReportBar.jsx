@@ -38,7 +38,7 @@ class _SaveReportBar extends React.PureComponent {
           value={this.state.name}
           name="name"
           placeholder={t("Report_name")}
-          handleInput={e => this.setState({ name: e.target.value })}
+          setValue={name => this.setState({ name })}
           autoFocus
         />
         <SaveButton

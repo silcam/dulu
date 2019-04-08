@@ -27,16 +27,6 @@ export default class NewPersonForm extends React.Component {
     saving: false
   };
 
-  handleInput = e => {
-    const name = e.target.name;
-    const value = e.target.value;
-    this.setState(prevState => {
-      let person = prevState.person;
-      person[name] = value;
-      return { person: person };
-    });
-  };
-
   updatePerson = mergePerson =>
     this.setState(prevState => ({
       person: update(prevState.person, { $merge: mergePerson })
@@ -93,7 +83,7 @@ export default class NewPersonForm extends React.Component {
         <h3>{t("New_person")}</h3>
 
         <ValidatedTextInputGroup
-          handleInput={this.handleInput}
+          setValue={first_name => this.updatePerson({ first_name })}
           name="first_name"
           label={t("First_name")}
           value={person.first_name}
@@ -104,7 +94,7 @@ export default class NewPersonForm extends React.Component {
         />
 
         <ValidatedTextInputGroup
-          handleInput={this.handleInput}
+          setValue={last_name => this.updatePerson({ last_name })}
           name="last_name"
           label={t("Last_name")}
           value={person.last_name}
@@ -114,7 +104,7 @@ export default class NewPersonForm extends React.Component {
         />
 
         <SelectGroup
-          handleChange={this.handleInput}
+          setValue={gender => this.updatePerson({ gender })}
           name="gender"
           label={t("Gender")}
           value={person.gender}
@@ -132,7 +122,7 @@ export default class NewPersonForm extends React.Component {
         {person.has_login && (
           <div>
             <ValidatedTextInputGroup
-              handleInput={this.handleInput}
+              setValue={email => this.updatePerson({ email })}
               name="email"
               label={t("Email")}
               value={person.email}
@@ -142,7 +132,7 @@ export default class NewPersonForm extends React.Component {
             />
 
             <SelectGroup
-              handleChange={this.handleInput}
+              setValue={ui_language => this.updatePerson({ ui_language })}
               name="ui_language"
               label={t("dulu_preferred_language")}
               value={person.ui_language}

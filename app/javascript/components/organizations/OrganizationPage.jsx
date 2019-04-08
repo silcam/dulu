@@ -122,9 +122,7 @@ export default class OrganizationPage extends React.PureComponent {
             editing={this.state.editing}
             name="short_name"
             value={organization.short_name}
-            updateValue={value =>
-              this.updateOrganization({ short_name: value })
-            }
+            setValue={value => this.updateOrganization({ short_name: value })}
             t={this.props.t}
             validateNotBlank
           />
@@ -135,7 +133,7 @@ export default class OrganizationPage extends React.PureComponent {
             editing={this.state.editing}
             value={organization.long_name || ""}
             label={this.props.t("Long_name")}
-            updateValue={value => {
+            setValue={value => {
               this.updateOrganization({ long_name: value });
             }}
           />
@@ -187,9 +185,7 @@ export default class OrganizationPage extends React.PureComponent {
             editing={this.state.editing}
             label={this.props.t("Description")}
             value={organization.description}
-            updateValue={value =>
-              this.updateOrganization({ description: value })
-            }
+            setValue={value => this.updateOrganization({ description: value })}
           />
         </div>
       </div>

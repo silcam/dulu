@@ -41,9 +41,7 @@ export default class MyOrganizationForm extends React.PureComponent {
           <label>{this.props.organization.short_name}</label>
           <TextInputGroup
             label={t("Position")}
-            handleInput={e =>
-              this.updateOrganizationPerson({ position: e.target.value })
-            }
+            setValue={position => this.updateOrganizationPerson({ position })}
             value={org_person.position || ""}
           />
           <FuzzyDateGroup

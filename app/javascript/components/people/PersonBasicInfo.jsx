@@ -35,7 +35,7 @@ function PersonBasicInfo(props) {
             <TextOrEditText
               editing={props.editing}
               value={person.email}
-              updateValue={value => props.updatePerson({ email: value })}
+              setValue={value => props.updatePerson({ email: value })}
               t={props.t}
               validateNotBlank={person.has_login}
             />

@@ -213,8 +213,8 @@ export default function EditEventParticipantsTable(props) {
                       <SelectInput
                         options={selectOptionsFromObject(t("roles"))}
                         value={role}
-                        handleChange={e =>
-                          updateRole(participant, roleIndex, e.target.value)
+                        setValue={newRole =>
+                          updateRole(participant, roleIndex, newRole)
                         }
                       />
                       <DeleteIcon

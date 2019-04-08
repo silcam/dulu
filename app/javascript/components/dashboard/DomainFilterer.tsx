@@ -21,7 +21,7 @@ export default function DomainFilterer(props: IProps) {
       <SelectInput
         value={props.domainFilter}
         options={domainOptions(t)}
-        handleChange={e => props.setDomainFilter(e.target.value)}
+        setValue={props.setDomainFilter}
         extraClasses={"input-sm extraSmall form-control-inline"}
       />
     </div>

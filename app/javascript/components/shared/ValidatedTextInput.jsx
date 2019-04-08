@@ -19,8 +19,8 @@ class ValidatedTextInput extends React.PureComponent {
     this.state = { showError: false };
   }
 
-  handleInput = e => {
-    this.props.handleInput(e);
+  setValue = value => {
+    this.props.setValue(value);
 
     if (!this.state.showError) {
       this.setState({ showError: true });
@@ -38,12 +38,12 @@ class ValidatedTextInput extends React.PureComponent {
   };
 
   render() {
-    const { handleInput, ...otherProps } = this.props;
+    const { setValue, ...otherProps } = this.props;
     const errorMessage = this.makeErrorMessage();
 
     return (
       <TextInput
-        handleInput={this.handleInput}
+        setValue={this.setValue}
         errorMessage={errorMessage}
         {...otherProps}
       />

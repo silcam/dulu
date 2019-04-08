@@ -69,7 +69,7 @@ export default class NewEventForm extends React.PureComponent {
         <ValidatedTextInputGroup
           value={event.name}
           name="Name"
-          handleInput={e => this.updateEvent({ name: e.target.value })}
+          setValue={name => this.updateEvent({ name })}
           placeholder={t("Name")}
           validateNotBlank
           t={t}
@@ -79,7 +79,7 @@ export default class NewEventForm extends React.PureComponent {
           label={t("Domain")}
           value={event.domain}
           options={selectOptionsFromObject(t("domains"))}
-          handleChange={e => this.updateEvent({ domain: e.target.value })}
+          setValue={domain => this.updateEvent({ domain })}
         />
         <FuzzyDateGroup
           label={t("Start_date")}
@@ -100,7 +100,7 @@ export default class NewEventForm extends React.PureComponent {
         <TextAreaGroup
           label={t("Note")}
           value={event.note}
-          handleInput={e => this.updateEvent({ note: e.target.value })}
+          setValue={note => this.updateEvent({ note })}
         />
 
         <EditEventParticipantsTable

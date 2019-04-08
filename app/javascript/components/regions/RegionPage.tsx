@@ -89,7 +89,7 @@ export default function RegionPage(props: IProps) {
         <TextOrEditText
           editing={editing}
           value={region.name}
-          updateValue={value => updateRegion({ name: value })}
+          setValue={value => updateRegion({ name: value })}
           t={t}
           name="name"
           validateNotBlank

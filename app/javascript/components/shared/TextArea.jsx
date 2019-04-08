@@ -8,7 +8,7 @@ export default function TextArea(props) {
       <textarea
         rows={rows}
         name={props.name}
-        onChange={props.handleInput}
+        onChange={e => props.setValue(e.target.value)}
         value={props.value || ""}
       />
     </div>
@@ -16,7 +16,7 @@ export default function TextArea(props) {
 }
 
 TextArea.propTypes = {
-  handleInput: PropTypes.func.isRequired,
+  setValue: PropTypes.func.isRequired,
   value: PropTypes.string,
   name: PropTypes.string,
   // optional

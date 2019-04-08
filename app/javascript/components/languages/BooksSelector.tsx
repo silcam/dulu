@@ -54,7 +54,7 @@ export default function BooksSelector(props: IProps) {
             <SelectInput
               value={addingIndex}
               options={availableBookOptions}
-              handleChange={e => setAddingIndex(parseInt(e.target.value))}
+              setValue={index => setAddingIndex(parseInt(index))}
               name="BibleBook"
               autoFocus
             />

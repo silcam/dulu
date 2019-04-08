@@ -131,7 +131,7 @@ export default class EventView extends React.PureComponent {
               name="name"
               editing={this.state.editing}
               value={event.name}
-              updateValue={value => this.updateEvent({ name: value })}
+              setValue={value => this.updateEvent({ name: value })}
               t={t}
               validateNotBlank
             />
@@ -141,7 +141,7 @@ export default class EventView extends React.PureComponent {
               <SelectGroup
                 label={t("Domain")}
                 value={event.domain}
-                handleChange={e => this.updateEvent({ domain: e.target.value })}
+                setValue={domain => this.updateEvent({ domain })}
                 options={selectOptionsFromObject(t("domains"))}
               />
               <FuzzyDateGroup
@@ -171,7 +171,7 @@ export default class EventView extends React.PureComponent {
               label={t("Note")}
               editing={this.state.editing}
               value={event.note}
-              updateValue={value => this.updateEvent({ note: value })}
+              setValue={value => this.updateEvent({ note: value })}
             />
           </P>
           <div className={style.participantsTable}>

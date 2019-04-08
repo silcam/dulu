@@ -11,7 +11,7 @@ export default function SelectInput(props) {
       name={name}
       value={props.value}
       autoFocus={props.autoFocus || false}
-      onChange={props.handleChange}
+      onChange={e => props.setValue(e.target.value)}
       onBlur={props.onBlur}
     >
       {props.options.map(option => {
@@ -33,7 +33,7 @@ SelectInput.translatedOptions = (options, t, keyPrefix) =>
   }));
 
 SelectInput.propTypes = {
-  handleChange: PropTypes.func.isRequired, // handleChange(e)
+  setValue: PropTypes.func.isRequired,
   value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
   options: PropTypes.array.isRequired, // [{value: v, display: d} ... ]
   // optional

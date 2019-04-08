@@ -37,7 +37,7 @@ export default class AddRoleRow extends React.PureComponent {
           <SelectInput
             value={this.state.role}
             options={this.props.person.grantable_roles}
-            handleChange={this.handleRoleSelect}
+            setValue={role => this.setState({ role })}
             autoFocus
           />
           <SmallSaveAndCancel

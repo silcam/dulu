@@ -57,7 +57,7 @@ export default class NewWorkshopsActivityForm extends React.PureComponent {
           label={t("New_activity")}
           placeholder={t("Title")}
           value={this.state.newActivity.title}
-          handleInput={e => this.updateNewActivity({ title: e.target.value })}
+          setValue={title => this.updateNewActivity({ title })}
           autoFocus
         />
         <label>{t("Workshops")}</label>
@@ -70,10 +70,10 @@ export default class NewWorkshopsActivityForm extends React.PureComponent {
                   <TextInput
                     placeholder={t("Name")}
                     value={workshop.name}
-                    handleInput={e =>
+                    setValue={name =>
                       this.updateWorkshop({
                         number: workshop.number,
-                        name: e.target.value
+                        name
                       })
                     }
                   />

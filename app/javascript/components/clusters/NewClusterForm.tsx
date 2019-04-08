@@ -57,9 +57,7 @@ export default class NewClusterForm extends React.PureComponent<
         <h2>{t("New_cluster")}</h2>
         <TextInputGroup
           value={this.state.cluster.name}
-          handleInput={(e: JSEvent) =>
-            this.updateCluster({ name: e.target.value })
-          }
+          setValue={(name: string) => this.updateCluster({ name })}
           placeholder={t("Name")}
           name="name"
           autoFocus

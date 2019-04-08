@@ -15,7 +15,7 @@ export default function NewStageForm(props) {
         <div className={styles.rowExpansion}>
           <label>{t("Update_stage")}</label>
           <SelectInput
-            handleChange={e => props.updateNextStage({ name: e.target.value })}
+            setValue={name => props.updateNextStage({ name })}
             value={props.stage.name}
             options={SelectInput.translatedOptions(
               Activity.stages(props.activity),

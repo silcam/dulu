@@ -42,7 +42,7 @@ export default function NewRegionForm(props: IProps) {
       <h2>{t("New_region")}</h2>
       <TextInputGroup
         value={region.name}
-        handleInput={(e: JSEvent) => updateRegion({ name: e.target.value })}
+        setValue={(name: string) => updateRegion({ name })}
         placeholder={t("Name")}
         name="name"
         autoFocus

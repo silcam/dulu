@@ -8,6 +8,7 @@ import {
 import SaveButton from "../shared/SaveButton";
 import CancelButton from "../shared/CancelButton";
 import DuluAxios from "../../util/DuluAxios";
+import update from "immutability-helper";
 
 export default class NewOrganizationForm extends React.Component {
   constructor(props) {
@@ -26,11 +27,13 @@ export default class NewOrganizationForm extends React.Component {
   handleInput = e => {
     const name = e.target.name;
     const value = e.target.value;
-    this.setState(prevState => {
-      let organization = prevState.organization;
-      organization[name] = value;
-      return { organization: organization };
-    });
+    this.updateOrganization({ [name]: value });
+  };
+
+  updateOrganization = mergeOrg => {
+    this.setState(prevState => ({
+      organization: update(prevState.organization, { $merge: mergeOrg })
+    }));
   };
 
   handleKeyDown = e => {
@@ -64,7 +67,7 @@ export default class NewOrganizationForm extends React.Component {
           <h3>{t("New_organization")}</h3>
 
           <ValidatedTextInputGroup
-            handleInput={this.handleInput}
+            setValue={short_name => this.updateOrganization({ short_name })}
             name="short_name"
             label={t("Short_name")}
             value={organization.short_name}
@@ -75,7 +78,7 @@ export default class NewOrganizationForm extends React.Component {
           />
 
           <TextInputGroup
-            handleInput={this.handleInput}
+            setValue={long_name => this.updateOrganization({ long_name })}
             name="long_name"
             label={t("Long_name")}
             value={organization.long_name}
@@ -83,7 +86,7 @@ export default class NewOrganizationForm extends React.Component {
         </div>
 
         <TextAreaGroup
-          handleInput={this.handleInput}
+          setValue={description => this.updateOrganization({ description })}
           name="description"
           label={t("Description")}
           value={organization.description}

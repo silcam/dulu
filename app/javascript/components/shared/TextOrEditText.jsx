@@ -3,12 +3,9 @@ import PropTypes from "prop-types";
 import { ValidatedTextInputGroup } from "../shared/formGroup";
 
 export default function TextOrEditText(props) {
-  const { editing, updateValue, ...otherProps } = props;
+  const { editing, ...otherProps } = props;
   return editing ? (
-    <ValidatedTextInputGroup
-      handleInput={e => updateValue(e.target.value)}
-      {...otherProps}
-    />
+    <ValidatedTextInputGroup {...otherProps} />
   ) : (
     <span>{props.value}</span>
   );
@@ -17,7 +14,7 @@ export default function TextOrEditText(props) {
 TextOrEditText.propTypes = {
   editing: PropTypes.bool,
   value: PropTypes.string.isRequired,
-  updateValue: PropTypes.func.isRequired,
+  setValue: PropTypes.func.isRequired,
   // optional
   t: PropTypes.func, // required for validation
   label: PropTypes.string, // only displayed in edit mode

@@ -7,7 +7,7 @@ export default function TextOrTextArea(props) {
     <TextAreaGroup
       rows={props.rows}
       name={props.name}
-      handleInput={e => props.updateValue(e.target.value)}
+      setValue={props.setValue}
       value={props.value}
       label={props.label}
     />
@@ -19,8 +19,9 @@ export default function TextOrTextArea(props) {
 TextOrTextArea.propTypes = {
   editing: PropTypes.bool,
   value: PropTypes.string,
-  updateValue: PropTypes.func.isRequired,
+  setValue: PropTypes.func.isRequired,
   rows: PropTypes.number,
   // optional
-  label: PropTypes.string
+  label: PropTypes.string,
+  name: PropTypes.string
 };

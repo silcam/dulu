@@ -103,7 +103,7 @@ export default function DomainStatusItemForm(props: IProps) {
 
       <SelectGroup
         label={t("Category")}
-        handleChange={(e: JSEvent) => setCategory(e.target.value)}
+        setValue={(category: DSICategories) => setCategory(category)}
         value={category}
         options={SelectInput.translatedOptions(categories, t)}
         autoFocus
@@ -111,7 +111,9 @@ export default function DomainStatusItemForm(props: IProps) {
 
       <SelectGroup
         label={t("Subcategory")}
-        handleChange={(e: JSEvent) => setSubcategory(e.target.value)}
+        setValue={(subcategory: DSISubcategories) =>
+          setSubcategory(subcategory)
+        }
         value={subcategory}
         options={SelectInput.translatedOptions(subcategories, t)}
       />
@@ -136,7 +138,7 @@ export default function DomainStatusItemForm(props: IProps) {
       <TextInputGroup
         label={t("Description")}
         value={description}
-        handleInput={(e: JSEvent) => setDescription(e.target.value)}
+        setValue={(d: string) => setDescription(d)}
       />
 
       <P>

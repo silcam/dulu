@@ -36,9 +36,9 @@ export default class Workshop extends React.PureComponent {
     });
   };
 
-  handleInput = e => {
+  setName = name => {
     this.setState({
-      [e.target.name]: e.target.value,
+      name,
       nameError: null
     });
   };
@@ -136,7 +136,7 @@ export default class Workshop extends React.PureComponent {
             <TextInput
               name="name"
               value={this.state.name}
-              handleInput={this.handleInput}
+              setValue={this.setName}
               handleEnter={this.save}
               errorMessage={this.state.nameError}
             />

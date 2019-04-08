@@ -21,7 +21,7 @@ export default function TextInput(props) {
         type="text"
         className={inputClass}
         name={props.name}
-        onChange={props.handleInput}
+        onChange={e => props.setValue(e.target.value)}
         onKeyDown={handleKeyDown}
         placeholder={props.placeholder}
         value={value}
@@ -36,7 +36,7 @@ export default function TextInput(props) {
 }
 
 TextInput.propTypes = {
-  handleInput: PropTypes.func.isRequired,
+  setValue: PropTypes.func.isRequired,
   value: PropTypes.string.isRequired,
   name: PropTypes.string,
   // Optional

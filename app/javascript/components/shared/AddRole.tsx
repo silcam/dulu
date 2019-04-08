@@ -17,7 +17,7 @@ export default function AddRole(props: IProps) {
       <SelectInput
         value={role}
         options={selectOptionsFromObject(t("roles"))}
-        handleChange={e => setRole(e.target.value)}
+        setValue={setRole}
       />
       <AddIcon onClick={() => props.addRole(role)} />
     </div>

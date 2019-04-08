@@ -90,7 +90,8 @@ export default function ActivityViewPeopleEditor(props: IProps) {
               </td>
             </tr>
           ))}
-          {availablePtptPeople.length > 0 && (
+          {/* Only need to check both because of tests where Edit gets clicked before ptpts are loaded} */}
+          {availablePtptPeople.length > 0 && addPtptId && (
             <tr>
               <td colSpan={2}>
                 <SelectInput
@@ -99,7 +100,7 @@ export default function ActivityViewPeopleEditor(props: IProps) {
                     display: fullName(ptptPerson.person)
                   }))}
                   value={addPtptId}
-                  handleChange={e => setAddPtptId(parseInt(e.target.value))}
+                  setValue={id => setAddPtptId(parseInt(id))}
                 />
                 <button
                   onClick={() =>

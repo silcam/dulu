@@ -120,7 +120,7 @@ export default function ClusterPage(props: IProps) {
         <TextOrEditText
           editing={editing}
           value={cluster.name}
-          updateValue={value => updateCluster({ name: value })}
+          setValue={value => updateCluster({ name: value })}
           t={t}
           name="name"
           validateNotBlank

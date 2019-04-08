@@ -53,8 +53,8 @@ function BasicSearcher(props: IProps) {
   return (
     <div className={styles.searcher}>
       <TextInput
-        handleInput={e => {
-          setQuery(e.target.value);
+        setValue={q => {
+          setQuery(q);
           setSelectedPosition(-1);
         }}
         name="query"

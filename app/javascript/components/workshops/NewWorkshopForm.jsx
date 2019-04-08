@@ -29,9 +29,9 @@ export default class NewWorkshopForm extends React.PureComponent {
     });
   };
 
-  handleInput = e => {
+  setName = name => {
     this.setState({
-      [e.target.name]: e.target.value,
+      name,
       nameError: null
     });
   };
@@ -67,7 +67,7 @@ export default class NewWorkshopForm extends React.PureComponent {
       return (
         <div>
           <TextInput
-            handleInput={this.handleInput}
+            setValue={this.setName}
             name="name"
             value={this.state.name}
             placeholder={this.props.t("Workshop_name")}

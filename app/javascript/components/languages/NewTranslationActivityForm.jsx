@@ -31,9 +31,7 @@ export default class NewTranslationActivityForm extends React.PureComponent {
         <SelectGroup
           label={t("New_activity")}
           value={this.state.newActivity.bible_book_id}
-          handleChange={e =>
-            this.updateNewActivity({ bible_book_id: e.target.value })
-          }
+          setValue={id => this.updateNewActivity({ bible_book_id: id })}
           options={this.props.availableBooks.map(book => ({
             value: book.id,
             display: book.name

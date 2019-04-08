@@ -145,7 +145,7 @@ export default class PersonPage extends React.PureComponent {
             editing={this.state.editing}
             name="first_name"
             value={person.first_name}
-            updateValue={value => this.updatePerson({ first_name: value })}
+            setValue={value => this.updatePerson({ first_name: value })}
             t={this.props.t}
             validateNotBlank
           />
@@ -154,7 +154,7 @@ export default class PersonPage extends React.PureComponent {
             editing={this.state.editing}
             name="last_name"
             value={person.last_name}
-            updateValue={value => this.updatePerson({ last_name: value })}
+            setValue={value => this.updatePerson({ last_name: value })}
             t={this.props.t}
             validateNotBlank
           />
