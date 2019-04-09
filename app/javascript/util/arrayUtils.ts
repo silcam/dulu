@@ -29,9 +29,9 @@ export function itemAfter<T>(array: T[], item: T) {
 //     : update(array, { $push: [newItem] });
 // }
 
-export function print<Ty>(array: Ty[], t: T, keyPrefix: string) {
-  keyPrefix = keyPrefix ? keyPrefix + "." : "";
-  return array.map(item => t(keyPrefix + item)).join(", ");
+export function print<Ty>(array: Ty[], t: T, keyPrefix?: string) {
+  const prefix = keyPrefix ? keyPrefix + "." : "";
+  return array.map(item => t(prefix + item)).join(", ");
 }
 
 export function findById<T extends WithId>(array: T[], id: number) {
@@ -64,4 +64,12 @@ export function overlap<T>(a: T[], b: T[]) {
 
 export function subtract<T>(a: T[], b: T[]) {
   return a.filter(aItem => !b.some(bItem => bItem == aItem));
+}
+
+// One level of flattening only
+export function flat<T>(array: Array<T | T[]>) {
+  return array.reduce((flatArray: T[], item) => {
+    const toAdd = item instanceof Array ? item : [item];
+    return flatArray.concat(toAdd);
+  }, []);
 }

@@ -1,4 +1,4 @@
-import * as arrayUtils from "util/arrayUtils";
+import * as arrayUtils from "../../../app/javascript/util/arrayUtils";
 
 test("arrayDelete removes an item", () => {
   let a1 = [1, 2, 3];
@@ -29,7 +29,7 @@ const english = { id: 404, name: "English" };
 const french = { id: 123, name: "French" };
 const hdi = { id: 505, name: "Hdi" };
 const langs = [english, french, hdi];
-const langCompare = (a, b) => a.name.localeCompare(b.name);
+// const langCompare = (a, b) => a.name.localeCompare(b.name);
 
 // test("insertInto Basaa goes in first", () => {
 //   const basaa = { id: 142, name: "Basaa" };
@@ -49,7 +49,7 @@ const langCompare = (a, b) => a.name.localeCompare(b.name);
 //   expect(arrayUtils.insertInto(langs, sango, langCompare)).toEqual(exp);
 // });
 
-const fakeT = key => key.toUpperCase();
+const fakeT = (key: string) => key.toUpperCase();
 
 test("print translated array", () => {
   expect(arrayUtils.print(["one", "two", "three"], fakeT)).toEqual(
@@ -71,9 +71,10 @@ test("findIndexById", () => {
   expect(arrayUtils.findIndexById(langs, 505)).toBe(2);
 });
 
-test("findIndexById works with string ids", () => {
-  expect(arrayUtils.findIndexById(langs, "123")).toBe(1);
-});
+// Typescript flags this as wrong anyway
+// test("findIndexById works with string ids", () => {
+//   expect(arrayUtils.findIndexById(langs, "123")).toBe(1);
+// });
 
 test("deleteFrom deletes by id", () => {
   expect(arrayUtils.deleteFrom(langs, 505)).toEqual([english, french]);
@@ -89,3 +90,8 @@ test("deleteFrom returns same array if id not found", () => {
 //   expect(newLangs).toEqual([english, newFrench, hdi]);
 //   expect(newLangs).not.toBe(langs);
 // });
+
+test("flat", () => {
+  const a = [1, [2, 3, 4]];
+  expect(arrayUtils.flat(a)).toEqual([1, 2, 3, 4]);
+});

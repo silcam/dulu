@@ -4,6 +4,7 @@ import { addActivities } from "../../actions/activityActions";
 import { connect } from "react-redux";
 import DBActivitiesTable from "./DBActivitiesTable";
 import { ActivityType } from "../../models/Activity";
+import { flat } from "../../util/arrayUtils";
 
 interface IProps {
   languageIds: number[];
@@ -11,9 +12,11 @@ interface IProps {
 }
 
 const mapStateToProps = (state: AppState, ownProps: IProps) => ({
-  activities: ownProps.languageIds
-    .map(id => Language.activities(state, id, ownProps.type))
-    .flat(),
+  activities: flat(
+    ownProps.languageIds.map(id =>
+      Language.activities(state, id, ownProps.type)
+    )
+  ),
   languages: state.languages.byId
 });
 

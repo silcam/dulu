@@ -5,6 +5,7 @@ import Region from "../../models/Region";
 import { IParticipant } from "../../models/Participant";
 import { connect } from "react-redux";
 import MainContent from "./MainContent";
+import { flat } from "../../util/arrayUtils";
 
 interface IProps {
   selection: Selection;
@@ -28,9 +29,9 @@ const mapStateToProps = (state: AppState, ownProps: IProps) => {
       selectedItem = state.regions.byId[ownProps.selection.id];
       break;
     case "cameroon":
-      languageIds = state.regions.list
-        .map(id => regionLanguages(state, id))
-        .flat();
+      languageIds = flat(
+        state.regions.list.map(id => regionLanguages(state, id))
+      );
       break;
     case "user":
       languageIds = userLanguages(state, ownProps.userId);
@@ -50,21 +51,23 @@ function clusterLanguages(state: AppState, clusterId: number) {
 }
 
 function regionLanguages(state: AppState, regionId: number) {
-  return Region.clusters(state, regionId)
-    .map(cluster => clusterLanguages(state, cluster.id))
-    .flat()
-    .concat(Region.languages(state, regionId).map(lang => lang.id));
+  return flat(
+    Region.clusters(state, regionId).map(cluster =>
+      clusterLanguages(state, cluster.id)
+    )
+  ).concat(Region.languages(state, regionId).map(lang => lang.id));
 }
 
 function userLanguages(state: AppState, userId: number) {
-  return (Object.values(state.participants) as IParticipant[])
-    .filter(ptpt => ptpt.person_id == userId)
-    .map(ptpt =>
-      ptpt.cluster_id
-        ? clusterLanguages(state, ptpt.cluster_id)
-        : [ptpt.language_id!]
-    )
-    .flat();
+  return flat(
+    (Object.values(state.participants) as IParticipant[])
+      .filter(ptpt => ptpt.person_id == userId)
+      .map(ptpt =>
+        ptpt.cluster_id
+          ? clusterLanguages(state, ptpt.cluster_id)
+          : [ptpt.language_id!]
+      )
+  );
 }
 
 const MainContentContainer = connect(mapStateToProps)(MainContent);

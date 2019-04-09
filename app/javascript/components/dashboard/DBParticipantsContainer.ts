@@ -6,6 +6,7 @@ import { addPeople } from "../../actions/peopleActions";
 import { addParticipants } from "../../actions/participantActions";
 import { connect } from "react-redux";
 import { IParticipant } from "../../models/Participant";
+import { flat } from "../../util/arrayUtils";
 
 interface IProps {
   languageIds: number[];
@@ -21,13 +22,13 @@ export interface PeopleParticipants {
 }
 
 const mapStateToProps = (state: AppState, ownProps: IProps) => {
-  const participants = (ownProps.languageIds
-    .map(id => state.languages.byId[id])
-    .filter(lang => lang !== undefined) as ILanguage[])
-    .map(lang =>
+  const participants = flat(
+    (ownProps.languageIds
+      .map(id => state.languages.byId[id])
+      .filter(lang => lang !== undefined) as ILanguage[]).map(lang =>
       Language.participants(state.participants, lang.id, lang.cluster_id)
     )
-    .flat();
+  );
   const peopleParticipants = participants.reduce(
     (accum: PeopleParticipants, ptpt) => {
       if (accum.participants[ptpt.person_id] === undefined) {
