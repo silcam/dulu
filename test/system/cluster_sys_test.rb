@@ -9,7 +9,7 @@ class ClusterSysTest < ApplicationSystemTestCase
     click_on "Save"
     assert_selector("h2", text: "Kluster")
     assert_selector("td", text: "Kluster")
-    sleep(0.2) # Don't let DB rollback delete cluster before ajax is done
+    sleep(1) # Don't let DB rollback delete cluster before ajax is done
   end
 
   test "Delete Cluster" do
