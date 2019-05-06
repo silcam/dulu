@@ -24,7 +24,6 @@ import { User } from "./DuluApp";
 
 interface IProps extends RouteComponentProps {
   t: T;
-  updateViewPrefs: (p: AnyObj) => void;
   user: User;
   updateLanguage: (l: Locale) => void;
 }
@@ -71,8 +70,6 @@ class MainRouter extends React.Component<IProps, IState> {
               location={location}
               {...matchParamsForChild(match)}
               t={this.props.t}
-              viewPrefs={this.props.user.view_prefs}
-              updateViewPrefs={this.props.updateViewPrefs}
             />
           )}
         />
@@ -152,15 +149,7 @@ class MainRouter extends React.Component<IProps, IState> {
             <ActivityPage history={history} id={match.params.id} />
           )}
         />
-        <Route
-          render={() => (
-            <Dashboard
-              user={this.props.user}
-              viewPrefs={this.props.user.view_prefs}
-              updateViewPrefs={this.props.updateViewPrefs}
-            />
-          )}
-        />
+        <Route render={() => <Dashboard user={this.props.user} />} />
       </Switch>
     );
   }

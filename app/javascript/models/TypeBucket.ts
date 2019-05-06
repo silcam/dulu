@@ -41,3 +41,5 @@ export interface ById<T> {
 }
 
 export type AnyJSX = JSX.Element | JSX.Element[] | string;
+
+export type Partial<T> = { [P in keyof T]?: T[P] };

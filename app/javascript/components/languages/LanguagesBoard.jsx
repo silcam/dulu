@@ -66,8 +66,6 @@ export default class LanguagesBoard extends React.PureComponent {
                 basePath={this.props.basePath}
                 location={this.props.location}
                 history={this.props.history}
-                viewPrefs={this.props.viewPrefs}
-                updateViewPrefs={this.props.updateViewPrefs}
               />
             )}
           </div>
@@ -88,7 +86,5 @@ LanguagesBoard.propTypes = {
   id: PropTypes.number,
   basePath: PropTypes.string.isRequired,
   location: PropTypes.object.isRequired,
-  history: PropTypes.object.isRequired,
-  viewPrefs: PropTypes.object.isRequired,
-  updateViewPrefs: PropTypes.func.isRequired
+  history: PropTypes.object.isRequired
 };

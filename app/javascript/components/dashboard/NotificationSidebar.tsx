@@ -5,18 +5,15 @@ import styles from "./NotificationsList.css";
 import { INotification } from "./Notification";
 import update from "immutability-helper";
 import DuluAxios from "../../util/DuluAxios";
-import { ViewPrefs, UpdateViewPrefs } from "../../application/DuluApp";
 import I18nContext from "../../application/I18nContext";
+import ViewPrefsContext from "../../application/ViewPrefsContext";
 
 export enum Channel {
   forMe,
   all
 }
 
-interface IProps {
-  viewPrefs: ViewPrefs;
-  updateViewPrefs: UpdateViewPrefs;
-}
+interface IProps {}
 
 interface MergeChannelState {
   notifications?: INotification[];
@@ -36,6 +33,7 @@ interface ChannelState {
 
 export default function NotificationsSidebar(props: IProps) {
   const t = useContext(I18nContext);
+  const { viewPrefs, updateViewPrefs } = useContext(ViewPrefsContext);
   const channels = [Channel.forMe, Channel.all];
   const channelPaths = ["/api/notifications", "/api/notifications/global"];
   const channelNames = [t("For_me"), t("All")];
@@ -81,18 +79,18 @@ export default function NotificationsSidebar(props: IProps) {
     });
   };
 
-  const currentChannel = props.viewPrefs.notificationsTab || 0;
+  const currentChannel = viewPrefs.notificationsTab || 0;
   useEffect(() => {
     if (state[currentChannel].notifications.length == 0)
       getNotifications(currentChannel);
-  }, [props.viewPrefs.notificationsTab]);
+  }, [viewPrefs.notificationsTab]);
 
   return (
     <div className={styles.container}>
       <h3 style={{ marginTop: 0 }}>{t("Notifications")}</h3>
       <Tabs
         selectedIndex={currentChannel}
-        onSelect={index => props.updateViewPrefs({ notificationsTab: index })}
+        onSelect={index => updateViewPrefs({ notificationsTab: index })}
       >
         <TabList>
           {state.map((channelState, channel) => (

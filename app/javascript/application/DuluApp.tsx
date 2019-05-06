@@ -7,7 +7,7 @@ import DuluAxios, { DuluAxiosError } from "../util/DuluAxios";
 import update from "immutability-helper";
 import MainRouter from "./MainRouter";
 import I18nContext from "./I18nContext";
-import { Selection } from "../components/dashboard/Dashboard";
+import ViewPrefsContext, { ViewPrefs } from "./ViewPrefsContext";
 
 interface IProps {}
 interface IState {
@@ -16,16 +16,6 @@ interface IState {
   locale: Locale;
   connectionError?: boolean;
   serverError?: boolean;
-}
-
-export interface ViewPrefs {
-  dashboardSelection?: Selection;
-  dashboardTab?: string;
-  notificationsTab?: number;
-}
-
-export interface UpdateViewPrefs {
-  (mergeViewPrefs: any): void;
 }
 
 export interface User {
@@ -82,21 +72,27 @@ export default class DuluApp extends React.Component<IProps, IState> {
   render() {
     return (
       <I18nContext.Provider value={this.state.t}>
-        <div className={styles.container}>
-          <NavBar user={this.state.user} t={this.state.t} />
-          <NetworkErrorAlerts
-            t={this.state.t}
-            connectionError={this.state.connectionError}
-            serverError={this.state.serverError}
-            clearServerError={() => this.setState({ serverError: undefined })}
-          />
-          <MainRouter
-            t={this.state.t}
-            user={this.state.user}
-            updateViewPrefs={this.updateViewPrefs}
-            updateLanguage={this.updateLanguage}
-          />
-        </div>
+        <ViewPrefsContext.Provider
+          value={{
+            viewPrefs: this.state.user.view_prefs,
+            updateViewPrefs: this.updateViewPrefs
+          }}
+        >
+          <div className={styles.container}>
+            <NavBar user={this.state.user} t={this.state.t} />
+            <NetworkErrorAlerts
+              t={this.state.t}
+              connectionError={this.state.connectionError}
+              serverError={this.state.serverError}
+              clearServerError={() => this.setState({ serverError: undefined })}
+            />
+            <MainRouter
+              t={this.state.t}
+              user={this.state.user}
+              updateLanguage={this.updateLanguage}
+            />
+          </div>
+        </ViewPrefsContext.Provider>
       </I18nContext.Provider>
     );
   }

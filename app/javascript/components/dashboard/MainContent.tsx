@@ -4,22 +4,21 @@ import { Selection } from "./Dashboard";
 import DBActivitiesContainer from "./DBActivitiesContainer";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import I18nContext from "../../application/I18nContext";
-import { ViewPrefs, UpdateViewPrefs } from "../../application/DuluApp";
 import DBEventsContainer from "./DBEventsContainer";
 import DBParticipantsContainer from "./DBParticipantsContainer";
+import ViewPrefsContext from "../../application/ViewPrefsContext";
 
 interface IProps {
   languageIds: number[];
   selectedName?: string;
   selection: Selection;
-  viewPrefs: ViewPrefs;
-  updateViewPrefs: UpdateViewPrefs;
 }
 
 const tabs = ["Translation", "Linguistics", "Media", "People", "Events"];
 
 export default function MainContent(props: IProps) {
   const t = useContext(I18nContext);
+  const { viewPrefs, updateViewPrefs } = useContext(ViewPrefsContext);
 
   return (
     <div>
@@ -32,10 +31,8 @@ export default function MainContent(props: IProps) {
       )}
       {props.languageIds.length > 0 && (
         <Tabs
-          selectedIndex={tabIndex(props.viewPrefs.dashboardTab)}
-          onSelect={index =>
-            props.updateViewPrefs({ dashboardTab: tabs[index] })
-          }
+          selectedIndex={tabIndex(viewPrefs.dashboardTab)}
+          onSelect={index => updateViewPrefs({ dashboardTab: tabs[index] })}
         >
           <TabList>
             {tabs.map(name => (

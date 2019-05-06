@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import Searcher from "./Searcher";
 import NotificationSidebar from "./NotificationSidebar";
 import styles from "./Dashboard.css";
 import DashboardSidebarContainer from "./DashboardSidebarContainer";
-import { User, ViewPrefs, UpdateViewPrefs } from "../../application/DuluApp";
+import { User } from "../../application/DuluApp";
 import MainContentContainer from "./MainContentContainer";
+import ViewPrefsContext from "../../application/ViewPrefsContext";
 
 export type Selection =
   | {
@@ -18,16 +19,15 @@ export type Selection =
 
 interface IProps {
   user: User;
-  viewPrefs: ViewPrefs;
-  updateViewPrefs: UpdateViewPrefs;
 }
 
 export default function Dashboard(props: IProps) {
-  const selection = props.viewPrefs.dashboardSelection || { type: "user" };
+  const { viewPrefs, updateViewPrefs } = useContext(ViewPrefsContext);
+  const selection = viewPrefs.dashboardSelection || { type: "user" };
   const [searcherActive, setSearcherActive] = useState(false);
 
   const setSelection = (selection: Selection) =>
-    props.updateViewPrefs({ dashboardSelection: selection });
+    updateViewPrefs({ dashboardSelection: selection });
 
   return (
     <div className={styles.container}>
@@ -41,19 +41,11 @@ export default function Dashboard(props: IProps) {
       <div className={styles.mainContent}>
         <Searcher setSeacherActive={setSearcherActive} />
         {!searcherActive && (
-          <MainContentContainer
-            selection={selection}
-            userId={props.user.id}
-            viewPrefs={props.viewPrefs}
-            updateViewPrefs={props.updateViewPrefs}
-          />
+          <MainContentContainer selection={selection} userId={props.user.id} />
         )}
       </div>
       <div className={styles.notificationSidebar}>
-        <NotificationSidebar
-          viewPrefs={props.viewPrefs}
-          updateViewPrefs={props.updateViewPrefs}
-        />
+        <NotificationSidebar />
       </div>
     </div>
   );

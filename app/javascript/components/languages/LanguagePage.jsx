@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useContext } from "react";
 import PropTypes from "prop-types";
-import SaveIndicator from "../shared/SaveIndicator";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import LanguagePageContent from "./LanguagePageContent";
 import { Route } from "react-router-dom";
+import I18nContext from "../../application/I18nContext";
+import ViewPrefsContext from "../../application/ViewPrefsContext";
 
 const tabs = [
   /*"All",*/ "Translation",
@@ -14,57 +15,50 @@ const tabs = [
   "Events"
 ];
 
-export default class LanguagePage extends React.PureComponent {
-  state = {};
+export default function LanguagePage(props) {
+  const t = useContext(I18nContext);
+  const { viewPrefs, updateViewPrefs } = useContext(ViewPrefsContext);
+  const language = props.language;
 
-  render() {
-    const language = this.props.language;
-    const t = this.props.t;
-    return (
-      <div>
-        <SaveIndicator
-          t={this.props.t}
-          saving={this.state.saving}
-          saved={this.state.savedChanges}
-        />
-        <h2>{language.name}</h2>
-        <Route
-          path={this.props.basePath + "/:domain?"}
-          render={({ match, history }) => (
-            <Tabs
-              selectedIndex={selectedTab(
-                match.params.domain,
-                this.props.viewPrefs.dashboardTab
-              )}
-              onSelect={index => {
-                this.props.updateViewPrefs({ dashboardTab: tabs[index] });
-                history.push(`${this.props.basePath}/${tabs[index]}`);
-                return true;
-              }}
-            >
-              <TabList>
-                {tabs.map(name => (
-                  <Tab key={name}>{t(name)}</Tab>
-                ))}
-              </TabList>
+  return (
+    <div>
+      <h2>{language.name}</h2>
+      <Route
+        path={props.basePath + "/:domain?"}
+        render={({ match, history }) => (
+          <Tabs
+            selectedIndex={selectedTab(
+              match.params.domain,
+              viewPrefs.dashboardTab
+            )}
+            onSelect={index => {
+              updateViewPrefs({ dashboardTab: tabs[index] });
+              history.push(`${props.basePath}/${tabs[index]}`);
+              return true;
+            }}
+          >
+            <TabList>
               {tabs.map(name => (
-                <TabPanel key={name}>
-                  <LanguagePageContent
-                    language={language}
-                    tab={name}
-                    t={t}
-                    location={this.props.location}
-                    basePath={match.url}
-                    history={this.props.history}
-                  />
-                </TabPanel>
+                <Tab key={name}>{t(name)}</Tab>
               ))}
-            </Tabs>
-          )}
-        />
-      </div>
-    );
-  }
+            </TabList>
+            {tabs.map(name => (
+              <TabPanel key={name}>
+                <LanguagePageContent
+                  language={language}
+                  tab={name}
+                  t={t}
+                  location={props.location}
+                  basePath={match.url}
+                  history={props.history}
+                />
+              </TabPanel>
+            ))}
+          </Tabs>
+        )}
+      />
+    </div>
+  );
 }
 
 function selectedTab(urlDomain, viewPrefsDomain) {
@@ -74,12 +68,8 @@ function selectedTab(urlDomain, viewPrefsDomain) {
 }
 
 LanguagePage.propTypes = {
-  
   basePath: PropTypes.string.isRequired,
-  t: PropTypes.func.isRequired,
   language: PropTypes.object.isRequired,
   location: PropTypes.object.isRequired,
-  history: PropTypes.object.isRequired,
-  viewPrefs: PropTypes.object.isRequired,
-  updateViewPrefs: PropTypes.func.isRequired
+  history: PropTypes.object.isRequired
 };
