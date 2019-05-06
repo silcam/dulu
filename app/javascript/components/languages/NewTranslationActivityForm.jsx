@@ -2,9 +2,10 @@ import React from "react";
 import PropTypes from "prop-types";
 import styles from "./ActivitiesTable.css";
 import SmallSaveAndCancel from "../shared/SmallSaveAndCancel";
-import { SelectGroup } from "../shared/formGroup";
 import update from "immutability-helper";
 import SaveIndicator from "../shared/SaveIndicator";
+import FormGroup from "../shared/FormGroup";
+import SelectInput from "../shared/SelectInput";
 
 export default class NewTranslationActivityForm extends React.PureComponent {
   constructor(props) {
@@ -28,15 +29,16 @@ export default class NewTranslationActivityForm extends React.PureComponent {
 
     return (
       <div className={styles.newActivityForm}>
-        <SelectGroup
-          label={t("New_activity")}
-          value={this.state.newActivity.bible_book_id}
-          setValue={id => this.updateNewActivity({ bible_book_id: id })}
-          options={this.props.availableBooks.map(book => ({
-            value: book.id,
-            display: book.name
-          }))}
-        />
+        <FormGroup label={t("New_activity")}>
+          <SelectInput
+            value={this.state.newActivity.bible_book_id}
+            setValue={id => this.updateNewActivity({ bible_book_id: id })}
+            options={this.props.availableBooks.map(book => ({
+              value: book.id,
+              display: book.name
+            }))}
+          />
+        </FormGroup>
         <SmallSaveAndCancel
           handleSave={() => this.props.addNewActivity(this.state.newActivity)}
           handleCancel={this.props.cancelForm}

@@ -24,7 +24,7 @@ export interface Deleter {
 export interface JSEvent {
   target: {
     value: any;
-    target: any;
+    target: { name: string; value: any };
   };
 }
 
@@ -43,3 +43,5 @@ export interface ById<T> {
 export type AnyJSX = JSX.Element | JSX.Element[] | string;
 
 export type Partial<T> = { [P in keyof T]?: T[P] };
+
+export type Children = JSX.Element | JSX.Element[] | undefined;

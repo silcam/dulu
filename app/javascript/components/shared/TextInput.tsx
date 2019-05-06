@@ -1,11 +1,23 @@
 import React from "react";
-import PropTypes from "prop-types";
 import styles from "./TextInput.css";
 
-export default function TextInput(props) {
-  const handleKeyDown = e => {
-    if (props.handleKeyDown) props.handleKeyDown(e.key);
-    if (e.key == "Enter" && props.handleEnter) {
+export interface IProps {
+  setValue: (value: string) => void;
+  value: string;
+  name?: string;
+  handleEnter?: () => void;
+  handleKeyDown?: (key: string) => void;
+  handleBlur?: () => void;
+  placeholder?: string;
+  errorMessage?: string;
+  extraClasses?: string;
+  autoFocus?: boolean;
+}
+
+export default function TextInput(props: IProps) {
+  const handleKeyDown = (key: string) => {
+    if (props.handleKeyDown) props.handleKeyDown(key);
+    if (key == "Enter" && props.handleEnter) {
       props.handleEnter();
     }
   };
@@ -22,7 +34,7 @@ export default function TextInput(props) {
         className={inputClass}
         name={props.name}
         onChange={e => props.setValue(e.target.value)}
-        onKeyDown={handleKeyDown}
+        onKeyDown={e => handleKeyDown(e.key)}
         placeholder={props.placeholder}
         value={value}
         onBlur={props.handleBlur}
@@ -34,17 +46,3 @@ export default function TextInput(props) {
     </div>
   );
 }
-
-TextInput.propTypes = {
-  setValue: PropTypes.func.isRequired,
-  value: PropTypes.string.isRequired,
-  name: PropTypes.string,
-  // Optional
-  handleEnter: PropTypes.func,
-  handleKeyDown: PropTypes.func,
-  handleBlur: PropTypes.func,
-  placeholder: PropTypes.string,
-  errorMessage: PropTypes.string,
-  extraClasses: PropTypes.string,
-  autoFocus: PropTypes.bool
-};

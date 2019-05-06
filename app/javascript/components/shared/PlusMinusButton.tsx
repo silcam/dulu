@@ -1,16 +1,15 @@
 import React from "react";
-import PropTypes from "prop-types";
 import style from "./PlusMinusButton.css";
 
-export default function PlusMinusButton(props) {
+interface IProps {
+  isExpanded?: boolean;
+  handleClick: () => void;
+}
+
+export default function PlusMinusButton(props: IProps) {
   return (
     <button className={style.plusMinusBtn} onClick={props.handleClick}>
       {props.isExpanded ? "‒" : "+"}
     </button>
   );
 }
-
-PlusMinusButton.propTypes = {
-  isExpanded: PropTypes.bool,
-  handleClick: PropTypes.func.isRequired
-};

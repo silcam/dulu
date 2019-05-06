@@ -6,7 +6,7 @@ type StyleClasses = "alertBox" | "alertBoxRed";
 interface IProps {
   text?: string;
   styleClass?: StyleClasses;
-  children: any;
+  children?: any;
 }
 
 export default function AlertBox(props: IProps) {

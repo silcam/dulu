@@ -42,8 +42,7 @@ class _SaveReportBar extends React.PureComponent {
           autoFocus
         />
         <SaveButton
-          handleClick={this.save}
-          t={t}
+          onClick={this.save}
           saveInProgress={this.state.saving}
           disabled={this.state.name.length == 0}
         />

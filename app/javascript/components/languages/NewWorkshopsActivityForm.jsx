@@ -2,11 +2,11 @@ import React from "react";
 import PropTypes from "prop-types";
 import styles from "./ActivitiesTable.css";
 import SmallSaveAndCancel from "../shared/SmallSaveAndCancel";
-import { TextInputGroup } from "../shared/formGroup";
 import update from "immutability-helper";
 import SaveIndicator from "../shared/SaveIndicator";
 import TextInput from "../shared/TextInput";
 import AddIcon from "../shared/icons/AddIcon";
+import FormGroup from "../shared/FormGroup";
 
 export default class NewWorkshopsActivityForm extends React.PureComponent {
   constructor(props) {
@@ -53,13 +53,14 @@ export default class NewWorkshopsActivityForm extends React.PureComponent {
 
     return (
       <div className={styles.newActivityForm}>
-        <TextInputGroup
-          label={t("New_activity")}
-          placeholder={t("Title")}
-          value={this.state.newActivity.title}
-          setValue={title => this.updateNewActivity({ title })}
-          autoFocus
-        />
+        <FormGroup label={t("New_activity")}>
+          <TextInput
+            placeholder={t("Title")}
+            value={this.state.newActivity.title}
+            setValue={title => this.updateNewActivity({ title })}
+            autoFocus
+          />
+        </FormGroup>
         <label>{t("Workshops")}</label>
         <table className={styles.workshopsTable}>
           <tbody>

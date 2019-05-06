@@ -11,10 +11,12 @@ import update from "immutability-helper";
 import TextOrTextArea from "../shared/TextOrTextArea";
 import style from "./EventPage.css";
 import P from "../shared/P";
-import { FuzzyDateGroup, SelectGroup } from "../shared/formGroup";
 import selectOptionsFromObject from "../../util/selectOptionsFromObject";
 import EditEventParticipantsTable from "./EditEventParticipantsTable";
 import Event from "../../models/Event";
+import FormGroup from "../shared/FormGroup";
+import SelectInput from "../shared/SelectInput";
+import FuzzyDateInput from "../shared/FuzzyDateInput";
 
 export default class EventView extends React.PureComponent {
   constructor(props) {
@@ -138,24 +140,29 @@ export default class EventView extends React.PureComponent {
           </h2>
           {this.state.editing ? (
             <div>
-              <SelectGroup
-                label={t("Domain")}
-                value={event.domain}
-                setValue={domain => this.updateEvent({ domain })}
-                options={selectOptionsFromObject(t("domains"))}
-              />
-              <FuzzyDateGroup
-                label={t("Start_date")}
-                date={event.start_date}
-                handleDateInput={date => this.updateEvent({ start_date: date })}
-                t={t}
-              />
-              <FuzzyDateGroup
-                label={t("End_date")}
-                date={event.end_date}
-                handleDateInput={date => this.updateEvent({ end_date: date })}
-                t={t}
-              />
+              <FormGroup label={t("Domain")}>
+                <SelectInput
+                  value={event.domain}
+                  setValue={domain => this.updateEvent({ domain })}
+                  options={selectOptionsFromObject(t("domains"))}
+                />
+              </FormGroup>
+              <FormGroup label={t("Start_date")}>
+                <FuzzyDateInput
+                  date={event.start_date}
+                  handleDateInput={date =>
+                    this.updateEvent({ start_date: date })
+                  }
+                  t={t}
+                />
+              </FormGroup>
+              <FormGroup label={t("End_date")}>
+                <FuzzyDateInput
+                  date={event.end_date}
+                  handleDateInput={date => this.updateEvent({ end_date: date })}
+                  t={t}
+                />
+              </FormGroup>
             </div>
           ) : (
             <h4>

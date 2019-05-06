@@ -1,6 +1,5 @@
 import axios from "axios";
 import React from "react";
-import PropTypes from "prop-types";
 
 export default function searchInterface(WrappedComponent, minQueryLength) {
   return class SearchInterface extends React.PureComponent {

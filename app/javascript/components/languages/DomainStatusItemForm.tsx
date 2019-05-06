@@ -7,15 +7,15 @@ import DomainStatusItem, {
 } from "../../models/DomainStatusItem";
 import I18nContext from "../../application/I18nContext";
 import useKeepStateOnList from "../../util/useKeepStateOnList";
-import { SelectGroup, TextInputGroup } from "../shared/formGroup";
 import SelectInput from "../shared/SelectInput";
 import SmallSaveAndCancel from "../shared/SmallSaveAndCancel";
 import { OrganizationPicker, PersonPicker } from "../shared/SearchPickers";
 import P from "../shared/P";
 import BooksSelector from "./BooksSelector";
-import { JSEvent } from "../../models/TypeBucket";
 import CheckBoxInput from "../shared/CheckboxInput";
 import EditActionBar from "../shared/EditActionBar";
+import FormGroup from "../shared/FormGroup";
+import TextInput from "../shared/TextInput";
 
 interface IProps {
   domainStatusItem?: IDomainStatusItem;
@@ -98,25 +98,28 @@ export default function DomainStatusItemForm(props: IProps) {
           saving={props.saving}
           save={() => props.save(domainStatusItem)}
           cancel={props.cancel}
+          can={{}}
         />
       )}
 
-      <SelectGroup
-        label={t("Category")}
-        setValue={(category: DSICategories) => setCategory(category)}
-        value={category}
-        options={SelectInput.translatedOptions(categories, t)}
-        autoFocus
-      />
+      <FormGroup label={t("Category")}>
+        <SelectInput
+          setValue={(category: DSICategories) => setCategory(category)}
+          value={category}
+          options={SelectInput.translatedOptions(categories, t)}
+          autoFocus
+        />
+      </FormGroup>
 
-      <SelectGroup
-        label={t("Subcategory")}
-        setValue={(subcategory: DSISubcategories) =>
-          setSubcategory(subcategory)
-        }
-        value={subcategory}
-        options={SelectInput.translatedOptions(subcategories, t)}
-      />
+      <FormGroup label={t("Subcategory")}>
+        <SelectInput
+          setValue={(subcategory: DSISubcategories) =>
+            setSubcategory(subcategory)
+          }
+          value={subcategory}
+          options={SelectInput.translatedOptions(subcategories, t)}
+        />
+      </FormGroup>
 
       {subcategory == DSISubcategories.Portions && (
         <P>
@@ -135,11 +138,12 @@ export default function DomainStatusItemForm(props: IProps) {
         </P>
       )}
 
-      <TextInputGroup
-        label={t("Description")}
-        value={description}
-        setValue={(d: string) => setDescription(d)}
-      />
+      <FormGroup label={t("Description")}>
+        <TextInput
+          value={description}
+          setValue={(d: string) => setDescription(d)}
+        />
+      </FormGroup>
 
       <P>
         <label>

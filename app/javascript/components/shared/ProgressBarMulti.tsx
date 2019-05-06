@@ -1,7 +1,14 @@
 import React from "react";
-import PropTypes from "prop-types";
 
-export default function ProgressBarMulti(props) {
+interface IProps {
+  bars: Array<{
+    percent: number;
+    color: string;
+    tooltip?: string;
+  }>;
+}
+
+export default function ProgressBarMulti(props: IProps) {
   return (
     <div
       style={{
@@ -28,19 +35,6 @@ export default function ProgressBarMulti(props) {
   );
 }
 
-function width(number) {
+function width(number: number) {
   return `${Math.round(number)}%`;
 }
-
-ProgressBarMulti.propTypes = {
-  bars: PropTypes.array.isRequired
-};
-
-/*
-  Sample bars:
-  [
-    { percent: 10, color: "#ff0000", tooltip: "Drafting: 15%" },
-    ...
-  ]
-
-*/

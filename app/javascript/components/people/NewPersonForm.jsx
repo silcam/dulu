@@ -1,10 +1,5 @@
 import React from "react";
 import PropTypes from "prop-types";
-import {
-  SelectGroup,
-  ValidatedTextInputGroup,
-  CheckboxGroup
-} from "../shared/formGroup";
 import SaveButton from "../shared/SaveButton";
 import selectOptionsFromObject from "../../util/selectOptionsFromObject";
 import DuplicateWarning from "./DuplicateWarning";
@@ -12,6 +7,10 @@ import CancelButton from "../shared/CancelButton";
 import DuluAxios from "../../util/DuluAxios";
 import { sameName } from "../../models/Person";
 import update from "immutability-helper";
+import FormGroup from "../shared/FormGroup";
+import ValidatedTextInput from "../shared/ValidatedTextInput";
+import SelectInput from "../shared/SelectInput";
+import CheckBoxInput from "../shared/CheckboxInput";
 
 export default class NewPersonForm extends React.Component {
   state = {
@@ -82,62 +81,68 @@ export default class NewPersonForm extends React.Component {
       <div onKeyDown={this.handleKeyDown}>
         <h3>{t("New_person")}</h3>
 
-        <ValidatedTextInputGroup
-          setValue={first_name => this.updatePerson({ first_name })}
-          name="first_name"
-          label={t("First_name")}
-          value={person.first_name}
-          t={t}
-          validateNotBlank
-          showError={this.state.failedSave}
-          autoFocus
-        />
+        <FormGroup label={t("First_name")}>
+          <ValidatedTextInput
+            setValue={first_name => this.updatePerson({ first_name })}
+            name="first_name"
+            value={person.first_name}
+            t={t}
+            validateNotBlank
+            showError={this.state.failedSave}
+            autoFocus
+          />
+        </FormGroup>
 
-        <ValidatedTextInputGroup
-          setValue={last_name => this.updatePerson({ last_name })}
-          name="last_name"
-          label={t("Last_name")}
-          value={person.last_name}
-          t={t}
-          validateNotBlank
-          showError={this.state.failedSave}
-        />
+        <FormGroup label={t("Last_name")}>
+          <ValidatedTextInput
+            setValue={last_name => this.updatePerson({ last_name })}
+            name="last_name"
+            value={person.last_name}
+            t={t}
+            validateNotBlank
+            showError={this.state.failedSave}
+          />
+        </FormGroup>
 
-        <SelectGroup
-          setValue={gender => this.updatePerson({ gender })}
-          name="gender"
-          label={t("Gender")}
-          value={person.gender}
-          options={selectOptionsFromObject(t("genders"))}
-        />
+        <FormGroup label={t("Gender")}>
+          <SelectInput
+            setValue={gender => this.updatePerson({ gender })}
+            name="gender"
+            value={person.gender}
+            options={selectOptionsFromObject(t("genders"))}
+          />
+        </FormGroup>
 
-        <CheckboxGroup
-          label={t("Dulu_account")}
-          setValue={value => this.updatePerson({ has_login: value })}
-          name="has_login"
-          value={person.has_login}
-          text={t("Can_login")}
-        />
+        <FormGroup label={t("Dulu_account")}>
+          <CheckBoxInput
+            setValue={value => this.updatePerson({ has_login: value })}
+            name="has_login"
+            value={person.has_login}
+            text={t("Can_login")}
+          />
+        </FormGroup>
 
         {person.has_login && (
           <div>
-            <ValidatedTextInputGroup
-              setValue={email => this.updatePerson({ email })}
-              name="email"
-              label={t("Email")}
-              value={person.email}
-              t={t}
-              validateNotBlank
-              showError={this.state.failedSave}
-            />
+            <FormGroup label={t("Email")}>
+              <ValidatedTextInput
+                setValue={email => this.updatePerson({ email })}
+                name="email"
+                value={person.email}
+                t={t}
+                validateNotBlank
+                showError={this.state.failedSave}
+              />
+            </FormGroup>
 
-            <SelectGroup
-              setValue={ui_language => this.updatePerson({ ui_language })}
-              name="ui_language"
-              label={t("dulu_preferred_language")}
-              value={person.ui_language}
-              options={selectOptionsFromObject(t("languages"))}
-            />
+            <FormGroup label={t("dulu_preferred_language")}>
+              <SelectInput
+                setValue={ui_language => this.updatePerson({ ui_language })}
+                name="ui_language"
+                value={person.ui_language}
+                options={selectOptionsFromObject(t("languages"))}
+              />
+            </FormGroup>
           </div>
         )}
 
@@ -151,13 +156,12 @@ export default class NewPersonForm extends React.Component {
         )}
         <p>
           <SaveButton
-            handleClick={this.clickSave}
+            onClick={this.clickSave}
             saveInProgress={this.state.saving}
             disabled={
               !this.inputValid() ||
               (this.state.duplicatePerson && !person.not_a_duplicate)
             }
-            t={t}
           />
 
           <CancelButton t={t} />

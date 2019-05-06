@@ -1,16 +1,17 @@
 import React, { useState, useContext } from "react";
 import update from "immutability-helper";
-import { TextInputGroup } from "../shared/formGroup";
 import SaveButton from "../shared/SaveButton";
 import CancelButton from "../shared/CancelButton";
 import { IRegion } from "../../models/Region";
-import { JSEvent, Adder, Setter } from "../../models/TypeBucket";
+import { Adder, Setter } from "../../models/TypeBucket";
 import { IPerson } from "../../models/Person";
 import { ICluster } from "../../models/Cluster";
 import { ILanguage } from "../../models/Language";
 import API from "./RegionsAPI";
 import { History } from "history";
 import I18nContext from "../../application/I18nContext";
+import FormGroup from "../shared/FormGroup";
+import TextInput from "../shared/TextInput";
 
 interface IProps {
   addPeople: Adder<IPerson>;
@@ -40,16 +41,17 @@ export default function NewRegionForm(props: IProps) {
   return (
     <div>
       <h2>{t("New_region")}</h2>
-      <TextInputGroup
-        value={region.name}
-        setValue={(name: string) => updateRegion({ name })}
-        placeholder={t("Name")}
-        name="name"
-        autoFocus
-      />
+      <FormGroup>
+        <TextInput
+          value={region.name}
+          setValue={(name: string) => updateRegion({ name })}
+          placeholder={t("Name")}
+          name="name"
+          autoFocus
+        />
+      </FormGroup>
       <SaveButton
-        handleClick={save}
-        t={t}
+        onClick={save}
         saveInProgress={saving}
         disabled={region.name.length == 0}
       />

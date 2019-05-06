@@ -49,7 +49,7 @@ function PersonBasicInfo(props) {
                 editing={props.editing}
                 value={person.has_login}
                 t={props.t}
-                updateValue={value => props.updatePerson({ has_login: value })}
+                setValue={value => props.updatePerson({ has_login: value })}
               />
             </td>
           </tr>
@@ -66,9 +66,7 @@ function PersonBasicInfo(props) {
                     en: "English",
                     fr: "Français"
                   }}
-                  updateValue={value =>
-                    props.updatePerson({ ui_language: value })
-                  }
+                  setValue={value => props.updatePerson({ ui_language: value })}
                 />
               </td>
             </tr>
@@ -79,9 +77,7 @@ function PersonBasicInfo(props) {
                   editing={props.editing}
                   value={person.email_pref}
                   options={t("email_prefs")}
-                  updateValue={value =>
-                    props.updatePerson({ email_pref: value })
-                  }
+                  setValue={value => props.updatePerson({ email_pref: value })}
                 />
               </td>
             </tr>

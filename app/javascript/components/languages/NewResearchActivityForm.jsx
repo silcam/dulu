@@ -2,11 +2,10 @@ import React from "react";
 import PropTypes from "prop-types";
 import styles from "./ActivitiesTable.css";
 import SmallSaveAndCancel from "../shared/SmallSaveAndCancel";
-import { SelectGroup, TextInputGroup } from "../shared/formGroup";
-import Activity from "../../models/Activity";
 import update from "immutability-helper";
-import SelectInput from "../shared/SelectInput";
 import SaveIndicator from "../shared/SaveIndicator";
+import FormGroup from "../shared/FormGroup";
+import TextInput from "../shared/TextInput";
 
 export default class NewResearchActivityForm extends React.PureComponent {
   constructor(props) {
@@ -30,13 +29,14 @@ export default class NewResearchActivityForm extends React.PureComponent {
 
     return (
       <div className={styles.newActivityForm}>
-        <TextInputGroup
-          label={t("New_activity")}
-          value={this.state.newActivity.title}
-          placeholder={t("Title")}
-          setValue={title => this.updateNewActivity({ title })}
-          autoFocus
-        />
+        <FormGroup label={t("New_activity")}>
+          <TextInput
+            value={this.state.newActivity.title}
+            placeholder={t("Title")}
+            setValue={title => this.updateNewActivity({ title })}
+            autoFocus
+          />
+        </FormGroup>
         <SmallSaveAndCancel
           handleSave={() => this.props.addNewActivity(this.state.newActivity)}
           handleCancel={this.props.cancelForm}

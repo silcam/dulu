@@ -1,11 +1,18 @@
 import React from "react";
 
-export default function TextOrSelect(props) {
+interface IProps {
+  editing?: boolean;
+  value: string;
+  setValue: (value: string) => void;
+  options: { [key: string]: string };
+}
+
+export default function TextOrSelect(props: IProps) {
   return props.editing ? (
     <select
       value={props.value}
       onChange={e => {
-        props.updateValue(e.target.value);
+        props.setValue(e.target.value);
       }}
     >
       {Object.keys(props.options).map(key => (

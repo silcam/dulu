@@ -2,7 +2,6 @@ import React, { useState, useEffect, useContext } from "react";
 import deepcopy from "../../util/deepcopy";
 import EditActionBar from "../shared/EditActionBar";
 import TextOrEditText from "../shared/TextOrEditText";
-import { SearchTextGroup } from "../shared/formGroup";
 import update from "immutability-helper";
 import { IRegionInflated, IRegion } from "../../models/Region";
 import ProgramList from "./ProgramList";
@@ -16,6 +15,8 @@ import Loading from "../shared/Loading";
 import API from "./RegionsAPI";
 import { History } from "history";
 import I18nContext from "../../application/I18nContext";
+import FormGroup from "../shared/FormGroup";
+import SearchTextInput from "../shared/SearchTextInput";
 
 interface IProps {
   id: number;
@@ -97,14 +98,17 @@ export default function RegionPage(props: IProps) {
       </h2>
       <P>
         {editing ? (
-          <SearchTextGroup
-            label={t("LPF")}
-            queryPath="/api/people/search"
-            text={region.person ? fullName(region.person) : ""}
-            updateValue={(person: IPerson) => updateRegion({ person: person })}
-            placeholder={t("Name")}
-            allowBlank
-          />
+          <FormGroup label={t("LPF")}>
+            <SearchTextInput
+              queryPath="/api/people/search"
+              text={region.person ? fullName(region.person) : ""}
+              updateValue={(person: IPerson) =>
+                updateRegion({ person: person })
+              }
+              placeholder={t("Name")}
+              allowBlank
+            />
+          </FormGroup>
         ) : (
           region.person && (
             <h3>

@@ -2,11 +2,11 @@ import React from "react";
 import PropTypes from "prop-types";
 import styles from "./ActivitiesTable.css";
 import SmallSaveAndCancel from "../shared/SmallSaveAndCancel";
-import { SelectGroup } from "../shared/formGroup";
 import Activity from "../../models/Activity";
 import update from "immutability-helper";
 import SelectInput from "../shared/SelectInput";
 import SaveIndicator from "../shared/SaveIndicator";
+import FormGroup from "../shared/FormGroup";
 
 export default class NewMediaActivityForm extends React.PureComponent {
   constructor(props) {
@@ -33,31 +33,37 @@ export default class NewMediaActivityForm extends React.PureComponent {
     return (
       <div className={styles.newActivityForm}>
         <label>{t("New_activity")}</label>
-        <SelectGroup
-          label={t("Category")}
-          value={this.state.newActivity.category}
-          setValue={category => this.updateNewActivity({ category })}
-          options={SelectInput.translatedOptions(Activity.mediaCategories, t)}
-        />
-        {this.state.newActivity.category == "AudioScripture" && (
-          <SelectGroup
-            label={t("Contents")}
-            value={this.state.newActivity.scripture}
-            setValue={scripture => this.updateNewActivity({ scripture })}
-            options={SelectInput.translatedOptions(Activity.mediaScriptures, t)}
+        <FormGroup label={t("Category")}>
+          <SelectInput
+            value={this.state.newActivity.category}
+            setValue={category => this.updateNewActivity({ category })}
+            options={SelectInput.translatedOptions(Activity.mediaCategories, t)}
           />
+        </FormGroup>
+        {this.state.newActivity.category == "AudioScripture" && (
+          <FormGroup label={t("Contents")}>
+            <SelectInput
+              value={this.state.newActivity.scripture}
+              setValue={scripture => this.updateNewActivity({ scripture })}
+              options={SelectInput.translatedOptions(
+                Activity.mediaScriptures,
+                t
+              )}
+            />
+          </FormGroup>
         )}
         {this.state.newActivity.category == "Film" && (
-          <SelectGroup
-            label={t("Film")}
-            value={this.state.newActivity.film}
-            setValue={film => this.updateNewActivity({ film })}
-            options={SelectInput.translatedOptions(
-              Activity.mediaFilms,
-              t,
-              "films"
-            )}
-          />
+          <FormGroup label={t("Film")}>
+            <SelectInput
+              value={this.state.newActivity.film}
+              setValue={film => this.updateNewActivity({ film })}
+              options={SelectInput.translatedOptions(
+                Activity.mediaFilms,
+                t,
+                "films"
+              )}
+            />
+          </FormGroup>
         )}
         <SmallSaveAndCancel
           handleSave={() => this.props.addNewActivity(this.state.newActivity)}

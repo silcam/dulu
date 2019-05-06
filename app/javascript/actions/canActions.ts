@@ -3,6 +3,7 @@ export const SET_CAN = "SET_CAN";
 export interface ICan {
   create?: boolean;
   update?: boolean;
+  destroy?: boolean;
 }
 
 export interface CanAction {

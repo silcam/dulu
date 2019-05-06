@@ -2,11 +2,12 @@ import React from "react";
 import PropTypes from "prop-types";
 import SearchTextInput from "../shared/SearchTextInput";
 import update from "immutability-helper";
-import { FuzzyDateGroup } from "../shared/formGroup";
 import SmallSaveAndCancel from "../shared/SmallSaveAndCancel";
 import DuluAxios from "../../util/DuluAxios";
 import CheckBoxInput from "../shared/CheckboxInput";
 import { arrayDelete } from "../../util/arrayUtils";
+import FormGroup from "../shared/FormGroup";
+import FuzzyDateInput from "../shared/FuzzyDateInput";
 
 export default class NewParticipantForm extends React.PureComponent {
   constructor(props) {
@@ -80,13 +81,16 @@ export default class NewParticipantForm extends React.PureComponent {
           text={participant.person_name}
           autoFocus
         />
-        <FuzzyDateGroup
-          label={t("Start_date")}
-          date={participant.start_date}
-          handleDateInput={date => this.updateParticipant({ start_date: date })}
-          dateIsInvalid={() => this.updateParticipant({ start_date: "" })}
-          t={t}
-        />
+        <FormGroup label={t("Start_date")}>
+          <FuzzyDateInput
+            date={participant.start_date}
+            handleDateInput={date =>
+              this.updateParticipant({ start_date: date })
+            }
+            dateIsInvalid={() => this.updateParticipant({ start_date: "" })}
+            t={t}
+          />
+        </FormGroup>
         <ul>
           {participant.person_roles.map(role => (
             <li key={role}>

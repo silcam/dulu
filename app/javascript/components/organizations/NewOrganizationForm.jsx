@@ -1,14 +1,13 @@
 import React from "react";
 import PropTypes from "prop-types";
-import {
-  TextAreaGroup,
-  TextInputGroup,
-  ValidatedTextInputGroup
-} from "../shared/formGroup";
 import SaveButton from "../shared/SaveButton";
 import CancelButton from "../shared/CancelButton";
 import DuluAxios from "../../util/DuluAxios";
 import update from "immutability-helper";
+import ValidatedTextInput from "../shared/ValidatedTextInput";
+import FormGroup from "../shared/FormGroup";
+import TextInput from "../shared/TextInput";
+import TextArea from "../shared/TextArea";
 
 export default class NewOrganizationForm extends React.Component {
   constructor(props) {
@@ -66,37 +65,39 @@ export default class NewOrganizationForm extends React.Component {
         <div onKeyDown={this.handleKeyDown}>
           <h3>{t("New_organization")}</h3>
 
-          <ValidatedTextInputGroup
-            setValue={short_name => this.updateOrganization({ short_name })}
-            name="short_name"
-            label={t("Short_name")}
-            value={organization.short_name}
-            t={t}
-            validateNotBlank
-            showError={this.state.failedSave}
-            autoFocus
-          />
+          <FormGroup label={t("Short_name")}>
+            <ValidatedTextInput
+              setValue={short_name => this.updateOrganization({ short_name })}
+              name="short_name"
+              value={organization.short_name}
+              t={t}
+              validateNotBlank
+              showError={this.state.failedSave}
+              autoFocus
+            />
+          </FormGroup>
 
-          <TextInputGroup
-            setValue={long_name => this.updateOrganization({ long_name })}
-            name="long_name"
-            label={t("Long_name")}
-            value={organization.long_name}
-          />
+          <FormGroup label={t("Long_name")}>
+            <TextInput
+              setValue={long_name => this.updateOrganization({ long_name })}
+              name="long_name"
+              value={organization.long_name}
+            />
+          </FormGroup>
         </div>
 
-        <TextAreaGroup
-          setValue={description => this.updateOrganization({ description })}
-          name="description"
-          label={t("Description")}
-          value={organization.description}
-        />
+        <FormGroup label={t("Description")}>
+          <TextArea
+            setValue={description => this.updateOrganization({ description })}
+            name="description"
+            value={organization.description}
+          />
+        </FormGroup>
 
         <p>
           <SaveButton
-            handleClick={this.clickSave}
+            onClick={this.clickSave}
             saveInProgress={this.state.saving}
-            t={t}
             disabled={!this.inputValid()}
           />
 

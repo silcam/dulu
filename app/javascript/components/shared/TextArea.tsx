@@ -1,7 +1,13 @@
 import React from "react";
-import PropTypes from "prop-types";
 
-export default function TextArea(props) {
+export interface IProps {
+  setValue: (value: string) => void;
+  value: string;
+  name?: string;
+  rows?: number;
+}
+
+export default function TextArea(props: IProps) {
   const rows = props.rows || 4;
   return (
     <div>
@@ -14,11 +20,3 @@ export default function TextArea(props) {
     </div>
   );
 }
-
-TextArea.propTypes = {
-  setValue: PropTypes.func.isRequired,
-  value: PropTypes.string,
-  name: PropTypes.string,
-  // optional
-  rows: PropTypes.number
-};

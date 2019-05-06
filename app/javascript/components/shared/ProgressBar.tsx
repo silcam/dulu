@@ -1,7 +1,12 @@
 import React from "react";
-import PropTypes from "prop-types";
 
-export default function ProgressBar(props) {
+interface IProps {
+  percent: number;
+  color: string;
+  small?: boolean;
+}
+
+export default function ProgressBar(props: IProps) {
   const width = `${props.percent}%`;
   return (
     <div
@@ -18,9 +23,3 @@ export default function ProgressBar(props) {
     </div>
   );
 }
-
-ProgressBar.propTypes = {
-  percent: PropTypes.number.isRequired,
-  color: PropTypes.string.isRequired,
-  small: PropTypes.bool
-};

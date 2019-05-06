@@ -28,7 +28,7 @@ interface IProgress {
   percent: number;
   color: string;
 }
-interface ProgressContainer {
+export interface ProgressContainer {
   [stage: string]: IProgress;
 }
 

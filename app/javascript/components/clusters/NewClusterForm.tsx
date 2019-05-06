@@ -1,13 +1,14 @@
 import React from "react";
-import { TextInputGroup } from "../shared/formGroup";
+import FormGroup from "../shared/FormGroup";
 import SaveButton from "../shared/SaveButton";
 import CancelButton from "../shared/CancelButton";
 import update from "immutability-helper";
 import { T } from "../../i18n/i18n";
 import { ICluster } from "../../models/Cluster";
-import { AnyObj, JSEvent } from "../../models/TypeBucket";
+import { AnyObj } from "../../models/TypeBucket";
 import DuluAxios from "../../util/DuluAxios";
 import { History } from "history";
+import TextInput from "../shared/TextInput";
 
 interface IProps {
   t: T;
@@ -55,16 +56,17 @@ export default class NewClusterForm extends React.PureComponent<
     return (
       <div>
         <h2>{t("New_cluster")}</h2>
-        <TextInputGroup
-          value={this.state.cluster.name}
-          setValue={(name: string) => this.updateCluster({ name })}
-          placeholder={t("Name")}
-          name="name"
-          autoFocus
-        />
+        <FormGroup>
+          <TextInput
+            value={this.state.cluster.name}
+            setValue={(name: string) => this.updateCluster({ name })}
+            placeholder={t("Name")}
+            name="name"
+            autoFocus
+          />
+        </FormGroup>
         <SaveButton
-          handleClick={this.save}
-          t={t}
+          onClick={this.save}
           saveInProgress={this.state.saving}
           disabled={this.state.cluster.name.length == 0}
         />

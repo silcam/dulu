@@ -1,11 +1,22 @@
 import React, { useContext } from "react";
-import EditIcon from "../shared/icons/EditIcon";
-import DeleteIcon from "../shared/icons/DeleteIcon";
+import EditIcon from "./icons/EditIcon";
+import DeleteIcon from "./icons/DeleteIcon";
 import styles from "./EditActionBar.css";
-import PropTypes from "prop-types";
 import I18nContext from "../../application/I18nContext";
+import { ICan } from "../../actions/canActions";
 
-export default function EditActionBar(props) {
+interface IProps {
+  can: ICan;
+  editing?: boolean;
+  saving?: boolean;
+  save?: () => void;
+  saveDisabled?: boolean;
+  cancel?: () => void;
+  edit?: () => void;
+  delete?: () => void;
+}
+
+export default function EditActionBar(props: IProps) {
   const t = useContext(I18nContext);
 
   if (!props.editing && !props.can) return null;
@@ -14,7 +25,7 @@ export default function EditActionBar(props) {
     <div className={styles.actionBar} data-div-name="editActionBar">
       <button
         onClick={props.save}
-        disabled={(props.saveDisabled || props.saving) && "disabled"}
+        disabled={props.saveDisabled || props.saving}
       >
         {props.saving ? t("Saving") : t("Save")}
       </button>
@@ -31,14 +42,3 @@ export default function EditActionBar(props) {
     </div>
   );
 }
-
-EditActionBar.propTypes = {
-  can: PropTypes.object,
-  editing: PropTypes.bool,
-  saving: PropTypes.bool,
-  save: PropTypes.func,
-  saveDisabled: PropTypes.bool,
-  cancel: PropTypes.func,
-  edit: PropTypes.func,
-  delete: PropTypes.func // Not required if not needed
-};
