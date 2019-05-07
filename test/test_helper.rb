@@ -26,8 +26,4 @@ class ActiveSupport::TestCase
     should_save = model.new(params)
     assert should_save.save, "Should save #{model} with valid params"
   end
-
-  def postpone_failure(date, message="Maybe test this now?")
-    assert Date.today < date, message
-  end
 end

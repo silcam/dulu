@@ -79,9 +79,7 @@ test("prepareEventParams", () => {
     languages: [{ id: 303 }, { id: 404 }],
     event_participants: [{ id: 505 }, { id: 606 }]
   };
-  const oldEvent = update(event, {
-    event_participants: { $push: [{ id: 707 }] }
-  });
+  const oldEventParticipants = event.event_participants.concat([{ id: 707 }]);
 
   // First without oldEvent
   let params = Event.prepareEventParams(event);
@@ -94,7 +92,7 @@ test("prepareEventParams", () => {
   });
 
   // Now with oldEvent
-  params = Event.prepareEventParams(event, oldEvent);
+  params = Event.prepareEventParams(event, oldEventParticipants);
   expect(params.event_participants_attributes).toEqual({
     0: { id: 505 },
     1: { id: 606 },

@@ -1,5 +1,5 @@
 import { connect } from "react-redux";
-import { fullName } from "../../models/Person";
+import { fullName, IPerson } from "../../models/Person";
 import * as eventActionCreators from "../../actions/eventActions";
 import { addPeople } from "../../actions/peopleActions";
 import { addLanguages } from "../../actions/languageActions";
@@ -9,17 +9,34 @@ import {
   deleteWorkshopEvent
 } from "../../actions/activityActions";
 import EventView from "./EventView";
+import { AppState } from "../../reducers/appReducer";
+import { ILanguage } from "../../models/Language";
+import { ICluster } from "../../models/Cluster";
 
-const mapStateToProps = (state, ownProps) => {
+interface IProps {
+  id: number;
+}
+
+const mapStateToProps = (state: AppState, ownProps: IProps) => {
   const event = state.events.byId[ownProps.id];
-  if (!event) return { event: event };
+  if (!event)
+    return {
+      event: event,
+      eventLanguages: [],
+      eventClusters: [],
+      eventParticipants: []
+    };
   return {
     event: event,
-    eventLanguages: event.language_ids.map(id => state.languages.byId[id]),
-    eventClusters: event.cluster_ids.map(id => state.clusters.byId[id]),
+    eventLanguages: event.language_ids.map(
+      id => state.languages.byId[id]
+    ) as ILanguage[],
+    eventClusters: event.cluster_ids.map(
+      id => state.clusters.byId[id]
+    ) as ICluster[],
     eventParticipants: event.event_participants.map(e_p => ({
       ...e_p,
-      full_name: fullName(state.people.byId[e_p.person_id])
+      full_name: fullName(state.people.byId[e_p.person_id] as IPerson)
     }))
   };
 };

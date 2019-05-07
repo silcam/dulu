@@ -1,16 +1,29 @@
-import React from "react";
-import PropTypes from "prop-types";
+import React, { useContext } from "react";
 import eventDateString from "../../util/eventDateString";
-import { monthName } from "./dateUtils";
+import { monthName, IMonth } from "./dateUtils";
 import FuzzyDate from "../../util/FuzzyDate";
 import style from "./EventsCalendar.css";
 import { Link } from "react-router-dom";
-import { fullName } from "../../models/Person";
+import { fullName, IPerson } from "../../models/Person";
+import I18nContext from "../../application/I18nContext";
+import { ById } from "../../models/TypeBucket";
+import { ILanguage } from "../../models/Language";
+import { ICluster } from "../../models/Cluster";
+import { IEvent } from "../../models/Event";
 
-export default function MonthColumn(props) {
+interface IProps {
+  events: IEvent[];
+  people: ById<IPerson>;
+  languages: ById<ILanguage>;
+  clusters: ById<ICluster>;
+  month: IMonth;
+}
+
+export default function MonthColumn(props: IProps) {
+  const t = useContext(I18nContext);
   return (
     <div>
-      <h2>{monthName(props.month.month, props.t) + " " + props.month.year}</h2>
+      <h2>{monthName(props.month.month, t) + " " + props.month.year}</h2>
       {props.events.map((event, index) => (
         <div key={event.id}>
           <h3 className={style.dateTitle}>{dateTitle(event, props.month)}</h3>
@@ -20,7 +33,7 @@ export default function MonthColumn(props) {
           {eventDateString(
             event.start_date,
             event.end_date,
-            props.t("month_names_short")
+            t("month_names_short")
           )}
           <p>{participants(event, props)}</p>
           <p>{event.note}</p>
@@ -31,7 +44,7 @@ export default function MonthColumn(props) {
   );
 }
 
-function dateTitle(event, month) {
+function dateTitle(event: IEvent, month: IMonth) {
   let days = [event.start_date, event.end_date].map(dateStr => {
     const date = FuzzyDate.toObject(dateStr);
     return date.year == month.year && date.month == month.month
@@ -42,26 +55,29 @@ function dateTitle(event, month) {
   return (days[0] ? days[0] : "<") + " - " + (days[1] ? days[1] : ">");
 }
 
-function participants(event, props) {
+function participants(event: IEvent, props: IProps) {
   const clusterLinks = makeLinks(
-    event.cluster_ids.map(id => ({ id: id, name: props.clusters[id].name })),
+    event.cluster_ids.map(id => props.clusters[id]) as ICluster[],
     "clusters"
   );
   const languageLinks = makeLinks(
-    event.language_ids.map(id => ({ id: id, name: props.languages[id].name })),
+    event.language_ids.map(id => props.languages[id]) as ILanguage[],
     "languages"
   );
   const peopleLinks = makeLinks(
     event.event_participants.map(e_p => ({
       id: e_p.person_id,
-      name: fullName(props.people[e_p.person_id])
+      name: fullName(props.people[e_p.person_id] as IPerson)
     })),
     "people"
   );
   return clusterLinks.concat(languageLinks).concat(peopleLinks);
 }
 
-function makeLinks(list, type) {
+function makeLinks<T extends { id: number; name: string }>(
+  list: T[],
+  type: string
+) {
   const baseUrl = "/" + type;
   return list.map(item => {
     return (
@@ -71,12 +87,3 @@ function makeLinks(list, type) {
     );
   });
 }
-
-MonthColumn.propTypes = {
-  events: PropTypes.array.isRequired,
-  people: PropTypes.object.isRequired,
-  languages: PropTypes.object.isRequired,
-  clusters: PropTypes.object.isRequired,
-  t: PropTypes.func.isRequired,
-  month: PropTypes.object.isRequired
-};

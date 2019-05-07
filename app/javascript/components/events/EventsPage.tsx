@@ -2,11 +2,14 @@ import React from "react";
 // import PropTypes from "prop-types";
 import { Switch, Route, Redirect } from "react-router-dom";
 import { thisYear, thisMonth } from "./dateUtils";
-import EventPage from "./EventPage";
+import EventPage, { IProps as EventPageProps } from "./EventPage";
 import EventsCalendarContainer from "./EventsCalendarContainer";
 import CrashCauser from "./CrashCauser";
+import { IProps as EventsCalendarProps } from "./EventsCalendar";
 
-export default function EventsPage(props) {
+type IProps = EventsCalendarProps & EventPageProps;
+
+export default function EventsPage(props: IProps) {
   return (
     <Switch>
       <Route

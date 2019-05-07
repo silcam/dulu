@@ -58,12 +58,7 @@ export default function BasicEventsTable(props: IProps) {
                   <th colSpan={2}>{year}</th>
                 </tr>
                 {years[year].map(event => (
-                  <EventRow
-                    key={event.id}
-                    event={event}
-                    t={t}
-                    basePath={basePath}
-                  />
+                  <EventRow key={event.id} event={event} basePath={basePath} />
                 ))}
               </React.Fragment>
             ))}

@@ -1,10 +1,16 @@
-import React from "react";
-import PropTypes from "prop-types";
+import React, { useContext } from "react";
 import eventDateString from "../../util/eventDateString";
 import { Link } from "react-router-dom";
+import { IEvent } from "../../models/Event";
+import I18nContext from "../../application/I18nContext";
 
-export default function EventRow(props) {
-  const t = props.t;
+interface IProps {
+  event: IEvent;
+  basePath: string;
+}
+
+export default function EventRow(props: IProps) {
+  const t = useContext(I18nContext);
   const event = props.event;
   return (
     <tr>
@@ -21,9 +27,3 @@ export default function EventRow(props) {
     </tr>
   );
 }
-
-EventRow.propTypes = {
-  t: PropTypes.func.isRequired,
-  event: PropTypes.object.isRequired,
-  basePath: PropTypes.string.isRequired
-};

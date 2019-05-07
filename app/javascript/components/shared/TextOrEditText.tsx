@@ -1,8 +1,10 @@
 import React from "react";
 import FormGroup from "./FormGroup";
-import ValidatedTextInput from "./ValidatedTextInput";
+import ValidatedTextInput, {
+  IProps as ValidatedTextInputProps
+} from "./ValidatedTextInput";
 
-interface IProps {
+interface IProps extends ValidatedTextInputProps {
   editing?: boolean;
   value: string;
   label?: string; // only displayed in edit mode

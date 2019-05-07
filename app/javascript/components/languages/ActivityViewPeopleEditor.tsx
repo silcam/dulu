@@ -96,10 +96,10 @@ export default function ActivityViewPeopleEditor(props: IProps) {
               <td colSpan={2}>
                 <SelectInput
                   options={availablePtptPeople.map(ptptPerson => ({
-                    value: ptptPerson.participant.id,
+                    value: `${ptptPerson.participant.id}`,
                     display: fullName(ptptPerson.person)
                   }))}
-                  value={addPtptId}
+                  value={`${addPtptId}`}
                   setValue={id => setAddPtptId(parseInt(id))}
                 />
                 <button

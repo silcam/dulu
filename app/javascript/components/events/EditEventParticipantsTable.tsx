@@ -1,5 +1,4 @@
-import React from "react";
-import PropTypes from "prop-types";
+import React, { useContext } from "react";
 import SearchTextInput from "../shared/SearchTextInput";
 import update from "immutability-helper";
 import DeleteIcon from "../shared/icons/DeleteIcon";
@@ -7,22 +6,32 @@ import SelectInput from "../shared/SelectInput";
 import selectOptionsFromObject from "../../util/selectOptionsFromObject";
 import AddIcon from "../shared/icons/AddIcon";
 import style from "./EditEventParticipantsTable.css";
+import { IEventInflated, IEventParticipantExtended } from "../../models/Event";
+import I18nContext from "../../application/I18nContext";
+import { ICluster } from "../../models/Cluster";
+import { ILanguage } from "../../models/Language";
+import { BasicModel } from "../../models/BasicModel";
 
-export default function EditEventParticipantsTable(props) {
+interface IProps {
+  event: IEventInflated;
+  replaceEvent: (event: IEventInflated) => void;
+}
+
+export default function EditEventParticipantsTable(props: IProps) {
   const event = props.event;
-  const t = props.t;
+  const t = useContext(I18nContext);
 
-  const addCluster = cluster => {
+  const addCluster = (cluster: ICluster) => {
     props.replaceEvent(update(props.event, { clusters: { $push: [cluster] } }));
   };
 
-  const addLanguage = language => {
+  const addLanguage = (language: ILanguage) => {
     props.replaceEvent(
       update(props.event, { languages: { $push: [language] } })
     );
   };
 
-  const addPerson = person => {
+  const addPerson = (person: BasicModel) => {
     props.replaceEvent(
       update(props.event, {
         event_participants: {
@@ -32,21 +41,21 @@ export default function EditEventParticipantsTable(props) {
     );
   };
 
-  const dropCluster = id => {
+  const dropCluster = (id: number) => {
     const newClusters = props.event.clusters.filter(c => c.id != id);
     props.replaceEvent(
       update(props.event, { clusters: { $set: newClusters } })
     );
   };
 
-  const dropLanguage = id => {
+  const dropLanguage = (id: number) => {
     const newPrograms = props.event.languages.filter(p => p.id != id);
     props.replaceEvent(
       update(props.event, { languages: { $set: newPrograms } })
     );
   };
 
-  const dropPerson = person_id => {
+  const dropPerson = (person_id: number) => {
     const newEventParticipants = props.event.event_participants.filter(
       p => p.person_id != person_id
     );
@@ -57,9 +66,9 @@ export default function EditEventParticipantsTable(props) {
     );
   };
 
-  const defaultNewRole = () => Object.keys(props.t("roles"))[0];
+  const defaultNewRole = () => Object.keys(t("roles"))[0];
 
-  const addRole = participant => {
+  const addRole = (participant: IEventParticipantExtended) => {
     const index = props.event.event_participants.indexOf(participant);
     props.replaceEvent(
       update(props.event, {
@@ -72,7 +81,11 @@ export default function EditEventParticipantsTable(props) {
     );
   };
 
-  const updateRole = (participant, roleIndex, newRole) => {
+  const updateRole = (
+    participant: IEventParticipantExtended,
+    roleIndex: number,
+    newRole: string
+  ) => {
     const index = props.event.event_participants.indexOf(participant);
     props.replaceEvent(
       update(props.event, {
@@ -87,7 +100,10 @@ export default function EditEventParticipantsTable(props) {
     );
   };
 
-  const dropRole = (participant, roleIndex) => {
+  const dropRole = (
+    participant: IEventParticipantExtended,
+    roleIndex: number
+  ) => {
     const index = props.event.event_participants.indexOf(participant);
     props.replaceEvent(
       update(props.event, {
@@ -202,7 +218,7 @@ export default function EditEventParticipantsTable(props) {
         <table className={style.rolesTable}>
           <tbody>
             <tr>
-              <th colSpan="2">{t("Roles")}</th>
+              <th colSpan={2}>{t("Roles")}</th>
             </tr>
             {event.event_participants.map(participant => (
               <tr key={participant.person_id}>
@@ -233,9 +249,3 @@ export default function EditEventParticipantsTable(props) {
     </div>
   );
 }
-
-EditEventParticipantsTable.propTypes = {
-  t: PropTypes.func.isRequired,
-  event: PropTypes.object.isRequired,
-  replaceEvent: PropTypes.func.isRequired
-};

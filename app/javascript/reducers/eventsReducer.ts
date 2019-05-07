@@ -20,7 +20,9 @@ export function emptyEvent(): IEvent {
     end_date: "",
     language_ids: [],
     cluster_ids: [],
-    event_participants: []
+    event_participants: [],
+    can: {},
+    note: ""
   };
 }
 

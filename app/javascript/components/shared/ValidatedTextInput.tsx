@@ -4,7 +4,7 @@ import TextInput, { IProps as TextInputProps } from "./TextInput";
 import I18nContext from "../../application/I18nContext";
 import { T } from "../../i18n/i18n";
 
-interface IProps extends TextInputProps {
+export interface IProps extends TextInputProps {
   showError?: boolean;
   validateNotBlank?: boolean;
 }

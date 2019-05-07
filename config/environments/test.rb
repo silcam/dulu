@@ -26,7 +26,7 @@ Rails.application.configure do
   config.action_dispatch.show_exceptions = false
 
   # Disable request forgery protection in test environment.
-  # config.action_controller.allow_forgery_protection = false
+  config.action_controller.allow_forgery_protection = false
   config.action_mailer.perform_caching = false
 
   # Tell Action Mailer not to deliver emails to the real world.
@@ -41,6 +41,6 @@ Rails.application.configure do
   config.action_view.raise_on_missing_translations = true
 
   # Disable logging to make tests faster
-  # config.logger = Logger.new(nil)
-  # config.log_level = :fatal
+  config.logger = Logger.new(nil)
+  config.log_level = :fatal
 end

@@ -7,13 +7,13 @@ enum StyleClass {
 }
 
 interface IProps {
-  styleClass: StyleClass;
+  styleClass?: StyleClass;
   children: Children;
 }
 
 export default function StyledTable(props: IProps) {
   let { styleClass, ...otherProps } = props;
-  if (!Object.keys(StyleClass).includes(styleClass))
+  if (!styleClass || !Object.keys(StyleClass).includes(styleClass))
     styleClass = StyleClass.normal;
 
   return (

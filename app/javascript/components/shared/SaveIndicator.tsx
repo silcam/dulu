@@ -8,9 +8,9 @@ interface IProps {
 }
 
 export default function SaveIndicator(props: IProps) {
+  const t = useContext(I18nContext);
   if (!props.saving && !props.saved) return null;
 
-  const t = useContext(I18nContext);
   return (
     <AlertBox text={props.saving ? t("Saving") : t("All_changes_saved")} />
   );

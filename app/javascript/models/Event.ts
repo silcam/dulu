@@ -3,6 +3,7 @@ import update from "immutability-helper";
 import { AnyObj } from "./TypeBucket";
 import { ILanguage } from "./Language";
 import { ICluster } from "./Cluster";
+import { ICan } from "../actions/canActions";
 
 export interface IPeriod {
   start?: { year: number; month?: number };
@@ -12,7 +13,12 @@ export interface IPeriod {
 export interface IEventParticipant {
   id: number;
   person_id: number;
+  roles: string[];
   _destroy?: boolean; // For API
+}
+
+export interface IEventParticipantExtended extends IEventParticipant {
+  full_name: string;
 }
 
 export interface IEvent {
@@ -24,11 +30,16 @@ export interface IEvent {
   language_ids: number[];
   cluster_ids: number[];
   event_participants: IEventParticipant[];
+  can: ICan;
+  workshop_id?: number;
+  workshop_activity_id?: number;
+  note: string;
 }
 
 export interface IEventInflated extends IEvent {
   languages: ILanguage[];
   clusters: ICluster[];
+  event_participants: IEventParticipantExtended[];
 }
 
 interface CompEvent {
@@ -90,7 +101,7 @@ export default class Event {
     return overlapsFuzzyDate(event, { year });
   }
 
-  static ensureEndDate(event: IEvent) {
+  static ensureEndDate<T extends IEvent>(event: T) {
     return event.end_date
       ? event
       : update(event, { end_date: { $set: event.start_date } });
@@ -98,7 +109,7 @@ export default class Event {
 
   static prepareEventParams(
     event: IEventInflated,
-    oldEvent: IEventInflated
+    oldEventParticipants?: IEventParticipant[]
   ): AnyObj {
     const cluster_ids = event.clusters.map(c => c.id);
     const language_ids = event.languages.map(p => p.id);
@@ -109,8 +120,8 @@ export default class Event {
       },
       {} as AnyObj
     );
-    if (oldEvent) {
-      oldEvent.event_participants.forEach(participant => {
+    if (oldEventParticipants) {
+      oldEventParticipants.forEach(participant => {
         if (!event.event_participants.some(p => p.id == participant.id))
           eventParticipantsAttributes[
             Object.keys(eventParticipantsAttributes).length

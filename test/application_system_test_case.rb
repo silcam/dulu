@@ -27,6 +27,7 @@ class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
         end
       end
     end
+    # sleep(0.4) # Avoids many spurious errors
   end
   
   def simulate_oauth(user)

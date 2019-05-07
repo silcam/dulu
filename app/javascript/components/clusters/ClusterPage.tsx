@@ -121,7 +121,6 @@ export default function ClusterPage(props: IProps) {
           editing={editing}
           value={cluster.name}
           setValue={value => updateCluster({ name: value })}
-          t={t}
           name="name"
           validateNotBlank
         />

@@ -5,8 +5,9 @@ import { addLanguages } from "../../actions/languageActions";
 import { addClusters } from "../../actions/clusterActions";
 import { setCan } from "../../actions/canActions";
 import EventsCalendar from "./EventsCalendar";
+import { AppState } from "../../reducers/appReducer";
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state: AppState) => ({
   can: state.can.events
 });
 

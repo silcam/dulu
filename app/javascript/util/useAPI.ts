@@ -8,11 +8,13 @@ const actionByDataKey: { [key: string]: string | string[] | undefined } = {
   can: "setCan",
   cluster: "setCluster",
   clusters: ["setClusters", "addClusters"],
+  event: ["setEvent"],
   language: "setLanguage",
   languages: ["addLanguages", "setLanguages"],
   organizations: ["addOrganizations", "setOrganizations"],
   participants: "addParticipants",
-  people: ["addPeople", "setPeople"]
+  people: ["addPeople", "setPeople"],
+  workshops_activities: ["addActivities"]
 };
 
 export interface ActionPack {
@@ -96,6 +98,7 @@ export function useAPIDelete(
 
 function updateStore(data: AnyObj, actions: ActionPack) {
   Object.keys(data).forEach(key => {
+    console.log(`Action: ${key}`);
     const actionName = actionByDataKey[key];
     switch (typeof actionName) {
       case "string":

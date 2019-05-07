@@ -87,9 +87,14 @@ function handleError(error: AxiosError) {
 
 function getAuthToken() {
   if (!DuluAxios.authToken) {
-    DuluAxios.authToken = document!
-      .querySelector("meta[name=csrf-token]")!
-      .getAttribute("content")!;
+    try {
+      DuluAxios.authToken = document!
+        .querySelector("meta[name=csrf-token]")!
+        .getAttribute("content")!;
+    } catch (err) {
+      // In Rails test environment there is no csrf token
+      DuluAxios.authToken = "None";
+    }
   }
   return DuluAxios.authToken;
 }
