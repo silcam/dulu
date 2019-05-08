@@ -116,11 +116,10 @@ class MainRouter extends React.Component<IProps, IState> {
             <OrganizationsContainer
               history={history}
               {...routeActionAndId(match.params)}
-              t={this.props.t}
             />
           )}
         />
-        <Route path="/events" render={() => <EventsPage t={this.props.t} />} />
+        <Route path="/events" render={() => <EventsPage />} />
         <Route
           path="/reports/:id?"
           render={({ match, history, location }) => (

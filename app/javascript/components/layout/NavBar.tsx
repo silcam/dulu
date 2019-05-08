@@ -1,11 +1,16 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Link } from "react-router-dom";
-import PropTypes from "prop-types";
-
 import styles from "./NavBar.css";
 import DuluAxios from "../../util/DuluAxios";
+import { User } from "../../application/DuluApp";
+import I18nContext from "../../application/I18nContext";
 
-export default function NavBar(props) {
+interface IProps {
+  user: User;
+}
+
+export default function NavBar(props: IProps) {
+  const t = useContext(I18nContext);
   return (
     <nav className={styles.nav}>
       <ul>
@@ -15,16 +20,16 @@ export default function NavBar(props) {
           </Link>
         </li>
         <li>
-          <Link to="/languages">{props.t("Languages")}</Link>
+          <Link to="/languages">{t("Languages")}</Link>
         </li>
         <li>
-          <Link to="/people">{props.t("People")}</Link>
+          <Link to="/people">{t("People")}</Link>
         </li>
         <li>
-          <Link to="/events">{props.t("Events")}</Link>
+          <Link to="/events">{t("Events")}</Link>
         </li>
         <li>
-          <Link to="/reports">{props.t("Reports")}</Link>
+          <Link to="/reports">{t("Reports")}</Link>
         </li>
       </ul>
       {props.user && (
@@ -37,11 +42,11 @@ export default function NavBar(props) {
               onClick={async e => {
                 e.preventDefault();
                 await DuluAxios.post("/logout", {});
-                document.location = "/";
+                document.location.href = "/";
               }}
               href="/logout"
             >
-              {props.t("Logout")}
+              {t("Logout")}
             </a>
           </li>
         </ul>
@@ -50,11 +55,6 @@ export default function NavBar(props) {
   );
 }
 
-NavBar.propTypes = {
-  user: PropTypes.object,
-  t: PropTypes.func.isRequired
-};
-
-function pathToUser(user) {
+function pathToUser(user: User) {
   return `/people/show/${user.id}`;
 }

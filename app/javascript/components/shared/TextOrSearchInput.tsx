@@ -4,6 +4,12 @@ import SearchTextInput from "./SearchTextInput";
 interface IProps {
   editing?: boolean;
   text: string;
+  queryPath: string;
+  updateValue: (value: any) => void;
+  placeholder?: string;
+  autoFocus?: boolean;
+  allowBlank?: boolean;
+  addBox?: boolean;
 }
 
 export default function TextOrSearchInput(props: IProps) {

@@ -1,8 +1,14 @@
 import React from "react";
 import styles from "../shared/MasterDetail.css";
-import { withRouter } from "react-router-dom";
+import { withRouter, RouteComponentProps } from "react-router-dom";
+import { IOrganization } from "../../models/Organization";
 
-function TableRow(props) {
+interface IProps extends RouteComponentProps {
+  organization: IOrganization;
+  selected?: boolean;
+}
+
+function TableRow(props: IProps) {
   const organization = props.organization;
   const rowClass = props.selected ? styles.selected : "";
 

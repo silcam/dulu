@@ -1,29 +1,25 @@
 import React from "react";
 import OrganizationTableRow from "./OrganizationTableRow";
 import Loading from "../shared/Loading";
+import { IOrganization } from "../../models/Organization";
 
-export default function OrganizationsTable(props) {
-  const filter = new RegExp(props.filter, "i");
-  const organizations = props.organizations.filter(org =>
-    org.short_name.match(filter)
-  );
+interface IProps {
+  organizations: IOrganization[];
+  id?: number;
+}
 
-  const t = props.t;
+export default function OrganizationsTable(props: IProps) {
   if (props.organizations.length == 0) {
     return <Loading />;
-  }
-  if (organizations.length == 0) {
-    return <p>{t("NoneFound")}</p>;
   }
   return (
     <div>
       <table>
         <tbody>
-          {organizations.map(organization => (
+          {props.organizations.map(organization => (
             <OrganizationTableRow
               key={organization.id}
               organization={organization}
-              t={t}
               selected={props.id == organization.id}
             />
           ))}

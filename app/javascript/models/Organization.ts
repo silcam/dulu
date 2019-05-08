@@ -9,6 +9,7 @@ export interface IOrganization {
   parent_id: number | null;
   country: { name: string } | null;
   can: ICan;
+  country_id?: number;
 }
 
 export interface IOrganizationPerson {
