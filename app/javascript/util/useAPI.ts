@@ -98,7 +98,6 @@ export function useAPIDelete(
 
 function updateStore(data: AnyObj, actions: ActionPack) {
   Object.keys(data).forEach(key => {
-    console.log(`Action: ${key}`);
     const actionName = actionByDataKey[key];
     switch (typeof actionName) {
       case "string":

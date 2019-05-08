@@ -1,6 +1,6 @@
 import React, { useContext, useState, useEffect } from "react";
 import { RouteComponentProps, withRouter } from "react-router";
-import { ById, Adder } from "../../models/TypeBucket";
+import { ById } from "../../models/TypeBucket";
 import { IPerson, fullName } from "../../models/Person";
 import { IOrganization } from "../../models/Organization";
 import { ILanguage } from "../../models/Language";
@@ -8,13 +8,7 @@ import { ICluster } from "../../models/Cluster";
 import { IRegion } from "../../models/Region";
 import I18nContext from "../../contexts/I18nContext";
 import { AppState } from "../../reducers/appReducer";
-import { setLanguages } from "../../actions/languageActions";
-import { setPeople } from "../../actions/peopleActions";
-import { setOrganizations } from "../../actions/organizationActions";
-import { setClusters } from "../../actions/clusterActions";
-import { setRegions } from "../../actions/regionActions";
 import { connect } from "react-redux";
-import DuluAxios from "../../util/DuluAxios";
 import accentFold from "../../util/accentFold";
 import styles from "./SearchTextInput.css";
 
@@ -34,12 +28,6 @@ interface IProps extends RouteComponentProps {
   languages: ById<ILanguage>;
   clusters: ById<ICluster>;
   regions: ById<IRegion>;
-  listSet: { [key: string]: boolean };
-  setPeople: Adder<IPerson>;
-  setOrganizations: Adder<IOrganization>;
-  setLanguages: Adder<ILanguage>;
-  setClusters: Adder<ICluster>;
-  setRegions: Adder<IRegion>;
 }
 
 const routes = [
@@ -57,8 +45,6 @@ function BaseGoBar(props: IProps) {
   const [query, setQuery] = useState("");
   const [matches, setMatches] = useState<Match[]>([]);
   const [activeIndex, setActiveIndex] = useState(0);
-
-  useEffect(() => apiFetch(props), []);
 
   useEffect(() => setMatches(search(query, props)), [query]);
 
@@ -123,25 +109,6 @@ function BaseGoBar(props: IProps) {
   );
 }
 
-function apiFetch(props: IProps) {
-  const setters = [
-    props.setPeople,
-    props.setOrganizations,
-    props.setLanguages,
-    props.setClusters,
-    props.setRegions
-  ];
-  ["people", "organizations", "languages", "clusters", "regions"].forEach(
-    (key, index) => {
-      if (!props.listSet[key]) {
-        DuluAxios.get(`/api/${key}`).then(data => {
-          if (data) setters[index](data[key]);
-        });
-      }
-    }
-  );
-}
-
 function search(query: string, props: IProps) {
   if (query.length == 0) return [];
   const q = accentFold(query);
@@ -175,8 +142,7 @@ function search(query: string, props: IProps) {
     );
   matches.sort((a, b) => {
     if (a.matched.startsWith(q) && !b.matched.startsWith(q)) return -1;
-    b.matched.startsWith(q) && !a.matched.startsWith(q);
-    return 1;
+    if (b.matched.startsWith(q) && !a.matched.startsWith(q)) return 1;
     return 0;
   });
   return matches;
@@ -213,28 +179,12 @@ function searchItems<T>(q: string, byId: ById<T>, checkMatch: Matcher<T>) {
   );
 }
 
-const GoBar = connect(
-  (state: AppState) => ({
-    people: state.people.byId,
-    organizations: state.organizations.byId,
-    languages: state.languages.byId,
-    clusters: state.clusters.byId,
-    regions: state.regions.byId,
-    listSet: {
-      people: state.people.listSet,
-      organizations: state.organizations.listSet,
-      languages: state.languages.listSet,
-      clusters: state.clusters.listSet,
-      regions: state.regions.listSet
-    }
-  }),
-  {
-    setPeople,
-    setOrganizations,
-    setLanguages,
-    setClusters,
-    setRegions
-  }
-)(withRouter(BaseGoBar));
+const GoBar = connect((state: AppState) => ({
+  people: state.people.byId,
+  organizations: state.organizations.byId,
+  languages: state.languages.byId,
+  clusters: state.clusters.byId,
+  regions: state.regions.byId
+}))(withRouter(BaseGoBar));
 
 export default GoBar;

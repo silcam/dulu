@@ -21,6 +21,7 @@ import RegionsContainer from "../components/regions/RegionsContainer";
 import { T, Locale } from "../i18n/i18n";
 import { AnyObj } from "../models/TypeBucket";
 import { User } from "./DuluApp";
+import CoreData from "./CoreData";
 
 interface IProps extends RouteComponentProps {
   t: T;
@@ -151,15 +152,10 @@ class MainRouter extends React.Component<IProps, IState> {
           />
           <Route render={() => <Dashboard user={this.props.user} />} />
         </Switch>
-        <NavMonitor />
+        <CoreData />
       </React.Fragment>
     );
   }
-}
-
-function NavMonitor() {
-  useEffect(() => console.log("MainRouter rerender!"));
-  return null;
 }
 
 export default withRouter(MainRouter);

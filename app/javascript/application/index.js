@@ -7,15 +7,18 @@ import { Provider } from "react-redux";
 import { createStore } from "redux";
 import appReducer from "../reducers/appReducer";
 import PropTypes from "prop-types";
+import DispatchContext from "../contexts/DispatchContext";
 
 const store = createStore(appReducer);
 
 function App({ store }) {
   return (
     <Provider store={store}>
-      <BrowserRouter>
-        <DuluApp />
-      </BrowserRouter>
+      <DispatchContext.Provider value={store.dispatch}>
+        <BrowserRouter>
+          <DuluApp />
+        </BrowserRouter>
+      </DispatchContext.Provider>
     </Provider>
   );
 }
