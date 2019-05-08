@@ -1,25 +1,28 @@
 import React, { useState } from "react";
 import styles from "./SearchTextInput.css";
 import accentFold from "../../util/accentFold";
+import { ById } from "../../models/TypeBucket";
+import { fullName, IPerson } from "../../models/Person";
+import { IOrganization } from "../../models/Organization";
 
-export interface PickerProps {
-  list: number[];
+export interface SearchPickerProps<T extends { id: number; name?: string }> {
+  collection: ById<T>;
   selectedId: number | null;
-  setSelected: (id: number | null) => void;
+  setSelected: (item: T | null) => void;
   placeholder?: string;
   autoFocus?: boolean;
   allowBlank?: boolean;
   autoClear?: boolean;
+  nameOf?: (item: T) => string;
 }
 
-export interface SearchPickerProps extends PickerProps {
-  nameOf: (id: number) => string;
-}
+export default function SearchPicker<T extends { id: number; name?: string }>(
+  props: SearchPickerProps<T>
+) {
+  const nameOf = props.nameOf || stdNameOf;
+  const selectedItem = props.selectedId && props.collection[props.selectedId];
 
-export default function SearchPicker(props: SearchPickerProps) {
-  const [text, setText] = useState(
-    props.selectedId ? props.nameOf(props.selectedId) : ""
-  );
+  const [text, setText] = useState(selectedItem ? nameOf(selectedItem) : "");
   const [editing, setEditing] = useState(false);
   const [activeIndex, setActiveIndex] = useState(-1);
   const updateText = (text: string) => {
@@ -29,14 +32,14 @@ export default function SearchPicker(props: SearchPickerProps) {
     if (props.allowBlank && text == "") props.setSelected(null);
   };
 
-  const filteredList = props.list.filter(id =>
-    accentFold(props.nameOf(id)).includes(accentFold(text))
-  );
+  const filteredList = Object.values(props.collection).filter(
+    item => item && accentFold(nameOf(item)).includes(accentFold(text))
+  ) as T[];
 
-  const save = (id: number) => {
-    setText(props.autoClear ? "" : props.nameOf(id));
+  const save = (item: T) => {
+    setText(props.autoClear ? "" : nameOf(item));
     setEditing(false);
-    props.setSelected(id);
+    props.setSelected(item);
   };
 
   const inputKeyPress = (key: string) => {
@@ -70,16 +73,16 @@ export default function SearchPicker(props: SearchPickerProps) {
       />
       {editing && (
         <ul onMouseLeave={() => setActiveIndex(-1)}>
-          {filteredList.map((id, index) => {
+          {filteredList.map((item, index) => {
             const className = index == activeIndex ? styles.selected : "";
             return (
               <li
-                key={id}
+                key={item.id}
                 className={className}
-                onMouseDown={() => save(id)}
+                onMouseDown={() => save(item)}
                 onMouseEnter={() => setActiveIndex(index)}
               >
-                {props.nameOf(id)}
+                {nameOf(item)}
               </li>
             );
           })}
@@ -87,4 +90,16 @@ export default function SearchPicker(props: SearchPickerProps) {
       )}
     </div>
   );
+}
+
+function stdNameOf<T extends { name?: string }>(item: T) {
+  return item.name ? item.name : `${item}`;
+}
+
+export function PersonPicker(props: SearchPickerProps<IPerson>) {
+  return <SearchPicker nameOf={person => fullName(person)} {...props} />;
+}
+
+export function OrganizationPicker(props: SearchPickerProps<IOrganization>) {
+  return <SearchPicker nameOf={org => org.short_name} {...props} />;
 }

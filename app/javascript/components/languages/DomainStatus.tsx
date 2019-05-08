@@ -5,7 +5,7 @@ import { IPerson } from "../../models/Person";
 import { IOrganization } from "../../models/Organization";
 import I18nContext from "../../contexts/I18nContext";
 import Spacer from "../shared/Spacer";
-import TranslationStatusNew from "./DomainStatusNew";
+import DomainStatusNew from "./DomainStatusNew";
 import AddIcon from "../shared/icons/AddIcon";
 import { useAPIGet } from "../../util/useAPI";
 import { DSICategories } from "../../models/DomainStatusItem";
@@ -58,7 +58,7 @@ export default function DomainStatus(props: DSProps) {
         )}
       </h3>
       {addingNew ? (
-        <TranslationStatusNew
+        <DomainStatusNew
           {...props}
           actions={actions}
           cancel={() => setAddingNew(false)}

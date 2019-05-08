@@ -49,7 +49,7 @@ export default class ReportsViewer extends React.PureComponent {
   subtractLoading = () =>
     this.setState(prevState => ({ loading: prevState.loading - 1 }));
 
-  addProgram = async language => {
+  addLanguage = async language => {
     this.addLoading();
     const data = await DuluAxios.get("/api/reports/report_data", {
       language_id: language.id,
@@ -81,7 +81,7 @@ export default class ReportsViewer extends React.PureComponent {
     this.subtractLoading();
   };
 
-  dropProgram = id => {
+  dropLanguage = id => {
     this.replaceReport(
       update(this.state.report, {
         languages: { $set: this.state.report.languages.filter(p => p.id != id) }
@@ -105,9 +105,9 @@ export default class ReportsViewer extends React.PureComponent {
             <ReportSideBar
               t={this.props.t}
               report={this.state.report}
-              addProgram={this.addProgram}
+              addLanguage={this.addLanguage}
               addCluster={this.addCluster}
-              dropProgram={this.dropProgram}
+              dropLanguage={this.dropLanguage}
               dropCluster={this.dropCluster}
               updateElements={this.updateElements}
               save={() => this.setState({ saving: true })}

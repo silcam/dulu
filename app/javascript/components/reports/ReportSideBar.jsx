@@ -5,9 +5,10 @@ import DeleteIcon from "../shared/icons/DeleteIcon";
 import Report from "../../models/Report";
 import CheckBoxInput from "../shared/CheckboxInput";
 import update from "immutability-helper";
-import { LanguagePicker, ClusterPicker } from "../shared/SearchPickers";
+import SearchPicker from "../shared/SearchPicker";
+import { connect } from "react-redux";
 
-export default function ReportSideBar(props) {
+function BaseReportSideBar(props) {
   const t = props.t;
   const report = props.report;
 
@@ -30,9 +31,10 @@ export default function ReportSideBar(props) {
             </li>
           ))}
         </ul>
-        <ClusterPicker
+        <SearchPicker
+          collection={props.clusters}
           selectedId={undefined}
-          setSelected={id => props.addCluster({ id: id })}
+          setSelected={cluster => cluster && props.addCluster(cluster)}
           placeholder={t("Add_cluster")}
           autoClear
         />
@@ -44,15 +46,16 @@ export default function ReportSideBar(props) {
             <li key={language.id}>
               - {language.name}
               <DeleteIcon
-                onClick={() => props.dropProgram(language.id)}
+                onClick={() => props.dropLanguage(language.id)}
                 iconSize="small"
               />
             </li>
           ))}
         </ul>
-        <LanguagePicker
+        <SearchPicker
+          collection={props.languages}
           selectedId={undefined}
-          setSelected={id => props.addProgram({ id: id })}
+          setSelected={lang => lang && props.addLanguage(lang)}
           placeholder={t("Add_language")}
           autoClear
         />
@@ -113,6 +116,11 @@ function showSaveButton(report) {
   );
 }
 
+const ReportSideBar = connect(state => ({
+  languages: state.languages.byId,
+  clusters: state.clusters.byId
+}))(BaseReportSideBar);
+
 ReportSideBar.propTypes = {
   t: PropTypes.func.isRequired,
   report: PropTypes.object.isRequired,
@@ -123,3 +131,5 @@ ReportSideBar.propTypes = {
   updateElements: PropTypes.func.isRequired,
   save: PropTypes.func.isRequired
 };
+
+export default ReportSideBar;

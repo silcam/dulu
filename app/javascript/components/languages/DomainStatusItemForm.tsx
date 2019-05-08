@@ -9,13 +9,16 @@ import I18nContext from "../../contexts/I18nContext";
 import useKeepStateOnList from "../../util/useKeepStateOnList";
 import SelectInput from "../shared/SelectInput";
 import SmallSaveAndCancel from "../shared/SmallSaveAndCancel";
-import { OrganizationPicker, PersonPicker } from "../shared/SearchPickers";
 import P from "../shared/P";
 import BooksSelector from "./BooksSelector";
 import CheckBoxInput from "../shared/CheckboxInput";
 import EditActionBar from "../shared/EditActionBar";
 import FormGroup from "../shared/FormGroup";
 import TextInput from "../shared/TextInput";
+import { PersonPicker, OrganizationPicker } from "../shared/SearchPicker";
+import { IPerson } from "../../models/Person";
+import { ById } from "../../models/TypeBucket";
+import { IOrganization } from "../../models/Organization";
 
 interface IProps {
   domainStatusItem?: IDomainStatusItem;
@@ -24,6 +27,8 @@ interface IProps {
   saving?: boolean;
   useEditActionBar?: boolean;
   cancel: () => void;
+  people: ById<IPerson>;
+  organizations: ById<IOrganization>;
 }
 
 export default function DomainStatusItemForm(props: IProps) {
@@ -163,8 +168,9 @@ export default function DomainStatusItemForm(props: IProps) {
         <label>
           {t("Person")}
           <PersonPicker
+            collection={props.people}
             selectedId={personId}
-            setSelected={setPersonId}
+            setSelected={person => setPersonId(person && person.id)}
             allowBlank
           />
         </label>
@@ -174,8 +180,9 @@ export default function DomainStatusItemForm(props: IProps) {
         <label>
           {t("Organization")}
           <OrganizationPicker
+            collection={props.organizations}
             selectedId={organizationId}
-            setSelected={setOrganizationId}
+            setSelected={org => setOrganizationId(org && org.id)}
             allowBlank
           />
         </label>
