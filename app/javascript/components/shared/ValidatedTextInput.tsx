@@ -1,7 +1,7 @@
 import React, { useContext, useState } from "react";
 
 import TextInput, { IProps as TextInputProps } from "./TextInput";
-import I18nContext from "../../application/I18nContext";
+import I18nContext from "../../contexts/I18nContext";
 import { T } from "../../i18n/i18n";
 
 export interface IProps extends TextInputProps {

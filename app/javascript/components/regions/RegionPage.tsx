@@ -14,7 +14,7 @@ import { ILanguage } from "../../models/Language";
 import Loading from "../shared/Loading";
 import API from "./RegionsAPI";
 import { History } from "history";
-import I18nContext from "../../application/I18nContext";
+import I18nContext from "../../contexts/I18nContext";
 import FormGroup from "../shared/FormGroup";
 import SearchTextInput from "../shared/SearchTextInput";
 
@@ -91,7 +91,6 @@ export default function RegionPage(props: IProps) {
           editing={editing}
           value={region.name}
           setValue={value => updateRegion({ name: value })}
-          t={t}
           name="name"
           validateNotBlank
         />

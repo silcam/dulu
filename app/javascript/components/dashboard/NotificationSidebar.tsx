@@ -5,15 +5,13 @@ import styles from "./NotificationsList.css";
 import { INotification } from "./Notification";
 import update from "immutability-helper";
 import DuluAxios from "../../util/DuluAxios";
-import I18nContext from "../../application/I18nContext";
-import ViewPrefsContext from "../../application/ViewPrefsContext";
+import I18nContext from "../../contexts/I18nContext";
+import ViewPrefsContext from "../../contexts/ViewPrefsContext";
 
 export enum Channel {
   forMe,
   all
 }
-
-interface IProps {}
 
 interface MergeChannelState {
   notifications?: INotification[];
@@ -31,7 +29,7 @@ interface ChannelState {
   moreAvailable?: boolean;
 }
 
-export default function NotificationsSidebar(props: IProps) {
+export default function NotificationsSidebar() {
   const t = useContext(I18nContext);
   const { viewPrefs, updateViewPrefs } = useContext(ViewPrefsContext);
   const channels = [Channel.forMe, Channel.all];

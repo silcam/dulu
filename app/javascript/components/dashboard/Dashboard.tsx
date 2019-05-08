@@ -5,7 +5,7 @@ import styles from "./Dashboard.css";
 import DashboardSidebarContainer from "./DashboardSidebarContainer";
 import { User } from "../../application/DuluApp";
 import MainContentContainer from "./MainContentContainer";
-import ViewPrefsContext from "../../application/ViewPrefsContext";
+import ViewPrefsContext from "../../contexts/ViewPrefsContext";
 
 export type Selection =
   | {

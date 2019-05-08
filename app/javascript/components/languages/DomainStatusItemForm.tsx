@@ -5,7 +5,7 @@ import DomainStatusItem, {
   DSISubcategories,
   AppPlatforms
 } from "../../models/DomainStatusItem";
-import I18nContext from "../../application/I18nContext";
+import I18nContext from "../../contexts/I18nContext";
 import useKeepStateOnList from "../../util/useKeepStateOnList";
 import SelectInput from "../shared/SelectInput";
 import SmallSaveAndCancel from "../shared/SmallSaveAndCancel";
@@ -104,7 +104,7 @@ export default function DomainStatusItemForm(props: IProps) {
 
       <FormGroup label={t("Category")}>
         <SelectInput
-          setValue={(category: DSICategories) => setCategory(category)}
+          setValue={category => setCategory(category as DSICategories)}
           value={category}
           options={SelectInput.translatedOptions(categories, t)}
           autoFocus
@@ -113,8 +113,8 @@ export default function DomainStatusItemForm(props: IProps) {
 
       <FormGroup label={t("Subcategory")}>
         <SelectInput
-          setValue={(subcategory: DSISubcategories) =>
-            setSubcategory(subcategory)
+          setValue={subcategory =>
+            setSubcategory(subcategory as DSISubcategories)
           }
           value={subcategory}
           options={SelectInput.translatedOptions(subcategories, t)}

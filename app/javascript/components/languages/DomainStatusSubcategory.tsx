@@ -3,7 +3,7 @@ import {
   IDomainStatusItem,
   DSISubcategories
 } from "../../models/DomainStatusItem";
-import I18nContext from "../../application/I18nContext";
+import I18nContext from "../../contexts/I18nContext";
 import { AnyJSX } from "../../models/TypeBucket";
 import styles from "./DomainStatus.css";
 

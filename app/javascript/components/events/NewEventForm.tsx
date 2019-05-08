@@ -14,7 +14,7 @@ import { ILanguage } from "../../models/Language";
 import { IPerson } from "../../models/Person";
 import { ICluster } from "../../models/Cluster";
 import { IActivity } from "../../models/Activity";
-import I18nContext from "../../application/I18nContext";
+import I18nContext from "../../contexts/I18nContext";
 import { useAPIPost } from "../../util/useAPI";
 import { emptyEvent } from "../../reducers/eventsReducer";
 import { T } from "../../i18n/i18n";

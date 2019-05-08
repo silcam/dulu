@@ -10,7 +10,7 @@ import TextArea from "../shared/TextArea";
 import { History } from "history";
 import { Setter } from "../../models/TypeBucket";
 import { IOrganization } from "../../models/Organization";
-import I18nContext from "../../application/I18nContext";
+import I18nContext from "../../contexts/I18nContext";
 
 interface IProps {
   addOrganization: Setter<IOrganization>;

@@ -2,7 +2,7 @@ import React, { useEffect, useContext, useState } from "react";
 import DuluAxios from "../../util/DuluAxios";
 import { Adder } from "../../models/TypeBucket";
 import Activity, { IActivity } from "../../models/Activity";
-import I18nContext from "../../application/I18nContext";
+import I18nContext from "../../contexts/I18nContext";
 import ProgressBar from "../shared/ProgressBar";
 import Spacer from "../shared/Spacer";
 import { ILanguage } from "../../models/Language";

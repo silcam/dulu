@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import InlineAddIcon from "../shared/icons/InlineAddIcon";
 import EventRow from "./EventRow";
 import { IEvent } from "../../models/Event";
-import I18nContext from "../../application/I18nContext";
+import I18nContext from "../../contexts/I18nContext";
 import { History } from "history";
 import StyledTable from "../shared/StyledTable";
 

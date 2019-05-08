@@ -5,7 +5,7 @@ import { print } from "../../util/arrayUtils";
 import { IEvent, IEventParticipantExtended } from "../../models/Event";
 import { ICluster } from "../../models/Cluster";
 import { ILanguage } from "../../models/Language";
-import I18nContext from "../../application/I18nContext";
+import I18nContext from "../../contexts/I18nContext";
 
 interface IProps {
   event: IEvent;

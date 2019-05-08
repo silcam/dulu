@@ -8,7 +8,7 @@ import InlineAddIcon from "../shared/icons/InlineAddIcon";
 import { IClusterInflated } from "../../models/Cluster";
 import { BasicModel } from "../../models/BasicModel";
 import { UpdaterFunc } from "../../models/TypeBucket";
-import I18nContext from "../../application/I18nContext";
+import I18nContext from "../../contexts/I18nContext";
 
 interface IProps {
   cluster: IClusterInflated;
@@ -85,7 +85,6 @@ export default function ClusterLanguagesTable(props: IProps) {
                   {language.progress.Old_testament && (
                     <ProgressBarTranslation
                       progress={language.progress.Old_testament}
-                      t={t}
                     />
                   )}
                 </td>
@@ -93,7 +92,6 @@ export default function ClusterLanguagesTable(props: IProps) {
                   {language.progress.New_testament && (
                     <ProgressBarTranslation
                       progress={language.progress.New_testament}
-                      t={t}
                     />
                   )}
                 </td>

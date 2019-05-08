@@ -2,7 +2,7 @@ import React, { useState, useContext } from "react";
 import SelectInput from "./SelectInput";
 import selectOptionsFromObject from "../../util/selectOptionsFromObject";
 import AddIcon from "./icons/AddIcon";
-import I18nContext from "../../application/I18nContext";
+import I18nContext from "../../contexts/I18nContext";
 
 interface IProps {
   addRole: (role: string) => void;

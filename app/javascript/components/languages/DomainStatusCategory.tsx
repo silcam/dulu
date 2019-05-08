@@ -3,7 +3,7 @@ import {
   DSICategories,
   IDomainStatusItem
 } from "../../models/DomainStatusItem";
-import I18nContext from "../../application/I18nContext";
+import I18nContext from "../../contexts/I18nContext";
 import styles from "./DomainStatus.css";
 
 interface IProps {

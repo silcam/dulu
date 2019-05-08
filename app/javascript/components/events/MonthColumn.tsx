@@ -5,7 +5,7 @@ import FuzzyDate from "../../util/FuzzyDate";
 import style from "./EventsCalendar.css";
 import { Link } from "react-router-dom";
 import { fullName, IPerson } from "../../models/Person";
-import I18nContext from "../../application/I18nContext";
+import I18nContext from "../../contexts/I18nContext";
 import { ById } from "../../models/TypeBucket";
 import { ILanguage } from "../../models/Language";
 import { ICluster } from "../../models/Cluster";

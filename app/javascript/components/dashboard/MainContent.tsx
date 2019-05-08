@@ -3,10 +3,10 @@ import { Link } from "react-router-dom";
 import { Selection } from "./Dashboard";
 import DBActivitiesContainer from "./DBActivitiesContainer";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
-import I18nContext from "../../application/I18nContext";
+import I18nContext from "../../contexts/I18nContext";
 import DBEventsContainer from "./DBEventsContainer";
 import DBParticipantsContainer from "./DBParticipantsContainer";
-import ViewPrefsContext from "../../application/ViewPrefsContext";
+import ViewPrefsContext from "../../contexts/ViewPrefsContext";
 
 interface IProps {
   languageIds: number[];

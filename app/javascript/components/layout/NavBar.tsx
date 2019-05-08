@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import styles from "./NavBar.css";
 import DuluAxios from "../../util/DuluAxios";
 import { User } from "../../application/DuluApp";
-import I18nContext from "../../application/I18nContext";
+import I18nContext from "../../contexts/I18nContext";
 
 interface IProps {
   user: User;

@@ -13,7 +13,7 @@ import Loading from "../shared/Loading";
 import { Deleter, Adder } from "../../models/TypeBucket";
 import { IPerson } from "../../models/Person";
 import { ILanguage } from "../../models/Language";
-import I18nContext from "../../application/I18nContext";
+import I18nContext from "../../contexts/I18nContext";
 import { IParticipant } from "../../models/Participant";
 
 interface IProps {

@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import Activity from "../../models/Activity";
 import ProgressBarMulti from "./ProgressBarMulti";
-import I18nContext from "../../application/I18nContext";
+import I18nContext from "../../contexts/I18nContext";
 
 interface IProps {
   progress: {

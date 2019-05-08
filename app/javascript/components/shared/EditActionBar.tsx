@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import EditIcon from "./icons/EditIcon";
 import DeleteIcon from "./icons/DeleteIcon";
 import styles from "./EditActionBar.css";
-import I18nContext from "../../application/I18nContext";
+import I18nContext from "../../contexts/I18nContext";
 import { ICan } from "../../actions/canActions";
 
 interface IProps {

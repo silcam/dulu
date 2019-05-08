@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import styles from "./NotificationsList.css";
 import Notification, { INotification } from "./Notification";
 import { Channel } from "./NotificationSidebar";
-import I18nContext from "../../application/I18nContext";
+import I18nContext from "../../contexts/I18nContext";
 
 interface IProps {
   channel: Channel;

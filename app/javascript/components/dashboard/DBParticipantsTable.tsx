@@ -7,7 +7,7 @@ import { PeopleParticipants } from "./DBParticipantsContainer";
 import { Adder } from "../../models/TypeBucket";
 import DuluAxios from "../../util/DuluAxios";
 import { domainFromRole } from "../../models/Role";
-import I18nContext from "../../application/I18nContext";
+import I18nContext from "../../contexts/I18nContext";
 import StyledTable from "../shared/StyledTable";
 import { IParticipant } from "../../models/Participant";
 

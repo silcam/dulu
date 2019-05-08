@@ -9,7 +9,7 @@ import { ICluster } from "../../models/Cluster";
 import { ILanguage } from "../../models/Language";
 import API from "./RegionsAPI";
 import { History } from "history";
-import I18nContext from "../../application/I18nContext";
+import I18nContext from "../../contexts/I18nContext";
 import FormGroup from "../shared/FormGroup";
 import TextInput from "../shared/TextInput";
 

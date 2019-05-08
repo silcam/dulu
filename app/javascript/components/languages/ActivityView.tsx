@@ -6,7 +6,7 @@ import { IPerson } from "../../models/Person";
 import WorkshopActivity from "../workshops/WorkshopActivity";
 import { Setter, Adder, ById } from "../../models/TypeBucket";
 import { ILanguage } from "../../models/Language";
-import I18nContext from "../../application/I18nContext";
+import I18nContext from "../../contexts/I18nContext";
 import VSpacer from "../shared/VSpacer";
 import ActivityViewPeople from "./ActivityViewPeople";
 import { IParticipant } from "../../models/Participant";

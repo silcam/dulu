@@ -6,7 +6,7 @@ import { ICluster } from "../../models/Cluster";
 import { ILanguage } from "../../models/Language";
 import { User } from "../../application/DuluApp";
 import { LoadedCluster, LoadedRegion } from "./DashboardSidebarContainer";
-import I18nContext from "../../application/I18nContext";
+import I18nContext from "../../contexts/I18nContext";
 import DashboardSidebarList from "./DashboardSidebarList";
 import DashboardSidebarItem from "./DashboardSidebarItem";
 import { fullName, IPerson } from "../../models/Person";

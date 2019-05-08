@@ -1,4 +1,4 @@
-import React, { ErrorInfo } from "react";
+import React, { ErrorInfo, useEffect } from "react";
 import {
   Switch,
   Route,
@@ -61,97 +61,105 @@ class MainRouter extends React.Component<IProps, IState> {
     return this.state.hasError ? (
       <ErrorMessage />
     ) : (
-      <Switch>
-        <Route
-          path="/languages/:idOrAction?"
-          render={({ match, history, location }) => (
-            <LanguagesContainer
-              history={history}
-              location={location}
-              {...matchParamsForChild(match)}
-              t={this.props.t}
-            />
-          )}
-        />
-        <Route
-          path="/programs/:idOrAction?"
-          render={({ match }) => (
-            <ProgramsRedirect t={this.props.t} match={match} />
-          )}
-        />
-        <Route
-          path="/regions/:idOrAction?"
-          render={({ history, match }) => (
-            <RegionsContainer
-              history={history}
-              {...matchParamsForChild(match)}
-            />
-          )}
-        />
-        <Route
-          path="/clusters/:idOrAction?"
-          render={({ history, match, location }) => (
-            <ClustersContainer
-              history={history}
-              location={location}
-              {...matchParamsForChild(match)}
-              t={this.props.t}
-            />
-          )}
-        />
-        <Route
-          path="/people/:actionOrId?/:id?"
-          render={({ match, history }) => (
-            <PeopleContainer
-              history={history}
-              {...routeActionAndId(match.params)}
-              t={this.props.t}
-              updateLanguage={this.props.updateLanguage}
-            />
-          )}
-        />
-        <Route
-          path="/organizations/:actionOrId?/:id?"
-          render={({ match, history }) => (
-            <OrganizationsContainer
-              history={history}
-              {...routeActionAndId(match.params)}
-            />
-          )}
-        />
-        <Route path="/events" render={() => <EventsPage />} />
-        <Route
-          path="/reports/:id?"
-          render={({ match, history, location }) => (
-            <ReportsViewer
-              key={match.params.id || ""}
-              t={this.props.t}
-              id={match.params.id}
-              history={history}
-              location={location}
-            />
-          )}
-        />
-        <Route
-          path="/participants/:id"
-          render={({ match, history }) => (
-            <ParticipantPage
-              t={this.props.t}
-              history={history}
-              id={match.params.id}
-            />
-          )}
-        />
-        <Route
-          path="/*activities/:id"
-          render={({ match, history }) => (
-            <ActivityPage history={history} id={match.params.id} />
-          )}
-        />
-        <Route render={() => <Dashboard user={this.props.user} />} />
-      </Switch>
+      <React.Fragment>
+        <Switch>
+          <Route
+            path="/languages/:idOrAction?"
+            render={({ match, history, location }) => (
+              <LanguagesContainer
+                history={history}
+                location={location}
+                {...matchParamsForChild(match)}
+                t={this.props.t}
+              />
+            )}
+          />
+          <Route
+            path="/programs/:idOrAction?"
+            render={({ match }) => (
+              <ProgramsRedirect t={this.props.t} match={match} />
+            )}
+          />
+          <Route
+            path="/regions/:idOrAction?"
+            render={({ history, match }) => (
+              <RegionsContainer
+                history={history}
+                {...matchParamsForChild(match)}
+              />
+            )}
+          />
+          <Route
+            path="/clusters/:idOrAction?"
+            render={({ history, match, location }) => (
+              <ClustersContainer
+                history={history}
+                location={location}
+                {...matchParamsForChild(match)}
+                t={this.props.t}
+              />
+            )}
+          />
+          <Route
+            path="/people/:actionOrId?/:id?"
+            render={({ match, history }) => (
+              <PeopleContainer
+                history={history}
+                {...routeActionAndId(match.params)}
+                t={this.props.t}
+                updateLanguage={this.props.updateLanguage}
+              />
+            )}
+          />
+          <Route
+            path="/organizations/:actionOrId?/:id?"
+            render={({ match, history }) => (
+              <OrganizationsContainer
+                history={history}
+                {...routeActionAndId(match.params)}
+              />
+            )}
+          />
+          <Route path="/events" render={() => <EventsPage />} />
+          <Route
+            path="/reports/:id?"
+            render={({ match, history, location }) => (
+              <ReportsViewer
+                key={match.params.id || ""}
+                t={this.props.t}
+                id={match.params.id}
+                history={history}
+                location={location}
+              />
+            )}
+          />
+          <Route
+            path="/participants/:id"
+            render={({ match, history }) => (
+              <ParticipantPage
+                t={this.props.t}
+                history={history}
+                id={match.params.id}
+              />
+            )}
+          />
+          <Route
+            path="/*activities/:id"
+            render={({ match, history }) => (
+              <ActivityPage history={history} id={match.params.id} />
+            )}
+          />
+          <Route render={() => <Dashboard user={this.props.user} />} />
+        </Switch>
+        <NavMonitor />
+      </React.Fragment>
     );
   }
+}
+
+function NavMonitor() {
+  useEffect(() => console.log("MainRouter rerender!"));
+  return null;
 }
 
 export default withRouter(MainRouter);

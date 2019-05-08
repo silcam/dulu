@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { withRouter, RouteComponentProps } from "react-router-dom";
-import I18nContext from "../../application/I18nContext";
+import I18nContext from "../../contexts/I18nContext";
 
 function CancelButtonInner(props: RouteComponentProps) {
   const t = useContext(I18nContext);

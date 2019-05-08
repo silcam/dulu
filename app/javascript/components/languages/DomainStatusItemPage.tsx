@@ -9,7 +9,7 @@ import { Link } from "react-router-dom";
 import { useAPIGet, useAPIPut, useAPIDelete } from "../../util/useAPI";
 import DomainStatusItemView from "./DomainStatusItemView";
 import DomainStatusItemForm from "./DomainStatusItemForm";
-import I18nContext from "../../application/I18nContext";
+import I18nContext from "../../contexts/I18nContext";
 import { History } from "history";
 
 interface IProps {

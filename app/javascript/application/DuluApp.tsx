@@ -6,8 +6,8 @@ import NetworkErrorAlerts from "./NetworkErrorAlerts";
 import DuluAxios, { DuluAxiosError } from "../util/DuluAxios";
 import update from "immutability-helper";
 import MainRouter from "./MainRouter";
-import I18nContext from "./I18nContext";
-import ViewPrefsContext, { ViewPrefs } from "./ViewPrefsContext";
+import I18nContext from "../contexts/I18nContext";
+import ViewPrefsContext, { ViewPrefs } from "../contexts/ViewPrefsContext";
 
 interface IProps {}
 interface IState {
@@ -79,7 +79,7 @@ export default class DuluApp extends React.Component<IProps, IState> {
           }}
         >
           <div className={styles.container}>
-            <NavBar user={this.state.user} t={this.state.t} />
+            <NavBar user={this.state.user} />
             <NetworkErrorAlerts
               t={this.state.t}
               connectionError={this.state.connectionError}

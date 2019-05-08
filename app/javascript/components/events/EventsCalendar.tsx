@@ -18,7 +18,7 @@ import { ILanguage } from "../../models/Language";
 import { ICluster } from "../../models/Cluster";
 import { ICan } from "../../actions/canActions";
 import { IEvent, IPeriod } from "../../models/Event";
-import I18nContext from "../../application/I18nContext";
+import I18nContext from "../../contexts/I18nContext";
 
 export interface IProps {
   year: string;

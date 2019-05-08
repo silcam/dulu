@@ -3,8 +3,8 @@ import PropTypes from "prop-types";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import LanguagePageContent from "./LanguagePageContent";
 import { Route } from "react-router-dom";
-import I18nContext from "../../application/I18nContext";
-import ViewPrefsContext from "../../application/ViewPrefsContext";
+import I18nContext from "../../contexts/I18nContext";
+import ViewPrefsContext from "../../contexts/ViewPrefsContext";
 
 const tabs = [
   /*"All",*/ "Translation",

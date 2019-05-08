@@ -1,6 +1,6 @@
 import React, { ChangeEvent, useState, useContext } from "react";
 import styles from "./Callout.css";
-import I18nContext from "../../application/I18nContext";
+import I18nContext from "../../contexts/I18nContext";
 
 interface IProps {
   handleClick: () => void;

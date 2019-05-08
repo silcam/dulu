@@ -13,7 +13,7 @@ import { IPerson } from "../../models/Person";
 import { ICluster } from "../../models/Cluster";
 import { ILanguage } from "../../models/Language";
 import { History } from "history";
-import I18nContext from "../../application/I18nContext";
+import I18nContext from "../../contexts/I18nContext";
 import { ICan } from "../../actions/canActions";
 import GoBar from "../shared/GoBar";
 

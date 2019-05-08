@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import eventDateString from "../../util/eventDateString";
 import { Link } from "react-router-dom";
 import { IEvent } from "../../models/Event";
-import I18nContext from "../../application/I18nContext";
+import I18nContext from "../../contexts/I18nContext";
 
 interface IProps {
   event: IEvent;

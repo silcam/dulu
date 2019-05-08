@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import { Link } from "react-router-dom";
 import styles from "./NotificationsList.css";
 import { AnyObj } from "../../models/TypeBucket";
-import I18nContext from "../../application/I18nContext";
+import I18nContext from "../../contexts/I18nContext";
 import commaJoinWithAnd from "../../util/commaJoinWithAnd";
 import { T } from "../../i18n/i18n";
 

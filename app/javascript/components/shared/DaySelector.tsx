@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import I18nContext from "../../application/I18nContext";
+import I18nContext from "../../contexts/I18nContext";
 
 interface IProps {
   handleInput: (e: { target: { name: any; value: any } }) => void;

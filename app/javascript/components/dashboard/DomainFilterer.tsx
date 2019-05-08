@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import SelectInput from "../shared/SelectInput";
 import selectOptionsFromObject from "../../util/selectOptionsFromObject";
 import { T } from "../../i18n/i18n";
-import I18nContext from "../../application/I18nContext";
+import I18nContext from "../../contexts/I18nContext";
 
 interface IProps {
   setDomainFilter: (domain: string) => void;

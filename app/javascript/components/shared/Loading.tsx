@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import AlertBox from "./AlertBox";
-import I18nContext from "../../application/I18nContext";
+import I18nContext from "../../contexts/I18nContext";
 
 export default function Loading() {
   const t = useContext(I18nContext);

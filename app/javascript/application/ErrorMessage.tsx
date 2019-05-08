@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import I18nContext from "./I18nContext";
+import I18nContext from "../contexts/I18nContext";
 
 export default function ErrorMessage() {
   const t = useContext(I18nContext);

@@ -8,7 +8,7 @@ import { ById } from "../../models/TypeBucket";
 import { IPerson } from "../../models/Person";
 import { IOrganization } from "../../models/Organization";
 import { ILanguage } from "../../models/Language";
-import I18nContext from "../../application/I18nContext";
+import I18nContext from "../../contexts/I18nContext";
 import { orBlank } from "../../util/orBlank";
 import { Link } from "react-router-dom";
 

@@ -7,7 +7,7 @@ import selectOptionsFromObject from "../../util/selectOptionsFromObject";
 import AddIcon from "../shared/icons/AddIcon";
 import style from "./EditEventParticipantsTable.css";
 import { IEventInflated, IEventParticipantExtended } from "../../models/Event";
-import I18nContext from "../../application/I18nContext";
+import I18nContext from "../../contexts/I18nContext";
 import { ICluster } from "../../models/Cluster";
 import { ILanguage } from "../../models/Language";
 import { BasicModel } from "../../models/BasicModel";

@@ -1,6 +1,6 @@
 import React, { useContext, useState } from "react";
 import BibleBook from "../../models/BibleBook";
-import I18nContext from "../../application/I18nContext";
+import I18nContext from "../../contexts/I18nContext";
 import DeleteIcon from "../shared/icons/DeleteIcon";
 import { arrayDelete } from "../../util/arrayUtils";
 import SelectInput from "../shared/SelectInput";
@@ -20,7 +20,7 @@ export default function BooksSelector(props: IProps) {
     .map((b, index) => ({
       id: b.id,
       display: b.name,
-      value: index
+      value: `${index}`
     }));
 
   const startAdding = () => {
@@ -52,7 +52,7 @@ export default function BooksSelector(props: IProps) {
         {adding ? (
           <React.Fragment>
             <SelectInput
-              value={addingIndex}
+              value={`${addingIndex}`}
               options={availableBookOptions}
               setValue={index => setAddingIndex(parseInt(index))}
               name="BibleBook"

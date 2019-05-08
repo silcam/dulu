@@ -25,7 +25,7 @@ import { IPerson } from "../../models/Person";
 import { IActivity } from "../../models/Activity";
 import { History } from "history";
 import { useAPIGet, useAPIPut, useAPIDelete } from "../../util/useAPI";
-import I18nContext from "../../application/I18nContext";
+import I18nContext from "../../contexts/I18nContext";
 
 interface IProps {
   id: number;

@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect } from "react";
 import { ById } from "../../models/TypeBucket";
-import I18nContext from "../../application/I18nContext";
+import I18nContext from "../../contexts/I18nContext";
 import { IPerson, fullName } from "../../models/Person";
 import { IActivity } from "../../models/Activity";
 import Participant, { IParticipant } from "../../models/Participant";

@@ -1,6 +1,6 @@
 import React, { useState, useContext } from "react";
 import { ById } from "../../models/TypeBucket";
-import I18nContext from "../../application/I18nContext";
+import I18nContext from "../../contexts/I18nContext";
 import Spacer from "../shared/Spacer";
 import EditIcon from "../shared/icons/EditIcon";
 import styles from "./ActivityView.css";

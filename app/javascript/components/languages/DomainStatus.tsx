@@ -3,7 +3,7 @@ import { ILanguage } from "../../models/Language";
 import { ById, Setter, Adder } from "../../models/TypeBucket";
 import { IPerson } from "../../models/Person";
 import { IOrganization } from "../../models/Organization";
-import I18nContext from "../../application/I18nContext";
+import I18nContext from "../../contexts/I18nContext";
 import Spacer from "../shared/Spacer";
 import TranslationStatusNew from "./DomainStatusNew";
 import AddIcon from "../shared/icons/AddIcon";

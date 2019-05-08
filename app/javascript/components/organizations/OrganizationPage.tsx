@@ -14,7 +14,7 @@ import Loading from "../shared/Loading";
 import { IOrganization } from "../../models/Organization";
 import { Setter, ById } from "../../models/TypeBucket";
 import { History } from "history";
-import I18nContext from "../../application/I18nContext";
+import I18nContext from "../../contexts/I18nContext";
 
 interface IProps {
   id: number;

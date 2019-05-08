@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import I18nContext from "../../application/I18nContext";
+import I18nContext from "../../contexts/I18nContext";
 
 export interface IProps {
   value?: boolean;

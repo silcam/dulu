@@ -1,7 +1,7 @@
 import React, { useState, useContext, useEffect } from "react";
 import TextInput from "../shared/TextInput";
 import styles from "./Searcher.css";
-import I18nContext from "../../application/I18nContext";
+import I18nContext from "../../contexts/I18nContext";
 import useSearch from "../shared/useSearch";
 import { withRouter, RouteComponentProps } from "react-router";
 import { Link } from "react-router-dom";

@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import HorizontalList from "../shared/HorizontalList";
 import styles from "./SortPicker.css";
-import I18nContext from "../../application/I18nContext";
+import I18nContext from "../../contexts/I18nContext";
 import { SortOption, Sort } from "./sortActivities";
 
 interface IProps {
@@ -37,26 +37,28 @@ function SortPicker(props: IProps) {
           <li>
             <label>{t("Sort")}:</label>
           </li>
-          {options.map(option => {
-            let sortArrow = "";
-            if (option == props.sort.option) {
-              sortArrow = props.sort.desc ? "▼" : "▲";
-            }
-            return (
-              <li key={option} className={styles.picker}>
-                <button
-                  className="link"
-                  onClick={() => {
-                    changeSort(option, props.sort, props.changeSort);
-                    // e.target.blur();
-                  }}
-                >
-                  {t(option)}
-                  {sortArrow}
-                </button>
-              </li>
-            );
-          })}
+          <React.Fragment>
+            {options.map(option => {
+              let sortArrow = "";
+              if (option == props.sort.option) {
+                sortArrow = props.sort.desc ? "▼" : "▲";
+              }
+              return (
+                <li key={option} className={styles.picker}>
+                  <button
+                    className="link"
+                    onClick={() => {
+                      changeSort(option, props.sort, props.changeSort);
+                      // e.target.blur();
+                    }}
+                  >
+                    {t(option)}
+                    {sortArrow}
+                  </button>
+                </li>
+              );
+            })}
+          </React.Fragment>
         </HorizontalList>
       </small>
     </div>

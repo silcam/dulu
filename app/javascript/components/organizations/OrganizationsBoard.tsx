@@ -12,7 +12,7 @@ import { Adder, Setter, SetCan } from "../../models/TypeBucket";
 import { IOrganization } from "../../models/Organization";
 import { ICan } from "../../actions/canActions";
 import { History } from "history";
-import I18nContext from "../../application/I18nContext";
+import I18nContext from "../../contexts/I18nContext";
 
 interface IProps {
   setOrganizations: Adder<IOrganization>;

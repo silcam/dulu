@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import AlertBox from "./AlertBox";
-import I18nContext from "../../application/I18nContext";
+import I18nContext from "../../contexts/I18nContext";
 
 interface IProps {
   saving?: boolean;

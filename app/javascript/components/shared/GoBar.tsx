@@ -6,7 +6,7 @@ import { IOrganization } from "../../models/Organization";
 import { ILanguage } from "../../models/Language";
 import { ICluster } from "../../models/Cluster";
 import { IRegion } from "../../models/Region";
-import I18nContext from "../../application/I18nContext";
+import I18nContext from "../../contexts/I18nContext";
 import { AppState } from "../../reducers/appReducer";
 import { setLanguages } from "../../actions/languageActions";
 import { setPeople } from "../../actions/peopleActions";
