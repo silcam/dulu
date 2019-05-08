@@ -1,16 +1,21 @@
-import React from "react";
-import PropTypes from "prop-types";
+import React, { useContext } from "react";
 import LCProgram from "./LCProgram";
 import style from "./ReportsViewer.css";
 import { Link } from "react-router-dom";
 import ColorKey from "./ColorKey";
+import { IReport } from "../../models/Report";
+import I18nContext from "../../contexts/I18nContext";
 
-export default function LCReport(props) {
+interface IProps {
+  report: IReport;
+}
+
+export default function LCReport(props: IProps) {
   const report = props.report;
-  const t = props.t;
+  const t = useContext(I18nContext);
   return (
     <div className={style.lcReport}>
-      <div className={style.lcHeader}>
+      <div>
         <h2>{report.name ? report.name : t("LanguageComparison")}</h2>
         {report.author && (
           <h5 className={style.lcReportSubheader}>
@@ -21,7 +26,7 @@ export default function LCReport(props) {
             })}
           </h5>
         )}
-        <ColorKey t={t} />
+        <ColorKey />
       </div>
       <div className={style.lcBody}>
         {report.clusters.map(cluster => (
@@ -33,21 +38,15 @@ export default function LCReport(props) {
               <LCProgram
                 key={language.id}
                 language={language}
-                t={t}
                 report={report}
               />
             ))}
           </div>
         ))}
         {report.languages.map(language => (
-          <LCProgram key={language.id} language={language} t={t} report={report} />
+          <LCProgram key={language.id} language={language} report={report} />
         ))}
       </div>
     </div>
   );
 }
-
-LCReport.propTypes = {
-  t: PropTypes.func.isRequired,
-  report: PropTypes.object.isRequired
-};

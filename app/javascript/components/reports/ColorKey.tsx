@@ -1,10 +1,10 @@
-import React from "react";
-import PropTypes from "prop-types";
+import React, { useContext } from "react";
 import Activity from "../../models/Activity";
 import Colors from "../../util/Colors";
+import I18nContext from "../../contexts/I18nContext";
 
-export default function ColorKey(props) {
-  const t = props.t;
+export default function ColorKey() {
+  const t = useContext(I18nContext);
   return (
     <table>
       <tbody>
@@ -29,7 +29,3 @@ export default function ColorKey(props) {
     </table>
   );
 }
-
-ColorKey.propTypes = {
-  t: PropTypes.func.isRequired
-};

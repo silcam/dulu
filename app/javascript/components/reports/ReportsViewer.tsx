@@ -1,5 +1,4 @@
 import React from "react";
-import PropTypes from "prop-types";
 import LCReport from "./LCReport";
 import style from "./ReportsViewer.css";
 import ReportSideBar from "./ReportSideBar";
@@ -8,11 +7,25 @@ import DuluAxios from "../../util/DuluAxios";
 import Loading from "../shared/Loading";
 import SaveReportBar from "./SaveReportBar";
 import EditActionBar from "../shared/EditActionBar";
-import Report from "../../models/Report";
-import SavedReports from "./SavedReports";
+import Report, { IReport, IReportElements } from "../../models/Report";
+import SavedReports, { ISavedReport } from "./SavedReports";
+import { RouteComponentProps } from "react-router";
+import { ILanguage } from "../../models/Language";
+import { ICluster } from "../../models/Cluster";
 
-export default class ReportsViewer extends React.PureComponent {
-  constructor(props) {
+interface IProps extends RouteComponentProps {
+  id?: number;
+}
+
+interface IState {
+  report: IReport;
+  loading: number;
+  saving?: boolean;
+  savedReports?: ISavedReport[];
+}
+
+export default class ReportsViewer extends React.PureComponent<IProps, IState> {
+  constructor(props: IProps) {
     super(props);
     this.state = {
       report: props.location.state
@@ -31,13 +44,13 @@ export default class ReportsViewer extends React.PureComponent {
     }
   }
 
-  replaceReport = report => {
+  replaceReport = (report: IReport) => {
     this.setState({
       report: report
     });
   };
 
-  updateElements = elements => {
+  updateElements = (elements: IReportElements) => {
     this.replaceReport(
       update(this.state.report, { elements: { $set: elements } })
     );
@@ -49,7 +62,7 @@ export default class ReportsViewer extends React.PureComponent {
   subtractLoading = () =>
     this.setState(prevState => ({ loading: prevState.loading - 1 }));
 
-  addLanguage = async language => {
+  addLanguage = async (language: ILanguage) => {
     this.addLoading();
     const data = await DuluAxios.get("/api/reports/report_data", {
       language_id: language.id,
@@ -65,7 +78,7 @@ export default class ReportsViewer extends React.PureComponent {
     this.subtractLoading();
   };
 
-  addCluster = async cluster => {
+  addCluster = async (cluster: ICluster) => {
     this.addLoading();
     const data = await DuluAxios.get("/api/reports/report_data", {
       cluster_id: cluster.id,
@@ -81,7 +94,7 @@ export default class ReportsViewer extends React.PureComponent {
     this.subtractLoading();
   };
 
-  dropLanguage = id => {
+  dropLanguage = (id: number) => {
     this.replaceReport(
       update(this.state.report, {
         languages: { $set: this.state.report.languages.filter(p => p.id != id) }
@@ -89,7 +102,7 @@ export default class ReportsViewer extends React.PureComponent {
     );
   };
 
-  dropCluster = id => {
+  dropCluster = (id: number) => {
     this.replaceReport(
       update(this.state.report, {
         clusters: { $set: this.state.report.clusters.filter(c => c.id != id) }
@@ -103,7 +116,6 @@ export default class ReportsViewer extends React.PureComponent {
         <div className={style.sidebar}>
           {!this.props.id && !this.state.saving && (
             <ReportSideBar
-              t={this.props.t}
               report={this.state.report}
               addLanguage={this.addLanguage}
               addCluster={this.addCluster}
@@ -117,7 +129,6 @@ export default class ReportsViewer extends React.PureComponent {
         <div className={style.main}>
           {this.state.saving && (
             <SaveReportBar
-              t={this.props.t}
               report={this.state.report}
               cancel={() => this.setState({ saving: false })}
             />
@@ -136,10 +147,9 @@ export default class ReportsViewer extends React.PureComponent {
           {this.state.report.clusters.length +
             this.state.report.languages.length >
           0 ? (
-            <LCReport t={this.props.t} report={this.state.report} />
+            <LCReport report={this.state.report} />
           ) : (
             <SavedReports
-              t={this.props.t}
               savedReports={this.state.savedReports}
               setSavedReports={reports =>
                 this.setState({ savedReports: reports })
@@ -166,11 +176,3 @@ function blankReport() {
     languages: []
   };
 }
-
-ReportsViewer.propTypes = {
-  t: PropTypes.func.isRequired,
-
-  id: PropTypes.string, // Only for viewing saved reports
-  history: PropTypes.object,
-  location: PropTypes.object
-};

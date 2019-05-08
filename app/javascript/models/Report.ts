@@ -1,20 +1,46 @@
-import { ILanguage } from "./Language";
-import { ICluster } from "./Cluster";
 import { T } from "../i18n/i18n";
 
+export interface IReportElements {
+  activities: {
+    Old_testament: boolean | undefined;
+    New_testament: boolean | undefined;
+    [eitherTestament: string]: boolean | undefined; // Odd Typescript problem
+  };
+  publications: {
+    [pub: string]: boolean;
+  };
+}
 export interface IReport {
-  type: string;
-  elements: {
-    activities: {
-      Old_testament?: boolean;
-      New_testament?: boolean;
-    };
+  id: number;
+  name?: string;
+  type: "LanguageComparison";
+  author?: {
+    id: number;
+    full_name: string;
+  };
+  elements: IReportElements;
+  clusters: Array<{
+    id: number;
+    name: string;
+    languages: IReportLanguage[];
+  }>;
+  languages: IReportLanguage[];
+}
+
+export interface IReportActivities {
+  Old_testament: string[];
+  New_testament: string[];
+}
+
+export interface IReportLanguage {
+  id: number;
+  name: string;
+  report: {
+    activities: IReportActivities;
     publications: {
-      [pub: string]: boolean;
+      [pub: string]: boolean | null;
     };
   };
-  languages: ILanguage[];
-  clusters: ICluster[];
 }
 
 function params(report: IReport) {

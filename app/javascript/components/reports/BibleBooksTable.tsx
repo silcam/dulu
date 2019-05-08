@@ -1,10 +1,16 @@
-import React from "react";
-import PropTypes from "prop-types";
+import React, { useContext } from "react";
 import Activity from "../../models/Activity";
 import Colors from "../../util/Colors";
+import I18nContext from "../../contexts/I18nContext";
+import { IReportElements, IReportActivities } from "../../models/Report";
 
-export default function BibleBooksTable(props) {
-  const t = props.t;
+interface IProps {
+  elements: IReportElements;
+  activities: IReportActivities;
+}
+
+export default function BibleBooksTable(props: IProps) {
+  const t = useContext(I18nContext);
   let books = props.elements.activities.Old_testament
     ? props.activities.Old_testament
     : [];
@@ -24,7 +30,7 @@ export default function BibleBooksTable(props) {
           );
           return (
             <tr key={rowIndex}>
-              {bookNames.map((bookName, colIndex) => {
+              {bookNames.map((bookName: string, colIndex: number) => {
                 let stage = books[rowIndex * rowLength + colIndex];
                 let color = stage
                   ? Activity.translationProgress[stage].color
@@ -48,9 +54,3 @@ export default function BibleBooksTable(props) {
     </table>
   );
 }
-
-BibleBooksTable.propTypes = {
-  t: PropTypes.func.isRequired,
-  elements: PropTypes.object.isRequired,
-  activities: PropTypes.object.isRequired
-};

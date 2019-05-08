@@ -1,10 +1,15 @@
-import React from "react";
-import PropTypes from "prop-types";
+import React, { useContext } from "react";
 import Colors from "../../util/Colors";
-import Report from "../../models/Report";
+import Report, { IReportElements, IReportLanguage } from "../../models/Report";
+import I18nContext from "../../contexts/I18nContext";
 
-export default function PubsTable(props) {
-  const t = props.t;
+interface IProps {
+  elements: IReportElements;
+  language: IReportLanguage;
+}
+
+export default function PubsTable(props: IProps) {
+  const t = useContext(I18nContext);
   const language = props.language;
   const pubs = Object.keys(props.elements.publications).filter(
     pub => props.elements.publications[pub]
@@ -37,9 +42,3 @@ export default function PubsTable(props) {
     </div>
   );
 }
-
-PubsTable.propTypes = {
-  t: PropTypes.func.isRequired,
-  elements: PropTypes.object.isRequired,
-  language: PropTypes.object.isRequired
-};

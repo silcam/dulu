@@ -1,15 +1,31 @@
-import React from "react";
-import PropTypes from "prop-types";
+import React, { useContext } from "react";
 import P from "../shared/P";
 import DeleteIcon from "../shared/icons/DeleteIcon";
-import Report from "../../models/Report";
+import Report, { IReport, IReportElements } from "../../models/Report";
 import CheckBoxInput from "../shared/CheckboxInput";
 import update from "immutability-helper";
 import SearchPicker from "../shared/SearchPicker";
 import { connect } from "react-redux";
+import I18nContext from "../../contexts/I18nContext";
+import { ICluster } from "../../models/Cluster";
+import { ILanguage } from "../../models/Language";
+import { ById } from "../../models/TypeBucket";
+import { AppState } from "../../reducers/appReducer";
 
-function BaseReportSideBar(props) {
-  const t = props.t;
+interface IProps {
+  report: IReport;
+  addCluster: (c: ICluster) => void;
+  addLanguage: (l: ILanguage) => void;
+  dropCluster: (id: number) => void;
+  dropLanguage: (id: number) => void;
+  updateElements: (elements: IReportElements) => void;
+  save: () => void;
+  clusters: ById<ICluster>;
+  languages: ById<ILanguage>;
+}
+
+function BaseReportSideBar(props: IProps) {
+  const t = useContext(I18nContext);
   const report = props.report;
 
   return (
@@ -33,7 +49,7 @@ function BaseReportSideBar(props) {
         </ul>
         <SearchPicker
           collection={props.clusters}
-          selectedId={undefined}
+          selectedId={null}
           setSelected={cluster => cluster && props.addCluster(cluster)}
           placeholder={t("Add_cluster")}
           autoClear
@@ -54,7 +70,7 @@ function BaseReportSideBar(props) {
         </ul>
         <SearchPicker
           collection={props.languages}
-          selectedId={undefined}
+          selectedId={null}
           setSelected={lang => lang && props.addLanguage(lang)}
           placeholder={t("Add_language")}
           autoClear
@@ -67,8 +83,8 @@ function BaseReportSideBar(props) {
             <li key={testament}>
               <CheckBoxInput
                 text={t(testament)}
-                value={report.elements.activities[testament]}
-                handleCheck={checked =>
+                value={!!report.elements.activities[testament]}
+                setValue={checked =>
                   props.updateElements(
                     update(report.elements, {
                       activities: { [testament]: { $set: checked } }
@@ -88,7 +104,7 @@ function BaseReportSideBar(props) {
               <CheckBoxInput
                 text={Report.tPubName(pub, t)}
                 value={report.elements.publications[pub] || false}
-                handleCheck={checked =>
+                setValue={checked =>
                   props.updateElements(
                     update(report.elements, {
                       publications: { [pub]: { $set: checked } }
@@ -104,11 +120,11 @@ function BaseReportSideBar(props) {
   );
 }
 
-function showSaveButton(report) {
+function showSaveButton(report: IReport) {
   return (
     (report.clusters.length > 0 || report.languages.length > 0) &&
     (Object.keys(report.elements.activities).some(
-      testament => report.elements.activities[testament]
+      testament => !!report.elements.activities[testament]
     ) ||
       Object.keys(report.elements.publications).some(
         pub => report.elements.publications[pub]
@@ -116,20 +132,9 @@ function showSaveButton(report) {
   );
 }
 
-const ReportSideBar = connect(state => ({
+const ReportSideBar = connect((state: AppState) => ({
   languages: state.languages.byId,
   clusters: state.clusters.byId
 }))(BaseReportSideBar);
-
-ReportSideBar.propTypes = {
-  t: PropTypes.func.isRequired,
-  report: PropTypes.object.isRequired,
-  addCluster: PropTypes.func.isRequired, // addCluster(id)
-  addProgram: PropTypes.func.isRequired, // addProgram(id)
-  dropCluster: PropTypes.func.isRequired, // dropCluster(id)
-  dropProgram: PropTypes.func.isRequired, // dropProgram(id)
-  updateElements: PropTypes.func.isRequired,
-  save: PropTypes.func.isRequired
-};
 
 export default ReportSideBar;
