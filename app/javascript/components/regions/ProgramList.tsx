@@ -1,31 +1,34 @@
 import React, { useContext } from "react";
 import CommaList from "../shared/CommaList";
 import { Link } from "react-router-dom";
-import SearchTextInput from "../shared/SearchTextInput";
 import DeleteIcon from "../shared/icons/DeleteIcon";
 import { deleteFrom } from "../../util/arrayUtils";
 import { ICluster } from "../../models/Cluster";
 import { ILanguage } from "../../models/Language";
-import { IRegionInflated } from "../../models/Region";
-import { AnyObj } from "../../models/TypeBucket";
+import { IRegionInflated, IRegion } from "../../models/Region";
+import { ById, Partial } from "../../models/TypeBucket";
 import I18nContext from "../../contexts/I18nContext";
+import { SearchPickerAutoClear } from "../shared/SearchPicker";
 
 type ClusterLanguage = ICluster | ILanguage;
 
-interface IProps {
+interface IProps<T extends ClusterLanguage> {
   thing: "cluster" | "language";
   region: IRegionInflated;
   editing?: boolean;
-  updateRegion: (r: AnyObj) => void;
+  updateRegion: (r: Partial<IRegion>) => void;
   noTrash?: boolean;
+  collection: ById<T>;
 }
 
-export default function ProgramList(props: IProps) {
+export default function ProgramList<T extends ClusterLanguage>(
+  props: IProps<T>
+) {
   const things = plural(props.thing) as ("clusters" | "languages");
-  const list = props.region[things] as ClusterLanguage[];
+  const list = props.region[things] as T[];
   const t = useContext(I18nContext);
 
-  const addThing = (clusterLanguage: ClusterLanguage) => {
+  const addThing = (clusterLanguage: T) => {
     props.updateRegion({
       [things]: [clusterLanguage].concat(list)
     });
@@ -44,12 +47,10 @@ export default function ProgramList(props: IProps) {
         <tbody>
           <tr>
             <td colSpan={2}>
-              <SearchTextInput
-                queryPath={`/api/${things}/search`}
-                text=""
+              <SearchPickerAutoClear
+                collection={props.collection}
+                setSelected={addThing}
                 placeholder={t(`Add_${props.thing}`)}
-                updateValue={addThing}
-                addBox
               />
             </td>
           </tr>

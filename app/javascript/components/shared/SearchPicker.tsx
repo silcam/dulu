@@ -5,10 +5,13 @@ import { ById } from "../../models/TypeBucket";
 import { fullName, IPerson } from "../../models/Person";
 import { IOrganization } from "../../models/Organization";
 
-export interface SearchPickerProps<T extends { id: number; name?: string }> {
+interface SearchItemType {
+  id: number;
+  name?: string;
+}
+
+interface CorePickerProps<T extends SearchItemType> {
   collection: ById<T>;
-  selectedId: number | null;
-  setSelected: (item: T | null) => void;
   placeholder?: string;
   autoFocus?: boolean;
   allowBlank?: boolean;
@@ -16,7 +19,13 @@ export interface SearchPickerProps<T extends { id: number; name?: string }> {
   nameOf?: (item: T) => string;
 }
 
-export default function SearchPicker<T extends { id: number; name?: string }>(
+interface SearchPickerProps<T extends SearchItemType>
+  extends CorePickerProps<T> {
+  selectedId: number | null;
+  setSelected: (item: T | null) => void;
+}
+
+export default function SearchPicker<T extends SearchItemType>(
   props: SearchPickerProps<T>
 ) {
   const nameOf = props.nameOf || stdNameOf;
@@ -92,14 +101,46 @@ export default function SearchPicker<T extends { id: number; name?: string }>(
   );
 }
 
-function stdNameOf<T extends { name?: string }>(item: T) {
+function stdNameOf<T extends SearchItemType>(item: T) {
   return item.name ? item.name : `${item}`;
+}
+
+interface SearchPickerAutoClearProps<T extends SearchItemType>
+  extends CorePickerProps<T> {
+  setSelected: (value: T) => void;
+}
+export function SearchPickerAutoClear<T extends SearchItemType>(
+  props: SearchPickerAutoClearProps<T>
+) {
+  const { setSelected, ...otherProps } = props;
+  return (
+    <SearchPicker
+      selectedId={null}
+      setSelected={value => value && setSelected(value)}
+      autoClear
+      {...otherProps}
+    />
+  );
 }
 
 export function PersonPicker(props: SearchPickerProps<IPerson>) {
   return <SearchPicker nameOf={person => fullName(person)} {...props} />;
 }
 
+export function PersonPickerAutoClear(
+  props: SearchPickerAutoClearProps<IPerson>
+) {
+  return (
+    <SearchPickerAutoClear nameOf={person => fullName(person)} {...props} />
+  );
+}
+
 export function OrganizationPicker(props: SearchPickerProps<IOrganization>) {
   return <SearchPicker nameOf={org => org.short_name} {...props} />;
+}
+
+export function OrganizationPickerAutoClear(
+  props: SearchPickerAutoClearProps<IOrganization>
+) {
+  return <SearchPickerAutoClear nameOf={org => org.short_name} {...props} />;
 }

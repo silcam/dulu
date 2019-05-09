@@ -1,5 +1,4 @@
 import React, { useContext } from "react";
-import SearchTextInput from "../shared/SearchTextInput";
 import update from "immutability-helper";
 import DeleteIcon from "../shared/icons/DeleteIcon";
 import SelectInput from "../shared/SelectInput";
@@ -10,14 +9,24 @@ import { IEventInflated, IEventParticipantExtended } from "../../models/Event";
 import I18nContext from "../../contexts/I18nContext";
 import { ICluster } from "../../models/Cluster";
 import { ILanguage } from "../../models/Language";
-import { BasicModel } from "../../models/BasicModel";
+import { AppState } from "../../reducers/appReducer";
+import { connect } from "react-redux";
+import { ById } from "../../models/TypeBucket";
+import { IPerson, fullName } from "../../models/Person";
+import {
+  SearchPickerAutoClear,
+  PersonPickerAutoClear
+} from "../shared/SearchPicker";
 
 interface IProps {
   event: IEventInflated;
   replaceEvent: (event: IEventInflated) => void;
+  languages: ById<ILanguage>;
+  clusters: ById<ICluster>;
+  people: ById<IPerson>;
 }
 
-export default function EditEventParticipantsTable(props: IProps) {
+function BaseEditEventParticipantsTable(props: IProps) {
   const event = props.event;
   const t = useContext(I18nContext);
 
@@ -31,11 +40,13 @@ export default function EditEventParticipantsTable(props: IProps) {
     );
   };
 
-  const addPerson = (person: BasicModel) => {
+  const addPerson = (person: IPerson) => {
     props.replaceEvent(
       update(props.event, {
         event_participants: {
-          $push: [{ person_id: person.id, full_name: person.name, roles: [] }]
+          $push: [
+            { person_id: person.id, full_name: fullName(person), roles: [] }
+          ]
         }
       })
     );
@@ -129,30 +140,24 @@ export default function EditEventParticipantsTable(props: IProps) {
           </tr>
           <tr>
             <td>
-              <SearchTextInput
-                queryPath="/api/clusters/search"
-                updateValue={addCluster}
+              <SearchPickerAutoClear
+                collection={props.clusters}
+                setSelected={addCluster}
                 placeholder={t("Add_cluster")}
-                text=""
-                addBox
               />
             </td>
             <td>
-              <SearchTextInput
-                queryPath="/api/languages/search"
-                updateValue={addLanguage}
+              <SearchPickerAutoClear
+                collection={props.languages}
+                setSelected={addLanguage}
                 placeholder={t("Add_language")}
-                text=""
-                addBox
               />
             </td>
             <td>
-              <SearchTextInput
-                queryPath="/api/people/search"
-                updateValue={addPerson}
+              <PersonPickerAutoClear
+                collection={props.people}
+                setSelected={addPerson}
                 placeholder={t("Add_person")}
-                text=""
-                addBox
               />
             </td>
           </tr>
@@ -249,3 +254,11 @@ export default function EditEventParticipantsTable(props: IProps) {
     </div>
   );
 }
+
+const EditEventParticipantsTable = connect((state: AppState) => ({
+  languages: state.languages.byId,
+  clusters: state.clusters.byId,
+  people: state.people.byId
+}))(BaseEditEventParticipantsTable);
+
+export default EditEventParticipantsTable;

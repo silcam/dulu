@@ -30,6 +30,7 @@ export default class PersonPage extends React.PureComponent {
   edit = () =>
     this.setState({
       editing: true,
+      savedChanges: false,
       edited: false,
       person: deepcopy(this.props.person)
     });

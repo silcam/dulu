@@ -7,7 +7,7 @@ import { IRegionInflated, IRegion } from "../../models/Region";
 import ProgramList from "./ProgramList";
 import P from "../shared/P";
 import { Link } from "react-router-dom";
-import { Adder, Setter, Deleter, AnyObj } from "../../models/TypeBucket";
+import { Adder, Setter, Deleter, AnyObj, ById } from "../../models/TypeBucket";
 import { IPerson, fullName } from "../../models/Person";
 import { ICluster } from "../../models/Cluster";
 import { ILanguage } from "../../models/Language";
@@ -16,7 +16,7 @@ import API from "./RegionsAPI";
 import { History } from "history";
 import I18nContext from "../../contexts/I18nContext";
 import FormGroup from "../shared/FormGroup";
-import SearchTextInput from "../shared/SearchTextInput";
+import { PersonPicker } from "../shared/SearchPicker";
 
 interface IProps {
   id: number;
@@ -27,6 +27,9 @@ interface IProps {
   setRegion: Setter<IRegion>;
   deleteRegion: Deleter;
   history: History;
+  people: ById<IPerson>;
+  languages: ById<ILanguage>;
+  clusters: ById<ICluster>;
 }
 
 export default function RegionPage(props: IProps) {
@@ -98,12 +101,10 @@ export default function RegionPage(props: IProps) {
       <P>
         {editing ? (
           <FormGroup label={t("LPF")}>
-            <SearchTextInput
-              queryPath="/api/people/search"
-              text={region.person ? fullName(region.person) : ""}
-              updateValue={(person: IPerson) =>
-                updateRegion({ person: person })
-              }
+            <PersonPicker
+              collection={props.people}
+              selectedId={region.person ? region.person.id : null}
+              setSelected={person => updateRegion({ person: person })}
               placeholder={t("Name")}
               allowBlank
             />
@@ -124,12 +125,14 @@ export default function RegionPage(props: IProps) {
         region={region}
         thing="cluster"
         updateRegion={updateRegion}
+        collection={props.clusters}
       />
       <ProgramList
         editing={editing}
         region={region}
         thing="language"
         updateRegion={updateRegion}
+        collection={props.languages}
       />
     </div>
   );

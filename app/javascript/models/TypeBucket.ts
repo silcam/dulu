@@ -44,4 +44,6 @@ export type AnyJSX = JSX.Element | JSX.Element[] | string;
 
 export type Partial<T> = { [P in keyof T]?: T[P] };
 
+export type Omit<T, K> = Pick<T, Exclude<keyof T, K>>;
+
 export type Children = JSX.Element | JSX.Element[] | undefined;

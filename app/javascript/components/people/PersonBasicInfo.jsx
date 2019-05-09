@@ -2,7 +2,8 @@ import React from "react";
 import TextOrEditText from "../shared/TextOrEditText";
 import TextOrYesNo from "../shared/TextOrYesNo";
 import TextOrSelect from "../shared/TextOrSelect";
-import TextOrSearchInput from "../shared/TextOrSearchInput";
+import TextOrInput from "../shared/TextOrInput";
+import SearchTextInput from "../shared/SearchTextInput";
 
 function PersonBasicInfo(props) {
   const t = props.t;
@@ -15,18 +16,19 @@ function PersonBasicInfo(props) {
         <tr>
           <th>{t("Home_country")}</th>
           <td>
-            <TextOrSearchInput
-              editing={props.editing}
-              text={home_country.name}
-              queryPath="/api/countries/search"
-              updateValue={country =>
-                props.updatePerson({
-                  home_country: country,
-                  country_id: country.id
-                })
-              }
-              allowBlank
-            />
+            <TextOrInput editing={props.editing} text={home_country.name}>
+              <SearchTextInput
+                text={home_country.name}
+                queryPath="/api/countries/search"
+                updateValue={country =>
+                  props.updatePerson({
+                    home_country: country,
+                    country_id: country.id
+                  })
+                }
+                allowBlank
+              />
+            </TextOrInput>
           </td>
         </tr>
         <tr>

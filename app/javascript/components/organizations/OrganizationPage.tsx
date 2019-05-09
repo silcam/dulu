@@ -5,9 +5,7 @@ import TextOrEditText from "../shared/TextOrEditText";
 import merge from "deepmerge";
 import SaveIndicator from "../shared/SaveIndicator";
 import DangerButton from "../shared/DangerButton";
-import TextOrSearchInput from "../shared/TextOrSearchInput";
 import TextOrTextArea from "../shared/TextOrTextArea";
-import SearchTextInput from "../shared/SearchTextInput";
 import { Link } from "react-router-dom";
 import DuluAxios from "../../util/DuluAxios";
 import Loading from "../shared/Loading";
@@ -15,6 +13,9 @@ import { IOrganization } from "../../models/Organization";
 import { Setter, ById } from "../../models/TypeBucket";
 import { History } from "history";
 import I18nContext from "../../contexts/I18nContext";
+import { OrganizationPicker } from "../shared/SearchPicker";
+import TextOrInput from "../shared/TextOrInput";
+import SearchTextInput from "../shared/SearchTextInput";
 
 interface IProps {
   id: number;
@@ -166,15 +167,14 @@ export default class OrganizationPage extends React.PureComponent<
                 <strong>{t("Parent_organization")}:</strong>
                 &nbsp;
                 {this.state.editing ? (
-                  <SearchTextInput
-                    editing={this.state.editing}
-                    text={parent ? parent.short_name : ""}
-                    updateValue={(org: Partial<IOrganization>) =>
+                  <OrganizationPicker
+                    collection={this.props.organizations}
+                    selectedId={parent ? parent.id : null}
+                    setSelected={org =>
                       this.updateOrganization({
-                        parent_id: org.id
+                        parent_id: org && org.id
                       })
                     }
-                    queryPath="/api/organizations/search"
                     allowBlank
                   />
                 ) : (
@@ -188,18 +188,22 @@ export default class OrganizationPage extends React.PureComponent<
               <li>
                 <strong>{t("Country")}:</strong>
                 &nbsp;
-                <TextOrSearchInput
+                <TextOrInput
                   editing={this.state.editing}
                   text={organization.country ? organization.country.name : ""}
-                  queryPath="/api/countries/search"
-                  updateValue={country =>
-                    this.updateOrganization({
-                      country: country,
-                      country_id: country.id
-                    })
-                  }
-                  allowBlank
-                />
+                >
+                  <SearchTextInput
+                    text={organization.country ? organization.country.name : ""}
+                    queryPath="/api/countries/search"
+                    updateValue={country =>
+                      this.updateOrganization({
+                        country: country,
+                        country_id: country.id || undefined
+                      })
+                    }
+                    allowBlank
+                  />
+                </TextOrInput>
               </li>
             </ul>
             <div style={{ marginTop: "16px" }}>

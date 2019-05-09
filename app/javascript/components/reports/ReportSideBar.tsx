@@ -4,7 +4,7 @@ import DeleteIcon from "../shared/icons/DeleteIcon";
 import Report, { IReport, IReportElements } from "../../models/Report";
 import CheckBoxInput from "../shared/CheckboxInput";
 import update from "immutability-helper";
-import SearchPicker from "../shared/SearchPicker";
+import { SearchPickerAutoClear } from "../shared/SearchPicker";
 import { connect } from "react-redux";
 import I18nContext from "../../contexts/I18nContext";
 import { ICluster } from "../../models/Cluster";
@@ -47,12 +47,10 @@ function BaseReportSideBar(props: IProps) {
             </li>
           ))}
         </ul>
-        <SearchPicker
+        <SearchPickerAutoClear
           collection={props.clusters}
-          selectedId={null}
-          setSelected={cluster => cluster && props.addCluster(cluster)}
+          setSelected={cluster => props.addCluster(cluster)}
           placeholder={t("Add_cluster")}
-          autoClear
         />
       </P>
       <P>
@@ -68,12 +66,10 @@ function BaseReportSideBar(props: IProps) {
             </li>
           ))}
         </ul>
-        <SearchPicker
+        <SearchPickerAutoClear
           collection={props.languages}
-          selectedId={null}
-          setSelected={lang => lang && props.addLanguage(lang)}
+          setSelected={lang => props.addLanguage(lang)}
           placeholder={t("Add_language")}
-          autoClear
         />
       </P>
       <P>

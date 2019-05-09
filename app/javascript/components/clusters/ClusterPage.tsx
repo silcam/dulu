@@ -10,7 +10,7 @@ import ParticipantsContainer from "../languages/ParticipantsContainer";
 import Cluster, { IClusterInflated, ICluster } from "../../models/Cluster";
 import { History } from "history";
 import Loading from "../shared/Loading";
-import { Deleter, Adder } from "../../models/TypeBucket";
+import { Deleter, Adder, ById } from "../../models/TypeBucket";
 import { IPerson } from "../../models/Person";
 import { ILanguage } from "../../models/Language";
 import I18nContext from "../../contexts/I18nContext";
@@ -26,6 +26,7 @@ interface IProps {
   addLanguages: Adder<ILanguage>;
   basePath: string;
   history: History<any>;
+  languages: ById<ILanguage>;
 }
 
 type MaybeIClusterInflated = IClusterInflated | undefined;
@@ -130,6 +131,7 @@ export default function ClusterPage(props: IProps) {
         editing={editing}
         updateCluster={updateCluster}
         edit={edit}
+        languages={props.languages}
       />
       {!editing && (
         <ParticipantsContainer

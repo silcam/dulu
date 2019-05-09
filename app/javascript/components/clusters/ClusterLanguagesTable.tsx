@@ -3,15 +3,17 @@ import ProgressBarTranslation from "../shared/ProgressBarTranslation";
 import { Link } from "react-router-dom";
 import DeleteIcon from "../shared/icons/DeleteIcon";
 import { deleteFrom } from "../../util/arrayUtils";
-import SearchTextInput from "../shared/SearchTextInput";
 import InlineAddIcon from "../shared/icons/InlineAddIcon";
 import { IClusterInflated } from "../../models/Cluster";
 import { BasicModel } from "../../models/BasicModel";
-import { UpdaterFunc } from "../../models/TypeBucket";
+import { UpdaterFunc, ById } from "../../models/TypeBucket";
 import I18nContext from "../../contexts/I18nContext";
+import { ILanguage } from "../../models/Language";
+import SearchPicker from "../shared/SearchPicker";
 
 interface IProps {
   cluster: IClusterInflated;
+  languages: ById<ILanguage>;
   editing?: boolean;
   edit: () => void;
   updateCluster: UpdaterFunc;
@@ -46,12 +48,12 @@ export default function ClusterLanguagesTable(props: IProps) {
           <tbody>
             <tr>
               <td colSpan={2}>
-                <SearchTextInput
-                  queryPath="/api/languages/search"
-                  text=""
-                  updateValue={(language: BasicModel) => addLanguage(language)}
+                <SearchPicker
+                  collection={props.languages}
+                  selectedId={null}
+                  setSelected={language => language && addLanguage(language)}
                   placeholder={t("Add_language")}
-                  addBox
+                  autoClear
                 />
               </td>
             </tr>

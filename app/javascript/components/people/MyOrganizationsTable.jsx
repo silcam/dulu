@@ -1,13 +1,15 @@
 import React from "react";
 import PropTypes from "prop-types";
 import MyOrganizationsTableRow from "./MyOrganizationsTableRow";
-import SearchTextInput from "../shared/SearchTextInput";
 import SmallSaveAndCancel from "../shared/SmallSaveAndCancel";
 import DuluAxios from "../../util/DuluAxios";
 import InlineAddIcon from "../shared/icons/InlineAddIcon";
+import { OrganizationPicker } from "../shared/SearchPicker";
 
 export default class MyOrganizationsTable extends React.PureComponent {
-  state = {};
+  state = {
+    newOrganization: null
+  };
 
   async componentDidMount() {
     const data = await DuluAxios.get(`/api/organization_people`, {
@@ -64,14 +66,13 @@ export default class MyOrganizationsTable extends React.PureComponent {
             {this.state.addingNew && (
               <tr>
                 <td colSpan="4">
-                  <SearchTextInput
-                    updateValue={org => this.setState({ newOrganization: org })}
-                    queryPath="/api/organizations/search"
-                    text={
-                      this.state.newOrganization
-                        ? this.state.newOrganization.name
-                        : ""
+                  <OrganizationPicker
+                    collection={this.props.organizationsById}
+                    selectedId={
+                      this.state.newOrganization &&
+                      this.state.newOrganization.id
                     }
+                    setSelected={org => this.setState({ newOrganization: org })}
                     autoFocus
                     allowBlank
                   />
@@ -95,7 +96,7 @@ export default class MyOrganizationsTable extends React.PureComponent {
 MyOrganizationsTable.propTypes = {
   person: PropTypes.object.isRequired,
   organizationPeople: PropTypes.array.isRequired,
-  organizationsById: PropTypes.object.isRequired,
+  organizationsById: PropTypes.object.isRequired, // ById<IOrganization
 
   t: PropTypes.func.isRequired,
   addOrganizationPeople: PropTypes.func.isRequired,
