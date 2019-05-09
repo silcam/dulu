@@ -10,12 +10,13 @@ import { ById } from "../../models/TypeBucket";
 import { ILanguage } from "../../models/Language";
 import { ICluster } from "../../models/Cluster";
 import { IEvent } from "../../models/Event";
+import List from "../../models/List";
 
 interface IProps {
   events: IEvent[];
   people: ById<IPerson>;
-  languages: ById<ILanguage>;
-  clusters: ById<ICluster>;
+  languages: List<ILanguage>;
+  clusters: List<ICluster>;
   month: IMonth;
 }
 
@@ -57,11 +58,11 @@ function dateTitle(event: IEvent, month: IMonth) {
 
 function participants(event: IEvent, props: IProps) {
   const clusterLinks = makeLinks(
-    event.cluster_ids.map(id => props.clusters[id]) as ICluster[],
+    event.cluster_ids.map(id => props.clusters.get(id)),
     "clusters"
   );
   const languageLinks = makeLinks(
-    event.language_ids.map(id => props.languages[id]) as ILanguage[],
+    event.language_ids.map(id => props.languages.get(id)),
     "languages"
   );
   const peopleLinks = makeLinks(

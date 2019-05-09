@@ -6,21 +6,25 @@ import organizationsReducer, {
 import organizationPeopleReducer, {
   OrganizationPeopleState
 } from "./organizationPeopleReducer";
-import languagesReducer, { LanguageState } from "./languagesReducer";
+import languagesReducer from "./languagesReducer";
 import participantsReducer, { ParticipantState } from "./participantsReducer";
 import activitiesReducer, { ActivityState } from "./activitiesReducer";
 import eventsReducer, { EventState } from "./eventsReducer";
-import clustersReducer, { ClusterState } from "./clustersReducer";
+import clustersReducer from "./clustersReducer";
 import canReducer, { CanState } from "./canReducer";
-import regionsReducer, { RegionState } from "./regionsReducer";
+import regionsReducer from "./regionsReducer";
+import List from "../models/List";
+import { IRegion } from "../models/Region";
+import { ICluster } from "../models/Cluster";
+import { ILanguage } from "../models/Language";
 
 export interface AppState {
   activities: ActivityState;
   can: CanState;
-  clusters: ClusterState;
+  clusters: List<ICluster>;
   events: EventState;
-  languages: LanguageState;
-  regions: RegionState;
+  languages: List<ILanguage>;
+  regions: List<IRegion>;
   organizations: OrganizationState;
   organizationPeople: OrganizationPeopleState;
   participants: ParticipantState;

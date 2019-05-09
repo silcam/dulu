@@ -11,10 +11,11 @@ import SortPicker from "./SortPicker";
 import sortActivities, { Sort, SortOption } from "./sortActivities";
 import CommaList from "../shared/CommaList";
 import StyledTable from "../shared/StyledTable";
+import List from "../../models/List";
 
 interface IProps {
   languageIds: number[];
-  languages: { [id: string]: ILanguage | undefined };
+  languages: List<ILanguage>;
   activities: IActivity[];
   addActivities: Adder<IActivity>;
   sortOptions?: SortOption[];
@@ -43,7 +44,7 @@ export default function DBActivitiesTable(props: IProps) {
             <tr key={activity.id}>
               <td>
                 <Link to={`/languages/${activity.language_id}`}>
-                  {props.languages[activity.language_id]!.name}
+                  {props.languages.get(activity.language_id).name}
                 </Link>
               </td>
               <td>

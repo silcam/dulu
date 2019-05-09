@@ -1,8 +1,9 @@
 import { IActivity } from "../../models/Activity";
-import { ILanguage } from "../../models/Language";
+import Language, { ILanguage } from "../../models/Language";
 import baseCompare from "../../util/baseCompare";
 import intCompare from "../../util/intCompare";
 import Activity from "../../models/Activity";
+import List from "../../models/List";
 
 export type SortOption = "Language" | "Book" | "Media" | "Stage";
 
@@ -14,7 +15,7 @@ export interface Sort {
 export default function sortActivities(
   sort: Sort,
   activities: IActivity[],
-  languages: { [id: string]: ILanguage | undefined }
+  languages: List<ILanguage>
 ) {
   let compare: (a: IActivity, b: IActivity) => number;
   switch (sort.option) {
@@ -30,9 +31,9 @@ export default function sortActivities(
     case "Language":
     default:
       compare = (a, b) =>
-        baseCompare(
-          languages[a.language_id]!.name,
-          languages[b.language_id]!.name
+        Language.compare(
+          languages.get(a.language_id),
+          languages.get(b.language_id)
         );
       break;
   }

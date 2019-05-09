@@ -1,28 +1,18 @@
 import Region, { IRegion } from "../models/Region";
-import { stdReducers, State } from "./stdReducers";
 import { RegionAction, RegionActionTypes } from "../actions/regionActions";
-
-export type RegionState = State<IRegion>;
-
-const emptyState: RegionState = {
-  list: [],
-  byId: {},
-  listSet: false
-};
-
-const stdRegionReducers = stdReducers(Region.emptyRegion, Region.compare);
+import List from "../models/List";
 
 export default function regionsReducer(
-  state = emptyState,
+  state = new List(Region.emptyRegion, [], Region.compare),
   action: RegionAction
-): RegionState {
+): List<IRegion> {
   switch (action.type) {
     case RegionActionTypes.SetRegions:
-      return stdRegionReducers.setList(state, action.regions!);
+      return state.addAndPrune(action.regions!);
     case RegionActionTypes.SetRegion:
-      return stdRegionReducers.addItems(state, [action.region!]);
+      return state.add([action.region!]);
     case RegionActionTypes.DeleteRegion:
-      return stdRegionReducers.deleteItem(state, action.id!);
+      return state.remove(action.id!);
   }
   return state;
 }

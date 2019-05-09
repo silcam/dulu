@@ -17,7 +17,7 @@ const mapStateToProps = (state: AppState, ownProps: IProps) => ({
       Language.activities(state, id, ownProps.type)
     )
   ),
-  languages: state.languages.byId
+  languages: state.languages
 });
 
 const mapDispatchToProps = {

@@ -5,33 +5,20 @@ import {
   LanguageAction
 } from "../actions/languageActions";
 import { ILanguage } from "../models/Language";
-import { stdReducers, State } from "./stdReducers";
 import Language from "../models/Language";
-
-export type LanguageState = State<ILanguage>;
-
-const emptyState: LanguageState = {
-  list: [],
-  byId: {},
-  listSet: false
-};
-
-const stdLanguageReducers = stdReducers<ILanguage>(
-  Language.emptyLanguage,
-  Language.compare
-);
+import List from "../models/List";
 
 export default function languagesReducer(
-  state = emptyState,
+  state = new List<ILanguage>(Language.emptyLanguage, [], Language.compare),
   action: LanguageAction
 ) {
   switch (action.type) {
     case SET_LANGUAGES:
-      return stdLanguageReducers.setList(state, action.languages!);
+      return state.addAndPrune(action.languages!);
     case ADD_LANGUAGES:
-      return stdLanguageReducers.addItems(state, action.languages!);
+      return state.add(action.languages!);
     case SET_LANGUAGE:
-      return stdLanguageReducers.addItems(state, [action.language!]);
+      return state.add([action.language!]);
   }
   return state;
 }

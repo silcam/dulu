@@ -10,11 +10,12 @@ import ParticipantsContainer from "../languages/ParticipantsContainer";
 import Cluster, { IClusterInflated, ICluster } from "../../models/Cluster";
 import { History } from "history";
 import Loading from "../shared/Loading";
-import { Deleter, Adder, ById } from "../../models/TypeBucket";
+import { Deleter, Adder } from "../../models/TypeBucket";
 import { IPerson } from "../../models/Person";
 import { ILanguage } from "../../models/Language";
 import I18nContext from "../../contexts/I18nContext";
 import { IParticipant } from "../../models/Participant";
+import List from "../../models/List";
 
 interface IProps {
   id: number;
@@ -26,7 +27,7 @@ interface IProps {
   addLanguages: Adder<ILanguage>;
   basePath: string;
   history: History<any>;
-  languages: ById<ILanguage>;
+  languages: List<ILanguage>;
 }
 
 type MaybeIClusterInflated = IClusterInflated | undefined;

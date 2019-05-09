@@ -1,7 +1,8 @@
 import { BasicModel } from "./BasicModel";
 import { IParticipant } from "./Participant";
 import { AppState } from "../reducers/appReducer";
-import Language, { ILanguage } from "./Language";
+import { ILanguage } from "./Language";
+import List from "./List";
 
 export interface ICluster extends BasicModel {
   can: { update?: boolean; destroy?: boolean; manage_participants?: boolean };
@@ -9,7 +10,7 @@ export interface ICluster extends BasicModel {
 }
 
 export interface IClusterInflated extends ICluster {
-  languages: ILanguage[];
+  languages: List<ILanguage>;
   participants: IParticipant[];
 }
 
@@ -34,9 +35,7 @@ function clusterParams(cluster: IClusterInflated) {
 function inflate(state: AppState, cluster: ICluster): IClusterInflated {
   return {
     ...cluster,
-    languages: (Object.values(state.languages.byId) as ILanguage[])
-      .filter(l => l.cluster_id == cluster.id)
-      .sort(Language.compare),
+    languages: state.languages.filter(l => l.cluster_id == cluster.id),
     participants: (Object.values(state.participants) as IParticipant[]).filter(
       p => p.cluster_id == cluster.id
     )
@@ -44,9 +43,7 @@ function inflate(state: AppState, cluster: ICluster): IClusterInflated {
 }
 
 function languages(state: AppState, clusterId: number) {
-  return (Object.values(state.languages.byId) as ILanguage[]).filter(
-    lang => lang.cluster_id == clusterId
-  );
+  return state.languages.filter(lang => lang.cluster_id == clusterId);
 }
 
 export default {

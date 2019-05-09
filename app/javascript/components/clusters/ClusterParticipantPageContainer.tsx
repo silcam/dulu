@@ -7,7 +7,7 @@ interface IProps {
 }
 
 const mapStateToProps = (state: AppState, ownProps: IProps) => ({
-  cluster: state.clusters.byId[ownProps.id]
+  cluster: state.clusters.get(ownProps.id)
 });
 
 const ClusterParticipantPageContainer = connect(mapStateToProps)(

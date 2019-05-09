@@ -6,34 +6,21 @@ import {
   DELETE_CLUSTER
 } from "../actions/clusterActions";
 import Cluster, { ICluster } from "../models/Cluster";
-import { stdReducers, State } from "./stdReducers";
-
-export type ClusterState = State<ICluster>;
-
-const emptyState: ClusterState = {
-  list: [],
-  byId: {},
-  listSet: false
-};
-
-const stdClusterReducers = stdReducers<ICluster>(
-  Cluster.emptyCluster,
-  Cluster.compare
-);
+import List from "../models/List";
 
 export default function clustersReducer(
-  state = emptyState,
+  state = new List<ICluster>(Cluster.emptyCluster, [], Cluster.compare),
   action: ClusterAction
-): ClusterState {
+) {
   switch (action.type) {
     case SET_CLUSTERS:
-      return stdClusterReducers.setList(state, action.clusters as ICluster[]);
+      return state.addAndPrune(action.clusters!);
     case ADD_CLUSTERS:
-      return stdClusterReducers.addItems(state, action.clusters as ICluster[]);
+      return state.add(action.clusters!);
     case SET_CLUSTER:
-      return stdClusterReducers.addItems(state, [action.cluster as ICluster]);
+      return state.add([action.cluster!]);
     case DELETE_CLUSTER:
-      return stdClusterReducers.deleteItem(state, action.id!);
+      return state.remove(action.id!);
   }
   return state;
 }

@@ -17,12 +17,13 @@ import {
   SearchPickerAutoClear,
   PersonPickerAutoClear
 } from "../shared/SearchPicker";
+import List from "../../models/List";
 
 interface IProps {
   event: IEventInflated;
   replaceEvent: (event: IEventInflated) => void;
-  languages: ById<ILanguage>;
-  clusters: ById<ICluster>;
+  languages: List<ILanguage>;
+  clusters: List<ICluster>;
   people: ById<IPerson>;
 }
 
@@ -141,14 +142,14 @@ function BaseEditEventParticipantsTable(props: IProps) {
           <tr>
             <td>
               <SearchPickerAutoClear
-                collection={props.clusters}
+                collection={props.clusters.asById()}
                 setSelected={addCluster}
                 placeholder={t("Add_cluster")}
               />
             </td>
             <td>
               <SearchPickerAutoClear
-                collection={props.languages}
+                collection={props.languages.asById()}
                 setSelected={addLanguage}
                 placeholder={t("Add_language")}
               />
@@ -256,8 +257,8 @@ function BaseEditEventParticipantsTable(props: IProps) {
 }
 
 const EditEventParticipantsTable = connect((state: AppState) => ({
-  languages: state.languages.byId,
-  clusters: state.clusters.byId,
+  languages: state.languages,
+  clusters: state.clusters,
   people: state.people.byId
 }))(BaseEditEventParticipantsTable);
 

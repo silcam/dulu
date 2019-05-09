@@ -18,8 +18,8 @@ const mapStateToProps = (state: AppState, ownProps: IProps) => {
       .filter(e => Event.overlapCompare(e, periodEvent) == 0)
       .sort(Event.compare),
     people: state.people.byId,
-    languages: state.languages.byId,
-    clusters: state.clusters.byId
+    languages: state.languages,
+    clusters: state.clusters
   };
 };
 

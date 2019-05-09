@@ -2,18 +2,17 @@ import React, { useContext } from "react";
 import ProgressBarTranslation from "../shared/ProgressBarTranslation";
 import { Link } from "react-router-dom";
 import DeleteIcon from "../shared/icons/DeleteIcon";
-import { deleteFrom } from "../../util/arrayUtils";
 import InlineAddIcon from "../shared/icons/InlineAddIcon";
 import { IClusterInflated } from "../../models/Cluster";
-import { BasicModel } from "../../models/BasicModel";
-import { UpdaterFunc, ById } from "../../models/TypeBucket";
+import { UpdaterFunc } from "../../models/TypeBucket";
 import I18nContext from "../../contexts/I18nContext";
 import { ILanguage } from "../../models/Language";
 import SearchPicker from "../shared/SearchPicker";
+import List from "../../models/List";
 
 interface IProps {
   cluster: IClusterInflated;
-  languages: ById<ILanguage>;
+  languages: List<ILanguage>;
   editing?: boolean;
   edit: () => void;
   updateCluster: UpdaterFunc;
@@ -23,15 +22,15 @@ export default function ClusterLanguagesTable(props: IProps) {
   const cluster = props.cluster;
   const t = useContext(I18nContext);
 
-  const addLanguage = (language: BasicModel) => {
+  const addLanguage = (language: ILanguage) => {
     props.updateCluster({
-      languages: [language].concat(props.cluster.languages)
+      languages: props.cluster.languages.add([language])
     });
   };
 
   const removeLanguage = (id: number) => {
     props.updateCluster({
-      languages: deleteFrom(props.cluster.languages, id)
+      languages: props.cluster.languages.remove(id)
     });
   };
 
@@ -49,7 +48,7 @@ export default function ClusterLanguagesTable(props: IProps) {
             <tr>
               <td colSpan={2}>
                 <SearchPicker
-                  collection={props.languages}
+                  collection={props.languages.asById()}
                   selectedId={null}
                   setSelected={language => language && addLanguage(language)}
                   placeholder={t("Add_language")}
@@ -71,7 +70,7 @@ export default function ClusterLanguagesTable(props: IProps) {
       ) : (
         <table>
           <tbody>
-            {cluster.languages.length > 0 && (
+            {cluster.languages.length() > 0 && (
               <tr>
                 <th />
                 <th>{t("Old_testament")}</th>

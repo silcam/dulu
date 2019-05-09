@@ -18,19 +18,19 @@ const mapStateToProps = (state: AppState, ownProps: IProps) => {
   switch (ownProps.selection.type) {
     case "language":
       languageIds = [ownProps.selection.id];
-      selectedItem = state.languages.byId[ownProps.selection.id];
+      selectedItem = state.languages.get(ownProps.selection.id);
       break;
     case "cluster":
       languageIds = clusterLanguages(state, ownProps.selection.id);
-      selectedItem = state.clusters.byId[ownProps.selection.id];
+      selectedItem = state.clusters.get(ownProps.selection.id);
       break;
     case "region":
       languageIds = regionLanguages(state, ownProps.selection.id);
-      selectedItem = state.regions.byId[ownProps.selection.id];
+      selectedItem = state.regions.get(ownProps.selection.id);
       break;
     case "cameroon":
       languageIds = flat(
-        state.regions.list.map(id => regionLanguages(state, id))
+        state.regions.map(region => regionLanguages(state, region.id))
       );
       break;
     case "user":

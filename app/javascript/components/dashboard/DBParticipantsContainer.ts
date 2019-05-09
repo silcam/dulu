@@ -1,5 +1,5 @@
 import { AppState } from "../../reducers/appReducer";
-import Language, { ILanguage } from "../../models/Language";
+import Language from "../../models/Language";
 import DBParticipantsTable from "./DBParticipantsTable";
 import { personCompare, IPerson } from "../../models/Person";
 import { addPeople } from "../../actions/peopleActions";
@@ -23,11 +23,11 @@ export interface PeopleParticipants {
 
 const mapStateToProps = (state: AppState, ownProps: IProps) => {
   const participants = flat(
-    (ownProps.languageIds
-      .map(id => state.languages.byId[id])
-      .filter(lang => lang !== undefined) as ILanguage[]).map(lang =>
-      Language.participants(state.participants, lang.id, lang.cluster_id)
-    )
+    ownProps.languageIds
+      .map(id => state.languages.get(id))
+      .map(lang =>
+        Language.participants(state.participants, lang.id, lang.cluster_id)
+      )
   );
   const peopleParticipants = participants.reduce(
     (accum: PeopleParticipants, ptpt) => {
@@ -38,11 +38,11 @@ const mapStateToProps = (state: AppState, ownProps: IProps) => {
       if (!accum.participants[ptpt.person_id].some(p => p.id == ptpt.id)) {
         const program = ptpt.language_id
           ? {
-              name: state.languages.byId[ptpt.language_id]!.name,
+              name: state.languages.get(ptpt.language_id).name,
               path: `/languages/${ptpt.language_id}`
             }
           : {
-              name: state.clusters.byId[ptpt.cluster_id!]!.name,
+              name: state.clusters.get(ptpt.cluster_id!).name,
               path: `/clusters/${ptpt.cluster_id}`
             };
         const programParticipant = { ...ptpt, program: program };

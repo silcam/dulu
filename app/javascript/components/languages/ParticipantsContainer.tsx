@@ -28,9 +28,9 @@ const mapStateToProps = (state: AppState, ownProps: IProps) => {
         $merge: {
           person: state.people.byId[p.person_id],
           language: p.language_id
-            ? state.languages.byId[p.language_id]
+            ? state.languages.get(p.language_id)
             : undefined,
-          cluster: p.cluster_id ? state.clusters.byId[p.cluster_id] : undefined
+          cluster: p.cluster_id ? state.clusters.get(p.cluster_id) : undefined
         }
       })
     ) as IParticipantInflated[];

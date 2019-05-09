@@ -17,10 +17,11 @@ import { History } from "history";
 import I18nContext from "../../contexts/I18nContext";
 import FormGroup from "../shared/FormGroup";
 import { PersonPicker } from "../shared/SearchPicker";
+import List from "../../models/List";
 
 interface IProps {
   id: number;
-  region?: IRegionInflated;
+  region: IRegionInflated;
   addPeople: Adder<IPerson>;
   addClusters: Adder<ICluster>;
   addLanguages: Adder<ILanguage>;
@@ -28,8 +29,8 @@ interface IProps {
   deleteRegion: Deleter;
   history: History;
   people: ById<IPerson>;
-  languages: ById<ILanguage>;
-  clusters: ById<ICluster>;
+  languages: List<ILanguage>;
+  clusters: List<ICluster>;
 }
 
 export default function RegionPage(props: IProps) {
@@ -45,7 +46,7 @@ export default function RegionPage(props: IProps) {
   }, [props.id]);
 
   const edit = () => {
-    setDraftRegion(deepcopy(props.region!));
+    setDraftRegion(deepcopy(props.region));
     setEditing(true);
   };
 

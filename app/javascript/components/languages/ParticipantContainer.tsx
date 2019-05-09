@@ -19,14 +19,14 @@ const mapStateToProps = (state: AppState, ownProps: IProps) => {
     participant: participant,
     person: state.people.byId[participant.person_id],
     clusterLanguage: participant.cluster_id
-      ? state.clusters.byId[participant.cluster_id]
-      : state.languages.byId[participant.language_id!],
+      ? state.clusters.get(participant.cluster_id)
+      : state.languages.get(participant.language_id!),
     activities: (Object.values(state.activities) as IActivity[])
       .filter(activity => {
         return activity.participant_ids.includes(ownProps.id);
       })
       .sort(Activity.compare),
-    languages: state.languages.byId
+    languages: state.languages
   };
 };
 

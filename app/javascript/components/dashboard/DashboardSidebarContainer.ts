@@ -11,36 +11,35 @@ import DashboardSidebar from "./DashboardSidebar";
 import { User } from "../../application/DuluApp";
 import { IRegion } from "../../models/Region";
 import { addPeople } from "../../actions/peopleActions";
+import List from "../../models/List";
 
 interface IProps {
   user: User;
 }
 
 export interface LoadedCluster extends ICluster {
-  languages: ILanguage[];
+  languages: List<ILanguage>;
 }
 
 export interface LoadedRegion extends IRegion {
   clusters: LoadedCluster[];
-  languages: ILanguage[];
+  languages: List<ILanguage>;
 }
 
 const mapStateToProps = (state: AppState, ownProps: IProps) => {
-  const languages = state.languages.list.map(
-    id => state.languages.byId[id]
-  ) as ILanguage[];
-  const clusters = state.clusters.list.map(id => ({
-    ...state.clusters.byId[id],
-    languages: languages.filter(lang => lang.cluster_id == id)
+  const languages = state.languages;
+  const clusters = state.clusters.map(cluster => ({
+    ...cluster,
+    languages: languages.filter(lang => lang.cluster_id == cluster.id)
   })) as LoadedCluster[];
   const userParticipants = (Object.values(
     state.participants
   ) as IParticipant[]).filter(ptpt => ptpt.person_id == ownProps.user.id);
   return {
-    regions: state.regions.list.map(id => ({
-      ...state.regions.byId[id],
-      clusters: clusters.filter(c => c.region_id == id),
-      languages: languages.filter(lang => lang.region_id == id)
+    regions: state.regions.map(region => ({
+      ...region,
+      clusters: clusters.filter(c => c.region_id == region.id),
+      languages: languages.filter(lang => lang.region_id == region.id)
     })) as LoadedRegion[],
     userPrograms: {
       clusters: userParticipants
@@ -50,9 +49,7 @@ const mapStateToProps = (state: AppState, ownProps: IProps) => {
         ) as LoadedCluster[],
       languages: userParticipants
         .filter(ptpt => !!ptpt.language_id)
-        .map(
-          ptpt => state.languages.byId[ptpt.language_id as number]
-        ) as ILanguage[]
+        .map(ptpt => state.languages.get(ptpt.language_id!)) as ILanguage[]
     }
   };
 };

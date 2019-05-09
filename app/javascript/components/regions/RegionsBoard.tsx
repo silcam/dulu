@@ -16,13 +16,14 @@ import { History } from "history";
 import I18nContext from "../../contexts/I18nContext";
 import { ICan } from "../../actions/canActions";
 import GoBar from "../shared/GoBar";
+import List from "../../models/List";
 
 interface IProps {
   id?: number;
   basePath: string;
   history: History;
   action: string;
-  regions: IRegion[];
+  regions: List<IRegion>;
   setRegions: Adder<IRegion>;
   addPeople: Adder<IPerson>;
   addClusters: Adder<ICluster>;

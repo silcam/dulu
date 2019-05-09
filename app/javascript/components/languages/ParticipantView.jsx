@@ -167,8 +167,7 @@ export default class ParticipantView extends React.PureComponent {
                 <li key={activity.id}>
                   <ProgressBar {...Activity.progress(activity)} small />
                   <Spacer width="10px" />
-                  {this.props.languages[activity.language_id] &&
-                    this.props.languages[activity.language_id].name}
+                  {this.props.languages.get(activity.language_id).name}
                   <Spacer width="10px" />
                   <Link
                     to={`/languages/${activity.language_id}/activities/${
@@ -193,7 +192,7 @@ ParticipantView.propTypes = {
   person: PropTypes.object,
   activities: PropTypes.array,
   clusterLanguage: PropTypes.object,
-  languages: PropTypes.object, // ById<ILanguage>
+  languages: PropTypes.object, // List<ILanguage>
 
   history: PropTypes.object.isRequired,
   basePath: PropTypes.string.isRequired,

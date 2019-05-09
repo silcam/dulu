@@ -9,12 +9,14 @@ import SaveReportBar from "./SaveReportBar";
 import EditActionBar from "../shared/EditActionBar";
 import Report, { IReport, IReportElements } from "../../models/Report";
 import SavedReports, { ISavedReport } from "./SavedReports";
-import { RouteComponentProps } from "react-router";
 import { ILanguage } from "../../models/Language";
 import { ICluster } from "../../models/Cluster";
+import { History, Location } from "history";
 
-interface IProps extends RouteComponentProps {
+interface IProps {
   id?: number;
+  history: History;
+  location: Location;
 }
 
 interface IState {

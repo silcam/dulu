@@ -13,6 +13,7 @@ import { History, Location } from "history";
 import { Adder, Setter, SetCan } from "../../models/TypeBucket";
 import { ICan } from "../../actions/canActions";
 import GoBar from "../shared/GoBar";
+import List from "../../models/List";
 
 interface IProps {
   t: T;
@@ -21,7 +22,7 @@ interface IProps {
   basePath: string;
   history: History;
   location: Location;
-  clusters: ICluster[];
+  clusters: List<ICluster>;
   setClusters: Adder<ICluster>;
   setCluster: Setter<ICluster>;
   setCan: SetCan;

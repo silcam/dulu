@@ -3,9 +3,10 @@ import { withRouter, RouteComponentProps } from "react-router-dom";
 import Loading from "../shared/Loading";
 import style from "../shared/MasterDetail.css";
 import { ICluster } from "../../models/Cluster";
+import List from "../../models/List";
 
 interface IProps extends RouteComponentProps<any> {
-  clusters: ICluster[];
+  clusters: List<ICluster>;
   id?: number;
 }
 
@@ -14,7 +15,7 @@ export default withRouter(ClustersTable);
 function ClustersTable(props: IProps) {
   const clusters = props.clusters;
 
-  if (clusters.length == 0) return <Loading />;
+  if (clusters.length() == 0) return <Loading />;
 
   return (
     <div>

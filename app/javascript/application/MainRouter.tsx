@@ -1,4 +1,4 @@
-import React, { ErrorInfo, useEffect } from "react";
+import React, { ErrorInfo } from "react";
 import {
   Switch,
   Route,
@@ -127,7 +127,6 @@ class MainRouter extends React.Component<IProps, IState> {
             render={({ match, history, location }) => (
               <ReportsViewer
                 key={match.params.id || ""}
-                t={this.props.t}
                 id={match.params.id}
                 history={history}
                 location={location}

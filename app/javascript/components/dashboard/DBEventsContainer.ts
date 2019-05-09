@@ -28,8 +28,8 @@ function aggrBackTo(state: AppState, languageIds: number[]) {
 }
 
 const mapStateToProps = (state: AppState, ownProps: IProps) => {
-  const languages = ownProps.languageIds.map(
-    id => state.languages.byId[id]
+  const languages = ownProps.languageIds.map(id =>
+    state.languages.get(id)
   ) as ILanguage[];
   const resolvedBackTo = aggrBackTo(state, ownProps.languageIds);
   const minYear = resolvedBackTo !== undefined ? resolvedBackTo : lastYear();

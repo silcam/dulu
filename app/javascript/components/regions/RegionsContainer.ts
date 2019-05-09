@@ -1,7 +1,6 @@
 import { connect } from "react-redux";
 import * as regionActionCreators from "../../actions/regionActions";
 import { AppState } from "../../reducers/appReducer";
-import { IRegion } from "../../models/Region";
 import { addPeople } from "../../actions/peopleActions";
 import { addLanguages } from "../../actions/languageActions";
 import { addClusters } from "../../actions/clusterActions";
@@ -9,7 +8,7 @@ import RegionsBoard from "./RegionsBoard";
 import { setCan } from "../../actions/canActions";
 
 const mapStateToProps = (state: AppState) => ({
-  regions: state.regions.list.map(id => state.regions.byId[id]) as IRegion[],
+  regions: state.regions,
   can: state.can.regions
 });
 

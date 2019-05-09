@@ -4,10 +4,11 @@ import Loading from "../shared/Loading";
 import style from "../shared/MasterDetail.css";
 import { IRegion } from "../../models/Region";
 import { RouteComponentProps } from "react-router";
+import List from "../../models/List";
 
 interface IProps extends RouteComponentProps {
   id?: number;
-  regions: IRegion[];
+  regions: List<IRegion>;
 }
 
 export default withRouter(RegionsTable);
@@ -15,7 +16,7 @@ export default withRouter(RegionsTable);
 function RegionsTable(props: IProps) {
   const regions = props.regions;
 
-  if (regions.length == 0) return <Loading />;
+  if (regions.length() == 0) return <Loading />;
 
   return (
     <div>

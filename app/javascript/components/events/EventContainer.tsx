@@ -10,8 +10,6 @@ import {
 } from "../../actions/activityActions";
 import EventView from "./EventView";
 import { AppState } from "../../reducers/appReducer";
-import { ILanguage } from "../../models/Language";
-import { ICluster } from "../../models/Cluster";
 
 interface IProps {
   id: number;
@@ -28,12 +26,8 @@ const mapStateToProps = (state: AppState, ownProps: IProps) => {
     };
   return {
     event: event,
-    eventLanguages: event.language_ids.map(
-      id => state.languages.byId[id]
-    ) as ILanguage[],
-    eventClusters: event.cluster_ids.map(
-      id => state.clusters.byId[id]
-    ) as ICluster[],
+    eventLanguages: event.language_ids.map(id => state.languages.get(id)),
+    eventClusters: event.cluster_ids.map(id => state.clusters.get(id)),
     eventParticipants: event.event_participants.map(e_p => ({
       ...e_p,
       full_name: fullName(state.people.byId[e_p.person_id] as IPerson)

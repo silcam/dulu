@@ -12,10 +12,10 @@ interface IProps {
 }
 
 const mapStateToProps = (state: AppState, ownProps: IProps) => {
-  const cluster = state.clusters.byId[ownProps.id];
+  const cluster = state.clusters.get(ownProps.id);
   return {
-    cluster: cluster && Cluster.inflate(state, cluster),
-    languages: state.languages.byId
+    cluster: Cluster.inflate(state, cluster),
+    languages: state.languages
   };
 };
 

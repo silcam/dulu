@@ -11,6 +11,7 @@ import { AppState } from "../../reducers/appReducer";
 import { connect } from "react-redux";
 import accentFold from "../../util/accentFold";
 import styles from "./SearchTextInput.css";
+import List from "../../models/List";
 
 interface Match {
   display: string;
@@ -25,9 +26,9 @@ interface Matcher<T> {
 interface IProps extends RouteComponentProps {
   people: ById<IPerson>;
   organizations: ById<IOrganization>;
-  languages: ById<ILanguage>;
-  clusters: ById<ICluster>;
-  regions: ById<IRegion>;
+  languages: List<ILanguage>;
+  clusters: List<ICluster>;
+  regions: List<IRegion>;
 }
 
 const routes = [
@@ -118,10 +119,10 @@ function search(query: string, props: IProps) {
     textMatcher("/languages", l => l.name)
   )
     .concat(
-      searchItems(q, props.people, textMatcher("/people", p => fullName(p)))
+      searchItemsOld(q, props.people, textMatcher("/people", p => fullName(p)))
     )
     .concat(
-      searchItems(
+      searchItemsOld(
         q,
         props.organizations,
         textMatcher("/organizations", o => o.short_name)
@@ -168,7 +169,7 @@ function textMatcher<T extends { id: number }>(
   };
 }
 
-function searchItems<T>(q: string, byId: ById<T>, checkMatch: Matcher<T>) {
+function searchItemsOld<T>(q: string, byId: ById<T>, checkMatch: Matcher<T>) {
   return (Object.values(byId) as T[]).reduce(
     (matches, item) => {
       const match = checkMatch(item, q);
@@ -179,12 +180,22 @@ function searchItems<T>(q: string, byId: ById<T>, checkMatch: Matcher<T>) {
   );
 }
 
+function searchItems<T extends { id: number }>(
+  q: string,
+  list: List<T>,
+  checkMatch: Matcher<T>
+) {
+  return list
+    .map(item => checkMatch(item, q))
+    .filter(match => match) as Match[];
+}
+
 const GoBar = connect((state: AppState) => ({
   people: state.people.byId,
   organizations: state.organizations.byId,
-  languages: state.languages.byId,
-  clusters: state.clusters.byId,
-  regions: state.regions.byId
+  languages: state.languages,
+  clusters: state.clusters,
+  regions: state.regions
 }))(withRouter(BaseGoBar));
 
 export default GoBar;

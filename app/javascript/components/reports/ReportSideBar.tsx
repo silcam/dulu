@@ -9,8 +9,8 @@ import { connect } from "react-redux";
 import I18nContext from "../../contexts/I18nContext";
 import { ICluster } from "../../models/Cluster";
 import { ILanguage } from "../../models/Language";
-import { ById } from "../../models/TypeBucket";
 import { AppState } from "../../reducers/appReducer";
+import List from "../../models/List";
 
 interface IProps {
   report: IReport;
@@ -20,8 +20,8 @@ interface IProps {
   dropLanguage: (id: number) => void;
   updateElements: (elements: IReportElements) => void;
   save: () => void;
-  clusters: ById<ICluster>;
-  languages: ById<ILanguage>;
+  clusters: List<ICluster>;
+  languages: List<ILanguage>;
 }
 
 function BaseReportSideBar(props: IProps) {
@@ -48,7 +48,7 @@ function BaseReportSideBar(props: IProps) {
           ))}
         </ul>
         <SearchPickerAutoClear
-          collection={props.clusters}
+          collection={props.clusters.asById()}
           setSelected={cluster => props.addCluster(cluster)}
           placeholder={t("Add_cluster")}
         />
@@ -67,7 +67,7 @@ function BaseReportSideBar(props: IProps) {
           ))}
         </ul>
         <SearchPickerAutoClear
-          collection={props.languages}
+          collection={props.languages.asById()}
           setSelected={lang => props.addLanguage(lang)}
           placeholder={t("Add_language")}
         />
@@ -129,8 +129,8 @@ function showSaveButton(report: IReport) {
 }
 
 const ReportSideBar = connect((state: AppState) => ({
-  languages: state.languages.byId,
-  clusters: state.clusters.byId
+  languages: state.languages,
+  clusters: state.clusters
 }))(BaseReportSideBar);
 
 export default ReportSideBar;

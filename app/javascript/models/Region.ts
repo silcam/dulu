@@ -2,6 +2,7 @@ import { IPerson } from "./Person";
 import { ICluster } from "./Cluster";
 import { ILanguage } from "./Language";
 import { AppState } from "../reducers/appReducer";
+import List from "./List";
 
 export interface IRegion {
   id: number;
@@ -12,8 +13,8 @@ export interface IRegion {
 
 export interface IRegionInflated extends IRegion {
   person?: IPerson;
-  clusters: ICluster[];
-  languages: ILanguage[];
+  clusters: List<ICluster>;
+  languages: List<ILanguage>;
 }
 
 const emptyRegion: IRegion = {
@@ -29,7 +30,7 @@ function compare(a: IRegion, b: IRegion) {
 function regionParams(region: IRegionInflated) {
   return {
     name: region.name,
-    person_id: region.person ? region.person.id : undefined,
+    person_id: region.person ? region.person.id : null,
     cluster_ids: region.clusters.map(cluster => cluster.id),
     language_ids: region.languages.map(language => language.id)
   };
@@ -39,25 +40,17 @@ function inflate(state: AppState, region: IRegion): IRegionInflated {
   return {
     ...region,
     person: region.person_id ? state.people.byId[region.person_id] : undefined,
-    clusters: state.clusters.list
-      .map(id => state.clusters.byId[id])
-      .filter(c => c!.region_id == region.id) as ICluster[],
-    languages: state.languages.list
-      .map(id => state.languages.byId[id])
-      .filter(l => l!.region_id == region.id) as ILanguage[]
+    clusters: state.clusters.filter(c => c!.region_id == region.id),
+    languages: state.languages.filter(l => l!.region_id == region.id)
   };
 }
 
 function clusters(state: AppState, regionId: number) {
-  return (Object.values(state.clusters.byId) as ICluster[]).filter(
-    c => c.region_id == regionId
-  );
+  return state.clusters.filter(c => c.region_id == regionId);
 }
 
 function languages(state: AppState, regionId: number) {
-  return (Object.values(state.languages.byId) as ILanguage[]).filter(
-    lang => lang.region_id == regionId
-  );
+  return state.languages.filter(lang => lang.region_id == regionId);
 }
 
 export default {
