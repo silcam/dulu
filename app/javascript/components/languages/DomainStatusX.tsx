@@ -6,16 +6,16 @@ import {
 import DomainStatusPublishedScripture from "./DomainStatusPublishedScripture";
 import DomainStatusAudioScripture from "./DomainStatusAudioScripture";
 import DomainStatusScriptureApps from "./DomainStatusScriptureApps";
-import { ById } from "../../models/TypeBucket";
 import { IPerson } from "../../models/Person";
 import { IOrganization } from "../../models/Organization";
 import DomainStatusFilms from "./DomainStatusFilms";
+import List from "../../models/List";
 
 interface IProps {
   category: DSICategories;
   domainStatusItems: IDomainStatusItem[];
-  people: ById<IPerson>;
-  organizations: ById<IOrganization>;
+  people: List<IPerson>;
+  organizations: List<IOrganization>;
   basePath: string;
 }
 

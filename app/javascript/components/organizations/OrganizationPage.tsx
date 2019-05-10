@@ -10,17 +10,18 @@ import { Link } from "react-router-dom";
 import DuluAxios from "../../util/DuluAxios";
 import Loading from "../shared/Loading";
 import { IOrganization } from "../../models/Organization";
-import { Setter, ById } from "../../models/TypeBucket";
+import { Setter } from "../../models/TypeBucket";
 import { History } from "history";
 import I18nContext from "../../contexts/I18nContext";
 import { OrganizationPicker } from "../shared/SearchPicker";
 import TextOrInput from "../shared/TextOrInput";
 import SearchTextInput from "../shared/SearchTextInput";
+import List from "../../models/List";
 
 interface IProps {
   id: number;
   organization?: IOrganization;
-  organizations: ById<IOrganization>;
+  organizations: List<IOrganization>;
   setOrganization: Setter<IOrganization>;
   deleteOrganization: (id: number) => void;
   history: History;
@@ -101,7 +102,7 @@ export default class OrganizationPage extends React.PureComponent<
     if (!organization) return <Loading />;
 
     const parent = organization.parent_id
-      ? this.props.organizations[organization.parent_id]
+      ? this.props.organizations.get(organization.parent_id)
       : null;
 
     return (
@@ -168,7 +169,7 @@ export default class OrganizationPage extends React.PureComponent<
                 &nbsp;
                 {this.state.editing ? (
                   <OrganizationPicker
-                    collection={this.props.organizations}
+                    collection={this.props.organizations.asById()}
                     selectedId={parent ? parent.id : null}
                     setSelected={org =>
                       this.updateOrganization({

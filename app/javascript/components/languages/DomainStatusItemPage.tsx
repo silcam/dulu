@@ -1,7 +1,7 @@
 import React, { useState, useContext } from "react";
 import EditActionBar from "../shared/EditActionBar";
 import { ILanguage } from "../../models/Language";
-import { ById, Setter, Adder } from "../../models/TypeBucket";
+import { Setter, Adder } from "../../models/TypeBucket";
 import { IOrganization } from "../../models/Organization";
 import { IPerson } from "../../models/Person";
 import { findById } from "../../util/arrayUtils";
@@ -11,12 +11,13 @@ import DomainStatusItemView from "./DomainStatusItemView";
 import DomainStatusItemForm from "./DomainStatusItemForm";
 import I18nContext from "../../contexts/I18nContext";
 import { History } from "history";
+import List from "../../models/List";
 
 interface IProps {
   language: ILanguage;
   domainStatusItemId: number;
-  organizations: ById<IOrganization>;
-  people: ById<IPerson>;
+  organizations: List<IOrganization>;
+  people: List<IPerson>;
   history: History;
 
   setLanguage: Setter<ILanguage>;

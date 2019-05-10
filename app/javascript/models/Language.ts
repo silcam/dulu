@@ -20,7 +20,7 @@ export interface ILanguage {
   };
   domain_status_items: IDomainStatusItem[];
   can: {
-    update_activites?: boolean;
+    update_activities?: boolean;
     manage_participants?: boolean;
     update?: boolean;
   };

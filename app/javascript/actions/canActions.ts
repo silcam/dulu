@@ -4,6 +4,7 @@ export interface ICan {
   create?: boolean;
   update?: boolean;
   destroy?: boolean;
+  update_activities?: boolean;
 }
 
 export interface CanAction {

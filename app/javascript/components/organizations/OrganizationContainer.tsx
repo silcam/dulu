@@ -8,8 +8,8 @@ interface IProps {
 }
 
 const mapStateToProps = (state: AppState, ownProps: IProps) => ({
-  organization: state.organizations.byId[ownProps.id],
-  organizations: state.organizations.byId
+  organization: state.organizations.get(ownProps.id),
+  organizations: state.organizations
 });
 
 const OrganizationContainer = connect(

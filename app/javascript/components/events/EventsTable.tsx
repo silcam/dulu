@@ -10,7 +10,7 @@ import { ICluster } from "../../models/Cluster";
 import { ILanguage } from "../../models/Language";
 import { ICan } from "../../actions/canActions";
 
-interface IProps {
+export interface IProps {
   events: IEvent[];
   basePath: string;
   history: History;

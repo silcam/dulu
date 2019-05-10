@@ -16,6 +16,9 @@ export interface IOrganizationPerson {
   id: number;
   person_id: number;
   organization_id: number;
+  position?: string;
+  start_date?: string;
+  end_date?: string;
 }
 
 function compare(a: IOrganization, b: IOrganization) {

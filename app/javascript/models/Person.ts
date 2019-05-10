@@ -1,16 +1,36 @@
 import baseCompare from "../util/baseCompare";
-import { IParticipant } from "./Participant";
+import { Locale } from "../i18n/i18n";
 
+// TODO - change API
+export interface Role {
+  value: string;
+  display: string;
+}
+
+export type EmailPref = "immediate" | "daily" | "weekly";
 export interface IPerson {
   id: number;
   first_name: string;
   last_name: string;
   can: { update?: boolean; destroy?: boolean };
-  roles: string[];
+  roles: Role[];
   email: string;
-  ui_language: string;
-  email_pref: string;
-  participants: IParticipant[]; // TODO - remove
+  ui_language: Locale;
+  email_pref: EmailPref;
+  participants: Array<{
+    id: number;
+    language_id: number | null;
+    cluster_id: number | null;
+    name: string;
+    roles: string[];
+  }>; // TODO - remove
+  grantable_roles: Role[];
+  gender: "M" | "F";
+  has_login?: boolean;
+  not_a_duplicate?: boolean;
+  country_id?: number | null;
+  home_country?: { id: number | null; name: string };
+  isUser?: boolean;
 }
 
 export function personCompare(a: IPerson, b: IPerson): number {

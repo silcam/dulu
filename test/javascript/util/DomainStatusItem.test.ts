@@ -1,7 +1,7 @@
 import DomainStatusItem, {
   IDomainStatusItem,
   DSICategories,
-  DSISubcategories
+  ScripturePortion
 } from "../../../app/javascript/models/DomainStatusItem";
 import translator, { Locale } from "../../../app/javascript/i18n/i18n";
 import {
@@ -9,12 +9,17 @@ import {
   organizationFactory,
   personFactory
 } from "../testUtil";
+import List from "../../../app/javascript/models/List";
+import { IPerson } from "../../../app/javascript/models/Person";
+import { emptyPerson } from "../../../app/javascript/reducers/peopleReducer";
+import { IOrganization } from "../../../app/javascript/models/Organization";
+import { emptyOrganization } from "../../../app/javascript/reducers/organizationsReducer";
 
 const mockDSI: IDomainStatusItem = {
   id: 0,
   language_id: 0,
   category: DSICategories.PublishedScripture,
-  subcategory: DSISubcategories.Portions,
+  subcategory: ScripturePortion.Portions,
   description: "",
   year: 2000,
   platforms: "",
@@ -26,13 +31,13 @@ const mockDSI: IDomainStatusItem = {
 
 const t = translator(Locale.en);
 
-const mockPeople = {
-  404: personFactory({ id: 404, first_name: "Joe", last_name: "Shmoe" })
-};
+const mockPeople = new List<IPerson>(emptyPerson, [
+  personFactory({ id: 404, first_name: "Joe", last_name: "Shmoe" })
+]);
 
-const mockOrganizations = {
-  303: organizationFactory({ id: 303, short_name: "MocksRUs" })
-};
+const mockOrganizations = new List<IOrganization>(emptyOrganization, [
+  organizationFactory({ id: 303, short_name: "MocksRUs" })
+]);
 
 test("DSI: platformsStr", () => {
   expect(DomainStatusItem.platformsStr(false, false)).toEqual("");

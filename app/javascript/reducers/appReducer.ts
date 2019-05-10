@@ -1,11 +1,7 @@
 import { combineReducers } from "redux";
-import peopleReducer, { PersonState } from "./peopleReducer";
-import organizationsReducer, {
-  OrganizationState
-} from "./organizationsReducer";
-import organizationPeopleReducer, {
-  OrganizationPeopleState
-} from "./organizationPeopleReducer";
+import peopleReducer from "./peopleReducer";
+import organizationsReducer from "./organizationsReducer";
+import organizationPeopleReducer from "./organizationPeopleReducer";
 import languagesReducer from "./languagesReducer";
 import participantsReducer, { ParticipantState } from "./participantsReducer";
 import activitiesReducer, { ActivityState } from "./activitiesReducer";
@@ -17,6 +13,8 @@ import List from "../models/List";
 import { IRegion } from "../models/Region";
 import { ICluster } from "../models/Cluster";
 import { ILanguage } from "../models/Language";
+import { IPerson } from "../models/Person";
+import { IOrganization, IOrganizationPerson } from "../models/Organization";
 
 export interface AppState {
   activities: ActivityState;
@@ -25,10 +23,10 @@ export interface AppState {
   events: EventState;
   languages: List<ILanguage>;
   regions: List<IRegion>;
-  organizations: OrganizationState;
-  organizationPeople: OrganizationPeopleState;
+  organizations: List<IOrganization>;
+  organizationPeople: List<IOrganizationPerson>;
   participants: ParticipantState;
-  people: PersonState;
+  people: List<IPerson>;
 }
 
 const appReducer = combineReducers({

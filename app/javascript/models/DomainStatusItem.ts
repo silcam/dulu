@@ -1,9 +1,10 @@
-import { ById } from "./TypeBucket";
 import { IPerson, fullName } from "./Person";
 import ifDef from "../util/ifDef";
 import { IOrganization } from "./Organization";
 import { T } from "../i18n/i18n";
 import BibleBook from "./BibleBook";
+import List from "./List";
+import { MediaFilm } from "./Activity";
 
 export interface IDomainStatusItem {
   id: number;
@@ -26,18 +27,13 @@ export enum DSICategories {
   ScriptureApp = "ScriptureApp"
 }
 
-export const enum DSISubcategories {
+export enum ScripturePortion {
   Portions = "Portions",
   NewTestament = "New_testament",
-  Bible = "Bible",
-  JesusFilm = "JesusFilm",
-  LukeFilm = "LukeFilm",
-  ActsFilm = "ActsFilm",
-  GenesisFilm = "GenesisFilm",
-  StoryOfGenesisFilm = "StoryOfGenesisFilm",
-  BookOfJohn = "BookOfJohn",
-  MagdalenaFilm = "MagdalenaFilm"
+  Bible = "Bible"
 }
+
+export type DSISubcategories = MediaFilm | ScripturePortion;
 
 export enum AppPlatforms {
   Android = "Android",
@@ -48,30 +44,10 @@ interface DSCategoryList {
   [key: string]: DSISubcategories[];
 }
 const categoryList: DSCategoryList = {
-  [DSICategories.PublishedScripture]: [
-    DSISubcategories.Portions,
-    DSISubcategories.NewTestament,
-    DSISubcategories.Bible
-  ],
-  [DSICategories.AudioScripture]: [
-    DSISubcategories.Portions,
-    DSISubcategories.NewTestament,
-    DSISubcategories.Bible
-  ],
-  [DSICategories.Film]: [
-    DSISubcategories.JesusFilm,
-    DSISubcategories.LukeFilm,
-    DSISubcategories.ActsFilm,
-    DSISubcategories.GenesisFilm,
-    DSISubcategories.StoryOfGenesisFilm,
-    DSISubcategories.BookOfJohn,
-    DSISubcategories.MagdalenaFilm
-  ],
-  [DSICategories.ScriptureApp]: [
-    DSISubcategories.Portions,
-    DSISubcategories.NewTestament,
-    DSISubcategories.Bible
-  ]
+  [DSICategories.PublishedScripture]: Object.values(ScripturePortion),
+  [DSICategories.AudioScripture]: Object.values(ScripturePortion),
+  [DSICategories.Film]: Object.values(MediaFilm),
+  [DSICategories.ScriptureApp]: Object.values(ScripturePortion)
 };
 
 // interface DSITree {
@@ -120,15 +96,15 @@ function books(item: IDomainStatusItem, t: T, max?: number) {
   return names;
 }
 
-function personName(item: IDomainStatusItem, people: ById<IPerson>) {
+function personName(item: IDomainStatusItem, people: List<IPerson>) {
   return ifDef(item.person_id, id =>
-    ifDef(people[id], person => fullName(person))
+    ifDef(people.get(id), person => fullName(person))
   );
 }
 
-function orgName(item: IDomainStatusItem, organizations: ById<IOrganization>) {
+function orgName(item: IDomainStatusItem, organizations: List<IOrganization>) {
   return ifDef(item.organization_id, id =>
-    ifDef(organizations[id], org => org.short_name)
+    ifDef(organizations.get(id), org => org.short_name)
   );
 }
 

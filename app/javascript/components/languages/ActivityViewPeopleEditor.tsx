@@ -11,13 +11,14 @@ import { useAPIPut, ActionPack, useAPIGet } from "../../util/useAPI";
 import Language, { ILanguage } from "../../models/Language";
 import SelectInput from "../shared/SelectInput";
 import { subtract } from "../../util/arrayUtils";
+import List from "../../models/List";
 
 interface IProps {
   cancelEdit: () => void;
   activity: IActivity;
   language: ILanguage;
   participants: ById<IParticipant>;
-  people: ById<IPerson>;
+  people: List<IPerson>;
   basePath: string;
   actions: ActionPack;
 }

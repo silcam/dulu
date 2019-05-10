@@ -2,21 +2,21 @@ import React, { useContext } from "react";
 import I18nContext from "../../contexts/I18nContext";
 import DomainStatusItem, {
   DSICategories,
-  DSISubcategories,
-  IDomainStatusItem
+  IDomainStatusItem,
+  ScripturePortion
 } from "../../models/DomainStatusItem";
 import DomainStatusCategory from "./DomainStatusCategory";
 import DomainStatusSubcategory from "./DomainStatusSubcategory";
 import { orBlank } from "../../util/orBlank";
 import { Link } from "react-router-dom";
 import takeFirst from "../../util/takeFirst";
-import { ById } from "../../models/TypeBucket";
 import { IOrganization } from "../../models/Organization";
+import List from "../../models/List";
 
 interface IProps {
   domainStatusItems: IDomainStatusItem[];
   basePath: string;
-  organizations: ById<IOrganization>;
+  organizations: List<IOrganization>;
 }
 
 export default function DomainStatusPublishedScripture(props: IProps) {
@@ -29,7 +29,7 @@ export default function DomainStatusPublishedScripture(props: IProps) {
         <React.Fragment>
           <DomainStatusSubcategory
             showCheckbox
-            subcategory={DSISubcategories.Portions}
+            subcategory={ScripturePortion.Portions}
             domainStatusItems={domainStatusItems}
             renderItem={item => (
               <span>
@@ -48,7 +48,7 @@ export default function DomainStatusPublishedScripture(props: IProps) {
           />
           <DomainStatusSubcategory
             showCheckbox
-            subcategory={DSISubcategories.NewTestament}
+            subcategory={ScripturePortion.NewTestament}
             domainStatusItems={domainStatusItems}
             renderItem={item => (
               <span>
@@ -64,7 +64,7 @@ export default function DomainStatusPublishedScripture(props: IProps) {
           />
           <DomainStatusSubcategory
             showCheckbox
-            subcategory={DSISubcategories.Bible}
+            subcategory={ScripturePortion.Bible}
             domainStatusItems={domainStatusItems}
             renderItem={item => (
               <span>

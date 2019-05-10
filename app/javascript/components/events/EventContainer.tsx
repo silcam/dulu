@@ -1,5 +1,5 @@
 import { connect } from "react-redux";
-import { fullName, IPerson } from "../../models/Person";
+import { fullName } from "../../models/Person";
 import * as eventActionCreators from "../../actions/eventActions";
 import { addPeople } from "../../actions/peopleActions";
 import { addLanguages } from "../../actions/languageActions";
@@ -30,7 +30,7 @@ const mapStateToProps = (state: AppState, ownProps: IProps) => {
     eventClusters: event.cluster_ids.map(id => state.clusters.get(id)),
     eventParticipants: event.event_participants.map(e_p => ({
       ...e_p,
-      full_name: fullName(state.people.byId[e_p.person_id] as IPerson)
+      full_name: fullName(state.people.get(e_p.person_id))
     }))
   };
 };

@@ -13,12 +13,13 @@ import { IOrganization } from "../../models/Organization";
 import { ICan } from "../../actions/canActions";
 import { History } from "history";
 import I18nContext from "../../contexts/I18nContext";
+import List from "../../models/List";
 
 interface IProps {
   setOrganizations: Adder<IOrganization>;
   addOrganization: Setter<IOrganization>;
   setCan: SetCan;
-  organizations: IOrganization[];
+  organizations: List<IOrganization>;
   id?: number;
   action?: string;
   history: History;

@@ -12,12 +12,13 @@ import ActivityViewPeople from "./ActivityViewPeople";
 import { IParticipant } from "../../models/Participant";
 import { useAPIGet } from "../../util/useAPI";
 import { ICluster } from "../../models/Cluster";
+import List from "../../models/List";
 
 interface IProps {
   activityId: number;
   activity: IActivity | undefined;
   participants: ById<IParticipant>;
-  people: ById<IPerson>;
+  people: List<IPerson>;
   basePath: string;
   language: ILanguage;
 

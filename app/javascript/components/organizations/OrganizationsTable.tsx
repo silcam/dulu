@@ -2,14 +2,15 @@ import React from "react";
 import OrganizationTableRow from "./OrganizationTableRow";
 import Loading from "../shared/Loading";
 import { IOrganization } from "../../models/Organization";
+import List from "../../models/List";
 
 interface IProps {
-  organizations: IOrganization[];
+  organizations: List<IOrganization>;
   id?: number;
 }
 
 export default function OrganizationsTable(props: IProps) {
-  if (props.organizations.length == 0) {
+  if (props.organizations.length() == 0) {
     return <Loading />;
   }
   return (

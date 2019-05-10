@@ -17,7 +17,7 @@ const mapStateToProps = (state: AppState, ownProps: IProps) => {
     events: (Object.values(state.events.byId) as IEvent[])
       .filter(e => Event.overlapCompare(e, periodEvent) == 0)
       .sort(Event.compare),
-    people: state.people.byId,
+    people: state.people,
     languages: state.languages,
     clusters: state.clusters
   };

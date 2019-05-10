@@ -5,7 +5,8 @@ json.person do
                      :email, 
                      :has_login,
                      :ui_language,
-                     :email_pref)
+                     :email_pref,
+                     :gender)
 
   json.isUser @person == current_user
 

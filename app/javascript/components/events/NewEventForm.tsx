@@ -76,7 +76,6 @@ export default function NewEventForm(props: IProps) {
           date={event.start_date}
           handleDateInput={(date: string) => updateEvent({ start_date: date })}
           dateIsInvalid={() => updateEvent({ start_date: "" })}
-          t={t}
         />
       </FormGroup>
 
@@ -85,7 +84,6 @@ export default function NewEventForm(props: IProps) {
           date={event.end_date}
           handleDateInput={(date: string) => updateEvent({ end_date: date })}
           dateIsInvalid={() => updateEvent({ end_date: "" })}
-          t={t}
         />
       </FormGroup>
 

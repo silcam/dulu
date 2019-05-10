@@ -1,6 +1,5 @@
 import React, { useContext, useState, useEffect } from "react";
 import { RouteComponentProps, withRouter } from "react-router";
-import { ById } from "../../models/TypeBucket";
 import { IPerson, fullName } from "../../models/Person";
 import { IOrganization } from "../../models/Organization";
 import { ILanguage } from "../../models/Language";
@@ -24,8 +23,8 @@ interface Matcher<T> {
 }
 
 interface IProps extends RouteComponentProps {
-  people: ById<IPerson>;
-  organizations: ById<IOrganization>;
+  people: List<IPerson>;
+  organizations: List<IOrganization>;
   languages: List<ILanguage>;
   clusters: List<ICluster>;
   regions: List<IRegion>;
@@ -119,10 +118,10 @@ function search(query: string, props: IProps) {
     textMatcher("/languages", l => l.name)
   )
     .concat(
-      searchItemsOld(q, props.people, textMatcher("/people", p => fullName(p)))
+      searchItems(q, props.people, textMatcher("/people", p => fullName(p)))
     )
     .concat(
-      searchItemsOld(
+      searchItems(
         q,
         props.organizations,
         textMatcher("/organizations", o => o.short_name)
@@ -169,17 +168,6 @@ function textMatcher<T extends { id: number }>(
   };
 }
 
-function searchItemsOld<T>(q: string, byId: ById<T>, checkMatch: Matcher<T>) {
-  return (Object.values(byId) as T[]).reduce(
-    (matches, item) => {
-      const match = checkMatch(item, q);
-      if (match) matches.push(match);
-      return matches;
-    },
-    [] as Match[]
-  );
-}
-
 function searchItems<T extends { id: number }>(
   q: string,
   list: List<T>,
@@ -191,8 +179,8 @@ function searchItems<T extends { id: number }>(
 }
 
 const GoBar = connect((state: AppState) => ({
-  people: state.people.byId,
-  organizations: state.organizations.byId,
+  people: state.people,
+  organizations: state.organizations,
   languages: state.languages,
   clusters: state.clusters,
   regions: state.regions

@@ -1,5 +1,5 @@
 import update from "immutability-helper";
-import { ById } from "./TypeBucket";
+import { ById, PartialModel } from "./TypeBucket";
 
 export default class List<T extends { id: number }> {
   private items: Array<T>;
@@ -28,18 +28,20 @@ export default class List<T extends { id: number }> {
   }
 
   // New items are added. Existing items are updated by merging
-  add(itemsToAdd: T[]) {
+  add(itemsToAdd: PartialModel<T>[]) {
     const newItems = itemsToAdd.reduce((items, itemToAdd) => {
       const existingIndex = items.findIndex(
         oldItem => oldItem.id == itemToAdd.id
       );
+      const mergeTarget =
+        existingIndex >= 0 ? items[existingIndex] : this.emptyItem;
+      const newItem = update(mergeTarget, { $merge: itemToAdd });
       if (existingIndex >= 0) {
-        const newItem = update(items[existingIndex], { $merge: itemToAdd });
         return update(items, {
           $splice: [[existingIndex, 1, newItem]]
         }) as T[];
       } else {
-        return items.concat([itemToAdd]);
+        return items.concat([newItem]);
       }
     }, this.items);
     if (this.sort) newItems.sort(this.sort);
@@ -70,6 +72,10 @@ export default class List<T extends { id: number }> {
 
   some(callback: (item: T) => boolean) {
     return this.items.some(callback);
+  }
+
+  find(callback: (item: T) => boolean) {
+    return this.items.find(callback);
   }
 
   // Transitional "escape hatches"

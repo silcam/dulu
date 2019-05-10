@@ -7,7 +7,7 @@ import { IRegionInflated, IRegion } from "../../models/Region";
 import ProgramList from "./ProgramList";
 import P from "../shared/P";
 import { Link } from "react-router-dom";
-import { Adder, Setter, Deleter, AnyObj, ById } from "../../models/TypeBucket";
+import { Adder, Setter, Deleter, AnyObj } from "../../models/TypeBucket";
 import { IPerson, fullName } from "../../models/Person";
 import { ICluster } from "../../models/Cluster";
 import { ILanguage } from "../../models/Language";
@@ -28,7 +28,7 @@ interface IProps {
   setRegion: Setter<IRegion>;
   deleteRegion: Deleter;
   history: History;
-  people: ById<IPerson>;
+  people: List<IPerson>;
   languages: List<ILanguage>;
   clusters: List<ICluster>;
 }
@@ -103,7 +103,7 @@ export default function RegionPage(props: IProps) {
         {editing ? (
           <FormGroup label={t("LPF")}>
             <PersonPicker
-              collection={props.people}
+              collection={props.people.asById()}
               selectedId={region.person ? region.person.id : null}
               setSelected={person => updateRegion({ person: person })}
               placeholder={t("Name")}

@@ -1,4 +1,4 @@
-function dateString(date: string, monthNames: string[]) {
+function dateString(date: string | undefined, monthNames: string[]) {
   if (!date) return "";
 
   if (date.length == 4) return date;

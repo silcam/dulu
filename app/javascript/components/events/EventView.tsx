@@ -146,7 +146,6 @@ export default function EventView(props: IProps) {
                 handleDateInput={(date: string) =>
                   updateEvent({ start_date: date })
                 }
-                t={t}
               />
             </FormGroup>
             <FormGroup label={t("End_date")}>
@@ -155,7 +154,6 @@ export default function EventView(props: IProps) {
                 handleDateInput={(date: string) =>
                   updateEvent({ end_date: date })
                 }
-                t={t}
               />
             </FormGroup>
           </div>

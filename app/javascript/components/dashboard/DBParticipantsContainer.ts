@@ -32,7 +32,7 @@ const mapStateToProps = (state: AppState, ownProps: IProps) => {
   const peopleParticipants = participants.reduce(
     (accum: PeopleParticipants, ptpt) => {
       if (accum.participants[ptpt.person_id] === undefined) {
-        accum.people.push(state.people.byId[ptpt.person_id]!);
+        accum.people.push(state.people.get(ptpt.person_id));
         accum.participants[ptpt.person_id] = [];
       }
       if (!accum.participants[ptpt.person_id].some(p => p.id == ptpt.id)) {

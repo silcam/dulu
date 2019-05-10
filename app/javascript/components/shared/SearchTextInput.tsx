@@ -7,11 +7,13 @@ const MIN_QUERY_LENGTH = 2;
 interface SearchItem {
   id: number;
   name: string;
+  roles?: string[];
 }
 
 const BLANK_ITEM = {
   id: null,
-  name: ""
+  name: "",
+  roles: []
 };
 
 interface IProps {

@@ -1,6 +1,6 @@
 import React, { useContext, useState } from "react";
 import { ILanguage } from "../../models/Language";
-import { ById, Setter, Adder } from "../../models/TypeBucket";
+import { Setter, Adder } from "../../models/TypeBucket";
 import { IPerson } from "../../models/Person";
 import { IOrganization } from "../../models/Organization";
 import I18nContext from "../../contexts/I18nContext";
@@ -10,13 +10,14 @@ import AddIcon from "../shared/icons/AddIcon";
 import { useAPIGet } from "../../util/useAPI";
 import { DSICategories } from "../../models/DomainStatusItem";
 import DomainStatusX from "./DomainStatusX";
+import List from "../../models/List";
 
 export interface DSProps {
   language: ILanguage;
   categories: DSICategories[];
 
-  people: ById<IPerson>;
-  organizations: ById<IOrganization>;
+  people: List<IPerson>;
+  organizations: List<IOrganization>;
 
   setLanguage: Setter<ILanguage>;
   addPeople: Adder<IPerson>;

@@ -15,7 +15,7 @@ const mapStateToProps = (state: AppState, ownProps: IProps) => {
   const region = state.regions.get(ownProps.id);
   return {
     region: Region.inflate(state, region),
-    people: state.people.byId,
+    people: state.people,
     languages: state.languages,
     clusters: state.clusters
   };

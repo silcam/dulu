@@ -14,7 +14,7 @@ interface IProps {
 const mapStateToProps = (state: AppState, ownProps: IProps) => ({
   activity: state.activities[ownProps.activityId],
   participants: state.participants,
-  people: state.people.byId
+  people: state.people
 });
 
 const mapDispatchToProps = {

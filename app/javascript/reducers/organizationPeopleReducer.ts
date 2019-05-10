@@ -5,7 +5,7 @@ import {
   OrganizationPeopleAction
 } from "../actions/organizationPeopleActions";
 import { IOrganizationPerson } from "../models/Organization";
-import { stdReducersNoList } from "./stdReducers";
+import List from "../models/List";
 
 const emptyOrganizationPerson: IOrganizationPerson = {
   id: 0,
@@ -13,32 +13,17 @@ const emptyOrganizationPerson: IOrganizationPerson = {
   organization_id: 0
 };
 
-export interface OrganizationPeopleState {
-  [id: string]: IOrganizationPerson | undefined;
-}
-
-const emptyState = {};
-
-const stdOrganizationPersonReducers = stdReducersNoList(
-  emptyOrganizationPerson
-);
-
 export default function organizationPeopleReducer(
-  state = emptyState,
+  state = new List<IOrganizationPerson>(emptyOrganizationPerson, []),
   action: OrganizationPeopleAction
 ) {
   switch (action.type) {
     case ADD_ORGANIZATION_PEOPLE:
-      return stdOrganizationPersonReducers.addItems(
-        state,
-        action.organizationPeople!
-      );
+      return state.add(action.organizationPeople!);
     case SET_ORGANIZATION_PERSON:
-      return stdOrganizationPersonReducers.addItems(state, [
-        action.organizationPerson!
-      ]);
+      return state.add([action.organizationPerson!]);
     case DELETE_ORGANIZATION_PERSON:
-      return stdOrganizationPersonReducers.deleteItem(state, action.id!);
+      return state.remove(action.id!);
   }
   return state;
 }

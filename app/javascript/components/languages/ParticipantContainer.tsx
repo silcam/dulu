@@ -14,10 +14,10 @@ interface IProps {
 
 const mapStateToProps = (state: AppState, ownProps: IProps) => {
   const participant = state.participants[ownProps.id];
-  if (!participant) return { participant: participant };
+  if (!participant) return { participant, languages: state.languages };
   return {
     participant: participant,
-    person: state.people.byId[participant.person_id],
+    person: state.people.get(participant.person_id),
     clusterLanguage: participant.cluster_id
       ? state.clusters.get(participant.cluster_id)
       : state.languages.get(participant.language_id!),

@@ -1,7 +1,9 @@
 import React from "react";
-import FuzzyDateInput from "./FuzzyDateInput";
+import FuzzyDateInput, {
+  IProps as FuzzyDateInputProps
+} from "./FuzzyDateInput";
 
-interface IProps {
+interface IProps extends FuzzyDateInputProps {
   editing?: boolean;
   date: string;
 }

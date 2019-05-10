@@ -11,7 +11,6 @@ import { ICluster } from "../../models/Cluster";
 import { ILanguage } from "../../models/Language";
 import { AppState } from "../../reducers/appReducer";
 import { connect } from "react-redux";
-import { ById } from "../../models/TypeBucket";
 import { IPerson, fullName } from "../../models/Person";
 import {
   SearchPickerAutoClear,
@@ -24,7 +23,7 @@ interface IProps {
   replaceEvent: (event: IEventInflated) => void;
   languages: List<ILanguage>;
   clusters: List<ICluster>;
-  people: ById<IPerson>;
+  people: List<IPerson>;
 }
 
 function BaseEditEventParticipantsTable(props: IProps) {
@@ -156,7 +155,7 @@ function BaseEditEventParticipantsTable(props: IProps) {
             </td>
             <td>
               <PersonPickerAutoClear
-                collection={props.people}
+                collection={props.people.asById()}
                 setSelected={addPerson}
                 placeholder={t("Add_person")}
               />
@@ -259,7 +258,7 @@ function BaseEditEventParticipantsTable(props: IProps) {
 const EditEventParticipantsTable = connect((state: AppState) => ({
   languages: state.languages,
   clusters: state.clusters,
-  people: state.people.byId
+  people: state.people
 }))(BaseEditEventParticipantsTable);
 
 export default EditEventParticipantsTable;

@@ -2,6 +2,8 @@ import { IPerson } from "./Person";
 import { ICluster } from "./Cluster";
 import { BasicModel } from "./BasicModel";
 import { ById } from "./TypeBucket";
+import List from "./List";
+import { ICan } from "../actions/canActions";
 
 export interface IParticipant {
   id: number;
@@ -11,6 +13,7 @@ export interface IParticipant {
   roles: string[];
   start_date: string;
   end_date?: string;
+  can: ICan;
 }
 
 export interface IParticipantInflated extends IParticipant {
@@ -30,12 +33,12 @@ interface PtptPerson {
 function participantPeople(
   ids: number[],
   participants: ById<IParticipant>,
-  people: ById<IPerson>
+  people: List<IPerson>
 ) {
   return ids.reduce((accum: PtptPerson[], id) => {
     const ptpt = participants[id];
     if (!ptpt) return accum;
-    const person = people[ptpt.person_id];
+    const person = people.get(ptpt.person_id);
     if (!person) return accum;
     return accum.concat([{ participant: ptpt, person: person }]);
   }, []);

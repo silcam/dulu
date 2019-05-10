@@ -2,21 +2,21 @@ import React, { useContext } from "react";
 import DomainStatusItem, {
   IDomainStatusItem,
   DSICategories,
-  DSISubcategories
+  ScripturePortion
 } from "../../models/DomainStatusItem";
-import { ById } from "../../models/TypeBucket";
 import { IPerson } from "../../models/Person";
 import { IOrganization } from "../../models/Organization";
 import { ILanguage } from "../../models/Language";
 import I18nContext from "../../contexts/I18nContext";
 import { orBlank } from "../../util/orBlank";
 import { Link } from "react-router-dom";
+import List from "../../models/List";
 
 interface IProps {
   language: ILanguage;
   item: IDomainStatusItem;
-  people: ById<IPerson>;
-  organizations: ById<IOrganization>;
+  people: List<IPerson>;
+  organizations: List<IOrganization>;
 }
 
 export default function DomainStatusItemView(props: IProps) {
@@ -27,7 +27,7 @@ export default function DomainStatusItemView(props: IProps) {
       <h2>{`${t(props.item.category)}: ${t(props.item.subcategory)}`}</h2>
       <table>
         <tbody>
-          {props.item.subcategory == DSISubcategories.Portions && (
+          {props.item.subcategory == ScripturePortion.Portions && (
             <tr>
               <th>{t("Books")}</th>
               <td>

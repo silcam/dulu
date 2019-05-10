@@ -3,7 +3,8 @@ import DomainStatusItem, {
   IDomainStatusItem,
   DSICategories,
   DSISubcategories,
-  AppPlatforms
+  AppPlatforms,
+  ScripturePortion
 } from "../../models/DomainStatusItem";
 import I18nContext from "../../contexts/I18nContext";
 import useKeepStateOnList from "../../util/useKeepStateOnList";
@@ -17,8 +18,8 @@ import FormGroup from "../shared/FormGroup";
 import TextInput from "../shared/TextInput";
 import { PersonPicker, OrganizationPicker } from "../shared/SearchPicker";
 import { IPerson } from "../../models/Person";
-import { ById } from "../../models/TypeBucket";
 import { IOrganization } from "../../models/Organization";
+import List from "../../models/List";
 
 interface IProps {
   domainStatusItem?: IDomainStatusItem;
@@ -27,8 +28,8 @@ interface IProps {
   saving?: boolean;
   useEditActionBar?: boolean;
   cancel: () => void;
-  people: ById<IPerson>;
-  organizations: ById<IOrganization>;
+  people: List<IPerson>;
+  organizations: List<IOrganization>;
 }
 
 export default function DomainStatusItemForm(props: IProps) {
@@ -126,7 +127,7 @@ export default function DomainStatusItemForm(props: IProps) {
         />
       </FormGroup>
 
-      {subcategory == DSISubcategories.Portions && (
+      {subcategory == ScripturePortion.Portions && (
         <P>
           <label>{t("Books")}</label>
           <BooksSelector bookIds={bibleBooksIds} setBookIds={setBibleBookIds} />
@@ -168,7 +169,7 @@ export default function DomainStatusItemForm(props: IProps) {
         <label>
           {t("Person")}
           <PersonPicker
-            collection={props.people}
+            collection={props.people.asById()}
             selectedId={personId}
             setSelected={person => setPersonId(person && person.id)}
             allowBlank
@@ -180,7 +181,7 @@ export default function DomainStatusItemForm(props: IProps) {
         <label>
           {t("Organization")}
           <OrganizationPicker
-            collection={props.organizations}
+            collection={props.organizations.asById()}
             selectedId={organizationId}
             setSelected={org => setOrganizationId(org && org.id)}
             allowBlank

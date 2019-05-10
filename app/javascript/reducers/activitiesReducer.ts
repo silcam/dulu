@@ -40,7 +40,9 @@ export default function activitiesReducer(
     case ADD_ACTIVITIES:
       return stdActivitiesReducers.addItems(state, action.activities!);
     case SET_ACTIVITY:
-      return stdActivitiesReducers.addItems(state, [action.activity!]);
+      return stdActivitiesReducers.addItems(state, [
+        action.activity as IActivity
+      ]); // Lazy Fix
     case DELETE_WORKSHOP_EVENT:
       return deleteWorkshopEvent(state, action as DeleteWSEventAction);
   }

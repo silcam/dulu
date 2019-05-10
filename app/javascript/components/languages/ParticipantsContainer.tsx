@@ -26,7 +26,7 @@ const mapStateToProps = (state: AppState, ownProps: IProps) => {
       // TODO - Write a participant inflater
       update(p, {
         $merge: {
-          person: state.people.byId[p.person_id],
+          person: state.people.get(p.person_id),
           language: p.language_id
             ? state.languages.get(p.language_id)
             : undefined,

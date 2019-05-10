@@ -10,7 +10,7 @@ import I18nContext from "../../contexts/I18nContext";
 import { SearchPickerAutoClear } from "../shared/SearchPicker";
 import List from "../../models/List";
 
-type ClusterLanguage = ICluster | ILanguage;
+export type ClusterLanguage = ICluster | ILanguage;
 
 interface IProps<T extends ClusterLanguage> {
   thing: "cluster" | "language";

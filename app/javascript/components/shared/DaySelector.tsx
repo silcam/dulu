@@ -1,11 +1,11 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import I18nContext from "../../contexts/I18nContext";
 
 interface IProps {
-  handleInput: (e: { target: { name: any; value: any } }) => void;
+  handleInput: (day: string) => void;
   value: number | string;
   maxValue: number;
-  name: string;
+  name?: string;
 }
 
 export default function DaySelector(props: IProps) {
@@ -13,8 +13,9 @@ export default function DaySelector(props: IProps) {
   const name = props.name || "day";
   const maxValue = props.maxValue || 31;
 
-  if (props.value > props.maxValue)
-    props.handleInput({ target: { name: name, value: props.maxValue } });
+  useEffect(() => {
+    if (props.value > props.maxValue) props.handleInput(`${props.maxValue}`);
+  });
 
   var optionsArray = [];
   for (var day = 1; day <= maxValue; ++day) {
@@ -29,7 +30,7 @@ export default function DaySelector(props: IProps) {
       className="form-control"
       name={name}
       value={String(props.value)}
-      onChange={props.handleInput}
+      onChange={e => props.handleInput(e.target.value)}
     >
       <option value="">{t("Day")}</option>
       {optionsArray}

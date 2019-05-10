@@ -5,14 +5,14 @@ import { AnyObj } from "../../app/javascript/models/TypeBucket";
 import {
   IDomainStatusItem,
   DSICategories,
-  DSISubcategories
+  ScripturePortion
 } from "../../app/javascript/models/DomainStatusItem";
 
 const mockDSI: IDomainStatusItem = {
   id: 0,
   language_id: 0,
   category: DSICategories.PublishedScripture,
-  subcategory: DSISubcategories.Portions,
+  subcategory: ScripturePortion.Portions,
   description: "",
   year: 2000,
   platforms: "",

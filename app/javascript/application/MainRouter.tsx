@@ -71,15 +71,12 @@ class MainRouter extends React.Component<IProps, IState> {
                 history={history}
                 location={location}
                 {...matchParamsForChild(match)}
-                t={this.props.t}
               />
             )}
           />
           <Route
             path="/programs/:idOrAction?"
-            render={({ match }) => (
-              <ProgramsRedirect t={this.props.t} match={match} />
-            )}
+            render={({ match }) => <ProgramsRedirect match={match} />}
           />
           <Route
             path="/regions/:idOrAction?"
@@ -107,7 +104,6 @@ class MainRouter extends React.Component<IProps, IState> {
               <PeopleContainer
                 history={history}
                 {...routeActionAndId(match.params)}
-                t={this.props.t}
                 updateLanguage={this.props.updateLanguage}
               />
             )}

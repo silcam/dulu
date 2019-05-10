@@ -3,12 +3,14 @@ import { Link } from "react-router-dom";
 import ParticipantContainer from "../languages/ParticipantContainer";
 import { T } from "../../i18n/i18n";
 import { ICluster } from "../../models/Cluster";
+import { History } from "history";
 
 interface IProps {
   t: T;
   cluster?: ICluster;
   participantId: number;
   basePath: string;
+  history: History;
 }
 
 export default function ClusterParticipantPage(props: IProps) {

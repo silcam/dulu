@@ -12,12 +12,13 @@ import Participant, { IParticipant } from "../../models/Participant";
 import { ActionPack } from "../../util/useAPI";
 import { ILanguage } from "../../models/Language";
 import ActivityViewPeopleEditor from "./ActivityViewPeopleEditor";
+import List from "../../models/List";
 
 interface IProps {
   activity: IActivity;
   language: ILanguage;
   participants: ById<IParticipant>;
-  people: ById<IPerson>;
+  people: List<IPerson>;
   basePath: string;
   actions: ActionPack;
 }

@@ -5,20 +5,19 @@ import { domainFromRole } from "../../models/Role";
 import { Link } from "react-router-dom";
 import DuluAxios from "../../util/DuluAxios";
 import { fullName, IPerson } from "../../models/Person";
-import { T } from "../../i18n/i18n";
 import { BasicModel } from "../../models/BasicModel";
 import { ICluster } from "../../models/Cluster";
 import { History } from "history";
 import { Adder, Setter } from "../../models/TypeBucket";
 import { ILanguage } from "../../models/Language";
 import { IParticipantInflated, IParticipant } from "../../models/Participant";
+import I18nContext from "../../contexts/I18nContext";
 
 /*
   Used by LanguagePageContent and ClusterPage!
 */
 
 interface IProps {
-  t: T;
   domain?: string;
   participants: IParticipantInflated[];
   language?: BasicModel;
@@ -63,53 +62,59 @@ export default class ParticipantsTable extends React.PureComponent<
       this.props.participants,
       this.props.domain
     );
-    const t = this.props.t;
 
     return (
-      <div>
-        <h3>
-          {t("People")}
-          {this.props.can.manage_participants && (
-            <InlineAddIcon
-              onClick={() => this.setState({ showNewForm: true })}
-            />
-          )}
-        </h3>
-        {this.state.showNewForm && (
-          <NewParticipantForm
-            t={t}
-            cancel={() => this.setState({ showNewForm: false })}
-            addParticipants={this.props.addParticipants}
-            addPeople={this.props.addPeople}
-            language_id={this.props.language && this.props.language.id}
-            cluster_id={this.props.cluster && this.props.cluster.id}
-            history={this.props.history}
-            basePath={this.props.basePath}
-          />
+      <I18nContext.Consumer>
+        {t => (
+          <div>
+            <h3>
+              {t("People")}
+              {this.props.can.manage_participants && (
+                <InlineAddIcon
+                  onClick={() => this.setState({ showNewForm: true })}
+                />
+              )}
+            </h3>
+            {this.state.showNewForm && (
+              <NewParticipantForm
+                cancel={() => this.setState({ showNewForm: false })}
+                addParticipants={this.props.addParticipants}
+                addPeople={this.props.addPeople}
+                language_id={this.props.language && this.props.language.id}
+                cluster_id={this.props.cluster && this.props.cluster.id}
+                history={this.props.history}
+                basePath={this.props.basePath}
+              />
+            )}
+            <table>
+              <tbody>
+                {participants.map((participant: IParticipantInflated) => (
+                  <tr key={participant.id}>
+                    <td>
+                      <Link
+                        to={`${this.props.basePath}/participants/${
+                          participant.id
+                        }`}
+                      >
+                        {fullName(participant.person)}
+                      </Link>{" "}
+                      {this.showCluster(participant) &&
+                        `(${participant.cluster!.name})`}
+                    </td>
+                    <td>
+                      {participant.roles
+                        .map(role => t(`roles.${role}`))
+                        .join(", ")}
+                    </td>
+                    <td>{participant.start_date}</td>
+                    <td>{participant.end_date}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         )}
-        <table>
-          <tbody>
-            {participants.map((participant: IParticipantInflated) => (
-              <tr key={participant.id}>
-                <td>
-                  <Link
-                    to={`${this.props.basePath}/participants/${participant.id}`}
-                  >
-                    {fullName(participant.person)}
-                  </Link>{" "}
-                  {this.showCluster(participant) &&
-                    `(${participant.cluster!.name})`}
-                </td>
-                <td>
-                  {participant.roles.map(role => t(`roles.${role}`)).join(", ")}
-                </td>
-                <td>{participant.start_date}</td>
-                <td>{participant.end_date}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+      </I18nContext.Consumer>
     );
   }
 }

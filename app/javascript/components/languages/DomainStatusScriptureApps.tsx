@@ -2,22 +2,22 @@ import React, { useContext } from "react";
 import I18nContext from "../../contexts/I18nContext";
 import DomainStatusItem, {
   DSICategories,
-  DSISubcategories,
-  IDomainStatusItem
+  IDomainStatusItem,
+  ScripturePortion
 } from "../../models/DomainStatusItem";
 import DomainStatusCategory from "./DomainStatusCategory";
 import DomainStatusSubcategory from "./DomainStatusSubcategory";
-import { ById } from "../../models/TypeBucket";
 import { IPerson } from "../../models/Person";
 import { IOrganization } from "../../models/Organization";
 import { Link } from "react-router-dom";
 import { orBlank } from "../../util/orBlank";
 import takeFirst from "../../util/takeFirst";
+import List from "../../models/List";
 
 interface IProps {
   domainStatusItems: IDomainStatusItem[];
-  people: ById<IPerson>;
-  organizations: ById<IOrganization>;
+  people: List<IPerson>;
+  organizations: List<IOrganization>;
   basePath: string;
 }
 
@@ -30,9 +30,9 @@ export default function DomainStatusScriptureApps(props: IProps) {
       render={domainStatusItems => (
         <React.Fragment>
           {[
-            DSISubcategories.Portions,
-            DSISubcategories.NewTestament,
-            DSISubcategories.Bible
+            ScripturePortion.Portions,
+            ScripturePortion.NewTestament,
+            ScripturePortion.Bible
           ].map(subcategory => (
             <DomainStatusSubcategory
               key={subcategory}
@@ -45,7 +45,7 @@ export default function DomainStatusScriptureApps(props: IProps) {
                     {takeFirst(item.platforms.replace("|", "-"), t("App"))}
                   </Link>
                   {orBlank(item.year, " ")}
-                  {subcategory == DSISubcategories.Portions &&
+                  {subcategory == ScripturePortion.Portions &&
                     "  " + DomainStatusItem.books(item, t)}
                 </span>
               )}

@@ -7,7 +7,7 @@ import {
   OrganizationAction
 } from "../actions/organizationActions";
 import Organization, { IOrganization } from "../models/Organization";
-import { stdReducers, State } from "./stdReducers";
+import List from "../models/List";
 
 export const emptyOrganization: IOrganization = {
   id: 0,
@@ -19,34 +19,20 @@ export const emptyOrganization: IOrganization = {
   can: {}
 };
 
-export type OrganizationState = State<IOrganization>;
-
-const emptyState: OrganizationState = {
-  list: [],
-  byId: {},
-  listSet: false
-};
-
-const stdOrganizationReducers = stdReducers(
-  emptyOrganization,
-  Organization.compare
-);
-
 export default function organizationsReducer(
-  state = emptyState,
+  state = new List<IOrganization>(emptyOrganization, [], Organization.compare),
   action: OrganizationAction
 ) {
   switch (action.type) {
     case SET_ORGANIZATIONS:
-      return stdOrganizationReducers.setList(state, action.organizations!);
+      return state.addAndPrune(action.organizations!);
     case ADD_ORGANIZATIONS:
-      return stdOrganizationReducers.addItems(state, action.organizations!);
+      return state.add(action.organizations!);
     case ADD_ORGANIZATION:
-      return stdOrganizationReducers.addItems(state, [action.organization!]);
     case SET_ORGANIZATION:
-      return stdOrganizationReducers.addItems(state, [action.organization!]);
+      return state.add([action.organization!]);
     case DELETE_ORGANIZATION:
-      return stdOrganizationReducers.deleteItem(state, action.id!);
+      return state.remove(action.id!);
   }
   return state;
 }

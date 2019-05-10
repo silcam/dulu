@@ -140,7 +140,6 @@ export default function ClusterPage(props: IProps) {
           can={cluster.can}
           basePath={props.basePath}
           history={props.history}
-          t={t}
         />
       )}
     </div>

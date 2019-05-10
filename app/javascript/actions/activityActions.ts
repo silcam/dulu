@@ -7,7 +7,7 @@ export const DELETE_WORKSHOP_EVENT = "DELETE_WORKSHOP_EVENT";
 export interface ActivityAction {
   type: string;
   activities?: IActivity[];
-  activity?: IActivity;
+  activity?: Partial<IActivity>;
   activityId?: number;
   workshopId?: number;
 }
@@ -19,7 +19,7 @@ export function addActivities(activities: IActivity[]): ActivityAction {
   };
 }
 
-export function setActivity(activity: IActivity): ActivityAction {
+export function setActivity(activity: Partial<IActivity>): ActivityAction {
   return {
     type: SET_ACTIVITY,
     activity: activity

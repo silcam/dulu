@@ -7,45 +7,40 @@ import {
   PeopleAction
 } from "../actions/peopleActions";
 import { personCompare, IPerson } from "../models/Person";
-import { stdReducers, State } from "./stdReducers";
+import { State } from "./stdReducers";
+import List from "../models/List";
+import { Locale } from "../i18n/i18n";
 
-export const emptyPerson = {
+export const emptyPerson: IPerson = {
   id: 0,
   first_name: "",
   last_name: "",
   can: {},
   roles: [],
   email: "",
-  ui_language: "",
-  email_pref: "",
-  participants: [] // TODO - remove
+  ui_language: Locale.en,
+  email_pref: "daily",
+  participants: [], // TODO - remove
+  grantable_roles: [],
+  gender: "M"
 };
 
 export type PersonState = State<IPerson>;
 
-const emptyState: PersonState = {
-  list: [],
-  byId: {},
-  listSet: false
-};
-
-const stdPersonReducers = stdReducers(emptyPerson, personCompare);
-
 export default function peopleReducer(
-  state = emptyState,
+  state = new List<IPerson>(emptyPerson, [], personCompare),
   action: PeopleAction
 ) {
   switch (action.type) {
     case SET_PEOPLE:
-      return stdPersonReducers.setList(state, action.people!);
+      return state.addAndPrune(action.people!);
     case ADD_PEOPLE:
-      return stdPersonReducers.addItems(state, action.people!);
+      return state.add(action.people!);
     case ADD_PERSON:
-      return stdPersonReducers.addItems(state, [action.person!]);
     case SET_PERSON:
-      return stdPersonReducers.addItems(state, [action.person!]);
+      return state.add([action.person!]);
     case DELETE_PERSON:
-      return stdPersonReducers.deleteItem(state, action.id!);
+      return state.remove(action.id!);
   }
   return state;
 }

@@ -6,7 +6,6 @@ import style from "./EventsCalendar.css";
 import { Link } from "react-router-dom";
 import { fullName, IPerson } from "../../models/Person";
 import I18nContext from "../../contexts/I18nContext";
-import { ById } from "../../models/TypeBucket";
 import { ILanguage } from "../../models/Language";
 import { ICluster } from "../../models/Cluster";
 import { IEvent } from "../../models/Event";
@@ -14,7 +13,7 @@ import List from "../../models/List";
 
 interface IProps {
   events: IEvent[];
-  people: ById<IPerson>;
+  people: List<IPerson>;
   languages: List<ILanguage>;
   clusters: List<ICluster>;
   month: IMonth;
@@ -68,7 +67,7 @@ function participants(event: IEvent, props: IProps) {
   const peopleLinks = makeLinks(
     event.event_participants.map(e_p => ({
       id: e_p.person_id,
-      name: fullName(props.people[e_p.person_id] as IPerson)
+      name: fullName(props.people.get(e_p.person_id))
     })),
     "people"
   );

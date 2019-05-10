@@ -7,8 +7,8 @@ import DomainStatus from "./DomainStatus";
 import DomainStatusItemPage from "./DomainStatusItemPage";
 
 const mapStateToProps = (state: AppState) => ({
-  people: state.people.byId,
-  organizations: state.organizations.byId
+  people: state.people,
+  organizations: state.organizations
 });
 
 const mapDispatchToProps = {

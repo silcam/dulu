@@ -3,17 +3,17 @@ import { DSICategories } from "../../models/DomainStatusItem";
 import { useAPIPost, ActionPack } from "../../util/useAPI";
 import DomainStatusItemForm from "./DomainStatusItemForm";
 import { ILanguage } from "../../models/Language";
-import { ById } from "../../models/TypeBucket";
 import { IPerson } from "../../models/Person";
 import { IOrganization } from "../../models/Organization";
+import List from "../../models/List";
 
 interface IProps {
   language: ILanguage;
   categories: DSICategories[];
   actions: ActionPack;
   cancel: () => void;
-  people: ById<IPerson>;
-  organizations: ById<IOrganization>;
+  people: List<IPerson>;
+  organizations: List<IOrganization>;
 }
 
 export default function DomainStatusNew(props: IProps) {

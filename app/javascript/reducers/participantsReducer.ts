@@ -10,7 +10,8 @@ const emptyParticipant: IParticipant = {
   id: 0,
   person_id: 0,
   roles: [],
-  start_date: ""
+  start_date: "",
+  can: {}
 };
 
 export interface ParticipantState {

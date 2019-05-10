@@ -34,6 +34,9 @@ export function addEvents(events: IEvent[], period: IPeriod): EventAction {
   };
 }
 
+export interface AddEventsForLanguage {
+  (events: IEvent[], languageId: number, period: IPeriod): void;
+}
 export function addEventsForLanguage(
   events: IEvent[],
   languageId: number,
@@ -48,6 +51,11 @@ export function addEventsForLanguage(
   };
 }
 
+export type IAddEventsForPerson = (
+  events: IEvent[],
+  person: IPerson,
+  period: IPeriod
+) => void;
 export function addEventsForPerson(
   events: IEvent[],
   person: IPerson,

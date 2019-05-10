@@ -5,7 +5,6 @@ import FuzzyDate from "../util/FuzzyDate";
 import { IWorkshop } from "./Workshop";
 import { ICan } from "../actions/canActions";
 import { T } from "../i18n/i18n";
-import DomainStatusItem, { DSICategories } from "./DomainStatusItem";
 
 export interface IActivity {
   id: number;
@@ -22,6 +21,13 @@ export interface IActivity {
   participant_ids: number[];
 }
 
+export interface IStage {
+  name: string;
+  start_date: string;
+  activity_id: number;
+  invalidDate?: boolean;
+}
+
 export type ActivityType = "Translation" | "Media" | "Research" | "Workshops";
 
 interface IProgress {
@@ -32,9 +38,32 @@ export interface ProgressContainer {
   [stage: string]: IProgress;
 }
 
-const mediaCategories = ["AudioScripture", "Film"];
-const mediaFilms = DomainStatusItem.categoryList[DSICategories.Film];
-const mediaScriptures = ["Bible", "Old_testament", "New_testament", "Other"];
+export enum MediaCategory {
+  AudioScripture = "AudioScripture",
+  Film = "Film"
+}
+
+export enum MediaFilm {
+  JesusFilm = "JesusFilm",
+  LukeFilm = "LukeFilm",
+  ActsFilm = "ActsFilm",
+  GenesisFilm = "GenesisFilm",
+  StoryOfGenesisFilm = "StoryOfGenesisFilm",
+  BookOfJohn = "BookOfJohn",
+  MagdalenaFilm = "MagdalenaFilm"
+}
+
+export enum MediaScripture {
+  Bible = "Bible",
+  Old_testament = "Old_testament",
+  New_testament = "New_testament",
+  Other = "Other"
+}
+
+const mediaCategories = Object.values(MediaCategory);
+const mediaFilms = Object.values(MediaFilm);
+const mediaScriptures = Object.values(MediaScripture);
+
 const mediaProgress: ProgressContainer = {
   Planned: { percent: 0, color: Colors.white },
   Application: { percent: 20, color: Colors.red },
@@ -76,7 +105,7 @@ function availableBooks(translation_activities: IActivity[], t: T) {
 
 function nextStage(activity: IActivity) {
   return {
-    name: itemAfter(stages(activity), activity.stage_name),
+    name: itemAfter(stages(activity), activity.stage_name) || "",
     start_date: FuzzyDate.today(),
     activity_id: activity.id
   };

@@ -13,6 +13,10 @@ export interface Setter<T> {
   (item: T): void;
 }
 
+export interface PSetter<T> {
+  (item: Partial<T>): void;
+}
+
 export interface Adder<T> {
   (items: T[]): void;
 }
@@ -43,6 +47,9 @@ export interface ById<T> {
 export type AnyJSX = JSX.Element | JSX.Element[] | string;
 
 export type Partial<T> = { [P in keyof T]?: T[P] };
+export type PartialModel<T extends { id: number }> = Omit<Partial<T>, "id"> & {
+  id: number;
+};
 
 export type Omit<T, K> = Pick<T, Exclude<keyof T, K>>;
 
