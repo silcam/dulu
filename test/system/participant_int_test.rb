@@ -7,10 +7,11 @@ class ParticipantIntTest < ApplicationSystemTestCase
     @zulgo_ezra = translation_activities :ZulgoEzra
     @drew = people :Drew
     @drew_hdi = participants(:DrewHdi)
+    @hdi = languages(:Hdi)
   end
 
   def setup_show_page
-    visit model_path(@drew_hdi)
+    visit model_path(@hdi, @drew_hdi)
   end
 
   test "Show Page: Remove Role" do
@@ -101,11 +102,11 @@ class ParticipantIntTest < ApplicationSystemTestCase
   test "Delete DrewHdi Participant" do
     visit "#{model_path(languages(:Hdi))}/Translation"
     assert_text 'Drew Mambo'
-    setup_show_page
+    click_on 'Drew Mambo'
     page.accept_confirm do
       action_bar_click_delete
     end
-    visit "#{model_path(languages(:Hdi))}/Translation"
+    assert_text 'People'
     safe_assert_no_text 'Drew Mambo'
     assert_nil Participant.find_by(id: @drew_hdi)
   end
@@ -150,7 +151,7 @@ class ParticipantIntTest < ApplicationSystemTestCase
   end
 
   def remove_drew
-    visit model_path(@drew_zulgo)
+    # visit model_path(@zulgo, @drew_zulgo)
     action_bar_click_edit
     within('tr', text: 'Left Program') { fill_in_date(FuzzyDate.new(2017, 7, 31)) }
     click_button 'Save'

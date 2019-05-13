@@ -5,6 +5,7 @@ import FuzzyDate from "../util/FuzzyDate";
 import { IWorkshop } from "./Workshop";
 import { ICan } from "../actions/canActions";
 import { T } from "../i18n/i18n";
+import List from "./List";
 
 export interface IActivity {
   id: number;
@@ -94,7 +95,7 @@ const translationProgress: ProgressContainer = {
   Published: { percent: 100, color: Colors.purple }
 };
 
-function availableBooks(translation_activities: IActivity[], t: T) {
+function availableBooks(translation_activities: List<IActivity>, t: T) {
   return BibleBook.books(t).filter(
     book =>
       !translation_activities.some(

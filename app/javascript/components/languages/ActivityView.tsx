@@ -4,7 +4,7 @@ import Activity, { IActivity } from "../../models/Activity";
 import Loading from "../shared/Loading";
 import { IPerson } from "../../models/Person";
 import WorkshopActivity from "../workshops/WorkshopActivity";
-import { Setter, Adder, ById } from "../../models/TypeBucket";
+import { Setter, Adder } from "../../models/TypeBucket";
 import { ILanguage } from "../../models/Language";
 import I18nContext from "../../contexts/I18nContext";
 import VSpacer from "../shared/VSpacer";
@@ -16,8 +16,8 @@ import List from "../../models/List";
 
 interface IProps {
   activityId: number;
-  activity: IActivity | undefined;
-  participants: ById<IParticipant>;
+  activity: IActivity;
+  participants: List<IParticipant>;
   people: List<IPerson>;
   basePath: string;
   language: ILanguage;
@@ -43,7 +43,7 @@ export default function ActivityView(props: IProps) {
     props.activityId
   ]);
 
-  if (!props.activity) return <Loading />;
+  if (props.activity.id == 0) return <Loading />;
 
   if (Activity.isWorkshops(props.activity))
     return (

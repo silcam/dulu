@@ -2,7 +2,6 @@ import { Selection } from "./Dashboard";
 import { AppState } from "../../reducers/appReducer";
 import Cluster from "../../models/Cluster";
 import Region from "../../models/Region";
-import { IParticipant } from "../../models/Participant";
 import { connect } from "react-redux";
 import MainContent from "./MainContent";
 import { flat } from "../../util/arrayUtils";
@@ -60,7 +59,7 @@ function regionLanguages(state: AppState, regionId: number) {
 
 function userLanguages(state: AppState, userId: number) {
   return flat(
-    (Object.values(state.participants) as IParticipant[])
+    state.participants
       .filter(ptpt => ptpt.person_id == userId)
       .map(ptpt =>
         ptpt.cluster_id

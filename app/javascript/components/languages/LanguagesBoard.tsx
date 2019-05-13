@@ -29,10 +29,7 @@ interface IProps {
 
 interface IState {}
 
-export default class LanguagesBoard extends React.PureComponent<
-  IProps,
-  IState
-> {
+export default class LanguagesBoard extends React.Component<IProps, IState> {
   state: IState = {};
 
   async componentDidMount() {
@@ -82,7 +79,7 @@ export default class LanguagesBoard extends React.PureComponent<
             )} */}
                 {this.props.id && (
                   <LanguageContainer
-                    key={this.props.id}
+                    key={this.props.id + location.pathname}
                     id={this.props.id}
                     basePath={this.props.basePath}
                   />

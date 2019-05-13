@@ -46,7 +46,7 @@ export default function RegionPage(props: IProps) {
   }, [props.id]);
 
   const edit = () => {
-    setDraftRegion(deepcopy(props.region));
+    setDraftRegion({ ...props.region });
     setEditing(true);
   };
 
@@ -76,7 +76,7 @@ export default function RegionPage(props: IProps) {
 
   const region = editing ? draftRegion : props.region;
 
-  if (!region) return <Loading />;
+  if (!region || region.id == 0) return <Loading />;
 
   return (
     <div>
@@ -103,7 +103,7 @@ export default function RegionPage(props: IProps) {
         {editing ? (
           <FormGroup label={t("LPF")}>
             <PersonPicker
-              collection={props.people.asById()}
+              collection={props.people}
               selectedId={region.person ? region.person.id : null}
               setSelected={person => updateRegion({ person: person })}
               placeholder={t("Name")}

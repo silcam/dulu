@@ -19,7 +19,7 @@ import List from "../../models/List";
 
 interface IProps {
   id: number;
-  cluster?: IClusterInflated;
+  cluster: IClusterInflated;
   setCluster: (c: ICluster) => void;
   deleteCluster: Deleter;
   addPeople: Adder<IPerson>;
@@ -58,7 +58,7 @@ export default function ClusterPage(props: IProps) {
     setDraftCluster(update(draftCluster, { $merge: mergeCluster }));
 
   const edit = () => {
-    setDraftCluster(deepcopy(props.cluster!));
+    setDraftCluster({ ...props.cluster });
     setEditing(true);
   };
 
@@ -102,7 +102,14 @@ export default function ClusterPage(props: IProps) {
 
   const cluster = editing ? draftCluster : props.cluster;
 
-  if (!cluster) return <Loading />;
+  if (!cluster || cluster.id == 0) return <Loading />;
+
+  if (!cluster.languages.map)
+    console.error(
+      `Cluster Languages: ${cluster.languages}\n${JSON.stringify(
+        cluster.languages
+      )}`
+    );
 
   return (
     <div>

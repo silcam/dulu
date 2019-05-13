@@ -169,7 +169,7 @@ export default function DomainStatusItemForm(props: IProps) {
         <label>
           {t("Person")}
           <PersonPicker
-            collection={props.people.asById()}
+            collection={props.people}
             selectedId={personId}
             setSelected={person => setPersonId(person && person.id)}
             allowBlank
@@ -181,7 +181,7 @@ export default function DomainStatusItemForm(props: IProps) {
         <label>
           {t("Organization")}
           <OrganizationPicker
-            collection={props.organizations.asById()}
+            collection={props.organizations}
             selectedId={organizationId}
             setSelected={org => setOrganizationId(org && org.id)}
             allowBlank

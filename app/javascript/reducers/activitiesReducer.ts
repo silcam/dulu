@@ -6,14 +6,10 @@ import {
 } from "../actions/activityActions";
 import { findIndexById } from "../util/arrayUtils";
 import update from "immutability-helper";
-import { IActivity } from "../models/Activity";
-import { stdReducersNoList } from "./stdReducers";
+import Activity, { IActivity } from "../models/Activity";
+import List from "../models/List";
 
-export interface ActivityState {
-  [id: string]: IActivity | undefined;
-}
-
-const emptyActivity: IActivity = {
+export const emptyActivity: IActivity = {
   id: 0,
   type: "TranslationActivity",
   language_id: 0,
@@ -28,21 +24,15 @@ const emptyActivity: IActivity = {
   can: {}
 };
 
-const emptyState: ActivityState = {};
-
-const stdActivitiesReducers = stdReducersNoList(emptyActivity);
-
 export default function activitiesReducer(
-  state = emptyState,
+  state = new List<IActivity>(emptyActivity, [], Activity.compare),
   action: ActivityAction
-): ActivityState {
+) {
   switch (action.type) {
     case ADD_ACTIVITIES:
-      return stdActivitiesReducers.addItems(state, action.activities!);
+      return state.add(action.activities!);
     case SET_ACTIVITY:
-      return stdActivitiesReducers.addItems(state, [
-        action.activity as IActivity
-      ]); // Lazy Fix
+      return state.add([action.activity!]);
     case DELETE_WORKSHOP_EVENT:
       return deleteWorkshopEvent(state, action as DeleteWSEventAction);
   }
@@ -54,15 +44,16 @@ interface DeleteWSEventAction {
   workshopId: number;
 }
 function deleteWorkshopEvent(
-  state: ActivityState,
+  state: List<IActivity>,
   { activityId, workshopId }: DeleteWSEventAction
 ) {
-  if (state[activityId] && state[activityId]!.workshops) {
-    const index = findIndexById(state[activityId]!.workshops, workshopId);
+  const activity = state.get(activityId);
+  if (activity.id > 0) {
+    const index = findIndexById(activity.workshops, workshopId);
     if (index >= 0)
-      return update(state, {
-        [activityId]: { workshops: { [index]: { $unset: ["event_id"] } } }
-      });
+      return state.add([
+        update(activity, { workshops: { [index]: { $unset: ["event_id"] } } })
+      ]);
   }
   return state;
 }

@@ -16,7 +16,7 @@ interface IProps {
 }
 
 const mapStateToProps = (state: AppState, ownProps: IProps) => {
-  const event = state.events.byId[ownProps.id];
+  const event = state.events.list.get(ownProps.id);
   if (!event)
     return {
       event: event,

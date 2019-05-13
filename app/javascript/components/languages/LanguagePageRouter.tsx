@@ -11,7 +11,7 @@ import { DomainStatusItemPageContainer } from "./DomainStatusContainer";
 import { ILanguage } from "../../models/Language";
 
 interface IProps {
-  language?: ILanguage;
+  language: ILanguage;
   // history: History;
   basePath: string;
   // key={this.props.id}
@@ -23,7 +23,7 @@ interface IProps {
 }
 
 export default function LanguagePageRouter(props: IProps) {
-  if (!props.language) return <Loading />;
+  if (props.language.id == 0) return <Loading />;
   const language = props.language;
   return (
     <Switch>

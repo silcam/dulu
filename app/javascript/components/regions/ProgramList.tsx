@@ -48,7 +48,7 @@ export default function ProgramList<T extends ClusterLanguage>(
           <tr>
             <td colSpan={2}>
               <SearchPickerAutoClear
-                collection={props.collection.asById()}
+                collection={props.collection}
                 setSelected={addThing}
                 placeholder={t(`Add_${props.thing}`)}
               />

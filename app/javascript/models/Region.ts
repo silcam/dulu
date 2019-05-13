@@ -40,8 +40,8 @@ function inflate(state: AppState, region: IRegion): IRegionInflated {
   return {
     ...region,
     person: region.person_id ? state.people.get(region.person_id) : undefined,
-    clusters: state.clusters.filter(c => c!.region_id == region.id),
-    languages: state.languages.filter(l => l!.region_id == region.id)
+    clusters: state.clusters.filter(c => c.region_id == region.id),
+    languages: state.languages.filter(l => l.region_id == region.id)
   };
 }
 

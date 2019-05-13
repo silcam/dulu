@@ -94,7 +94,7 @@ export default function NewEventForm(props: IProps) {
       <EditEventParticipantsTable event={event} replaceEvent={updateEvent} />
 
       <SaveButton
-        onClick={save}
+        onClick={() => save(props.cancelForm)}
         disabled={eventInvalid}
         saveInProgress={saving}
       />

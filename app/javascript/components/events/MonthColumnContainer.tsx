@@ -1,5 +1,5 @@
 import { connect } from "react-redux";
-import Event, { IEvent } from "../../models/Event";
+import Event from "../../models/Event";
 import MonthColumn from "./MonthColumn";
 import { AppState } from "../../reducers/appReducer";
 import { IMonth } from "./dateUtils";
@@ -14,9 +14,9 @@ const mapStateToProps = (state: AppState, ownProps: IProps) => {
     end: ownProps.month
   });
   return {
-    events: (Object.values(state.events.byId) as IEvent[])
-      .filter(e => Event.overlapCompare(e, periodEvent) == 0)
-      .sort(Event.compare),
+    events: state.events.list.filter(
+      e => Event.overlapCompare(e, periodEvent) == 0
+    ),
     people: state.people,
     languages: state.languages,
     clusters: state.clusters

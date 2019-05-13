@@ -106,7 +106,7 @@ export default function EventView(props: IProps) {
     });
 
   const event = editing ? draftEvent : props.event;
-  if (!event) return <Loading />;
+  if (!event || event.id == 0) return <Loading />;
   return (
     <div className={style.eventPage}>
       <div>

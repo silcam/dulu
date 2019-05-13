@@ -9,11 +9,12 @@ import Spacer from "../shared/Spacer";
 import { Link } from "react-router-dom";
 import { ICan } from "../../actions/canActions";
 import I18nContext from "../../contexts/I18nContext";
+import { PSetter } from "../../models/TypeBucket";
 
 interface IProps {
   activity: IActivity;
   can: ICan;
-  setActivity: (a: Partial<IActivity>) => void;
+  setActivity: PSetter<IActivity>;
 
   basePath: string;
 }

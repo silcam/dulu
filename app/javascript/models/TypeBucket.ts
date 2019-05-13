@@ -13,8 +13,8 @@ export interface Setter<T> {
   (item: T): void;
 }
 
-export interface PSetter<T> {
-  (item: Partial<T>): void;
+export interface PSetter<T extends { id: number }> {
+  (item: PartialModel<T>): void;
 }
 
 export interface Adder<T> {
@@ -38,10 +38,6 @@ export interface JSEventHandler {
 
 export interface UpdaterFunc {
   (arg: AnyObj): void;
-}
-
-export interface ById<T> {
-  [id: string]: T | undefined;
 }
 
 export type AnyJSX = JSX.Element | JSX.Element[] | string;

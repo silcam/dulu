@@ -7,10 +7,11 @@ import { IPerson } from "../../models/Person";
 import { ICan } from "../../actions/canActions";
 import BasicEventsTable from "../events/BasicEventsTable";
 import DomainFilterer from "./DomainFilterer";
+import List from "../../models/List";
 
 interface IProps {
   languageIds: number[];
-  events: IEvent[];
+  events: List<IEvent>;
   eventsBackTo: number | undefined;
   can: ICan;
 
@@ -39,7 +40,7 @@ export default function DBEventsTable(props: IProps) {
       ? props.events
       : props.events.filter(e => e.domain == domainFilter);
 
-  return props.events.length == 0 ? (
+  return props.events.length() == 0 ? (
     <div />
   ) : (
     <div>

@@ -48,7 +48,7 @@ export default function ClusterLanguagesTable(props: IProps) {
             <tr>
               <td colSpan={2}>
                 <SearchPicker
-                  collection={props.languages.asById()}
+                  collection={props.languages}
                   selectedId={null}
                   setSelected={language => language && addLanguage(language)}
                   placeholder={t("Add_language")}

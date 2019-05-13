@@ -3,8 +3,8 @@ import peopleReducer from "./peopleReducer";
 import organizationsReducer from "./organizationsReducer";
 import organizationPeopleReducer from "./organizationPeopleReducer";
 import languagesReducer from "./languagesReducer";
-import participantsReducer, { ParticipantState } from "./participantsReducer";
-import activitiesReducer, { ActivityState } from "./activitiesReducer";
+import participantsReducer from "./participantsReducer";
+import activitiesReducer from "./activitiesReducer";
 import eventsReducer, { EventState } from "./eventsReducer";
 import clustersReducer from "./clustersReducer";
 import canReducer, { CanState } from "./canReducer";
@@ -15,9 +15,11 @@ import { ICluster } from "../models/Cluster";
 import { ILanguage } from "../models/Language";
 import { IPerson } from "../models/Person";
 import { IOrganization, IOrganizationPerson } from "../models/Organization";
+import { IParticipant } from "../models/Participant";
+import { IActivity } from "../models/Activity";
 
 export interface AppState {
-  activities: ActivityState;
+  activities: List<IActivity>;
   can: CanState;
   clusters: List<ICluster>;
   events: EventState;
@@ -25,7 +27,7 @@ export interface AppState {
   regions: List<IRegion>;
   organizations: List<IOrganization>;
   organizationPeople: List<IOrganizationPerson>;
-  participants: ParticipantState;
+  participants: List<IParticipant>;
   people: List<IPerson>;
 }
 

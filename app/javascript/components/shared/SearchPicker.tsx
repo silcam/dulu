@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import styles from "./SearchTextInput.css";
 import accentFold from "../../util/accentFold";
-import { ById } from "../../models/TypeBucket";
 import { fullName, IPerson } from "../../models/Person";
 import { IOrganization } from "../../models/Organization";
+import List from "../../models/List";
 
 interface SearchItemType {
   id: number;
@@ -11,7 +11,7 @@ interface SearchItemType {
 }
 
 interface CorePickerProps<T extends SearchItemType> {
-  collection: ById<T>;
+  collection: List<T>;
   placeholder?: string;
   autoFocus?: boolean;
   allowBlank?: boolean;
@@ -29,7 +29,8 @@ export default function SearchPicker<T extends SearchItemType>(
   props: SearchPickerProps<T>
 ) {
   const nameOf = props.nameOf || stdNameOf;
-  const selectedItem = props.selectedId && props.collection[props.selectedId];
+  const selectedItem =
+    props.selectedId && props.collection.get(props.selectedId);
 
   const [text, setText] = useState(selectedItem ? nameOf(selectedItem) : "");
   const [editing, setEditing] = useState(false);
@@ -41,9 +42,11 @@ export default function SearchPicker<T extends SearchItemType>(
     if (props.allowBlank && text == "") props.setSelected(null);
   };
 
-  const filteredList = Object.values(props.collection).filter(
-    item => item && accentFold(nameOf(item)).includes(accentFold(text))
-  ) as T[];
+  const filteredList = props.collection
+    .toArray()
+    .filter(
+      item => item && accentFold(nameOf(item)).includes(accentFold(text))
+    );
 
   const save = (item: T) => {
     setText(props.autoClear ? "" : nameOf(item));

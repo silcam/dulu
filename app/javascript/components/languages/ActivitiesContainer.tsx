@@ -2,7 +2,7 @@ import { connect } from "react-redux";
 import * as activityActionCreators from "../../actions/activityActions";
 import { setLanguage } from "../../actions/languageActions";
 import ActivitiesTable from "./ActivitiesTable";
-import Activity, { IActivity, ActivityType } from "../../models/Activity";
+import { IActivity, ActivityType } from "../../models/Activity";
 import { ILanguage } from "../../models/Language";
 import { AppState } from "../../reducers/appReducer";
 
@@ -12,9 +12,7 @@ interface IProps {
 }
 
 const mapStateToProps = (state: AppState, ownProps: IProps) => ({
-  activities: (Object.values(state.activities) as IActivity[])
-    .filter(propMatcher(ownProps))
-    .sort(Activity.compare)
+  activities: state.activities.filter(propMatcher(ownProps))
 });
 
 function propMatcher(props: IProps) {

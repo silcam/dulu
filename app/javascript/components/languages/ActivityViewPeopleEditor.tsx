@@ -1,5 +1,4 @@
 import React, { useState, useContext, useEffect } from "react";
-import { ById } from "../../models/TypeBucket";
 import I18nContext from "../../contexts/I18nContext";
 import { IPerson, fullName } from "../../models/Person";
 import { IActivity } from "../../models/Activity";
@@ -17,7 +16,7 @@ interface IProps {
   cancelEdit: () => void;
   activity: IActivity;
   language: ILanguage;
-  participants: ById<IParticipant>;
+  participants: List<IParticipant>;
   people: List<IPerson>;
   basePath: string;
   actions: ActionPack;

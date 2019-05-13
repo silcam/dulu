@@ -141,21 +141,21 @@ function BaseEditEventParticipantsTable(props: IProps) {
           <tr>
             <td>
               <SearchPickerAutoClear
-                collection={props.clusters.asById()}
+                collection={props.clusters}
                 setSelected={addCluster}
                 placeholder={t("Add_cluster")}
               />
             </td>
             <td>
               <SearchPickerAutoClear
-                collection={props.languages.asById()}
+                collection={props.languages}
                 setSelected={addLanguage}
                 placeholder={t("Add_language")}
               />
             </td>
             <td>
               <PersonPickerAutoClear
-                collection={props.people.asById()}
+                collection={props.people}
                 setSelected={addPerson}
                 placeholder={t("Add_person")}
               />

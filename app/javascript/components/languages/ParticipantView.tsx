@@ -26,7 +26,7 @@ export interface IProps {
   id: number;
   participant?: IParticipant;
   person?: IPerson;
-  activities?: IActivity[];
+  activities?: List<IActivity>;
   clusterLanguage?: ClusterLanguage;
   languages: List<ILanguage>;
 
@@ -129,7 +129,7 @@ export default class ParticipantView extends React.PureComponent<
       ? this.state.participant
       : this.props.participant;
 
-    if (!participant) return <Loading />;
+    if (!participant || participant.id == 0) return <Loading />;
     const can = this.props.participant!.can || {};
 
     return (

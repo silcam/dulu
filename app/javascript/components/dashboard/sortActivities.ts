@@ -4,6 +4,7 @@ import baseCompare from "../../util/baseCompare";
 import intCompare from "../../util/intCompare";
 import Activity from "../../models/Activity";
 import List from "../../models/List";
+import { emptyActivity } from "../../reducers/activitiesReducer";
 
 export type SortOption = "Language" | "Book" | "Media" | "Stage";
 
@@ -41,5 +42,5 @@ export default function sortActivities(
   const finalCompare = (a: IActivity, b: IActivity) =>
     sort.desc ? compare(b, a) : compare(a, b);
 
-  return [...activities].sort(finalCompare);
+  return activities.sort(finalCompare);
 }

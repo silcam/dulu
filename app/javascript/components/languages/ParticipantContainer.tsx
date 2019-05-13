@@ -1,5 +1,4 @@
 import { connect } from "react-redux";
-import Activity, { IActivity } from "../../models/Activity";
 import * as participantActionCreators from "../../actions/participantActions";
 import { setPerson } from "../../actions/peopleActions";
 import { addActivities } from "../../actions/activityActions";
@@ -13,7 +12,7 @@ interface IProps {
 }
 
 const mapStateToProps = (state: AppState, ownProps: IProps) => {
-  const participant = state.participants[ownProps.id];
+  const participant = state.participants.get(ownProps.id);
   if (!participant) return { participant, languages: state.languages };
   return {
     participant: participant,
@@ -21,11 +20,9 @@ const mapStateToProps = (state: AppState, ownProps: IProps) => {
     clusterLanguage: participant.cluster_id
       ? state.clusters.get(participant.cluster_id)
       : state.languages.get(participant.language_id!),
-    activities: (Object.values(state.activities) as IActivity[])
-      .filter(activity => {
-        return activity.participant_ids.includes(ownProps.id);
-      })
-      .sort(Activity.compare),
+    activities: state.activities.filter(activity => {
+      return activity.participant_ids.includes(ownProps.id);
+    }),
     languages: state.languages
   };
 };

@@ -4,9 +4,9 @@ import {
   ParticipantAction
 } from "../actions/participantActions";
 import { IParticipant } from "../models/Participant";
-import { stdReducersNoList } from "./stdReducers";
+import List from "../models/List";
 
-const emptyParticipant: IParticipant = {
+export const emptyParticipant: IParticipant = {
   id: 0,
   person_id: 0,
   roles: [],
@@ -14,23 +14,15 @@ const emptyParticipant: IParticipant = {
   can: {}
 };
 
-export interface ParticipantState {
-  [id: string]: IParticipant | undefined;
-}
-
-const emptyState = {};
-
-const stdParticipantReducers = stdReducersNoList(emptyParticipant);
-
 export default function participantsReducer(
-  state = emptyState,
+  state = new List<IParticipant>(emptyParticipant, []),
   action: ParticipantAction
 ) {
   switch (action.type) {
     case ADD_PARTICIPANTS:
-      return stdParticipantReducers.addItems(state, action.participants!);
+      return state.add(action.participants!);
     case DELETE_PARTICIPANT:
-      return stdParticipantReducers.deleteItem(state, action.id!);
+      return state.remove(action.id!);
   }
   return state;
 }

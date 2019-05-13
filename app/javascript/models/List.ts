@@ -1,5 +1,5 @@
 import update from "immutability-helper";
-import { ById, PartialModel } from "./TypeBucket";
+import { PartialModel } from "./TypeBucket";
 
 export default class List<T extends { id: number }> {
   private items: Array<T>;
@@ -61,11 +61,33 @@ export default class List<T extends { id: number }> {
     return this.filter(item => item.id != id);
   }
 
-  map<U>(callback: (item: T, index?: number) => U) {
+  // removeAll(ids: number[]) {
+  //   return this.filter(item => !ids.some(id => id == item.id));
+  // }
+
+  reverse() {
+    const newItems = this.items.reduceRight(
+      (newItems, item) => {
+        newItems.push(item);
+        return newItems;
+      },
+      [] as T[]
+    );
+    const revSort = this.sort ? (a: T, b: T) => this.sort!(b, a) : undefined;
+    return new List(this.emptyItem, newItems, revSort);
+  }
+
+  map<U>(callback: (item: T, index: number) => U) {
     return this.items.map(callback);
   }
 
-  filter(callback: (item: T) => boolean) {
+  mapToList<U extends T>(callback: (item: T, index: number) => U) {
+    const newEmptyItem = callback(this.emptyItem, 0);
+    const newItems = this.items.map(callback);
+    return new List<U>(newEmptyItem, newItems, this.sort);
+  }
+
+  filter(callback: (item: T) => boolean | undefined | null) {
     const newItems = this.items.filter(callback);
     return new List(this.emptyItem, newItems, this.sort);
   }
@@ -78,18 +100,11 @@ export default class List<T extends { id: number }> {
     return this.items.find(callback);
   }
 
-  // Transitional "escape hatches"
-  asArray() {
-    return this.filter(_ => true);
+  reduce<U>(callback: (accum: U, item: T) => U, startVal: U) {
+    return this.items.reduce(callback, startVal);
   }
 
-  asById() {
-    return this.items.reduce(
-      (byId, item) => {
-        byId[item.id] = item;
-        return byId;
-      },
-      {} as ById<T>
-    );
+  toArray() {
+    return this.map(item => item);
   }
 }

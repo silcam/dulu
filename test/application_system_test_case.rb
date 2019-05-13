@@ -23,11 +23,12 @@ class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
     if errors.present?
       errors.each do |error|
         unless error.to_s.include?("Can't perform a React state update on an unmounted component.")
-          puts "\e[31m#{error}\e[0m"
+          puts "\e[31m#{self.method_name} : #{error}\e[0m"
         end
       end
     end
     # sleep(0.4) # Avoids many spurious errors
+    puts "Finished #{self.method_name}"
   end
   
   def simulate_oauth(user)
@@ -93,12 +94,12 @@ class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
   # end
 
   def fill_in_search_input(text)
-    fill_in('query', with: text)
+    fill_in('query', with: text, fill_options: { clear: :backspace })
     find('li', text: text).click
   end
 
   def clear_search_input
-    fill_in('query', with: '')
+    fill_in('query', with: '', fill_options: { clear: :backspace })
     find('input[name=query]').native.send_keys(:return)
   end
 

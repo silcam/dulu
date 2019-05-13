@@ -13,6 +13,7 @@ import { fullName, IPerson } from "../../models/Person";
 import { Selection } from "./Dashboard";
 import Loading from "../shared/Loading";
 import { IParticipant } from "../../models/Participant";
+import List from "../../models/List";
 
 interface IProps {
   selection: Selection;
@@ -21,7 +22,7 @@ interface IProps {
     clusters: LoadedCluster[];
     languages: ILanguage[];
   };
-  regions: LoadedRegion[];
+  regions: List<LoadedRegion>;
   setSelection: (s: Selection) => void;
   setRegions: Adder<IRegion>;
   setClusters: Adder<ICluster>;
@@ -62,7 +63,7 @@ export default function DashboardSidebar(props: IProps) {
   const clusterStartExpanded = (cluster: LoadedCluster) =>
     cluster.languages.some(l => isSelected("language", l.id));
 
-  if (props.regions.length == 0) return <Loading />;
+  if (props.regions.length() == 0) return <Loading />;
 
   return (
     <div>

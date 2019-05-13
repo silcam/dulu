@@ -95,7 +95,7 @@ export default class MyOrganizationsTable extends React.PureComponent<
                   <tr>
                     <td colSpan={4}>
                       <OrganizationPicker
-                        collection={this.props.organizations.asById()}
+                        collection={this.props.organizations}
                         selectedId={
                           this.state.newOrganization &&
                           this.state.newOrganization.id

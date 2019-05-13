@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Loading from "../shared/Loading";
 import { History } from "history";
 import { IParticipant } from "../../models/Participant";
@@ -20,9 +20,11 @@ function BaseParticipantPage(props: IProps) {
     addParticipant: props.addParticipant
   });
 
-  if (props.participant) {
-    props.history.replace(routeTo(props.participant));
-  }
+  useEffect(() => {
+    if (props.participant && props.participant.id > 0) {
+      props.history.replace(routeTo(props.participant));
+    }
+  });
 
   return loading ? <Loading /> : null;
 }
@@ -35,7 +37,7 @@ function routeTo(participant: IParticipant) {
 
 const ParticipantPage = connect(
   (state: AppState, ownProps: { id: number }) => ({
-    participant: state.participants[ownProps.id]
+    participant: state.participants.get(ownProps.id)
   }),
   {
     addParticipant

@@ -11,7 +11,7 @@ export interface ICluster extends BasicModel {
 
 export interface IClusterInflated extends ICluster {
   languages: List<ILanguage>;
-  participants: IParticipant[];
+  participants: List<IParticipant>;
 }
 
 const emptyCluster = {
@@ -36,9 +36,7 @@ function inflate(state: AppState, cluster: ICluster): IClusterInflated {
   return {
     ...cluster,
     languages: state.languages.filter(l => l.cluster_id == cluster.id),
-    participants: (Object.values(state.participants) as IParticipant[]).filter(
-      p => p.cluster_id == cluster.id
-    )
+    participants: state.participants.filter(p => p.cluster_id == cluster.id)
   };
 }
 

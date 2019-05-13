@@ -11,9 +11,10 @@ import NewWorkshopsActivityForm from "./NewWorkshopsActivityForm";
 import { Adder, Setter, PSetter } from "../../models/TypeBucket";
 import { ILanguage } from "../../models/Language";
 import I18nContext from "../../contexts/I18nContext";
+import List from "../../models/List";
 
 interface IProps {
-  activities: IActivity[];
+  activities: List<IActivity>;
   addActivities: Adder<IActivity>;
   setActivity: PSetter<IActivity>;
   setLanguage: Setter<ILanguage>;

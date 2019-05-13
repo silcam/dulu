@@ -26,7 +26,11 @@ const mapStateToProps = (state: AppState, ownProps: IProps) => {
     ownProps.languageIds
       .map(id => state.languages.get(id))
       .map(lang =>
-        Language.participants(state.participants, lang.id, lang.cluster_id)
+        Language.participants(
+          state.participants,
+          lang.id,
+          lang.cluster_id
+        ).toArray()
       )
   );
   const peopleParticipants = participants.reduce(

@@ -1,5 +1,4 @@
 import React, { useState, useContext } from "react";
-import { ById } from "../../models/TypeBucket";
 import I18nContext from "../../contexts/I18nContext";
 import Spacer from "../shared/Spacer";
 import EditIcon from "../shared/icons/EditIcon";
@@ -17,7 +16,7 @@ import List from "../../models/List";
 export interface IProps {
   activity: IActivity;
   language: ILanguage;
-  participants: ById<IParticipant>;
+  participants: List<IParticipant>;
   people: List<IPerson>;
   basePath: string;
   actions: ActionPack;

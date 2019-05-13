@@ -12,7 +12,7 @@ import { IEvent } from "../../models/Event";
 import List from "../../models/List";
 
 interface IProps {
-  events: IEvent[];
+  events: List<IEvent>;
   people: List<IPerson>;
   languages: List<ILanguage>;
   clusters: List<ICluster>;
@@ -37,7 +37,7 @@ export default function MonthColumn(props: IProps) {
           )}
           <p>{participants(event, props)}</p>
           <p>{event.note}</p>
-          {index < props.events.length - 1 && <hr />}
+          {index < props.events.length() - 1 && <hr />}
         </div>
       ))}
     </div>

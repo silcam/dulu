@@ -99,7 +99,7 @@ export default class OrganizationPage extends React.PureComponent<
       ? this.state.organization
       : this.props.organization;
 
-    if (!organization) return <Loading />;
+    if (!organization || organization.id == 0) return <Loading />;
 
     const parent = organization.parent_id
       ? this.props.organizations.get(organization.parent_id)
@@ -169,7 +169,7 @@ export default class OrganizationPage extends React.PureComponent<
                 &nbsp;
                 {this.state.editing ? (
                   <OrganizationPicker
-                    collection={this.props.organizations.asById()}
+                    collection={this.props.organizations}
                     selectedId={parent ? parent.id : null}
                     setSelected={org =>
                       this.updateOrganization({

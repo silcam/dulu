@@ -5,13 +5,14 @@ import { IEvent } from "../../models/Event";
 import I18nContext from "../../contexts/I18nContext";
 import { History } from "history";
 import StyledTable from "../shared/StyledTable";
+import List from "../../models/List";
 
 interface EventsByYear {
   [year: string]: IEvent[];
 }
 
 interface IProps {
-  events: IEvent[];
+  events: List<IEvent>;
   basePath?: string;
   can: { create?: boolean };
   noAdd?: boolean;

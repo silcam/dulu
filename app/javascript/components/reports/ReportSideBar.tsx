@@ -48,7 +48,7 @@ function BaseReportSideBar(props: IProps) {
           ))}
         </ul>
         <SearchPickerAutoClear
-          collection={props.clusters.asById()}
+          collection={props.clusters}
           setSelected={cluster => props.addCluster(cluster)}
           placeholder={t("Add_cluster")}
         />
@@ -67,7 +67,7 @@ function BaseReportSideBar(props: IProps) {
           ))}
         </ul>
         <SearchPickerAutoClear
-          collection={props.languages.asById()}
+          collection={props.languages}
           setSelected={lang => props.addLanguage(lang)}
           placeholder={t("Add_language")}
         />

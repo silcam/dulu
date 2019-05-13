@@ -86,12 +86,40 @@ test("Remove removes the item", () => {
   expect(list.get(1).id).toBe(0);
 });
 
+// test("Remove All", () => {
+//   const list = aList().removeAll([4, 8]);
+//   expect(list.length()).toBe(2);
+//   expect(list.get(4).id).toBe(0);
+// });
+
 test("Remove does not alter the original list", () => {
   const list = aList();
   const newList = list.remove(1);
   expect(list).not.toBe(newList);
   expect(list.length()).toBe(4);
   expect(newList.length()).toBe(3);
+});
+
+// test("Remove All does not alter the original list", () => {
+//   const list = aList();
+//   const newList = list.removeAll([1, 8]);
+//   expect(list).not.toBe(newList);
+//   expect(list.length()).toBe(4);
+//   expect(newList.length()).toBe(2);
+// });
+
+test("Reverse reverses (and not in place)", () => {
+  const list = aList();
+  const list2 = list.reverse();
+  expect(list).not.toBe(list2);
+  expect(idsOf(list2)).toEqual([8, 1, 10, 4]);
+});
+
+test("Reverse reverses the sort", () => {
+  const list = aSortedList().reverse();
+  expect(idsOf(list)).toEqual([10, 8, 4, 1]);
+  const list2 = list.add([{ id: 5 }]);
+  expect(idsOf(list2)).toEqual([10, 8, 5, 4, 1]);
 });
 
 test("map maps", () => {

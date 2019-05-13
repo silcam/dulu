@@ -14,7 +14,7 @@ interface IProps {
 const mapStateToProps = (state: AppState, ownProps: IProps) => ({
   activities: flat(
     ownProps.languageIds.map(id =>
-      Language.activities(state, id, ownProps.type)
+      Language.activities(state, id, ownProps.type).toArray()
     )
   ),
   languages: state.languages

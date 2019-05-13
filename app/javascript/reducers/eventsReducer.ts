@@ -9,7 +9,7 @@ import {
 import Event from "../models/Event";
 import update from "immutability-helper";
 import { IEvent, IPeriod } from "../models/Event";
-import { stdReducersNoList } from "./stdReducers";
+import List from "../models/List";
 
 export function emptyEvent(): IEvent {
   return {
@@ -27,13 +27,14 @@ export function emptyEvent(): IEvent {
 }
 
 export interface EventState {
-  byId: { [id: string]: IEvent | undefined };
+  list: List<IEvent>;
   backTo: { [backToId: string]: number | undefined };
 }
 
-const emptyState = { byId: {}, backTo: {} };
-
-const stdEventReducers = stdReducersNoList(emptyEvent());
+const emptyState = {
+  list: new List(emptyEvent(), [], Event.compare),
+  backTo: {}
+};
 
 export default function eventsReducer(
   state = emptyState,
@@ -42,10 +43,10 @@ export default function eventsReducer(
   switch (action.type) {
     case SET_EVENT:
       return update(state, {
-        byId: { $set: stdEventReducers.addItems(state.byId, [action.event!]) }
+        list: { $set: state.list.add([action.event!]) }
       });
     case DELETE_EVENT:
-      return update(state, { byId: { $unset: [action.id] } });
+      return update(state, { list: { $set: state.list.remove(action.id!) } });
     case ADD_EVENTS:
       return addEvents(state, action);
     case ADD_EVENTS_FOR_LANGUAGE:
@@ -65,16 +66,14 @@ function addEvents(
   { events, period }: EventAction,
   extraFilter: Filter = _e => true
 ) {
-  let byId = stdEventReducers.addItems(state.byId, events!);
+  const list = state.list.add(events!);
   const periodEvent = Event.comparisonEvent(period!);
-  const eventIdsToRemove = Object.keys(byId).filter(
-    id =>
-      Event.overlapCompare(byId[id]!, periodEvent) == 0 &&
-      !events!.some(e => e.id == parseInt(id)) &&
-      extraFilter(byId[id]!)
-  );
-  byId = update(byId, { $unset: eventIdsToRemove });
-  return update(state, { byId: { $set: byId } });
+  const removeEvent = (event: IEvent) =>
+    Event.overlapCompare(event, periodEvent) == 0 &&
+    !events!.some(e => e.id == event.id) &&
+    extraFilter(event);
+  const filteredList = list.filter(event => !removeEvent(event));
+  return update(state, { list: { $set: filteredList } });
 }
 
 function addEventsFor(

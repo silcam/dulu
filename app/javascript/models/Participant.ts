@@ -1,7 +1,6 @@
 import { IPerson } from "./Person";
 import { ICluster } from "./Cluster";
 import { BasicModel } from "./BasicModel";
-import { ById } from "./TypeBucket";
 import List from "./List";
 import { ICan } from "../actions/canActions";
 
@@ -32,17 +31,32 @@ interface PtptPerson {
 }
 function participantPeople(
   ids: number[],
-  participants: ById<IParticipant>,
+  participants: List<IParticipant>,
   people: List<IPerson>
-) {
-  return ids.reduce((accum: PtptPerson[], id) => {
-    const ptpt = participants[id];
-    if (!ptpt) return accum;
-    const person = people.get(ptpt.person_id);
-    if (!person) return accum;
-    return accum.concat([{ participant: ptpt, person: person }]);
-  }, []);
+): PtptPerson[] {
+  return ids
+    .map(id => {
+      const ptpt = participants.get(id);
+      return {
+        person: people.get(ptpt.person_id),
+        participant: ptpt
+      };
+    })
+    .filter(p => p.participant.id > 0 && p.person.id > 0);
 }
+// function participantPeople(
+//   ids: number[],
+//   participants: List<IParticipant>,
+//   people: List<IPerson>
+// ) {
+//   return ids.reduce((accum: PtptPerson[], id) => {
+//     const ptpt = participants.get(id);
+//     if (!ptpt) return accum;
+//     const person = people.get(ptpt.person_id);
+//     if (!person) return accum;
+//     return accum.concat([{ participant: ptpt, person: person }]);
+//   }, []);
+// }
 
 export default {
   clusterProgram,

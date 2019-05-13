@@ -7,7 +7,6 @@ import {
   PeopleAction
 } from "../actions/peopleActions";
 import { personCompare, IPerson } from "../models/Person";
-import { State } from "./stdReducers";
 import List from "../models/List";
 import { Locale } from "../i18n/i18n";
 
@@ -24,8 +23,6 @@ export const emptyPerson: IPerson = {
   grantable_roles: [],
   gender: "M"
 };
-
-export type PersonState = State<IPerson>;
 
 export default function peopleReducer(
   state = new List<IPerson>(emptyPerson, [], personCompare),

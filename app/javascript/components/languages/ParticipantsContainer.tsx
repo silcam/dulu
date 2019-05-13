@@ -16,7 +16,7 @@ interface IProps {
 }
 
 const mapStateToProps = (state: AppState, ownProps: IProps) => {
-  const participants = (Object.values(state.participants) as IParticipant[])
+  const participants = state.participants
     .filter(
       ownProps.language
         ? languageFilter(ownProps.language)
@@ -43,7 +43,7 @@ const mapStateToProps = (state: AppState, ownProps: IProps) => {
 function languageFilter(language: ILanguage) {
   return (p: IParticipant) =>
     p.language_id == language.id ||
-    (p.cluster_id && p.cluster_id == language.cluster_id);
+    (!!p.cluster_id && p.cluster_id == language.cluster_id);
 }
 
 function clusterFilter(cluster: ICluster) {

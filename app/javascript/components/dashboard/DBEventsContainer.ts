@@ -4,7 +4,7 @@ import { addPeople } from "../../actions/peopleActions";
 import { addLanguages } from "../../actions/languageActions";
 import { addClusters } from "../../actions/clusterActions";
 import { setCan } from "../../actions/canActions";
-import Event, { IEvent } from "../../models/Event";
+import Event from "../../models/Event";
 import { AppState } from "../../reducers/appReducer";
 import { ILanguage } from "../../models/Language";
 import { overlap } from "../../util/arrayUtils";
@@ -34,7 +34,7 @@ const mapStateToProps = (state: AppState, ownProps: IProps) => {
   const resolvedBackTo = aggrBackTo(state, ownProps.languageIds);
   const minYear = resolvedBackTo !== undefined ? resolvedBackTo : lastYear();
   return {
-    events: (Object.values(state.events.byId) as IEvent[])
+    events: state.events.list
       .filter(
         event =>
           (overlap(event.language_ids, ownProps.languageIds) ||
@@ -44,7 +44,7 @@ const mapStateToProps = (state: AppState, ownProps: IProps) => {
             )) &&
           event.end_date >= `${minYear}`
       )
-      .sort(Event.revCompare),
+      .reverse(),
     eventsBackTo: resolvedBackTo,
     can: state.can.events
   };

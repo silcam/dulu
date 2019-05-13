@@ -16,6 +16,7 @@ interface IProps {
 
 export default function SavedReports(props: IProps) {
   const [expanded, setExpanded] = useState(false);
+  const t = useContext(I18nContext);
 
   useEffect(() => {
     if (!props.savedReports) {
@@ -27,7 +28,6 @@ export default function SavedReports(props: IProps) {
 
   if (!props.savedReports || props.savedReports.length == 0) return null;
 
-  const t = useContext(I18nContext);
   const reports = expanded
     ? props.savedReports
     : props.savedReports.slice(0, 5);

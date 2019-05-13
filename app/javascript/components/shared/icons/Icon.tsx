@@ -12,7 +12,7 @@ interface IProps
   children: Children;
 }
 
-export type IconProps = Omit<IProps, "styleClass">;
+export type IconProps = Omit<Omit<IProps, "styleClass">, "children">;
 
 export default function Icon(props: IProps) {
   let { iconSize, styleClass, children, svgStyle, ...otherProps } = props;

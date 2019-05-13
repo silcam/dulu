@@ -12,7 +12,7 @@ interface IProps {
 }
 
 const mapStateToProps = (state: AppState, ownProps: IProps) => ({
-  activity: state.activities[ownProps.activityId],
+  activity: state.activities.get(ownProps.activityId),
   participants: state.participants,
   people: state.people
 });

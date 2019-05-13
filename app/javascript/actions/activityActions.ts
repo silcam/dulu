@@ -1,4 +1,5 @@
 import { IActivity } from "../models/Activity";
+import { PartialModel } from "../models/TypeBucket";
 
 export const ADD_ACTIVITIES = "ADD_ACTIVITIES";
 export const SET_ACTIVITY = "SET_ACTIVITY";
@@ -7,7 +8,7 @@ export const DELETE_WORKSHOP_EVENT = "DELETE_WORKSHOP_EVENT";
 export interface ActivityAction {
   type: string;
   activities?: IActivity[];
-  activity?: Partial<IActivity>;
+  activity?: PartialModel<IActivity>;
   activityId?: number;
   workshopId?: number;
 }
@@ -19,7 +20,7 @@ export function addActivities(activities: IActivity[]): ActivityAction {
   };
 }
 
-export function setActivity(activity: Partial<IActivity>): ActivityAction {
+export function setActivity(activity: PartialModel<IActivity>): ActivityAction {
   return {
     type: SET_ACTIVITY,
     activity: activity

@@ -1,6 +1,5 @@
 import { connect } from "react-redux";
 import { AppState } from "../../reducers/appReducer";
-import { IParticipant } from "../../models/Participant";
 import { ILanguage } from "../../models/Language";
 import { ICluster } from "../../models/Cluster";
 import { setRegions } from "../../actions/regionActions";
@@ -22,34 +21,33 @@ export interface LoadedCluster extends ICluster {
 }
 
 export interface LoadedRegion extends IRegion {
-  clusters: LoadedCluster[];
+  clusters: List<LoadedCluster>;
   languages: List<ILanguage>;
 }
 
 const mapStateToProps = (state: AppState, ownProps: IProps) => {
   const languages = state.languages;
-  const clusters = state.clusters.map(cluster => ({
+  const clusters: List<LoadedCluster> = state.clusters.mapToList(cluster => ({
     ...cluster,
     languages: languages.filter(lang => lang.cluster_id == cluster.id)
-  })) as LoadedCluster[];
-  const userParticipants = (Object.values(
-    state.participants
-  ) as IParticipant[]).filter(ptpt => ptpt.person_id == ownProps.user.id);
+  }));
+  const userParticipants = state.participants.filter(
+    ptpt => ptpt.person_id == ownProps.user.id
+  );
+  const regions: List<LoadedRegion> = state.regions.mapToList(region => ({
+    ...region,
+    clusters: clusters.filter(c => c.region_id == region.id),
+    languages: languages.filter(lang => lang.region_id == region.id)
+  }));
   return {
-    regions: state.regions.map(region => ({
-      ...region,
-      clusters: clusters.filter(c => c.region_id == region.id),
-      languages: languages.filter(lang => lang.region_id == region.id)
-    })) as LoadedRegion[],
+    regions,
     userPrograms: {
       clusters: userParticipants
         .filter(ptpt => !!ptpt.cluster_id)
-        .map(ptpt =>
-          clusters.find(c => c.id == ptpt.cluster_id)
-        ) as LoadedCluster[],
+        .map(ptpt => clusters.get(ptpt.cluster_id!)),
       languages: userParticipants
         .filter(ptpt => !!ptpt.language_id)
-        .map(ptpt => state.languages.get(ptpt.language_id!)) as ILanguage[]
+        .map(ptpt => state.languages.get(ptpt.language_id!))
     }
   };
 };

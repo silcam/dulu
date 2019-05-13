@@ -8,6 +8,7 @@ import { ICluster } from "../../models/Cluster";
 import { ILanguage } from "../../models/Language";
 import { ICan } from "../../actions/canActions";
 import { IEvent } from "../../models/Event";
+import List from "../../models/List";
 
 interface IProps {
   person: IPerson;
@@ -19,7 +20,7 @@ interface IProps {
   addLanguages: Adder<ILanguage>;
   setCan: SetCan;
   can: ICan;
-  events: IEvent[];
+  events: List<IEvent>;
 }
 
 export default function PersonEventsTable(props: IProps) {

@@ -9,9 +9,10 @@ import { IPerson } from "../../models/Person";
 import { ICluster } from "../../models/Cluster";
 import { ILanguage } from "../../models/Language";
 import { ICan } from "../../actions/canActions";
+import List from "../../models/List";
 
 export interface IProps {
-  events: IEvent[];
+  events: List<IEvent>;
   basePath: string;
   history: History;
   addPeople: Adder<IPerson>;

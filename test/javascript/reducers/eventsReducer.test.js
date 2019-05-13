@@ -4,6 +4,7 @@ import {
   addEventsForLanguage
 } from "../../../app/javascript/actions/eventActions";
 import { emptyEvent } from "../../../app/javascript/reducers/eventsReducer";
+import List from "../../../app/javascript/models/List";
 
 const makeEvent = obj => Object.assign(emptyEvent(), obj);
 
@@ -46,65 +47,61 @@ const twentyTwenty = makeEvent({
 
 test("addEventsByMonth", () => {
   const initialState = {
-    byId: { 101: newYears, 202: jan, 303: dec },
+    list: new List(emptyEvent(), [newYears, jan, dec]),
     backTo: {}
   };
-  expect(
+
+  checkList(
     eventsReducer(
       initialState,
       addEvents([newYears, school], {
         start: { year: 2019, month: 1 },
         end: { year: 2019, month: 1 }
       })
-    ).byId
-  ).toEqual({
-    101: newYears,
-    303: dec,
-    404: school
-  });
+    ).list,
+    [101, 303, 404]
+  );
 });
 
 test("addEventsForLanguageByYear", () => {
   const initialState = {
-    byId: { 101: newYears, 202: jan, 303: dec, 505: valentines },
+    list: new List(emptyEvent(), [newYears, jan, dec, valentines]),
     backTo: {}
   };
-  expect(
+  checkList(
     eventsReducer(
       initialState,
       addEventsForLanguage([newYears, school], 888, {
         start: { year: 2019 },
         end: { year: 2019 }
       })
-    ).byId
-  ).toEqual({
-    101: newYears,
-    303: dec,
-    404: school,
-    505: valentines
-  });
+    ).list,
+    [101, 303, 404, 505]
+  );
 });
 
 test("addEventsForLanguageFromYear", () => {
   const initialState = {
-    byId: {
-      101: newYears,
-      202: jan,
-      303: dec,
-      505: valentines,
-      606: twentyTwenty
-    },
+    list: new List(emptyEvent(), [
+      newYears,
+      jan,
+      dec,
+      valentines,
+      twentyTwenty
+    ]),
     backTo: {}
   };
-  expect(
+  checkList(
     eventsReducer(
       initialState,
       addEventsForLanguage([newYears, school], 888, { start: { year: 2019 } })
-    ).byId
-  ).toEqual({
-    101: newYears,
-    303: dec,
-    404: school,
-    505: valentines
-  });
+    ).list,
+    [101, 303, 404, 505]
+  );
 });
+
+// list: List<IEvent>, ids: number[]
+function checkList(list, ids) {
+  const toObj = ids => ids.reduce((obj, id) => ({ ...obj, [id]: id }), {});
+  expect(toObj(list.map(item => item.id))).toEqual(toObj(ids));
+}
