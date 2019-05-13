@@ -46,7 +46,13 @@ export default function ActivityView(props: IProps) {
   if (!props.activity) return <Loading />;
 
   if (Activity.isWorkshops(props.activity))
-    return <WorkshopActivity {...props} actions={actions} />;
+    return (
+      <WorkshopActivity
+        {...props}
+        actions={actions}
+        activity={props.activity}
+      />
+    );
 
   return (
     <div>

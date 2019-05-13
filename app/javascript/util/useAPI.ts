@@ -12,6 +12,7 @@ const actionByDataKey: { [key: string]: string | string[] | undefined } = {
   language: "setLanguage",
   languages: ["addLanguages", "setLanguages"],
   organizations: ["addOrganizations", "setOrganizations"],
+  participant: "addParticipant",
   participants: "addParticipants",
   people: ["addPeople", "setPeople"],
   workshops_activities: ["addActivities"]

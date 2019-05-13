@@ -18,6 +18,10 @@ export function addParticipants(
   };
 }
 
+export function addParticipant(participant: IParticipant) {
+  return addParticipants([participant]);
+}
+
 export function deleteParticipant(id: number): ParticipantAction {
   return {
     type: DELETE_PARTICIPANT,

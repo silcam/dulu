@@ -14,7 +14,7 @@ import { ILanguage } from "../../models/Language";
 import ActivityViewPeopleEditor from "./ActivityViewPeopleEditor";
 import List from "../../models/List";
 
-interface IProps {
+export interface IProps {
   activity: IActivity;
   language: ILanguage;
   participants: ById<IParticipant>;

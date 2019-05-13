@@ -19,7 +19,7 @@ export default class List<T extends { id: number }> {
 
   get(id: number) {
     const item = this.items.find(item => item.id == id);
-    if (!item) console.error(`Item with id ${id} not found in the list.`);
+    // if (!item) console.error(`Item with id ${id} not found in the list.`);
     return item || this.emptyItem;
   }
 

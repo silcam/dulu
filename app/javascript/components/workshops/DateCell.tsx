@@ -1,8 +1,22 @@
-import React from "react";
-import PropTypes from "prop-types";
+import React, { useContext } from "react";
 import { Link } from "react-router-dom";
+import { IWorkshop } from "../../models/Workshop";
+import { ILanguage } from "../../models/Language";
+import { T } from "../../i18n/i18n";
+import I18nContext from "../../contexts/I18nContext";
+import { LocationDescriptorObject } from "history";
 
-function dateText(date, languageId, eventId) {
+interface IProps {
+  workshop: IWorkshop;
+  language: ILanguage;
+  canUpdate?: boolean;
+}
+
+function dateText(
+  date: string | null,
+  languageId: number,
+  eventId: number | null
+) {
   return eventId ? (
     <Link to={`/languages/${languageId}/events/${eventId}`}>{date}</Link>
   ) : (
@@ -10,7 +24,12 @@ function dateText(date, languageId, eventId) {
   );
 }
 
-function addEventLink(eventId, canUpdate, newEventText, newEventPath) {
+function addEventLink(
+  eventId: number | null,
+  canUpdate: boolean | undefined,
+  newEventText: string,
+  newEventPath: string | LocationDescriptorObject
+) {
   return canUpdate && !eventId ? (
     <Link to={newEventPath}>{newEventText}</Link>
   ) : (
@@ -18,7 +37,11 @@ function addEventLink(eventId, canUpdate, newEventText, newEventPath) {
   );
 }
 
-function newEventLocation(workshop, language, t) {
+function newEventLocation(
+  workshop: IWorkshop,
+  language: ILanguage,
+  t: T
+): LocationDescriptorObject {
   return {
     pathname: `/languages/${language.id}/events/new`,
     state: {
@@ -32,7 +55,8 @@ function newEventLocation(workshop, language, t) {
   };
 }
 
-export default function DateCell(props) {
+export default function DateCell(props: IProps) {
+  const t = useContext(I18nContext);
   const theDateText = dateText(
     props.workshop.formattedDate,
     props.language.id,
@@ -41,8 +65,8 @@ export default function DateCell(props) {
   const theAddEventLink = addEventLink(
     props.workshop.event_id,
     props.canUpdate,
-    props.t("Add_event"),
-    newEventLocation(props.workshop, props.language, props.t)
+    t("Add_event"),
+    newEventLocation(props.workshop, props.language, t)
   );
   return (
     <div>
@@ -52,10 +76,3 @@ export default function DateCell(props) {
     </div>
   );
 }
-
-DateCell.propTypes = {
-  workshop: PropTypes.object.isRequired,
-  language: PropTypes.object.isRequired,
-  canUpdate: PropTypes.bool,
-  t: PropTypes.func.isRequired
-};

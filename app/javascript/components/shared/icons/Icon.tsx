@@ -1,9 +1,20 @@
-import React from "react";
-import PropTypes from "prop-types";
+import React, { CSSProperties, DetailedHTMLProps, HTMLAttributes } from "react";
 import styles from "./Icon.css";
 import update from "immutability-helper";
+import { Children } from "../../../models/TypeBucket";
+import { Omit } from "react-tabs";
 
-export default function Icon(props) {
+interface IProps
+  extends DetailedHTMLProps<HTMLAttributes<HTMLSpanElement>, HTMLSpanElement> {
+  iconSize?: "large" | "small";
+  styleClass: "iconBlue" | "iconRed" | "iconYellow";
+  svgStyle?: CSSProperties;
+  children: Children;
+}
+
+export type IconProps = Omit<IProps, "styleClass">;
+
+export default function Icon(props: IProps) {
   let { iconSize, styleClass, children, svgStyle, ...otherProps } = props;
   svgStyle = update(iconSizer(iconSize), { $merge: svgStyle || {} });
 
@@ -22,7 +33,7 @@ export default function Icon(props) {
   );
 }
 
-function iconSizer(size) {
+function iconSizer(size?: "large" | "small") {
   switch (size) {
     case "large":
       return { width: "32px", height: "32px" };
@@ -31,9 +42,3 @@ function iconSizer(size) {
   }
   return {};
 }
-
-Icon.propTypes = {
-  iconSize: PropTypes.string,
-  styleClass: PropTypes.string,
-  svgStyle: PropTypes.object
-};
