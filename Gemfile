@@ -81,4 +81,5 @@ group :test do
   gem 'minitest-rails-capybara'
   gem 'selenium-webdriver'
   gem 'brakeman', require: false
+  gem 'minitest-retry'
 end
