@@ -28,7 +28,7 @@ class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
       end
     end
     # sleep(0.4) # Avoids many spurious errors
-    puts "Finished #{self.method_name}"
+    puts "Finished #{self.method_name}\u001b[0K"
   end
   
   def simulate_oauth(user)

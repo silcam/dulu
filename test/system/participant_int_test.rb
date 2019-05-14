@@ -36,6 +36,7 @@ class ParticipantIntTest < ApplicationSystemTestCase
       click_icon('addIcon')
     end
     click_on 'Save'
+    assert_no_selector('button', text: 'Cancel') # Make sure we're back to main page
     assert_text 'Linguist'
     @drew_hdi.reload
     assert @drew_hdi.roles.include?(:Linguist)

@@ -41,4 +41,9 @@ class ApplicationController < ActionController::Base
   rescue_from "AccessGranted::AccessDenied" do |exception|
     redirect_to not_allowed_path
   end
+
+  rescue_from "ActiveRecord::RecordNotFound" do |exception|
+    # logger.error exception.to_s
+    render plain: '404 Not Found', status: 404
+  end
 end
