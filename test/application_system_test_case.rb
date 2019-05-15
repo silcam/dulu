@@ -30,8 +30,7 @@ class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
         end
       end
     end
-    # sleep(0.4) # Avoids many spurious errors
-    puts "Finished #{self.method_name}\u001b[0K"
+    # puts "Finished #{self.method_name}\u001b[0K"
   end
   
   def simulate_oauth(user)
@@ -45,7 +44,7 @@ class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
     visit '/events/new' # A page that doesn't turn around and load a bunch of junk
     unless page.has_text?(user.first_name)
       assert fails < 6
-      puts 'LOG IN FAILURE - TRYING AGAIN\u001b[0K'
+      # puts "LOG IN FAILURE - TRYING AGAIN\u001b[0K"
       log_in(user, fails + 1)
     end
   end
