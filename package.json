@@ -11,7 +11,7 @@
     "axios": "^0.18.0",
     "babel-preset-react": "^6.24.1",
     "deepmerge": "^2.1.1",
-    "immutability-helper": "^2.6.6",
+    "immutability-helper": "2.7.1",
     "prop-types": "^15.6.1",
     "react": "~16.8.0",
     "react-dom": "~16.8.0",
@@ -20,7 +20,7 @@
     "react-tabs": "^2.2.1",
     "redux": "^4.0.1",
     "ts-loader": "3.5.0",
-    "typescript": "^3.3.3"
+    "typescript": "3.3.3"
   },
   "devDependencies": {
     "@types/deepmerge": "2.1.0",
