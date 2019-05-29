@@ -53,3 +53,7 @@ export function personFactory(params: AnyObj) {
 export function organizationFactory(params: AnyObj) {
   return Object.assign({}, emptyOrganization, params);
 }
+
+export function dsiFactory(params: Partial<IDomainStatusItem>) {
+  return Object.assign({}, mockDSI, params);
+}

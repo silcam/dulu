@@ -174,6 +174,7 @@ export default function DomainStatusItemForm(props: IProps) {
                         : ""
                     }
                     setValue={v => setDetails({ [discourseType]: parseInt(v) })}
+                    name={discourseType}
                   />
                 </td>
               </tr>

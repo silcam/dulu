@@ -4,7 +4,7 @@ class DomainStatusSysTest < ApplicationSystemTestCase
 
   test "Create App" do
     log_in people(:Drew)
-    visit "#{model_path(languages(:Hdi))}/translation"
+    visit "#{model_path(languages(:Hdi))}/Translation"
     within(parent(find('h3', text: 'Status'))) do
       click_icon('addIcon')
       within('label', text: 'Category'){ find('select').select('Scripture App') }
