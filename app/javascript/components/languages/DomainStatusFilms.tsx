@@ -1,7 +1,6 @@
 import React, { useContext } from "react";
 import I18nContext from "../../contexts/I18nContext";
 import DomainStatusItem, {
-  DSICategories,
   IDomainStatusItem
 } from "../../models/DomainStatusItem";
 import DomainStatusCategory from "./DomainStatusCategory";
@@ -24,12 +23,12 @@ export default function DomainStatusFilms(props: IProps) {
   const t = useContext(I18nContext);
   return (
     <DomainStatusCategory
-      category={DSICategories.Film}
+      category={"Film"}
       domainStatusItems={props.domainStatusItems}
       render={domainStatusItems =>
         domainStatusItems.length == 0
           ? t("None")
-          : DomainStatusItem.categoryList[DSICategories.Film].map(film =>
+          : DomainStatusItem.categoryList.Film.map(film =>
               domainStatusItems.some(item => item.subcategory == film) ? (
                 <DomainStatusSubcategory
                   key={film}

@@ -1,13 +1,10 @@
 import React, { useContext } from "react";
-import {
-  DSICategories,
-  IDomainStatusItem
-} from "../../models/DomainStatusItem";
+import { IDomainStatusItem, DSICategory } from "../../models/DomainStatusItem";
 import I18nContext from "../../contexts/I18nContext";
 import styles from "./DomainStatus.css";
 
 interface IProps {
-  category: DSICategories;
+  category: DSICategory;
   domainStatusItems: IDomainStatusItem[];
   render: (items: IDomainStatusItem[]) => JSX.Element | JSX.Element[];
 }

@@ -1,9 +1,9 @@
 import React from "react";
-import { Link } from "react-router-dom";
 import ParticipantContainer from "../languages/ParticipantContainer";
 import { T } from "../../i18n/i18n";
 import { ICluster } from "../../models/Cluster";
 import { History } from "history";
+import { ClusterBackLink } from "../shared/BreadCrumbs";
 
 interface IProps {
   t: T;
@@ -18,9 +18,7 @@ export default function ClusterParticipantPage(props: IProps) {
   if (!cluster) return null;
   return (
     <div>
-      <h4>
-        <Link to={props.basePath}>{`< ${cluster.name}`}</Link>
-      </h4>
+      <ClusterBackLink cluster={cluster} />
       <ParticipantContainer {...props} id={props.participantId} />
     </div>
   );

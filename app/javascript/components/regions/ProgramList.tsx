@@ -9,6 +9,7 @@ import { Partial } from "../../models/TypeBucket";
 import I18nContext from "../../contexts/I18nContext";
 import { SearchPickerAutoClear } from "../shared/SearchPicker";
 import List from "../../models/List";
+import capitalize from "../../util/capitalize";
 
 export type ClusterLanguage = ICluster | ILanguage;
 
@@ -82,10 +83,6 @@ export default function ProgramList<T extends ClusterLanguage>(
 
 function url(things: string, id: number) {
   return `/${things}/${id}`;
-}
-
-function capitalize(word: string) {
-  return word.slice(0, 1).toUpperCase() + word.slice(1);
 }
 
 function plural(thing: string) {

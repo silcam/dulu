@@ -95,3 +95,22 @@ test("flat", () => {
   const a = [1, [2, 3, 4]];
   expect(arrayUtils.flat(a)).toEqual([1, 2, 3, 4]);
 });
+
+test("all", () => {
+  expect(arrayUtils.all([1, 2, 3], num => num > 0)).toBe(true);
+  expect(arrayUtils.all([0, 1, 2], num => num > 0)).toBe(false);
+  expect(arrayUtils.all([], () => true)).toBe(true);
+});
+
+test("max with Empty Array", () => {
+  expect(arrayUtils.max([], () => 0)).toBeUndefined();
+});
+
+test("max", () => {
+  expect(arrayUtils.max([4, 3, 56, 9, 0], (a, b) => a - b)).toBe(56);
+});
+
+test("sort", () => {
+  const sorted = arrayUtils.sort([4, 3, 56, 9, 0], (a, b) => a - b);
+  expect(sorted).toEqual([0, 3, 4, 9, 56]);
+});

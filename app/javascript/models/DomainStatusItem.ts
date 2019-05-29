@@ -5,11 +5,12 @@ import { T } from "../i18n/i18n";
 import BibleBook from "./BibleBook";
 import List from "./List";
 import { MediaFilm } from "./Activity";
+import { max, sort } from "../util/arrayUtils";
 
 export interface IDomainStatusItem {
   id: number;
   language_id: number;
-  category: DSICategories;
+  category: DSICategory;
   subcategory: DSISubcategories;
   description: string;
   year: number | null;
@@ -18,72 +19,92 @@ export interface IDomainStatusItem {
   person_id: number | null;
   creator_id: number;
   bible_book_ids: number[];
+  count: number;
+  completeness: DSICompleteness;
+  details: DSIDetails;
 }
 
-export enum DSICategories {
-  PublishedScripture = "PublishedScripture",
-  AudioScripture = "AudioScripture",
-  Film = "Film",
-  ScriptureApp = "ScriptureApp"
+export const DSICategories = <const>[
+  "PublishedScripture",
+  "AudioScripture",
+  "Film",
+  "ScriptureApp",
+  "Research",
+  "DataCollection"
+  // "Community"
+];
+export type DSICategory = typeof DSICategories[number];
+
+export const ScripturePortions = <const>["Portions", "New_testament", "Bible"];
+export type ScripturePortion = typeof ScripturePortions[number];
+
+export const LingResearches = <const>[
+  "Phonology",
+  "Orthography",
+  "Tone",
+  "Grammar",
+  "Discourse"
+];
+export type LingResearch = typeof LingResearches[number];
+
+export const DataCollections = <const>["Lexicon", "Texts"];
+export type DataCollection = typeof DataCollections[number];
+
+export const LingCommunityItems = <const>["Workshops"];
+export type LingCommunityItem = typeof LingCommunityItems[number];
+
+export type DSISubcategories =
+  | MediaFilm
+  | ScripturePortion
+  | LingResearch
+  | DataCollection
+  | LingCommunityItem;
+
+export const AppPlatforms = <const>["Android", "iOS"];
+export type AppPlatform = typeof AppPlatforms[number];
+
+export const DiscourseTypes = <const>[
+  "Narrative",
+  "Hortatory",
+  "Expository",
+  "Procedural"
+];
+export type DiscourseType = typeof DiscourseTypes[number];
+
+export const GrammarTypes = <const>[
+  "NounPhrase",
+  "VerbPhrase",
+  "ClausesAndSentences"
+];
+export type GrammarType = typeof GrammarTypes[number];
+
+type DiscourseDetails = { [key in DiscourseType]?: number };
+
+type GrammarTypeDetails = { [key in GrammarType]?: boolean };
+
+export interface DSIDetails extends DiscourseDetails, GrammarTypeDetails {
+  toneOrthography?: boolean;
+  ddpWork?: boolean;
 }
 
-export enum ScripturePortion {
-  Portions = "Portions",
-  NewTestament = "New_testament",
-  Bible = "Bible"
-}
-
-export type DSISubcategories = MediaFilm | ScripturePortion;
-
-export enum AppPlatforms {
-  Android = "Android",
-  iOS = "iOS"
-}
+export const DSICompletenesses = <const>["Draft", "Satisfactory", "Complete"];
+export type DSICompleteness = typeof DSICompletenesses[number];
 
 interface DSCategoryList {
-  [key: string]: DSISubcategories[];
+  [key: string]: readonly DSISubcategories[];
 }
 const categoryList: DSCategoryList = {
-  [DSICategories.PublishedScripture]: Object.values(ScripturePortion),
-  [DSICategories.AudioScripture]: Object.values(ScripturePortion),
-  [DSICategories.Film]: Object.values(MediaFilm),
-  [DSICategories.ScriptureApp]: Object.values(ScripturePortion)
+  PublishedScripture: ScripturePortions,
+  AudioScripture: ScripturePortions,
+  Film: Object.values(MediaFilm),
+  ScriptureApp: ScripturePortions,
+  Research: LingResearches,
+  DataCollection: DataCollections
+  // Community: LingCommunityItems
 };
 
-// interface DSITree {
-//   [category: string]: {
-//     [subcategory: string]: IDomainStatusItem[];
-//   };
-// }
-// const emptyDSITree = Object.values(DSICategories).reduce(
-//   (accum, category) => ({
-//     ...accum,
-//     [category]: categoryList[category].reduce(
-//       (subAccum, subcategory) => ({
-//         ...subAccum,
-//         [subcategory]: []
-//       }),
-//       {}
-//     )
-//   }),
-//   {}
-// );
-
-// function categorize(domainStatusItems: IDomainStatusItem[]): DSITree {
-//   return domainStatusItems.reduce(
-//     (accum, item) =>
-//       update(accum, {
-//         [item.category]: { [item.subcategory]: { $push: item } }
-//       }),
-//     emptyDSITree
-//   );
-// }
-
 function platformsStr(android: boolean, ios: boolean) {
-  return [
-    android ? AppPlatforms.Android : false,
-    ios ? AppPlatforms.iOS : false
-  ]
+  return [android ? "Android" : false, ios ? "iOS" : false]
     .filter(p => !!p)
     .join("|");
 }
@@ -94,6 +115,37 @@ function books(item: IDomainStatusItem, t: T, max?: number) {
   if (names.includes(" ")) names = names.replace(/-/g, ", ");
   if (ids.length < item.bible_book_ids.length) names += "...";
   return names;
+}
+
+export function countUnit(collectionType: DataCollection) {
+  switch (collectionType) {
+    case "Lexicon":
+      return "words";
+    case "Texts":
+      return "texts";
+  }
+}
+
+export function latestItem(items: IDomainStatusItem[]) {
+  return max(items, itemDateCompare);
+}
+
+export function sortByDate(items: IDomainStatusItem[]) {
+  return sort(items, itemDateCompare);
+}
+
+export function revSortByDate(items: IDomainStatusItem[]) {
+  return sort(items, (a, b) => itemDateCompare(b, a));
+}
+
+function itemDateCompare(a: IDomainStatusItem, b: IDomainStatusItem) {
+  if (a.year && b.year && a.year != b.year) return a.year - b.year;
+  return a.id - b.id;
+}
+
+export function lingCompleteSat(item: IDomainStatusItem) {
+  const acceptCompletenesses: DSICompleteness[] = ["Complete", "Satisfactory"];
+  return acceptCompletenesses.includes(item.completeness);
 }
 
 function personName(item: IDomainStatusItem, people: List<IPerson>) {

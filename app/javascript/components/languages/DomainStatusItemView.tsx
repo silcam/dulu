@@ -1,8 +1,8 @@
 import React, { useContext } from "react";
 import DomainStatusItem, {
   IDomainStatusItem,
-  DSICategories,
-  ScripturePortion
+  GrammarTypes,
+  DiscourseTypes
 } from "../../models/DomainStatusItem";
 import { IPerson } from "../../models/Person";
 import { IOrganization } from "../../models/Organization";
@@ -11,6 +11,11 @@ import I18nContext from "../../contexts/I18nContext";
 import { orBlank } from "../../util/orBlank";
 import { Link } from "react-router-dom";
 import List from "../../models/List";
+import TextOrYesNo from "../shared/TextOrYesNo";
+import ReadonlyCheck from "../shared/ReadonlyCheck";
+import styles from "./DomainStatus.css";
+import Spacer from "../shared/Spacer";
+import DivInline from "../shared/DivInline";
 
 interface IProps {
   language: ILanguage;
@@ -25,9 +30,9 @@ export default function DomainStatusItemView(props: IProps) {
   return (
     <div>
       <h2>{`${t(props.item.category)}: ${t(props.item.subcategory)}`}</h2>
-      <table>
+      <table className={styles.dsiView}>
         <tbody>
-          {props.item.subcategory == ScripturePortion.Portions && (
+          {props.item.subcategory == "Portions" && (
             <tr>
               <th>{t("Books")}</th>
               <td>
@@ -35,16 +40,65 @@ export default function DomainStatusItemView(props: IProps) {
               </td>
             </tr>
           )}
-          {props.item.category == DSICategories.ScriptureApp && (
+          {props.item.category == "ScriptureApp" && (
             <tr>
               <th>{t("Platforms")}</th>
               <td>{props.item.platforms.replace("|", ", ")}</td>
             </tr>
           )}
+
           <tr>
             <th>{t("Description")}</th>
-            <td>{props.item.description}</td>
+            <td>
+              <div>{props.item.description}</div>
+              {props.item.subcategory == "Orthography" && (
+                <div style={{ marginTop: "16px" }}>
+                  <ReadonlyCheck
+                    value={props.item.details.toneOrthography}
+                    label={t("ToneOrthography")}
+                  />
+                </div>
+              )}
+              {props.item.subcategory == "Grammar" && (
+                <div style={{ marginTop: "16px" }}>
+                  {GrammarTypes.map(grammarType => (
+                    <DivInline key={grammarType}>
+                      <ReadonlyCheck
+                        value={!!props.item.details[grammarType]}
+                        label={t(grammarType)}
+                      />
+                      <Spacer width={"20px"} />
+                    </DivInline>
+                  ))}
+                </div>
+              )}
+              {props.item.subcategory == "Discourse" && (
+                <div style={{ marginTop: "16px" }}>
+                  {DiscourseTypes.map(discourseType => (
+                    <DivInline key={discourseType}>
+                      <ReadonlyCheck
+                        value={!!props.item.details[discourseType]}
+                        label={t(discourseType)}
+                      />
+                      <Spacer width="20px" />
+                    </DivInline>
+                  ))}
+                </div>
+              )}
+            </td>
           </tr>
+
+          {props.item.subcategory == "Orthography" && (
+            <tr>
+              <th>{t("ToneOrthography")}</th>
+              <td>
+                <TextOrYesNo
+                  value={props.item.details.toneOrthography}
+                  setValue={() => {}}
+                />
+              </td>
+            </tr>
+          )}
           <tr>
             <th>{t("Year")}</th>
             <td>{orBlank(props.item.year)}</td>
@@ -69,6 +123,12 @@ export default function DomainStatusItemView(props: IProps) {
               )}
             </td>
           </tr>
+          {props.item.category == "Research" && (
+            <tr>
+              <th>{t("Completeness")}</th>
+              <td>{props.item.completeness}</td>
+            </tr>
+          )}
         </tbody>
       </table>
     </div>

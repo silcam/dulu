@@ -1,9 +1,7 @@
 import React, { useContext } from "react";
 import I18nContext from "../../contexts/I18nContext";
 import DomainStatusItem, {
-  DSICategories,
-  IDomainStatusItem,
-  ScripturePortion
+  IDomainStatusItem
 } from "../../models/DomainStatusItem";
 import DomainStatusCategory from "./DomainStatusCategory";
 import DomainStatusSubcategory from "./DomainStatusSubcategory";
@@ -23,13 +21,13 @@ export default function DomainStatusPublishedScripture(props: IProps) {
   const t = useContext(I18nContext);
   return (
     <DomainStatusCategory
-      category={DSICategories.PublishedScripture}
+      category="PublishedScripture"
       domainStatusItems={props.domainStatusItems}
       render={domainStatusItems => (
         <React.Fragment>
           <DomainStatusSubcategory
             showCheckbox
-            subcategory={ScripturePortion.Portions}
+            subcategory="Portions"
             domainStatusItems={domainStatusItems}
             renderItem={item => (
               <span>
@@ -48,7 +46,7 @@ export default function DomainStatusPublishedScripture(props: IProps) {
           />
           <DomainStatusSubcategory
             showCheckbox
-            subcategory={ScripturePortion.NewTestament}
+            subcategory="New_testament"
             domainStatusItems={domainStatusItems}
             renderItem={item => (
               <span>
@@ -64,7 +62,7 @@ export default function DomainStatusPublishedScripture(props: IProps) {
           />
           <DomainStatusSubcategory
             showCheckbox
-            subcategory={ScripturePortion.Bible}
+            subcategory="Bible"
             domainStatusItems={domainStatusItems}
             renderItem={item => (
               <span>

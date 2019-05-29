@@ -8,13 +8,13 @@ import Spacer from "../shared/Spacer";
 import DomainStatusNew from "./DomainStatusNew";
 import AddIcon from "../shared/icons/AddIcon";
 import { useAPIGet } from "../../util/useAPI";
-import { DSICategories } from "../../models/DomainStatusItem";
+import { DSICategory } from "../../models/DomainStatusItem";
 import DomainStatusX from "./DomainStatusX";
 import List from "../../models/List";
 
 export interface DSProps {
   language: ILanguage;
-  categories: DSICategories[];
+  categories: DSICategory[];
 
   people: List<IPerson>;
   organizations: List<IOrganization>;

@@ -3,7 +3,7 @@ import ActivitiesContainer from "./ActivitiesContainer";
 import ParticipantsContainer from "./ParticipantsContainer";
 import LanguageEventsContainer from "./LanguageEventsContainer";
 import DomainStatusContainer from "./DomainStatusContainer";
-import { DSICategories } from "../../models/DomainStatusItem";
+import { DSICategory } from "../../models/DomainStatusItem";
 import { ILanguage } from "../../models/Language";
 import { LanguagePageTab } from "./LanguagePage";
 import { Location, History } from "history";
@@ -86,21 +86,14 @@ export default function LanguagePageContent(props: IProps) {
   );
 }
 
-function categoriesByDomain(domain: string) {
+function categoriesByDomain(domain: string): DSICategory[] {
   switch (domain) {
     case "Translation":
-      return [
-        DSICategories.PublishedScripture,
-        DSICategories.ScriptureApp,
-        DSICategories.AudioScripture,
-        DSICategories.Film
-      ];
+      return ["PublishedScripture", "ScriptureApp", "AudioScripture", "Film"];
     case "Media":
-      return [
-        DSICategories.AudioScripture,
-        DSICategories.Film,
-        DSICategories.ScriptureApp
-      ];
+      return ["AudioScripture", "Film", "ScriptureApp"];
+    case "Linguistics":
+      return ["DataCollection", "Research" /*"Community"*/];
     default:
       return [];
   }

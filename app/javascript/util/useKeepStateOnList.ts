@@ -8,7 +8,7 @@ import { useEffect } from "react";
 export default function useKeepStateOnList<T>(
   item: T,
   setItem: (t: T) => void,
-  list: T[]
+  list: readonly T[]
 ) {
   useEffect(() => {
     if (!list.includes(item)) setItem(list[0]);

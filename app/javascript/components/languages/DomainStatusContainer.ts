@@ -5,6 +5,7 @@ import { AppState } from "../../reducers/appReducer";
 import { connect } from "react-redux";
 import DomainStatus from "./DomainStatus";
 import DomainStatusItemPage from "./DomainStatusItemPage";
+import DomainStatusDataCollectionPage from "./DomainStatusDataCollectionPage";
 
 const mapStateToProps = (state: AppState) => ({
   people: state.people,
@@ -21,6 +22,11 @@ export const DomainStatusItemPageContainer = connect(
   mapStateToProps,
   mapDispatchToProps
 )(DomainStatusItemPage);
+
+export const DomainStatusDataCollectionContainer = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(DomainStatusDataCollectionPage);
 
 const DomainStatusContainer = connect(
   mapStateToProps,

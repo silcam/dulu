@@ -1,7 +1,5 @@
 import DomainStatusItem, {
-  IDomainStatusItem,
-  DSICategories,
-  ScripturePortion
+  IDomainStatusItem
 } from "../../../app/javascript/models/DomainStatusItem";
 import translator, { Locale } from "../../../app/javascript/i18n/i18n";
 import {
@@ -18,15 +16,18 @@ import { emptyOrganization } from "../../../app/javascript/reducers/organization
 const mockDSI: IDomainStatusItem = {
   id: 0,
   language_id: 0,
-  category: DSICategories.PublishedScripture,
-  subcategory: ScripturePortion.Portions,
+  category: "PublishedScripture",
+  subcategory: "Portions",
   description: "",
   year: 2000,
   platforms: "",
   organization_id: 303,
   person_id: 404,
   creator_id: 404,
-  bible_book_ids: [1, 2]
+  bible_book_ids: [1, 2],
+  completeness: "Draft",
+  details: {},
+  count: 0
 };
 
 const t = translator(Locale.en);

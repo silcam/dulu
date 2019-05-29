@@ -7,9 +7,21 @@
 .normal th {
     text-align: left;
     padding-left: 8px;
+    vertical-align: top;
 }
 
 .normal td {
     padding: 8px;
     border-top: 1px solid #ddd;
+    vertical-align: top;
+}
+
+.noBorder {
+    composes: normal;
+}
+
+table.noBorder tbody tr td,
+table.noBorder tbody tr th 
+{
+    border-top: none;
 }

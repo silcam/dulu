@@ -1,5 +1,5 @@
 import React from "react";
-import { DSICategories } from "../../models/DomainStatusItem";
+import { DSICategory, DSISubcategories } from "../../models/DomainStatusItem";
 import { useAPIPost, ActionPack } from "../../util/useAPI";
 import DomainStatusItemForm from "./DomainStatusItemForm";
 import { ILanguage } from "../../models/Language";
@@ -9,7 +9,8 @@ import List from "../../models/List";
 
 interface IProps {
   language: ILanguage;
-  categories: DSICategories[];
+  categories: DSICategory[];
+  subcategory?: DSISubcategories;
   actions: ActionPack;
   cancel: () => void;
   people: List<IPerson>;
@@ -30,6 +31,7 @@ export default function DomainStatusNew(props: IProps) {
       }}
       saving={saving}
       categories={props.categories}
+      subcategory={props.subcategory}
       cancel={props.cancel}
       people={props.people}
       organizations={props.organizations}

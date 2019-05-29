@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useContext } from "react";
-import deepcopy from "../../util/deepcopy";
 import EditActionBar from "../shared/EditActionBar";
 import TextOrEditText from "../shared/TextOrEditText";
 import update from "immutability-helper";

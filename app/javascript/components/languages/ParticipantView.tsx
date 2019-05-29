@@ -1,6 +1,5 @@
 import React from "react";
 import EditActionBar from "../shared/EditActionBar";
-import deepcopy from "../../util/deepcopy";
 import DuluAxios from "../../util/DuluAxios";
 import ParticipantRoles from "./ParticipantRoles";
 import update from "immutability-helper";
@@ -80,8 +79,9 @@ export default class ParticipantView extends React.PureComponent<
   };
 
   edit = () =>
+    this.props.participant &&
     this.setState({
-      participant: deepcopy(this.props.participant),
+      participant: { ...this.props.participant },
       editing: true
     });
 
@@ -145,7 +145,7 @@ export default class ParticipantView extends React.PureComponent<
               cancel={() =>
                 this.setState({
                   editing: false,
-                  participant: deepcopy(this.props.participant)
+                  participant: undefined
                 })
               }
               edit={this.edit}

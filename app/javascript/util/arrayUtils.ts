@@ -73,3 +73,32 @@ export function flat<T>(array: Array<T | T[]>) {
     return flatArray.concat(toAdd);
   }, []);
 }
+
+export function all<T>(array: readonly T[], test: (t: T) => any): boolean {
+  return array
+    .map(item => test(item))
+    .reduce((finalVal, testVal) => finalVal && testVal, true);
+}
+
+export function max<T>(
+  array: readonly T[],
+  compare: (a: T, b: T) => number
+): T | undefined {
+  if (array.length == 0) return undefined;
+  return array.reduce((currentMax, item) =>
+    compare(currentMax, item) > 0 ? currentMax : item
+  );
+}
+
+export function sort<T>(
+  array: readonly T[],
+  compare: (a: T, b: T) => number
+): T[] {
+  const sorted: T[] = [];
+  array.forEach(item => {
+    let i = 0;
+    while (i < sorted.length && compare(sorted[i], item) <= 0) ++i;
+    sorted.splice(i, 0, item);
+  });
+  return sorted;
+}

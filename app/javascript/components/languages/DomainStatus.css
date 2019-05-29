@@ -21,4 +21,19 @@ div.subcategory {
 
 li.ds_item {
     padding-left: 20px;
+    padding-bottom: 8px;
+}
+
+li.ds_item .incomplete, 
+li.ds_item .incomplete a 
+{
+    font-weight: 200;
+}
+
+table.dsiView th{
+    vertical-align: top;
+}
+
+table.dsiView label {
+    font-weight: normal;
 }

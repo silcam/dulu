@@ -3,8 +3,15 @@ import DomainStatusItem, {
   IDomainStatusItem,
   DSICategories,
   DSISubcategories,
-  AppPlatforms,
-  ScripturePortion
+  DSICompleteness,
+  DSIDetails,
+  GrammarTypes,
+  DiscourseTypes,
+  DSICompletenesses,
+  DSICategory,
+  countUnit,
+  DataCollection,
+  DataCollections
 } from "../../models/DomainStatusItem";
 import I18nContext from "../../contexts/I18nContext";
 import useKeepStateOnList from "../../util/useKeepStateOnList";
@@ -20,10 +27,13 @@ import { PersonPicker, OrganizationPicker } from "../shared/SearchPicker";
 import { IPerson } from "../../models/Person";
 import { IOrganization } from "../../models/Organization";
 import List from "../../models/List";
+import useMergeState from "../../util/useMergeState";
+import StyledTable, { TableStyleClass } from "../shared/StyledTable";
 
 interface IProps {
   domainStatusItem?: IDomainStatusItem;
-  categories?: DSICategories[];
+  categories?: DSICategory[];
+  subcategory?: DSISubcategories;
   save: (item: IDomainStatusItem) => void;
   saving?: boolean;
   useEditActionBar?: boolean;
@@ -35,14 +45,14 @@ interface IProps {
 export default function DomainStatusItemForm(props: IProps) {
   const t = useContext(I18nContext);
 
-  const categories: DSICategories[] = props.categories
-    ? props.categories
-    : Object.values(DSICategories);
-  const [category, setCategory] = useState<DSICategories>(
+  const categories = props.categories ? props.categories : DSICategories;
+  const [category, setCategory] = useState<DSICategory>(
     props.domainStatusItem ? props.domainStatusItem.category : categories[0]
   );
 
-  const subcategories = DomainStatusItem.categoryList[category];
+  const subcategories = props.subcategory
+    ? [props.subcategory]
+    : DomainStatusItem.categoryList[category];
   const [subcategory, setSubcategory] = useState(
     props.domainStatusItem
       ? props.domainStatusItem.subcategory
@@ -56,12 +66,12 @@ export default function DomainStatusItemForm(props: IProps) {
 
   const [android, setAndroid] = useState(
     props.domainStatusItem
-      ? props.domainStatusItem.platforms.includes(AppPlatforms.Android)
+      ? props.domainStatusItem.platforms.includes("Android")
       : false
   );
   const [ios, setIos] = useState(
     props.domainStatusItem
-      ? props.domainStatusItem.platforms.includes(AppPlatforms.iOS)
+      ? props.domainStatusItem.platforms.includes("iOS")
       : false
   );
 
@@ -81,11 +91,26 @@ export default function DomainStatusItemForm(props: IProps) {
     props.domainStatusItem ? props.domainStatusItem.organization_id : null
   );
 
+  const [completeness, setCompleteness] = useState<DSICompleteness>(
+    props.domainStatusItem ? props.domainStatusItem.completeness : "Draft"
+  );
+
+  const [details, setDetails] = useMergeState(
+    props.domainStatusItem ? props.domainStatusItem.details : ({} as DSIDetails)
+  );
+
+  const [count, setCount] = useState(
+    props.domainStatusItem ? String(props.domainStatusItem.count) : ""
+  );
+
   const domainStatusItem: IDomainStatusItem = {
     category,
     subcategory,
     year,
-    description: description,
+    description,
+    completeness,
+    details,
+    count: parseInt(count) || 0,
     platforms: DomainStatusItem.platformsStr(android, ios),
     person_id: personId,
     organization_id: organizationId,
@@ -110,7 +135,7 @@ export default function DomainStatusItemForm(props: IProps) {
 
       <FormGroup label={t("Category")}>
         <SelectInput
-          setValue={category => setCategory(category as DSICategories)}
+          setValue={category => setCategory(category as DSICategory)}
           value={category}
           options={SelectInput.translatedOptions(categories, t)}
           autoFocus
@@ -127,14 +152,44 @@ export default function DomainStatusItemForm(props: IProps) {
         />
       </FormGroup>
 
-      {subcategory == ScripturePortion.Portions && (
+      {DataCollections.includes(subcategory as DataCollection) && (
+        <FormGroup
+          label={t(`Total_${countUnit(subcategory as DataCollection)}`)}
+        >
+          <TextInput value={count} setValue={v => setCount(v)} />
+        </FormGroup>
+      )}
+
+      {subcategory == "Texts" && (
+        <StyledTable styleClass={TableStyleClass.noBorder}>
+          <tbody>
+            {DiscourseTypes.map(discourseType => (
+              <tr key={discourseType}>
+                <td>{t(discourseType)}</td>
+                <td>
+                  <TextInput
+                    value={
+                      details[discourseType]
+                        ? String(details[discourseType])
+                        : ""
+                    }
+                    setValue={v => setDetails({ [discourseType]: parseInt(v) })}
+                  />
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </StyledTable>
+      )}
+
+      {subcategory == "Portions" && (
         <P>
           <label>{t("Books")}</label>
           <BooksSelector bookIds={bibleBooksIds} setBookIds={setBibleBookIds} />
         </P>
       )}
 
-      {category == DSICategories.ScriptureApp && (
+      {category == "ScriptureApp" && (
         <P>
           <label>{t("Platforms")}</label>
           <br />
@@ -151,6 +206,44 @@ export default function DomainStatusItemForm(props: IProps) {
         />
       </FormGroup>
 
+      {subcategory == "Orthography" && (
+        <P>
+          <CheckBoxInput
+            text={t("ToneOrthography")}
+            value={!!details.toneOrthography}
+            setValue={toneOrthography => setDetails({ toneOrthography })}
+          />
+        </P>
+      )}
+
+      {subcategory == "Grammar" && (
+        <P>
+          {GrammarTypes.map(grammarType => (
+            <div key={grammarType}>
+              <CheckBoxInput
+                text={t(grammarType)}
+                value={!!details[grammarType]}
+                setValue={v => setDetails({ [grammarType]: v })}
+              />
+            </div>
+          ))}
+        </P>
+      )}
+
+      {subcategory == "Discourse" && (
+        <P>
+          {DiscourseTypes.map(discourseType => (
+            <div key={discourseType}>
+              <CheckBoxInput
+                text={t(discourseType)}
+                value={!!details[discourseType]}
+                setValue={v => setDetails({ [discourseType]: v })}
+              />
+            </div>
+          ))}
+        </P>
+      )}
+
       <P>
         <label>
           {t("Year")}
@@ -164,6 +257,16 @@ export default function DomainStatusItemForm(props: IProps) {
           />
         </label>
       </P>
+
+      {["Research", "DataCollection"].includes(category) && (
+        <FormGroup label={t("Completeness")}>
+          <SelectInput
+            value={completeness}
+            setValue={c => setCompleteness(c as DSICompleteness)}
+            options={SelectInput.translatedOptions(DSICompletenesses, t)}
+          />
+        </FormGroup>
+      )}
 
       <P>
         <label>

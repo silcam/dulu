@@ -36,7 +36,11 @@ export default function SelectInput(props: IProps) {
   );
 }
 
-SelectInput.translatedOptions = (options: string[], t: T, keyPrefix?: string) =>
+SelectInput.translatedOptions = (
+  options: readonly string[],
+  t: T,
+  keyPrefix?: string
+) =>
   options.map(option => ({
     value: option,
     display: keyPrefix ? t(`${keyPrefix}.${option}`) : t(option)

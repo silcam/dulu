@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
 import EditActionBar from "../shared/EditActionBar";
-import deepcopy from "../../util/deepcopy";
 import TextOrEditText from "../shared/TextOrEditText";
 import update from "immutability-helper";
 import DuluAxios from "../../util/DuluAxios";

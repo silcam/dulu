@@ -2,19 +2,20 @@ import React from "react";
 import styles from "./StyledTable.css";
 import { Children } from "../../models/TypeBucket";
 
-enum StyleClass {
-  normal = "normal"
+export enum TableStyleClass {
+  normal = "normal",
+  noBorder = "noBorder"
 }
 
 interface IProps {
-  styleClass?: StyleClass;
+  styleClass?: TableStyleClass;
   children: Children;
 }
 
 export default function StyledTable(props: IProps) {
   let { styleClass, ...otherProps } = props;
-  if (!styleClass || !Object.keys(StyleClass).includes(styleClass))
-    styleClass = StyleClass.normal;
+  if (!styleClass || !Object.keys(TableStyleClass).includes(styleClass))
+    styleClass = TableStyleClass.normal;
 
   return (
     <table className={styles[styleClass]} {...otherProps}>

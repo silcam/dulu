@@ -1,7 +1,7 @@
 import React from "react";
-import { Link } from "react-router-dom";
 import ActivityContainer from "./ActivityContainer";
 import { ILanguage } from "../../models/Language";
+import { LanguageBackLink } from "../shared/BreadCrumbs";
 
 interface IProps {
   language: ILanguage;
@@ -12,9 +12,7 @@ interface IProps {
 export default function LanguageActivityPage(props: IProps) {
   return (
     <div className="padBottom">
-      <h4>
-        <Link to={props.basePath}>{`< ${props.language.name}`}</Link>
-      </h4>
+      <LanguageBackLink language={props.language} />
       <ActivityContainer {...props} />
     </div>
   );

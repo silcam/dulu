@@ -1,8 +1,6 @@
 import React from "react";
 import EditActionBar from "../shared/EditActionBar";
-import deepcopy from "../../util/deepcopy";
 import TextOrEditText from "../shared/TextOrEditText";
-import merge from "deepmerge";
 import SaveIndicator from "../shared/SaveIndicator";
 import DangerButton from "../shared/DangerButton";
 import TextOrTextArea from "../shared/TextOrTextArea";
@@ -17,6 +15,7 @@ import { OrganizationPicker } from "../shared/SearchPicker";
 import TextOrInput from "../shared/TextOrInput";
 import SearchTextInput from "../shared/SearchTextInput";
 import List from "../../models/List";
+import update from "immutability-helper";
 
 interface IProps {
   id: number;
@@ -51,13 +50,14 @@ export default class OrganizationPage extends React.PureComponent<
 
   updateOrganization = (mergeOrg: Partial<IOrganization>) => {
     this.setState(prevState => ({
-      organization: merge(prevState.organization, mergeOrg)
+      organization: update(prevState.organization, { $merge: mergeOrg })
     }));
   };
 
   edit = () =>
+    this.props.organization &&
     this.setState({
-      organization: deepcopy(this.props.organization),
+      organization: { ...this.props.organization },
       editing: true
     });
 

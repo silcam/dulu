@@ -38,6 +38,9 @@ class Api::DomainStatusItemsController < ApplicationController
         :description,
         :organization_id,
         :person_id,
+        :count,
+        :completeness,
+        details: {},
         bible_book_ids: []
       )
   end

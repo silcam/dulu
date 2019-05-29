@@ -1,12 +1,11 @@
 import React from "react";
-import deepcopy from "../../util/deepcopy";
-import merge from "deepmerge";
 import SmallSaveAndCancel from "../shared/SmallSaveAndCancel";
 import FormGroup from "../shared/FormGroup";
 import TextInput from "../shared/TextInput";
 import FuzzyDateInput from "../shared/FuzzyDateInput";
 import { IOrganizationPerson, IOrganization } from "../../models/Organization";
 import I18nContext from "../../contexts/I18nContext";
+import update from "immutability-helper";
 
 interface IProps {
   organization_person: IOrganizationPerson;
@@ -28,7 +27,7 @@ export default class MyOrganizationForm extends React.PureComponent<
   constructor(props: IProps) {
     super(props);
     this.state = {
-      organization_person: deepcopy(props.organization_person)
+      organization_person: { ...props.organization_person }
     };
   }
 
@@ -36,10 +35,9 @@ export default class MyOrganizationForm extends React.PureComponent<
     mergeOrganizationPerson: Partial<IOrganizationPerson>
   ) => {
     this.setState(prevState => ({
-      organization_person: merge(
-        prevState.organization_person,
-        mergeOrganizationPerson
-      )
+      organization_person: update(prevState.organization_person, {
+        $merge: mergeOrganizationPerson
+      })
     }));
     if (mergeOrganizationPerson.start_date)
       this.setState({ invalidStartDate: undefined });

@@ -2,24 +2,23 @@
 import { emptyPerson } from "../../app/javascript/reducers/peopleReducer";
 import { emptyOrganization } from "../../app/javascript/reducers/organizationsReducer";
 import { AnyObj } from "../../app/javascript/models/TypeBucket";
-import {
-  IDomainStatusItem,
-  DSICategories,
-  ScripturePortion
-} from "../../app/javascript/models/DomainStatusItem";
+import { IDomainStatusItem } from "../../app/javascript/models/DomainStatusItem";
 
 const mockDSI: IDomainStatusItem = {
   id: 0,
   language_id: 0,
-  category: DSICategories.PublishedScripture,
-  subcategory: ScripturePortion.Portions,
+  category: "PublishedScripture",
+  subcategory: "Portions",
   description: "",
   year: 2000,
   platforms: "",
   organization_id: 303,
   person_id: 404,
   creator_id: 404,
-  bible_book_ids: [1, 2]
+  bible_book_ids: [1, 2],
+  completeness: "Draft",
+  details: {},
+  count: 0
 };
 
 export function monthNames() {

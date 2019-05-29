@@ -1,8 +1,8 @@
 import React from "react";
 import EventContainer from "../events/EventContainer";
-import { Link } from "react-router-dom";
 import { ILanguage } from "../../models/Language";
 import { History } from "history";
+import { LanguageBackLink } from "../shared/BreadCrumbs";
 
 interface IProps {
   language: ILanguage;
@@ -17,9 +17,7 @@ export default function LanguageEventPage(props: IProps) {
 
   return (
     <div>
-      <h4>
-        <Link to={props.basePath}>{`< ${language.name}`}</Link>
-      </h4>
+      <LanguageBackLink language={language} />
 
       <EventContainer id={props.eventId} history={props.history} />
     </div>

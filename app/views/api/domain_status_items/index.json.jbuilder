@@ -16,7 +16,10 @@ json.language do
       :organization_id, 
       :person_id,
       :creator_id,
-      :bible_book_ids
+      :bible_book_ids,
+      :count,
+      :details,
+      :completeness
     )
   end
 end

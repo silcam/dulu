@@ -5,13 +5,13 @@ import { Setter, Adder } from "../../models/TypeBucket";
 import { IOrganization } from "../../models/Organization";
 import { IPerson } from "../../models/Person";
 import { findById } from "../../util/arrayUtils";
-import { Link } from "react-router-dom";
 import { useAPIGet, useAPIPut, useAPIDelete } from "../../util/useAPI";
 import DomainStatusItemView from "./DomainStatusItemView";
 import DomainStatusItemForm from "./DomainStatusItemForm";
 import I18nContext from "../../contexts/I18nContext";
 import { History } from "history";
 import List from "../../models/List";
+import BreadCrumbs, { LanguageBackLink } from "../shared/BreadCrumbs";
 
 interface IProps {
   language: ILanguage;
@@ -64,11 +64,21 @@ export default function DomainStatusItemPage(props: IProps) {
 
   return (
     <div className="padBottom">
-      <h4>
-        <Link to={`/languages/${props.language.id}`}>{`< ${
-          props.language.name
-        }`}</Link>
-      </h4>
+      {!!item && item.category == "DataCollection" ? (
+        <BreadCrumbs
+          links={[
+            [`/languages/${props.language.id}`, props.language.name],
+            [
+              `/languages/${props.language.id}/domain_status_items/lingdata/${
+                item.subcategory
+              }`,
+              item.subcategory
+            ]
+          ]}
+        />
+      ) : (
+        <LanguageBackLink language={props.language} />
+      )}
       {!!item && (
         <div>
           {editing ? (

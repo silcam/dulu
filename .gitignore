@@ -38,3 +38,9 @@ db/*.sql.gz
 /node_modules
 yarn-debug.log*
 .yarn-integrity
+
+# Couple spreadsheets
+/design/*.xlsx
+
+# Mac
+.DS_Store

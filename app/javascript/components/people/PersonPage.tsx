@@ -1,8 +1,6 @@
 import React from "react";
 import EditActionBar from "../shared/EditActionBar";
-import deepcopy from "../../util/deepcopy";
 import TextOrEditText from "../shared/TextOrEditText";
-import merge from "deepmerge";
 import SaveIndicator from "../shared/SaveIndicator";
 import PersonBasicInfo from "./PersonBasicInfo";
 import DangerButton from "../shared/DangerButton";
@@ -53,7 +51,7 @@ export default class PersonPage extends React.PureComponent<IProps, IState> {
       editing: true,
       savedChanges: false,
       edited: false,
-      person: deepcopy(this.props.person)
+      person: { ...this.props.person }
     });
 
   cancelEdit = () => this.setState({ editing: false, person: undefined });
@@ -61,7 +59,7 @@ export default class PersonPage extends React.PureComponent<IProps, IState> {
   updatePerson = (mergePerson: Partial<IPerson>) => {
     this.setState(prevState => ({
       edited: true,
-      person: merge(prevState.person, mergePerson)
+      person: update(prevState.person, { $merge: mergePerson })
     }));
   };
 
