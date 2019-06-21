@@ -2,11 +2,11 @@ import React, { useContext } from "react";
 import DomainStatusCategory from "./DomainStatusCategory";
 import DomainStatusItem, {
   IDomainStatusItem,
-  DSICompleteness,
   LingResearch,
   GrammarTypes,
   DiscourseTypes,
-  LingResearches
+  LingResearches,
+  lingCompleteSat
 } from "../../models/DomainStatusItem";
 import DomainStatusSubcategory from "./DomainStatusSubcategory";
 import { Link } from "react-router-dom";
@@ -15,6 +15,8 @@ import List from "../../models/List";
 import { all } from "../../util/arrayUtils";
 import DSLingCompleteStyler from "./DSLingCompleteStyler";
 import I18nContext from "../../contexts/I18nContext";
+import { takeFirstNonBlank } from "../../util/takeFirst";
+import ifDef from "../../util/ifDef";
 
 interface IProps {
   domainStatusItems: IDomainStatusItem[];
@@ -23,6 +25,7 @@ interface IProps {
 }
 
 export default function DomainStatusResearch(props: IProps) {
+  const t = useContext(I18nContext);
   return (
     <DomainStatusCategory
       category="Research"
@@ -42,8 +45,14 @@ export default function DomainStatusResearch(props: IProps) {
               renderItem={item => (
                 <DSLingCompleteStyler item={item}>
                   <Link to={`${props.basePath}/${item.id}}`}>
-                    {DomainStatusItem.personName(item, props.people)}{" "}
-                    {item.year}
+                    {takeFirstNonBlank(
+                      `${DomainStatusItem.personName(
+                        item,
+                        props.people
+                      )} ${ifDef(item.year)}`,
+                      item.description,
+                      t(subCategory)
+                    )}
                   </Link>
                   <DSResearchItemExtras item={item} />
                 </DSLingCompleteStyler>
@@ -79,11 +88,8 @@ function researchSubCategoryComplete(
   subCategory: LingResearch,
   domainStatusItems: IDomainStatusItem[]
 ) {
-  const satCompletenesses: DSICompleteness[] = ["Complete", "Satisfactory"];
-  const completedItems = domainStatusItems.filter(
-    item =>
-      item.subcategory == subCategory &&
-      satCompletenesses.includes(item.completeness)
+  const completedItems = domainStatusItems.filter(item =>
+    lingCompleteSat(item)
   );
   switch (subCategory) {
     case "Grammar":

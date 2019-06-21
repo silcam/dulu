@@ -87,7 +87,7 @@ export interface DSIDetails extends DiscourseDetails, GrammarTypeDetails {
   ddpWork?: boolean;
 }
 
-export const DSICompletenesses = <const>["Draft", "Satisfactory", "Complete"];
+export const DSICompletenesses = <const>["Draft", "Satisfactory"];
 export type DSICompleteness = typeof DSICompletenesses[number];
 
 interface DSCategoryList {
@@ -102,6 +102,10 @@ const categoryList: DSCategoryList = {
   DataCollection: DataCollections
   // Community: LingCommunityItems
 };
+
+function lingSubcategories() {
+  return (DataCollections as readonly string[]).concat(LingResearches);
+}
 
 function platformsStr(android: boolean, ios: boolean) {
   return [android ? "Android" : false, ios ? "iOS" : false]
@@ -126,6 +130,10 @@ export function countUnit(collectionType: DataCollection) {
   }
 }
 
+export function countText(item: IDomainStatusItem) {
+  return item.count > 0 ? `${item.count}` : `?`;
+}
+
 export function latestItem(items: IDomainStatusItem[]) {
   return max(items, itemDateCompare);
 }
@@ -144,8 +152,7 @@ function itemDateCompare(a: IDomainStatusItem, b: IDomainStatusItem) {
 }
 
 export function lingCompleteSat(item: IDomainStatusItem) {
-  const acceptCompletenesses: DSICompleteness[] = ["Complete", "Satisfactory"];
-  return acceptCompletenesses.includes(item.completeness);
+  return item.completeness == "Satisfactory";
 }
 
 function personName(item: IDomainStatusItem, people: List<IPerson>) {
@@ -165,5 +172,6 @@ export default {
   platformsStr,
   books,
   personName,
-  orgName
+  orgName,
+  lingSubcategories
 };

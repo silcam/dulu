@@ -3,7 +3,8 @@ import DomainStatusItem, {
   revSortByDate,
   DataCollection,
   countUnit,
-  DiscourseTypes
+  DiscourseTypes,
+  countText
 } from "../../models/DomainStatusItem";
 import { ILanguage } from "../../models/Language";
 import List from "../../models/List";
@@ -47,7 +48,7 @@ export default function DomainStatusDataCollectionView(props: IProps) {
               <td>
                 <Link to={`${props.basePath}/${item.id}`}>{item.year}</Link>
               </td>
-              <td style={{ fontSize: "larger" }}>{item.count}</td>
+              <td style={{ fontSize: "larger" }}>{countText(item)}</td>
               <td>{t(item.completeness)}</td>
               <td>
                 <span>{item.description}</span>

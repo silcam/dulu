@@ -29,6 +29,7 @@ import { IOrganization } from "../../models/Organization";
 import List from "../../models/List";
 import useMergeState from "../../util/useMergeState";
 import StyledTable, { TableStyleClass } from "../shared/StyledTable";
+import { equals } from "../../util/arrayUtils";
 
 interface IProps {
   domainStatusItem?: IDomainStatusItem;
@@ -59,6 +60,16 @@ export default function DomainStatusItemForm(props: IProps) {
       : subcategories[0]
   );
   useKeepStateOnList(subcategory, setSubcategory, subcategories);
+
+  const setCategoryAndSubcategory = (subcategory: DSISubcategories) => {
+    const newCategory: DSICategory = DataCollections.includes(
+      subcategory as DataCollection
+    )
+      ? "DataCollection"
+      : "Research";
+    setCategory(newCategory);
+    setSubcategory(subcategory);
+  };
 
   const [bibleBooksIds, setBibleBookIds] = useState(
     props.domainStatusItem ? props.domainStatusItem.bible_book_ids : []
@@ -133,24 +144,42 @@ export default function DomainStatusItemForm(props: IProps) {
         />
       )}
 
-      <FormGroup label={t("Category")}>
-        <SelectInput
-          setValue={category => setCategory(category as DSICategory)}
-          value={category}
-          options={SelectInput.translatedOptions(categories, t)}
-          autoFocus
-        />
-      </FormGroup>
+      {equals(categories, ["DataCollection", "Research"]) ? (
+        <FormGroup label={t("Subcategory")}>
+          <SelectInput
+            setValue={subcategory =>
+              setCategoryAndSubcategory(subcategory as DSISubcategories)
+            }
+            value={subcategory}
+            options={SelectInput.translatedOptions(
+              DomainStatusItem.lingSubcategories(),
+              t
+            )}
+            autoFocus
+          />
+        </FormGroup>
+      ) : (
+        <React.Fragment>
+          <FormGroup label={t("Category")}>
+            <SelectInput
+              setValue={category => setCategory(category as DSICategory)}
+              value={category}
+              options={SelectInput.translatedOptions(categories, t)}
+              autoFocus
+            />
+          </FormGroup>
 
-      <FormGroup label={t("Subcategory")}>
-        <SelectInput
-          setValue={subcategory =>
-            setSubcategory(subcategory as DSISubcategories)
-          }
-          value={subcategory}
-          options={SelectInput.translatedOptions(subcategories, t)}
-        />
-      </FormGroup>
+          <FormGroup label={t("Subcategory")}>
+            <SelectInput
+              setValue={subcategory =>
+                setSubcategory(subcategory as DSISubcategories)
+              }
+              value={subcategory}
+              options={SelectInput.translatedOptions(subcategories, t)}
+            />
+          </FormGroup>
+        </React.Fragment>
+      )}
 
       {DataCollections.includes(subcategory as DataCollection) && (
         <FormGroup

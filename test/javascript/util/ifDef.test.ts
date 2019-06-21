@@ -19,3 +19,7 @@ test("ifDef return 3rd arg if 1st arg is undefined", () => {
 test("ifDef returns empty string if 1st not defined and no 3rd provided", () => {
   expect(ifDef(undefined, () => 4)).toEqual("");
 });
+
+test("ifDef returns the item if no callback specified", () => {
+  expect(ifDef(4)).toEqual(4);
+});

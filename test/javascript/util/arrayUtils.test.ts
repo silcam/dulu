@@ -114,3 +114,10 @@ test("sort", () => {
   const sorted = arrayUtils.sort([4, 3, 56, 9, 0], (a, b) => a - b);
   expect(sorted).toEqual([0, 3, 4, 9, 56]);
 });
+
+test("equals", () => {
+  expect(arrayUtils.equals([1, 2, 3], [1, 2, 3])).toBe(true);
+  expect(arrayUtils.equals([1, 2], [1, 2, 3])).toBe(false);
+  expect(arrayUtils.equals([1, 2, 3], [1, 2])).toBe(false);
+  expect(arrayUtils.equals([1, 2, 3], [1, 2, 4])).toBe(false);
+});

@@ -2,7 +2,10 @@ import React, { useContext } from "react";
 import DomainStatusItem, {
   IDomainStatusItem,
   GrammarTypes,
-  DiscourseTypes
+  DiscourseTypes,
+  countUnit,
+  DataCollection,
+  countText
 } from "../../models/DomainStatusItem";
 import { IPerson } from "../../models/Person";
 import { IOrganization } from "../../models/Organization";
@@ -16,6 +19,7 @@ import ReadonlyCheck from "../shared/ReadonlyCheck";
 import styles from "./DomainStatus.css";
 import Spacer from "../shared/Spacer";
 import DivInline from "../shared/DivInline";
+import capitalize from "../../util/capitalize";
 
 interface IProps {
   language: ILanguage;
@@ -87,6 +91,17 @@ export default function DomainStatusItemView(props: IProps) {
               )}
             </td>
           </tr>
+
+          {props.item.category == "DataCollection" && (
+            <tr>
+              <th>
+                {capitalize(
+                  countUnit(props.item.subcategory as DataCollection)
+                )}
+              </th>
+              <td>{countText(props.item)}</td>
+            </tr>
+          )}
 
           {props.item.subcategory == "Orthography" && (
             <tr>

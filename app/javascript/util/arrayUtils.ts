@@ -102,3 +102,7 @@ export function sort<T>(
   });
   return sorted;
 }
+
+export function equals<T>(a: readonly T[], b: readonly T[]) {
+  return a.length == b.length && a.every((aItem, index) => b[index] == aItem);
+}

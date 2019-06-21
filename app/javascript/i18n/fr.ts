@@ -97,7 +97,6 @@ export default {
   Category: "Catégorie",
   ClausesAndSentences: "Propositions et phrases",
   Close: "Fermer",
-  Complete: "Complet",
   Completed: "Terminé",
   Completeness: "Exhaustivité",
   confirm_delete_cluster: "Supprimer %{name} ?",
