@@ -20,6 +20,7 @@ class Api::EventsController < ApplicationController
   def create
     authorize! :create, Event
     @event = Event.new event_params
+    @event.creator = current_user
     @event.workshop = Workshop.find(params[:event][:workshop_id]) if params[:event][:workshop_id]
     @event.save!
     render :show
