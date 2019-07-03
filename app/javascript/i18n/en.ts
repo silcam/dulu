@@ -2,6 +2,7 @@ export default {
   All_changes_saved: "All changes saved.",
   already_exists: "already exists",
   As_of: "As of",
+  BackTranslators: "Back-Translators",
   bible_books: [
     "Genesis",
     "Exodus",
@@ -71,6 +72,7 @@ export default {
     "Revelation"
   ],
   Can_login: "Can log in to Dulu",
+  CitSupervisedChecking: "CiT Supervised Checking",
   ClausesAndSentences: "Clauses and Sentences",
   confirm_delete_cluster: "Delete %{name}?",
   confirm_delete_domain_status_item: "Delete this %{category}?",
@@ -206,6 +208,7 @@ export default {
       F: "herself"
     }
   },
+  PreChecking: "Pre-checking",
   roles: {
     Administration: "Administration",
     BackTranslator: "Back-Translator",

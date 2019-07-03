@@ -1,12 +1,10 @@
 import React, { useState, useContext } from "react";
-import selectOptionsFromObject from "../../util/selectOptionsFromObject";
 import update from "immutability-helper";
 import EditEventParticipantsTable from "./EditEventParticipantsTable";
 import SaveButton from "../shared/SaveButton";
 import Event, { IEventInflated, IEvent } from "../../models/Event";
 import FormGroup from "../shared/FormGroup";
 import ValidatedTextInput from "../shared/ValidatedTextInput";
-import SelectInput from "../shared/SelectInput";
 import FuzzyDateInput from "../shared/FuzzyDateInput";
 import TextArea from "../shared/TextArea";
 import { Setter, Adder } from "../../models/TypeBucket";
@@ -17,6 +15,8 @@ import { IActivity } from "../../models/Activity";
 import I18nContext from "../../contexts/I18nContext";
 import { useAPIPost } from "../../util/useAPI";
 import { emptyEvent } from "../../reducers/eventsReducer";
+import EventCategoryPicker from "./EventCategoryPicker";
+import { Domain } from "../../models/Domain";
 import { T } from "../../i18n/i18n";
 
 interface IProps {
@@ -64,13 +64,7 @@ export default function NewEventForm(props: IProps) {
           autoFocus
         />
       </FormGroup>
-      <FormGroup label={t("Domain")}>
-        <SelectInput
-          value={event.domain}
-          options={selectOptionsFromObject(t("domains"))}
-          setValue={domain => updateEvent({ domain })}
-        />
-      </FormGroup>
+      <EventCategoryPicker event={event} updateEvent={updateEvent} />
       <FormGroup label={t("Start_date")}>
         <FuzzyDateInput
           date={event.start_date}
@@ -109,7 +103,7 @@ export default function NewEventForm(props: IProps) {
 function newEvent(t: T, startEvent?: Partial<IEventInflated>): IEventInflated {
   let event = {
     ...emptyEvent(),
-    domain: Object.keys(t("domains"))[0],
+    domain: Object.keys(t("domains"))[0] as Domain,
     languages: [],
     clusters: [],
     event_participants: []

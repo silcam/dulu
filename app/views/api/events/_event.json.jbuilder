@@ -1,6 +1,6 @@
 # Locals: event, language
 
-json.call(event, :id, :name, :domain, :start_date, :end_date, :note)
+json.call(event, :id, :name, :domain, :start_date, :end_date, :note, :category, :subcategory)
 
 json.languages event.languages do |language|
   json.call(language, :id, :name)

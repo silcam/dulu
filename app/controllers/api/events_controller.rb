@@ -56,6 +56,7 @@ class Api::EventsController < ApplicationController
             .require(:event)
             .permit(
                 :name, :domain, :note, :start_date, :end_date,
+                :category, :subcategory,
                 language_ids: [], cluster_ids: [], 
                 event_participants_attributes: [
                   :id, :person_id, :_destroy, roles: []

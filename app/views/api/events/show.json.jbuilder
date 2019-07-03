@@ -17,7 +17,7 @@ else
 end
 
 json.event do
-  json.call(@event, :id, :name, :domain, :start_date, :end_date, :note, :language_ids, :cluster_ids)
+  json.call(@event, :id, :name, :domain, :start_date, :end_date, :note, :language_ids, :cluster_ids, :category, :subcategory)
 
   json.event_participants @event.event_participants do |e_p|
     json.call(e_p, :id, :person_id, :roles)

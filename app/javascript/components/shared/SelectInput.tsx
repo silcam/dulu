@@ -39,9 +39,17 @@ export default function SelectInput(props: IProps) {
 SelectInput.translatedOptions = (
   options: readonly string[],
   t: T,
-  keyPrefix?: string
-) =>
-  options.map(option => ({
-    value: option,
-    display: keyPrefix ? t(`${keyPrefix}.${option}`) : t(option)
-  }));
+  keyPrefix?: string,
+  sort = true
+) => {
+  const selectOptions: { value: string; display: string }[] = options.map(
+    option => ({
+      value: option,
+      display: keyPrefix ? t(`${keyPrefix}.${option}`) : t(option)
+    })
+  );
+  if (sort) {
+    selectOptions.sort((a, b) => a.display.localeCompare(b.display));
+  }
+  return selectOptions;
+};

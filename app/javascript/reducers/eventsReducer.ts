@@ -15,7 +15,9 @@ export function emptyEvent(): IEvent {
   return {
     id: 0,
     name: "",
-    domain: "",
+    domain: "Anthropology",
+    category: "",
+    subcategory: "",
     start_date: "",
     end_date: "",
     language_ids: [],

@@ -31,7 +31,8 @@ export default function NewStageForm(props: IProps) {
             options={SelectInput.translatedOptions(
               Activity.stages(props.activity),
               t,
-              "stage_names"
+              "stage_names",
+              false
             )}
           />
           <button className="small" onClick={() => props.setFormState("date")}>

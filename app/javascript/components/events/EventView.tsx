@@ -8,7 +8,6 @@ import update from "immutability-helper";
 import TextOrTextArea from "../shared/TextOrTextArea";
 import style from "./EventPage.css";
 import P from "../shared/P";
-import selectOptionsFromObject from "../../util/selectOptionsFromObject";
 import EditEventParticipantsTable from "./EditEventParticipantsTable";
 import Event, {
   IEvent,
@@ -16,7 +15,6 @@ import Event, {
   IEventInflated
 } from "../../models/Event";
 import FormGroup from "../shared/FormGroup";
-import SelectInput from "../shared/SelectInput";
 import FuzzyDateInput from "../shared/FuzzyDateInput";
 import { ILanguage } from "../../models/Language";
 import { ICluster } from "../../models/Cluster";
@@ -26,6 +24,8 @@ import { IActivity } from "../../models/Activity";
 import { History } from "history";
 import { useAPIGet, useAPIPut, useAPIDelete } from "../../util/useAPI";
 import I18nContext from "../../contexts/I18nContext";
+import { T } from "../../i18n/i18n";
+import EventCategoryPicker from "./EventCategoryPicker";
 
 interface IProps {
   id: number;
@@ -44,7 +44,6 @@ interface IProps {
 }
 
 export default function EventView(props: IProps) {
-  console.log(`Event is ${props.event}`);
   const actions = {
     setEvent: props.setEvent,
     addPeople: props.addPeople,
@@ -130,16 +129,17 @@ export default function EventView(props: IProps) {
             setValue={value => updateEvent({ name: value })}
             validateNotBlank
           />
+          {!editing && (
+            <span>
+              <br />
+              <span className="subheader">{domainCategoryText(event, t)}</span>
+            </span>
+          )}
         </h2>
+
         {editing ? (
           <div>
-            <FormGroup label={t("Domain")}>
-              <SelectInput
-                value={event.domain}
-                setValue={domain => updateEvent({ domain })}
-                options={selectOptionsFromObject(t("domains"))}
-              />
-            </FormGroup>
+            <EventCategoryPicker event={event} updateEvent={updateEvent} />
             <FormGroup label={t("Start_date")}>
               <FuzzyDateInput
                 date={event.start_date}
@@ -192,4 +192,15 @@ export default function EventView(props: IProps) {
       </div>
     </div>
   );
+}
+
+function domainCategoryText(event: IEvent, t: T) {
+  let text = t(`domains.${event.domain}`) as string;
+  if (event.category) {
+    text += " > " + t(event.category);
+    if (event.subcategory) {
+      text += " > " + t(event.subcategory);
+    }
+  }
+  return text;
 }

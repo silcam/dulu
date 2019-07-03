@@ -33,6 +33,7 @@ export default function translator(setLocale: Locale) {
 }
 
 function t(key: string, subs: Subs, locale: Locale) {
+  if (!key) return "";
   let tStr = getString(strings[locale], key);
   if (tStr === undefined) {
     if (locale != "en")

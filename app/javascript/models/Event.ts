@@ -4,6 +4,7 @@ import { AnyObj } from "./TypeBucket";
 import { ILanguage } from "./Language";
 import { ICluster } from "./Cluster";
 import { ICan } from "../actions/canActions";
+import { Domain } from "./Domain";
 
 export interface IPeriod {
   start?: { year: number; month?: number };
@@ -21,10 +22,46 @@ export interface IEventParticipantExtended extends IEventParticipant {
   full_name: string;
 }
 
+export const EventCategories: {
+  [domain: string]: { [category: string]: string[] };
+} = {
+  Anthropology: {},
+  Community_development: {},
+  Ethnomusicology: {},
+  Linguistics: { Workshop: [] },
+  Literacy: {
+    TeacherTraining: ["Literacy", "MLE"],
+    TeacherRefresher: ["Literacy", "MLE"],
+    Workshop: [
+      "Mobilization",
+      "Bloom",
+      "Primer_1",
+      "Primer_2",
+      "TransitionManual",
+      "Writers",
+      "FunctionalLiteracy",
+      "MLE_advocacy",
+      "MLE_material_production"
+    ],
+    Class: ["Primer_1", "Primer_2", "TransitionManual"]
+  },
+  Scripture_use: {},
+  Mobilization: {},
+  Translation: {
+    ConsultantChecking: [],
+    PreChecking: [],
+    CitSupervisedChecking: [],
+    Training: ["Translators", "Reviewers", "BackTranslators"],
+    Workshop: []
+  }
+};
+
 export interface IEvent {
   id: number;
   name: string;
-  domain: string;
+  domain: Domain;
+  category: string;
+  subcategory: string;
   start_date: string;
   end_date: string;
   language_ids: number[];
