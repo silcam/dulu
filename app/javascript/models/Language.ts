@@ -12,6 +12,7 @@ interface Progress {
 export interface ILanguage {
   id: number;
   name: string;
+  code: string;
   cluster_id?: number;
   region_id?: number;
   progress: {
@@ -29,6 +30,7 @@ export interface ILanguage {
 const emptyLanguage: ILanguage = {
   id: 0,
   name: "",
+  code: "",
   progress: {},
   domain_status_items: [],
   can: {}

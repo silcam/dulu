@@ -132,6 +132,12 @@ h3 a:hover {
     text-decoration: none;
 }
 
+.subheader {
+    color: #aaa;
+    font-size: 85%;
+    font-weight: normal;
+}
+
 input[type=text] {
     width: calc(100% - 12px);
     margin: 0;

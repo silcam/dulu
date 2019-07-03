@@ -19,7 +19,7 @@ interface Match {
 }
 
 interface Matcher<T> {
-  (item: T, q: string): Match | undefined;
+  (item: T, q: string): Match | null;
 }
 
 interface IProps extends RouteComponentProps {
@@ -112,21 +112,11 @@ function BaseGoBar(props: IProps) {
 function search(query: string, props: IProps) {
   if (query.length == 0) return [];
   const q = accentFold(query);
-  let matches = searchItems(
-    q,
-    props.languages,
-    textMatcher("/languages", l => l.name)
-  )
+  let matches = searchItems(q, props.languages, languageMatcher)
     .concat(
       searchItems(q, props.people, textMatcher("/people", p => fullName(p)))
     )
-    .concat(
-      searchItems(
-        q,
-        props.organizations,
-        textMatcher("/organizations", o => o.short_name)
-      )
-    )
+    .concat(searchItems(q, props.organizations, orgMatcher))
     .concat(
       searchItems(q, props.clusters, textMatcher("/clusters", c => c.name))
     )
@@ -152,19 +142,38 @@ function capIt(s: string) {
   return s.slice(0, 1).toUpperCase() + s.slice(1);
 }
 
+function languageMatcher(language: ILanguage, q: string) {
+  return (
+    textMatcher("/languages", () => language.name)(language, q) ||
+    textMatcher("/languages", () => language.code, () => language.name)(
+      language,
+      q
+    )
+  );
+}
+
+function orgMatcher(org: IOrganization, q: string) {
+  return (
+    textMatcher("/organizations", () => org.short_name)(org, q) ||
+    textMatcher("/organizations", () => org.long_name)(org, q)
+  );
+}
+
 function textMatcher<T extends { id: number }>(
   baseUrl: string,
-  getText: (item: T) => string
+  getText: (item: T) => string,
+  displayText?: (item: T) => string
 ) {
   return (item: T, q: string) => {
     const text = getText(item);
     const matchText = accentFold(text);
     if (matchText.includes(q))
       return {
-        display: text,
+        display: displayText ? displayText(item) : text,
         matched: matchText,
         url: `${baseUrl}/${item.id}`
       };
+    return null;
   };
 }
 

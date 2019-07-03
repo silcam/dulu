@@ -38,7 +38,11 @@ export default function LanguagePage(props: IProps) {
 
   return (
     <div>
-      <h2>{language.name}</h2>
+      <h2>
+        {language.name}
+        {"  "}
+        <span className="subheader">{language.code}</span>
+      </h2>
       <Route
         path={props.basePath + "/:domain?"}
         render={({ match, history }) => (
