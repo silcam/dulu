@@ -50,6 +50,7 @@ export default function DomainStatusResearch(props: IProps) {
                         item,
                         props.people
                       )} ${ifDef(item.year)}`,
+                      item.title,
                       item.description,
                       t(subCategory)
                     )}

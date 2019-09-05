@@ -51,6 +51,13 @@ export default function DomainStatusItemView(props: IProps) {
             </tr>
           )}
 
+          {props.item.category == "Research" && (
+            <tr>
+              <th>{t("Title")}</th>
+              <td>{props.item.title}</td>
+            </tr>
+          )}
+
           <tr>
             <th>{t("Description")}</th>
             <td>

@@ -13,6 +13,7 @@ export interface IDomainStatusItem {
   category: DSICategory;
   subcategory: DSISubcategories;
   description: string;
+  title: string;
   year: number | null;
   platforms: string;
   organization_id: number | null;
@@ -174,6 +175,7 @@ function empty(): IDomainStatusItem {
     category: "Research",
     subcategory: "Phonology",
     description: "",
+    title: "",
     year: null,
     platforms: "",
     organization_id: null,

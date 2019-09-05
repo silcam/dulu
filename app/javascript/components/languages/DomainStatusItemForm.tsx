@@ -90,6 +90,10 @@ export default function DomainStatusItemForm(props: IProps) {
     props.domainStatusItem ? props.domainStatusItem.description : ""
   );
 
+  const [title, setTitle] = useState(
+    props.domainStatusItem ? props.domainStatusItem.title : ""
+  );
+
   const [year, setYear] = useState(
     props.domainStatusItem ? props.domainStatusItem.year : null
   );
@@ -119,6 +123,7 @@ export default function DomainStatusItemForm(props: IProps) {
     subcategory,
     year,
     description,
+    title,
     completeness,
     details,
     count: parseInt(count) || 0,
@@ -227,6 +232,12 @@ export default function DomainStatusItemForm(props: IProps) {
           <br />
           <CheckBoxInput value={ios} setValue={setIos} text="iOS" />
         </P>
+      )}
+
+      {category == "Research" && (
+        <FormGroup label={t("Title")}>
+          <TextInput value={title} setValue={(t: string) => setTitle(t)} />
+        </FormGroup>
       )}
 
       <FormGroup label={t("Description")}>

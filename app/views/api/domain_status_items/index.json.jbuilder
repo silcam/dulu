@@ -11,6 +11,7 @@ json.language do
       :category, 
       :subcategory, 
       :description,
+      :title,
       :year,
       :platforms,
       :organization_id, 

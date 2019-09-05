@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190703114100) do
+ActiveRecord::Schema.define(version: 20190905152409) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -140,6 +140,7 @@ ActiveRecord::Schema.define(version: 20190703114100) do
     t.string "completeness", default: ""
     t.json "details", default: {}
     t.integer "count", default: 0
+    t.string "title", default: ""
     t.index ["language_id"], name: "index_domain_status_items_on_language_id"
     t.index ["organization_id"], name: "index_domain_status_items_on_organization_id"
     t.index ["person_id"], name: "index_domain_status_items_on_person_id"

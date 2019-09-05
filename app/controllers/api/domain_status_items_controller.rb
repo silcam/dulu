@@ -36,6 +36,7 @@ class Api::DomainStatusItemsController < ApplicationController
         :year, 
         :platforms,
         :description,
+        :title,
         :organization_id,
         :person_id,
         :count,
