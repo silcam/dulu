@@ -40,8 +40,8 @@ class EventsIntegrationTest < ApplicationSystemTestCase
 
   test "Edit Event Dates" do
     setup_edit
-    within('label', text: 'Start Date') { fill_in_date(FuzzyDate.new(2017, 2)) }
-    within('label', text: 'End Date') { fill_in_date(FuzzyDate.new(2018, 2)) }
+    within('div#startDateInput') { fill_in_date(FuzzyDate.new(2017, 2)) }
+    within('div#endDateInput') { fill_in_date(FuzzyDate.new(2018, 2)) }
     click_on 'Save'
     assert_text('Feb 2017')
   end

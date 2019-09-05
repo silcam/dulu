@@ -140,22 +140,26 @@ export default function EventView(props: IProps) {
         {editing ? (
           <div>
             <EventCategoryPicker event={event} updateEvent={updateEvent} />
-            <FormGroup label={t("Start_date")}>
+            <P>
+              <label>{t("Start_date")}</label>
               <FuzzyDateInput
                 date={event.start_date}
                 handleDateInput={(date: string) =>
                   updateEvent({ start_date: date })
                 }
+                divId="startDateInput"
               />
-            </FormGroup>
-            <FormGroup label={t("End_date")}>
+            </P>
+            <P>
+              <label>{t("End_date")}</label>
               <FuzzyDateInput
                 date={event.end_date}
                 handleDateInput={(date: string) =>
                   updateEvent({ end_date: date })
                 }
+                divId="endDateInput"
               />
-            </FormGroup>
+            </P>
           </div>
         ) : (
           <h4>

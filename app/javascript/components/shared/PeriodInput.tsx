@@ -1,8 +1,9 @@
 import React, { useContext } from "react";
 import { IPeriodStrict } from "../../models/Event";
-import FormGroup from "./FormGroup";
 import I18nContext from "../../contexts/I18nContext";
 import SelectInput from "./SelectInput";
+import P from "./P";
+import { T } from "../../i18n/i18n";
 
 interface IProps {
   period: IPeriodStrict;
@@ -41,13 +42,14 @@ interface YMProps {
 function YearMonthInput(props: YMProps) {
   const t = useContext(I18nContext);
   return (
-    <FormGroup label={props.label}>
+    <P>
+      <label className="block">{props.label}</label>
       <SelectInput
         value={props.month.toString()}
         setValue={month =>
           props.setValue({ year: props.year, month: parseInt(month) })
         }
-        options={toOptions(monthsList())}
+        options={monthsList(t)}
         name="month"
       />
       <SelectInput
@@ -58,12 +60,15 @@ function YearMonthInput(props: YMProps) {
         options={toOptions(yearsList())}
         name="year"
       />
-    </FormGroup>
+    </P>
   );
 }
 
-function monthsList() {
-  return new Array(12).fill(0).map((_value, index) => index + 1);
+function monthsList(t: T) {
+  return t("month_names_short").map((month: string, i: number) => ({
+    value: i + 1,
+    display: month
+  }));
 }
 
 function yearsList() {

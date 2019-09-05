@@ -5,13 +5,13 @@ import SmallSaveAndCancel from "../shared/SmallSaveAndCancel";
 import DuluAxios from "../../util/DuluAxios";
 import CheckBoxInput from "../shared/CheckboxInput";
 import { arrayDelete } from "../../util/arrayUtils";
-import FormGroup from "../shared/FormGroup";
 import FuzzyDateInput from "../shared/FuzzyDateInput";
 import { IParticipant } from "../../models/Participant";
 import { Adder } from "../../models/TypeBucket";
 import { IPerson } from "../../models/Person";
 import { History } from "history";
 import I18nContext from "../../contexts/I18nContext";
+import P from "../shared/P";
 
 interface NewParticipant extends IParticipant {
   person_name: string;
@@ -113,7 +113,8 @@ export default class NewParticipantForm extends React.PureComponent<
               text={participant.person_name}
               autoFocus
             />
-            <FormGroup label={t("Start_date")}>
+            <P>
+              <label>{t("Start_date")}</label>
               <FuzzyDateInput
                 date={participant.start_date}
                 handleDateInput={date =>
@@ -121,7 +122,7 @@ export default class NewParticipantForm extends React.PureComponent<
                 }
                 dateIsInvalid={() => this.updateParticipant({ start_date: "" })}
               />
-            </FormGroup>
+            </P>
             <ul>
               {participant.person_roles.map(role => (
                 <li key={role}>

@@ -6,6 +6,7 @@ import FuzzyDateInput from "../shared/FuzzyDateInput";
 import { IOrganizationPerson, IOrganization } from "../../models/Organization";
 import I18nContext from "../../contexts/I18nContext";
 import update from "immutability-helper";
+import P from "../shared/P";
 
 interface IProps {
   organization_person: IOrganizationPerson;
@@ -67,7 +68,8 @@ export default class MyOrganizationForm extends React.PureComponent<
                   value={org_person.position || ""}
                 />
               </FormGroup>
-              <FormGroup label={t("Start_date")}>
+              <P>
+                <label>{t("Start_date")}</label>
                 <FuzzyDateInput
                   date={org_person.start_date}
                   handleDateInput={date =>
@@ -78,8 +80,9 @@ export default class MyOrganizationForm extends React.PureComponent<
                   }}
                   allowBlank
                 />
-              </FormGroup>
-              <FormGroup label={t("End_date")}>
+              </P>
+              <P>
+                <label>{t("End_date")}</label>
                 <FuzzyDateInput
                   date={org_person.end_date}
                   handleDateInput={date =>
@@ -90,7 +93,7 @@ export default class MyOrganizationForm extends React.PureComponent<
                   }}
                   allowBlank
                 />
-              </FormGroup>
+              </P>
               <div>
                 <SmallSaveAndCancel
                   handleSave={this.save}

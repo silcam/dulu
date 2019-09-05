@@ -118,17 +118,7 @@ class MainRouter extends React.Component<IProps, IState> {
             )}
           />
           <Route path="/events" render={() => <EventsPage />} />
-          <Route
-            path="/reports/"
-            render={({ match, history, location }) => (
-              <ReportsRouter
-                key={match.params.id || ""}
-                id={match.params.id}
-                history={history}
-                location={location}
-              />
-            )}
-          />
+          <Route path="/reports" render={() => <ReportsRouter />} />
           <Route
             path="/participants/:id"
             render={({ match, history }) => (

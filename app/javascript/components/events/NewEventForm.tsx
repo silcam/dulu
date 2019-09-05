@@ -18,6 +18,7 @@ import { emptyEvent } from "../../models/Event";
 import EventCategoryPicker from "./EventCategoryPicker";
 import { Domain } from "../../models/Domain";
 import { T } from "../../i18n/i18n";
+import P from "../shared/P";
 
 interface IProps {
   cancelForm: () => void;
@@ -65,21 +66,23 @@ export default function NewEventForm(props: IProps) {
         />
       </FormGroup>
       <EventCategoryPicker event={event} updateEvent={updateEvent} />
-      <FormGroup label={t("Start_date")}>
+      <P>
+        <label>{t("Start_date")}</label>
         <FuzzyDateInput
           date={event.start_date}
           handleDateInput={(date: string) => updateEvent({ start_date: date })}
           dateIsInvalid={() => updateEvent({ start_date: "" })}
         />
-      </FormGroup>
+      </P>
 
-      <FormGroup label={t("End_date")}>
+      <P>
+        <label>{t("End_date")}</label>
         <FuzzyDateInput
           date={event.end_date}
           handleDateInput={(date: string) => updateEvent({ end_date: date })}
           dateIsInvalid={() => updateEvent({ end_date: "" })}
         />
-      </FormGroup>
+      </P>
 
       <FormGroup label={t("Note")}>
         <TextArea value={event.note} setValue={note => updateEvent({ note })} />

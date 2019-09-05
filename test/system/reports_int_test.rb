@@ -23,8 +23,8 @@ class ReportsIntTest < ApplicationSystemTestCase
     visit '/reports'
     click_on 'Domain'
     select 'Translation', from: 'Domain'
-    within('label', text: 'Start'){ select '2017', from: 'year' }
-    within('label', text: 'End'){ select '2017', from: 'year' }
+    within(parent(find('label', text: 'Start'))){ select '2017', from: 'year' }
+    within(parent(find('label', text: 'End'))){ select '2017', from: 'year' }
     assert_text 'Hdi Ezra Drafting 2017-02'
     assert_text 'Zulgo Ezra Consultant Check in Progress 2017-05-29'
     assert_text 'Check a book now 2017-07 2017-07 Hdi'

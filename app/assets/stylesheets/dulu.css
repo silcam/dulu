@@ -163,6 +163,10 @@ label {
     font-weight: bold;
 }
 
+label.block {
+    display: block;
+}
+
 h3 label {
     font-size: 14px;
 }

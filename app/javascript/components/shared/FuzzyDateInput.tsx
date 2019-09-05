@@ -12,6 +12,7 @@ export interface IProps {
   showErrors?: boolean;
   //optional
   dateIsInvalid?: () => void;
+  divId?: string;
 }
 
 interface IState {
@@ -128,7 +129,7 @@ export default class FuzzyDateInput extends React.PureComponent<
     return (
       <I18nContext.Consumer>
         {t => (
-          <div className={styles.fuzzyDate}>
+          <div className={styles.fuzzyDate} id={this.props.divId || ""}>
             <DaySelector
               handleInput={day => this.setState({ day }, this.pushDate)}
               value={this.state.day}
