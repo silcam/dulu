@@ -153,9 +153,9 @@ export default withRouter(MainRouter);
 
 function routeActionAndId(routeParams: AnyObj) {
   if (routeParams.actionOrId && routeParams.id)
-    return { action: routeParams.actionOrId, id: routeParams.id };
+    return { action: routeParams.actionOrId, id: parseInt(routeParams.id) };
   if (parseInt(routeParams.actionOrId))
-    return { action: "show", id: routeParams.actionOrId };
+    return { action: "show", id: parseInt(routeParams.actionOrId) };
   return { action: routeParams.actionOrId };
 }
 

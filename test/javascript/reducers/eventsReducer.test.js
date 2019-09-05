@@ -3,7 +3,7 @@ import {
   addEvents,
   addEventsForLanguage
 } from "../../../app/javascript/actions/eventActions";
-import { emptyEvent } from "../../../app/javascript/reducers/eventsReducer";
+import { emptyEvent } from "../../../app/javascript/models/Event";
 import List from "../../../app/javascript/models/List";
 
 const makeEvent = obj => Object.assign(emptyEvent(), obj);

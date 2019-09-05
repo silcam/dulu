@@ -83,6 +83,7 @@ export default class OrganizationPage extends React.PureComponent<
       `/api/organizations/${this.props.id}`
     );
     if (success) {
+      console.log("DELETING...");
       this.props.history.push("/organizations");
       this.props.deleteOrganization(this.props.id);
     }
@@ -95,6 +96,7 @@ export default class OrganizationPage extends React.PureComponent<
   };
 
   render() {
+    console.log(`ORG PAGE PROGS: ${JSON.stringify(this.props)}`);
     const organization = this.state.editing
       ? this.state.organization
       : this.props.organization;

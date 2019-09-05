@@ -48,6 +48,7 @@ function YearMonthInput(props: YMProps) {
           props.setValue({ year: props.year, month: parseInt(month) })
         }
         options={toOptions(monthsList())}
+        name="month"
       />
       <SelectInput
         value={props.year.toString()}
@@ -55,6 +56,7 @@ function YearMonthInput(props: YMProps) {
           props.setValue({ month: props.month, year: parseInt(year) })
         }
         options={toOptions(yearsList())}
+        name="year"
       />
     </FormGroup>
   );

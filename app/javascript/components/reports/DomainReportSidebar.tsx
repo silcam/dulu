@@ -71,24 +71,28 @@ function BaseSidebar(props: IProps) {
         period={reportParams.period}
         setPeriod={period => updateReportParams({ period })}
       />
-      <LanguageMultiSelect
-        allItems={props.languages}
-        selectedItems={selectedLanguages}
-        setSelectedItems={selectedLanguages =>
-          updateReportParams({
-            languageIds: selectedLanguages.map(lang => lang.id)
-          })
-        }
-      />
-      <ClusterMultiSelect
-        allItems={props.clusters}
-        selectedItems={selectedClusters}
-        setSelectedItems={selectedClusters =>
-          updateReportParams({
-            clusterIds: selectedClusters.map(cluster => cluster.id)
-          })
-        }
-      />
+      <div id="languageSelect">
+        <LanguageMultiSelect
+          allItems={props.languages}
+          selectedItems={selectedLanguages}
+          setSelectedItems={selectedLanguages =>
+            updateReportParams({
+              languageIds: selectedLanguages.map(lang => lang.id)
+            })
+          }
+        />
+      </div>
+      <div id="clusterSelect">
+        <ClusterMultiSelect
+          allItems={props.clusters}
+          selectedItems={selectedClusters}
+          setSelectedItems={selectedClusters =>
+            updateReportParams({
+              clusterIds: selectedClusters.map(cluster => cluster.id)
+            })
+          }
+        />
+      </div>
     </div>
   );
 }

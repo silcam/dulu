@@ -196,7 +196,7 @@ export default {
   Im_sure: "Je suis certain.",
   Joined_program: "Rejoint le programme",
   Language: "Langue",
-  LanguageComparison: "Comparaison des Langues",
+  LanguageComparison: "Progrès de traduction",
   Languages: "Langues",
   Language_programs: "Programmes de langue",
   languages: {

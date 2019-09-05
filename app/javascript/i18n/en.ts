@@ -125,7 +125,7 @@ export default {
     F: "Female"
   },
   Im_sure: "I'm sure",
-  LanguageComparison: "Language Comparison Report",
+  LanguageComparison: "Translation Progress",
   languages: {
     fr: "Fran\u00e7ais",
     en: "English"

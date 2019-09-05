@@ -4,14 +4,11 @@ require 'minitest/retry'
 Minitest::Retry.use!
 
 Capybara.register_driver(:headless_chrome) do |app|
-  capabilities = Selenium::WebDriver::Remote::Capabilities.chrome(
-    chromeOptions: { args: %w[headless disable-gpu window-size=1600x1080] },
-  )
-
+  
   Capybara::Selenium::Driver.new(
     app,
     browser: :chrome,
-    desired_capabilities: capabilities,
+    options: Selenium::WebDriver::Chrome::Options.new(args: %w[headless disable-gpu])
   )
 end
 
@@ -22,14 +19,15 @@ class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
   # driven_by :selenium, using: :chrome, screen_size: [1400, 1400]
 
   def teardown
-    errors = page.driver.browser.manage.logs.get(:browser)
-    if errors.present?
-      errors.each do |error|
-        unless error.to_s.include?("Can't perform a React state update on an unmounted component.")
-          puts "\e[31m#{self.method_name} : #{error}\e[0m"
-        end
-      end
-    end
+    # Stopped working with chrome upgrade :(
+    # errors = page.driver.browser.manage.logs.get(:browser)
+    # if errors.present?
+    #   errors.each do |error|
+    #     unless error.to_s.include?("Can't perform a React state update on an unmounted component.")
+    #       puts "\e[31m#{self.method_name} : #{error}\e[0m"
+    #     end
+    #   end
+    # end
     # puts "Finished #{self.method_name}\u001b[0K"
   end
   
