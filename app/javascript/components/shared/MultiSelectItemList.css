@@ -1,0 +1,12 @@
+span.item {
+    padding-right: 6px;
+}
+
+span.clear button:hover {
+    color: #c9302c;
+}
+
+span.item button:hover {
+    color: #c9302c;
+    text-decoration: line-through;
+}

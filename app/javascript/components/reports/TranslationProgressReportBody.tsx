@@ -3,29 +3,19 @@ import LCProgram from "./LCProgram";
 import style from "./ReportsViewer.css";
 import { Link } from "react-router-dom";
 import ColorKey from "./ColorKey";
-import { IReport } from "../../models/Report";
+import { TranslationProgressReport } from "../../models/TranslationProgressReport";
 import I18nContext from "../../contexts/I18nContext";
 
 interface IProps {
-  report: IReport;
+  report: TranslationProgressReport;
 }
 
-export default function LCReport(props: IProps) {
+export default function TranslationProgressReportBody(props: IProps) {
   const report = props.report;
   const t = useContext(I18nContext);
   return (
     <div className={style.lcReport}>
       <div>
-        <h2>{report.name ? report.name : t("LanguageComparison")}</h2>
-        {report.author && (
-          <h5 className={style.lcReportSubheader}>
-            {t("Created_by", { name: report.author.full_name })}
-            <br />
-            {t("Share_this_report", {
-              url: `https://dulu.sil.org/reports/${report.id}`
-            })}
-          </h5>
-        )}
         <ColorKey />
       </div>
       <div className={style.lcBody}>

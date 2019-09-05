@@ -11,8 +11,18 @@ class Api::ReportsController < ApplicationController
   end
 
   def show
-    @report = Report.find(params[:id])
-    ViewedReport.mark_viewed(@report, current_user)
+    @db_report = Report.find(params[:id])
+    ViewedReport.mark_viewed(@db_report, current_user)
+    case @db_report.report['type']
+    when 'Domain'
+      @report = DomainReport.from_database(@db_report)
+      @report.generate
+      render :domain_report
+    when 'LanguageComparison'
+      render :translation_progress_report
+    else
+      raise "Unknown report type #{@db_report.report['type']} for report {#{@db_report.id}}." 
+    end
   end
 
   def report_data
@@ -22,6 +32,11 @@ class Api::ReportsController < ApplicationController
       @data = Report.get_cluster_report(params[:report_type], Cluster.find(params[:cluster_id]))
     end
     render json: @data
+  end
+
+  def domain_report
+    @report = DomainReport.from_web_params(params)
+    @report.generate
   end
 
   private

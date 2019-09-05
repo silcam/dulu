@@ -5,11 +5,10 @@ import {
   ClusterAction,
   DELETE_CLUSTER
 } from "../actions/clusterActions";
-import Cluster, { ICluster } from "../models/Cluster";
-import List from "../models/List";
+import Cluster from "../models/Cluster";
 
 export default function clustersReducer(
-  state = new List<ICluster>(Cluster.emptyCluster, [], Cluster.compare),
+  state = Cluster.emptyList(),
   action: ClusterAction
 ) {
   switch (action.type) {

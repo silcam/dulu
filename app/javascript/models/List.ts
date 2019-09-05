@@ -57,13 +57,14 @@ export default class List<T extends { id: number }> {
     return list.add(itemsToAdd);
   }
 
-  remove(id: number) {
-    return this.filter(item => item.id != id);
+  remove(ids: number | number[]) {
+    if (typeof ids == "number") return this.filter(item => item.id != ids);
+    else return this.filter(item => !ids.some(id => id == item.id));
   }
 
-  // removeAll(ids: number[]) {
-  //   return this.filter(item => !ids.some(id => id == item.id));
-  // }
+  empty() {
+    return new List(this.emptyItem, [], this.sort);
+  }
 
   reverse() {
     const newItems = this.items.reduceRight(

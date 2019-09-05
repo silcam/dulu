@@ -14,10 +14,9 @@ export interface IClusterInflated extends ICluster {
   participants: List<IParticipant>;
 }
 
-const emptyCluster = {
+const emptyCluster: ICluster = {
   id: 0,
   name: "",
-  language_ids: [],
   can: {}
 };
 
@@ -44,10 +43,15 @@ function languages(state: AppState, clusterId: number) {
   return state.languages.filter(lang => lang.cluster_id == clusterId);
 }
 
+function emptyList() {
+  return new List(emptyCluster, [], compare);
+}
+
 export default {
   emptyCluster,
   compare,
   clusterParams,
   inflate,
-  languages
+  languages,
+  emptyList
 };

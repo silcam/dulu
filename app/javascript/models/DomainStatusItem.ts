@@ -167,11 +167,36 @@ function orgName(item: IDomainStatusItem, organizations: List<IOrganization>) {
   );
 }
 
+function empty(): IDomainStatusItem {
+  return {
+    id: 0,
+    language_id: 0,
+    category: "Research",
+    subcategory: "Phonology",
+    description: "",
+    year: null,
+    platforms: "",
+    organization_id: null,
+    person_id: null,
+    creator_id: 0,
+    bible_book_ids: [],
+    count: 0,
+    completeness: "Draft",
+    details: {}
+  };
+}
+
+function emptyList() {
+  return new List(empty(), []);
+}
+
 export default {
   categoryList,
   platformsStr,
   books,
   personName,
   orgName,
-  lingSubcategories
+  lingSubcategories,
+  empty,
+  emptyList
 };

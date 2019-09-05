@@ -2,10 +2,13 @@ import React from "react";
 import BibleBooksTable from "./BibleBooksTable";
 import PubsTable from "./PubsTable";
 import { Link } from "react-router-dom";
-import { IReport, IReportLanguage } from "../../models/Report";
+import {
+  TranslationProgressReport,
+  IReportLanguage
+} from "../../models/TranslationProgressReport";
 
 interface IProps {
-  report: IReport;
+  report: TranslationProgressReport;
   language: IReportLanguage;
 }
 
@@ -29,7 +32,7 @@ export default function LCProgram(props: IProps) {
   );
 }
 
-function showPubsTable(report: IReport) {
+function showPubsTable(report: TranslationProgressReport) {
   return Object.keys(report.elements.publications).some(
     pub => report.elements.publications[pub]
   );

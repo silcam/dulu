@@ -66,6 +66,7 @@ Rails.application.routes.draw do
 
     resources :reports do
       get 'report_data', on: :collection
+      get 'domain_report', on: :collection
     end
 
     resources :stages

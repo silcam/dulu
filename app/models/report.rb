@@ -6,8 +6,8 @@ class Report < ApplicationRecord
   validates :name, presence: true, allow_blank: false
 
   TYPES = %i( LanguageComparison )
-  PUBLICATIONS = %i( Bible New_testament Old_testament Any_scripture Audio_Bible Audio_New_testament
-                     Audio_Old_testament JesusFilm LukeFilm App Dictionary Any_literacy)
+  PUBLICATIONS = %i( Bible New_testament Portions Audio_Bible Audio_New_testament
+                     JesusFilm LukeFilm App)
 
   def generate
     case params[:type]
@@ -18,6 +18,10 @@ class Report < ApplicationRecord
 
   def params
     JSON.parse(self.attributes['params'], symbolize_names: true)
+  end
+
+  def report
+    self.attributes['report'].with_indifferent_access
   end
 
   def self.make_name(params)
@@ -89,40 +93,27 @@ class Report < ApplicationRecord
 
   def self.pubs_report(language)
     pubs = {}
+    ds_items = language.domain_status_items.to_a
     PUBLICATIONS.each do |pub_type|
-      pubs[pub_type] = pub_published?(language, pub_type)
+      pubs[pub_type] = pub_published?(ds_items, pub_type.to_s)
     end
     pubs
   end
 
-  def self.pub_published?(language, pub)
-    case pub.to_s
-      when 'Bible', 'New_testament', 'Old_testament'
-        return true if language.publications.find_by(kind: :Scripture, scripture_kind: pub)
+  def self.pub_published?(ds_items, pub)
+    case pub
+      when 'Bible', 'New_testament', 'Portions'
+        return ds_items.any? { |dsi| dsi.category == "PublishedScripture" && dsi.subcategory == pub }
 
-      when 'Any_scripture'
-        return true if language.publications.find_by(kind: :Scripture)
-
-      when 'Audio_Bible', 'Audio_New_testament', 'Audio_Old_testament'
+      when 'Audio_Bible', 'Audio_New_testament'
         key = pub[(6..-1)] # Chop off 'Audio_'
-        return true if language.publications.find_by(media_kind: :AudioScripture, scripture_kind: key)
+        return ds_items.any? { |dsi| dsi.category == "AudioScripture" && dsi.subcategory == key}
 
       when 'JesusFilm', 'LukeFilm'
-        return true if language.publications.find_by(film_kind: pub)
+        return ds_items.any? { |dsi| dsi.category == "Film" && dsi.subcategory == pub }
 
       when 'App'
-        return true if language.publications.find_by(kind: :Media, media_kind: :App)
-
-      when 'Dictionary'
-        return language
-                   .publications
-                   .where("kind='Linguistic' AND (english_name ILIKE ? OR french_name ILIKE ?)",
-                                          "%#{I18n.t(pub, locale: :en)}%",
-                                          "%#{I18n.t(pub, locale: :fr)}%"
-                   ).count > 0
-
-      when 'Any_literacy'
-        return true if language.publications.find_by(kind: :Literacy)
+        return ds_items.any? { |dsi| dsi.category == "ScriptureApp" }
     end
   end
 end

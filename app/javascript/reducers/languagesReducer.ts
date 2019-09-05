@@ -4,12 +4,10 @@ import {
   ADD_LANGUAGES,
   LanguageAction
 } from "../actions/languageActions";
-import { ILanguage } from "../models/Language";
 import Language from "../models/Language";
-import List from "../models/List";
 
 export default function languagesReducer(
-  state = new List<ILanguage>(Language.emptyLanguage, [], Language.compare),
+  state = Language.emptyList(),
   action: LanguageAction
 ) {
   switch (action.type) {

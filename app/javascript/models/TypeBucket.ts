@@ -1,6 +1,11 @@
 import { SyntheticEvent } from "react";
 import { ICan } from "../actions/canActions";
 
+export interface YearMonth {
+  year: number;
+  month: number;
+}
+
 export interface AnyObj {
   [key: string]: any;
 }

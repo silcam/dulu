@@ -2,7 +2,10 @@ import React, { useContext } from "react";
 import Activity from "../../models/Activity";
 import Colors from "../../util/Colors";
 import I18nContext from "../../contexts/I18nContext";
-import { IReportElements, IReportActivities } from "../../models/Report";
+import {
+  IReportElements,
+  IReportActivities
+} from "../../models/TranslationProgressReport";
 
 interface IProps {
   elements: IReportElements;

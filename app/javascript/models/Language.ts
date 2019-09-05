@@ -60,9 +60,14 @@ function participants(
   );
 }
 
+function emptyList() {
+  return new List(emptyLanguage, [], compare);
+}
+
 export default {
   emptyLanguage,
   compare,
   activities,
-  participants
+  participants,
+  emptyList
 };

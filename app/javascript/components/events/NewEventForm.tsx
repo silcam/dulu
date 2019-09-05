@@ -14,7 +14,7 @@ import { ICluster } from "../../models/Cluster";
 import { IActivity } from "../../models/Activity";
 import I18nContext from "../../contexts/I18nContext";
 import { useAPIPost } from "../../util/useAPI";
-import { emptyEvent } from "../../reducers/eventsReducer";
+import { emptyEvent } from "../../models/Event";
 import EventCategoryPicker from "./EventCategoryPicker";
 import { Domain } from "../../models/Domain";
 import { T } from "../../i18n/i18n";

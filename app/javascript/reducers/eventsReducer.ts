@@ -6,27 +6,10 @@ import {
   ADD_EVENTS_FOR_PERSON,
   EventAction
 } from "../actions/eventActions";
-import Event from "../models/Event";
+import Event, { emptyEventList } from "../models/Event";
 import update from "immutability-helper";
 import { IEvent, IPeriod } from "../models/Event";
 import List from "../models/List";
-
-export function emptyEvent(): IEvent {
-  return {
-    id: 0,
-    name: "",
-    domain: "Anthropology",
-    category: "",
-    subcategory: "",
-    start_date: "",
-    end_date: "",
-    language_ids: [],
-    cluster_ids: [],
-    event_participants: [],
-    can: {},
-    note: ""
-  };
-}
 
 export interface EventState {
   list: List<IEvent>;
@@ -34,7 +17,7 @@ export interface EventState {
 }
 
 const emptyState = {
-  list: new List(emptyEvent(), [], Event.compare),
+  list: emptyEventList(),
   backTo: {}
 };
 

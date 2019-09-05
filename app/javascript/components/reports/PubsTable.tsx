@@ -1,7 +1,11 @@
 import React, { useContext } from "react";
 import Colors from "../../util/Colors";
-import Report, { IReportElements, IReportLanguage } from "../../models/Report";
+import Report, {
+  IReportElements,
+  IReportLanguage
+} from "../../models/TranslationProgressReport";
 import I18nContext from "../../contexts/I18nContext";
+import TranslationProgressReport from "../../models/TranslationProgressReport";
 
 interface IProps {
   elements: IReportElements;
@@ -11,7 +15,7 @@ interface IProps {
 export default function PubsTable(props: IProps) {
   const t = useContext(I18nContext);
   const language = props.language;
-  const pubs = Object.keys(props.elements.publications).filter(
+  const pubs = TranslationProgressReport.LanguageComparison.elements.publications.filter(
     pub => props.elements.publications[pub]
   );
   return (

@@ -12,6 +12,7 @@
     align-self: stretch;
     border-right: 2px solid #ddd;
     overflow-y: auto;
+    flex-shrink: 0;
 }
 
 .sidebar input[type=text] {
@@ -31,14 +32,10 @@
     flex-direction: column;
     flex-grow: 1;
     flex-shrink: 1;
-    padding: 8px 8px 0;
+    padding: 30px 8px 0;
     /* height: calc(100%-8px); */
     align-self: stretch;
     overflow-y: auto;
-}
-
-.savedReportsList {
-    padding-left: 16px;
 }
 
 .lcReport {

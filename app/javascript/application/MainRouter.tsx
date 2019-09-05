@@ -7,7 +7,7 @@ import {
 } from "react-router-dom";
 import Dashboard from "../components/dashboard/Dashboard";
 import PeopleContainer from "../components/people/PeopleContainer";
-import ReportsViewer from "../components/reports/ReportsViewer";
+import ReportsRouter from "../components/reports/ReportsRouter";
 import EventsPage from "../components/events/EventsPage";
 import ParticipantPage from "../components/participants/ParticipantPage";
 import ActivityPage from "../components/activities/ActivityPage";
@@ -119,9 +119,9 @@ class MainRouter extends React.Component<IProps, IState> {
           />
           <Route path="/events" render={() => <EventsPage />} />
           <Route
-            path="/reports/:id?"
+            path="/reports/"
             render={({ match, history, location }) => (
-              <ReportsViewer
+              <ReportsRouter
                 key={match.params.id || ""}
                 id={match.params.id}
                 history={history}

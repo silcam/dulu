@@ -86,11 +86,16 @@ test("Remove removes the item", () => {
   expect(list.get(1).id).toBe(0);
 });
 
-// test("Remove All", () => {
-//   const list = aList().removeAll([4, 8]);
-//   expect(list.length()).toBe(2);
-//   expect(list.get(4).id).toBe(0);
-// });
+test("Removing non-existant item is a no-op", () => {
+  const list = aList().remove(999);
+  expect(list.toArray()).toEqual(aList().toArray());
+});
+
+test("Remove multiple ids", () => {
+  const list = aList().remove([4, 8]);
+  expect(list.length()).toBe(2);
+  expect(list.get(4).id).toBe(0);
+});
 
 test("Remove does not alter the original list", () => {
   const list = aList();
@@ -100,13 +105,20 @@ test("Remove does not alter the original list", () => {
   expect(newList.length()).toBe(3);
 });
 
-// test("Remove All does not alter the original list", () => {
-//   const list = aList();
-//   const newList = list.removeAll([1, 8]);
-//   expect(list).not.toBe(newList);
-//   expect(list.length()).toBe(4);
-//   expect(newList.length()).toBe(2);
-// });
+test("Remove multiple ids does not alter the original list", () => {
+  const list = aList();
+  const newList = list.remove([1, 8]);
+  expect(list).not.toBe(newList);
+  expect(list.length()).toBe(4);
+  expect(newList.length()).toBe(2);
+});
+
+test("Empty", () => {
+  const list = aList();
+  const emptyList = list.empty();
+  expect(emptyList.length()).toBe(0);
+  expect(list.length()).toBe(4);
+});
 
 test("Reverse reverses (and not in place)", () => {
   const list = aList();

@@ -1,10 +1,11 @@
 import React from "react";
+import { IReport, reportParams } from "../../models/Report";
 import TextInput from "../shared/TextInput";
 import SaveButton from "../shared/SaveButton";
 import DuluAxios from "../../util/DuluAxios";
-import Report, { IReport } from "../../models/Report";
 import { withRouter, RouteComponentProps } from "react-router-dom";
 import I18nContext from "../../contexts/I18nContext";
+import FormGroup from "../shared/FormGroup";
 
 interface IProps extends RouteComponentProps {
   report: IReport;
@@ -29,7 +30,7 @@ class _SaveReportBar extends React.PureComponent<IProps, IState> {
     const data = await DuluAxios.post("/api/reports", {
       report: {
         name: this.state.name,
-        report: Report.params(this.props.report)
+        report: reportParams(this.props.report)
       }
     });
     if (data) {
@@ -44,14 +45,15 @@ class _SaveReportBar extends React.PureComponent<IProps, IState> {
       <I18nContext.Consumer>
         {t => (
           <div>
-            <label>{t("Save_report")}</label>
-            <TextInput
-              value={this.state.name}
-              name="name"
-              placeholder={t("Report_name")}
-              setValue={name => this.setState({ name })}
-              autoFocus
-            />
+            <FormGroup label={t("Save_report")}>
+              <TextInput
+                value={this.state.name}
+                name="name"
+                placeholder={t("Report_name")}
+                setValue={name => this.setState({ name })}
+                autoFocus
+              />
+            </FormGroup>
             <SaveButton
               onClick={this.save}
               saveInProgress={this.state.saving}

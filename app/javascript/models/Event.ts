@@ -5,10 +5,16 @@ import { ILanguage } from "./Language";
 import { ICluster } from "./Cluster";
 import { ICan } from "../actions/canActions";
 import { Domain } from "./Domain";
+import List from "./List";
 
 export interface IPeriod {
   start?: { year: number; month?: number };
   end?: { year: number; month?: number };
+}
+
+export interface IPeriodStrict {
+  start: { year: number; month: number };
+  end: { year: number; month: number };
 }
 
 export interface IEventParticipant {
@@ -182,6 +188,26 @@ export default class Event {
   static personBackToId(personId: number) {
     return `person=${personId}`;
   }
+}
+export function emptyEvent(): IEvent {
+  return {
+    id: 0,
+    name: "",
+    domain: "Anthropology",
+    category: "",
+    subcategory: "",
+    start_date: "",
+    end_date: "",
+    language_ids: [],
+    cluster_ids: [],
+    event_participants: [],
+    can: {},
+    note: ""
+  };
+}
+
+export function emptyEventList() {
+  return new List(emptyEvent(), [], Event.compare);
 }
 
 function overlapsFuzzyDate(event: CompEvent, fdate: IFuzzyDate) {
