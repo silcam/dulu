@@ -10,6 +10,7 @@ import { ILanguage } from "../../models/Language";
 import { ICluster } from "../../models/Cluster";
 import { IEvent } from "../../models/Event";
 import List from "../../models/List";
+import Truncate from "../shared/Truncate";
 
 interface IProps {
   events: List<IEvent>;
@@ -36,7 +37,9 @@ export default function MonthColumn(props: IProps) {
             t("month_names_short")
           )}
           <p>{participants(event, props)}</p>
-          <p>{event.note}</p>
+          <p>
+            <Truncate text={event.note} limit={500} />
+          </p>
           {index < props.events.length() - 1 && <hr />}
         </div>
       ))}
