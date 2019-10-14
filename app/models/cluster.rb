@@ -21,26 +21,26 @@ class Cluster < ApplicationRecord
   end
 
   def sorted_activities
-    Activity.where(language_id: self.languages).order('language_id, type DESC, bible_book_id')
+    Activity.where(language_id: self.languages).order("language_id, type DESC, bible_book_id")
   end
 
   def sorted_translation_activities
-    TranslationActivity.where(language_id: self.languages).joins(:bible_book).order('activities.language_id, bible_books.usfm_number')
+    TranslationActivity.where(language_id: self.languages).joins(:bible_book).order("activities.language_id, bible_books.usfm_number")
   end
 
   def self.search(query)
-    clusters = Cluster.multi_word_where(query, 'name')
+    clusters = Cluster.multi_word_where(query, "name")
     results = []
     clusters.each do |cluster|
       subresults = []
       cluster.languages.each do |language|
-        subresults << {title: language.name,
+        subresults << { title: language.name,
                        model: language,
-                       description: I18n.t(:Language_program)}
+                       description: I18n.t(:Language_program) }
       end
-      results << {title: I18n.t(:Cluster_x, name: cluster.name),
-                  model: cluster,
-                  subresults: subresults}
+      results << { title: I18n.t(:Cluster_x, name: cluster.name),
+                   model: cluster,
+                   subresults: subresults }
     end
     results
   end

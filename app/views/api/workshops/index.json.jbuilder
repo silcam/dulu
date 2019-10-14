@@ -1,5 +1,5 @@
 json.workshops do
-  json.array! @workshops, partial: 'workshop', as: :workshop
+  json.array! @workshops, partial: "workshop", as: :workshop
 end
 
 json.can do

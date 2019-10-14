@@ -1,5 +1,4 @@
 class Statistic
-
   attr_reader :number, :title, :path, :description, :model, :language
 
   def initialize(stat)
@@ -21,14 +20,14 @@ class Statistic
 
   def translations_in_progress
     @number = TranslationActivity.in_progress.count
-    @title = I18n.t(:Book).pluralize(@number) + ' ' + I18n.t(:being_translated)
-    @path = ''
+    @title = I18n.t(:Book).pluralize(@number) + " " + I18n.t(:being_translated)
+    @path = ""
   end
 
   def publications_this_year
     @number = Publication.where(year: Date.today.year).count
-    @title = I18n.t('new_publication'.pluralize(@number)) + ' ' + I18n.t(:in) + ' ' + Date.today.year.to_s
-    @path = ''
+    @title = I18n.t("new_publication".pluralize(@number)) + " " + I18n.t(:in) + " " + Date.today.year.to_s
+    @path = ""
   end
 
   # Latest
@@ -48,7 +47,7 @@ class Statistic
   end
 
   def latest_translation_started
-    @model = Stage.order("start_date DESC").find_by(name: 'Drafting').activity
+    @model = Stage.order("start_date DESC").find_by(name: "Drafting").activity
     @title = I18n.t(:Translation_started)
     @description = "#{@model.bible_book.name}"
     @language = @model.language

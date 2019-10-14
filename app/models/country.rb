@@ -4,7 +4,7 @@ class Country < ApplicationRecord
   has_many :regions
 
   def name
-    I18n.locale==:fr ? french_name : english_name
+    I18n.locale == :fr ? french_name : english_name
   end
 
   def french_name_transliterated
@@ -15,19 +15,19 @@ class Country < ApplicationRecord
     if I18n.locale == :fr
       countries = Country.all
       return countries.sort do |a, b|
-        if a.people_count == b.people_count
-          a.french_name_transliterated <=> b.french_name_transliterated
-        else
-          b.people_count <=> a.people_count
-        end
-      end
+               if a.people_count == b.people_count
+                 a.french_name_transliterated <=> b.french_name_transliterated
+               else
+                 b.people_count <=> a.people_count
+               end
+             end
     end
     return Country.all.order(people_count: :desc, english_name: :asc)
   end
 
   def self.search(query)
-    field = (I18n.locale == :fr) ? 'french_name' : 'english_name'
+    field = (I18n.locale == :fr) ? "french_name" : "english_name"
     Country.where("unaccent(#{field}) ILIKE unaccent(?)", "#{query}%")
-            .order(field)
+      .order(field)
   end
 end

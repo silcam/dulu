@@ -1,5 +1,5 @@
 json.organization_person do
-  json.partial! 'org_person',  org_person: @org_person
+  json.partial! "org_person", org_person: @org_person
 end
 
 json.organization do

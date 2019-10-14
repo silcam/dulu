@@ -1,13 +1,12 @@
-require 'test_helper'
+require "test_helper"
 
 class PersonRoleTest < ActiveSupport::TestCase
-
   def setup
     @drew = people :Drew
   end
 
   test "Required params" do
-    params = {person: @drew, role: 'Exegete', start_date: '2018-01-01'}
+    params = { person: @drew, role: "Exegete", start_date: "2018-01-01" }
     model_validation_hack_test PersonRole, params
   end
 
@@ -20,5 +19,4 @@ class PersonRoleTest < ActiveSupport::TestCase
     assert_includes person_roles, person_roles(:DrewTranslationConsultant)
     refute_includes person_roles, person_roles(:DrewTCTraining)
   end
-
 end

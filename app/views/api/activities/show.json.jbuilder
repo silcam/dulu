@@ -1,13 +1,13 @@
 
 json.activity do
-  json.call(@activity, 
-            :id, 
-            :bible_book_id, 
-            :type, 
-            :note, 
-            :category, 
-            :title, 
-            :scripture, 
+  json.call(@activity,
+            :id,
+            :bible_book_id,
+            :type,
+            :note,
+            :category,
+            :title,
+            :scripture,
             :film,
             :participant_ids,
             :stage_name,
@@ -19,7 +19,7 @@ json.activity do
   end
 
   if @activity.category == :Workshops
-    json.workshops Workshop.sort(@activity.workshops), partial: 'api/workshops/workshop', as: :workshop
+    json.workshops Workshop.sort(@activity.workshops), partial: "api/workshops/workshop", as: :workshop
   end
 end
 

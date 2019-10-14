@@ -1,1 +1,1 @@
-json.partial! 'person'
+json.partial! "person"

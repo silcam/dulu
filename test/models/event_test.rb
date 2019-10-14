@@ -1,4 +1,4 @@
-require 'test_helper'
+require "test_helper"
 
 class EventTest < ActiveSupport::TestCase
   def setup
@@ -18,20 +18,20 @@ class EventTest < ActiveSupport::TestCase
   end
 
   test "Presence Validation" do
-    params = {domain: 'Translation', name: 'Taco Party', start_date: '2019-04', end_date: '2019-04'}
+    params = { domain: "Translation", name: "Taco Party", start_date: "2019-04", end_date: "2019-04" }
     model_validation_hack_test Event, params
   end
 
   test "Validate Domain" do
-    assert_raises(Exception){ @genesis_check.update!(domain: 'NotARealKind') }
+    assert_raises(Exception) { @genesis_check.update!(domain: "NotARealKind") }
   end
 
   test "Validate Start Date Fuzzy Date" do
-    refute @genesis_check.update(start_date: 'abc'), "Should not save with invalid start date"
+    refute @genesis_check.update(start_date: "abc"), "Should not save with invalid start date"
   end
 
   test "Validate End Date not before Start Date" do
-    refute @genesis_check.update(end_date: '2017-01'), "Should not save with end date before start date"
+    refute @genesis_check.update(end_date: "2017-01"), "Should not save with end date before start date"
   end
 
   # test "Display Name" do
@@ -70,7 +70,7 @@ class EventTest < ActiveSupport::TestCase
   end
 
   def create_test_event(start, finish)
-    Event.create!(name: 'Test', domain: :Translation, start_date: start, end_date: finish)
+    Event.create!(name: "Test", domain: :Translation, start_date: start, end_date: finish)
   end
 
   # test "Timely Queries" do
@@ -125,23 +125,23 @@ class EventTest < ActiveSupport::TestCase
 
   test "User Language Association" do
     rick = people :Rick
-    Participant.create!(person: rick, language: @hdi, start_date: '2017')
+    Participant.create!(person: rick, language: @hdi, start_date: "2017")
     assert @genesis_check.associated_with?(rick)
   end
 
   test "Search" do
-    results = Event.search 'genesis'
+    results = Event.search "genesis"
     exp = {
-            title: 'Genesis Checking',
-            description: 'Jan 15, 2018 to Jan 30, 2018 - Hdi',
-            model: @genesis_check
+            title: "Genesis Checking",
+            description: "Jan 15, 2018 to Jan 30, 2018 - Hdi",
+            model: @genesis_check,
           }
     assert_includes results, exp
   end
 
   test "Search query words separately" do
-    results = Event.search 'checking genesis'
-    assert(results.any?{ |r| r[:title] == 'Genesis Checking' })
+    results = Event.search "checking genesis"
+    assert(results.any? { |r| r[:title] == "Genesis Checking" })
   end
 
   test "FOR_PERIOD: no params" do
@@ -150,22 +150,22 @@ class EventTest < ActiveSupport::TestCase
   end
 
   test "FOR_PERIOD: start only" do
-    events = Event.for_period('2019')
+    events = Event.for_period("2019")
     assert events.count == 1
   end
 
   test "FOR_PERIOD: end only" do
-    events = Event.for_period(nil, nil, '2018', '1')
+    events = Event.for_period(nil, nil, "2018", "1")
     assert events.count == 4
   end
 
   test "FOR_PERIOD: 2017-07 to 2018" do
-    events = Event.for_period('2017', '7', '2018')
+    events = Event.for_period("2017", "7", "2018")
     assert events.count == 4
   end
 
-  test "FOR_PERIOD: 2017 to 2018-03" do 
-    events = Event.for_period('2017', nil, '2018', '3')
+  test "FOR_PERIOD: 2017 to 2018-03" do
+    events = Event.for_period("2017", nil, "2018", "3")
     assert events.count == 5
   end
 end

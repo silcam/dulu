@@ -6,14 +6,14 @@ class Event < ApplicationRecord
   has_many :event_participants, autosave: true, dependent: :destroy
   accepts_nested_attributes_for :event_participants, allow_destroy: true
   has_many :people, through: :event_participants
-  belongs_to :creator, required: false, class_name: 'Person'
+  belongs_to :creator, required: false, class_name: "Person"
   has_one :workshop, dependent: :nullify
 
   audited
 
-  default_scope{ order(start_date: :desc) }
+  default_scope { order(start_date: :desc) }
 
-  validates :domain, inclusion: {in: StatusParameter.domains}
+  validates :domain, inclusion: { in: StatusParameter.domains }
   validates :name, presence: true
   validates :start_date, presence: true
   validates :end_date, presence: true
@@ -42,7 +42,7 @@ class Event < ApplicationRecord
     finish = f_end_date
     date_text = start.pretty_print(no_relative_dates: true)
     if start != finish
-      date_text += ' ' + I18n.t(:to) + ' ' + finish.pretty_print(no_relative_dates: true)
+      date_text += " " + I18n.t(:to) + " " + finish.pretty_print(no_relative_dates: true)
     end
     date_text
   end
@@ -92,9 +92,9 @@ class Event < ApplicationRecord
     return true if self.people.include? user
 
     person_languages_list = user.current_languages
-    self.languages.each{ |p| return true if person_languages_list.include? p }
+    self.languages.each { |p| return true if person_languages_list.include? p }
     self.clusters.each do |c|
-      c.languages.each{ |p| return true if person_languages_list.include? p }
+      c.languages.each { |p| return true if person_languages_list.include? p }
     end
 
     false
@@ -116,7 +116,7 @@ class Event < ApplicationRecord
     where(month_filter(year.to_i, month.to_i))
   end
 
-  def self.for_period(start_year=nil, start_month=nil, end_year=nil, end_month=nil)
+  def self.for_period(start_year = nil, start_month = nil, end_year = nil, end_month = nil)
     s_filter = start_year ?
       start_filter(start_year, start_month) :
       nil
@@ -141,14 +141,14 @@ class Event < ApplicationRecord
   # end
 
   def self.search(query)
-    events = Event.multi_word_where(query, 'name')
+    events = Event.multi_word_where(query, "name")
     results = []
     events.each do |event|
       title = "#{event.name}"
       description = event.dates_display_text
-      description_cluster_progs = (event.clusters + event.languages).collect{ |cp| cp.display_name }.join(', ')
-      description += ' - ' + description_cluster_progs unless description_cluster_progs.blank?
-      results << {title: title, description: description, model: event}
+      description_cluster_progs = (event.clusters + event.languages).collect { |cp| cp.display_name }.join(", ")
+      description += " - " + description_cluster_progs unless description_cluster_progs.blank?
+      results << { title: title, description: description, model: event }
     end
     results
   end
@@ -176,6 +176,7 @@ class Event < ApplicationRecord
       today, year_month, year = today_texts
       "start_date <= '#{today}' AND (end_date >= '#{today}' OR end_date = '#{year_month}' OR end_date = '#{year}')"
     end
+
     ## DOWN TO HERE ==============================
 
     # SQL Injection?
@@ -189,19 +190,18 @@ class Event < ApplicationRecord
 
     # SQL Injection?
     # Ok because inserted texts all come from FuzzyDate.to_s which does not produce malicious SQL
-    def start_filter(year, month=nil)
+    def start_filter(year, month = nil)
       date_str = FuzzyDate.new(year, month).to_s
       "(end_date >= '#{date_str}' OR end_date = '#{year.to_i}')"
     end
 
     # SQL Injection?
     # Ok because inserted texts all come from FuzzyDate.to_s which does not produce malicious SQL
-    def end_filter(year, month=nil)
+    def end_filter(year, month = nil)
       month ||= 12
       next_month_text = get_next_month_text(year, month)
       "(start_date < '#{next_month_text}')"
     end
-
 
     # # SQL Injection?
     # # Ok because year is an int
@@ -220,7 +220,6 @@ class Event < ApplicationRecord
     def get_next_month_text(year, month)
       return month.to_i == 12 ? FuzzyDate.new(year.to_i + 1).to_s : FuzzyDate.new(year, month.to_i + 1).to_s
     end
-        
 
     def today_texts
       today = Date.today.to_s

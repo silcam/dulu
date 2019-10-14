@@ -1,11 +1,8 @@
-require 'test_helper'
+require "test_helper"
 
 class SessionsControllerTest < ActionDispatch::IntegrationTest
-
   test "should redirect to login" do
-
     get "/people"
-    assert_redirected_to 'http://www.example.com/auth/google_oauth2'
-
+    assert_redirected_to "http://www.example.com/auth/google_oauth2"
   end
 end

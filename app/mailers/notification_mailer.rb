@@ -6,7 +6,7 @@ class NotificationMailer < ApplicationMailer
     @person = person
     @creator = creator
     set_locale person
-    mail to: to_field(person), subject: I18n.t('email.welcome.welcome')
+    mail to: to_field(person), subject: I18n.t("email.welcome.welcome")
   end
 
   def notify(notification)
@@ -14,7 +14,7 @@ class NotificationMailer < ApplicationMailer
     if should_notify(person)
       @notification = notification
       set_locale person
-      mail to: to_field(person), subject: I18n.t('email.notify.subject')
+      mail to: to_field(person), subject: I18n.t("email.notify.subject")
       notification.update(emailed: true)
     end
   end
@@ -24,7 +24,7 @@ class NotificationMailer < ApplicationMailer
     @person = person
     if should_notify(person) && !@notifications.empty?
       set_locale(person)
-      mail to: to_field(person), subject: I18n.t('email.notification_summary.subject')
+      mail to: to_field(person), subject: I18n.t("email.notification_summary.subject")
       @notifications.update(emailed: true)
     end
   end

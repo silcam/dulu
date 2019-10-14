@@ -10,8 +10,8 @@ end
 
 percents = Language.percentages(@cluster.languages)
 
-languages = @old_languages ? 
-  (@cluster.languages + @old_languages).uniq : 
+languages = @old_languages ?
+  (@cluster.languages + @old_languages).uniq :
   @cluster.languages
 
 json.languages languages do |language|

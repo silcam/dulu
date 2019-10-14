@@ -1,4 +1,4 @@
-require 'test_helper'
+require "test_helper"
 
 class PersonTest < ActiveSupport::TestCase
   def setup
@@ -6,7 +6,7 @@ class PersonTest < ActiveSupport::TestCase
     I18n.locale = :en
   end
 
-  test 'Relations' do
+  test "Relations" do
     sil = organizations :SIL
     usa = countries :USA
     drew_hdi = participants :DrewHdi
@@ -18,26 +18,26 @@ class PersonTest < ActiveSupport::TestCase
 
   test "Invalid People" do
     cm = countries(:Cameroon)
-    invalid_person = Person.new(last_name: 'Jones', gender: 'M', country: cm)
+    invalid_person = Person.new(last_name: "Jones", gender: "M", country: cm)
     refute invalid_person.save, "Shouldn't save person with no first name"
-    invalid_person = Person.new(first_name: 'Bill', gender: 'M', country: cm)
+    invalid_person = Person.new(first_name: "Bill", gender: "M", country: cm)
     refute invalid_person.save, "Shouldn't save person with no last name"
-    invalid_person = Person.new(last_name: 'Jones', first_name: 'Bill', gender: 'A', country: cm)
+    invalid_person = Person.new(last_name: "Jones", first_name: "Bill", gender: "A", country: cm)
     refute invalid_person.save, "Shouldn't save person with invalid gender"
-    valid_person = Person.new(last_name: 'Johnes', first_name: 'Bill', gender: 'M', country: cm)
+    valid_person = Person.new(last_name: "Johnes", first_name: "Bill", gender: "M", country: cm)
     assert valid_person.save, "Should save valid person"
   end
 
   test "Duplicate Email" do
-    drew2 = Person.new(last_name: 'Mambo', first_name: 'DrewToo', gender: 'M', email: 'drew_mambo@sil.org')
+    drew2 = Person.new(last_name: "Mambo", first_name: "DrewToo", gender: "M", email: "drew_mambo@sil.org")
     refute drew2.save, "Should not save person with duplicate email"
     drew2.email = "drew_mambo_too@sil.org"
     assert drew2.save, "Should save with unique email."
   end
 
-  test 'Full Names' do
-    assert_equal 'Drew Mambo', @drew.full_name
-    assert_equal 'Mambo, Drew', @drew.full_name_rev
+  test "Full Names" do
+    assert_equal "Drew Mambo", @drew.full_name
+    assert_equal "Mambo, Drew", @drew.full_name_rev
   end
 
   test "Default Scope" do
@@ -52,10 +52,10 @@ class PersonTest < ActiveSupport::TestCase
   end
 
   test "Add Role" do
-    @drew.add_role('DuluAdmin')
-    exp = '|TranslationConsultant|DuluAdmin|'
+    @drew.add_role("DuluAdmin")
+    exp = "|TranslationConsultant|DuluAdmin|"
     assert_equal exp, @drew.roles_field
-    assert PersonRole.current.find_by(person: @drew, role: 'DuluAdmin')
+    assert PersonRole.current.find_by(person: @drew, role: "DuluAdmin")
 
     @drew.add_role(:Exegete)
     assert @drew.has_role? :Exegete
@@ -67,9 +67,9 @@ class PersonTest < ActiveSupport::TestCase
   end
 
   test "Remove Role" do
-    @drew.remove_role('TranslationConsultant')
+    @drew.remove_role("TranslationConsultant")
     assert_empty @drew.roles
-    assert_equal '', @drew.roles_field
+    assert_equal "", @drew.roles_field
     assert_equal Date.today,
                  PersonRole.find_by(person: @drew, role: :TranslationConsultant).end_date
     refute PersonRole.current.find_by(person: @drew, role: :TranslationConsultant)
@@ -79,12 +79,12 @@ class PersonTest < ActiveSupport::TestCase
     @drew.add_role :Exegete
 
     @drew.remove_role :Translator
-    exp = '|DuluAdmin|Exegete|'
+    exp = "|DuluAdmin|Exegete|"
     assert_equal exp, @drew.roles_field
     assert_equal 2, @drew.person_roles.current.count
 
-    @drew.remove_role 'Exegete'
-    exp = '|DuluAdmin|'
+    @drew.remove_role "Exegete"
+    exp = "|DuluAdmin|"
     assert_equal exp, @drew.roles_field
   end
 
@@ -109,27 +109,27 @@ class PersonTest < ActiveSupport::TestCase
     @drew.add_role :DuluAdmin
     exp = {
             id: @drew.id,
-            first_name: 'Drew',
-            last_name: 'Mambo',
+            first_name: "Drew",
+            last_name: "Mambo",
             roles: [{
                       role: :TranslationConsultant,
-                      t_role: 'Translation Consultant'
+                      t_role: "Translation Consultant",
                     },
                     {
                       role: :DuluAdmin,
-                      t_role: 'Dulu Admin'
-                    }]
+                      t_role: "Dulu Admin",
+                    }],
           }
     assert_equal exp, @drew.to_hash
   end
 
   test "Search" do
-    results = Person.search 'drew'
+    results = Person.search "drew"
     assert_equal 1, results.count
-    assert_equal 'Drew Mambo', results[0][:title]
+    assert_equal "Drew Mambo", results[0][:title]
     hdi_language = languages :Hdi
     assert_includes results[0][:subresults],
-                    {title: 'Hdi', model: hdi_language,
-                        description: 'Translation Consultant'}
+                    { title: "Hdi", model: hdi_language,
+                      description: "Translation Consultant" }
   end
 end

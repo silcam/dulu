@@ -9,32 +9,32 @@ class Role
               LanguageProgramFacilitator
               Administration
               DuluAdmin
-            )
+  )
 
   NON_PROGRAM_ROLES = %i( Administration DuluAdmin )
 
   SUPERVISOR_ROLES = %i( DuluAdmin Administration LanguageProgramFacilitator )
 
   PARTICIPANT_ROLES = %i(
-              Translator TranslationConsultant TranslationConsultantTraining Exegete BackTranslator
-              LinguisticConsultant LinguisticConsultantTraining Linguist
-              Literacy_specialist Literacy_consultant
-              Scripture_engagement_specialist
-              MediaConsultant MediaSpecialist
-              Cluster_coordinator Cluster_facilitator ProjectCoordinator
+    Translator TranslationConsultant TranslationConsultantTraining Exegete BackTranslator
+    LinguisticConsultant LinguisticConsultantTraining Linguist
+    Literacy_specialist Literacy_consultant
+    Scripture_engagement_specialist
+    MediaConsultant MediaSpecialist
+    Cluster_coordinator Cluster_facilitator ProjectCoordinator
   )
 
   EVENT_ROLES = %i( Leader Facilitator Student )
 
-  def self.program_roles(source=ROLES)
+  def self.program_roles(source = ROLES)
     source - NON_PROGRAM_ROLES
   end
 
-  def self.available(assign_to, source=ROLES)
+  def self.available(assign_to, source = ROLES)
     source - assign_to.roles
   end
 
-  def self.grantable_roles(user, person=nil)
+  def self.grantable_roles(user, person = nil)
     if user.has_role? :DuluAdmin
       roles = ROLES
     elsif user.has_role_among? SUPERVISOR_ROLES
@@ -63,6 +63,6 @@ class Role
   private
 
   def self.arrays_overlap?(a1, a2)
-    a1.any?{ |item1| a2.any?{ |item2| item1.to_sym == item2.to_sym} }
+    a1.any? { |item1| a2.any? { |item2| item1.to_sym == item2.to_sym } }
   end
 end

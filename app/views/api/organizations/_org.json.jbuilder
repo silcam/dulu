@@ -2,7 +2,6 @@
 
 json.call(org, :id, :short_name, :long_name, :description, :parent_id)
 
-
 if org.country
   json.country do
     json.call(org.country, :id, :name)

@@ -1,17 +1,16 @@
 class SessionsController < ApplicationController
-  
   skip_before_action :require_login, only: [:new, :create]
 
   def new
     if logged_in?
       redirect_to root_path
     else
-      redirect_to '/auth/google_oauth2'
+      redirect_to "/auth/google_oauth2"
     end
   end
 
   def create
-    @gmail = request.env['omniauth.auth']['info']['email']
+    @gmail = request.env["omniauth.auth"]["info"]["email"]
     person = Person.find_by(email: @gmail)
     if person.try :has_login
       reset_user_session
@@ -51,5 +50,4 @@ class SessionsController < ApplicationController
     reset_session
     session.merge! old
   end
-
 end

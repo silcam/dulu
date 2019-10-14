@@ -1,12 +1,11 @@
 class Stage < ApplicationRecord
-
   belongs_to :activity, required: true, touch: true
   has_one :workshop # For Workshop type Linguistic Activities
   # has_many :program_roles, through: :stage_name
 
   LINGUISTIC_STAGES = %i( Planned Research Drafting Review Published )
   MEDIA_STAGES = %i( Planned Application Script Scheduled Recording Mastering Published )
-  TRANSLATION_STAGES = %i( Planned Drafting Testing Review_committee Back_translating Prechecking 
+  TRANSLATION_STAGES = %i( Planned Drafting Testing Review_committee Back_translating Prechecking
                            Ready_for_consultant_check Consultant_check Consultant_checked Ready_for_publication Published )
 
   # LINGUISTIC_STAGE_ROLES = {
@@ -29,13 +28,12 @@ class Stage < ApplicationRecord
                               Back_translating: [:Translator],
                               Ready_for_consultant_check: [:TranslationConsultant, :TranslationConsultantTraining],
                               Consultant_check: [:TranslationConsultant, :TranslationConsultantTraining],
-                              Consultant_checked: [:TranslationConsultant, :TranslationConsultantTraining]
+                              Consultant_checked: [:TranslationConsultant, :TranslationConsultantTraining],
                             }
-
 
   audited associated_with: :activity
 
-  validates :start_date, presence: {message: "year can't be blank"}, allow_blank: false
+  validates :start_date, presence: { message: "year can't be blank" }, allow_blank: false
   validates :start_date, fuzzy_date: true
   validates :kind, inclusion: [:Translation, :Linguistic, :Media]
   # validate :name_is_on_the_list
@@ -47,11 +45,11 @@ class Stage < ApplicationRecord
   end
 
   def kind
-    self.attributes['kind'].try(:to_sym)
+    self.attributes["kind"].try(:to_sym)
   end
 
   def name
-    self.attributes['name'].try(:to_sym)
+    self.attributes["name"].try(:to_sym)
   end
 
   def f_start_date
@@ -64,23 +62,23 @@ class Stage < ApplicationRecord
 
   def progress
     case kind
-      when :Translation
-        return Stage.translation_progress(name)
-      when :Linguistic
-        return Stage.linguistic_progress(name)
-      when :Media
-        return Stage.media_progress(name)
+    when :Translation
+      return Stage.translation_progress(name)
+    when :Linguistic
+      return Stage.linguistic_progress(name)
+    when :Media
+      return Stage.media_progress(name)
     end
   end
 
   def roles
     case kind
-      when :Translation
-        TRANSLATION_STAGE_ROLES[name] || []
-      when :Linguistic
-        [:LinguisticConsultant, :LinguisticConsultantTraining]
-      when :Media
-        [:MediaConsultant, :MediaSpecialist]
+    when :Translation
+      TRANSLATION_STAGE_ROLES[name] || []
+    when :Linguistic
+      [:LinguisticConsultant, :LinguisticConsultantTraining]
+    when :Media
+      [:MediaConsultant, :MediaSpecialist]
     end
   end
 
@@ -100,87 +98,85 @@ class Stage < ApplicationRecord
 
   def self.stages(kind)
     case kind.to_sym
-      when :Translation
-        TRANSLATION_STAGES
-      when :Linguistic
-        LINGUISTIC_STAGES
-      when :Media
-        MEDIA_STAGES
+    when :Translation
+      TRANSLATION_STAGES
+    when :Linguistic
+      LINGUISTIC_STAGES
+    when :Media
+      MEDIA_STAGES
     end
   end
 
   def self.progress(kind, stage_name)
     case kind
-      when :Translation
-        return translation_progress(stage_name)
-      when :Linguistic
-        return linguistic_progress(stage_name)
-      when :Media
-        return media_progress(stage_name)
+    when :Translation
+      return translation_progress(stage_name)
+    when :Linguistic
+      return linguistic_progress(stage_name)
+    when :Media
+      return media_progress(stage_name)
     end
-
   end
 
   private
 
   def self.translation_progress(name)
     case name
-      when :Planned
-        return 0, :white
-      when :Drafting
-        return 10, :red
-      when :Testing
-        return 20, :orange
-      when :Review_committee
-        return 40, :pale_orange
-      when :Back_translating
-        return 60, :yellow
-      when :Prechecking
-        return 70, :light_green
-      when :Ready_for_consultant_check
-        return 75, :dark_green
-      when :Consultant_check
-        return 80, :light_blue
-      when :Consultant_checked
-        return 90, :dark_blue
-      when :Ready_for_publication
-        return 95, :light_purple
+    when :Planned
+      return 0, :white
+    when :Drafting
+      return 10, :red
+    when :Testing
+      return 20, :orange
+    when :Review_committee
+      return 40, :pale_orange
+    when :Back_translating
+      return 60, :yellow
+    when :Prechecking
+      return 70, :light_green
+    when :Ready_for_consultant_check
+      return 75, :dark_green
+    when :Consultant_check
+      return 80, :light_blue
+    when :Consultant_checked
+      return 90, :dark_blue
+    when :Ready_for_publication
+      return 95, :light_purple
     end
     return 100, :purple
   end
 
   def self.linguistic_progress(name)
     case name
-      when :Planned
-        return 0, :white
-      when :Research
-        return 25, :red
-      when :Drafting
-        return 50, :yellow
-      when :Review
-        return 75, :light_blue
-      when :Published
-        return 100, :purple
+    when :Planned
+      return 0, :white
+    when :Research
+      return 25, :red
+    when :Drafting
+      return 50, :yellow
+    when :Review
+      return 75, :light_blue
+    when :Published
+      return 100, :purple
     end
   end
 
   def self.media_progress(name)
     case name
-      when :Planned
-        return 0, :white
-      when :Application
-        return 20, :red
-      when :Script
-        return 40, :orange
-      when :Scheduled
-        return 50, :yellow
-      when :Recording
-        return 60, :light_green
-      when :Mastering
-        return 80, :light_blue
-      when :Published
-        return 100, :purple
-
+    when :Planned
+      return 0, :white
+    when :Application
+      return 20, :red
+    when :Script
+      return 40, :orange
+    when :Scheduled
+      return 50, :yellow
+    when :Recording
+      return 60, :light_green
+    when :Mastering
+      return 80, :light_blue
+    when :Published
+      return 100, :purple
     end
   end
 

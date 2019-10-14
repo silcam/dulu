@@ -1,4 +1,4 @@
-require 'test_helper'
+require "test_helper"
 
 class EventParticipantTest < ActiveSupport::TestCase
   def setup
@@ -14,7 +14,7 @@ class EventParticipantTest < ActiveSupport::TestCase
 
   test "Validation Hack Test" do
     rick = people :Rick
-    params = {event: @genesis_check, person: rick}
+    params = { event: @genesis_check, person: rick }
     model_validation_hack_test EventParticipant, params
   end
 end

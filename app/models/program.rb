@@ -13,11 +13,12 @@ class Program < ApplicationRecord
   belongs_to :language
   has_one :cluster, through: :language
 
-  default_scope { includes(:language).order('languages.name') }
+  default_scope { includes(:language).order("languages.name") }
 
   def name
     language.name
   end
+
   alias display_name name
 
   def get_lpf
@@ -49,11 +50,11 @@ class Program < ApplicationRecord
   end
 
   def sorted_activities
-    activities.order('type DESC, bible_book_id')
+    activities.order("type DESC, bible_book_id")
   end
 
   def sorted_translation_activities
-    translation_activities.joins(:bible_book).order('bible_books.usfm_number')
+    translation_activities.joins(:bible_book).order("bible_books.usfm_number")
   end
 
   def research_activities
@@ -65,7 +66,7 @@ class Program < ApplicationRecord
   end
 
   def sorted_pubs(kind)
-    publications.where(kind: kind).order('year DESC')
+    publications.where(kind: kind).order("year DESC")
   end
 
   def is_translating?(book_id)
@@ -74,33 +75,33 @@ class Program < ApplicationRecord
 
   def all_events
     cluster.nil? ?
-        events :
-        Event.left_outer_joins(:programs, :clusters)
-            .where("events_programs.program_id=? or clusters_events.cluster_id=?", id, cluster.id)
+      events :
+      Event.left_outer_joins(:programs, :clusters)
+      .where("events_programs.program_id=? or clusters_events.cluster_id=?", id, cluster.id)
   end
 
   def percentages
     percents = {}
     translations = translation_activities.loaded? ? translation_activities :
-                    translation_activities.includes([:bible_book, :stages]).where(stages: {current: true})
+      translation_activities.includes([:bible_book, :stages]).where(stages: { current: true })
     translations.each do |translation|
       unless translation.stages.first.name == Stage.first_stage(:Translation)
         bible_book = translation.bible_book
         testament = bible_book.testament
         stage_name = translation.stages.first.name
         percents[testament] ||= {}
-        percents[testament][stage_name] ||= 0.0;
+        percents[testament][stage_name] ||= 0.0
         percents[testament][stage_name] += bible_book.percent_of_testament
       end
     end
     percents
   end
 
-  def self.percentages(programs=nil)
+  def self.percentages(programs = nil)
     percentages = {}
     unless programs
       programs = Program.includes(:translation_activities => [:bible_book, :stages])
-                        .where(stages: {current: true})
+                        .where(stages: { current: true })
     end
     programs.each do |program|
       percentages[program.id] = program.percentages
@@ -109,7 +110,7 @@ class Program < ApplicationRecord
   end
 
   def self.all_sorted_by_recency
-    Program.all.unscope(:order).order('programs.updated_at DESC')
+    Program.all.unscope(:order).order("programs.updated_at DESC")
   end
 
   def self.search(query)
@@ -120,14 +121,12 @@ class Program < ApplicationRecord
     programs.each do |program|
       description = "#{I18n.t(:Language_program)}"
       description += " - #{program.activities.count} #{I18n.t(:Activities).downcase}" if program.activities.count > 0
-      results << {title: program.name,
-                  model: program,
-                  description: description}
+      results << { title: program.name,
+                   model: program,
+                   description: description }
     end
     results
   end
 
   private
-
-
 end

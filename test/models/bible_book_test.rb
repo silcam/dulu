@@ -1,4 +1,4 @@
-require 'test_helper'
+require "test_helper"
 
 class BibleBookTest < ActiveSupport::TestCase
   def setup
@@ -7,30 +7,30 @@ class BibleBookTest < ActiveSupport::TestCase
     @john = bible_books(:John)
   end
 
-  test 'Relations' do
+  test "Relations" do
     @hdi_ezra = translation_activities(:HdiEzra)
     @ezra = bible_books(:Ezra)
     assert_includes @ezra.translation_activities, @hdi_ezra
   end
 
-  test 'Name' do
-    assert_equal 'Ezra', @ezra.name
+  test "Name" do
+    assert_equal "Ezra", @ezra.name
     I18n.locale = :fr
-    assert_equal 'Esdras', @ezra.name
+    assert_equal "Esdras", @ezra.name
     I18n.locale = :en # Reset for future tests
   end
 
-  test 'testament' do
+  test "testament" do
     assert_equal :Old_testament, @ezra.testament
     assert_equal :New_testament, @john.testament
   end
 
-  test 'percent of testament' do
+  test "percent of testament" do
     assert_in_delta 1.2, @ezra.percent_of_testament, 0.1
     assert_in_delta 3.8, @john.percent_of_testament, 0.1
   end
 
-  test 'testament getters' do
+  test "testament getters" do
     assert_includes(BibleBook.get_old_testament, bible_books(:Genesis))
     assert_includes(BibleBook.get_old_testament, bible_books(:Ezra))
     assert_includes(BibleBook.get_new_testament, bible_books(:John))

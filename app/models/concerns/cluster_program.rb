@@ -9,7 +9,7 @@ module ClusterProgram
   end
 
   def unassociated_people
-    excludes = all_people.collect{ |p| p.id }
+    excludes = all_people.collect { |p| p.id }
     Person.where.not(id: excludes)
   end
 
@@ -18,7 +18,7 @@ module ClusterProgram
   end
 
   def current_people
-    current_participants.collect{ |ptcpt| ptcpt.person }
+    current_participants.collect { |ptcpt| ptcpt.person }
     # people.joins(:participants).where(participants: {end_date: nil})
   end
 

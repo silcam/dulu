@@ -1,14 +1,13 @@
-require 'test_helper'
+require "test_helper"
 
 class WorkshopTest < ActiveSupport::TestCase
-
   def setup
     @grammar_ws = linguistic_activities(:EwondoGrammarIntro)
     I18n.locale = :en
   end
 
   test "Required Params Validation" do
-    params = {linguistic_activity: @grammar_ws, name: 'Yo', number: 4}
+    params = { linguistic_activity: @grammar_ws, name: "Yo", number: 4 }
     model_validation_hack_test Workshop, params
   end
 
@@ -42,16 +41,16 @@ class WorkshopTest < ActiveSupport::TestCase
     verb.reload
     assert_equal 2, @grammar_ws.stages.count
     assert_equal :Verb, verb.stage.name
-    assert_equal '2018-03', verb.stage.start_date
+    assert_equal "2018-03", verb.stage.start_date
   end
 
   test "Complete no Event" do
     syntax = @grammar_ws.workshops.last
-    syntax.complete date: '2018-02'
+    syntax.complete date: "2018-02"
     syntax.reload
     assert_equal 2, @grammar_ws.stages.count
     assert_equal :Syntax, syntax.stage.name
-    assert_equal '2018-02', syntax.stage.start_date
+    assert_equal "2018-02", syntax.stage.start_date
   end
 
   test "Complete without date or event raises" do
@@ -64,11 +63,11 @@ class WorkshopTest < ActiveSupport::TestCase
     Date.stub(:today, Date.new(2018, 1, 31)) do
       noun = @grammar_ws.workshops.first
       exp = {
-          id: noun.id,
-          complete: true,
-          completed_text: 'Completed',
-          date: 'Jan 21, 2018',
-          activity: @grammar_ws.to_hash
+        id: noun.id,
+        complete: true,
+        completed_text: "Completed",
+        date: "Jan 21, 2018",
+        activity: @grammar_ws.to_hash,
       }
       assert_equal exp, noun.to_hash
     end

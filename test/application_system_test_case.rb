@@ -1,20 +1,19 @@
 require "test_helper"
-require 'minitest/retry'
+require "minitest/retry"
 
 Minitest::Retry.use!
 
 Capybara.register_driver(:headless_chrome) do |app|
-  
   Capybara::Selenium::Driver.new(
     app,
     browser: :chrome,
-    options: Selenium::WebDriver::Chrome::Options.new(args: %w[headless disable-gpu])
+    options: Selenium::WebDriver::Chrome::Options.new(args: %w[headless disable-gpu]),
   )
 end
 
 class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
   include ApplicationHelper
-  
+
   driven_by :headless_chrome
   # driven_by :selenium, using: :chrome, screen_size: [1400, 1400]
 
@@ -30,16 +29,16 @@ class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
     # end
     # puts "Finished #{self.method_name}\u001b[0K"
   end
-  
+
   def simulate_oauth(user)
     OmniAuth.config.test_mode = true
-    OmniAuth.config.add_mock(:google_oauth2, {info: {email: user.email}})
+    OmniAuth.config.add_mock(:google_oauth2, { info: { email: user.email } })
   end
 
-  def log_in(user, fails=0)
+  def log_in(user, fails = 0)
     Capybara.current_session.driver.browser.manage.delete_all_cookies
     simulate_oauth user
-    visit '/events/new' # A page that doesn't turn around and load a bunch of junk
+    visit "/events/new" # A page that doesn't turn around and load a bunch of junk
     unless page.has_text?(user.first_name)
       assert fails < 6
       # puts "LOG IN FAILURE - TRYING AGAIN\u001b[0K"
@@ -57,7 +56,7 @@ class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
 
   def fill_in_date(date)
     fill_in "year", with: date.year
-    sel_month = date.month.nil? ? I18n.t(:Month) : I18n.t('date.abbr_month_names')[date.month]
+    sel_month = date.month.nil? ? I18n.t(:Month) : I18n.t("date.abbr_month_names")[date.month]
     sel_day = date.day.nil? ? I18n.t(:Day) : date.day
     select sel_month, from: "month"
     select sel_day, from: "day"
@@ -94,13 +93,13 @@ class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
   # end
 
   def fill_in_search_input(text)
-    fill_in('query', with: text, fill_options: { clear: :backspace })
-    find('li', text: text).click
+    fill_in("query", with: text, fill_options: { clear: :backspace })
+    find("li", text: text).click
   end
 
   def clear_search_input
-    fill_in('query', with: '', fill_options: { clear: :backspace })
-    find('input[name=query]').native.send_keys(:return)
+    fill_in("query", with: "", fill_options: { clear: :backspace })
+    find("input[name=query]").native.send_keys(:return)
   end
 
   # def edit_editable_text_area(field, text, new_text)
@@ -112,11 +111,11 @@ class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
   # end
 
   def assert_changes_saved
-    assert_text 'All changes saved.'
+    assert_text "All changes saved."
   end
 
   def parent(node)
-    return node.find(:xpath, '..')
+    return node.find(:xpath, "..")
   end
 
   def find_by_placeholder(placeholder)
@@ -132,11 +131,11 @@ class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
   end
 
   def action_bar_click_edit
-    find('div[data-div-name=editActionBar]').find(icon_selector('editIcon')).click
+    find("div[data-div-name=editActionBar]").find(icon_selector("editIcon")).click
   end
 
   def action_bar_click_delete
-    find('div[data-div-name=editActionBar]').find(icon_selector('deleteIcon')).click
+    find("div[data-div-name=editActionBar]").find(icon_selector("deleteIcon")).click
   end
 
   def safe_assert_no_selector(*args)

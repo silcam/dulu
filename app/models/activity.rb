@@ -11,17 +11,17 @@ class Activity < ApplicationRecord
 
   validates :type, presence: true
 
-  default_scope{ where(archived: false) }
+  default_scope { where(archived: false) }
 
   after_touch :update_current_stage
 
   def current_stage
     self.stages.find_by(current: true) or
-        stages.new(name: Stage.first_stage(kind), kind: kind)
+      stages.new(name: Stage.first_stage(kind), kind: kind)
   end
 
   def kind
-    type.gsub('Activity', '').to_sym
+    type.gsub("Activity", "").to_sym
   end
 
   def progress
@@ -36,7 +36,7 @@ class Activity < ApplicationRecord
     Stage.new(
       name: Stage.stage_after(current_stage.name, current_stage.kind),
       kind: kind,
-      start_date: Date.today
+      start_date: Date.today,
     )
   end
 
@@ -50,11 +50,11 @@ class Activity < ApplicationRecord
   end
 
   def stages_ordered_desc
-    stages.order('start_date DESC, id DESC')
+    stages.order("start_date DESC, id DESC")
   end
 
   def stages_ordered_asc
-    stages.order 'start_date ASC, id ASC'
+    stages.order "start_date ASC, id ASC"
   end
 
   def empty_activity?
@@ -69,41 +69,40 @@ class Activity < ApplicationRecord
     percent, color = progress
     color = color_from_sym(color)
     {
-        id: id,
-        stage_name: stage_name,
-        archivable: archivable?,
-        progress:
-            {
-                percent: percent,
-                color: color
-            }
+      id: id,
+      stage_name: stage_name,
+      archivable: archivable?,
+      progress: {
+              percent: percent,
+              color: color,
+            },
 
     }
   end
 
   def self.types_for_select
     [
-        [I18n.t(:Bible_translation), 'TranslationActivity'],
-        [I18n.t(:Linguistic), 'LinguisticActivity'],
-        [I18n.t(:Media), 'MediaActivity']
+      [I18n.t(:Bible_translation), "TranslationActivity"],
+      [I18n.t(:Linguistic), "LinguisticActivity"],
+      [I18n.t(:Media), "MediaActivity"],
     ]
   end
 
   def self.subclass_from_text(str)
     case str
-      when 'TranslationActivity'
-        TranslationActivity
-      when 'MediaActivity'
-        MediaActivity
-      when 'LinguisticActivity'
-        LinguisticActivity
+    when "TranslationActivity"
+      TranslationActivity
+    when "MediaActivity"
+      MediaActivity
+    when "LinguisticActivity"
+      LinguisticActivity
     end
   end
 
   def self.search(query)
     TranslationActivity.search(query) +
-        MediaActivity.search(query) +
-        LinguisticActivity.search(query)
+      MediaActivity.search(query) +
+      LinguisticActivity.search(query)
   end
 
   private

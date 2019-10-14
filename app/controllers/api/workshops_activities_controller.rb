@@ -20,7 +20,7 @@ class Api::WorkshopsActivitiesController < ApplicationController
   private
 
   def workshops_activity_params
-    wa_params = params.require(:workshops_activity).permit(:title, {workshops_attributes: [:number, :name] })
+    wa_params = params.require(:workshops_activity).permit(:title, { workshops_attributes: [:number, :name] })
     wa_params[:category] = :Workshops
     return wa_params
   end

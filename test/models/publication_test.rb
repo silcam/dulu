@@ -1,4 +1,4 @@
-require 'test_helper'
+require "test_helper"
 
 class PublicationTest < ActiveSupport::TestCase
   def setup
@@ -6,37 +6,37 @@ class PublicationTest < ActiveSupport::TestCase
     I18n.locale = :en
   end
 
-  test 'Relations' do
+  test "Relations" do
     assert_equal languages(:Ewondo), @ewondo_nt.language
   end
 
-  test 'Validations' do
-    wrong_kind = Publication.new(kind: 'Wrong', english_name: 'Wrong')
+  test "Validations" do
+    wrong_kind = Publication.new(kind: "Wrong", english_name: "Wrong")
     refute wrong_kind.save, "Shouldn't save without kind"
-    no_name = Publication.new(kind: 'Scripture')
+    no_name = Publication.new(kind: "Scripture")
     refute no_name.save, "Shouldn't save without name"
-    good_pub = Publication.new(kind: 'Scripture', english_name: 'Bible')
+    good_pub = Publication.new(kind: "Scripture", english_name: "Bible")
     assert good_pub.save, "Should save valid pub"
   end
 
   test "Valid Media Kind" do
-    luke_film = Publication.new(english_name: "Luke Film", kind: 'Media', media_kind: 'Video')
+    luke_film = Publication.new(english_name: "Luke Film", kind: "Media", media_kind: "Video")
     assert luke_film.valid?
-    luke_film.media_kind = 'Pizza'
+    luke_film.media_kind = "Pizza"
     refute luke_film.valid?
   end
 
   test "Name" do
     assert_equal "Ewondo New Testament", @ewondo_nt.name
-    french_only = Publication.new(kind: 'Scripture', french_name: 'french name')
-    nl_only = Publication.new(kind: 'Scripture', nl_name: 'nl name')
-    assert_equal 'french name', french_only.name
-    assert_equal 'nl name', nl_only.name
+    french_only = Publication.new(kind: "Scripture", french_name: "french name")
+    nl_only = Publication.new(kind: "Scripture", nl_name: "nl name")
+    assert_equal "french name", french_only.name
+    assert_equal "nl name", nl_only.name
   end
 
   test "NL Name or Name" do
-    assert_equal 'Abc Abcd', @ewondo_nt.nl_name_or_name
+    assert_equal "Abc Abcd", @ewondo_nt.nl_name_or_name
     @ewondo_nt.nl_name = nil
-    assert_equal 'Ewondo New Testament', @ewondo_nt.nl_name_or_name
+    assert_equal "Ewondo New Testament", @ewondo_nt.nl_name_or_name
   end
 end

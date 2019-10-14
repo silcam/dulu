@@ -3,7 +3,7 @@ class Api::ReportsController < ApplicationController
     @report = Report.new(report_params)
     @report.author = current_user
     @report.save!
-    render json: { report: {id: @report.id}}
+    render json: { report: { id: @report.id } }
   end
 
   def index
@@ -13,15 +13,15 @@ class Api::ReportsController < ApplicationController
   def show
     @db_report = Report.find(params[:id])
     ViewedReport.mark_viewed(@db_report, current_user)
-    case @db_report.report['type']
-    when 'Domain'
+    case @db_report.report["type"]
+    when "Domain"
       @report = DomainReport.from_database(@db_report)
       @report.generate
       render :domain_report
-    when 'LanguageComparison'
+    when "LanguageComparison"
       render :translation_progress_report
     else
-      raise "Unknown report type #{@db_report.report['type']} for report {#{@db_report.id}}." 
+      raise "Unknown report type #{@db_report.report["type"]} for report {#{@db_report.id}}."
     end
   end
 

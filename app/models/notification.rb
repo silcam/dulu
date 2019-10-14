@@ -1,8 +1,7 @@
 class Notification < ApplicationRecord
-
   belongs_to :person, required: false
 
-  default_scope{ order(created_at: :desc) }
+  default_scope { order(created_at: :desc) }
 
   def vars
     if @vars.nil?
@@ -14,9 +13,9 @@ class Notification < ApplicationRecord
   def t_vars
     t_var_hash = {}
     vars.each do |key, var|
-      t_var_hash[key] = var.is_a?(Hash) ? 
-                          var[I18n.locale] :
-                          var
+      t_var_hash[key] = var.is_a?(Hash) ?
+        var[I18n.locale] :
+        var
     end
     t_var_hash
   end
@@ -41,13 +40,14 @@ class Notification < ApplicationRecord
   # end
 
   def email
-    if person.email_pref == 'immediate'
+    if person.email_pref == "immediate"
       NotificationMailer.delay.notify(self)
     end
   end
 
   class << self
     include TranslationHelper
+
     def model_path(instance)
       return ApplicationController.helpers.model_path(instance)
     end
@@ -63,13 +63,13 @@ class Notification < ApplicationRecord
         vars: {
           user_name: user.full_name,
           participant_name: participant.full_name,
-          program_name: program.name
+          program_name: program.name,
         },
         links: {
           user_name: model_path(user),
           participant_name: model_path(participant),
-          program_name: model_path(program)
-        }
+          program_name: model_path(program),
+        },
       }
       people = cluster_program_people(program, user, participant.person)
       send_notification n_params, people
@@ -77,6 +77,7 @@ class Notification < ApplicationRecord
       n_params[:kind] = :added_you_to_program
       send_notification n_params, [participant.person], false
     end
+
     handle_asynchronously :new_program_participant
 
     def new_cluster_participant(user, participant)
@@ -86,13 +87,13 @@ class Notification < ApplicationRecord
         vars: {
           user_name: user.full_name,
           participant_name: participant.full_name,
-          cluster_name: cluster.name
+          cluster_name: cluster.name,
         },
         links: {
           user_name: model_path(user),
           participant_name: model_path(participant),
-          cluster_name: model_path(cluster)
-        }
+          cluster_name: model_path(cluster),
+        },
       }
       people = cluster_program_people(cluster, user, participant.person)
       send_notification n_params, people
@@ -100,6 +101,7 @@ class Notification < ApplicationRecord
       n_params[:kind] = :added_you_to_cluster
       send_notification n_params, [participant.person], false
     end
+
     handle_asynchronously :new_cluster_participant
 
     def new_stage(user, stage)
@@ -111,16 +113,17 @@ class Notification < ApplicationRecord
           user_name: user.full_name,
           activity_name: activity_name(activity),
           stage_name: t_hash(stage.name),
-          program_name: program.name
+          program_name: program.name,
         },
         links: {
           user_name: model_path(user),
           activity_name: model_path(activity),
-          program_name: model_path(program)          
-        }
+          program_name: model_path(program),
+        },
       }
-      send_notification n_params, cluster_program_people(program, user)      
+      send_notification n_params, cluster_program_people(program, user)
     end
+
     handle_asynchronously :new_stage
 
     def workshop_complete(user, workshop)
@@ -130,16 +133,17 @@ class Notification < ApplicationRecord
         vars: {
           user_name: user.full_name,
           workshop_name: workshop.name,
-          program_name: program.name
+          program_name: program.name,
         },
         links: {
           user_name: model_path(user),
           workshop_name: model_path(workshop.linguistic_activity),
-          program_name: model_path(program)
-        }
+          program_name: model_path(program),
+        },
       }
       send_notification n_params, cluster_program_people(program, user)
     end
+
     handle_asynchronously :workshop_complete
 
     def new_activity(user, activity)
@@ -149,16 +153,17 @@ class Notification < ApplicationRecord
         vars: {
           user_name: user.full_name,
           program_name: program.name,
-          activity_name: activity_name(activity)
+          activity_name: activity_name(activity),
         },
         links: {
           user_name: model_path(user),
           program_name: model_path(program),
-          activity_name: model_path(activity)
-        }
+          activity_name: model_path(activity),
+        },
       }
       send_notification n_params, cluster_program_people(program, user)
     end
+
     handle_asynchronously :new_activity
 
     # # testament one of :New_testament or :Old_testament
@@ -185,17 +190,18 @@ class Notification < ApplicationRecord
         kind: :updated_you,
         vars: {
           user_name: user.full_name,
-          your_info: t_hash('notification.your_info'),
-          person_name: person.full_name
+          your_info: t_hash("notification.your_info"),
+          person_name: person.full_name,
         },
         links: {
           user_name: model_path(user),
           your_info: model_path(person),
-          person_name: model_path(person)
-        }
+          person_name: model_path(person),
+        },
       }
       send_notification n_params, [person], true, :updated_person
     end
+
     handle_asynchronously :updated_you
 
     def updated_himself(user)
@@ -203,11 +209,11 @@ class Notification < ApplicationRecord
         kind: :updated_himself,
         vars: {
           user_name: user.full_name,
-          his: t_hash("notification.his.#{user.gender}")
+          his: t_hash("notification.his.#{user.gender}"),
         },
         links: {
-          user_name: model_path(user)
-        }
+          user_name: model_path(user),
+        },
       }
       send_notification n_params, []  # Global only
     end
@@ -219,15 +225,16 @@ class Notification < ApplicationRecord
         vars: {
           user_name: user.full_name,
           role_name: t_hash(role),
-          person_name: person.full_name
+          person_name: person.full_name,
         },
         links: {
           user_name: model_path(user),
-          person_name: model_path(person)
-        }
+          person_name: model_path(person),
+        },
       }
       send_notification n_params, [person], true, :gave_person_role
     end
+
     handle_asynchronously :gave_you_role
 
     def gave_himself_role(user, role)
@@ -236,11 +243,11 @@ class Notification < ApplicationRecord
         vars: {
           user_name: user.full_name,
           himself: t_hash("notification.himself.#{user.gender}"),
-          role_name: t_hash(role)
+          role_name: t_hash(role),
         },
         links: {
-          user_name: model_path(user)
-        }
+          user_name: model_path(user),
+        },
       }
       send_notification n_params, []  # Global only
     end
@@ -254,14 +261,14 @@ class Notification < ApplicationRecord
           user_name: user.full_name,
           person_names: people.map { |p| p.full_name },
           activity_name: activity_name(activity),
-          program_name: language.name
+          program_name: language.name,
         },
         links: {
           user_name: model_path(user),
           person_names: people.map { |p| model_path(p) },
           activity_name: model_path(activity),
-          program_name: model_path(language)
-        }
+          program_name: model_path(language),
+        },
       }
       target_people = cluster_program_people(activity.language, user, *people)
       send_notification n_params, target_people
@@ -269,6 +276,7 @@ class Notification < ApplicationRecord
       n_params[:kind] = :added_you_to_activity
       send_notification n_params, people, false
     end
+
     handle_asynchronously :added_people_to_activity
 
     def added_himself_to_activity(user, activity)
@@ -278,13 +286,13 @@ class Notification < ApplicationRecord
           user_name: user.full_name,
           himself: t_hash("notification.himself.#{user.gender}"),
           activity_name: activity_name(activity),
-          program_name: activity.language.name
+          program_name: activity.language.name,
         },
         links: {
           user_name: model_path(user),
           activity_name: model_path(activity),
-          program_name: model_path(activity.language)
-        }
+          program_name: model_path(activity.language),
+        },
       }
       people = cluster_program_people(activity.language, user)
       send_notification n_params, people
@@ -292,27 +300,28 @@ class Notification < ApplicationRecord
 
     def added_people_to_event(user, event_participants)
       return added_himself_to_event(user, event_participant) if event_participants.length == 1 && user == event_participants[0].person
-      people = event_participants.map{ |ep| ep.person }
+      people = event_participants.map { |ep| ep.person }
       event = event_participants[0].event
       n_params = {
         kind: :added_people_to_event,
         vars: {
           user_name: user.full_name,
           person_names: people.map { |p| p.full_name },
-          event_name: event.name
+          event_name: event.name,
         },
         links: {
           user_name: model_path(user),
           person_names: people.map { |p| model_path(p) },
-          event_name: model_path(event)
-        }
+          event_name: model_path(event),
+        },
       }
       target_people = event.people - [user] - people
       send_notification n_params, target_people
-      
+
       n_params[:kind] = :added_you_to_event
       send_notification n_params, people, false
     end
+
     handle_asynchronously :added_people_to_event
 
     def added_himself_to_event(user, event_participant)
@@ -321,12 +330,12 @@ class Notification < ApplicationRecord
         vars: {
           user_name: user.full_name,
           himself: t_hash("notification.himself.#{user.gender}"),
-          event_name: event_participant.event.name
+          event_name: event_participant.event.name,
         },
         links: {
           user_name: model_path(user),
-          event_name: model_path(event_participant.event)
-        }
+          event_name: model_path(event_participant.event),
+        },
       }
       people = event_participant.event.people - [user]
       send_notification n_params, people
@@ -338,16 +347,17 @@ class Notification < ApplicationRecord
         vars: {
           user_name: user.full_name,
           event_name: event.name,
-          program_name: program.name
+          program_name: program.name,
         },
         links: {
           user_name: model_path(user),
           event_name: model_path(program) + model_path(event),
-          program_name: model_path(program)
-        }
-      } 
+          program_name: model_path(program),
+        },
+      }
       send_notification n_params, cluster_program_people(program, user)
     end
+
     handle_asynchronously :new_event_for_program
 
     def added_program_to_event(user, program, event)
@@ -356,16 +366,17 @@ class Notification < ApplicationRecord
         vars: {
           user_name: user.full_name,
           program_name: program.name,
-          event_name: event.name
+          event_name: event.name,
         },
         links: {
           user_name: model_path(user),
           program_name: model_path(program),
-          event_name: model_path(program) + model_path(event)
-        }
+          event_name: model_path(program) + model_path(event),
+        },
       }
       send_notification n_params, cluster_program_event_people(program, event, user)
     end
+
     handle_asynchronously :added_program_to_event
 
     def added_cluster_to_event(user, cluster, event)
@@ -374,21 +385,22 @@ class Notification < ApplicationRecord
         vars: {
           user_name: user.full_name,
           cluster_name: cluster.name,
-          event_name: event.name
+          event_name: event.name,
         },
         links: {
           user_name: model_path(user),
           cluster_name: model_path(cluster),
-          event_name: model_path(event)
-        }
+          event_name: model_path(event),
+        },
       }
       send_notification n_params, cluster_program_event_people(cluster, event, user)
     end
+
     handle_asynchronously :added_cluster_to_event
 
     private
 
-    def send_notification(n_params, people, send_global=true, global_kind=nil)
+    def send_notification(n_params, people, send_global = true, global_kind = nil)
       people.each do |person|
         notification = person.notifications.create n_params
         notification.email
@@ -404,7 +416,7 @@ class Notification < ApplicationRecord
       people = cluster_program.all_current_people
       lpf = cluster_program.get_lpf.try(:person)
       people << lpf unless lpf.nil?
-      omissions.each{ |p| people.delete(p) }
+      omissions.each { |p| people.delete(p) }
       people
     end
 
@@ -418,8 +430,8 @@ class Notification < ApplicationRecord
 
     def activity_name(activity)
       activity.is_a?(TranslationActivity) ?
-          activity.t_names :
-          activity.name
+        activity.t_names :
+        activity.name
     end
   end
 end

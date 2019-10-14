@@ -1,8 +1,7 @@
 class LinguisticActivity < Activity
-
   CATEGORIES = %i( Research Workshops )
 
-  default_scope{ where(archived: false) }
+  default_scope { where(archived: false) }
 
   has_many :workshops
   accepts_nested_attributes_for :workshops
@@ -11,7 +10,7 @@ class LinguisticActivity < Activity
   validates :category, inclusion: CATEGORIES
 
   def category
-    self.attributes['category'].try(:to_sym)
+    self.attributes["category"].try(:to_sym)
   end
 
   def name
@@ -20,8 +19,8 @@ class LinguisticActivity < Activity
 
   def available_stages
     (category == :Workshops) ?
-        workshops.collect{ |w| w.name } :
-        Stage.stages(:Linguistic)
+      workshops.collect { |w| w.name } :
+      Stage.stages(:Linguistic)
   end
 
   # def current_workshop
@@ -48,14 +47,14 @@ class LinguisticActivity < Activity
 
   def progress
     (category == :Workshops) ?
-        workshop_progress :
-        current_stage.progress
+      workshop_progress :
+      current_stage.progress
   end
 
   def archivable?
     (category == :Workshops) ?
-        stages.count == workshops.count :
-        super
+      stages.count == workshops.count :
+      super
   end
 
   def empty_activity?
@@ -113,13 +112,14 @@ class LinguisticActivity < Activity
   end
 
   def self.search(query)
-    activities = LinguisticActivity.where("unaccent(title) ILIKE unaccent(:q) OR category ILIKE :q", {q: "%#{query}%"})
+    activities = LinguisticActivity.where("unaccent(title) ILIKE unaccent(:q) OR category ILIKE :q", { q: "%#{query}%" })
     results = []
     activities.each do |activity|
       results << {
-          title: activity.name,
-          description: "#{activity.language.name} - #{activity.current_stage.name}",
-          route: "/activities/#{activity.id}"}
+        title: activity.name,
+        description: "#{activity.language.name} - #{activity.current_stage.name}",
+        route: "/activities/#{activity.id}",
+      }
     end
     results
   end

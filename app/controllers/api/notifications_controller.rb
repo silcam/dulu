@@ -17,7 +17,7 @@ class Api::NotificationsController < ApplicationController
   def get_notifications(source)
     page = params[:page].to_i || 0
     page_size = 12
-    @notifications = source.offset(page * page_size).limit(page_size+1).to_a
+    @notifications = source.offset(page * page_size).limit(page_size + 1).to_a
     if @notifications.size == page_size + 1
       @notifications.pop
       @more_available = true

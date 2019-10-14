@@ -3,7 +3,7 @@ module HasRoles
 
   def roles
     return [] if roles_field.blank?
-    roles_field[1..-1].split('|').collect{ |r| r.to_sym }
+    roles_field[1..-1].split("|").collect { |r| r.to_sym }
   end
 
   def roles=(roles)
@@ -15,7 +15,7 @@ module HasRoles
   end
 
   def roles_text
-    roles.collect{ |r| I18n.t(r) }.join(', ')
+    roles.collect { |r| I18n.t(r) }.join(", ")
   end
 
   def has_role?(role)
@@ -27,10 +27,11 @@ module HasRoles
   end
 
   def add_to_roles_field(new_role)
-    r_field = roles_field.blank? ? '|' : roles_field
-    r_field += new_role.to_s + '|'
+    r_field = roles_field.blank? ? "|" : roles_field
+    r_field += new_role.to_s + "|"
     update! roles_field: r_field
   end
+
   alias add_role add_to_roles_field
 
   def remove_from_roles_field(role)
@@ -38,6 +39,7 @@ module HasRoles
     roles.delete role.to_sym
     update roles_field: make_roles_field(roles)
   end
+
   alias remove_role remove_from_roles_field
 
   def make_roles_field(roles)
@@ -46,18 +48,18 @@ module HasRoles
 
   class_methods do
     def make_roles_field(roles)
-      return '' if roles.nil? || roles.empty?
-      '|' + roles.join('|') + '|'
+      return "" if roles.nil? || roles.empty?
+      "|" + roles.join("|") + "|"
     end
 
     def where_has_role(role)
-      where('roles_field LIKE ?', "%|#{role}|%")
+      where("roles_field LIKE ?", "%|#{role}|%")
     end
 
     def where_has_role_among(roles)
       return [] if roles.empty?
-      search = roles.collect{ |r| 'roles_field LIKE ?'}.join(' OR ')
-      roles = roles.collect{ |r| "%|#{r}|%"}
+      search = roles.collect { |r| "roles_field LIKE ?" }.join(" OR ")
+      roles = roles.collect { |r| "%|#{r}|%" }
       where(search, *roles)
     end
   end

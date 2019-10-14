@@ -1,4 +1,4 @@
-require 'test_helper'
+require "test_helper"
 
 class MediaActivityTest < ActiveSupport::TestCase
   def setup
@@ -7,10 +7,10 @@ class MediaActivityTest < ActiveSupport::TestCase
   end
 
   test "Build Jesus Film" do
-    params = ActionController::Parameters.new category: 'Film', film: 'JesusFilm'
+    params = ActionController::Parameters.new category: "Film", film: "JesusFilm"
     participants = [@drew_hdi]
     MediaActivity.build(params, @hdi, participants)
-    film = MediaActivity.order('id').last
+    film = MediaActivity.order("id").last
     assert_equal :Film, film.category
     assert_equal :JesusFilm, film.film
     assert_equal @hdi, film.language
@@ -18,10 +18,10 @@ class MediaActivityTest < ActiveSupport::TestCase
   end
 
   test "Jesus Film no Participants" do
-    params = ActionController::Parameters.new category: 'Film', film: 'JesusFilm'
+    params = ActionController::Parameters.new category: "Film", film: "JesusFilm"
     participants = []
     MediaActivity.build(params, @hdi, participants)
-    film = MediaActivity.order('id').last
+    film = MediaActivity.order("id").last
     assert_equal :Film, film.category
     assert_equal :JesusFilm, film.film
     assert_equal @hdi, film.language
@@ -29,19 +29,19 @@ class MediaActivityTest < ActiveSupport::TestCase
   end
 
   test "Create some Audio Scripture" do
-    params = ActionController::Parameters.new category: 'AudioScripture', scripture: 'New_testament'
+    params = ActionController::Parameters.new category: "AudioScripture", scripture: "New_testament"
     MediaActivity.build(params, @hdi, [])
-    audio = MediaActivity.order('id').last
+    audio = MediaActivity.order("id").last
     assert_equal :AudioScripture, audio.category
     assert_equal :New_testament, audio.scripture
     assert_equal @hdi, audio.language
   end
 
   test "Create Audio Genesis-Exodus" do
-    params = ActionController::Parameters.new category: 'AudioScripture', scripture: 'Other'
-    params[:bible_book_ids] = [:Genesis, :Exodus].collect{ |b| bible_books(b).id }
+    params = ActionController::Parameters.new category: "AudioScripture", scripture: "Other"
+    params[:bible_book_ids] = [:Genesis, :Exodus].collect { |b| bible_books(b).id }
     MediaActivity.build(params, @hdi, [])
-    audio = MediaActivity.order('id').last
+    audio = MediaActivity.order("id").last
     assert_equal 2, audio.bible_books.length
     assert_includes audio.bible_books, bible_books(:Genesis)
   end

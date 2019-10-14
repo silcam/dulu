@@ -1,18 +1,17 @@
 class DomainUpdate < ApplicationRecord
-
   belongs_to :language, required: true, touch: true
   belongs_to :status_parameter, required: false
-  belongs_to :author, required: true, class_name: 'Person'
+  belongs_to :author, required: true, class_name: "Person"
 
   audited associated_with: :language
 
   validates :number, numericality: true, allow_nil: true
   validates :date, presence: true
   validates :date, fuzzy_date: true
-  validates :domain, inclusion: {in: StatusParameter.domains}
+  validates :domain, inclusion: { in: StatusParameter.domains }
   validate :number_or_status
 
-  default_scope { order('date DESC')}
+  default_scope { order("date DESC") }
 
   def f_date
     FuzzyDate.from_string date
@@ -21,7 +20,7 @@ class DomainUpdate < ApplicationRecord
   def short_version
     s = ""
     if number
-      s+= number_to_human(number) + ' ' + status_parameter.number_unit + ' '
+      s += number_to_human(number) + " " + status_parameter.number_unit + " "
     end
     s += status
     s
@@ -29,10 +28,10 @@ class DomainUpdate < ApplicationRecord
 
   def previous
     DomainUpdate.where("language_id=:p AND " +
-                           "domain=:d AND " +
-                           "status_parameter_id#{status_parameter.nil? ? ' IS NULL':'=:sp'} AND " +
-                           "date<:date",
-                       {p: language.id, d: domain, sp: status_parameter.try(:id), date: date})
+                       "domain=:d AND " +
+                       "status_parameter_id#{status_parameter.nil? ? " IS NULL" : "=:sp"} AND " +
+                       "date<:date",
+                       { p: language.id, d: domain, sp: status_parameter.try(:id), date: date })
                 .first
   end
 

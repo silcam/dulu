@@ -1,6 +1,6 @@
 class BibleBook < ApplicationRecord
   include HasTranslatedNames
-  
+
   has_many :translation_activities
 
   GENESIS_USFM = 1
@@ -23,28 +23,28 @@ class BibleBook < ApplicationRecord
 
   def testament
     case usfm_number
-      when (1 .. 39)
-        return :Old_testament
-      when (41 .. 67)
-        return :New_testament
+    when (1..39)
+      return :Old_testament
+    when (41..67)
+      return :New_testament
     end
   end
 
   def percent_of_testament
     case testament
-      when :Old_testament
-        return number_of_verses.to_f / VERSES_OT * 100
-      when :New_testament
-        return number_of_verses.to_f / VERSES_NT * 100
+    when :Old_testament
+      return number_of_verses.to_f / VERSES_OT * 100
+    when :New_testament
+      return number_of_verses.to_f / VERSES_NT * 100
     end
   end
 
   def self.get_old_testament
-    where(usfm_number: (GENESIS_USFM..MALACHI_USFM)).order('usfm_number')
+    where(usfm_number: (GENESIS_USFM..MALACHI_USFM)).order("usfm_number")
   end
 
   def self.get_new_testament
-    where(usfm_number: (MATTHEW_USFM..REVELATION_USFM)).order('usfm_number')
+    where(usfm_number: (MATTHEW_USFM..REVELATION_USFM)).order("usfm_number")
   end
 
   # def self.verses_in_bible

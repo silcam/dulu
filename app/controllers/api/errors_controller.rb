@@ -1,4 +1,4 @@
-class Api::ErrorsController < ApplicationController 
+class Api::ErrorsController < ApplicationController
   skip_before_action :verify_authenticity_token
 
   def create

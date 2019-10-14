@@ -2,7 +2,7 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
   include SessionsHelper
   include ApplicationHelper
-	include RedirectToReferrer
+  include RedirectToReferrer
 
   before_action :require_login, :log_access, :set_locale, :store_redirect
 
@@ -17,10 +17,10 @@ class ApplicationController < ActionController::Base
     if request.path == root_path
       @failed_login_email = session[:failed_login]
       session.delete :failed_login
-      render 'shared/welcome'
+      render "shared/welcome"
     else
       session[:original_request] = request.path
-      redirect_to '/auth/google_oauth2'
+      redirect_to "/auth/google_oauth2"
     end
   end
 
@@ -44,6 +44,6 @@ class ApplicationController < ActionController::Base
 
   rescue_from "ActiveRecord::RecordNotFound" do |exception|
     # logger.error exception.to_s
-    render plain: '404 Not Found', status: 404
+    render plain: "404 Not Found", status: 404
   end
 end

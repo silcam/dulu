@@ -1,8 +1,8 @@
 class DailyEmailTask
   include Delayed::RecurringJob
   run_every 1.day
-  run_at '12:12am'
-  timezone 'UTC'
+  run_at "12:12am"
+  timezone "UTC"
 
   def perform
     if Date.today.monday?

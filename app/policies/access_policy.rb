@@ -2,7 +2,7 @@ class AccessPolicy
   include AccessGranted::Policy
 
   def configure
-    role :site_admin, proc{ |u| u.has_role?(:DuluAdmin) } do
+    role :site_admin, proc { |u| u.has_role?(:DuluAdmin) } do
       can [:grant_admin, :login_as_others, :destroy], Person
       can :destroy, Participant
       can :read, Audited::Audit
@@ -11,7 +11,7 @@ class AccessPolicy
       can :manage, Lpf
     end
 
-    role :supervisor, proc{ |u| u.has_role_among?(Role::SUPERVISOR_ROLES) } do
+    role :supervisor, proc { |u| u.has_role_among?(Role::SUPERVISOR_ROLES) } do
       can [:grant_login], Person
       can [:create_activity, :manage_participants, :manage_surveys, :update_activities], Language
       can [:manage_participants, :create, :update], Cluster
@@ -25,7 +25,7 @@ class AccessPolicy
     end
 
     part_roles = Role::SUPERVISOR_ROLES + Role::PARTICIPANT_ROLES
-    role :participant, proc{ |u| u.has_role_among? part_roles } do
+    role :participant, proc { |u| u.has_role_among? part_roles } do
       can [:create, :read, :update], Person
 
       can [:create, :read, :update], Organization

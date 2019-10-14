@@ -1,4 +1,4 @@
-require 'application_system_test_case'
+require "application_system_test_case"
 
 class UpdateStageTest < ApplicationSystemTestCase
   def setup
@@ -21,16 +21,16 @@ class UpdateStageTest < ApplicationSystemTestCase
 
   test "Remove Stage" do
     skip
-  #   hdi_drafting = @hdi_ezra.current_stage
-  #   within(:css, "form[action='#{stage_path(hdi_drafting)}']") do
-  #     page.accept_confirm do
-  #       click_button 'X'
-  #     end
-  #   end
+    #   hdi_drafting = @hdi_ezra.current_stage
+    #   within(:css, "form[action='#{stage_path(hdi_drafting)}']") do
+    #     page.accept_confirm do
+    #       click_button 'X'
+    #     end
+    #   end
 
-  #   within(:css, 'span#current-stage') do
-  #     assert_text 'Planned'
-  #     safe_assert_no_text 'Drafting'
-  #   end
+    #   within(:css, 'span#current-stage') do
+    #     assert_text 'Planned'
+    #     safe_assert_no_text 'Drafting'
+    #   end
   end
 end

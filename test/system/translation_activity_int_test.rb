@@ -1,4 +1,4 @@
-require 'application_system_test_case'
+require "application_system_test_case"
 
 class TranslationActivityIntTest < ApplicationSystemTestCase
   def setup
@@ -9,11 +9,11 @@ class TranslationActivityIntTest < ApplicationSystemTestCase
   test "New Translation Activity" do
     log_in(people(:Olga))
     visit "#{model_path(@zulgo)}/Translation"
-    safe_assert_no_selector('tr', text: 'Genesis Planned')
-    within('h3', text: 'Activities') { click_icon('addIcon') }
-    find('select').select 'Genesis'
-    click_on 'Save'
-    assert_selector('tr', text: 'Genesis Planned')
+    safe_assert_no_selector("tr", text: "Genesis Planned")
+    within("h3", text: "Activities") { click_icon("addIcon") }
+    find("select").select "Genesis"
+    click_on "Save"
+    assert_selector("tr", text: "Genesis Planned")
   end
 
   test "Rick Deletes Hdi Exodus" do
@@ -34,21 +34,21 @@ class TranslationActivityIntTest < ApplicationSystemTestCase
     safe_assert_no_selector('input[value="Delete Exodus"]')
   end
 
-  test "Drew updates stage for Hdi Ezra" do 
+  test "Drew updates stage for Hdi Ezra" do
     log_in people(:Drew)
     visit model_path @hdi
-    find('tr', text: 'Ezra').find('button', text: 'Drafting').click
-    within('tr', text: 'Update Stage:') do
-      find('select').select('Ready for Consultant Check')
-      click_on('Update')
+    find("tr", text: "Ezra").find("button", text: "Drafting").click
+    within("tr", text: "Update Stage:") do
+      find("select").select("Ready for Consultant Check")
+      click_on("Update")
     end
-    find('tr', text: 'As of').click_on('Save')
-    find('tr', text: 'Ezra').assert_text('Ready for Consultant Check')
+    find("tr", text: "As of").click_on("Save")
+    find("tr", text: "Ezra").assert_text("Ready for Consultant Check")
   end
 
   test "Kendall can't update Hdi Ezra" do
     log_in people(:Kendall)
     visit model_path @hdi
-    find('tr', text: 'Ezra').assert_no_selector('button', text: 'Drafting')
+    find("tr", text: "Ezra").assert_no_selector("button", text: "Drafting")
   end
 end

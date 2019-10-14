@@ -1,4 +1,4 @@
-require 'test_helper'
+require "test_helper"
 
 class TranslationActivityTest < ActiveSupport::TestCase
   def setup
@@ -8,7 +8,7 @@ class TranslationActivityTest < ActiveSupport::TestCase
 
   test "Name" do
     I18n.locale = :en
-    assert_equal 'Ezra', @hdi_ezra.name
+    assert_equal "Ezra", @hdi_ezra.name
   end
 
   test "Next" do
@@ -28,7 +28,7 @@ class TranslationActivityTest < ActiveSupport::TestCase
     john = bible_books :John
     hdi = languages :Hdi
     drew_hdi = participants :DrewHdi
-    params = {type: 'TranslationActivity', bible_book_id: john.id.to_s}
+    params = { type: "TranslationActivity", bible_book_id: john.id.to_s }
     participants = [drew_hdi]
     TranslationActivity.build(params, hdi, participants)
     hdi_john = TranslationActivity.last
@@ -39,7 +39,7 @@ class TranslationActivityTest < ActiveSupport::TestCase
   test "Repeat Build" do
     genesis = bible_books :Genesis
     hdi = languages :Hdi
-    params = {type: 'TranslationActivity', bible_book_id: 'ot'}
+    params = { type: "TranslationActivity", bible_book_id: "ot" }
     assert_equal 1, TranslationActivity.where(language: hdi, bible_book: genesis).count
     TranslationActivity.build(params, hdi, [])
     assert_equal 1, TranslationActivity.where(language: hdi, bible_book: genesis).count
@@ -47,8 +47,8 @@ class TranslationActivityTest < ActiveSupport::TestCase
 
   test "Build All" do
     ewondo_language = languages :Ewondo
-    params = {type: 'TranslationActivity', bible_book_id: 'ot'}
-    TranslationActivity.build(params, ewondo_language,[])
+    params = { type: "TranslationActivity", bible_book_id: "ot" }
+    TranslationActivity.build(params, ewondo_language, [])
     ezra = bible_books :Ezra
     genesis = bible_books :Genesis
     refute_nil ewondo_language.translation_activities.find_by(bible_book: ezra), "Should be an Ewondo Ezra Activity"
@@ -56,9 +56,9 @@ class TranslationActivityTest < ActiveSupport::TestCase
   end
 
   test "Search" do
-    t_acs = TranslationActivity.search('ezra')
-    ezra_list = t_acs[t_acs.index{|r| r[:title]=='Ezra'}][:subresults]
-    hdi_ezra_result = ezra_list[ezra_list.index{|r| r[:title]=='Hdi'}]
+    t_acs = TranslationActivity.search("ezra")
+    ezra_list = t_acs[t_acs.index { |r| r[:title] == "Ezra" }][:subresults]
+    hdi_ezra_result = ezra_list[ezra_list.index { |r| r[:title] == "Hdi" }]
     refute_nil hdi_ezra_result
   end
 end

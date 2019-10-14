@@ -41,7 +41,8 @@ class Participant < ApplicationRecord
 
   def sorted_activities
     activities.order(
-        'activities.language_id, activities.type, bible_book_id')
+      "activities.language_id, activities.type, bible_book_id"
+    )
   end
 
   def unassoc_activities

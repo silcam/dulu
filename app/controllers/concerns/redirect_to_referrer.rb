@@ -6,7 +6,7 @@ module RedirectToReferrer
     send :include, PrivateMethods
   end
 
-  def follow_redirect default_path, parameters={}
+  def follow_redirect(default_path, parameters = {})
     if session[:referred_by]
       session[:referred_by_params] = parameters unless parameters.empty?
       redirect_to session[:referred_by]
@@ -29,7 +29,9 @@ module RedirectToReferrer
 
     def manage_stored_redirect
       if session[:referred_to]
-        delete_redirect if session[:referred_to] != [controller_name, action_name]
+        if session[:referred_to] != [controller_name, action_name]
+          delete_redirect
+        end
       else
         session[:referred_to] = [controller_name, action_name]
       end

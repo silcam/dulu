@@ -1,6 +1,5 @@
 namespace :delayed_job do
-
-  desc 'Restart the delayed_job process'
+  desc "Restart the delayed_job process"
   task :restart do
     on roles(:app) do
       within release_path do

@@ -1,1 +1,1 @@
-json.partial! 'index', activities: @workshops_activities
+json.partial! "index", activities: @workshops_activities

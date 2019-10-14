@@ -1,7 +1,6 @@
-require 'test_helper'
+require "test_helper"
 
 class RoleTest < ActiveSupport::TestCase
-
   def setup
     @rick = people :Rick
     @drew = people :Drew
@@ -46,7 +45,7 @@ class RoleTest < ActiveSupport::TestCase
   test "Is a role" do
     assert Role.is_a_role? :Translator
     refute Role.is_a_role? :Starfighter
-    assert Role.is_a_role? 'Translator'
+    assert Role.is_a_role? "Translator"
   end
 
   test "Has a program role" do

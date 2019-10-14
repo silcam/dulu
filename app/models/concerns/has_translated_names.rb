@@ -3,8 +3,8 @@ module HasTranslatedNames
 
   def t_names
     return {
-      en: self.english_name,
-      fr: self.french_name
-    }
+             en: self.english_name,
+             fr: self.french_name,
+           }
   end
 end

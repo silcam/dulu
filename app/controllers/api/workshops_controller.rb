@@ -1,5 +1,4 @@
 class Api::WorkshopsController < ApplicationController
-
   def index
     @activity = Activity.find(params[:activity_id])
     @workshops = Workshop.sort @activity.workshops

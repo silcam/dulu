@@ -1,5 +1,5 @@
 json.participant do
-  json.partial! 'participant', participant: @participant
+  json.partial! "participant", participant: @participant
 
   json.can do
     json.update can?(:manage_participants, @participant.cluster_language)
@@ -12,14 +12,14 @@ json.person do
 end
 
 json.activities @participant.activities do |activity|
-  json.call(activity, 
-            :id, 
+  json.call(activity,
+            :id,
             :type,
             :category,
-            :language_id, 
-            :bible_book_id, 
-            :title, 
-            :name, 
+            :language_id,
+            :bible_book_id,
+            :title,
+            :name,
             :participant_ids)
   json.stage_name activity.current_stage.name
 end

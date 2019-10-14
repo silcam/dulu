@@ -31,9 +31,9 @@ class Api::DomainStatusItemsController < ApplicationController
   def dsi_params
     params
       .permit(
-        :category, 
-        :subcategory, 
-        :year, 
+        :category,
+        :subcategory,
+        :year,
         :platforms,
         :description,
         :title,
@@ -42,7 +42,7 @@ class Api::DomainStatusItemsController < ApplicationController
         :count,
         :completeness,
         details: {},
-        bible_book_ids: []
+        bible_book_ids: [],
       )
   end
 end

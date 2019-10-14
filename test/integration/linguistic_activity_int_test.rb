@@ -1,4 +1,4 @@
-require 'test_helper'
+require "test_helper"
 
 class LinguisticActivityIntTest < Capybara::Rails::TestCase
   def setup
@@ -84,7 +84,7 @@ class LinguisticActivityIntTest < Capybara::Rails::TestCase
   #   click_on 'Save'
   #   assert_selector('tr', text: 'Taco Party')
   # end
-  
+
   # test "Remove Workshop" do
   #   visit activity_path(@grammar_ws)
   #   # assert_selector('tr', text: 'Noun')

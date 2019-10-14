@@ -1,1 +1,1 @@
-json.partial! 'workshop', workshop: @workshop
+json.partial! "workshop", workshop: @workshop

@@ -1,4 +1,4 @@
-require 'application_system_test_case'
+require "application_system_test_case"
 
 class ParticipantIntTest < ApplicationSystemTestCase
   def setup
@@ -16,55 +16,55 @@ class ParticipantIntTest < ApplicationSystemTestCase
 
   test "Show Page: Remove Role" do
     setup_show_page
-    assert_text 'Translation Consultant'
+    assert_text "Translation Consultant"
     assert @drew_hdi.roles.include?(:TranslationConsultant)
     action_bar_click_edit
-    within('table', text: 'Translation Consultant') { click_icon('deleteIcon') }
-    click_on 'Save'
-    safe_assert_no_text 'Translation Consultant'
+    within("table", text: "Translation Consultant") { click_icon("deleteIcon") }
+    click_on "Save"
+    safe_assert_no_text "Translation Consultant"
     @drew_hdi.reload
     refute @drew_hdi.roles.include?(:TranslationConsultant)
   end
 
   test "Show Page: Add Role" do
     setup_show_page
-    safe_assert_no_text 'Linguist'
+    safe_assert_no_text "Linguist"
     refute @drew_hdi.roles.include?(:Linguist)
     action_bar_click_edit
-    within('table', text: 'Translation Consultant') do
-      find('select').select('Linguist')
-      click_icon('addIcon')
+    within("table", text: "Translation Consultant") do
+      find("select").select("Linguist")
+      click_icon("addIcon")
     end
-    click_on 'Save'
-    assert_no_selector('button', text: 'Cancel') # Make sure we're back to main page
-    assert_text 'Linguist'
+    click_on "Save"
+    assert_no_selector("button", text: "Cancel") # Make sure we're back to main page
+    assert_text "Linguist"
     @drew_hdi.reload
     assert @drew_hdi.roles.include?(:Linguist)
   end
 
   test "Add Activity" do
     visit model_path(translation_activities(:HdiGenesis))
-    safe_assert_no_text 'Drew Mambo'
-    within('h3', text: 'People') { click_icon('editIcon') }
-    find('select').select('Drew Mambo')
-    click_on 'Add'
-    click_on 'Save'
-    assert_selector('li', text: 'Drew Mambo - Translation Consultant');
+    safe_assert_no_text "Drew Mambo"
+    within("h3", text: "People") { click_icon("editIcon") }
+    find("select").select("Drew Mambo")
+    click_on "Add"
+    click_on "Save"
+    assert_selector("li", text: "Drew Mambo - Translation Consultant")
   end
 
   test "Remove Activity" do
     visit model_path(translation_activities(:HdiEzra))
-    assert_text 'Drew Mambo'
-    within('h3', text: 'People') { click_icon('editIcon') }
-    within('tr', text: 'Drew Mambo') { click_icon('deleteIcon') }
-    click_on 'Save'
-    safe_assert_no_text 'Drew Mambo' 
+    assert_text "Drew Mambo"
+    within("h3", text: "People") { click_icon("editIcon") }
+    within("tr", text: "Drew Mambo") { click_icon("deleteIcon") }
+    click_on "Save"
+    safe_assert_no_text "Drew Mambo"
   end
 
   test "Kevin can't edit ActivityPeople" do
     log_in people(:Kevin)
     visit model_path(translation_activities(:HdiEzra))
-    safe_assert_no_selector(icon_selector('editIcon'))
+    safe_assert_no_selector(icon_selector("editIcon"))
   end
 
   # test "Add Activity to Cluster Participant" do
@@ -102,13 +102,13 @@ class ParticipantIntTest < ApplicationSystemTestCase
 
   test "Delete DrewHdi Participant" do
     visit "#{model_path(languages(:Hdi))}/Translation"
-    assert_text 'Drew Mambo'
-    click_on 'Drew Mambo'
+    assert_text "Drew Mambo"
+    click_on "Drew Mambo"
     page.accept_confirm do
       action_bar_click_delete
     end
-    assert_text 'People'
-    safe_assert_no_text 'Drew Mambo'
+    assert_text "People"
+    safe_assert_no_text "Drew Mambo"
     assert_nil Participant.find_by(id: @drew_hdi)
   end
 
@@ -130,32 +130,32 @@ class ParticipantIntTest < ApplicationSystemTestCase
 
   def add_drew
     visit "#{model_path(languages(:Zulgo))}/Translation"
-    within(parent(find('h3', text: 'People'))) do
-       click_icon('addIcon')
-       fill_in_search_input('Drew Mambo')
-       fill_in_date(FuzzyDate.new(2016, 7, 31))
-       click_on 'Save'
+    within(parent(find("h3", text: "People"))) do
+      click_icon("addIcon")
+      fill_in_search_input("Drew Mambo")
+      fill_in_date(FuzzyDate.new(2016, 7, 31))
+      click_on "Save"
     end
-    assert_selector('h2', text: 'Drew Mambo')
-    assert_text 'Translation Consultant'
-    assert_text 'Joined Program 2016-07-31'
+    assert_selector("h2", text: "Drew Mambo")
+    assert_text "Translation Consultant"
+    assert_text "Joined Program 2016-07-31"
     @drew_zulgo = Participant.find_by(person: @drew, language: @zulgo)
   end
 
   def modify_drew
     visit "#{model_path(@zulgo)}/Translation"
-    click_link 'Drew Mambo'
+    click_link "Drew Mambo"
     action_bar_click_edit
-    within('tr', text: 'Joined Program') { fill_in_date(FuzzyDate.new(2016, 8, 31)) }
-    click_on 'Save'
+    within("tr", text: "Joined Program") { fill_in_date(FuzzyDate.new(2016, 8, 31)) }
+    click_on "Save"
     assert_text "2016-08-31"
   end
 
   def remove_drew
     # visit model_path(@zulgo, @drew_zulgo)
     action_bar_click_edit
-    within('tr', text: 'Left Program') { fill_in_date(FuzzyDate.new(2017, 7, 31)) }
-    click_button 'Save'
+    within("tr", text: "Left Program") { fill_in_date(FuzzyDate.new(2017, 7, 31)) }
+    click_button "Save"
     assert_text "Left Program 2017-07-31"
     @zulgo.reload
     refute @zulgo.current_people.include?(@drew)

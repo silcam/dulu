@@ -5,7 +5,7 @@ class Publication < ApplicationRecord
 
   audited associated_with: :language
 
-  default_scope{ order(:year, :created_at)}
+  default_scope { order(:year, :created_at) }
 
   def self.kinds
     %w[Scripture Linguistic NLPub Media Literacy Anthropology]
@@ -23,11 +23,11 @@ class Publication < ApplicationRecord
     %w[Bible New_testament Old_testament Portions]
   end
 
-  validates :kind, inclusion: {in: Publication.kinds}
-  validates :media_kind, inclusion: {in: Publication.media_kinds}, allow_blank: true
-  validates :scripture_kind, inclusion: {in: Publication.scripture_kinds}, allow_blank: true
-  validates :film_kind, inclusion: {in: Publication.film_kinds}, allow_blank: true
-  validates :year, numericality: {only_integer: true, greater_than: 0, less_than: 10000, allow_nil: true}
+  validates :kind, inclusion: { in: Publication.kinds }
+  validates :media_kind, inclusion: { in: Publication.media_kinds }, allow_blank: true
+  validates :scripture_kind, inclusion: { in: Publication.scripture_kinds }, allow_blank: true
+  validates :film_kind, inclusion: { in: Publication.film_kinds }, allow_blank: true
+  validates :year, numericality: { only_integer: true, greater_than: 0, less_than: 10000, allow_nil: true }
   validate :has_a_name
 
   # Intl languages are first choices
@@ -43,18 +43,18 @@ class Publication < ApplicationRecord
   end
 
   def names
-    names = name_priorities.collect{ |method| send(method) }
-    names.delete_if{ |n| n.blank? }
+    names = name_priorities.collect { |method| send(method) }
+    names.delete_if { |n| n.blank? }
   end
 
   def self.search(query)
-    pubs = Publication.multi_word_where(query, 'english_name', 'french_name', 'nl_name').includes(:language)
+    pubs = Publication.multi_word_where(query, "english_name", "french_name", "nl_name").includes(:language)
     results = []
     pubs.each do |pub|
       title = "#{pub.name} : #{pub.language.name}"
       description = I18n.t(pub.kind)
-      description += ' - ' + pub.year.to_s if pub.year
-      results << {title: title, description: description, model: pub}
+      description += " - " + pub.year.to_s if pub.year
+      results << { title: title, description: description, model: pub }
     end
     results
   end
@@ -68,8 +68,8 @@ class Publication < ApplicationRecord
   end
 
   def name_priorities
-    I18n.locale==:en ?
-        [:english_name, :french_name, :nl_name] :
-        [:french_name, :english_name, :nl_name]
+    I18n.locale == :en ?
+      [:english_name, :french_name, :nl_name] :
+      [:french_name, :english_name, :nl_name]
   end
 end

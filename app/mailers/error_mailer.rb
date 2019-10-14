@@ -1,7 +1,7 @@
 class ErrorMailer < ApplicationMailer
   def error_report(content)
     @content = content
-    mail to: admin_email, from: admin_email, subject: 'Dulu Javascript Error'
+    mail to: admin_email, from: admin_email, subject: "Dulu Javascript Error"
   end
 
   private

@@ -1,5 +1,4 @@
 class StatusParameter < ApplicationRecord
-
   has_many :domain_updates
 
   default_scope { order(:order) }
@@ -9,11 +8,11 @@ class StatusParameter < ApplicationRecord
   end
 
   validates :prompt, presence: true, allow_blank: false
-  validates :domain, inclusion: {in: domains}
+  validates :domain, inclusion: { in: domains }
   validate :number_unit_if_number_field
 
   def self.other_parameter(domain)
-    StatusParameter.new(domain: domain, prompt: 'Other')
+    StatusParameter.new(domain: domain, prompt: "Other")
   end
   #
   # def self.parameters_with_other(domain)
@@ -21,7 +20,7 @@ class StatusParameter < ApplicationRecord
   # end
 
   def self.sorted_domains
-    domains.sort{ |a, b| I18n.t(a) <=> I18n.t(b) }
+    domains.sort { |a, b| I18n.t(a) <=> I18n.t(b) }
   end
 
   private

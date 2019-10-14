@@ -9,10 +9,10 @@ json.results results do |result|
   elsif result[:model]
     json.route model_path(result[:model])
   end
-  
+
   if result[:subresults]
     json.subresults do
-      json.partial! 'search', results: result[:subresults]
+      json.partial! "search", results: result[:subresults]
     end
   end
 end

@@ -66,14 +66,14 @@ json.participants language.all_current_participants do |participant|
     json.cluster_id participant.cluster.id
   end
 
-  json.roles(participant.roles.collect{ |role| t(role) })
+  json.roles(participant.roles.collect { |role| t(role) })
 end
 
 current_events = language.all_events.current.uniq
 upcoming_events = language.all_events.upcoming.uniq
 json.events do
-  json.current current_events, partial: 'api/languages/event', as: :event, locals: {language: language}
-  json.upcoming upcoming_events, partial: 'api/languages/event', as: :event, locals: {language: language}
+  json.current current_events, partial: "api/languages/event", as: :event, locals: { language: language }
+  json.upcoming upcoming_events, partial: "api/languages/event", as: :event, locals: { language: language }
 end
 
 json.can do

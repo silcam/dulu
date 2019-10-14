@@ -1,12 +1,12 @@
 json.person do
-  json.call(@person, :id, 
-                     :first_name, 
-                     :last_name, 
-                     :email, 
-                     :has_login,
-                     :ui_language,
-                     :email_pref,
-                     :gender)
+  json.call(@person, :id,
+            :first_name,
+            :last_name,
+            :email,
+            :has_login,
+            :ui_language,
+            :email_pref,
+            :gender)
 
   json.isUser @person == current_user
 
@@ -19,12 +19,12 @@ json.person do
   end
 
   json.roles do
-    json.partial! '/api/person_roles/roles', roles: @person.roles
+    json.partial! "/api/person_roles/roles", roles: @person.roles
   end
   json.grantable_roles(Role
-                        .grantable_roles(current_user, @person)
-                        .collect{ |r| { value: r, display: t(r) } }
-                        .sort_by{ |a| a[:display] })
+    .grantable_roles(current_user, @person)
+    .collect { |r| { value: r, display: t(r) } }
+    .sort_by { |a| a[:display] })
 
   json.participants @person.participants do |participant|
     json.call(participant, :id, :language_id, :cluster_id)

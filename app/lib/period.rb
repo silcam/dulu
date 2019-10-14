@@ -8,8 +8,8 @@ class Period
 
   def to_h
     return {
-      start: @start.to_h,
-      end: @finish.to_h
-    }
+             start: @start.to_h,
+             end: @finish.to_h,
+           }
   end
 end

@@ -1,4 +1,4 @@
-require 'test_helper'
+require "test_helper"
 
 class OrganizationTest < ActiveSupport::TestCase
   def setup
@@ -6,14 +6,14 @@ class OrganizationTest < ActiveSupport::TestCase
     @rick = people :Rick
   end
 
-  test 'Relations' do
+  test "Relations" do
     assert_includes @sil.people, @rick
   end
 
-  test 'Validations' do
-    fake_sil = Organization.new(long_name: 'SIL')
+  test "Validations" do
+    fake_sil = Organization.new(long_name: "SIL")
     refute fake_sil.save, "Shouldn't save Organization with blank name"
-    fake_sil.short_name = 'SIL'
+    fake_sil.short_name = "SIL"
     refute fake_sil.save, "Shouldn't save Organization with non-unique name"
   end
 
@@ -22,8 +22,8 @@ class OrganizationTest < ActiveSupport::TestCase
   #   assert_includes @sil.current_participants, drew_hdi
   # end
 
-  test 'Search' do
-    orgs = Organization.search('sil')
+  test "Search" do
+    orgs = Organization.search("sil")
     assert_equal 1, orgs.count
     assert_equal @sil.name, orgs[0][:title]
     # assert_not_empty orgs[0][:subresults]

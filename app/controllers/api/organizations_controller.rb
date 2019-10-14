@@ -35,8 +35,8 @@ class Api::OrganizationsController < ApplicationController
   private
 
   def org_params
-    params.require(:organization).permit(:short_name, 
-                                         :long_name, 
+    params.require(:organization).permit(:short_name,
+                                         :long_name,
                                          :description,
                                          :parent_id,
                                          :country_id)

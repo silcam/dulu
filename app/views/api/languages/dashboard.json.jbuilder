@@ -1,1 +1,1 @@
-json.partial! 'dashboard', language: @language
+json.partial! "dashboard", language: @language

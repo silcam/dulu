@@ -2,7 +2,7 @@ class Api::ParticipantsController < ApplicationController
   def index
     @cluster_language = params[:language_id] ?
       Language.find(params[:language_id]) :
-      Cluster.find(params[:cluster_id]) 
+      Cluster.find(params[:cluster_id])
     @participants = @cluster_language.all_participants
   end
 

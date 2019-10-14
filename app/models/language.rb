@@ -5,7 +5,7 @@ class Language < ApplicationRecord
   belongs_to :language_status, required: false
   has_and_belongs_to_many :countries
   has_and_belongs_to_many :regions
-  belongs_to :parent, class_name: 'Language', required: false
+  belongs_to :parent, class_name: "Language", required: false
   # has_one :program
 
   has_many :activities
@@ -37,7 +37,7 @@ class Language < ApplicationRecord
 
   def parent_cannot_be_dialect
     if parent.try(:is_dialect?)
-      errors.add(:parent_id, 'Cannot add a dialect to a dialect')
+      errors.add(:parent_id, "Cannot add a dialect to a dialect")
     end
   end
 
@@ -54,7 +54,7 @@ class Language < ApplicationRecord
   end
 
   def alt_names_array
-    alt_names.split(', ')
+    alt_names.split(", ")
   end
 
   def update_name(new_name)
@@ -67,7 +67,7 @@ class Language < ApplicationRecord
     new_alt_names = alt_names_array
     new_alt_names.delete(new_name)
     new_alt_names.append(name).sort!
-    self.alt_names = new_alt_names.join(', ')
+    self.alt_names = new_alt_names.join(", ")
   end
 
   def all_participants
@@ -95,11 +95,11 @@ class Language < ApplicationRecord
   end
 
   def sorted_activities
-    activities.order('type DESC, bible_book_id')
+    activities.order("type DESC, bible_book_id")
   end
 
   def sorted_translation_activities
-    translation_activities.joins(:bible_book).order('bible_books.usfm_number')
+    translation_activities.joins(:bible_book).order("bible_books.usfm_number")
   end
 
   def research_activities
@@ -111,7 +111,7 @@ class Language < ApplicationRecord
   end
 
   def sorted_pubs(kind)
-    publications.where(kind: kind).order('year DESC')
+    publications.where(kind: kind).order("year DESC")
   end
 
   def is_translating?(book_id)
@@ -120,33 +120,33 @@ class Language < ApplicationRecord
 
   def all_events
     cluster.nil? ?
-        events :
-        Event.left_outer_joins(:languages, :clusters)
-            .where("events_languages.language_id=? or clusters_events.cluster_id=?", id, cluster.id)
+      events :
+      Event.left_outer_joins(:languages, :clusters)
+      .where("events_languages.language_id=? or clusters_events.cluster_id=?", id, cluster.id)
   end
 
   def percentages
     percents = {}
     translations = translation_activities.loaded? ? translation_activities :
-                    translation_activities.includes([:bible_book, :stages]).where(stages: {current: true})
+      translation_activities.includes([:bible_book, :stages]).where(stages: { current: true })
     translations.each do |translation|
       unless translation.stages.first.name == Stage.first_stage(:Translation)
         bible_book = translation.bible_book
         testament = bible_book.testament
         stage_name = translation.stages.first.name
         percents[testament] ||= {}
-        percents[testament][stage_name] ||= 0.0;
+        percents[testament][stage_name] ||= 0.0
         percents[testament][stage_name] += bible_book.percent_of_testament
       end
     end
     percents
   end
 
-  def self.percentages(languages=nil)
+  def self.percentages(languages = nil)
     percentages = {}
     unless languages
       languages = Language.includes(:translation_activities => [:bible_book, :stages])
-                        .where(stages: {current: true})
+        .where(stages: { current: true })
     end
     languages.each do |language|
       percentages[language.id] = language.percentages
@@ -155,7 +155,7 @@ class Language < ApplicationRecord
   end
 
   def self.all_sorted_by_recency
-    Language.all.unscope(:order).order('languages.updated_at DESC')
+    Language.all.unscope(:order).order("languages.updated_at DESC")
   end
 
   def self.basic_search(query)
@@ -166,14 +166,14 @@ class Language < ApplicationRecord
     languages = where("unaccent(name) ILIKE unaccent(?) OR
                        unaccent(alt_names) ILIKE unaccent(?) OR 
                        code=?",
-                       "%#{query}%", "%#{query}%", query)
+                      "%#{query}%", "%#{query}%", query)
     results = []
     languages.each do |language|
       description = "#{I18n.t(:Language_program)}"
       description += " - #{language.activities.count} #{I18n.t(:Activities).downcase}" if language.activities.count > 0
-      results << {title: language.name,
-                  model: language,
-                  description: description}
+      results << { title: language.name,
+                   model: language,
+                   description: description }
     end
     results
   end

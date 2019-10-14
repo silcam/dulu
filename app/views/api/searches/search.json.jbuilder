@@ -1,1 +1,1 @@
-json.partial! 'search', results: @results
+json.partial! "search", results: @results

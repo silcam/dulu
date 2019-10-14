@@ -1,13 +1,12 @@
-require 'test_helper'
+require "test_helper"
 
 class HasParticipantsTest < ActiveSupport::TestCase
-
   def setup
     # Program model uses this concern
     @hdi = languages :Hdi
   end
 
-  test 'Unassociated People' do
+  test "Unassociated People" do
     drew = people :Drew
     rick = people :Rick
     unassoc = @hdi.unassociated_people
@@ -15,7 +14,7 @@ class HasParticipantsTest < ActiveSupport::TestCase
     refute_includes unassoc, drew
   end
 
-  test 'Current Participants and People and Orgs' do
+  test "Current Participants and People and Orgs" do
     drew_hdi = participants :DrewHdi
     drew = people :Drew
     former_hdi = participants :FormerHdiTranslator

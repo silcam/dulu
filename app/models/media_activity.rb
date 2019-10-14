@@ -1,5 +1,4 @@
 class MediaActivity < Activity
-
   has_and_belongs_to_many :bible_books
 
   CATEGORIES = %i( AudioScripture Film )
@@ -10,18 +9,18 @@ class MediaActivity < Activity
   validates :film, inclusion: FILMS, allow_nil: true
   validates :scripture, inclusion: SCRIPTURE, allow_nil: true
 
-  default_scope{ where(archived: false) }
+  default_scope { where(archived: false) }
 
   def category
-    attributes['category'].try(:to_sym)
+    attributes["category"].try(:to_sym)
   end
 
   def film
-    attributes['film'].try(:to_sym)
+    attributes["film"].try(:to_sym)
   end
 
   def scripture
-    attributes['scripture'].try(:to_sym)
+    attributes["scripture"].try(:to_sym)
   end
 
   def name
@@ -39,12 +38,12 @@ class MediaActivity < Activity
   end
 
   def self.search(query)
-    activities = MediaActivity.where("category ILIKE unaccent(:q)", {q: "%#{query}%"})
+    activities = MediaActivity.where("category ILIKE unaccent(:q)", { q: "%#{query}%" })
     activities.collect do |activity|
       {
-          title: activity.name,
-          description: "#{activity.language.name} - #{activity.current_stage.name}",
-          route: "activities/#{activity.id}"
+        title: activity.name,
+        description: "#{activity.language.name} - #{activity.current_stage.name}",
+        route: "activities/#{activity.id}",
       }
     end
   end

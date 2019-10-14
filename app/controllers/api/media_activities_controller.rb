@@ -1,5 +1,4 @@
 class Api::MediaActivitiesController < ApplicationController
-
   def index
     @language = Language.find(params[:language_id])
     @media_activities = @language.media_activities

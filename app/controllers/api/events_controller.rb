@@ -3,7 +3,7 @@ class Api::EventsController < ApplicationController
     event_src = get_event_src
     @events = event_src.for_period(params[:start_year], params[:start_month], params[:end_year], params[:end_month])
     @start_year = params[:start_year].to_i
-    if (@events.count == 0) 
+    if (@events.count == 0)
       @events = event_src.for_period(nil, nil, params[:end_year], params[:end_month])
       @start_year = nil
     end
@@ -16,7 +16,7 @@ class Api::EventsController < ApplicationController
   def show
     @event = Event.find(params[:id])
   end
-  
+
   def create
     authorize! :create, Event
     @event = Event.new event_params
@@ -53,14 +53,14 @@ class Api::EventsController < ApplicationController
 
   def event_params
     return params
-            .require(:event)
-            .permit(
-                :name, :domain, :note, :start_date, :end_date,
-                :category, :subcategory,
-                language_ids: [], cluster_ids: [], 
-                event_participants_attributes: [
-                  :id, :person_id, :_destroy, roles: []
-                ]
-              )
+             .require(:event)
+             .permit(
+               :name, :domain, :note, :start_date, :end_date,
+               :category, :subcategory,
+               language_ids: [], cluster_ids: [],
+               event_participants_attributes: [
+                 :id, :person_id, :_destroy, roles: [],
+               ],
+             )
   end
 end

@@ -19,15 +19,15 @@ json.report do
 
   json.data do
     json.activityReportItems @report.activity_items
-    
+
     json.events(@report.events.map do |ev|
       ev.attributes.merge({
         cluster_ids: ev.cluster_ids,
         language_ids: ev.language_ids,
-        event_participants: ev.event_participants.map{ |ep| {id: ep.id, person_id: ep.person_id} }
+        event_participants: ev.event_participants.map { |ep| { id: ep.id, person_id: ep.person_id } },
       })
     end)
-    
+
     json.statusItems @report.status_items
   end
 end

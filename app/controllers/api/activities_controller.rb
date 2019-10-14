@@ -1,9 +1,9 @@
-class Api::ActivitiesController < ApplicationController 
+class Api::ActivitiesController < ApplicationController
   def index
     @language = Language.find(params[:language_id])
-    @domain = params[:domain] || 'all'
+    @domain = params[:domain] || "all"
   end
-  
+
   def show
     @activity = Activity.find(params[:id])
   end
@@ -24,7 +24,7 @@ class Api::ActivitiesController < ApplicationController
     params.require(:activity).permit(participant_ids: [])
   end
 
-  def notify(activity, old_people) 
+  def notify(activity, old_people)
     new_people = activity.people - old_people
     if new_people.length > 0
       Notification.added_people_to_activity(current_user, new_people, activity)

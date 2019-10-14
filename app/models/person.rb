@@ -25,11 +25,11 @@ class Person < ApplicationRecord
 
   validates :last_name, presence: true, allow_blank: false
   validates :first_name, presence: true, allow_blank: false
-  validates :gender, inclusion: { in: %w(M F)}
+  validates :gender, inclusion: { in: %w(M F) }
   validates :email, uniqueness: true, allow_blank: true
 
-  default_scope{ order(:last_name, :first_name) }
-  
+  default_scope { order(:last_name, :first_name) }
+
   before_validation :normalize_name
 
   enum email_pref: [:immediate, :daily, :weekly]
@@ -37,6 +37,7 @@ class Person < ApplicationRecord
   def full_name
     "#{first_name} #{last_name}"
   end
+
   alias name full_name
 
   def full_name_rev
@@ -56,7 +57,7 @@ class Person < ApplicationRecord
 
   def remove_role(role)
     transaction do
-      person_roles.find_by(role: role, end_date: nil).try(:update, {end_date: Date.today})
+      person_roles.find_by(role: role, end_date: nil).try(:update, { end_date: Date.today })
       remove_from_roles_field(role)
     end
   end
@@ -78,35 +79,35 @@ class Person < ApplicationRecord
   end
 
   def to_hash
-    roles = self.roles.collect{ |r| {role: r, t_role: I18n.t(r)}}
+    roles = self.roles.collect { |r| { role: r, t_role: I18n.t(r) } }
     {
-        id: id,
-        first_name: first_name,
-        last_name: last_name,
-        roles: roles
+      id: id,
+      first_name: first_name,
+      last_name: last_name,
+      roles: roles,
     }
   end
 
   def self.search(query)
-    people = Person.multi_word_where(query, 'first_name', 'last_name')
+    people = Person.multi_word_where(query, "first_name", "last_name")
     results = []
     people.each do |person|
       subresults = []
       person.current_participants.each do |participant|
-        subresults << {title: participant.cluster_language.display_name,
+        subresults << { title: participant.cluster_language.display_name,
                        model: participant.cluster_language,
-                       description: participant.roles_text}
+                       description: participant.roles_text }
       end
-      results << {title: person.name,
-                  model: person,
-                  description: person.roles_text,
-                  subresults: subresults}
+      results << { title: person.name,
+                   model: person,
+                   description: person.roles_text,
+                   subresults: subresults }
     end
     results
   end
 
   def self.basic_search(query)
-    Person.multi_word_where(query, 'first_name', 'last_name')
+    Person.multi_word_where(query, "first_name", "last_name")
   end
 
   private

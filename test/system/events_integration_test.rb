@@ -1,4 +1,4 @@
-require 'application_system_test_case'
+require "application_system_test_case"
 
 class EventsIntegrationTest < ApplicationSystemTestCase
   def setup
@@ -9,124 +9,124 @@ class EventsIntegrationTest < ApplicationSystemTestCase
   test "New Event" do
     log_in(people(:Kendall))
     visit "/events"
-    find('h2', text: 'Events').find(icon_selector('addIcon')).click
-    within('div#NewEventForm') do
-      fill_in 'Name', with: 'Taco Party'
-      within('div', text: 'Domain') { select 'Community Development', from: 'basic_select' }
-      within('div', text: 'Start Date') { fill_in_date(FuzzyDate.new(2017, 7, 1)) }
-      within('div', text: 'End Date') { fill_in_date(FuzzyDate.new(2017, 7, 1)) }
-      fill_in 'Note', with: 'Boatloads of tacos!'
-      click_on 'Save'
+    find("h2", text: "Events").find(icon_selector("addIcon")).click
+    within("div#NewEventForm") do
+      fill_in "Name", with: "Taco Party"
+      within("div", text: "Domain") { select "Community Development", from: "basic_select" }
+      within("div", text: "Start Date") { fill_in_date(FuzzyDate.new(2017, 7, 1)) }
+      within("div", text: "End Date") { fill_in_date(FuzzyDate.new(2017, 7, 1)) }
+      fill_in "Note", with: "Boatloads of tacos!"
+      click_on "Save"
     end
     visit "/events/cal/2017/7"
-    within(find('h4', text: 'Taco Party').find(:xpath, '..')) do
-      assert_text '1 Jul 2017'
-      assert_text 'Boatloads of tacos!'
+    within(find("h4", text: "Taco Party").find(:xpath, "..")) do
+      assert_text "1 Jul 2017"
+      assert_text "Boatloads of tacos!"
     end
   end
 
   def setup_edit
     log_in people(:Drew)
     visit model_path(@genesis_consult)
-    find(icon_selector('editIcon')).click
+    find(icon_selector("editIcon")).click
   end
 
   test "Edit Event Name" do
     setup_edit
-    fill_in 'name', with: 'Taco Party'
-    click_on 'Save'
-    assert_selector('h2', text: 'Taco Party')
+    fill_in "name", with: "Taco Party"
+    click_on "Save"
+    assert_selector("h2", text: "Taco Party")
   end
 
   test "Edit Event Dates" do
     setup_edit
-    within('div#startDateInput') { fill_in_date(FuzzyDate.new(2017, 2)) }
-    within('div#endDateInput') { fill_in_date(FuzzyDate.new(2018, 2)) }
-    click_on 'Save'
-    assert_text('Feb 2017')
+    within("div#startDateInput") { fill_in_date(FuzzyDate.new(2017, 2)) }
+    within("div#endDateInput") { fill_in_date(FuzzyDate.new(2018, 2)) }
+    click_on "Save"
+    assert_text("Feb 2017")
   end
 
   test "Add and Remove Event Program" do
     setup_edit
-    within(parent(find_by_placeholder('Add Language'))) { fill_in_search_input('Ewondo') }
-    click_on 'Save'
-    assert_selector('a', text: 'Ewondo')
+    within(parent(find_by_placeholder("Add Language"))) { fill_in_search_input("Ewondo") }
+    click_on "Save"
+    assert_selector("a", text: "Ewondo")
   end
 
   test "Remove Event Program" do
     setup_edit
-    find('tr tr', text: 'Hdi').find(icon_selector('deleteIcon')).click
-    click_on 'Save'
-    safe_assert_no_text 'Hdi'
+    find("tr tr", text: "Hdi").find(icon_selector("deleteIcon")).click
+    click_on "Save"
+    safe_assert_no_text "Hdi"
   end
 
   test "Add and Remove Event Cluster" do
     setup_edit
-    within(parent(find_by_placeholder('Add Cluster'))) { fill_in_search_input('Ndop') }
-    click_on 'Save'
-    assert_selector('a', text: 'Ndop')
+    within(parent(find_by_placeholder("Add Cluster"))) { fill_in_search_input("Ndop") }
+    click_on "Save"
+    assert_selector("a", text: "Ndop")
 
-    find(icon_selector('editIcon')).click
-    find('tr tr', text: 'Ndop').find(icon_selector('deleteIcon')).click
-    click_on 'Save'
-    safe_assert_no_text 'Ndop'
+    find(icon_selector("editIcon")).click
+    find("tr tr", text: "Ndop").find(icon_selector("deleteIcon")).click
+    click_on "Save"
+    safe_assert_no_text "Ndop"
   end
 
   test "Add Rick" do
     setup_edit
-    within(parent(find_by_placeholder('Add Person'))) { fill_in_search_input('Rick Conrad') }
-    within('table', text: 'Roles') do
-      within('tr', text: 'Rick Conrad') do 
-        find(icon_selector('addIcon')).click
-        find('select').select('Facilitator')
+    within(parent(find_by_placeholder("Add Person"))) { fill_in_search_input("Rick Conrad") }
+    within("table", text: "Roles") do
+      within("tr", text: "Rick Conrad") do
+        find(icon_selector("addIcon")).click
+        find("select").select("Facilitator")
       end
     end
     click_on "Save"
-    assert_selector('a', text: 'Rick Conrad')
-    assert_text('Rick Conrad (Facilitator)')
+    assert_selector("a", text: "Rick Conrad")
+    assert_text("Rick Conrad (Facilitator)")
   end
 
   test "Remove Abanda" do
     setup_edit
-    find('tr tr', text: 'Abanda').find(icon_selector('deleteIcon')).click
-    safe_assert_no_text 'Abanda'
-    click_on 'Save'
-    safe_assert_no_text 'Abanda'
+    find("tr tr", text: "Abanda").find(icon_selector("deleteIcon")).click
+    safe_assert_no_text "Abanda"
+    click_on "Save"
+    safe_assert_no_text "Abanda"
   end
 
   test "Create permission" do
     log_in people(:Lance)
-    visit '/events'
-    assert_selector(icon_selector('addIcon'))
+    visit "/events"
+    assert_selector(icon_selector("addIcon"))
 
     log_in people(:Kevin)
-    visit '/events'
-    safe_assert_no_selector(icon_selector('addIcon'))
+    visit "/events"
+    safe_assert_no_selector(icon_selector("addIcon"))
   end
 
   test "Edit and Delete Permissions" do
     log_in people(:Drew)
     visit model_path(@genesis_consult)
-    assert_selector(icon_selector('editIcon'))
-    assert_selector(icon_selector('deleteIcon'))
+    assert_selector(icon_selector("editIcon"))
+    assert_selector(icon_selector("deleteIcon"))
 
     log_in people(:Lance)
     visit model_path(@genesis_consult)
-    find('h2', text: 'Genesis Checking')
-    safe_assert_no_selector(icon_selector('editIcon'))
-    safe_assert_no_selector(icon_selector('deleteIcon'))
+    find("h2", text: "Genesis Checking")
+    safe_assert_no_selector(icon_selector("editIcon"))
+    safe_assert_no_selector(icon_selector("deleteIcon"))
   end
 
   test "Delete Event" do
     log_in people(:Drew)
     visit "/events/cal/2018/1"
-    assert_selector('a', text: 'Genesis Checking') # Should see the event before deletion
-    click_link 'Genesis Checking'
+    assert_selector("a", text: "Genesis Checking") # Should see the event before deletion
+    click_link "Genesis Checking"
     page.accept_confirm do
-      find(icon_selector('deleteIcon')).click
+      find(icon_selector("deleteIcon")).click
     end
     visit "/events/cal/2018/1"
-    safe_assert_no_selector('a', text: 'Genesis Checking') # Should no longer see deleted event
+    safe_assert_no_selector("a", text: "Genesis Checking") # Should no longer see deleted event
   end
 
   test "Delete Event I created" do
@@ -134,16 +134,16 @@ class EventsIntegrationTest < ApplicationSystemTestCase
     visit "/events/cal/2019/1"
     click_link "Lance's Event"
     page.accept_confirm do
-      find(icon_selector('deleteIcon')).click
+      find(icon_selector("deleteIcon")).click
     end
     visit "/events/cal/2019/1"
-    safe_assert_no_selector('a', text: "Lance's Event") # Should no longer see deleted event
+    safe_assert_no_selector("a", text: "Lance's Event") # Should no longer see deleted event
   end
 
   test "Don't change Event Creator when updating" do
     setup_edit # Drew is logged in
-    fill_in 'name', with: 'Pizza Party!'
-    click_on 'Save'
+    fill_in "name", with: "Pizza Party!"
+    click_on "Save"
     @genesis_consult.reload
     assert_equal people(:Olga), @genesis_consult.creator  # Not Drew
   end

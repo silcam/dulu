@@ -20,64 +20,65 @@ module ApplicationHelper
 
   def color_from_sym(color)
     case color
-      when :white
-        '#FFFFFF'
-      when :red
-        '#A93226'
-      when :orange
-        '#D86613'
-      when :pale_orange
-        '#FA8C3B'
-      when :yellow
-        '#F4D03F'
-      when :light_green
-        '#58D68D'
-      when :dark_green
-        '#1E8449'
-      when :light_blue
-        '#5DADE2'
-      when :dark_blue
-        '#21618C'
-      when :light_purple
-        '#946BA4'
-      when :purple
-        '#6C3483'
+    when :white
+      "#FFFFFF"
+    when :red
+      "#A93226"
+    when :orange
+      "#D86613"
+    when :pale_orange
+      "#FA8C3B"
+    when :yellow
+      "#F4D03F"
+    when :light_green
+      "#58D68D"
+    when :dark_green
+      "#1E8449"
+    when :light_blue
+      "#5DADE2"
+    when :dark_blue
+      "#21618C"
+    when :light_purple
+      "#946BA4"
+    when :purple
+      "#6C3483"
     end
   end
 
   def forecolor_from_sym(color)
     case color
-      when :white
-        '#000000'
-      when :red
-        '#ffffff'
-      when :orange
-        '#000000'
-      when :yellow
-        '#000000'
-      when :light_green
-        '#000000'
-      when :dark_green
-        '#ffffff'
-      when :light_blue
-        '#000000'
-      when :dark_blue
-        '#ffffff'
-      when :purple
-        '#ffffff'
+    when :white
+      "#000000"
+    when :red
+      "#ffffff"
+    when :orange
+      "#000000"
+    when :yellow
+      "#000000"
+    when :light_green
+      "#000000"
+    when :dark_green
+      "#ffffff"
+    when :light_blue
+      "#000000"
+    when :dark_blue
+      "#ffffff"
+    when :purple
+      "#ffffff"
     end
   end
 
-  def revealable_truncate(text, options={})
+  def revealable_truncate(text, options = {})
     length = options[:length] || 30
     return text if text.length <= length
     options[:escape] = false
-    truncated = truncate(text, options).chomp('...')
+    truncated = truncate(text, options).chomp("...")
     remainder = text[truncated.length, text.length - truncated.length]
-    render 'shared/revealable_truncate', truncated: truncated, remainder: remainder
+    render "shared/revealable_truncate", truncated: truncated, remainder: remainder
   end
 
   MAX_NOTIFICATIONS = 8
+
   def user_notifications
     notifications = current_user.notifications.where(read: false).to_a
     if notifications.count < MAX_NOTIFICATIONS
@@ -88,7 +89,7 @@ module ApplicationHelper
 
   def strings_json(*keys)
     h = {}
-    keys.each{ |key| h.merge!(I18n.t(key)) }
+    keys.each { |key| h.merge!(I18n.t(key)) }
     return JSON.generate(h).html_safe
   end
 
@@ -96,9 +97,9 @@ module ApplicationHelper
   # Or given multiple instances, like /programs/4/events/123
   def model_path(*instances)
     return instances.collect do |instance|
-      "/#{instance.class.name.pluralize.underscore}/#{instance.id}"
-    end
-    .join
+             "/#{instance.class.name.pluralize.underscore}/#{instance.id}"
+           end
+             .join
   end
 
   def model_url(instance)

@@ -1,5 +1,4 @@
 class Api::TranslationActivitiesController < ApplicationController
-
   def index
     @language = Language.find(params[:language_id])
     @translation_activities = @language.translation_activities.order(:bible_book_id)

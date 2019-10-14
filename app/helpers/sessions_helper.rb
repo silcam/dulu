@@ -1,6 +1,6 @@
 module SessionsHelper
   def log_in(person)
-    session[:user_id] = person.id 
+    session[:user_id] = person.id
   end
 
   def current_user
