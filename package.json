@@ -1,9 +1,7 @@
 {
   "scripts": {
-    "test": "jest",
-    "test-watch": "jest --watch",
-    "test-system": "node systemTests.js",
-    "test-all": "rails test && yarn test && yarn test-system"
+    "test": "jest --watch",
+    "testall": "rails test && yarn jest && rails test:system"
   },
   "dependencies": {
     "@rails/webpacker": "^3.3.1",

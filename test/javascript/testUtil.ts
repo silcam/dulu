@@ -10,6 +10,7 @@ const mockDSI: IDomainStatusItem = {
   category: "PublishedScripture",
   subcategory: "Portions",
   description: "",
+  title: "",
   year: 2000,
   platforms: "",
   organization_id: 303,
