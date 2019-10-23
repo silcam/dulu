@@ -3,6 +3,7 @@ json.activity do
   json.call(@activity,
             :id,
             :bible_book_id,
+            :name,
             :type,
             :note,
             :category,
