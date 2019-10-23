@@ -46,7 +46,9 @@ export default function DomainStatusDataCollectionView(props: IProps) {
           {items.map(item => (
             <tr key={item.id}>
               <td>
-                <Link to={`${props.basePath}/${item.id}`}>{item.year}</Link>
+                <Link to={`${props.basePath}/${item.id}`}>
+                  {item.year ? item.year : "[----]"}
+                </Link>
               </td>
               <td style={{ fontSize: "larger" }}>{countText(item)}</td>
               <td>{t(item.completeness)}</td>

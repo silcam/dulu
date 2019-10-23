@@ -50,7 +50,7 @@ export default function DomainStatusDataCollection(props: IProps) {
                       <Link to={`${props.basePath}/lingdata/${collectionType}`}>
                         {`${countText(latest)} ${countUnit(
                           latest.subcategory as DataCollection
-                        )} ${latest.year}`}
+                        )} ${latest.year || ""}`}
                       </Link>
                     </DSLingCompleteStyler>
                   </li>
