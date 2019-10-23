@@ -89,8 +89,8 @@ function researchSubCategoryComplete(
   subCategory: LingResearch,
   domainStatusItems: IDomainStatusItem[]
 ) {
-  const completedItems = domainStatusItems.filter(item =>
-    lingCompleteSat(item)
+  const completedItems = domainStatusItems.filter(
+    item => item.subcategory === subCategory && lingCompleteSat(item)
   );
   switch (subCategory) {
     case "Grammar":
