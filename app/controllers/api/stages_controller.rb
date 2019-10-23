@@ -11,6 +11,22 @@ class Api::StagesController < ApplicationController
     Notification.new_stage(current_user, @stage)
   end
 
+  def update
+    @stage = Stage.find(params[:id])
+    authorize! :update, @stage.activity
+    @stage.update(stage_params)
+    @activity = Activity.find(@stage.activity_id)
+    render "api/activities/show"
+  end
+
+  def destroy
+    @stage = Stage.find(params[:id])
+    authorize! :update, @stage.activity
+    @stage.destroy
+    @activity = Activity.find(@stage.activity_id)
+    render "api/activities/show"
+  end
+
   private
 
   def stage_params

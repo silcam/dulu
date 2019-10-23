@@ -3,7 +3,7 @@ import I18nContext from "../../contexts/I18nContext";
 
 interface IProps {
   handleInput: (day: string) => void;
-  value: number | string;
+  value: string;
   maxValue: number;
   name?: string;
 }
@@ -29,7 +29,7 @@ export default function DaySelector(props: IProps) {
     <select
       className="form-control"
       name={name}
-      value={String(props.value)}
+      value={String(parseInt(props.value))}
       onChange={e => props.handleInput(e.target.value)}
     >
       <option value="">{t("Day")}</option>

@@ -13,6 +13,7 @@ import { IParticipant } from "../../models/Participant";
 import { useAPIGet } from "../../util/useAPI";
 import { ICluster } from "../../models/Cluster";
 import List from "../../models/List";
+import ActivityViewStages from "./ActivityViewStages";
 
 interface IProps {
   activityId: number;
@@ -68,6 +69,11 @@ export default function ActivityView(props: IProps) {
         {...props}
         activity={props.activity!}
         actions={actions}
+      />
+      <VSpacer height={40} />
+      <ActivityViewStages
+        activity={props.activity}
+        setActivity={props.setActivity}
       />
     </div>
   );

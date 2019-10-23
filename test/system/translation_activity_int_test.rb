@@ -51,4 +51,28 @@ class TranslationActivityIntTest < ApplicationSystemTestCase
     visit model_path @hdi
     find("tr", text: "Ezra").assert_no_selector("button", text: "Drafting")
   end
+
+  test "Update Stage Date" do
+    log_in people(:Drew)
+    visit model_path @hdi
+    click_on "Ezra"
+    within("tr", text: "Drafting") do
+      click_icon "editIcon"
+      fill_in_date FuzzyDate.new(2018, 4, 2)
+      click_on "Save"
+      assert_no_selector("button", text: "Save")
+      assert_text "2018-04-02"
+    end
+  end
+
+  test "Delete stage" do
+    log_in people(:Drew)
+    visit model_path @hdi
+    click_on "Ezra"
+    within("tr", text: "Drafting") do
+      page.accept_confirm { click_icon "deleteIcon" }
+    end
+    assert_text "Ezra Planned"
+    safe_assert_no_text "Drafting"
+  end
 end

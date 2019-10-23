@@ -58,7 +58,12 @@ test("available books", () => {
 });
 
 test("translation next stage", () => {
-  const exp = { name: "Testing", start_date: "2019-02-27", activity_id: 101 };
+  const exp = {
+    id: 0,
+    name: "Testing",
+    start_date: "2019-02-27",
+    activity_id: 101
+  };
   expect(Activity.nextStage(translationActivity)).toEqual(exp);
 });
 

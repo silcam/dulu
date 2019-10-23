@@ -74,6 +74,7 @@ export default {
   Can_login: "Can log in to Dulu",
   CitSupervisedChecking: "CiT Supervised Checking",
   ClausesAndSentences: "Clauses and Sentences",
+  confirm_delete: "Delete %{name}?",
   confirm_delete_cluster: "Delete %{name}?",
   confirm_delete_domain_status_item: "Delete this %{category}?",
   confirm_delete_event: "Delete %{name}?",

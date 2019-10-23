@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import I18nContext from "../../contexts/I18nContext";
 
 interface IProps {
-  value: number | string;
+  value: string;
   handleInput: (month: string) => void;
   name?: string;
 }
@@ -14,7 +14,7 @@ export default function MonthSelector(props: IProps) {
     <select
       className="form-control"
       name={name}
-      value={String(props.value)}
+      value={String(parseInt(props.value))}
       onChange={e => props.handleInput(e.target.value)}
     >
       <option value="">{t("Month")}</option>

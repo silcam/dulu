@@ -13,6 +13,7 @@ export interface IActivity {
   language_id: number;
   stage_name: string;
   stage_date: string;
+  stages: IStage[];
   bible_book_id: number;
   name: string;
   title: string;
@@ -23,6 +24,7 @@ export interface IActivity {
 }
 
 export interface IStage {
+  id: number;
   name: string;
   start_date: string;
   activity_id: number;
@@ -104,8 +106,9 @@ function availableBooks(translation_activities: List<IActivity>, t: T) {
   );
 }
 
-function nextStage(activity: IActivity) {
+function nextStage(activity: IActivity): IStage {
   return {
+    id: 0,
     name: itemAfter(stages(activity), activity.stage_name) || "",
     start_date: FuzzyDate.today(),
     activity_id: activity.id

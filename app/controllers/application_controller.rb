@@ -39,7 +39,7 @@ class ApplicationController < ActionController::Base
   end
 
   rescue_from "AccessGranted::AccessDenied" do |exception|
-    redirect_to not_allowed_path
+    render plain: "Not allowed", status: 401
   end
 
   rescue_from "ActiveRecord::RecordNotFound" do |exception|

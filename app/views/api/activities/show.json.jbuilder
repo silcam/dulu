@@ -14,6 +14,10 @@ json.activity do
             :language_id)
   json.stage_date @activity.current_stage.start_date
 
+  json.stages @activity.stages.order(start_date: :desc) do |stage|
+    json.call(stage, :id, :name, :start_date, :activity_id)
+  end
+
   json.can do
     json.update can?(:update, @activity)
   end

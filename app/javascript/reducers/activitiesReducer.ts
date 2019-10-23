@@ -17,6 +17,7 @@ export const emptyActivity: IActivity = {
   name: "",
   stage_name: "",
   stage_date: "",
+  stages: [],
   title: "",
   category: "",
   workshops: [],
