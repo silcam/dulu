@@ -2,6 +2,7 @@ export default {
   All_changes_saved: "All changes saved.",
   already_exists: "already exists",
   As_of: "As of",
+  Audio_x: "Audio %{x}",
   BackTranslators: "Back-Translators",
   bible_books: [
     "Genesis",
@@ -119,7 +120,11 @@ export default {
     GenesisFilm: "Genesis Film",
     StoryOfGenesisFilm: "Story of Genesis",
     BookOfJohn: "Book of John",
-    MagdalenaFilm: "Magdalena Film"
+    MagdalenaFilm: "Magdalena Film",
+    LumoMatthew: "Lumo Matthew",
+    LumoMark: "Lumo Mark",
+    LumoLuke: "Lumo Luke",
+    LumoJohn: "Lumo John"
   },
   genders: {
     M: "Male",

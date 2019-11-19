@@ -38,7 +38,8 @@ const workshopsActivity = {
 const mediaActivity = {
   id: 404,
   type: "MediaActivity",
-  name: "Luke Film",
+  film: "LukeFilm",
+  category: "Film",
   stage_name: "Script",
   stage_date: "2018-12-12"
 };
@@ -154,7 +155,8 @@ test("Compare: compare by name", () => {
   expect(
     Activity.compare(mediaActivity, {
       type: "MediaActivity",
-      name: "Magdalena Film"
+      category: "Film",
+      film: "MagdalenaFilm"
     })
   ).toBeLessThan(0);
   expect(

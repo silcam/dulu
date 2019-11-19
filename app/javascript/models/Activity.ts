@@ -15,12 +15,13 @@ export interface IActivity {
   stage_date: string;
   stages: IStage[];
   bible_book_id: number;
-  name: string;
   title: string;
   category: string;
   workshops: IWorkshop[];
   can: ICan;
   participant_ids: number[];
+  film: string;
+  scripture: string;
 }
 
 export interface IStage {
@@ -53,7 +54,11 @@ export enum MediaFilm {
   GenesisFilm = "GenesisFilm",
   StoryOfGenesisFilm = "StoryOfGenesisFilm",
   BookOfJohn = "BookOfJohn",
-  MagdalenaFilm = "MagdalenaFilm"
+  MagdalenaFilm = "MagdalenaFilm",
+  LumoMatthew = "LumoMatthew",
+  LumoMark = "LumoMark",
+  LumoLuke = "LumoLuke",
+  LumoJohn = "LumoJohn"
 }
 
 export enum MediaScripture {
@@ -115,15 +120,18 @@ function nextStage(activity: IActivity): IStage {
   };
 }
 
-// t required if activity could be TranslationActivity
-function name(activity: IActivity, t?: T) {
+function name(activity: IActivity, t: T) {
   switch (activity.type) {
     case "LinguisticActivity":
       return activity.title;
     case "MediaActivity":
-      return activity.name;
+      return activity.category == "Film"
+        ? t(`films.${activity.film}`)
+        : activity.scripture == "Other"
+        ? t("AudioScripture")
+        : t("Audio_x", { x: t(activity.scripture) });
     case "TranslationActivity":
-      return BibleBook.name(activity.bible_book_id, t!);
+      return BibleBook.name(activity.bible_book_id, t);
   }
 }
 
@@ -218,8 +226,8 @@ function compare(a: IActivity, b: IActivity) {
     const categoryCompare = a.category.localeCompare(b.category);
     if (categoryCompare != 0) return categoryCompare;
   }
-
-  return name(a).localeCompare(name(b));
+  const closeEnoughT = (key: string) => key;
+  return name(a, closeEnoughT).localeCompare(name(b, closeEnoughT));
 }
 
 export default {

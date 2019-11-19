@@ -31,7 +31,7 @@ export default function DBActivitiesTable(props: IProps) {
   }, [JSON.stringify(props.languageIds)]);
 
   const sortOptions = props.sortOptions || ["Language", "Stage"];
-  const activities = sortActivities(sort, props.activities, props.languages);
+  const activities = sortActivities(sort, props.activities, props.languages, t);
 
   return (
     <div>
@@ -49,9 +49,7 @@ export default function DBActivitiesTable(props: IProps) {
               </td>
               <td>
                 <Link
-                  to={`/languages/${activity.language_id}/activities/${
-                    activity.id
-                  }`}
+                  to={`/languages/${activity.language_id}/activities/${activity.id}`}
                 >
                   {Activity.name(activity, t)}
                 </Link>

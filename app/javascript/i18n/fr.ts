@@ -17,6 +17,7 @@ export default {
   As_of: "Depuis",
   Audio: "Audio",
   AudioScripture: "Saintes Écritures en audio",
+  Audio_x: "%{x} en audio",
   BackTranslators: "Retraducteurs",
   Bible: "Bible",
   bible_books: [
@@ -171,7 +172,11 @@ export default {
     GenesisFilm: "Film Genèse",
     StoryOfGenesisFilm: "L'histoire de Genèse",
     BookOfJohn: "Livre de Jean",
-    MagdalenaFilm: "Film Magdalena"
+    MagdalenaFilm: "Film Magdalena",
+    LumoMatthew: "Lumo Matthieu",
+    LumoMark: "Lumo Marc",
+    LumoLuke: "Lumo Luc",
+    LumoJohn: "Lumo Jean"
   },
   JesusFilm: "Film Jésus",
   LukeFilm: "Film Luc",

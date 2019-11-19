@@ -14,7 +14,6 @@ export const emptyActivity: IActivity = {
   type: "TranslationActivity",
   language_id: 0,
   bible_book_id: 0,
-  name: "",
   stage_name: "",
   stage_date: "",
   stages: [],
@@ -22,7 +21,9 @@ export const emptyActivity: IActivity = {
   category: "",
   workshops: [],
   participant_ids: [],
-  can: {}
+  can: {},
+  film: "",
+  scripture: ""
 };
 
 export default function activitiesReducer(
