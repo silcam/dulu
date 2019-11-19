@@ -14,6 +14,7 @@ import { useAPIGet } from "../../util/useAPI";
 import { ICluster } from "../../models/Cluster";
 import List from "../../models/List";
 import ActivityViewStages from "./ActivityViewStages";
+import AudioBookList from "./AudioBookList";
 
 interface IProps {
   activityId: number;
@@ -57,7 +58,10 @@ export default function ActivityView(props: IProps) {
 
   return (
     <div>
-      <h2>{Activity.name(props.activity, t)}</h2>
+      <h2>
+        {Activity.name(props.activity, t)}
+        <AudioBookList activity={props.activity} />
+      </h2>
       <div style={{ display: "flex", flexDirection: "row" }}>
         <ProgressBar {...Activity.progress(props.activity)} />
         <span style={{ marginLeft: "8px" }}>

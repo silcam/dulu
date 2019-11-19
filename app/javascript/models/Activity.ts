@@ -22,6 +22,7 @@ export interface IActivity {
   participant_ids: number[];
   film: string;
   scripture: string;
+  bible_book_ids: number[];
 }
 
 export interface IStage {
@@ -126,7 +127,7 @@ function name(activity: IActivity, t: T) {
       return activity.title;
     case "MediaActivity":
       return activity.category == "Film"
-        ? t(`films.${activity.film}`)
+        ? t(activity.film)
         : activity.scripture == "Other"
         ? t("AudioScripture")
         : t("Audio_x", { x: t(activity.scripture) });

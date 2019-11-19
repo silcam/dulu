@@ -23,7 +23,8 @@ export const emptyActivity: IActivity = {
   participant_ids: [],
   can: {},
   film: "",
-  scripture: ""
+  scripture: "",
+  bible_book_ids: []
 };
 
 export default function activitiesReducer(

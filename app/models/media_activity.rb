@@ -21,6 +21,21 @@ class MediaActivity < Activity
     attributes["scripture"].try(:to_sym)
   end
 
+  def t_names
+    return {
+             en: t_name(:en),
+             fr: t_name(:fr),
+           }
+  end
+
+  def t_name(locale)
+    category == :Film ?
+      I18n.t(film, locale: locale) :
+      scripture == :Other ?
+      I18n.t(:AudioScripture, locale: locale) :
+      I18n.t(:Audio_x, x: I18n.t(scripture, locale: locale), locale: locale)
+  end
+
   def available_stages
     Stage.stages(:Media)
   end

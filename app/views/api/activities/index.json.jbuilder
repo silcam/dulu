@@ -19,4 +19,5 @@ end
 json.language do
   json.id @language.id
   json.partial! "api/languages/can", language: @language
+  json.progress @language.percentages
 end

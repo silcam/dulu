@@ -3,7 +3,6 @@ json.activity do
   json.call(@activity,
             :id,
             :bible_book_id,
-            :name,
             :type,
             :note,
             :category,
@@ -13,6 +12,7 @@ json.activity do
             :participant_ids,
             :stage_name,
             :language_id)
+  json.bible_book_ids @activity.bible_book_ids if @activity.type == "MediaActivity"
   json.stage_date @activity.current_stage.start_date
 
   json.stages @activity.stages.order(start_date: :desc) do |stage|

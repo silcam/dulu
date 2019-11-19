@@ -429,9 +429,9 @@ class Notification < ApplicationRecord
     end
 
     def activity_name(activity)
-      activity.is_a?(TranslationActivity) ?
-        activity.t_names :
-        activity.name
+      activity.is_a?(LinguisticActivity) ?
+        activity.name :
+        activity.t_names
     end
   end
 end

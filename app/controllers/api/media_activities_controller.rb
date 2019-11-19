@@ -20,6 +20,6 @@ class Api::MediaActivitiesController < ApplicationController
   private
 
   def media_activity_params
-    return params.require(:media_activity).permit(:category, :scripture, :film)
+    return params.require(:media_activity).permit(:category, :scripture, :film, bible_book_ids: [])
   end
 end

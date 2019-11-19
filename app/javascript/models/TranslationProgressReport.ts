@@ -57,7 +57,7 @@ export function translationProgressReportParams(
 function tPubName(pubName: string, t: T) {
   if (pubName.startsWith("Audio_"))
     return t("Audio") + " " + t(pubName.slice(6));
-  if (pubName.endsWith("Film")) return t(`films.${pubName}`);
+  if (pubName.endsWith("Film")) return t(pubName);
   return t(pubName);
 }
 

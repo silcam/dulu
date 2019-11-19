@@ -11,6 +11,8 @@ import SelectInput from "../shared/SelectInput";
 import SaveIndicator from "../shared/SaveIndicator";
 import FormGroup from "../shared/FormGroup";
 import I18nContext from "../../contexts/I18nContext";
+import BooksSelector from "./BooksSelector";
+import P from "../shared/P";
 
 interface IProps {
   saving?: boolean;
@@ -22,6 +24,7 @@ interface NewMediaActivity {
   category: MediaCategory;
   scripture: MediaScripture;
   film: MediaFilm;
+  bible_book_ids: number[];
 }
 
 interface IState {
@@ -38,7 +41,8 @@ export default class NewMediaActivityForm extends React.PureComponent<
       newActivity: {
         category: Activity.mediaCategories[0],
         scripture: Activity.mediaScriptures[0],
-        film: Activity.mediaFilms[0]
+        film: Activity.mediaFilms[0],
+        bible_book_ids: []
       }
     };
   }
@@ -87,6 +91,18 @@ export default class NewMediaActivityForm extends React.PureComponent<
                 />
               </FormGroup>
             )}
+            {this.state.newActivity.category == "AudioScripture" &&
+              this.state.newActivity.scripture == "Other" && (
+                <P>
+                  <label>{t("Books")}</label>
+                  <BooksSelector
+                    bookIds={this.state.newActivity.bible_book_ids}
+                    setBookIds={bible_book_ids =>
+                      this.updateNewActivity({ bible_book_ids })
+                    }
+                  />
+                </P>
+              )}
             {this.state.newActivity.category == "Film" && (
               <FormGroup label={t("Film")}>
                 <SelectInput
@@ -97,7 +113,8 @@ export default class NewMediaActivityForm extends React.PureComponent<
                   options={SelectInput.translatedOptions(
                     Activity.mediaFilms,
                     t,
-                    "films"
+                    undefined,
+                    false
                   )}
                 />
               </FormGroup>

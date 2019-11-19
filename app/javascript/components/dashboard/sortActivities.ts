@@ -30,6 +30,7 @@ export default function sortActivities(
       break;
     case "Media":
       compare = (a, b) => baseCompare(Activity.name(a, t), Activity.name(b, t));
+      break;
     case "Language":
     default:
       compare = (a, b) =>
@@ -37,7 +38,6 @@ export default function sortActivities(
           languages.get(a.language_id),
           languages.get(b.language_id)
         );
-      break;
   }
 
   const finalCompare = (a: IActivity, b: IActivity) =>

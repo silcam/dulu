@@ -8,6 +8,7 @@ import { ILanguage } from "../../models/Language";
 import { LanguagePageTab } from "./LanguagePage";
 import { Location, History } from "history";
 import I18nContext from "../../contexts/I18nContext";
+import TranslationProgress from "./TranslationProgress";
 
 interface IProps {
   language: ILanguage;
@@ -40,6 +41,10 @@ export default function LanguagePageContent(props: IProps) {
 
   return (
     <div className={`padBottom`}>
+      {props.tab == "Translation" && (
+        <TranslationProgress language={props.language} />
+      )}
+
       {(props.tab == "Translation" || props.tab == "Media") && (
         <ActivitiesContainer
           {...props}

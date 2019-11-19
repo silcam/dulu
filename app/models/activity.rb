@@ -73,9 +73,9 @@ class Activity < ApplicationRecord
       stage_name: stage_name,
       archivable: archivable?,
       progress: {
-              percent: percent,
-              color: color,
-            },
+        percent: percent,
+        color: color,
+      },
 
     }
   end
