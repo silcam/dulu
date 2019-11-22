@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class NotificationMailer < ApplicationMailer
   helper ApplicationHelper
   default from: Rails.application.secrets.gmail_username
@@ -6,40 +8,41 @@ class NotificationMailer < ApplicationMailer
     @person = person
     @creator = creator
     set_locale person
-    mail to: to_field(person), subject: I18n.t("email.welcome.welcome")
+    mail to: to_field(person), subject: I18n.t('email.welcome.welcome')
   end
 
-  def notify(notification)
-    person = notification.person
-    if should_notify(person)
-      @notification = notification
-      set_locale person
-      mail to: to_field(person), subject: I18n.t("email.notify.subject")
-      notification.update(emailed: true)
+  def notify(person_notification)
+    @person = person_notification.person
+    @notification = person_notification.notification
+    if should_email(@person)
+      set_locale @person
+      mail to: to_field(@person), subject: I18n.t('email.notify.subject')
+      person_notification.update(emailed: true)
     end
   end
 
   def notification_summary(person)
-    @notifications = person.notifications.where(read: false, emailed: false)
+    p_notifications = person.person_notifications.where(read: false, emailed: false)
     @person = person
-    if should_notify(person) && !@notifications.empty?
+    @notifications = p_notifications.map(&:notification)
+    if should_email(person) && !p_notifications.empty?
       set_locale(person)
-      mail to: to_field(person), subject: I18n.t("email.notification_summary.subject")
-      @notifications.update(emailed: true)
+      mail to: to_field(person), subject: I18n.t('email.notification_summary.subject')
+      p_notifications.update(emailed: true)
     end
   end
 
   private
 
   def set_locale(person)
-    I18n.locale = person.try(:ui_language) || I18n.default_locale
+    @locale = person.try(:ui_language) || I18n.default_locale
   end
 
   def to_field(person)
     %("#{person.full_name}" <#{person.email}>)
   end
 
-  def should_notify(person)
+  def should_email(person)
     person.has_login && !person.email.blank?
   end
 end

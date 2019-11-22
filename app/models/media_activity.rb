@@ -1,4 +1,6 @@
 class MediaActivity < Activity
+  include TranslationHelper
+
   has_and_belongs_to_many :bible_books
 
   CATEGORIES = %i( AudioScripture Film )
@@ -8,6 +10,10 @@ class MediaActivity < Activity
   validates :scripture, inclusion: SCRIPTURE, allow_nil: true
 
   default_scope { where(archived: false) }
+
+  def domain
+    :Scripture_use
+  end
 
   def category
     attributes["category"].try(:to_sym)
@@ -21,19 +27,15 @@ class MediaActivity < Activity
     attributes["scripture"].try(:to_sym)
   end
 
-  def t_names
-    return {
-             en: t_name(:en),
-             fr: t_name(:fr),
-           }
-  end
-
-  def t_name(locale)
-    category == :Film ?
-      I18n.t(film, locale: locale) :
-      scripture == :Other ?
-      I18n.t(:AudioScripture, locale: locale) :
-      I18n.t(:Audio_x, x: I18n.t(scripture, locale: locale), locale: locale)
+  def t_name
+    case
+    when category == :Film
+      t_params(film)
+    when scripture == :Other
+      t_params(:AudioScripture)
+    else
+      t_params(:Audio_x, x: t_params(scripture))
+    end
   end
 
   def available_stages

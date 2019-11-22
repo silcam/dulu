@@ -1,28 +1,30 @@
+# frozen_string_literal: true
+
 class Api::NotificationsController < ApplicationController
   def index
-    get_notifications(current_user.notifications)
+    @p_notifications, @more_available = get_paged(current_user.person_notifications)
   end
 
   def global
-    get_notifications(Notification.global)
-    render :index
+    @notifications, @more_available = get_paged(Notification)
   end
 
   def mark_read
-    current_user.notifications.where(id: (params[:from]..params[:to])).update(read: true)
+    current_user.person_notifications.where(id: (params[:from]..params[:to])).update(read: true)
   end
 
   private
 
-  def get_notifications(source)
+  def get_paged(source)
     page = params[:page].to_i || 0
     page_size = 12
-    @notifications = source.offset(page * page_size).limit(page_size + 1).to_a
-    if @notifications.size == page_size + 1
-      @notifications.pop
-      @more_available = true
+    items = source.offset(page * page_size).limit(page_size + 1).to_a
+    if items.size == page_size + 1
+      items.pop
+      more_available = true
     else
-      @more_available = false
+      more_available = false
     end
+    [items, more_available]
   end
 end

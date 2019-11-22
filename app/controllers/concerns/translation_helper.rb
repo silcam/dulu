@@ -43,4 +43,17 @@ module TranslationHelper
   def t_select_options(array, selected = nil)
     options_for_select(array.collect { |item| [t(item), item] }, selected)
   end
+
+  def t_params(key, subs = {})
+    { key: key, subs: subs }
+  end
+
+  # params type { key: string/sym, subs?: { [key]: string/sym/params } }
+  def t_nested(params, locale, &extra_transform)
+    subs = params[:subs] || {}
+    subs.transform_values! { |v| v.is_a?(Hash) ? t_nested(v, locale) : v }
+    subs = extra_transform.call(subs) if block_given?
+    subs.merge!(locale: locale)
+    I18n.t(params[:key], subs)
+  end
 end

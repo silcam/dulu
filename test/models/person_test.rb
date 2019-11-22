@@ -88,6 +88,18 @@ class PersonTest < ActiveSupport::TestCase
     assert_equal exp, @drew.roles_field
   end
 
+  test "Add notification channel" do
+    @drew.add_notification_channel(NotificationChannel.domain_channel(:Translation))
+    @drew.reload
+    assert_includes @drew.notification_channels, "DTra "
+  end
+
+  test "Remove notification channel" do
+    @drew.remove_notification_channel(NotificationChannel.language_channel(languages(:Hdi).id))
+    @drew.reload
+    assert_not_includes @drew.notification_channels, "Lng#{languages(:Hdi).id} "
+  end
+
   test "Current Participants" do
     no_participants = people(:FormerHdiTranslator).current_participants
     participants = people(:Drew).current_participants

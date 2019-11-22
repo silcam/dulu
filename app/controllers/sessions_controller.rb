@@ -1,5 +1,5 @@
 class SessionsController < ApplicationController
-  skip_before_action :require_login, only: [:new, :create]
+  skip_before_action :require_login, only: [:new, :create, :test_create]
 
   def new
     if logged_in?
@@ -20,6 +20,12 @@ class SessionsController < ApplicationController
       session[:failed_login] = @gmail
       redirect_to root_path
     end
+  end
+
+  def test_create
+    user = Person.find params[:id]
+    log_in user
+    response_ok
   end
 
   def destroy

@@ -1,6 +1,4 @@
 class BibleBook < ApplicationRecord
-  include HasTranslatedNames
-
   has_many :translation_activities
 
   GENESIS_USFM = 1
@@ -15,10 +13,7 @@ class BibleBook < ApplicationRecord
   default_scope { order(:usfm_number) }
 
   def name
-    if I18n.locale == :fr
-      return french_name
-    end
-    return english_name
+    english_name
   end
 
   def testament

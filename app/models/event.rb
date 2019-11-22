@@ -13,7 +13,7 @@ class Event < ApplicationRecord
 
   default_scope { order(start_date: :desc) }
 
-  validates :domain, inclusion: { in: StatusParameter.domains }
+  validates :domain, inclusion: { in: Domain.domains }
   validates :name, presence: true
   validates :start_date, presence: true
   validates :end_date, presence: true

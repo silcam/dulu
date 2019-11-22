@@ -7,7 +7,7 @@
 <ul>
   <% @notifications.each do |notification| %>
     <li>
-      <%= render 'notifications/text', notification: notification, email: true %>
+      <%= notification.html(@locale, base_url).html_safe %>
     </li>
   <% end %>
 </ul>

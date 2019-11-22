@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190905152409) do
+ActiveRecord::Schema.define(version: 20191121103210) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -244,7 +244,14 @@ ActiveRecord::Schema.define(version: 20190905152409) do
     t.index ["person_id"], name: "index_lpfs_on_person_id"
   end
 
-  create_table "notifications", id: :serial, force: :cascade do |t|
+  create_table "notifications", force: :cascade do |t|
+    t.string "english", default: ""
+    t.string "french", default: ""
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "old_notifications", id: :serial, force: :cascade do |t|
     t.integer "person_id"
     t.string "kind"
     t.boolean "read", default: false
@@ -253,7 +260,7 @@ ActiveRecord::Schema.define(version: 20190905152409) do
     t.boolean "emailed", default: false
     t.json "vars_json"
     t.json "links_json"
-    t.index ["person_id"], name: "index_notifications_on_person_id"
+    t.index ["person_id"], name: "index_old_notifications_on_person_id"
   end
 
   create_table "organization_people", force: :cascade do |t|
@@ -314,8 +321,20 @@ ActiveRecord::Schema.define(version: 20190905152409) do
     t.boolean "has_login", default: false
     t.integer "email_pref", default: 0
     t.json "view_prefs", default: {}
+    t.string "notification_channels", default: ""
     t.index ["country_id"], name: "index_people_on_country_id"
     t.index ["organization_id"], name: "index_people_on_organization_id"
+  end
+
+  create_table "person_notifications", force: :cascade do |t|
+    t.bigint "person_id"
+    t.bigint "notification_id"
+    t.boolean "read", default: false
+    t.boolean "emailed", default: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["notification_id"], name: "index_person_notifications_on_notification_id"
+    t.index ["person_id"], name: "index_person_notifications_on_person_id"
   end
 
   create_table "person_roles", id: :serial, force: :cascade do |t|

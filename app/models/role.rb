@@ -60,6 +60,35 @@ class Role
     arrays_overlap?(roles1, roles2)
   end
 
+  # Keep in sync with Role.ts
+  def self.domain(role)
+    case role.to_sym
+    when :Administration then nil
+    when :BackTranslator then :Translation
+    when :DuluAdmin then nil
+    when :Cluster_coordinator then :All
+    when :Cluster_facilitator then :All
+    when :Exegete then :Translation
+    when :Facilitator then nil
+    when :LanguageProgramCommittee then :All
+    when :LanguageProgramFacilitator then :All
+    when :Leader then nil
+    when :Linguist then :Linguistics
+    when :LinguisticConsultant then :Linguistics
+    when :LinguisticConsultantTraining then :Linguistics
+    when :Literacy_specialist then :Literacy
+    when :Literacy_consultant then :Literacy
+    when :MediaConsultant then :Media
+    when :MediaSpecialist then :Media
+    when :ProjectCoordinator then :All
+    when :Scripture_engagement_specialist then :Scripture_use
+    when :Student then nil
+    when :Translator then :Translation
+    when :TranslationConsultant then :Translation
+    when :TranslationConsultantTraining then :Translation
+    end
+  end
+
   private
 
   def self.arrays_overlap?(a1, a2)

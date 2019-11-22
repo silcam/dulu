@@ -1,5 +1,9 @@
 module ApplicationHelper
   include TranslationHelper
+  
+  def base_url
+    'https://dulu.sil.org'
+  end
 
   def assemble_dates(params, model, *fields)
     fields.each do |field|
@@ -96,13 +100,14 @@ module ApplicationHelper
   # Returns path like /events/123
   # Or given multiple instances, like /programs/4/events/123
   def model_path(*instances)
-    return instances.collect do |instance|
-             "/#{instance.class.name.pluralize.underscore}/#{instance.id}"
-           end
-             .join
+    instances
+      .collect do |instance|
+        "/#{instance.class.name.pluralize.underscore}/#{instance.id}"
+      end
+      .join
   end
 
   def model_url(instance)
-    return "dulu.sil.org" + model_path(instance)
+    base_url + model_path(instance)
   end
 end

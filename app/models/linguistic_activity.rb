@@ -17,6 +17,10 @@ class LinguisticActivity < Activity
     "#{I18n.t(category)}: #{title}"
   end
 
+  def domain
+    :Linguistics
+  end
+
   def available_stages
     (category == :Workshops) ?
       workshops.collect { |w| w.name } :

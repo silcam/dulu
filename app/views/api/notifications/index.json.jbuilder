@@ -1,15 +1,13 @@
-unread_notifications = false
-json.notifications @notifications do |notification|
-  json.(notification, :id, :read, :created_at)
+# frozen_string_literal: true
 
-  json.message do
-    json.key notification.kind
-    json.t_vars notification.t_vars
-    json.links notification.links
+json.notifications @p_notifications do |p_notification|
+  json.call(p_notification.notification, :id, :text)
+
+  json.person_notification do
+    json.id p_notification.id
+    json.read p_notification.read
   end
-
-  unread_notifications = true unless notification.read
 end
 
 json.moreAvailable @more_available
-json.unreadNotifications unread_notifications
+json.unreadNotifications @p_notifications.any?(&:unread)

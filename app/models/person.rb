@@ -18,7 +18,8 @@ class Person < ApplicationRecord
   has_many :viewed_reports
   has_many :reports, through: :viewed_reports
 
-  has_many :notifications
+  has_many :person_notifications
+  has_many :notifications, through: :person_notifications
   has_many :lpfs
 
   audited
@@ -60,6 +61,18 @@ class Person < ApplicationRecord
       person_roles.find_by(role: role, end_date: nil).try(:update, { end_date: Date.today })
       remove_from_roles_field(role)
     end
+  end
+
+  def add_notification_channel(channel)
+    update!(
+      notification_channels: NotificationChannel.add_channel(notification_channels, channel)
+    )
+  end
+
+  def remove_notification_channel(channel)
+    update!(
+      notification_channels: NotificationChannel.remove_channel(notification_channels, channel)
+    )
   end
 
   def current_participants

@@ -3,12 +3,8 @@ class StatusParameter < ApplicationRecord
 
   default_scope { order(:order) }
 
-  def self.domains
-    %w[Literacy Scripture_use Mobilization Ethnomusicology Anthropology Community_development Translation Linguistics Media]
-  end
-
   validates :prompt, presence: true, allow_blank: false
-  validates :domain, inclusion: { in: domains }
+  validates :domain, inclusion: { in: Domain.domains }
   validate :number_unit_if_number_field
 
   def self.other_parameter(domain)
@@ -20,7 +16,7 @@ class StatusParameter < ApplicationRecord
   # end
 
   def self.sorted_domains
-    domains.sort { |a, b| I18n.t(a) <=> I18n.t(b) }
+    Domain.domains.sort { |a, b| I18n.t(a) <=> I18n.t(b) }
   end
 
   private

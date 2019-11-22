@@ -1,6 +1,14 @@
-require "test_helper"
+# frozen_string_literal: true
+
+require 'test_helper'
 
 class NotificationTest < ActiveSupport::TestCase
+  include ApplicationHelper
+
+  def mp(arg)
+    model_path(arg)
+  end
+
   def setup
     @drew = people :Drew
     @rick = people :Rick
@@ -8,146 +16,173 @@ class NotificationTest < ActiveSupport::TestCase
     @andreas = people :Andreas
     @hdi = languages :Hdi
     @abanda = people :Abanda
-    # @old_count = Notification.count #It will be 0
+    @nancy = people :Nancy
   end
 
-  test "t_vars" do
-    I18n.locale = :en
-    n = Notification.new(vars: { user_name: "Rick Conrad", activity_name: { en: "Genesis", fr: "Genèse" } })
-    exp = { user_name: "Rick Conrad", activity_name: "Genesis" }
-    assert_equal exp, n.t_vars
+  test 'Notification Text' do
+    ntfn = Notification.new(english: '[Rick Conrad](/people/1) likes pizza.', french: '[Rick Conrad](/people/1) aime le pizza.')
+    assert_equal '[Rick Conrad](/people/1) likes pizza.', ntfn.text
+    assert_equal '[Rick Conrad](/people/1) aime le pizza.', ntfn.text(:fr)
+    assert_equal 'Rick Conrad aime le pizza.', ntfn.simple_text(:fr)
+    assert_equal "<a href='/people/1'>Rick Conrad</a> aime le pizza.", ntfn.html(:fr)
+    assert_equal "<a href='https://dulu.sil.org/people/1'>Rick Conrad</a> aime le pizza.", ntfn.html(:fr, 'https://dulu.sil.org')
   end
 
-  test "New participant program" do
-    lance_hdi = Participant.create(person: @lance, language: @hdi, start_date: "2018")
-    Notification.new_program_participant(@drew, lance_hdi)
-    assert_equal 3, Notification.where(kind: :new_program_participant).count
-    assert_equal 1, Notification.where(kind: :added_you_to_program).count
-    assert_equal 1, people(:Abanda).notifications.count
-    assert_equal 1, @andreas.notifications.count # LPF
+  test 'New Participant Language' do
+    lance_hdi = Participant.create(
+      person: @lance, 
+      language: @hdi, 
+      start_date: '2018', 
+      roles: ['TranslationConsultant']
+    )
+    Notification.new_language_participant(@drew, lance_hdi)
+    ntfn = Notification.last
+    assert_equal(
+      "[Drew Mambo](#{mp(@drew)}) added [Lance Armstrong](#{mp(lance_hdi)}) to the [Hdi](#{mp(@hdi)}) language.",
+      ntfn.english
+    )
+    assert_equal(
+      "[Drew Mambo](#{mp(@drew)}) a ajouté [Lance Armstrong](#{mp(lance_hdi)}) au programme [Hdi](#{mp(@hdi)}).", 
+      ntfn.french
+    )
+    assert_equal 5, PersonNotification.count
+    assert_includes @drew.notifications, ntfn
+    assert_includes @lance.notifications, ntfn
+    assert_includes @abanda.notifications, ntfn
+    assert_includes @andreas.notifications, ntfn
+    assert_includes @nancy.notifications, ntfn
+    assert_equal true, @drew.person_notifications.last.read
+    assert_equal false, @andreas.person_notifications.last.read
   end
 
-  test "New participant cluster" do
+  test 'New Participant Cluster' do
     ndop = clusters :Ndop
-    kendall_ndop = Participant.create(person: people(:Kendall), cluster: ndop, start_date: "2018")
-    Notification.new_cluster_participant @rick, kendall_ndop
-    assert_equal 3, Notification.where(kind: :new_cluster_participant).count
-    assert_equal 1, Notification.where(kind: :added_you_to_cluster).count
-    assert_equal 1, @drew.notifications.count
-    assert_equal 1, people(:Olga).notifications.count # LPF
+    kendall_ndop = Participant.create(
+      person: people(:Kendall), 
+      cluster: ndop, 
+      start_date: '2018', 
+      roles: ['TranslationConsultant']
+    )
+    Notification.new_cluster_participant(@drew, kendall_ndop)
+    ntfn = Notification.last
+    assert_equal "[Drew Mambo](#{mp(@drew)}) added [Kendall Ingles](#{mp(kendall_ndop)}) to the [Ndop](#{mp(ndop)}) cluster.", ntfn.english
+    assert_includes people(:Freddie).notifications, ntfn
+    assert_includes @nancy.notifications, ntfn
   end
 
-  test "New stage" do
-    ezra_testing = Stage.create!(activity: translation_activities(:HdiEzra), start_date: "2018", name: :Testing, kind: :Translation)
+  test 'New Stage' do
+    ezra_testing = Stage.create!(
+      activity: translation_activities(:HdiEzra), 
+      start_date: '2018', 
+      name: :Testing, 
+      kind: :Translation
+    )
     Notification.new_stage(@drew, ezra_testing)
-    assert_equal 3, Notification.count
-    assert_equal 1, people(:Abanda).notifications.count
-    assert_equal 1, @andreas.notifications.count # LPF
+    ntfn = Notification.last
+    assert_equal "[Drew Mambo](#{mp(@drew)}) updated [Ezra](#{mp(ezra_testing.activity)}) to the Testing stage for the [Hdi](#{mp(@hdi)}) program.", ntfn.english
+    assert_includes people(:Abanda).notifications, ntfn
+    assert_includes people(:Nancy).notifications, ntfn
   end
 
-  test "Workshop complete" do
-    verbshop = workshops :Verb
+  test 'Workshop Complete' do
+    verbshop = workshops(:Verb)
     verbshop.complete({})
     Notification.workshop_complete(@rick, verbshop)
-    assert_equal 3, Notification.count
-    assert_equal 1, people(:Kendall).notifications.count
-    assert_equal 1, people(:Olga).notifications.count # LPF
+    ntfn = Notification.last
+    assert_equal(
+      "[Rick Conrad](#{mp(@rick)}) updated the [Verb](#{mp(verbshop.linguistic_activity)}) workshop for the [Ewondo](#{mp(languages(:Ewondo))}) program as complete.",
+      ntfn.english
+    )
+    assert_includes people(:Kendall).notifications, ntfn
   end
 
-  test "New activity" do
-    dvu_study = LinguisticActivity.create(category: :Research, title: "Dvu", language: @hdi)
-    # alternate version :
-    # dvu_study = TranslationActivity.create(language: @hdi, bible_book: bible_books(:John))
+  test 'New Activity' do
+    @nancy.add_notification_channel(NotificationChannel.domain_channel(:Linguistics))
+    dvu_study = LinguisticActivity.create(category: :Research, title: 'Dvu', language: @hdi)
     Notification.new_activity(@drew, dvu_study)
-    assert_equal 3, Notification.count
-    assert_equal 1, people(:Abanda).notifications.count
-    assert_equal 1, @andreas.notifications.count # LPF
+    ntfn = Notification.last
+    assert_equal(
+      "[Drew Mambo](#{mp(@drew)}) added a new activity to the [Hdi](#{mp(@hdi)}) program: [Research: Dvu](#{mp(dvu_study)}).",
+      ntfn.english
+    )
+    assert_includes @abanda.notifications, ntfn
+    assert_includes @nancy.notifications, ntfn
   end
 
-  test "Updated you" do
-    Notification.updated_you(@rick, @drew)
-    assert_equal 1, Notification.where(kind: :updated_you).count
-    assert_equal 1, Notification.where(kind: :updated_person).count
-    assert_equal "updated_you", @drew.notifications.first.kind
+  test 'Updated Person' do
+    Notification.updated_person(@rick, @drew)
+    ntfn = Notification.last
+    assert_equal(
+      "[Rick Conrad](#{mp(@rick)}) updated the info for [Drew Mambo](#{mp(@drew)}).",
+      ntfn.english
+    )
+    assert_equal 1, ntfn.person_notifications.count
+    assert_includes @drew.notifications, ntfn
   end
 
-  test "Updated himself" do
-    Notification.updated_you(@rick, @rick)
-    assert_equal 1, Notification.count
-    assert_equal "updated_himself", Notification.first.kind
+  test 'Gave Person Role' do
+    Notification.gave_person_role(@rick, @drew, :Literacy_specialist)
+    ntfn = Notification.last
+    assert_equal(
+      "[Rick Conrad](#{mp(@rick)}) gave the Literacy Specialist role to [Drew Mambo](#{mp(@drew)}).",
+      ntfn.english
+    )
+    assert_equal 1, ntfn.person_notifications.count
+    assert_includes @drew.notifications, ntfn
   end
 
-  test "Gave you role" do
-    Notification.gave_you_role(@rick, @drew, :Literacy_specialist)
-    assert_equal 1, Notification.where(kind: :gave_you_role).count
-    assert_equal 1, Notification.where(kind: :gave_person_role).count
-    notification = @drew.notifications.first
-    assert_equal "gave_you_role", notification.kind
-    assert_equal "Literacy Specialist", notification.t_vars[:role_name]
+  test 'Added people to activity' do
+    hdi_exodus = translation_activities(:HdiExodus)
+    Notification.added_people_to_activity(@rick, [@drew, @abanda], hdi_exodus)
+    ntfn = Notification.last
+    assert_equal(
+      "[Rick Conrad](#{mp(@rick)}) added [Drew Mambo](#{mp(@drew)}) & [Abanda Dunno](#{mp(@abanda)}) to [Exodus](#{mp(hdi_exodus)}) for the [Hdi](#{mp(@hdi)}) program.",
+      ntfn.english
+    )
+    assert_includes @abanda.notifications, ntfn
+    assert_includes @nancy.notifications, ntfn
   end
 
-  test "Gave himself role" do
-    Notification.gave_you_role(@rick, @rick, :Literacy_specialist)
-    assert_equal 1, Notification.count
-    assert_equal "gave_himself_role", Notification.first.kind
+  test 'Added people to event' do
+    gen_checking = events(:HdiGenesisChecking)
+    kendall = people(:Kendall)
+    gen_checking.people << [@lance, kendall]
+    ev_ptpts = gen_checking.event_participants.where(person: [@lance, kendall])
+    Notification.added_people_to_event(@rick, ev_ptpts)
+    ntfn = Notification.last
+    assert_equal(
+      "[Rick Conrad](#{mp(@rick)}) added [Lance Armstrong](#{mp(@lance)}) & [Kendall Ingles](#{mp(kendall)}) to the [Genesis Checking](#{mp(gen_checking)}) event.",
+      ntfn.english
+    )
+    assert_includes @lance.notifications, ntfn
   end
 
-  # test 'Added you to program' do
-  #   lance_hdi = Participant.create(person: @lance, language: @hdi, start_date: '2018')
-  #   Notification.added_you_to_program(@drew, lance_hdi)
-  #   assert_equal 1, Notification.count
-  #   assert_equal 1, @lance.notifications.count
-  # end
-
-  # test 'Added person to cluster' do
-  #   Notification.added_person_to_cluster(@rick, participants(:DrewNdop))
-  #   assert_equal 1, Notification.count
-  #   assert_equal 1, @drew.notifications.count
-  # end
-
-  test "Added people to activity" do
-    Notification.added_people_to_activity(@rick, [@drew, @abanda], translation_activities(:HdiExodus))
-    assert_equal 2, Notification.where(kind: :added_people_to_activity).count
-    assert_equal 2, Notification.where(kind: :added_you_to_activity).count
+  test 'New event for language' do
+    event = @hdi.events.create(name: 'Exodus Checking', domain: :Translation, start_date: '2019-11-22', end_date: '2019-12-5')
+    Notification.new_event_for_language(@drew, event, @hdi)
+    ntfn = Notification.last
+    assert_equal(
+      "[Drew Mambo](#{mp(@drew)}) created the [Exodus Checking](#{mp(event)}) event for the [Hdi](#{mp(@hdi)}) program.",
+      ntfn.english
+    )
+    assert_includes @abanda.notifications, ntfn
   end
 
-  test "Added himself to activity" do
-    Notification.added_people_to_activity(@drew, [@drew], translation_activities(:HdiGenesis))
-    assert_equal 3, Notification.count
-    assert_equal 3, Notification.where(kind: :added_himself_to_activity).count
+  test 'Added language to event' do
+    gen_checking = events(:HdiGenesisChecking)
+    Notification.added_language_to_event(@drew, @hdi, gen_checking)
+    ntfn = Notification.last
+    assert_equal "[Drew Mambo](#{mp(@drew)}) added the [Hdi](#{mp(@hdi)}) program to the [Genesis Checking](#{mp(gen_checking)}) event.", ntfn.english
+    assert_includes people(:Abanda).notifications, ntfn
+    assert_includes people(:Nancy).notifications, ntfn
   end
 
-  # test 'Added you to event' do
-  #   Notification.added_person_to_event(@rick, event_participants(:DrewHdiGenesis))
-  #   assert_equal 2, Notification.where(kind: :added_person_to_event).count
-  #   assert_equal 1, Notification.where(kind: :added_you_to_event).count
-  #   assert_equal 1, @drew.notifications.count
-  # end
-
-  # test 'Added himself to event' do
-  #   Notification.added_person_to_event(@drew, event_participants(:DrewHdiGenesis))
-  #   assert_equal 2, Notification.count
-  #   assert_equal 2, Notification.where(kind: :added_himself_to_event).count
-  # end
-
-  # test 'New event for program' do
-  #   Notification.new_event_for_program(@drew, events(:HdiGenesisChecking), @hdi)
-  #   assert_equal 3, Notification.count
-  #   assert_equal 1, people(:Abanda).notifications.count
-  #   assert_equal 1, @andreas.notifications.count # LPF
-  # end
-
-  test "Added program to event" do
-    Notification.added_program_to_event(@drew, @hdi, events(:HdiGenesisChecking))
-    assert_equal 3, Notification.count
-    assert_equal 1, people(:Abanda).notifications.count
-    assert_equal 1, @andreas.notifications.count # LPF
-  end
-
-  test "Added cluster to event" do
-    Notification.added_cluster_to_event(@rick, clusters(:Ndop), events(:HdiGenesisChecking))
-    assert_equal 4, Notification.count
-    assert_equal 1, @drew.notifications.count
-    assert_equal 1, people(:Olga).notifications.count # LPF
+  test 'Added cluster to event' do
+    gen_checking = events(:HdiGenesisChecking)
+    Notification.added_cluster_to_event(@rick, clusters(:Ndop), gen_checking)
+    ntfn = Notification.last
+    assert_equal "[Rick Conrad](#{mp(@rick)}) added the [Ndop](#{mp(clusters(:Ndop))}) cluster to the [Genesis Checking](#{mp(gen_checking)}) event.", ntfn.english
+    assert_includes people(:Freddie).notifications, ntfn
+    assert_includes people(:Nancy).notifications, ntfn
   end
 end

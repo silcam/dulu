@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Participant < ApplicationRecord
   include HasRoles
 
@@ -13,8 +15,20 @@ class Participant < ApplicationRecord
   validate :belongs_to_language_or_cluster
   # validate :end_date_after_start_date
 
+  after_create do |participant|
+    if participant.language_id
+      participant.person.add_notification_channel(
+        NotificationChannel.language_channel(participant.language_id)
+      )
+    else
+      participant.person.add_notification_channel(
+        NotificationChannel.cluster_channel(participant.cluster_id)
+      )
+    end
+  end
+
   def cluster_language
-    language ? language : cluster
+    language || cluster
   end
 
   def associate_activities(activity_ids)
@@ -30,30 +44,35 @@ class Participant < ApplicationRecord
     person.full_name_rev
   end
 
+  def domains
+    roles.map { |role| Role.domain(role) }.uniq.reject(&:nil?)
+  end
+
   def f_start_date
     FuzzyDate.from_string(start_date)
   end
 
   def f_end_date
     return nil if end_date.blank?
+    
     FuzzyDate.from_string(end_date)
   end
 
   def sorted_activities
     activities.order(
-      "activities.language_id, activities.type, bible_book_id"
+      'activities.language_id, activities.type, bible_book_id'
     )
   end
 
   def unassoc_activities
-    cluster_language.sorted_activities.where.not(id: self.activities)
+    cluster_language.sorted_activities.where.not(id: activities)
   end
 
   private
 
   def belongs_to_language_or_cluster
-    if cluster.nil? and language.nil?
-      errors.add :base, "Person must be associated with a language or a cluster"
+    if cluster.nil? && language.nil?
+      errors.add :base, 'Person must be associated with a language or a cluster'
     end
   end
 

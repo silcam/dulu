@@ -34,7 +34,7 @@ fr:
   Download_report: Télécharger le rapport
   Sorry: Désolé
   as: comme
-  Select: Choisier...
+  Select: Choisir...
   Category: Catégorie
   Topic: Sujet
   and: et
@@ -193,7 +193,7 @@ fr:
   Delete_activity_confirmation: Confirmez que vous voulez supprimer cette activité.
   # Media Activities
   AudioScripture: Écriture Audio
-  Audio_x: "%{x} Audio"
+  Audio_x: "%{x} en audio"
   Film: Film
   JesusFilm: Film Jésus
   LukeFilm: Film Luc
@@ -392,14 +392,14 @@ fr:
   not_before_start: ne peut pas être avant le date de commencement.
 
   notification:
-    new_program_participant: "%{user_name} a ajouté %{participant_name} au programme %{program_name}."
-    added_you_to_program: "%{user_name} vous a ajouté au programme %{program_name}."
+    new_language_participant: "%{user_name} a ajouté %{participant_name} au programme %{language_name}."
+    # added_you_to_program: "%{user_name} vous a ajouté au programme %{language_name}."
     new_cluster_participant: "%{user_name} a ajouté %{participant_name} au groupe %{cluster_name}."
     added_you_to_cluster: "%{user_name} vous a ajouté au groupe %{cluster_name}."
-    new_stage: "%{user_name} a mis à jour %{activity_name} à %{stage_name} pour le programme %{program_name}."
-    workshop_complete: "%{user_name} a mis à jour l'atelier %{workshop_name} pour le programme %{program_name} comme réalisé."
-    new_activity: "%{user_name} a ajouté une nouvelle activité au programme %{program_name} : %{activity_name}."
-    added_a_testament: "%{user_name} a ajouté une nouvelle activité au programme %{program_name} : %{testament}."
+    new_stage: "%{user_name} a mis à jour %{activity_name} à %{stage_name} pour le programme %{language_name}."
+    workshop_complete: "%{user_name} a mis à jour l'atelier %{workshop_name} pour le programme %{language_name} comme réalisé."
+    new_activity: "%{user_name} a ajouté une nouvelle activité au programme %{language_name} : %{activity_name}."
+    added_a_testament: "%{user_name} a ajouté une nouvelle activité au programme %{language_name} : %{testament}."
     updated_you: "%{user_name} a mis à jour %{your_info}."
     updated_person: "%{user_name} a mis à jour les infos pour %{person_name}."
     updated_himself: "%{user_name} a mis à jour ses propres infos."
@@ -407,16 +407,16 @@ fr:
     gave_you_role: "%{user_name} vous a donné le rôle %{role_name}."
     gave_person_role: "%{user_name} a donné le rôle %{role_name} à %{person_name}."
     gave_himself_role: "%{user_name} a donné le rôle %{role_name} à %{himself}."
-    added_person_to_activity: "%{user_name} a ajouté %{person_name} à %{activity_name} pour le programme %{program_name}."
-    added_people_to_activity: "%{user_name} a ajouté %{person_names} à %{activity_name} pour le programme %{program_name}."
+    added_person_to_activity: "%{user_name} a ajouté %{person_name} à %{activity_name} pour le programme %{language_name}."
+    added_people_to_activity: "%{user_name} a ajouté %{person_names} à %{activity_name} pour le programme %{language_name}."
     added_you_to_activity: "%{user_name} vous a ajouté à %{activity_name} pour le programme %{language_name}."
-    added_himself_to_activity: "%{user_name} a ajouté %{himself} à %{activity_name} pour le programme %{program_name}."
+    added_himself_to_activity: "%{user_name} a ajouté %{himself} à %{activity_name} pour le programme %{language_name}."
     added_person_to_event: "%{user_name} a ajouté %{person_name} à l'événement %{event_name}."
     added_people_to_event: "%{user_name} a ajouté %{person_names} à l'événement %{event_name}."
     added_you_to_event: "%{user_name} vous a ajouté à l'événement %{event_name}."
     added_himself_to_event: "%{user_name} a ajouté %{himself} à l'événement %{event_name}."
-    new_event_for_program: "%{user_name} a créé l'événement %{event_name} pour le programme %{program_name}."
-    added_program_to_event: "%{user_name} a ajouté le programme %{program_name} à l'événement %{event_name}."
+    new_event_for_language: "%{user_name} a créé l'événement %{event_name} pour le programme %{language_name}."
+    added_language_to_event: "%{user_name} a ajouté le programme %{language_name} à l'événement %{event_name}."
     added_cluster_to_event: "%{user_name} a ajouté le groupe %{cluster_name} à l'événement %{event_name}."
     his:
       M: son  # This is looked up but eventually not used.
@@ -450,6 +450,74 @@ fr:
       truncate: '...'
       next: '>'
       last: '>>'
+
+  # Bible Books
+  Genesis: Genèse
+  Exodus: Exode
+  Leviticus: Lévitique
+  Numbers: Nombres
+  Deuteronomy: Deutéronome
+  Joshua: Josué
+  Judges: Juges
+  Ruth: Ruth
+  1 Samuel: 1 Samuel
+  2 Samuel: 2 Samuel
+  1 Kings: 1 Rois
+  2 Kings: 2 Rois
+  1 Chronicles: 1 Chroniques
+  2 Chronicles: 2 Chroniques
+  Ezra: Esdras
+  Nehemiah: Néhémie
+  Esther: Esther
+  Job: Job
+  Psalms: Psaumes
+  Proverbs: Proverbes
+  Ecclesiastes: Ecclésiaste
+  Song of Songs: Cantique des Cantiques
+  Isaiah: Ésaïe
+  Jeremiah: Jérémie
+  Lamentations: Lamentations
+  Ezekiel: Ézéchiel
+  Daniel: Daniel
+  Hosea: Osée
+  Joel: Joël
+  Amos: Amos
+  Obadiah: Abdias
+  Jonah: Jonas
+  Micah: Michée
+  Nahum: Nahum
+  Habakkuk: Habacuc
+  Zephaniah: Sophonie
+  Haggai: Aggée
+  Zechariah: Zacharie
+  Malachi: Malachie
+  Matthew: Matthieu
+  Mark: Marc
+  Luke: Luc
+  John: Jean
+  Acts: Actes
+  Romans: Romanis
+  1 Corinthians: 1 Corinthiens
+  2 Corinthians: 2 Corinthiens
+  Galatians: Galates
+  Ephesians: Éphésiens
+  Philippians: Philippiens
+  Colossians: Colossiens
+  1 Thessalonians: 1 Thessaloniciens
+  2 Thessalonians: 2 Thessaloniciens
+  1 Timothy: 1 Timothée
+  2 Timothy: 2 Timothée
+  Titus: Tite
+  Philemon: Philémon
+  Hebrews: Hébreux
+  James: Jacques
+  1 Peter: 1 Pierre
+  2 Peter: 2 Pierre
+  1 John: 1 Jean
+  2 John: 2 Jean
+  3 John: 3 Jean
+  Jude: Jude
+  Revelation: Apocalypse
 
   # ActiveRecord
   activerecord:

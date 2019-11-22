@@ -1,7 +1,7 @@
 <%= t 'email.notification_summary.intro' %>
 
 <% @notifications.each do |notification| %>
- - <%= strip_tags(render('notifications/text.html.erb', notification: notification)).strip %>
+ - <%= notification.simple_text(@locale) %>
 <% end %>
 
 

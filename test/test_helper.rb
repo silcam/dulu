@@ -26,4 +26,22 @@ class ActiveSupport::TestCase
     should_save = model.new(params)
     assert should_save.save, "Should save #{model} with valid params"
   end
+
+  def api_login(user = people(:Drew))
+    post('/test-login', params: { id: user.id })
+  end
+
+  def api_get(path)
+    get(path, xhr: true)
+    response_body
+  end
+
+  def api_post(path, params)
+    post(path, xhr: true, params: params)
+    response_body
+  end
+
+  def response_body
+    @response.body.empty? ? nil : JSON.parse(@response.body, symbolize_names: true)
+  end
 end

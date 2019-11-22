@@ -8,7 +8,7 @@ class DomainUpdate < ApplicationRecord
   validates :number, numericality: true, allow_nil: true
   validates :date, presence: true
   validates :date, fuzzy_date: true
-  validates :domain, inclusion: { in: StatusParameter.domains }
+  validates :domain, inclusion: { in: Domain.domains }
   validate :number_or_status
 
   default_scope { order("date DESC") }

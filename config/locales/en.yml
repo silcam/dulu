@@ -393,31 +393,31 @@ en:
   not_before_start: can't be before start date.
 
   notification:
-    new_program_participant: "%{user_name} added %{participant_name} to the %{program_name} program."
-    added_you_to_program: "%{user_name} added you to the %{program_name} program."
+    new_language_participant: "%{user_name} added %{participant_name} to the %{language_name} language."
+    # added_you_to_program: "%{user_name} added you to the %{language_name} program."
     new_cluster_participant: "%{user_name} added %{participant_name} to the %{cluster_name} cluster."
-    added_you_to_cluster: "%{user_name} added you to the %{cluster_name} cluster."
-    new_stage: "%{user_name} updated %{activity_name} to the %{stage_name} stage for the %{program_name} program."
-    workshop_complete: "%{user_name} updated the %{workshop_name} workshop for the %{program_name} program as complete."
-    new_activity: "%{user_name} added a new activity to the %{program_name} program: %{activity_name}."
-    added_a_testament: "%{user_name} added a new activity to the %{program_name} program: %{testament}."
-    updated_you: "%{user_name} updated %{your_info}."
+    # added_you_to_cluster: "%{user_name} added you to the %{cluster_name} cluster."
+    new_stage: "%{user_name} updated %{activity_name} to the %{stage_name} stage for the %{language_name} program."
+    workshop_complete: "%{user_name} updated the %{workshop_name} workshop for the %{language_name} program as complete."
+    new_activity: "%{user_name} added a new activity to the %{language_name} program: %{activity_name}."
+    added_a_testament: "%{user_name} added a new activity to the %{language_name} program: %{testament}."
+    # updated_you: "%{user_name} updated %{your_info}."
     updated_person: "%{user_name} updated the info for %{person_name}."
-    updated_himself: "%{user_name} updated %{his} own info."
-    your_info: your info
-    gave_you_role: "%{user_name} gave you the %{role_name} role."
+    # updated_himself: "%{user_name} updated %{his} own info."
+    # your_info: your info
+    # gave_you_role: "%{user_name} gave you the %{role_name} role."
     gave_person_role: "%{user_name} gave the %{role_name} role to %{person_name}."
-    gave_himself_role: "%{user_name} gave %{himself} the %{role_name} role."
-    added_person_to_activity: "%{user_name} added %{person_name} to %{activity_name} for the %{program_name} program."
-    added_people_to_activity: "%{user_name} added %{person_names} to %{activity_name} for the %{program_name} program."
-    added_you_to_activity: "%{user_name} added you to %{activity_name} for the %{program_name} program."
-    added_himself_to_activity: "%{user_name} added %{himself} to %{activity_name} for the %{program_name} program."
+    # gave_himself_role: "%{user_name} gave %{himself} the %{role_name} role."
+    added_person_to_activity: "%{user_name} added %{person_name} to %{activity_name} for the %{language_name} program."
+    added_people_to_activity: "%{user_name} added %{person_names} to %{activity_name} for the %{language_name} program."
+    added_you_to_activity: "%{user_name} added you to %{activity_name} for the %{language_name} program."
+    added_himself_to_activity: "%{user_name} added %{himself} to %{activity_name} for the %{language_name} program."
     added_person_to_event: "%{user_name} added %{person_name} to the %{event_name} event."
     added_people_to_event: "%{user_name} added %{person_names} to the %{event_name} event."
     added_you_to_event: "%{user_name} added you to the %{event_name} event."
     added_himself_to_event: "%{user_name} added %{himself} to the %{event_name} event."
-    new_event_for_program: "%{user_name} created the %{event_name} event for the %{program_name} program."
-    added_program_to_event: "%{user_name} added the %{program_name} program to the %{event_name} event."
+    new_event_for_language: "%{user_name} created the %{event_name} event for the %{language_name} program."
+    added_language_to_event: "%{user_name} added the %{language_name} program to the %{event_name} event."
     added_cluster_to_event: "%{user_name} added the %{cluster_name} cluster to the %{event_name} event."
     his:
       M: his
@@ -452,7 +452,73 @@ en:
       next: '>'
       last: '>>'
 
-
+  # Bible Books
+  Genesis: Genesis
+  Exodus: Exodus
+  Leviticus: Leviticus
+  Numbers: Numbers
+  Deuteronomy: Deuteronomy
+  Joshua: Joshua
+  Judges: Judges
+  Ruth: Ruth
+  1 Samuel: 1 Samuel
+  2 Samuel: 2 Samuel
+  1 Kings: 1 Kings
+  2 Kings: 2 Kings
+  1 Chronicles: 1 Chronicles
+  2 Chronicles: 2 Chronicles
+  Ezra: Ezra
+  Nehemiah: Nehemiah
+  Esther: Esther
+  Job: Job
+  Psalms: Psalms
+  Proverbs: Proverbs
+  Ecclesiastes: Ecclesiastes
+  Song of Songs: Song of Songs
+  Isaiah: Isaiah
+  Jeremiah: Jeremiah
+  Lamentations: Lamentations
+  Ezekiel: Ezekiel
+  Daniel: Daniel
+  Hosea: Hosea
+  Joel: Joel
+  Amos: Amos
+  Obadiah: Obadiah
+  Jonah: Jonah
+  Micah: Micah
+  Nahum: Nahum
+  Habakkuk: Habakkuk
+  Zephaniah: Zephaniah
+  Haggai: Haggai
+  Zechariah: Zechariah
+  Malachi: Malachi
+  Matthew: Matthew
+  Mark: Mark
+  Luke: Luke
+  John: John
+  Acts: Acts
+  Romans: Romans
+  1 Corinthians: 1 Corinthians
+  2 Corinthians: 2 Corinthians
+  Galatians: Galatians
+  Ephesians: Ephesians
+  Philippians: Philippians
+  Colossians: Colossians
+  1 Thessalonians: 1 Thessalonians
+  2 Thessalonians: 2 Thessalonians
+  1 Timothy: 1 Timothy
+  2 Timothy: 2 Timothy
+  Titus: Titus
+  Philemon: Philemon
+  Hebrews: Hebrews
+  James: James
+  1 Peter: 1 Peter
+  2 Peter: 2 Peter
+  1 John: 1 John
+  2 John: 2 John
+  3 John: 3 John
+  Jude: Jude
+  Revelation: Revelation
 
 
 
