@@ -49,6 +49,14 @@ class NotificationChannelTest < ActiveSupport::TestCase
     )
   end
 
+  test 'People for....whatever!' do
+    notify_people = NotificationChannel.people_for([:Translation, languages(:Ewondo), clusters(:Ndop)])
+    assert_equal(
+      [people(:Nancy), people(:Kendall), people(:Olga), people(:Drew), people(:Freddie)], 
+      notify_people
+    )
+  end
+
   test 'People for Domain' do
     assert_equal(
       [people(:Nancy)],

@@ -32,8 +32,7 @@ class Notification < ApplicationRecord
         participant_name: participant,
         language_name: language
       }
-      people = NotificationChannel.people_for_language(language) +
-               NotificationChannel.people_for_domains(participant.domains)
+      people = NotificationChannel.people_for([language] + participant.domains)
       send_notification(params, links, people, user)
     end
 
@@ -48,8 +47,7 @@ class Notification < ApplicationRecord
         participant_name: participant,
         cluster_name: cluster
       }
-      people = NotificationChannel.people_for_cluster(cluster) +
-               NotificationChannel.people_for_domains(participant.domains)
+      people = NotificationChannel.people_for([cluster] + participant.domains) 
       send_notification(params, links, people, user)
     end
 
@@ -66,8 +64,7 @@ class Notification < ApplicationRecord
         language_name: language,
         activity_name: activity
       }
-      people = NotificationChannel.people_for_language(language) + 
-               NotificationChannel.people_for_domain(activity.domain)
+      people = NotificationChannel.people_for([language, activity.domain])  
       send_notification(params, links, people, user)
     end
 
@@ -82,8 +79,7 @@ class Notification < ApplicationRecord
         workshop_name: workshop.linguistic_activity,
         language_name: language
       }
-      people = NotificationChannel.people_for_language(language) +
-               NotificationChannel.people_for_domain(:Linguistics)
+      people = NotificationChannel.people_for([language, :Linguistics]) 
       send_notification(params, links, people, user)
     end
 
@@ -98,8 +94,7 @@ class Notification < ApplicationRecord
         language_name: language,
         activity_name: activity
       }
-      people = NotificationChannel.people_for_language(language) + 
-               NotificationChannel.people_for_domain(activity.domain)
+      people = NotificationChannel.people_for([language, activity.domain])  
       send_notification(params, links, people, user)
     end
 
@@ -137,8 +132,7 @@ class Notification < ApplicationRecord
         activity_name: activity,
         language_name: language
       }
-      n_people = NotificationChannel.people_for_language(language) +
-                 NotificationChannel.people_for_domain(activity.domain)
+      n_people = NotificationChannel.people_for([language, activity.domain]) 
       send_notification(params, links, n_people, user)
     end
 
@@ -167,8 +161,7 @@ class Notification < ApplicationRecord
         event_name: event,
         language_name: language
       }
-      people = NotificationChannel.people_for_language(language) + 
-               NotificationChannel.people_for_domain(event.domain)
+      people = NotificationChannel.people_for([language, event.domain])  
       send_notification(params, links, people, user)
     end
 
@@ -182,8 +175,7 @@ class Notification < ApplicationRecord
         language_name: language,
         event_name: event
       }
-      people = NotificationChannel.people_for_language(language) +
-               NotificationChannel.people_for_domain(event.domain)
+      people = NotificationChannel.people_for([language, event.domain]) 
       send_notification(params, links, people, user)
     end
 
@@ -197,8 +189,7 @@ class Notification < ApplicationRecord
         cluster_name: cluster,
         event_name: event
       }
-      people = NotificationChannel.people_for_cluster(cluster) +
-               NotificationChannel.people_for_domain(event.domain)
+      people = NotificationChannel.people_for([cluster, event.domain]) 
       send_notification(params, links, people, user)
     end
 

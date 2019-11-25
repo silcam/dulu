@@ -43,6 +43,20 @@ class NotificationChannel
       channels.gsub(channel, '')
     end
 
+    def people_for(items)
+      items
+        .map do |item|
+          case
+          when item.is_a?(Language) then people_for_language(item)
+          when item.is_a?(Cluster) then people_for_cluster(item)
+          when Domain.domains.include?(item.to_s) then people_for_domain(item)
+          else people_for_channels([item])
+          end
+        end
+        .flatten
+        .uniq
+    end
+
     def people_for_channels(channels)
       query = channels.map { 'notification_channels LIKE ?' }.join(' OR ')
       subs = channels.map { |c| "%#{c}%" }
