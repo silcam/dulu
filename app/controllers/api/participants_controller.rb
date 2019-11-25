@@ -12,7 +12,7 @@ class Api::ParticipantsController < ApplicationController
     @participant.save!
     render :show
     if @participant.language
-      Notification.new_program_participant(current_user, @participant)
+      Notification.new_language_participant(current_user, @participant)
     else
       Notification.new_cluster_participant(current_user, @participant)
     end

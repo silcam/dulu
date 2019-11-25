@@ -4,7 +4,7 @@ class PersonNotification < ApplicationRecord
   belongs_to :notification
   belongs_to :person
 
-  default_scope { order(created_at: :desc) }
+  default_scope { order(id: :desc) }
 
   def unread
     !read

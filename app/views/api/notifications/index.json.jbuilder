@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 json.notifications @p_notifications do |p_notification|
-  json.call(p_notification.notification, :id, :text)
+  json.call(p_notification.notification, :id, :text, :created_at)
 
   json.person_notification do
     json.id p_notification.id

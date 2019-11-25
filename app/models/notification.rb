@@ -3,7 +3,7 @@
 class Notification < ApplicationRecord
   has_many :person_notifications
 
-  default_scope { order(created_at: :desc) }
+  default_scope { order(id: :desc) }
 
   def text(locale = I18n.locale)
     locale.to_sym == :fr ? french : english
@@ -99,6 +99,8 @@ class Notification < ApplicationRecord
     end
 
     def updated_person(user, person)
+      return if user == person
+      
       params = t_params(
         'notification.updated_person',
         person_name: person.full_name

@@ -17,6 +17,7 @@ class NotificationTest < ActiveSupport::TestCase
     @hdi = languages :Hdi
     @abanda = people :Abanda
     @nancy = people :Nancy
+    I18n.locale = :en
   end
 
   test 'Notification Text' do

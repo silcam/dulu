@@ -5,8 +5,11 @@ require 'test_helper'
 class NotificationsControllerTest < ActionDispatch::IntegrationTest
   setup do
     @drew = people(:Drew)
+    @now = Time.now
     api_login
-    seed_notifications
+    Time.stub :now, @now do
+      seed_notifications
+    end
   end
 
   def seed_notifications
@@ -31,6 +34,7 @@ class NotificationsControllerTest < ActionDispatch::IntegrationTest
     assert data[:unreadNotifications]
     ntfn = data[:notifications].first
     assert_equal 'Rick Conrad added Drew Mambo to the Hdi program.', ntfn[:text]
+    assert_equal @now.to_s.slice(0, 10), ntfn[:created_at].slice(0, 10)
     assert_not ntfn[:person_notification][:read]
   end
 
@@ -41,6 +45,7 @@ class NotificationsControllerTest < ActionDispatch::IntegrationTest
     assert_not data[:unreadNotifications]
     ntfn = data[:notifications].first
     assert_equal 'Rick Conrad added Drew Mambo to the Hdi program.', ntfn[:text]
+    assert_equal @now.to_s.slice(0, 10), ntfn[:created_at].slice(0, 10)
     assert_not ntfn[:person_notification]
   end
 

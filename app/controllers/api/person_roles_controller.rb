@@ -5,7 +5,7 @@ class Api::PersonRolesController < ApplicationController
     role = params[:role]
     authorize_add_role(role)
     @person.add_role(role) if Role.is_a_role?(role)
-    Notification.gave_you_role current_user, @person, role
+    Notification.gave_person_role current_user, @person, role
   end
 
   def finish
