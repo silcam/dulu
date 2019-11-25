@@ -5,6 +5,13 @@ require 'test_helper'
 class NotificationChannelTest < ActiveSupport::TestCase
   demo_channels = 'Lng4 Cls12 DTra '
 
+  def setup
+    @bangolan = languages(:Bangolan)
+    @ewondo = languages(:Ewondo)
+    @south = lpfs(:SouthRegion)
+    @ndop = clusters(:Ndop)
+  end
+
   test 'Basic channel codes' do
     assert_equal('Lng41 ', NotificationChannel.language_channel(41))
     assert_equal('Cls41 ', NotificationChannel.cluster_channel(41))
@@ -15,89 +22,104 @@ class NotificationChannelTest < ActiveSupport::TestCase
     assert_equal('DScr ', NotificationChannel.domain_channel(:Scripture_use))
   end
 
-  test 'Supported Domain' do
-    assert NotificationChannel.supported_domain?(:Translation)
-    assert !NotificationChannel.supported_domain?(:Basket_weaving)
-  end
-
   test 'Add Channel' do
     assert_equal(
       'Lng4 Cls12 DTra Reg2 ', 
-      NotificationChannel.add_channel(demo_channels, NotificationChannel.region_channel(2))
+      NotificationChannel.add_channel(demo_channels, 'Reg2 ')
     )
     assert_equal(
       'Lng4 Cls12 DTra ', 
-      NotificationChannel.add_channel(demo_channels, NotificationChannel.domain_channel(:Translation))
+      NotificationChannel.add_channel(demo_channels, 'DTra ')
     )
   end
 
   test 'Remove Channel' do
     assert_equal(
       'Cls12 DTra ', 
-      NotificationChannel.remove_channel(demo_channels, NotificationChannel.language_channel(4))
+      NotificationChannel.remove_channel(demo_channels, 'Lng4 ')
     )
     assert_equal(
       'Lng4 Cls12 DTra ', 
-      NotificationChannel.remove_channel(demo_channels, NotificationChannel.language_channel(5))
+      NotificationChannel.remove_channel(demo_channels, 'Lng5 ')
     )
   end
 
-  test 'Basic People for Channels' do
+  test 'Unsupported object throw in channels_for' do
+    assert_raises "NotificationChannel.channels_for doesn't know how to handle Yoohoo!" do
+      NotificationChannel.channels_for('Yoohoo')
+    end
+  end
+
+  test 'Empty channels_for' do
+    assert_empty NotificationChannel.channels_for([])
+  end
+
+  test 'Channels for Domain' do
     assert_equal(
-      [people(:Nancy)], 
-      NotificationChannel.people_for_channels([NotificationChannel.domain_channel(:Translation)])
+      'DTra ',
+      NotificationChannel.channels_for(:Translation)
+    )
+    assert_equal(
+      '',
+      NotificationChannel.channels_for(:Anthropology)
     )
   end
 
-  test 'People for....whatever!' do
-    notify_people = NotificationChannel.people_for([:Translation, languages(:Ewondo), clusters(:Ndop)])
+  test 'Channels for Language - Lang, Cluster & Region' do 
     assert_equal(
-      [people(:Nancy), people(:Kendall), people(:Olga), people(:Drew), people(:Freddie)], 
+      "Lng#{@bangolan.id} Cls#{@ndop.id} Reg#{@south.id} ",
+      NotificationChannel.channels_for(@bangolan)
+    )
+  end
+
+  test 'Channels for Language - Lang & Region' do 
+    assert_equal(
+      "Lng#{@ewondo.id} Reg#{@south.id} ",
+      NotificationChannel.channels_for(@ewondo)
+    )
+  end
+
+  test 'Channels for Language - Lang Only' do 
+    @ewondo.update(lpf: nil)
+    assert_equal(
+      "Lng#{@ewondo.id} ",
+      NotificationChannel.channels_for(@ewondo)
+    )
+  end
+
+  test 'Channels for cluster' do 
+    assert_equal(
+      "Cls#{@ndop.id} Lng#{languages(:Bambalang).id} Lng#{@bangolan.id} Reg#{@south.id} ",
+      NotificationChannel.channels_for(@ndop)
+    )
+  end
+
+  test 'Channels for cluster - No Region' do 
+    @ndop.update(lpf: nil)
+    assert_equal(
+      "Cls#{@ndop.id} Lng#{languages(:Bambalang).id} Lng#{@bangolan.id} ",
+      NotificationChannel.channels_for(@ndop)
+    )
+  end
+
+  test 'People for Channels' do
+    assert_equal(
+      [people(:Kendall), people(:Nancy)], 
+      NotificationChannel.people_for_channels("DTra Lng#{@ewondo.id} ")
+    )
+  end
+
+  test 'People for empty channels' do
+    assert_empty NotificationChannel.people_for_channels('')
+  end
+
+  test 'Integrate channels_for with people_for_channels' do
+    notify_people = NotificationChannel.people_for_channels(
+      NotificationChannel.channels_for(:Translation, languages(:Ewondo), clusters(:Ndop))
+    )
+    assert_equal(
+      [people(:Kendall), people(:Drew), people(:Nancy), people(:Olga), people(:Freddie)], 
       notify_people
     )
-  end
-
-  test 'People for Domain' do
-    assert_equal(
-      [people(:Nancy)],
-      NotificationChannel.people_for_domain(:Translation)
-    )
-    assert_equal(
-      [],
-      NotificationChannel.people_for_domain(:Unsupported_domain)
-    )
-  end
-
-  test 'People for Language - Lang, Cluster & Region' do 
-    notify_people = NotificationChannel.people_for_language(languages(:Bangolan))
-    assert_includes(notify_people, people(:Olga))
-    assert_includes(notify_people, people(:Freddie))
-    assert_includes(notify_people, people(:Drew))
-  end
-
-  test 'People for Language - Lang & Region' do 
-    notify_people = NotificationChannel.people_for_language(languages(:Ewondo))
-    assert_includes(notify_people, people(:Kendall))
-    assert_includes(notify_people, people(:Olga))
-  end
-
-  test 'People for Language - Lang Only' do 
-    languages(:Ewondo).lpf = nil
-    notify_people = NotificationChannel.people_for_language(languages(:Ewondo))
-    assert_includes(notify_people, people(:Kendall))
-  end
-
-  test 'People for cluster' do 
-    notify_people = NotificationChannel.people_for_cluster(clusters(:Ndop))
-    assert_includes(notify_people, people(:Drew))
-    assert_includes(notify_people, people(:Freddie))
-    assert_includes(notify_people, people(:Olga))
-  end
-
-  test 'People for cluster - No Region' do 
-    clusters(:Ndop).lpf = nil
-    notify_people = NotificationChannel.people_for_cluster(clusters(:Ndop))
-    assert_includes(notify_people, people(:Drew))
-    assert_includes(notify_people, people(:Freddie))
   end
 end

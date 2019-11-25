@@ -46,6 +46,9 @@ class NotificationTest < ActiveSupport::TestCase
       "[Drew Mambo](#{mp(@drew)}) a ajouté [Lance Armstrong](#{mp(lance_hdi)}) au programme [Hdi](#{mp(@hdi)}).", 
       ntfn.french
     )
+    assert_equal "Lng#{@hdi.id} Reg#{lpfs(:NorthRegion).id} DTra ", ntfn.channels
+    assert_equal @drew, ntfn.creator
+    assert_equal [ntfn], @drew.created_notifications
     assert_equal 5, PersonNotification.count
     assert_includes @drew.notifications, ntfn
     assert_includes @lance.notifications, ntfn

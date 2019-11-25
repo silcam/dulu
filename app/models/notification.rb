@@ -2,6 +2,7 @@
 
 class Notification < ApplicationRecord
   has_many :person_notifications
+  belongs_to :creator, class_name: 'Person'
 
   default_scope { order(id: :desc) }
 
@@ -32,8 +33,8 @@ class Notification < ApplicationRecord
         participant_name: participant,
         language_name: language
       }
-      people = NotificationChannel.people_for([language] + participant.domains)
-      send_notification(params, links, people, user)
+      channels = NotificationChannel.channels_for(language, participant.domains)
+      send_notification(generate(params, links, channels, user))
     end
 
     def new_cluster_participant(user, participant)
@@ -47,8 +48,8 @@ class Notification < ApplicationRecord
         participant_name: participant,
         cluster_name: cluster
       }
-      people = NotificationChannel.people_for([cluster] + participant.domains) 
-      send_notification(params, links, people, user)
+      channels = NotificationChannel.channels_for(cluster, participant.domains) 
+      send_notification(generate(params, links, channels, user))
     end
 
     def new_stage(user, stage)
@@ -64,8 +65,8 @@ class Notification < ApplicationRecord
         language_name: language,
         activity_name: activity
       }
-      people = NotificationChannel.people_for([language, activity.domain])  
-      send_notification(params, links, people, user)
+      channels = NotificationChannel.channels_for(language, activity.domain)  
+      send_notification(generate(params, links, channels, user))
     end
 
     def workshop_complete(user, workshop)
@@ -79,8 +80,8 @@ class Notification < ApplicationRecord
         workshop_name: workshop.linguistic_activity,
         language_name: language
       }
-      people = NotificationChannel.people_for([language, :Linguistics]) 
-      send_notification(params, links, people, user)
+      channels = NotificationChannel.channels_for(language, :Linguistics) 
+      send_notification(generate(params, links, channels, user))
     end
 
     def new_activity(user, activity)
@@ -94,8 +95,8 @@ class Notification < ApplicationRecord
         language_name: language,
         activity_name: activity
       }
-      people = NotificationChannel.people_for([language, activity.domain])  
-      send_notification(params, links, people, user)
+      channels = NotificationChannel.channels_for(language, activity.domain)  
+      send_notification(generate(params, links, channels, user))
     end
 
     def updated_person(user, person)
@@ -106,7 +107,7 @@ class Notification < ApplicationRecord
         person_name: person.full_name
       )
       links = { person_name: person }
-      send_notification(params, links, [person], user)
+      send_notification(generate(params, links, '', user), [person])
     end
 
     def gave_person_role(user, person, role)
@@ -118,7 +119,7 @@ class Notification < ApplicationRecord
         }
       )
       links = { person_name: person }
-      send_notification(params, links, [person], user)
+      send_notification(generate(params, links, '', user), [person])
     end
 
     def added_people_to_activity(user, people, activity)
@@ -134,8 +135,8 @@ class Notification < ApplicationRecord
         activity_name: activity,
         language_name: language
       }
-      n_people = NotificationChannel.people_for([language, activity.domain]) 
-      send_notification(params, links, n_people, user)
+      channels = NotificationChannel.channels_for(language, activity.domain) 
+      send_notification(generate(params, links, channels, user))
     end
 
     def added_people_to_event(user, event_participants)
@@ -150,7 +151,7 @@ class Notification < ApplicationRecord
         person_names: event_people,
         event_name: event
       }
-      send_notification(params, links, event.people, user)
+      send_notification(generate(params, links, '', user), event.people)
     end
 
     def new_event_for_language(user, event, language)
@@ -163,8 +164,8 @@ class Notification < ApplicationRecord
         event_name: event,
         language_name: language
       }
-      people = NotificationChannel.people_for([language, event.domain])  
-      send_notification(params, links, people, user)
+      channels = NotificationChannel.channels_for(language, event.domain)  
+      send_notification(generate(params, links, channels, user))
     end
 
     def added_language_to_event(user, language, event)
@@ -177,8 +178,8 @@ class Notification < ApplicationRecord
         language_name: language,
         event_name: event
       }
-      people = NotificationChannel.people_for([language, event.domain]) 
-      send_notification(params, links, people, user)
+      channels = NotificationChannel.channels_for(language, event.domain) 
+      send_notification(generate(params, links, channels, user))
     end
 
     def added_cluster_to_event(user, cluster, event)
@@ -191,8 +192,8 @@ class Notification < ApplicationRecord
         cluster_name: cluster,
         event_name: event
       }
-      people = NotificationChannel.people_for([cluster, event.domain]) 
-      send_notification(params, links, people, user)
+      channels = NotificationChannel.channels_for(cluster, event.domain) 
+      send_notification(generate(params, links, channels, user))
     end
 
     private
@@ -210,11 +211,18 @@ class Notification < ApplicationRecord
       end
     end
 
-    def generate_notification(params, links)
-      Notification.create(
+    def text_params(params, links)
+      {
         english: t_nested(params, :en) { |subs| linkify_subs(subs, links) },
         french: t_nested(params, :fr) { |subs| linkify_subs(subs, links) }
-      )
+      }
+    end
+
+    def with_user(params, links, user)
+      [
+        params.merge(subs: params[:subs].merge(user_name: user.full_name)),
+        links.merge(user_name: user)
+      ]
     end
 
     def linkify_subs(subs, links)
@@ -237,16 +245,22 @@ class Notification < ApplicationRecord
       "[#{text}](#{path})"
     end
 
-    def send_notification(params, links, people, user)
-      notification = generate_notification(
-        params.merge(subs: params[:subs].merge(user_name: user.full_name)),
-        links.merge(user_name: user)
+    def generate(params, links, channels, user)
+      create(
+        text_params(*with_user(params, links, user)).merge(
+          creator: user,
+          channels: channels
+        )
       )
+    end
+
+    def send_notification(notification, people = nil)
+      people ||= NotificationChannel.people_for_channels(notification.channels)
       people.uniq.each do |person|
         person_notification = PersonNotification.create(
           person: person,
           notification: notification,
-          read: person == user
+          read: person == notification.creator
         )
         person_notification.email
       end

@@ -17,77 +17,81 @@ class NotificationChannel
     def domain_channel(domain)
       case domain.downcase.to_sym
       when :translation
-        return 'DTra '
+        'DTra '
       when :linguistics
-        return 'DLng '
+        'DLng '
       when :literacy
-        return 'DLit '
+        'DLit '
       when :scripture_use || :media
-        return 'DScr '
+        'DScr '
+      else
+        nil
       end
-      throw "Could not convert domain [#{domain}] into a notification channel."
     end
 
-    def supported_domain?(domain)
-      domain_channel(domain)
-      true
-    rescue StandardError
-      false
+    def add_channel(channels_str, channel)
+      channels_str.include?(channel) ? channels_str : channels_str + channel
     end
 
-    def add_channel(channels, channel)
-      channels.include?(channel) ? channels : channels + channel
+    def remove_channel(channels_str, channel)
+      channels_str.gsub(channel, '')
     end
 
-    def remove_channel(channels, channel)
-      channels.gsub(channel, '')
-    end
-
-    def people_for(items)
-      items
-        .map do |item|
-          case
-          when item.is_a?(Language) then people_for_language(item)
-          when item.is_a?(Cluster) then people_for_cluster(item)
-          when Domain.domains.include?(item.to_s) then people_for_domain(item)
-          else people_for_channels([item])
+    def channels_for(*items)
+      to_str(
+        items
+          .flatten
+          .map do |item|
+            case
+            when item.is_a?(Language) then channels_for_language(item)
+            when item.is_a?(Cluster) then channels_for_cluster(item)
+            when Domain.domains.include?(item.to_s) then channels_for_domains([item])
+            else raise "NotificationChannel.channels_for doesn't know how to handle #{item}!"
+            end
           end
-        end
-        .flatten
-        .uniq
+          .flatten
+          .uniq
+      )
     end
 
-    def people_for_channels(channels)
+    def people_for_channels(channels_str)
+      channels = to_array(channels_str)
+      return [] if channels == []
+
       query = channels.map { 'notification_channels LIKE ?' }.join(' OR ')
       subs = channels.map { |c| "%#{c}%" }
       Person.where(query, *subs)
     end
 
-    def people_for_language(language)
+    private
+
+    def channels_for_language(language)
       region = language.get_lpf
       channels = [language_channel(language.id)]
       channels << cluster_channel(language.cluster_id) if language.cluster_id
       channels << region_channel(region.id) if region
-      people_for_channels(channels)
+      channels
     end
 
-    def people_for_cluster(cluster)
+    def channels_for_cluster(cluster)
       channels = [cluster_channel(cluster.id)]
       channels += cluster.language_ids.map { |id| language_channel(id) }
       channels << region_channel(cluster.lpf_id) if cluster.lpf_id
-      people_for_channels(channels)
+      channels
     end
 
-    def people_for_domain(domain)
-      people_for_domains [domain]
-    end
-
-    def people_for_domains(domains)
+    def channels_for_domains(domains)
       domains
-        .map do |domain|
-          supported_domain?(domain) ? people_for_channels([domain_channel(domain)]) : []
-        end
-        .flatten
+        .map { |d| domain_channel(d) }
+        .reject(&:nil?)
+    end
+
+    def to_str(channels)
+      channels.join('')
+    end
+
+    def to_array(channels_str) 
+      channels_str.split(/(?<= )/)
     end
   end
 end

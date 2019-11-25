@@ -18,8 +18,8 @@ class NotificationsControllerTest < ActionDispatch::IntegrationTest
       ['Lance Armstrong updated Genesis to Drafting.', 'Lance Armstrong à mis a jour Genèse.', false],
       ['Rick Conrad added Drew Mambo to the Hdi program.', 'Rick Conrad a ajouté Drew Mambo au programme Hdi.', false]
     ].each do |params|
-      ntfn = Notification.create(english: params[0], french: params[1])
-      PersonNotification.create(notification: ntfn, person: @drew, read: params[2])
+      ntfn = Notification.create!(english: params[0], french: params[1], creator: @drew)
+      PersonNotification.create!(notification: ntfn, person: @drew, read: params[2])
     end
   end
 
