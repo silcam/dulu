@@ -122,14 +122,14 @@ export default function RegionPage(props: IProps) {
       </P>
       <ProgramList
         editing={editing}
-        region={region}
+        regionList={region.clusters}
         thing="cluster"
         updateRegion={updateRegion}
         collection={props.clusters}
       />
       <ProgramList
         editing={editing}
-        region={region}
+        regionList={region.languages}
         thing="language"
         updateRegion={updateRegion}
         collection={props.languages}

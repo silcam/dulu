@@ -22,6 +22,7 @@ import { T, Locale } from "../i18n/i18n";
 import { AnyObj } from "../models/TypeBucket";
 import { User } from "./DuluApp";
 import CoreData from "./CoreData";
+import NotificationsPage from "../components/notifications/NotificationsPage";
 
 interface IProps extends RouteComponentProps {
   t: T;
@@ -119,6 +120,7 @@ class MainRouter extends React.Component<IProps, IState> {
           />
           <Route path="/events" render={() => <EventsPage />} />
           <Route path="/reports" render={() => <ReportsRouter />} />
+          <Route path="/feed" render={() => <NotificationsPage />} />
           <Route
             path="/participants/:id"
             render={({ match, history }) => (

@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import DeleteIcon from "../shared/icons/DeleteIcon";
 import { ICluster } from "../../models/Cluster";
 import { ILanguage } from "../../models/Language";
-import { IRegionInflated, IRegion } from "../../models/Region";
+import { IRegion } from "../../models/Region";
 import { Partial } from "../../models/TypeBucket";
 import I18nContext from "../../contexts/I18nContext";
 import { SearchPickerAutoClear } from "../shared/SearchPicker";
@@ -15,7 +15,7 @@ export type ClusterLanguage = ICluster | ILanguage;
 
 interface IProps<T extends ClusterLanguage> {
   thing: "cluster" | "language";
-  region: IRegionInflated;
+  regionList: List<T>;
   editing?: boolean;
   updateRegion: (r: Partial<IRegion>) => void;
   noTrash?: boolean;
@@ -25,8 +25,8 @@ interface IProps<T extends ClusterLanguage> {
 export default function ProgramList<T extends ClusterLanguage>(
   props: IProps<T>
 ) {
-  const things = plural(props.thing) as ("clusters" | "languages");
-  const list = props.region[things] as List<T>;
+  const things = plural(props.thing) as "clusters" | "languages";
+  const list = props.regionList;
   const t = useContext(I18nContext);
 
   const addThing = (clusterLanguage: T) => {

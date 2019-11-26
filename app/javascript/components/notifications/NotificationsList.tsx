@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import styles from "./NotificationsList.css";
 import Notification, { INotification } from "./Notification";
-import { Channel } from "./NotificationSidebar";
+import { Channel } from "../dashboard/NotificationSidebar";
 import I18nContext from "../../contexts/I18nContext";
 
 interface IProps {

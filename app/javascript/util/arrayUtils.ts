@@ -106,3 +106,7 @@ export function sort<T>(
 export function equals<T>(a: readonly T[], b: readonly T[]) {
   return a.length == b.length && a.every((aItem, index) => b[index] == aItem);
 }
+
+export function range(min: number, max: number) {
+  return new Array(max - min + 1).fill(1).map((_, index) => index + min);
+}

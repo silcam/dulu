@@ -1,5 +1,6 @@
 import React, { useContext, useEffect } from "react";
 import I18nContext from "../../contexts/I18nContext";
+import { range } from "../../util/arrayUtils";
 
 interface IProps {
   handleInput: (day: string) => void;
@@ -14,17 +15,10 @@ export default function DaySelector(props: IProps) {
   const maxValue = props.maxValue || 31;
 
   useEffect(() => {
-    if (props.value > props.maxValue) props.handleInput(`${props.maxValue}`);
+    if (parseInt(props.value) > props.maxValue)
+      props.handleInput(`${props.maxValue}`);
   });
 
-  var optionsArray = [];
-  for (var day = 1; day <= maxValue; ++day) {
-    optionsArray.push(
-      <option key={day} value={day}>
-        {day}
-      </option>
-    );
-  }
   return (
     <select
       className="form-control"
@@ -33,7 +27,11 @@ export default function DaySelector(props: IProps) {
       onChange={e => props.handleInput(e.target.value)}
     >
       <option value="">{t("Day")}</option>
-      {optionsArray}
+      {range(1, maxValue).map(day => (
+        <option key={day} value={day}>
+          {day}
+        </option>
+      ))}
     </select>
   );
 }

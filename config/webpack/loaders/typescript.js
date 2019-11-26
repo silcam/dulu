@@ -4,15 +4,14 @@ module.exports = {
     {
       loader: "ts-loader",
       options: {
-        transpileOnly: true
-        // configFile: 'tsconfig.build.json'
-        // compilerOptions: {
-        //   strict: false,
-        //   noUnusedLocals: false,
-        //   noUnusedParameters: false,
-        //   checkJs: false,
-        //   noEmit: false
-        // }
+        // transpileOnly: true
+        configFile: "tsconfig.json",
+        compilerOptions: {
+          noEmit: false,
+          noUnusedLocals: false,
+          noUnusedParameters: false,
+          noImplicitAny: false
+        }
       }
     }
   ]

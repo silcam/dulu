@@ -1,8 +1,8 @@
 import React, { useState, useContext, useEffect } from "react";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
-import NotificationsList from "./NotificationsList";
-import styles from "./NotificationsList.css";
-import { INotification } from "./Notification";
+import NotificationsList from "../notifications/NotificationsList";
+import styles from "../notifications/NotificationsList.css";
+import { INotification } from "../notifications/Notification";
 import update from "immutability-helper";
 import DuluAxios from "../../util/DuluAxios";
 import I18nContext from "../../contexts/I18nContext";
@@ -40,9 +40,11 @@ export default function NotificationsSidebar() {
   );
 
   const setChannelState = (channel: Channel, mergeState: MergeChannelState) =>
-    setState(update(state, {
-      [channel]: { $merge: mergeState }
-    }) as ChannelState[]);
+    setState(
+      update(state, {
+        [channel]: { $merge: mergeState }
+      }) as ChannelState[]
+    );
 
   const getNotifications = async (channel: Channel) => {
     setChannelState(channel, { loading: true });
@@ -63,15 +65,18 @@ export default function NotificationsSidebar() {
     }
   };
 
-  const markAllRead = (channel: Channel) => {
-    const notifications = state[channel].notifications;
-    DuluAxios.post(`${channelPaths[channel]}/mark_read`, {
-      from: notifications[notifications.length - 1].id,
-      to: notifications[0].id
+  const markAllRead = () => {
+    const notifications = state[Channel.forMe].notifications;
+    const p_notifications = notifications
+      .map(n => n.person_notification)
+      .filter(pn => pn);
+    DuluAxios.post(`/api/notifications/mark_read`, {
+      from: p_notifications[p_notifications.length - 1]!.id,
+      to: p_notifications[0]!.id
     });
-    setChannelState(channel, {
+    setChannelState(Channel.forMe, {
       notifications: notifications.map(n => {
-        n.read = true;
+        if (n.person_notification) n.person_notification.read = true;
         return n;
       })
     });
