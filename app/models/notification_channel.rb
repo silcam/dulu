@@ -54,13 +54,17 @@ class NotificationChannel
       )
     end
 
-    def people_for_channels(channels_str)
+    def match_channels(channels_str, src, colname = 'notification_channels')
       channels = to_array(channels_str)
       return [] if channels == []
 
-      query = channels.map { 'notification_channels LIKE ?' }.join(' OR ')
+      query = channels.map { "#{colname} LIKE ?" }.join(' OR ')
       subs = channels.map { |c| "%#{c}%" }
-      Person.where(query, *subs)
+      src.where(query, *subs)
+    end
+
+    def people_for_channels(channels_str)
+      match_channels(channels_str, Person)
     end
 
     private

@@ -6,6 +6,8 @@ Style/GuardClause:
   Enabled: false
 Style/ClassAndModuleChildren:
   Enabled: false
+Style/MultilineTernaryOperator:
+  Enabled: false
 
 Metrics/LineLength:
   Enabled: false

@@ -22,6 +22,10 @@ class Notification < ApplicationRecord
     include ApplicationHelper
     include TranslationHelper
 
+    def for_channels(channels)
+      NotificationChannel.match_channels(channels, Notification, 'channels')
+    end
+
     def new_language_participant(user, participant)
       language = participant.language
       params = t_params(

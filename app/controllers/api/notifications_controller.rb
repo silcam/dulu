@@ -6,7 +6,9 @@ class Api::NotificationsController < ApplicationController
   end
 
   def global
-    @notifications, @more_available = get_paged(Notification)
+    @notifications, @more_available = get_paged(
+      params[:channels] ? Notification.for_channels(params[:channels]) : Notification
+    )
   end
 
   def mark_read

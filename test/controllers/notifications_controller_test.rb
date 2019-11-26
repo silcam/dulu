@@ -14,11 +14,11 @@ class NotificationsControllerTest < ActionDispatch::IntegrationTest
 
   def seed_notifications
     [
-      ['Drew Mambo added Abanda Dunno to the Genesis Checking event.', 'Drew Mambo a ajouté Abanda Dunno à Genèse Checking.', true],
-      ['Lance Armstrong updated Genesis to Drafting.', 'Lance Armstrong à mis a jour Genèse.', false],
-      ['Rick Conrad added Drew Mambo to the Hdi program.', 'Rick Conrad a ajouté Drew Mambo au programme Hdi.', false]
+      ['Drew Mambo added Abanda Dunno to the Genesis Checking event.', 'Drew Mambo a ajouté Abanda Dunno à Genèse Checking.', true, 'DTra '],
+      ['Lance Armstrong completed the Noun workshop.', "Lance Armstrong à terminé l'atelier Nom.", false, 'DLng '],
+      ['Rick Conrad added Drew Mambo to the Hdi program.', 'Rick Conrad a ajouté Drew Mambo au programme Hdi.', false, 'DTra ']
     ].each do |params|
-      ntfn = Notification.create!(english: params[0], french: params[1], creator: @drew)
+      ntfn = Notification.create!(english: params[0], french: params[1], creator: @drew, channels: params[3])
       PersonNotification.create!(notification: ntfn, person: @drew, read: params[2])
     end
   end
@@ -80,6 +80,13 @@ class NotificationsControllerTest < ActionDispatch::IntegrationTest
     assert_equal 12, data[:notifications].count
     data = api_get ntfn_path('/global?page=1')
     assert_not data[:moreAvailable]
+    assert_equal 3, data[:notifications].count
+  end
+
+  test 'Global by channel' do
+    data = api_get ntfn_path('/global?channels=DTra%20')
+    assert_equal 2, data[:notifications].count
+    data = api_get ntfn_path('/global?channels=DTra%20DLng%20')
     assert_equal 3, data[:notifications].count
   end
 
