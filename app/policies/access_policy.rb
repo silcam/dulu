@@ -8,7 +8,7 @@ class AccessPolicy
       can :read, Audited::Audit
       can :manage, Organization
       can [:manage_participants, :create, :update, :destroy], Cluster
-      can :manage, Lpf
+      can :manage, Region
     end
 
     role :supervisor, proc { |u| u.has_role_among?(Role::SUPERVISOR_ROLES) } do
@@ -21,7 +21,7 @@ class AccessPolicy
       can :manage, Publication
       can :create, DomainUpdate
       can :manage, SurveyCompletion
-      can [:create, :update], Lpf
+      can [:create, :update], Region
     end
 
     part_roles = Role::SUPERVISOR_ROLES + Role::PARTICIPANT_ROLES

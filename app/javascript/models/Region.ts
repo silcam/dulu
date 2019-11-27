@@ -7,12 +7,12 @@ import List from "./List";
 export interface IRegion {
   id: number;
   name: string;
-  person_id?: number;
+  lpf_id?: number;
   can: { update?: boolean; destroy?: boolean };
 }
 
 export interface IRegionInflated extends IRegion {
-  person?: IPerson;
+  lpf?: IPerson;
   clusters: List<ICluster>;
   languages: List<ILanguage>;
 }
@@ -30,7 +30,7 @@ function compare(a: IRegion, b: IRegion) {
 function regionParams(region: IRegionInflated) {
   return {
     name: region.name,
-    person_id: region.person ? region.person.id : null,
+    lpf_id: region.lpf ? region.lpf.id : null,
     cluster_ids: region.clusters.map(cluster => cluster.id),
     language_ids: region.languages.map(language => language.id)
   };
@@ -39,7 +39,7 @@ function regionParams(region: IRegionInflated) {
 function inflate(state: AppState, region: IRegion): IRegionInflated {
   return {
     ...region,
-    person: region.person_id ? state.people.get(region.person_id) : undefined,
+    lpf: region.lpf_id ? state.people.get(region.lpf_id) : undefined,
     clusters: state.clusters.filter(c => c.region_id == region.id),
     languages: state.languages.filter(l => l.region_id == region.id)
   };

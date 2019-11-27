@@ -1,5 +1,5 @@
 json.region do
-  json.call(@region, :id, :name, :person_id)
+  json.call(@region, :id, :name, :lpf_id)
 
   json.can do
     json.update can? :update, @region
@@ -7,20 +7,12 @@ json.region do
   end
 end
 
-people = @region.person ? [@region.person] : []
+if @region_updated
+  json.clusters Cluster.all do |cluster|
+    json.call(cluster, :id, :name, :region_id)
+  end
 
-json.people people do |person|
-  json.call(person, :id, :first_name, :last_name)
-end
-
-clusters = @old_clusters ? (@region.clusters + @old_clusters).uniq : @region.clusters
-json.clusters clusters do |cluster|
-  json.call(cluster, :id, :name)
-  json.region_id cluster.lpf_id
-end
-
-languages = @old_languages ? (@region.languages + @old_languages).uniq : @region.languages
-json.languages languages do |language|
-  json.call(language, :id, :name)
-  json.region_id language.lpf_id
+  json.languages Language.all do |language|
+    json.call(language, :id, :name, :region_id)
+  end
 end

@@ -3,5 +3,5 @@ json.regions @regions do |region|
 end
 
 json.can do
-  json.create can?(:create, Lpf)
+  json.create can?(:create, Region)
 end

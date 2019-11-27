@@ -1,5 +1,5 @@
 json.clusters @clusters do |cluster|
-  json.call(cluster, :id, :name)
+  json.call(cluster, :id, :name, :region_id)
 end
 
 json.can do

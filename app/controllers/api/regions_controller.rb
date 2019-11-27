@@ -1,31 +1,32 @@
+# frozen_string_literal: true
+
 class Api::RegionsController < ApplicationController
   def create
-    authorize! :create, Lpf
-    @region = Lpf.create!(region_params)
+    authorize! :create, Region
+    @region = Region.create!(region_params)
+    @region_updated = true
     render :show
   end
 
   def index
-    @regions = Lpf.all
+    @regions = Region.all
   end
 
   def show
-    @region = Lpf.find(params[:id])
+    @region = Region.find(params[:id])
   end
 
   def update
-    @region = Lpf.find(params[:id])
-    old_language_ids = @region.language_ids
-    old_cluster_ids = @region.cluster_ids
+    @region = Region.find(params[:id])
     authorize! :update, @region
     @region.update(region_params)
-    @old_languages = Language.where(id: old_language_ids)
-    @old_clusters = Cluster.where(id: old_cluster_ids)
+    @region_updated = true
+    @region.lpf&.add_notification_channel(NotificationChannel.region_channel(@region))
     render :show
   end
 
   def destroy
-    @region = Lpf.find(params[:id])
+    @region = Region.find(params[:id])
     authorize! :destroy, @region
     @region.destroy!
     response_ok
@@ -34,6 +35,6 @@ class Api::RegionsController < ApplicationController
   private
 
   def region_params
-    params.require(:region).permit(:name, :person_id, cluster_ids: [], language_ids: [])
+    params.require(:region).permit(:name, :lpf_id, cluster_ids: [], language_ids: [])
   end
 end

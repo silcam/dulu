@@ -6,7 +6,7 @@ class TerritoryTest < ActiveSupport::TestCase
   end
 
   test "Relations" do
-    far_north = regions :FarNorth
-    assert_equal far_north, @mayo_tsanaga.region
+    far_north = country_regions :FarNorth
+    assert_equal far_north, @mayo_tsanaga.country_region
   end
 end

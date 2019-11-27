@@ -1,5 +1,5 @@
 json.cluster do
-  json.call(@cluster, :id, :name)
+  json.call(@cluster, :id, :name, :region_id)
 
   json.can do
     json.update can?(:update, @cluster)

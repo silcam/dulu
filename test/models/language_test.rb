@@ -13,7 +13,7 @@ class LanguageTest < ActiveSupport::TestCase
   test "Relations" do
     developing = language_statuses :Developing
     cameroon = countries :Cameroon
-    far_north = regions :FarNorth
+    far_north = country_regions :FarNorth
     hdi_language = languages :Hdi
     hdi_dialect = languages :HdiDialect
     hdi_ezra = translation_activities :HdiEzra
@@ -26,7 +26,7 @@ class LanguageTest < ActiveSupport::TestCase
 
     assert_equal developing, @hdi.language_status
     assert_equal cameroon, @hdi.countries.first
-    assert_equal far_north, @hdi.regions.first
+    assert_equal far_north, @hdi.country_regions.first
     # assert_equal hdi_language, @hdi.language
     assert_equal @hdi, hdi_dialect.parent
     assert_includes @hdi.translation_activities, hdi_ezra

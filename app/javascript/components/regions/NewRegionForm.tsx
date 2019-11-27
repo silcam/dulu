@@ -4,7 +4,6 @@ import SaveButton from "../shared/SaveButton";
 import CancelButton from "../shared/CancelButton";
 import { IRegion } from "../../models/Region";
 import { Adder, Setter } from "../../models/TypeBucket";
-import { IPerson } from "../../models/Person";
 import { ICluster } from "../../models/Cluster";
 import { ILanguage } from "../../models/Language";
 import API from "./RegionsAPI";
@@ -14,7 +13,6 @@ import FormGroup from "../shared/FormGroup";
 import TextInput from "../shared/TextInput";
 
 interface IProps {
-  addPeople: Adder<IPerson>;
   addClusters: Adder<ICluster>;
   addLanguages: Adder<ILanguage>;
   setRegion: Setter<IRegion>;

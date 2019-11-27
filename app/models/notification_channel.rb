@@ -2,16 +2,16 @@
 
 class NotificationChannel
   class << self
-    def language_channel(id)
-      "Lng#{id} "
+    def language_channel(lang_or_id)
+      "Lng#{lang_or_id.is_a?(Integer) ? lang_or_id : lang_or_id.id} "
     end
 
-    def cluster_channel(id)
-      "Cls#{id} "
+    def cluster_channel(cl_or_id)
+      "Cls#{cl_or_id.is_a?(Integer) ? cl_or_id : cl_or_id.id} "
     end
 
-    def region_channel(id)
-      "Reg#{id} "
+    def region_channel(reg_or_id)
+      "Reg#{reg_or_id.is_a?(Integer) ? reg_or_id : reg_or_id.id} "
     end
 
     def domain_channel(domain)
@@ -59,7 +59,7 @@ class NotificationChannel
     private
 
     def channels_for_language(language)
-      region = language.get_lpf
+      region = language.get_region
       channels = [language_channel(language.id)]
       channels << cluster_channel(language.cluster_id) if language.cluster_id
       channels << region_channel(region.id) if region
@@ -69,7 +69,7 @@ class NotificationChannel
     def channels_for_cluster(cluster)
       channels = [cluster_channel(cluster.id)]
       channels += cluster.language_ids.map { |id| language_channel(id) }
-      channels << region_channel(cluster.lpf_id) if cluster.lpf_id
+      channels << region_channel(cluster.region_id) if cluster.region_id
       channels
     end
 

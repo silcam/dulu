@@ -1,3 +1,7 @@
-FarNorth:
-  english_name: Far North
-  french_name: Extrème-Nord
+NorthRegion:
+  name: North Region
+  lpf: Andreas
+
+SouthRegion:
+  name: South Region
+  lpf: Olga

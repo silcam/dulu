@@ -8,14 +8,17 @@ class NotificationChannelTest < ActiveSupport::TestCase
   def setup
     @bangolan = languages(:Bangolan)
     @ewondo = languages(:Ewondo)
-    @south = lpfs(:SouthRegion)
+    @south = regions(:SouthRegion)
     @ndop = clusters(:Ndop)
   end
 
   test 'Basic channel codes' do
     assert_equal('Lng41 ', NotificationChannel.language_channel(41))
+    assert_equal("Lng#{@ewondo.id} ", NotificationChannel.language_channel(@ewondo))
     assert_equal('Cls41 ', NotificationChannel.cluster_channel(41))
+    assert_equal("Cls#{@ndop.id} ", NotificationChannel.cluster_channel(@ndop))
     assert_equal('Reg41 ', NotificationChannel.region_channel(41))
+    assert_equal("Reg#{@south.id} ", NotificationChannel.region_channel(@south))
     assert_equal('DTra ', NotificationChannel.domain_channel(:Translation))
     assert_equal('DLin ', NotificationChannel.domain_channel(:Linguistics))
     assert_equal('DLit ', NotificationChannel.domain_channel(:Literacy))
@@ -76,7 +79,7 @@ class NotificationChannelTest < ActiveSupport::TestCase
   end
 
   test 'Channels for Language - Lang Only' do 
-    @ewondo.update(lpf: nil)
+    @ewondo.update(region: nil)
     assert_equal(
       "Lng#{@ewondo.id} ",
       NotificationChannel.channels_for(@ewondo)
@@ -91,7 +94,7 @@ class NotificationChannelTest < ActiveSupport::TestCase
   end
 
   test 'Channels for cluster - No Region' do 
-    @ndop.update(lpf: nil)
+    @ndop.update(region: nil)
     assert_equal(
       "Cls#{@ndop.id} Lng#{languages(:Bambalang).id} Lng#{@bangolan.id} ",
       NotificationChannel.channels_for(@ndop)

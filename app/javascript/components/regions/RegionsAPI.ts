@@ -7,12 +7,10 @@ import {
   AnyObj,
   SetCan
 } from "../../models/TypeBucket";
-import { IPerson } from "../../models/Person";
 import { ICluster } from "../../models/Cluster";
 import { ILanguage } from "../../models/Language";
 
 interface FetchRegionActions {
-  addPeople: Adder<IPerson>;
   addClusters: Adder<ICluster>;
   addLanguages: Adder<ILanguage>;
   setRegion: Setter<IRegion>;
@@ -60,9 +58,8 @@ async function del(id: number, deleteRegionAction: Deleter) {
 }
 
 function fetchedRegion(data: AnyObj, actions: FetchRegionActions) {
-  actions.addPeople(data.people);
-  actions.addLanguages(data.languages);
-  actions.addClusters(data.clusters);
+  if (data.languages) actions.addLanguages(data.languages);
+  if (data.clusters) actions.addClusters(data.clusters);
   actions.setRegion(data.region);
 }
 

@@ -1,21 +1,24 @@
-require "test_helper"
+# frozen_string_literal: true
+
+require 'test_helper'
 
 class RegionTest < ActiveSupport::TestCase
   def setup
-    @far_north = regions :FarNorth
+    @south = regions :SouthRegion
+    @olga = people :Olga
+    @ewondo = languages :Ewondo
+    @ndop = clusters :Ndop
   end
 
-  test "Relations" do
-    mayo_tsanaga = territories :MayoTsanaga
-    hdi = languages :Hdi
-    assert_includes(@far_north.territories, mayo_tsanaga)
-    assert_includes(@far_north.languages, hdi)
+  test 'lpf' do
+    assert_equal @olga, @south.lpf
   end
 
-  test "Name" do
-    I18n.locale = :fr
-    assert_equal "Extrème-Nord", @far_north.name
-    I18n.locale = :en
-    assert_equal "Far North", @far_north.name
+  test 'clusters' do
+    assert_includes @south.clusters, @ndop
+  end
+
+  test 'languages' do
+    assert_includes @south.languages, @ewondo
   end
 end

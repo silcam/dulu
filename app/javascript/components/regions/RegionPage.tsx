@@ -103,18 +103,18 @@ export default function RegionPage(props: IProps) {
           <FormGroup label={t("LPF")}>
             <PersonPicker
               collection={props.people}
-              selectedId={region.person ? region.person.id : null}
-              setSelected={person => updateRegion({ person: person })}
+              selectedId={region.lpf ? region.lpf.id : null}
+              setSelected={person => updateRegion({ lpf: person })}
               placeholder={t("Name")}
               allowBlank
             />
           </FormGroup>
         ) : (
-          region.person && (
+          region.lpf && (
             <h3>
               {t("LPF")}:{" "}
-              <Link className="notBlue" to={`/people/${region.person.id}`}>
-                {fullName(region.person)}
+              <Link className="notBlue" to={`/people/${region.lpf.id}`}>
+                {fullName(region.lpf)}
               </Link>
             </h3>
           )

@@ -1,12 +1,9 @@
 class Region < ApplicationRecord
-  belongs_to :country, required: true
-  has_many :territories
-  has_and_belongs_to_many :languages
+  belongs_to :lpf, required: false, class_name: 'Person'
+  has_many :clusters, dependent: :nullify
+  has_many :languages, dependent: :nullify
 
-  def name
-    if I18n.locale == :fr
-      return french_name
-    end
-    return english_name
-  end
+  default_scope { order :name }
+
+  validates :name, presence: true, allow_blank: false
 end

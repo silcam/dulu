@@ -14,7 +14,7 @@ class Cluster < ApplicationRecord
   alias all_people people
   alias all_current_participants current_participants
   alias all_current_people current_people
-  alias get_lpf lpf
+  alias get_region region
 
   def display_name
     I18n.t(:Cluster_x, name: name)

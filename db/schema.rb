@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20191125121610) do
+ActiveRecord::Schema.define(version: 20191127105642) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -87,8 +87,8 @@ ActiveRecord::Schema.define(version: 20191125121610) do
     t.string "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "lpf_id"
-    t.index ["lpf_id"], name: "index_clusters_on_lpf_id"
+    t.integer "region_id"
+    t.index ["region_id"], name: "index_clusters_on_region_id"
   end
 
   create_table "clusters_events", id: false, force: :cascade do |t|
@@ -110,6 +110,22 @@ ActiveRecord::Schema.define(version: 20191125121610) do
     t.bigint "language_id"
     t.index ["country_id"], name: "index_countries_languages_on_country_id"
     t.index ["language_id"], name: "index_countries_languages_on_language_id"
+  end
+
+  create_table "country_regions", id: :serial, force: :cascade do |t|
+    t.string "english_name"
+    t.string "french_name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "country_id"
+    t.index ["country_id"], name: "index_country_regions_on_country_id"
+  end
+
+  create_table "country_regions_languages", force: :cascade do |t|
+    t.bigint "language_id"
+    t.bigint "country_region_id"
+    t.index ["country_region_id"], name: "index_country_regions_languages_on_country_region_id"
+    t.index ["language_id"], name: "index_country_regions_languages_on_language_id"
   end
 
   create_table "delayed_jobs", id: :serial, force: :cascade do |t|
@@ -214,34 +230,19 @@ ActiveRecord::Schema.define(version: 20191125121610) do
     t.integer "population"
     t.string "population_description"
     t.string "classification"
-    t.integer "region_id"
+    t.integer "country_region_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "alt_names"
     t.integer "parent_id"
     t.integer "cluster_id"
-    t.integer "lpf_id"
+    t.integer "region_id"
     t.integer "program_id"
     t.index ["cluster_id"], name: "index_languages_on_cluster_id"
     t.index ["country_id"], name: "index_languages_on_country_id"
+    t.index ["country_region_id"], name: "index_languages_on_country_region_id"
     t.index ["language_status_id"], name: "index_languages_on_language_status_id"
     t.index ["parent_id"], name: "index_languages_on_parent_id"
-    t.index ["region_id"], name: "index_languages_on_region_id"
-  end
-
-  create_table "languages_regions", force: :cascade do |t|
-    t.bigint "language_id"
-    t.bigint "region_id"
-    t.index ["language_id"], name: "index_languages_regions_on_language_id"
-    t.index ["region_id"], name: "index_languages_regions_on_region_id"
-  end
-
-  create_table "lpfs", id: :serial, force: :cascade do |t|
-    t.string "name"
-    t.integer "person_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["person_id"], name: "index_lpfs_on_person_id"
   end
 
   create_table "notifications", force: :cascade do |t|
@@ -376,12 +377,11 @@ ActiveRecord::Schema.define(version: 20191125121610) do
   end
 
   create_table "regions", id: :serial, force: :cascade do |t|
-    t.string "english_name"
-    t.string "french_name"
+    t.string "name"
+    t.integer "lpf_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "country_id"
-    t.index ["country_id"], name: "index_regions_on_country_id"
+    t.index ["lpf_id"], name: "index_regions_on_lpf_id"
   end
 
   create_table "reports", id: :serial, force: :cascade do |t|
@@ -442,11 +442,11 @@ ActiveRecord::Schema.define(version: 20191125121610) do
   end
 
   create_table "territories", id: :serial, force: :cascade do |t|
-    t.integer "region_id"
+    t.integer "country_region_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "name"
-    t.index ["region_id"], name: "index_territories_on_region_id"
+    t.index ["country_region_id"], name: "index_territories_on_country_region_id"
   end
 
   create_table "viewed_reports", id: :serial, force: :cascade do |t|

@@ -124,7 +124,7 @@ class PersonIntTest < ApplicationSystemTestCase
   test 'Subscribe Notification Channel' do
     ewondo = languages(:Ewondo)
     ndop = clusters(:Ndop)
-    north = lpfs(:NorthRegion)
+    north = regions(:NorthRegion)
     log_in @rick
     refute_includes NotificationChannel.people_for_channels("Lng#{ewondo.id} Cls#{ndop.id} Reg#{north.id} DLit "), @rick
     visit model_path(@rick)

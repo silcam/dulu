@@ -22,7 +22,7 @@ class Person < ApplicationRecord
   has_many :notifications, through: :person_notifications
   has_many :created_notifications, class_name: 'Notification', foreign_key: :creator_id
 
-  has_many :lpfs
+  has_many :regions
 
   audited
 

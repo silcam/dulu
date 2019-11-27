@@ -4,7 +4,7 @@ class Language < ApplicationRecord
   belongs_to :cluster, required: false
   belongs_to :language_status, required: false
   has_and_belongs_to_many :countries
-  has_and_belongs_to_many :regions
+  has_and_belongs_to_many :country_regions
   belongs_to :parent, class_name: "Language", required: false
   # has_one :program
 
@@ -31,8 +31,8 @@ class Language < ApplicationRecord
     name
   end
 
-  def get_lpf
-    lpf || cluster.try(:lpf)
+  def get_region
+    region || cluster.try(:region)
   end
 
   def parent_cannot_be_dialect

@@ -1,16 +1,16 @@
 Hdi:
   name: Hdi
   countries: Cameroon
-  regions: FarNorth
+  country_regions: FarNorth
   language_status: Developing
   code: xed
   alt_names: 'Hedi, Hide, Turu-Hide, Xadi, Xdi, Xedi'
-  lpf: NorthRegion
+  region: NorthRegion
 
 HdiDialect:
   name: HdiDialect
   countries: Cameroon
-  regions: FarNorth
+  country_regions: FarNorth
   parent: Hdi
 
 Bangolan:
@@ -23,11 +23,11 @@ Bambalang:
 
 Ewondo:
   name: Ewondo
-  lpf: SouthRegion
+  region: SouthRegion
 
 Zulgo:
   name: Zulgo
-  lpf: NorthRegion
+  region: NorthRegion
 
 NoActivity:
   name: No Activity

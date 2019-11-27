@@ -67,7 +67,6 @@ export default function RegionsBoard(props: IProps) {
           {props.action == "new" && (
             <NewRegionForm
               setRegion={props.setRegion}
-              addPeople={props.addPeople}
               addClusters={props.addClusters}
               addLanguages={props.addLanguages}
               history={props.history}
