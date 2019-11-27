@@ -1,4 +1,5 @@
 export const Domains = <const>[
+  // Keep in sync with domain.rb
   "Anthropology",
   "Community_development",
   "Ethnomusicology",

@@ -43,7 +43,7 @@ function languages(state: AppState, clusterId: number) {
   return state.languages.filter(lang => lang.cluster_id == clusterId);
 }
 
-function emptyList() {
+function emptyList(): List<ICluster> {
   return new List(emptyCluster, [], compare);
 }
 

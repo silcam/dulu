@@ -3,12 +3,12 @@ import AddRoleRow from "./AddRoleRow";
 import DeleteIcon from "../shared/icons/DeleteIcon";
 import DuluAxios from "../../util/DuluAxios";
 import InlineAddIcon from "../shared/icons/InlineAddIcon";
-import { IPerson, Role } from "../../models/Person";
+import { IPerson } from "../../models/Person";
 import I18nContext from "../../contexts/I18nContext";
 
 interface IProps {
   person: IPerson;
-  replaceRoles: (roles: Role[]) => void;
+  replaceRoles: (roles: string[]) => void;
 }
 
 interface IState {
@@ -52,8 +52,8 @@ export default class RolesTable extends React.PureComponent<IProps, IState> {
               <tbody>
                 {person.roles.map(role => {
                   return (
-                    <tr key={role.value}>
-                      <td>{role.display}</td>
+                    <tr key={role}>
+                      <td>{t(`roles.${role}`)}</td>
                       {person.can.update && (
                         <td>
                           <DeleteIcon
@@ -61,11 +61,11 @@ export default class RolesTable extends React.PureComponent<IProps, IState> {
                               if (
                                 window.confirm(
                                   t("confirm_delete_role", {
-                                    role: role.display
+                                    role: t(`roles.${role}`)
                                   })
                                 )
                               )
-                                this.deleteRole(role.value);
+                                this.deleteRole(role);
                             }}
                           />
                         </td>

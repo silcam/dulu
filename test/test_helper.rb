@@ -41,7 +41,41 @@ class ActiveSupport::TestCase
     response_body
   end
 
+  def api_put(path, params)
+    put(path, xhr: true, params: params)
+    response_body
+  end
+
+  def api_delete(path)
+    delete(path, xhr: true)
+    response_body
+  end
+
   def response_body
-    @response.body.empty? ? nil : JSON.parse(@response.body, symbolize_names: true)
+    JSON.parse(@response.body, symbolize_names: true)
+  rescue JSON::ParserError
+    @response.body
+  end
+
+  def assert_not_allowed
+    assert_response 401
+  end
+
+  def assert_partial(exp, actual)
+    if exp.is_a? Hash
+      exp.each_pair do |key, val|
+        if val.nil?
+          assert_nil actual[key]
+        else
+          assert_equal val, actual[key]
+        end
+      end
+    elsif exp.is_a? Array
+      exp.each do |val|
+        assert_includes actual, val
+      end
+    else
+      raise "Expected Hash or Array to be supplied to assert_partial. Received #{exp.class}."
+    end
   end
 end

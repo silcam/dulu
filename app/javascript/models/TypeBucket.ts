@@ -55,3 +55,7 @@ export type PartialModel<T extends { id: number }> = Omit<Partial<T>, "id"> & {
 export type Omit<T, K> = Pick<T, Exclude<keyof T, K>>;
 
 export type Children = JSX.Element | JSX.Element[] | undefined;
+
+export function isDefined<T>(item: T | undefined | null): item is T {
+  return item !== null && item !== undefined;
+}

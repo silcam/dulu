@@ -3,6 +3,7 @@ interface StrObj {
 }
 
 const roleDomains: StrObj = {
+  // Keep in sync with role.rb
   Administration: "",
   BackTranslator: "Translation",
   DuluAdmin: "",

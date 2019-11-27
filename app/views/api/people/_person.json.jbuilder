@@ -1,12 +1,19 @@
+# frozen_string_literal: true
+
 json.person do
-  json.call(@person, :id,
-            :first_name,
-            :last_name,
-            :email,
-            :has_login,
-            :ui_language,
-            :email_pref,
-            :gender)
+  json.call(
+    @person, 
+    :id,
+    :first_name,
+    :last_name,
+    :email,
+    :has_login,
+    :ui_language,
+    :email_pref,
+    :gender,
+    :roles,
+    :notification_channels
+  )
 
   json.isUser @person == current_user
 
@@ -18,9 +25,6 @@ json.person do
     json.home_country nil
   end
 
-  json.roles do
-    json.partial! "/api/person_roles/roles", roles: @person.roles
-  end
   json.grantable_roles(Role
     .grantable_roles(current_user, @person)
     .collect { |r| { value: r, display: t(r) } }
@@ -29,8 +33,7 @@ json.person do
   json.participants @person.participants do |participant|
     json.call(participant, :id, :language_id, :cluster_id)
     json.name participant.cluster_language.display_name
-    roles = participant.roles.collect { |r| t(r) }
-    json.roles roles
+    json.roles participant.roles
   end
 
   # json.events do

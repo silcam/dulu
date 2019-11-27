@@ -1,22 +1,21 @@
 import baseCompare from "../util/baseCompare";
 import { Locale } from "../i18n/i18n";
 
-// TODO - change API
-export interface Role {
+export interface GrRole {
   value: string;
   display: string;
 }
-
 export type EmailPref = "immediate" | "daily" | "weekly";
 export interface IPerson {
   id: number;
   first_name: string;
   last_name: string;
   can: { update?: boolean; destroy?: boolean };
-  roles: Role[];
+  roles: string[];
   email: string;
   ui_language: Locale;
   email_pref: EmailPref;
+  notification_channels: string;
   participants: Array<{
     id: number;
     language_id: number | null;
@@ -24,7 +23,7 @@ export interface IPerson {
     name: string;
     roles: string[];
   }>; // TODO - remove
-  grantable_roles: Role[];
+  grantable_roles: GrRole[];
   gender: "M" | "F";
   has_login?: boolean;
   not_a_duplicate?: boolean;

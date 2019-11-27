@@ -53,3 +53,11 @@ SelectInput.translatedOptions = (
   }
   return selectOptions;
 };
+
+SelectInput.indexedOptions = (options: readonly string[]) => {
+  const selectOptions: {
+    value: string;
+    display: string;
+  }[] = options.map((opt, index) => ({ value: `${index}`, display: opt }));
+  return selectOptions;
+};

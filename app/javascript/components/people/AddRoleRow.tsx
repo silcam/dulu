@@ -2,11 +2,11 @@ import React from "react";
 import SelectInput from "../shared/SelectInput";
 import DuluAxios from "../../util/DuluAxios";
 import SmallSaveAndCancel from "../shared/SmallSaveAndCancel";
-import { IPerson, Role } from "../../models/Person";
+import { IPerson } from "../../models/Person";
 
 interface IProps {
   person: IPerson;
-  replaceRoles: (roles: Role[]) => void;
+  replaceRoles: (roles: string[]) => void;
   cancel: () => void;
 }
 

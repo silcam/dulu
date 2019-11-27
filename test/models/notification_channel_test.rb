@@ -17,7 +17,7 @@ class NotificationChannelTest < ActiveSupport::TestCase
     assert_equal('Cls41 ', NotificationChannel.cluster_channel(41))
     assert_equal('Reg41 ', NotificationChannel.region_channel(41))
     assert_equal('DTra ', NotificationChannel.domain_channel(:Translation))
-    assert_equal('DLng ', NotificationChannel.domain_channel(:Linguistics))
+    assert_equal('DLin ', NotificationChannel.domain_channel(:Linguistics))
     assert_equal('DLit ', NotificationChannel.domain_channel(:Literacy))
     assert_equal('DScr ', NotificationChannel.domain_channel(:Scripture_use))
   end
@@ -58,10 +58,6 @@ class NotificationChannelTest < ActiveSupport::TestCase
     assert_equal(
       'DTra ',
       NotificationChannel.channels_for(:Translation)
-    )
-    assert_equal(
-      '',
-      NotificationChannel.channels_for(:Anthropology)
     )
   end
 

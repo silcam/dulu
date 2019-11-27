@@ -63,39 +63,6 @@ function PersonBasicInfo(props: IProps) {
             </td>
           </tr>
         )}
-        {person.isUser && (
-          <React.Fragment>
-            <tr>
-              <th>{t("dulu_preferred_language")}</th>
-              <td>
-                <TextOrSelect
-                  editing={props.editing}
-                  value={person.ui_language}
-                  options={{
-                    en: "English",
-                    fr: "Français"
-                  }}
-                  setValue={value =>
-                    props.updatePerson({ ui_language: value as Locale })
-                  }
-                />
-              </td>
-            </tr>
-            <tr>
-              <th>{t("Email_frequency")}</th>
-              <td>
-                <TextOrSelect
-                  editing={props.editing}
-                  value={person.email_pref}
-                  options={t("email_prefs")}
-                  setValue={value =>
-                    props.updatePerson({ email_pref: value as EmailPref })
-                  }
-                />
-              </td>
-            </tr>
-          </React.Fragment>
-        )}
       </tbody>
     </table>
   );

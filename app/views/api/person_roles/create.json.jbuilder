@@ -1,3 +1,1 @@
-json.roles do
-  json.partial! "roles", roles: @person.roles
-end
+json.roles @person.roles

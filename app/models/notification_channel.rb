@@ -15,18 +15,7 @@ class NotificationChannel
     end
 
     def domain_channel(domain)
-      case domain.downcase.to_sym
-      when :translation
-        'DTra '
-      when :linguistics
-        'DLng '
-      when :literacy
-        'DLit '
-      when :scripture_use || :media
-        'DScr '
-      else
-        nil
-      end
+      "D#{domain.to_s.camelize.slice(0, 3)} "
     end
 
     def add_channel(channels_str, channel)

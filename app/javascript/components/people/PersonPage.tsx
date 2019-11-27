@@ -4,7 +4,7 @@ import TextOrEditText from "../shared/TextOrEditText";
 import SaveIndicator from "../shared/SaveIndicator";
 import PersonBasicInfo from "./PersonBasicInfo";
 import DangerButton from "../shared/DangerButton";
-import { fullName, IPerson, Role } from "../../models/Person";
+import { fullName, IPerson } from "../../models/Person";
 import update from "immutability-helper";
 import ParticipantsTable from "./ParticipantsTable";
 import DuluAxios from "../../util/DuluAxios";
@@ -15,6 +15,7 @@ import PersonEventsContainer from "./PersonEventsContainer";
 import { Setter } from "../../models/TypeBucket";
 import { Locale, T } from "../../i18n/i18n";
 import { History } from "history";
+import DuluSettings from "./DuluSettings";
 // import styles from "./PersonPage.css";
 
 interface IProps {
@@ -75,6 +76,17 @@ export default class PersonPage extends React.PureComponent<IProps, IState> {
     }
   };
 
+  updatePersonAndSave = (mergePerson: Partial<IPerson>) => {
+    this.setState(
+      {
+        person: update(this.props.person, { $merge: mergePerson })
+      },
+      () => {
+        this.save();
+      }
+    );
+  };
+
   updateLanguageIfNecessary = () => {
     if (
       this.props.person.isUser &&
@@ -97,9 +109,9 @@ export default class PersonPage extends React.PureComponent<IProps, IState> {
     const person = this.state.person;
     return (
       person &&
-      (person.first_name.length > 0 &&
-        person.last_name.length > 0 &&
-        (!person.has_login || person.email.length > 0))
+      person.first_name.length > 0 &&
+      person.last_name.length > 0 &&
+      (!person.has_login || person.email.length > 0)
     );
   };
 
@@ -113,7 +125,7 @@ export default class PersonPage extends React.PureComponent<IProps, IState> {
     });
   };
 
-  replaceRoles = (newRoles: Role[]) => {
+  replaceRoles = (newRoles: string[]) => {
     const newPerson = update(this.props.person, {
       roles: { $set: newRoles }
     });
@@ -129,7 +141,7 @@ export default class PersonPage extends React.PureComponent<IProps, IState> {
     if (!person || person.id == 0) return <Loading />;
 
     return (
-      <div>
+      <div className="padBottom">
         <EditActionBar
           can={person.can}
           editing={this.state.editing}
@@ -193,6 +205,13 @@ export default class PersonPage extends React.PureComponent<IProps, IState> {
           history={this.props.history}
           basePath={`/people/${this.props.id}`}
         />
+
+        {person.isUser && !this.state.editing && (
+          <DuluSettings
+            person={person}
+            updatePersonAndSave={this.updatePersonAndSave}
+          />
+        )}
       </div>
     );
   }

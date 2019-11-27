@@ -7,7 +7,7 @@ interface IProps<T> {
   items: readonly T[];
   display: (item: T) => string;
   removeItem: (item: T) => void;
-  clear: () => void;
+  clear?: () => void;
   autoSort?: boolean;
 }
 
@@ -23,7 +23,7 @@ export default function MultiSelectItemList<T>(props: IProps<T>) {
           </button>
         </span>
       ))}
-      {items.length > 0 && (
+      {items.length > 0 && props.clear && (
         <span className={styles.clear}>
           <button className="link" onClick={props.clear}>
             {t("Clear")}

@@ -19,6 +19,7 @@ export const emptyPerson: IPerson = {
   email: "",
   ui_language: Locale.en,
   email_pref: "daily",
+  notification_channels: "",
   participants: [], // TODO - remove
   grantable_roles: [],
   gender: "M"

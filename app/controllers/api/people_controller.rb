@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Api::PeopleController < ApplicationController
   skip_before_action :verify_authenticity_token, only: [:update_view_prefs]
 
@@ -55,21 +57,29 @@ class Api::PeopleController < ApplicationController
   private
 
   def person_params
-    params.require(:person).permit(:first_name,
-                                   :last_name,
-                                   :gender,
-                                   :email,
-                                   :country_id,
-                                   :has_login,
-                                   :ui_language,
-                                   :email_pref)
+    params
+      .require(:person)
+      .permit(
+        :first_name,
+        :last_name,
+        :gender,
+        :email,
+        :country_id,
+        :has_login,
+        :ui_language,
+        :email_pref,
+        :notification_channels
+      )
   end
 
   def duplicate_person?
     return false if params[:person][:not_a_duplicate]
-    @duplicate = Person.find_by("first_name ILIKE ? AND last_name ILIKE ?",
-                                @person.first_name,
-                                @person.last_name)
-    return @duplicate
+
+    @duplicate = Person.find_by(
+      'first_name ILIKE ? AND last_name ILIKE ?',
+      @person.first_name,
+      @person.last_name
+    )
+    @duplicate
   end
 end

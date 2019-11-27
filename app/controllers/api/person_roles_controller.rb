@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Api::PersonRolesController < ApplicationController
   before_action :set_person
 
@@ -22,8 +24,6 @@ class Api::PersonRolesController < ApplicationController
   end
 
   def authorize_add_role(role)
-    unless Role.grantable_roles(current_user).include?(role.to_sym)
-      raise AccessGranted::AccessDenied
-    end
+    raise AccessGranted::AccessDenied unless Role.grantable_roles(current_user).include?(role.to_sym)
   end
 end

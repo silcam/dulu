@@ -53,11 +53,16 @@ function languages(state: AppState, regionId: number) {
   return state.languages.filter(lang => lang.region_id == regionId);
 }
 
+function emptyList() {
+  return new List(emptyRegion, [], compare);
+}
+
 export default {
   emptyRegion,
   compare,
   regionParams,
   inflate,
   clusters,
-  languages
+  languages,
+  emptyList
 };
