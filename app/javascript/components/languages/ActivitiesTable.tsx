@@ -12,6 +12,7 @@ import { Adder, Setter, PSetter } from "../../models/TypeBucket";
 import { ILanguage } from "../../models/Language";
 import I18nContext from "../../contexts/I18nContext";
 import List from "../../models/List";
+import StyledTable from "../shared/StyledTable";
 
 interface IProps {
   activities: List<IActivity>;
@@ -119,7 +120,7 @@ export default class ActivitiesTable extends React.PureComponent<
                 }
               />
             )}
-            <table>
+            <StyledTable>
               <tbody>
                 {this.props.activities.map(activity => (
                   <ActivityRow
@@ -131,7 +132,7 @@ export default class ActivitiesTable extends React.PureComponent<
                   />
                 ))}
               </tbody>
-            </table>
+            </StyledTable>
           </div>
         )}
       </I18nContext.Consumer>

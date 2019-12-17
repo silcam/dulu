@@ -6,6 +6,7 @@ import DashboardSidebarContainer from "./DashboardSidebarContainer";
 import { User } from "../../application/DuluApp";
 import MainContentContainer from "./MainContentContainer";
 import ViewPrefsContext from "../../contexts/ViewPrefsContext";
+import LanguageContainer from "../languages/LanguageContainer";
 
 export type Selection =
   | {
@@ -40,9 +41,15 @@ export default function Dashboard(props: IProps) {
       </div>
       <div className={styles.mainContent}>
         <Searcher setSeacherActive={setSearcherActive} />
-        {!searcherActive && (
-          <MainContentContainer selection={selection} userId={props.user.id} />
-        )}
+        {!searcherActive &&
+          (selection.type == "language" ? (
+            <LanguageContainer id={selection.id} basePath="/" />
+          ) : (
+            <MainContentContainer
+              selection={selection}
+              userId={props.user.id}
+            />
+          ))}
       </div>
       <div className={styles.notificationSidebar}>
         <NotificationSidebar />

@@ -11,6 +11,7 @@ import { useAPIGet } from "../../util/useAPI";
 import { DSICategory } from "../../models/DomainStatusItem";
 import DomainStatusX from "./DomainStatusX";
 import List from "../../models/List";
+import StyledTable from "../shared/StyledTable";
 
 export interface DSProps {
   language: ILanguage;
@@ -65,7 +66,7 @@ export default function DomainStatus(props: DSProps) {
           cancel={() => setAddingNew(false)}
         />
       ) : (
-        <table>
+        <StyledTable>
           <tbody>
             {props.categories.map(category => (
               <DomainStatusX
@@ -78,7 +79,7 @@ export default function DomainStatus(props: DSProps) {
               />
             ))}
           </tbody>
-        </table>
+        </StyledTable>
       )}
     </div>
   );

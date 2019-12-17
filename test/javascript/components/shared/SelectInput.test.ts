@@ -7,3 +7,21 @@ test("Indexed Options", () => {
     { value: "2", display: "Gary" }
   ]);
 });
+
+test("selectOptionsFromObject", () => {
+  expect(
+    SelectInput.fromObjectOptions({
+      a: "Apple",
+      b: "Badger"
+    })
+  ).toEqual([
+    {
+      value: "a",
+      display: "Apple"
+    },
+    {
+      value: "b",
+      display: "Badger"
+    }
+  ]);
+});

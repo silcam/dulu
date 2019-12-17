@@ -2,7 +2,6 @@ import React, { useContext } from "react";
 import update from "immutability-helper";
 import DeleteIcon from "../shared/icons/DeleteIcon";
 import SelectInput from "../shared/SelectInput";
-import selectOptionsFromObject from "../../util/selectOptionsFromObject";
 import AddIcon from "../shared/icons/AddIcon";
 import style from "./EditEventParticipantsTable.css";
 import { IEventInflated, IEventParticipantExtended } from "../../models/Event";
@@ -232,7 +231,7 @@ function BaseEditEventParticipantsTable(props: IProps) {
                   {participant.roles.map((role, roleIndex) => (
                     <span key={roleIndex}>
                       <SelectInput
-                        options={selectOptionsFromObject(t("roles"))}
+                        options={SelectInput.fromObjectOptions(t("roles"))}
                         value={role}
                         setValue={newRole =>
                           updateRole(participant, roleIndex, newRole)

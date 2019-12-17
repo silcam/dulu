@@ -68,7 +68,7 @@ export default function EventsTable(props: IProps) {
         loadingMore ? "loading" : props.eventsBackTo ? "button" : "none"
       }
       moreEvents={() => getEvents({})}
-      noHeader={props.events.length() === 0}
+      noHeader={props.events.length() === 0 && props.noAdd}
     />
   );
 }

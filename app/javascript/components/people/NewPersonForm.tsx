@@ -1,6 +1,5 @@
 import React from "react";
 import SaveButton from "../shared/SaveButton";
-import selectOptionsFromObject from "../../util/selectOptionsFromObject";
 import DuplicateWarning from "./DuplicateWarning";
 import CancelButton from "../shared/CancelButton";
 import DuluAxios from "../../util/DuluAxios";
@@ -118,11 +117,11 @@ export default class NewPersonForm extends React.Component<IProps, IState> {
             <FormGroup label={t("Gender")}>
               <SelectInput
                 setValue={gender =>
-                  this.updatePerson({ gender: gender as ("M" | "F") })
+                  this.updatePerson({ gender: gender as "M" | "F" })
                 }
                 name="gender"
                 value={person.gender}
-                options={selectOptionsFromObject(t("genders"))}
+                options={SelectInput.fromObjectOptions(t("genders"))}
               />
             </FormGroup>
 
@@ -154,7 +153,7 @@ export default class NewPersonForm extends React.Component<IProps, IState> {
                     }
                     name="ui_language"
                     value={person.ui_language}
-                    options={selectOptionsFromObject(t("languages"))}
+                    options={SelectInput.fromObjectOptions(t("languages"))}
                   />
                 </FormGroup>
               </div>

@@ -2,9 +2,9 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
   include SessionsHelper
   include ApplicationHelper
-  include RedirectToReferrer
+  # include RedirectToReferrer
 
-  before_action :require_login, :log_access, :set_locale, :store_redirect
+  before_action :require_login, :log_access, :set_locale
 
   private
 

@@ -12,6 +12,7 @@ import { Adder, Setter } from "../../models/TypeBucket";
 import { ILanguage } from "../../models/Language";
 import { IParticipantInflated, IParticipant } from "../../models/Participant";
 import I18nContext from "../../contexts/I18nContext";
+import StyledTable from "../shared/StyledTable";
 
 /*
   Used by LanguagePageContent and ClusterPage!
@@ -86,15 +87,13 @@ export default class ParticipantsTable extends React.PureComponent<
                 basePath={this.props.basePath}
               />
             )}
-            <table>
+            <StyledTable>
               <tbody>
                 {participants.map((participant: IParticipantInflated) => (
                   <tr key={participant.id}>
                     <td>
                       <Link
-                        to={`${this.props.basePath}/participants/${
-                          participant.id
-                        }`}
+                        to={`${this.props.basePath}/participants/${participant.id}`}
                       >
                         {fullName(participant.person)}
                       </Link>{" "}
@@ -111,7 +110,7 @@ export default class ParticipantsTable extends React.PureComponent<
                   </tr>
                 ))}
               </tbody>
-            </table>
+            </StyledTable>
           </div>
         )}
       </I18nContext.Consumer>

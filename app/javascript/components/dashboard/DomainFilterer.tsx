@@ -1,6 +1,5 @@
 import React, { useContext } from "react";
 import SelectInput from "../shared/SelectInput";
-import selectOptionsFromObject from "../../util/selectOptionsFromObject";
 import { T } from "../../i18n/i18n";
 import I18nContext from "../../contexts/I18nContext";
 
@@ -30,6 +29,6 @@ export default function DomainFilterer(props: IProps) {
 
 function domainOptions(t: T) {
   return [{ display: t("All"), value: "All" }].concat(
-    selectOptionsFromObject(t("domains"))
+    SelectInput.fromObjectOptions(t("domains"))
   );
 }

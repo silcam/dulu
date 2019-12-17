@@ -1,6 +1,5 @@
 import React, { useState, useContext } from "react";
 import SelectInput from "./SelectInput";
-import selectOptionsFromObject from "../../util/selectOptionsFromObject";
 import AddIcon from "./icons/AddIcon";
 import I18nContext from "../../contexts/I18nContext";
 
@@ -16,7 +15,7 @@ export default function AddRole(props: IProps) {
     <div>
       <SelectInput
         value={role}
-        options={selectOptionsFromObject(t("roles"))}
+        options={SelectInput.fromObjectOptions(t("roles"))}
         setValue={setRole}
       />
       <AddIcon onClick={() => props.addRole(role)} />

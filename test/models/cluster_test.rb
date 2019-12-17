@@ -3,6 +3,7 @@ require "test_helper"
 class ClusterTest < ActiveSupport::TestCase
   def setup
     @ndop = clusters :Ndop
+    I18n.locale = :en
   end
 
   test "Required attr Validation" do
