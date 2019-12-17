@@ -1,3 +1,3 @@
 json.duplicatePerson do
-  json.call(@duplicate, :id, :full_name)
+  json.call(@duplicates.first, :id, :full_name)
 end

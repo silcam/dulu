@@ -33,7 +33,7 @@ class Person < ApplicationRecord
 
   default_scope { order(:last_name, :first_name) }
 
-  before_validation :normalize_name
+  before_save :normalize_name_email
 
   enum email_pref: [:immediate, :daily, :weekly]
 
@@ -127,9 +127,10 @@ class Person < ApplicationRecord
 
   private
 
-  def normalize_name
-    self.first_name = fix_caps(self.first_name)
-    self.last_name = fix_caps(self.last_name)
+  def normalize_name_email
+    self.first_name = fix_caps(self.first_name).strip
+    self.last_name = fix_caps(self.last_name).strip
+    self.email&.strip!
   end
 
   def fix_caps(text)

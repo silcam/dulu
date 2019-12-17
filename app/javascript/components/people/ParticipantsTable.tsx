@@ -29,7 +29,7 @@ export default function ParticipantsTable(props: IProps) {
                 </td>
                 <td className="subtle-links">
                   <Link to={`/participants/${participant.id}`}>
-                    {participant.roles.join(", ")}
+                    {participant.roles.map(r => t(`roles.${r}`)).join(", ")}
                   </Link>
                 </td>
               </tr>

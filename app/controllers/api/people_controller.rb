@@ -75,11 +75,13 @@ class Api::PeopleController < ApplicationController
   def duplicate_person?
     return false if params[:person][:not_a_duplicate]
 
-    @duplicate = Person.find_by(
-      'first_name ILIKE ? AND last_name ILIKE ?',
-      @person.first_name,
-      @person.last_name
-    )
-    @duplicate
+    full_name = "#{@person.first_name} #{@person.last_name}"
+    @poss_duplicates = Person.basic_search(full_name)
+    names = full_name.downcase.split(/\s+/)
+    @duplicates = @poss_duplicates.find_all do |person|
+      p_names = person.full_name.downcase.split(/\s+/)
+      names.count { |n| p_names.include?(n) } >= 2
+    end
+    !@duplicates.empty?
   end
 end

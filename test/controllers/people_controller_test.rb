@@ -105,6 +105,26 @@ class PeopleControllerTest < ActionDispatch::IntegrationTest
     assert_not_allowed
   end
 
+  test 'Create Duplicate' do
+    api_login @rick
+    dup = { first_name: 'Drew', last_name: 'Mambo', gender: 'M', has_login: false }
+    data = api_post(people_path, person: dup)
+    puts data
+    assert_equal('Drew Mambo', data[:duplicatePerson][:full_name])
+
+    dup[:first_name] += ' '
+    data = api_post(people_path, person: dup)
+    assert_equal('Drew Mambo', data[:duplicatePerson][:full_name])
+
+    dup.merge!(first_name: 'Mambo', last_name: 'Drew')
+    data = api_post(people_path, person: dup)
+    assert_equal('Drew Mambo', data[:duplicatePerson][:full_name])
+
+    dup.merge!(first_name: 'Drew Mambo', last_name: 'McGurkins')
+    data = api_post(people_path, person: dup)
+    assert_equal('Drew Mambo', data[:duplicatePerson][:full_name])
+  end
+
   test 'Update' do
     api_login @kevin
     data = api_put(people_path("/#{@kevin.id}"), person: { ui_language: :fr })

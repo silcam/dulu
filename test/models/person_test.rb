@@ -35,6 +35,19 @@ class PersonTest < ActiveSupport::TestCase
     assert drew2.save, "Should save with unique email."
   end
 
+  test "Strip email whitespace" do
+    @drew.update(email: ' drew@yo.com ')
+    assert_equal('drew@yo.com', @drew.email)
+  end
+
+  test "Normalize Names" do
+    @drew.update(first_name: 'FRED')
+    assert_equal 'Fred', @drew.first_name
+
+    @drew.update(last_name: 'McGuffin')
+    assert_equal 'McGuffin', @drew.last_name
+  end
+
   test "Full Names" do
     assert_equal "Drew Mambo", @drew.full_name
     assert_equal "Mambo, Drew", @drew.full_name_rev
