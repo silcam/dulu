@@ -109,7 +109,6 @@ class PeopleControllerTest < ActionDispatch::IntegrationTest
     api_login @rick
     dup = { first_name: 'Drew', last_name: 'Mambo', gender: 'M', has_login: false }
     data = api_post(people_path, person: dup)
-    puts data
     assert_equal('Drew Mambo', data[:duplicatePerson][:full_name])
 
     dup[:first_name] += ' '

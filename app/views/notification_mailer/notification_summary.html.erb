@@ -5,7 +5,7 @@
 </p>
 
 <ul>
-  <% @notifications.each do |notification| %>
+  <% @notifications.reverse_each do |notification| %>
     <li>
       <%= notification.html(@locale, base_url).html_safe %>
     </li>

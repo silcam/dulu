@@ -1,6 +1,6 @@
 <%= t 'email.notification_summary.intro' %>
 
-<% @notifications.each do |notification| %>
+<% @notifications.reverse_each do |notification| %>
  - <%= notification.simple_text(@locale) %>
 <% end %>
 
