@@ -1,9 +1,9 @@
 import axios, { AxiosError } from "axios";
 import { AnyObj } from "../models/TypeBucket";
 
-type MaybeAnyObj = AnyObj | undefined;
+export type MaybeAnyObj = AnyObj | undefined;
 
-interface IDuluAxios {
+export interface IDuluAxios {
   get: (url: string, params?: {}) => Promise<MaybeAnyObj>;
   post: (url: string, data: PostParams) => Promise<MaybeAnyObj>;
   put: (url: string, data: PostParams) => Promise<MaybeAnyObj>;

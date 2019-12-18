@@ -12,7 +12,6 @@ export default {
   Add_workshop: "Ajouter un atelier",
   All: "Tous",
   All_changes_saved: "Toute modification enregistrée",
-  already_exists: "existe déjà",
   and: "et",
   Anthropology: "Anthropologie",
   Any_literacy: "Alphabétisation",
@@ -153,9 +152,8 @@ export default {
   Dulu_account: "Compte Dulu",
   dulu_preferred_language: "Langue pour Dulu",
   DuluSettings: "Parametres Dulu",
-  duplicate_warning_end:
-    "en Dulu. Êtes-vous sûr que celle-ci est une personne différente ?",
-  duplicate_warning_start: "Il y a déjà une personne qui s'appelle",
+  duplicate_warning_text:
+    "Ces personnes existent déjà en Dulu. Êtes-vous sûr que celle-ci est une personne différente ?",
   Email: "Mail",
   Email_frequency: "Périodicité des mails",
   email_prefs: {
@@ -220,6 +218,7 @@ export default {
   LPF: "LPF",
   Mark_all_read: "Marquer tous comme lus",
   Mark_completed: "Marquer comme terminé",
+  may_already_exist: "%{name} peut exister déjà",
   MLE: "Éducation multilangue",
   MLE_advocacy: "Plaidoyer envers l'éducation multilangue",
   MLE_material_production:

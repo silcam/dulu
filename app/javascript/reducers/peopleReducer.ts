@@ -9,6 +9,7 @@ import {
 import { personCompare, IPerson } from "../models/Person";
 import List from "../models/List";
 import { Locale } from "../i18n/i18n";
+import { LoadAction, isLoadAction } from "./LoadAction";
 
 export const emptyPerson: IPerson = {
   id: 0,
@@ -27,8 +28,15 @@ export const emptyPerson: IPerson = {
 
 export default function peopleReducer(
   state = new List<IPerson>(emptyPerson, [], personCompare),
-  action: PeopleAction
+  action: PeopleAction | LoadAction
 ) {
+  if (isLoadAction(action)) {
+    return action.payload.people
+      ? state.add(action.payload.people)
+      : action.payload.person
+      ? state.add([action.payload.person])
+      : state;
+  }
   switch (action.type) {
     case SET_PEOPLE:
       return state.addAndPrune(action.people!);

@@ -19,3 +19,8 @@ export function fixCaps(text: string) {
   }
   return text;
 }
+
+export function splitOnLastSpace(str: string): [string, string] {
+  const i = str.lastIndexOf(" ");
+  return i < 0 ? [str, ""] : [str.slice(0, i), str.slice(i + 1)];
+}

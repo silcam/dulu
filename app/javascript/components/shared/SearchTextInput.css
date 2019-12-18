@@ -9,8 +9,8 @@ div.searchTextInput ul {
     list-style: none;
     padding: 0;
     /* border-top: 1px solid #aaa; */
-    margin-top: -6px;
-    margin-left: 4px;
+    /* margin-top: -6px;
+    margin-left: 4px; */
     box-shadow: 2px 4px 4px 0 rgba(0,0,0,0.16) /*, 2px 4px 10px 0 rgba(0,0,0,0.12); */
 }
 

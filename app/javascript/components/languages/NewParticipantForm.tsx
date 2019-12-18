@@ -1,5 +1,4 @@
 import React from "react";
-import SearchTextInput from "../shared/SearchTextInput";
 import update from "immutability-helper";
 import SmallSaveAndCancel from "../shared/SmallSaveAndCancel";
 import DuluAxios from "../../util/DuluAxios";
@@ -12,6 +11,7 @@ import { IPerson } from "../../models/Person";
 import { History } from "history";
 import I18nContext from "../../contexts/I18nContext";
 import P from "../shared/P";
+import PersonPicker from "../people/PersonPicker";
 
 interface NewParticipant extends IParticipant {
   person_name: string;
@@ -30,7 +30,8 @@ interface IProps {
 }
 
 interface IState {
-  participant: NewParticipant;
+  participant: IParticipant;
+  person: IPerson | null;
   saving?: boolean;
 }
 
@@ -45,13 +46,12 @@ export default class NewParticipantForm extends React.PureComponent<
         language_id: props.language_id,
         cluster_id: props.cluster_id,
         start_date: "",
-        person_name: "",
-        person_roles: [],
         roles: [],
         id: 0,
         person_id: 0,
         can: {}
-      }
+      },
+      person: null
     };
   }
 
@@ -99,18 +99,15 @@ export default class NewParticipantForm extends React.PureComponent<
       <I18nContext.Consumer>
         {t => (
           <div>
-            <SearchTextInput
-              queryPath="/api/people/search"
-              placeholder={t("Name")}
-              updateValue={person =>
+            <PersonPicker
+              value={this.state.person}
+              setValue={person => {
+                this.setState({ person });
                 this.updateParticipant({
-                  person_id: person.id || 0,
-                  person_name: person.name,
-                  person_roles: person.roles,
-                  roles: person.roles!.concat([])
-                })
-              }
-              text={participant.person_name}
+                  person_id: person ? person.id : 0,
+                  roles: person ? person.roles : []
+                });
+              }}
               autoFocus
             />
             <P>
@@ -124,17 +121,18 @@ export default class NewParticipantForm extends React.PureComponent<
               />
             </P>
             <ul>
-              {participant.person_roles.map(role => (
-                <li key={role}>
-                  <CheckBoxInput
-                    value={participant.roles.includes(role)}
-                    text={t(`roles.${role}`)}
-                    setValue={checked =>
-                      checked ? this.addRole(role) : this.dropRole(role)
-                    }
-                  />
-                </li>
-              ))}
+              {this.state.person &&
+                this.state.person.roles.map(role => (
+                  <li key={role}>
+                    <CheckBoxInput
+                      value={participant.roles.includes(role)}
+                      text={t(`roles.${role}`)}
+                      setValue={checked =>
+                        checked ? this.addRole(role) : this.dropRole(role)
+                      }
+                    />
+                  </li>
+                ))}
             </ul>
             <SmallSaveAndCancel
               handleSave={this.save}

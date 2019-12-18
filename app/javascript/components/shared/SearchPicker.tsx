@@ -126,18 +126,6 @@ export function SearchPickerAutoClear<T extends SearchItemType>(
   );
 }
 
-export function PersonPicker(props: SearchPickerProps<IPerson>) {
-  return <SearchPicker nameOf={person => fullName(person)} {...props} />;
-}
-
-export function PersonPickerAutoClear(
-  props: SearchPickerAutoClearProps<IPerson>
-) {
-  return (
-    <SearchPickerAutoClear nameOf={person => fullName(person)} {...props} />
-  );
-}
-
 export function OrganizationPicker(props: SearchPickerProps<IOrganization>) {
   return <SearchPicker nameOf={org => org.short_name} {...props} />;
 }

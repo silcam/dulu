@@ -15,8 +15,8 @@ import API from "./RegionsAPI";
 import { History } from "history";
 import I18nContext from "../../contexts/I18nContext";
 import FormGroup from "../shared/FormGroup";
-import { PersonPicker } from "../shared/SearchPicker";
 import List from "../../models/List";
+import PersonPicker from "../people/PersonPicker";
 
 interface IProps {
   id: number;
@@ -102,11 +102,8 @@ export default function RegionPage(props: IProps) {
         {editing ? (
           <FormGroup label={t("LPF")}>
             <PersonPicker
-              collection={props.people}
-              selectedId={region.lpf ? region.lpf.id : null}
-              setSelected={person => updateRegion({ lpf: person })}
-              placeholder={t("Name")}
-              allowBlank
+              value={region.lpf || null}
+              setValue={p => updateRegion({ lpf: p })}
             />
           </FormGroup>
         ) : (

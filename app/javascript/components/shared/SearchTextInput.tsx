@@ -7,6 +7,8 @@ const MIN_QUERY_LENGTH = 2;
 interface SearchItem {
   id: number;
   name: string;
+  first_name?: string;
+  last_name?: string;
   roles?: string[];
 }
 
@@ -20,6 +22,7 @@ interface IProps {
   text?: string;
   queryPath: string;
   updateValue: (value: SearchItem | typeof BLANK_ITEM) => void;
+  notListed?: { label: string; onClick: (text: string) => void };
   placeholder?: string;
   autoFocus?: boolean;
   allowBlank?: boolean;
@@ -104,6 +107,19 @@ export default function SearchTextInput(props: IProps) {
               </li>
             );
           })}
+          {props.notListed && (
+            <li>
+              <button
+                className="link"
+                onMouseDown={() => {
+                  props.notListed!.onClick(query);
+                  setShowResults(false);
+                }}
+              >
+                {props.notListed.label}
+              </button>
+            </li>
+          )}
         </ul>
       )}
     </div>

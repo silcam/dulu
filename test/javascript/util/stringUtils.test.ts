@@ -1,4 +1,8 @@
-import { allMatches, fixCaps } from "../../../app/javascript/util/stringUtils";
+import {
+  allMatches,
+  fixCaps,
+  splitOnLastSpace
+} from "../../../app/javascript/util/stringUtils";
 
 test("allMatches", () => {
   const str = "Lng4 DTra Lng32 Cls8 Lng12 ";
@@ -15,4 +19,13 @@ test("fix all uppercase", () => {
 
 test("Don't fix mixed case", () => {
   expect(fixCaps("van den Berg")).toEqual("van den Berg");
+});
+
+test("splitOnLastSpace", () => {
+  expect(splitOnLastSpace("Three Word String")).toEqual([
+    "Three Word",
+    "String"
+  ]);
+  expect(splitOnLastSpace("Ending Space ")).toEqual(["Ending Space", ""]);
+  expect(splitOnLastSpace("No-space")).toEqual(["No-space", ""]);
 });

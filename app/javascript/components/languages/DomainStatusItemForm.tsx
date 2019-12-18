@@ -23,13 +23,14 @@ import CheckBoxInput from "../shared/CheckboxInput";
 import EditActionBar from "../shared/EditActionBar";
 import FormGroup from "../shared/FormGroup";
 import TextInput from "../shared/TextInput";
-import { PersonPicker, OrganizationPicker } from "../shared/SearchPicker";
+import { OrganizationPicker } from "../shared/SearchPicker";
 import { IPerson } from "../../models/Person";
 import { IOrganization } from "../../models/Organization";
 import List from "../../models/List";
 import useMergeState from "../../util/useMergeState";
 import StyledTable, { TableStyleClass } from "../shared/StyledTable";
 import { equals } from "../../util/arrayUtils";
+import PersonPicker from "../people/PersonPicker";
 
 interface IProps {
   domainStatusItem?: IDomainStatusItem;
@@ -313,10 +314,9 @@ export default function DomainStatusItemForm(props: IProps) {
         <label>
           {t("Person")}
           <PersonPicker
-            collection={props.people}
-            selectedId={personId}
-            setSelected={person => setPersonId(person && person.id)}
-            allowBlank
+            value={personId === null ? null : props.people.get(personId)}
+            setValue={p => setPersonId(p && p.id)}
+            placeholder=""
           />
         </label>
       </P>

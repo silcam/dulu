@@ -26,6 +26,8 @@ class PersonTest < ActiveSupport::TestCase
     refute invalid_person.save, "Shouldn't save person with invalid gender"
     valid_person = Person.new(last_name: "Johnes", first_name: "Bill", gender: "M", country: cm)
     assert valid_person.save, "Should save valid person"
+    also_valid = Person.new(last_name: "Jones", first_name: "Bill")
+    assert also_valid.save
   end
 
   test "Duplicate Email" do

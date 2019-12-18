@@ -28,7 +28,7 @@ class Person < ApplicationRecord
 
   validates :last_name, presence: true, allow_blank: false
   validates :first_name, presence: true, allow_blank: false
-  validates :gender, inclusion: { in: %w(M F) }
+  validates :gender, inclusion: { in: %w[M F] }, allow_blank: true
   validates :email, uniqueness: true, allow_blank: true
 
   default_scope { order(:last_name, :first_name) }

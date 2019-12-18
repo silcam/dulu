@@ -109,19 +109,23 @@ class PeopleControllerTest < ActionDispatch::IntegrationTest
     api_login @rick
     dup = { first_name: 'Drew', last_name: 'Mambo', gender: 'M', has_login: false }
     data = api_post(people_path, person: dup)
-    assert_equal('Drew Mambo', data[:duplicatePerson][:full_name])
+    assert_equal('Drew Mambo', data[:duplicates][0][:full_name])
 
     dup[:first_name] += ' '
     data = api_post(people_path, person: dup)
-    assert_equal('Drew Mambo', data[:duplicatePerson][:full_name])
+    assert_equal('Drew Mambo', data[:duplicates][0][:full_name])
 
     dup.merge!(first_name: 'Mambo', last_name: 'Drew')
     data = api_post(people_path, person: dup)
-    assert_equal('Drew Mambo', data[:duplicatePerson][:full_name])
+    assert_equal('Drew Mambo', data[:duplicates][0][:full_name])
 
     dup.merge!(first_name: 'Drew Mambo', last_name: 'McGurkins')
     data = api_post(people_path, person: dup)
-    assert_equal('Drew Mambo', data[:duplicatePerson][:full_name])
+    assert_equal('Drew Mambo', data[:duplicates][0][:full_name])
+
+    dup[:not_a_duplicate] = true
+    data = api_post(people_path, person: dup)
+    assert_nil data[:duplicates]
   end
 
   test 'Update' do

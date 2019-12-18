@@ -1,6 +1,5 @@
 export default {
   All_changes_saved: "All changes saved.",
-  already_exists: "already exists",
   As_of: "As of",
   Audio_x: "Audio %{x}",
   BackTranslators: "Back-Translators",
@@ -103,8 +102,8 @@ export default {
     Translation: "Translation"
   },
   dulu_preferred_language: "Preferred language for using Dulu",
-  duplicate_warning_end: "in Dulu. Are you sure this is a different person?",
-  duplicate_warning_start: "There is already a person named",
+  duplicate_warning_text:
+    "These people already exist in Dulu, are you trying add one of them?",
   email_prefs: {
     immediate: "Immediate",
     daily: "Daily",
@@ -136,6 +135,7 @@ export default {
   },
   Loading: "Loading...",
   Mark_all_read: "Mark all as read",
+  may_already_exist: "%{name} may already exist",
   month_names_short: [
     "Jan",
     "Feb",

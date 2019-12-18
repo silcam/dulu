@@ -11,11 +11,9 @@ import { ILanguage } from "../../models/Language";
 import { AppState } from "../../reducers/appReducer";
 import { connect } from "react-redux";
 import { IPerson, fullName } from "../../models/Person";
-import {
-  SearchPickerAutoClear,
-  PersonPickerAutoClear
-} from "../shared/SearchPicker";
+import { SearchPickerAutoClear } from "../shared/SearchPicker";
 import List from "../../models/List";
+import PersonPicker from "../people/PersonPicker";
 
 interface IProps {
   event: IEventInflated;
@@ -153,10 +151,11 @@ function BaseEditEventParticipantsTable(props: IProps) {
               />
             </td>
             <td>
-              <PersonPickerAutoClear
-                collection={props.people}
-                setSelected={addPerson}
+              <PersonPicker
+                value={null}
+                setValue={p => p && addPerson(p)}
                 placeholder={t("Add_person")}
+                autoClear
               />
             </td>
           </tr>
