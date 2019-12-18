@@ -11,7 +11,7 @@ class SessionsController < ApplicationController
 
   def create
     @gmail = request.env["omniauth.auth"]["info"]["email"]
-    person = Person.find_by(email: @gmail)
+    person = Person.where('email ILIKE ?', @gmail).first
     if person.try :has_login
       reset_user_session
       log_in person
