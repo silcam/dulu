@@ -4,9 +4,11 @@ import styles from "./NavBar.css";
 import DuluAxios from "../../util/DuluAxios";
 import { User } from "../../application/DuluApp";
 import I18nContext from "../../contexts/I18nContext";
+import NavLoadingIndicator from "./NavLoadingIndicator";
 
 interface IProps {
   user: User;
+  loading: boolean;
 }
 
 export default function NavBar(props: IProps) {
@@ -51,6 +53,7 @@ export default function NavBar(props: IProps) {
           </li>
         </ul>
       )}
+      <NavLoadingIndicator loading={props.loading} />
     </nav>
   );
 }

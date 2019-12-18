@@ -11,6 +11,8 @@ interface IDuluAxios {
   authToken?: string;
   setNetworkError?: (error: DuluAxiosError) => void;
   clearNetworkError?: () => void;
+  addLoading: () => void;
+  subtractLoading: () => void;
 }
 
 interface PostParams {
@@ -25,6 +27,7 @@ export interface DuluAxiosError {
 const DuluAxios: IDuluAxios = {
   get: async (url, params) => {
     try {
+      DuluAxios.addLoading();
       console.log(`GET ${url} ${params ? JSON.stringify(params) : ""}`);
       const response = await axios.get(url, {
         params: params
@@ -33,11 +36,14 @@ const DuluAxios: IDuluAxios = {
       return response.data;
     } catch (error) {
       handleError(error);
+    } finally {
+      DuluAxios.subtractLoading();
     }
   },
 
   post: async (url, data) => {
     try {
+      DuluAxios.addLoading();
       console.log(`POST ${url} ${JSON.stringify(data)}`);
       data.authenticity_token = getAuthToken();
       const response = await axios.post(url, data);
@@ -45,11 +51,14 @@ const DuluAxios: IDuluAxios = {
       return response.data;
     } catch (error) {
       handleError(error);
+    } finally {
+      DuluAxios.subtractLoading();
     }
   },
 
   put: async (url, data) => {
     try {
+      DuluAxios.addLoading();
       console.log(`PUT ${url} ${JSON.stringify(data)}`);
       data.authenticity_token = getAuthToken();
       const response = await axios.put(url, data);
@@ -57,11 +66,14 @@ const DuluAxios: IDuluAxios = {
       return response.data;
     } catch (error) {
       handleError(error);
+    } finally {
+      DuluAxios.subtractLoading();
     }
   },
 
   delete: async url => {
     try {
+      DuluAxios.addLoading();
       console.log(`DELETE ${url}`);
       const response = await axios({
         method: "delete",
@@ -75,8 +87,13 @@ const DuluAxios: IDuluAxios = {
     } catch (error) {
       handleError(error);
       return false;
+    } finally {
+      DuluAxios.subtractLoading();
     }
-  }
+  },
+
+  addLoading: () => {}, // Added in by DuluApp
+  subtractLoading: () => {} // Added in by DuluApp
 };
 
 function handleError(error: AxiosError) {

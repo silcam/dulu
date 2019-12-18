@@ -14,6 +14,7 @@ interface IState {
   user: User;
   t: T;
   locale: Locale;
+  loadingCount: number;
   connectionError?: boolean;
   serverError?: boolean;
 }
@@ -40,10 +41,21 @@ export default class DuluApp extends React.Component<IProps, IState> {
       this.setState({ connectionError: undefined });
     };
 
+    DuluAxios.addLoading = () =>
+      this.setState(prevState => ({
+        loadingCount: prevState.loadingCount + 1
+      }));
+
+    DuluAxios.subtractLoading = () =>
+      this.setState(prevState => ({
+        loadingCount: prevState.loadingCount - 1
+      }));
+
     this.state = {
       user: user,
       t: translator(user.ui_language),
-      locale: user.ui_language
+      locale: user.ui_language,
+      loadingCount: 0
     };
   }
 
@@ -79,7 +91,10 @@ export default class DuluApp extends React.Component<IProps, IState> {
           }}
         >
           <div className={styles.container}>
-            <NavBar user={this.state.user} />
+            <NavBar
+              user={this.state.user}
+              loading={this.state.loadingCount > 0}
+            />
             <NetworkErrorAlerts
               t={this.state.t}
               connectionError={this.state.connectionError}

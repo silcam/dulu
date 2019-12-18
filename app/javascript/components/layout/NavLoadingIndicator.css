@@ -1,0 +1,22 @@
+.container {
+    height: 2px;
+    overflow: hidden;   
+}
+
+.bar {
+    height: 2px;
+    width: 33%;
+    background-color: #75c6ef;
+    animation-duration: 2s;
+    animation-name: flyAcross;
+    animation-iteration-count: infinite;
+}
+
+@keyframes flyAcross {
+    from {
+        margin-left: -33%;
+    }
+    to {
+        margin-left: 100%;
+    }
+}
