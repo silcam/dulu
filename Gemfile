@@ -54,7 +54,7 @@ gem "daemons", "~> 1.2"
 gem "delayed_job_recurring"
 
 group :development, :test do
-  gem "puma", "~>3.0"
+  gem "puma", "~>3.12"
 end
 
 group :development do
