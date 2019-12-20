@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import DomainStatusItem, {
+import {
   revSortByDate,
   DataCollection,
   countUnit,
@@ -7,19 +7,17 @@ import DomainStatusItem, {
   countText
 } from "../../models/DomainStatusItem";
 import { ILanguage } from "../../models/Language";
-import List from "../../models/List";
-import { IPerson } from "../../models/Person";
-import { IOrganization } from "../../models/Organization";
+import { fullName } from "../../models/Person";
 import I18nContext from "../../contexts/I18nContext";
 import { Link } from "react-router-dom";
 import capitalize from "../../util/capitalize";
 import StyledTable from "../shared/StyledTable";
+import CommaList from "../shared/CommaList";
+import useAppSelector from "../../reducers/useAppSelector";
 
 interface IProps {
   language: ILanguage;
   collectionType: DataCollection;
-  people: List<IPerson>;
-  organizations: List<IOrganization>;
   basePath: string; // /languages/:id/domain_status_items
 }
 
@@ -31,6 +29,9 @@ export default function DomainStatusDataCollectionView(props: IProps) {
   );
   const items = revSortByDate(categoryItems);
 
+  const people = useAppSelector(state => state.people);
+  const organizations = useAppSelector(state => state.organizations);
+
   return (
     <div>
       <StyledTable>
@@ -40,8 +41,8 @@ export default function DomainStatusDataCollectionView(props: IProps) {
             <th>{capitalize(t(countUnit(props.collectionType)))}</th>
             <th>{t("Completeness")}</th>
             <th>{t("Description")}</th>
-            <th>{t("Person")}</th>
-            <th>{t("Organization")}</th>
+            <th>{t("People")}</th>
+            <th>{t("Organizations")}</th>
           </tr>
           {items.map(item => (
             <tr key={item.id}>
@@ -63,18 +64,22 @@ export default function DomainStatusDataCollectionView(props: IProps) {
                 )}
               </td>
               <td>
-                {item.person_id && (
-                  <Link to={`/people/${item.person_id}`}>
-                    {DomainStatusItem.personName(item, props.people)}
-                  </Link>
-                )}
+                <CommaList
+                  list={item.person_ids}
+                  render={id => (
+                    <Link to={`/people/${id}`}>{fullName(people.get(id))}</Link>
+                  )}
+                />
               </td>
               <td>
-                {item.organization_id && (
-                  <Link to={`/organizations/${item.organization_id}`}>
-                    {DomainStatusItem.orgName(item, props.organizations)}
-                  </Link>
-                )}
+                <CommaList
+                  list={item.organization_ids}
+                  render={id => (
+                    <Link to={`/organizations/${id}`}>
+                      {organizations.get(id).short_name}
+                    </Link>
+                  )}
+                />
               </td>
             </tr>
           ))}

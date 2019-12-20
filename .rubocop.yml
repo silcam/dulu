@@ -21,6 +21,8 @@ Metrics/AbcSize:
   Enabled: false
 Metrics/BlockLength:
   Enabled: false
+Metrics/PerceivedComplexity:
+  Enabled: false
 
 Layout/TrailingWhitespace:
   Enabled: false

@@ -1,47 +1,52 @@
 import React, { useState, useContext } from "react";
 import EditActionBar from "../shared/EditActionBar";
 import { ILanguage } from "../../models/Language";
-import { Setter, Adder } from "../../models/TypeBucket";
-import { IOrganization } from "../../models/Organization";
-import { IPerson } from "../../models/Person";
 import { findById } from "../../util/arrayUtils";
-import { useAPIGet, useAPIPut, useAPIDelete } from "../../util/useAPI";
 import DomainStatusItemView from "./DomainStatusItemView";
 import DomainStatusItemForm from "./DomainStatusItemForm";
 import I18nContext from "../../contexts/I18nContext";
 import { History } from "history";
-import List from "../../models/List";
 import BreadCrumbs, { LanguageBackLink } from "../shared/BreadCrumbs";
+import useLoad, { useLoadOnMount } from "../shared/useLoad";
+import { IDomainStatusItem } from "../../models/DomainStatusItem";
 
 interface IProps {
   language: ILanguage;
   domainStatusItemId: number;
-  organizations: List<IOrganization>;
-  people: List<IPerson>;
   history: History;
-
-  setLanguage: Setter<ILanguage>;
-  addPeople: Adder<IPerson>;
-  addOrganizations: Adder<IOrganization>;
 }
 
 export default function DomainStatusItemPage(props: IProps) {
   const t = useContext(I18nContext);
-  const actions = {
-    setLanguage: props.setLanguage,
-    addPeople: props.addPeople,
-    addOrganizations: props.addOrganizations
+
+  useLoadOnMount(duluAxios =>
+    duluAxios.get(`/api/languages/${props.language.id}/domain_status_items`)
+  );
+
+  const [saveLoad] = useLoad();
+  const save = async (item: IDomainStatusItem) => {
+    await saveLoad(duluAxios =>
+      duluAxios.put(
+        `/api/domain_status_items/${props.domainStatusItemId}`,
+        item
+      )
+    );
+    setEditing(false);
   };
-  useAPIGet(
-    `/api/languages/${props.language.id}/domain_status_items`,
-    {},
-    actions
-  );
-  const [, save] = useAPIPut(
-    `/api/domain_status_items/${props.domainStatusItemId}`,
-    {},
-    actions
-  );
+  const deleteItem = async () => {
+    if (
+      confirm(
+        t("confirm_delete_domain_status_item", {
+          category: item ? t(item.category) : ""
+        })
+      )
+    ) {
+      await saveLoad(duluAxios =>
+        duluAxios.delete(`/api/domain_status_items/${props.domainStatusItemId}`)
+      );
+      props.history.replace(`/languages/${props.language.id}`);
+    }
+  };
 
   const can = {
     update: props.language.can.update,
@@ -54,14 +59,6 @@ export default function DomainStatusItemPage(props: IProps) {
     props.domainStatusItemId
   );
 
-  const [, deleteItem] = useAPIDelete(
-    `/api/domain_status_items/${props.domainStatusItemId}`,
-    actions,
-    t("confirm_delete_domain_status_item", {
-      category: item ? t(item.category) : ""
-    })
-  );
-
   return (
     <div className="padBottom">
       {!!item && item.category == "DataCollection" ? (
@@ -69,9 +66,7 @@ export default function DomainStatusItemPage(props: IProps) {
           links={[
             [`/languages/${props.language.id}`, props.language.name],
             [
-              `/languages/${props.language.id}/domain_status_items/lingdata/${
-                item.subcategory
-              }`,
+              `/languages/${props.language.id}/domain_status_items/lingdata/${item.subcategory}`,
               item.subcategory
             ]
           ]}
@@ -87,18 +82,14 @@ export default function DomainStatusItemPage(props: IProps) {
               domainStatusItem={item}
               useEditActionBar
               cancel={() => setEditing(false)}
-              save={item => save(() => setEditing(false), item)}
+              save={item => save(item)}
             />
           ) : (
             <div>
               <EditActionBar
                 can={can}
                 edit={() => setEditing(true)}
-                delete={() =>
-                  deleteItem(() =>
-                    props.history.replace(`/languages/${props.language.id}`)
-                  )
-                }
+                delete={() => deleteItem()}
               />
               <DomainStatusItemView {...props} item={item} />
             </div>

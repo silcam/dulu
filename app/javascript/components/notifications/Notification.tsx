@@ -39,7 +39,7 @@ export default function Notification(props: IProps) {
                 index % 2 === 0 ? (
                   piece
                 ) : (
-                  <Link to={/\((.+?)\)$/.exec(piece)![1]}>
+                  <Link key={index} to={/\((.+?)\)$/.exec(piece)![1]}>
                     {/^\[(.+?)\]/.exec(piece)![1]}
                   </Link>
                 )

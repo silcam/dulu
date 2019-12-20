@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Api::OrganizationsController < ApplicationController
   def index
     @orgs = Organization.all

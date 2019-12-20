@@ -6,7 +6,6 @@ import { Link } from "react-router-dom";
 import AddIcon from "../shared/icons/AddIcon";
 import FlexSpacer from "../shared/FlexSpacer";
 import DuluAxios from "../../util/DuluAxios";
-import OrganizationContainer from "./OrganizationContainer";
 import GoBar from "../shared/GoBar";
 import { Adder, Setter, SetCan } from "../../models/TypeBucket";
 import { IOrganization } from "../../models/Organization";
@@ -14,6 +13,7 @@ import { ICan } from "../../actions/canActions";
 import { History } from "history";
 import I18nContext from "../../contexts/I18nContext";
 import List from "../../models/List";
+import OrganizationPage from "./OrganizationPage";
 
 interface IProps {
   setOrganizations: Adder<IOrganization>;
@@ -71,13 +71,10 @@ export default class OrganizationsBoard extends React.PureComponent<
               </div>
               <div className={styles.detail}>
                 {this.props.action == "new" && (
-                  <NewOrganizationForm
-                    addOrganization={this.props.addOrganization}
-                    history={this.props.history}
-                  />
+                  <NewOrganizationForm history={this.props.history} />
                 )}
                 {this.props.action == "show" && (
-                  <OrganizationContainer
+                  <OrganizationPage
                     key={this.props.id}
                     id={this.props.id!}
                     history={this.props.history}

@@ -5,11 +5,15 @@ import {
   LanguageAction
 } from "../actions/languageActions";
 import Language from "../models/Language";
+import { LoadAction, isLoadAction } from "./LoadAction";
 
 export default function languagesReducer(
   state = Language.emptyList(),
-  action: LanguageAction
+  action: LanguageAction | LoadAction
 ) {
+  if (isLoadAction(action)) {
+    return state.add(action.payload.languages);
+  }
   switch (action.type) {
     case SET_LANGUAGES:
       return state.addAndPrune(action.languages!);

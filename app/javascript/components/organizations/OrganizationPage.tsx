@@ -1,227 +1,173 @@
-import React from "react";
+import React, { useContext, useState } from "react";
 import EditActionBar from "../shared/EditActionBar";
 import TextOrEditText from "../shared/TextOrEditText";
 import SaveIndicator from "../shared/SaveIndicator";
 import DangerButton from "../shared/DangerButton";
 import TextOrTextArea from "../shared/TextOrTextArea";
 import { Link } from "react-router-dom";
-import DuluAxios from "../../util/DuluAxios";
-import Loading from "../shared/Loading";
 import { IOrganization } from "../../models/Organization";
-import { Setter } from "../../models/TypeBucket";
 import { History } from "history";
 import I18nContext from "../../contexts/I18nContext";
-import { OrganizationPicker } from "../shared/SearchPicker";
 import TextOrInput from "../shared/TextOrInput";
-import SearchTextInput from "../shared/SearchTextInput";
-import List from "../../models/List";
+import { CountrySearchTextInput } from "../shared/SearchTextInput";
 import update from "immutability-helper";
+import useLoad, { useLoadOnMount } from "../shared/useLoad";
+import { useSelector, useDispatch } from "react-redux";
+import { AppState } from "../../reducers/appReducer";
+import OrganizationPicker from "./OrganizationPicker";
+import { deleteOrganization } from "../../actions/organizationActions";
 
 interface IProps {
   id: number;
-  organization?: IOrganization;
-  organizations: List<IOrganization>;
-  setOrganization: Setter<IOrganization>;
-  deleteOrganization: (id: number) => void;
   history: History;
 }
 
-interface IState {
-  organization?: IOrganization;
-  editing?: boolean;
-  saving?: boolean;
-  savedChanges?: boolean;
-  deleting?: boolean;
-}
+export default function OrganizationPage(props: IProps) {
+  const t = useContext(I18nContext);
 
-export default class OrganizationPage extends React.PureComponent<
-  IProps,
-  IState
-> {
-  state: IState = {};
+  const organization = useSelector((state: AppState) =>
+    state.organizations.get(props.id)
+  );
 
-  async componentDidMount() {
-    const data = await DuluAxios.get(`/api/organizations/${this.props.id}`);
-    if (data) {
-      this.props.setOrganization(data.organization);
-      this.setState({ organization: data.organization });
-    }
-  }
+  const [deleting, setDeleting] = useState(false);
+  const [draftOrg, setDraftOrg] = useState<IOrganization | null>(null);
+  const draftOrgValid = draftOrg && draftOrg.short_name.length > 0;
 
-  updateOrganization = (mergeOrg: Partial<IOrganization>) => {
-    this.setState(prevState => ({
-      organization: update(prevState.organization, { $merge: mergeOrg })
-    }));
+  useLoadOnMount(duluAxios => duluAxios.get(`/api/organizations/${props.id}`));
+  const [load, loading] = useLoad();
+  const dispatch = useDispatch();
+
+  const updateOrganization = (mergeOrg: Partial<IOrganization>) =>
+    setDraftOrg(update(draftOrg, { $merge: mergeOrg }));
+
+  const edit = () => {
+    setDraftOrg({ ...organization });
   };
 
-  edit = () =>
-    this.props.organization &&
-    this.setState({
-      organization: { ...this.props.organization },
-      editing: true
-    });
-
-  save = async () => {
-    if (!this.validate()) return;
-    this.setState({ saving: true });
-    const data = await DuluAxios.put(`/api/organizations/${this.props.id}`, {
-      organization: this.state.organization
-    });
-    if (data) {
-      this.props.setOrganization(data.organization);
-      this.setState({
-        editing: false,
-        saving: false,
-        savedChanges: true,
-        organization: data.organization
-      });
+  const save = async () => {
+    if (draftOrgValid) {
+      const data = await load(duluAxios =>
+        duluAxios.put(`/api/organizations/${props.id}`, {
+          organization: draftOrg
+        })
+      );
+      if (data) {
+        setDraftOrg(null);
+      }
     }
   };
 
-  delete = async () => {
-    const success = await DuluAxios.delete(
-      `/api/organizations/${this.props.id}`
+  const deleteOrg = async () => {
+    const success = await load(duluAxios =>
+      duluAxios.delete(`/api/organizations/${props.id}`)
     );
     if (success) {
-      console.log("DELETING...");
-      this.props.history.push("/organizations");
-      this.props.deleteOrganization(this.props.id);
+      props.history.push("/organizations");
+      dispatch(deleteOrganization(props.id));
     }
   };
 
-  validate = () => {
-    return (
-      this.state.organization && this.state.organization.short_name.length > 0
-    );
-  };
+  const org = draftOrg || organization;
+  const foundParent = useSelector((state: AppState) =>
+    state.organizations.get(org.parent_id || 0)
+  );
+  const parent = foundParent.id < 1 ? null : foundParent;
 
-  render() {
-    console.log(`ORG PAGE PROGS: ${JSON.stringify(this.props)}`);
-    const organization = this.state.editing
-      ? this.state.organization
-      : this.props.organization;
+  return (
+    <div>
+      <EditActionBar
+        can={org.can}
+        editing={!!draftOrg}
+        edit={edit}
+        delete={() => setDeleting(true)}
+        save={save}
+        cancel={() => setDraftOrg(null)}
+      />
 
-    if (!organization || organization.id == 0) return <Loading />;
+      {deleting && (
+        <DangerButton
+          handleClick={deleteOrg}
+          handleCancel={() => setDeleting(false)}
+          message={t("delete_person_warning", {
+            name: org.short_name
+          })}
+          buttonText={t("delete_person", {
+            name: org.short_name
+          })}
+        />
+      )}
 
-    const parent = organization.parent_id
-      ? this.props.organizations.get(organization.parent_id)
-      : null;
+      <SaveIndicator saving={loading} />
 
-    return (
-      <I18nContext.Consumer>
-        {t => (
-          <div>
-            <EditActionBar
-              can={organization.can}
-              editing={this.state.editing}
-              edit={this.edit}
-              delete={() => this.setState({ deleting: true })}
-              save={this.save}
-              cancel={() =>
-                this.setState({
-                  editing: false
-                })
+      <h2>
+        <TextOrEditText
+          editing={!!draftOrg}
+          name="short_name"
+          value={org.short_name}
+          setValue={value => updateOrganization({ short_name: value })}
+          validateNotBlank
+        />
+      </h2>
+
+      <h3>
+        <TextOrEditText
+          editing={!!draftOrg}
+          value={org.long_name || ""}
+          label={t("Long_name")}
+          setValue={value => {
+            updateOrganization({ long_name: value });
+          }}
+        />
+      </h3>
+
+      <ul>
+        <li>
+          <strong>{t("Parent_organization")}:</strong>
+          &nbsp;
+          {!!draftOrg ? (
+            <OrganizationPicker
+              value={parent}
+              setValue={parent =>
+                updateOrganization({ parent_id: parent && parent.id })
               }
             />
-
-            {this.state.deleting && (
-              <DangerButton
-                handleClick={this.delete}
-                handleCancel={() => this.setState({ deleting: false })}
-                message={t("delete_person_warning", {
-                  name: organization.short_name
-                })}
-                buttonText={t("delete_person", {
-                  name: organization.short_name
-                })}
-              />
-            )}
-
-            <SaveIndicator
-              saving={this.state.saving}
-              saved={this.state.savedChanges}
+          ) : (
+            parent && (
+              <Link to={`/organizations/${parent.id}`}>
+                {parent.short_name}
+              </Link>
+            )
+          )}
+        </li>
+        <li>
+          <strong>{t("Country")}:</strong>
+          &nbsp;
+          <TextOrInput
+            editing={!!draftOrg}
+            text={org.country ? org.country.name : ""}
+          >
+            <CountrySearchTextInput
+              text={org.country ? org.country.name : ""}
+              updateValue={c => {
+                const country = c || { name: "", id: undefined };
+                updateOrganization({
+                  country: country,
+                  country_id: undefined
+                });
+              }}
+              allowBlank
             />
-
-            <h2>
-              <TextOrEditText
-                editing={this.state.editing}
-                name="short_name"
-                value={organization.short_name}
-                setValue={value =>
-                  this.updateOrganization({ short_name: value })
-                }
-                validateNotBlank
-              />
-            </h2>
-
-            <h3>
-              <TextOrEditText
-                editing={this.state.editing}
-                value={organization.long_name || ""}
-                label={t("Long_name")}
-                setValue={value => {
-                  this.updateOrganization({ long_name: value });
-                }}
-              />
-            </h3>
-
-            <ul>
-              <li>
-                <strong>{t("Parent_organization")}:</strong>
-                &nbsp;
-                {this.state.editing ? (
-                  <OrganizationPicker
-                    collection={this.props.organizations}
-                    selectedId={parent ? parent.id : null}
-                    setSelected={org =>
-                      this.updateOrganization({
-                        parent_id: org && org.id
-                      })
-                    }
-                    allowBlank
-                  />
-                ) : (
-                  parent && (
-                    <Link to={`/organizations/${parent.id}`}>
-                      {parent.short_name}
-                    </Link>
-                  )
-                )}
-              </li>
-              <li>
-                <strong>{t("Country")}:</strong>
-                &nbsp;
-                <TextOrInput
-                  editing={this.state.editing}
-                  text={organization.country ? organization.country.name : ""}
-                >
-                  <SearchTextInput
-                    text={organization.country ? organization.country.name : ""}
-                    queryPath="/api/countries/search"
-                    updateValue={country =>
-                      this.updateOrganization({
-                        country: country,
-                        country_id: country.id || undefined
-                      })
-                    }
-                    allowBlank
-                  />
-                </TextOrInput>
-              </li>
-            </ul>
-            <div style={{ marginTop: "16px" }}>
-              <TextOrTextArea
-                editing={this.state.editing}
-                label={t("Description")}
-                value={organization.description}
-                setValue={value =>
-                  this.updateOrganization({ description: value })
-                }
-              />
-            </div>
-          </div>
-        )}
-      </I18nContext.Consumer>
-    );
-  }
+          </TextOrInput>
+        </li>
+      </ul>
+      <div style={{ marginTop: "16px" }}>
+        <TextOrTextArea
+          editing={!!draftOrg}
+          label={t("Description")}
+          value={org.description}
+          setValue={value => updateOrganization({ description: value })}
+        />
+      </div>
+    </div>
+  );
 }

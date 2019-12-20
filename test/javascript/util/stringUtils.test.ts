@@ -17,6 +17,10 @@ test("fix all uppercase", () => {
   expect(fixCaps("CONRAD")).toEqual("Conrad");
 });
 
+test("Fix multiword", () => {
+  expect(fixCaps("sil cameroon")).toEqual("Sil Cameroon");
+});
+
 test("Don't fix mixed case", () => {
   expect(fixCaps("van den Berg")).toEqual("van den Berg");
 });

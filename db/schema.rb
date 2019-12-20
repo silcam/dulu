@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20191127105642) do
+ActiveRecord::Schema.define(version: 20191219131226) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -160,6 +160,20 @@ ActiveRecord::Schema.define(version: 20191127105642) do
     t.index ["language_id"], name: "index_domain_status_items_on_language_id"
     t.index ["organization_id"], name: "index_domain_status_items_on_organization_id"
     t.index ["person_id"], name: "index_domain_status_items_on_person_id"
+  end
+
+  create_table "domain_status_items_organizations", force: :cascade do |t|
+    t.bigint "organization_id"
+    t.bigint "domain_status_item_id"
+    t.index ["domain_status_item_id"], name: "index_dsi_organizations_on_dsi_id"
+    t.index ["organization_id"], name: "index_domain_status_items_organizations_on_organization_id"
+  end
+
+  create_table "domain_status_items_people", force: :cascade do |t|
+    t.bigint "person_id"
+    t.bigint "domain_status_item_id"
+    t.index ["domain_status_item_id"], name: "index_domain_status_items_people_on_domain_status_item_id"
+    t.index ["person_id"], name: "index_domain_status_items_people_on_person_id"
   end
 
   create_table "domain_updates", id: :serial, force: :cascade do |t|

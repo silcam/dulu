@@ -1,45 +1,25 @@
 import React, { useContext, useState } from "react";
 import { ILanguage } from "../../models/Language";
-import { Setter, Adder } from "../../models/TypeBucket";
-import { IPerson } from "../../models/Person";
-import { IOrganization } from "../../models/Organization";
 import I18nContext from "../../contexts/I18nContext";
 import Spacer from "../shared/Spacer";
 import DomainStatusNew from "./DomainStatusNew";
 import AddIcon from "../shared/icons/AddIcon";
-import { useAPIGet } from "../../util/useAPI";
 import { DSICategory } from "../../models/DomainStatusItem";
 import DomainStatusX from "./DomainStatusX";
-import List from "../../models/List";
 import StyledTable from "../shared/StyledTable";
+import { useLoadOnMount } from "../shared/useLoad";
 
 export interface DSProps {
   language: ILanguage;
   categories: DSICategory[];
-
-  people: List<IPerson>;
-  organizations: List<IOrganization>;
-
-  setLanguage: Setter<ILanguage>;
-  addPeople: Adder<IPerson>;
-  addOrganizations: Adder<IOrganization>;
 }
 
 export default function DomainStatus(props: DSProps) {
   const t = useContext(I18nContext);
   const [addingNew, setAddingNew] = useState(false);
 
-  const actions = {
-    setLanguage: props.setLanguage,
-    addPeople: props.addPeople,
-    addOrganizations: props.addOrganizations
-  };
-
-  const loading = useAPIGet(
-    `/api/languages/${props.language.id}/domain_status_items`,
-    {},
-    actions,
-    [props.language.id]
+  const loading = useLoadOnMount(duluAxios =>
+    duluAxios.get(`/api/languages/${props.language.id}/domain_status_items`)
   );
 
   const allDomainStatusItems = props.language.domain_status_items;
@@ -60,11 +40,7 @@ export default function DomainStatus(props: DSProps) {
         )}
       </h3>
       {addingNew ? (
-        <DomainStatusNew
-          {...props}
-          actions={actions}
-          cancel={() => setAddingNew(false)}
-        />
+        <DomainStatusNew {...props} cancel={() => setAddingNew(false)} />
       ) : (
         <StyledTable>
           <tbody>
@@ -73,8 +49,6 @@ export default function DomainStatus(props: DSProps) {
                 key={category}
                 category={category}
                 domainStatusItems={allDomainStatusItems}
-                people={props.people}
-                organizations={props.organizations}
                 basePath={`/languages/${props.language.id}/domain_status_items`}
               />
             ))}

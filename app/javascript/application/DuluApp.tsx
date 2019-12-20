@@ -68,17 +68,20 @@ export default class DuluApp extends React.Component<IProps, IState> {
   };
 
   updateViewPrefs = (mergeViewPrefs: any) => {
-    this.setState(prevState => {
-      const newUser = update(prevState.user, {
-        view_prefs: { $merge: mergeViewPrefs }
-      });
-      DuluAxios.put("/api/people/update_view_prefs", {
-        view_prefs: newUser.view_prefs
-      });
-      return {
-        user: newUser
-      };
-    });
+    this.setState(
+      prevState => {
+        const newUser = update(prevState.user, {
+          view_prefs: { $merge: mergeViewPrefs }
+        });
+        return {
+          user: newUser
+        };
+      },
+      () =>
+        DuluAxios.put("/api/people/update_view_prefs", {
+          view_prefs: this.state.user.view_prefs
+        })
+    );
   };
 
   render() {

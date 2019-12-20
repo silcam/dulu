@@ -1,11 +1,15 @@
 import { PartialModel } from "../models/TypeBucket";
 import { IPerson } from "../models/Person";
+import { ILanguage } from "../models/Language";
+import { IOrganization } from "../models/Organization";
 
 export interface LoadAction {
   type: "Load";
   payload: {
     people?: PartialModel<IPerson>[];
-    person?: PartialModel<IPerson>;
+    person?: PartialModel<IPerson>; // Remove
+    languages?: PartialModel<ILanguage>[];
+    organizations?: PartialModel<IOrganization>[];
     // ... add more here
   };
 }

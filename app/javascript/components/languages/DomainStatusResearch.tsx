@@ -46,9 +46,8 @@ export default function DomainStatusResearch(props: IProps) {
                 <DSLingCompleteStyler item={item}>
                   <Link to={`${props.basePath}/${item.id}}`}>
                     {takeFirstNonBlank(
-                      `${DomainStatusItem.personName(
-                        item,
-                        props.people
+                      `${DomainStatusItem.personNames(item, props.people).join(
+                        ", "
                       )} ${ifDef(item.year)}`,
                       item.title,
                       item.description,

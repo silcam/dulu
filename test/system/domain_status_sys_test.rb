@@ -13,10 +13,10 @@ class DomainStatusSysTest < ApplicationSystemTestCase
       click_on "Add"
       check "Android"
       fill_in "Year", with: "2010"
-      within("label", text: "Person") do
+      within(parent(find("label", text: "People"))) do
         fill_in_search_input("Rick")
       end
-      within("label", text: "Organization") do
+      within(parent(find("label", text: "Organizations"))) do
         fill_in_search_input("SIL")
       end
       click_on "Save"

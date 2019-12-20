@@ -40,7 +40,9 @@ function BaseDomainStatusReportTable(props: IProps) {
               </td>
               <td>{t(item.subcategory)}</td>
               <td>{item.year}</td>
-              <td>{DomainStatusItem.personName(item, props.people)}</td>
+              <td>
+                {DomainStatusItem.personNames(item, props.people).join(", ")}
+              </td>
             </tr>
           ))}
         </tbody>

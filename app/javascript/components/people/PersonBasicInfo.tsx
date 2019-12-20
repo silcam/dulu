@@ -1,12 +1,10 @@
 import React, { useContext } from "react";
 import TextOrEditText from "../shared/TextOrEditText";
 import TextOrYesNo from "../shared/TextOrYesNo";
-import TextOrSelect from "../shared/TextOrSelect";
 import TextOrInput from "../shared/TextOrInput";
-import SearchTextInput from "../shared/SearchTextInput";
+import { CountrySearchTextInput } from "../shared/SearchTextInput";
 import I18nContext from "../../contexts/I18nContext";
-import { IPerson, EmailPref } from "../../models/Person";
-import { Locale } from "../../i18n/i18n";
+import { IPerson } from "../../models/Person";
 
 interface IProps {
   person: IPerson;
@@ -26,14 +24,20 @@ function PersonBasicInfo(props: IProps) {
           <th>{t("Home_country")}</th>
           <td>
             <TextOrInput editing={props.editing} text={home_country.name}>
-              <SearchTextInput
+              <CountrySearchTextInput
                 text={home_country.name}
-                queryPath="/api/countries/search"
                 updateValue={country =>
-                  props.updatePerson({
-                    home_country: country,
-                    country_id: country.id
-                  })
+                  props.updatePerson(
+                    country
+                      ? {
+                          home_country: country,
+                          country_id: country.id
+                        }
+                      : {
+                          home_country: { name: "", id: null },
+                          country_id: null
+                        }
+                  )
                 }
                 allowBlank
               />

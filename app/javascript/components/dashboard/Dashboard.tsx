@@ -43,7 +43,11 @@ export default function Dashboard(props: IProps) {
         <Searcher setSeacherActive={setSearcherActive} />
         {!searcherActive &&
           (selection.type == "language" ? (
-            <LanguageContainer id={selection.id} basePath="/" />
+            <LanguageContainer
+              basePath=""
+              id={selection.id}
+              key={selection.id}
+            />
           ) : (
             <MainContentContainer
               selection={selection}

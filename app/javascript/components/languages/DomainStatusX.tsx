@@ -3,24 +3,23 @@ import { IDomainStatusItem, DSICategory } from "../../models/DomainStatusItem";
 import DomainStatusPublishedScripture from "./DomainStatusPublishedScripture";
 import DomainStatusAudioScripture from "./DomainStatusAudioScripture";
 import DomainStatusScriptureApps from "./DomainStatusScriptureApps";
-import { IPerson } from "../../models/Person";
-import { IOrganization } from "../../models/Organization";
 import DomainStatusFilms from "./DomainStatusFilms";
-import List from "../../models/List";
 import DomainStatusDataCollection from "./DomainStatusDataCollection";
 import DomainStatusResearch from "./DomainStatusResearch";
-import DomainStatusCommunity from "./DomainStatusCommunity";
+import useAppSelector from "../../reducers/useAppSelector";
 
 interface IProps {
   category: DSICategory;
   domainStatusItems: IDomainStatusItem[];
-  people: List<IPerson>;
-  organizations: List<IOrganization>;
   basePath: string;
 }
 
 export default function DomainStatusX(props: IProps) {
-  const { category, ...otherProps } = props;
+  const people = useAppSelector(state => state.people);
+  const organizations = useAppSelector(state => state.organizations);
+
+  const { category, ...otherProps } = { ...props, people, organizations };
+
   switch (category) {
     case "PublishedScripture":
       return <DomainStatusPublishedScripture {...otherProps} />;

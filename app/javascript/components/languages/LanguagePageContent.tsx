@@ -2,13 +2,13 @@ import React, { useContext } from "react";
 import ActivitiesContainer from "./ActivitiesContainer";
 import ParticipantsContainer from "./ParticipantsContainer";
 import LanguageEventsContainer from "./LanguageEventsContainer";
-import DomainStatusContainer from "./DomainStatusContainer";
 import { DSICategory } from "../../models/DomainStatusItem";
 import { ILanguage } from "../../models/Language";
 import { LanguagePageTab } from "./LanguagePage";
 import { Location, History } from "history";
 import I18nContext from "../../contexts/I18nContext";
 import TranslationProgress from "./TranslationProgress";
+import DomainStatus from "./DomainStatus";
 
 interface IProps {
   language: ILanguage;
@@ -83,10 +83,7 @@ export default function LanguagePageContent(props: IProps) {
         history={props.history}
       />
 
-      <DomainStatusContainer
-        {...props}
-        categories={categoriesByDomain(props.tab)}
-      />
+      <DomainStatus {...props} categories={categoriesByDomain(props.tab)} />
     </div>
   );
 }

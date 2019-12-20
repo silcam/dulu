@@ -1,5 +1,5 @@
 import DuluAxios, { IDuluAxios, MaybeAnyObj } from "../../util/DuluAxios";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { loadAction } from "../../reducers/LoadAction";
 
@@ -19,4 +19,14 @@ export default function useLoad(): [
     return data;
   };
   return [loader, loading];
+}
+
+export function useLoadOnMount(load: Load): boolean {
+  const [loader, loading] = useLoad();
+
+  useEffect(() => {
+    loader(load);
+  }, []);
+
+  return loading;
 }

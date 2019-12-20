@@ -13,8 +13,8 @@ const mockDSI: IDomainStatusItem = {
   title: "",
   year: 2000,
   platforms: "",
-  organization_id: 303,
-  person_id: 404,
+  organization_ids: [303],
+  person_ids: [404],
   creator_id: 404,
   bible_book_ids: [1, 2],
   completeness: "Draft",
@@ -43,7 +43,7 @@ export function postponeFailure(date: Date) {
   expect(new Date().valueOf()).toBeLessThan(date.valueOf());
 }
 
-export function domainStatusItemFactory(params: AnyObj) {
+export function domainStatusItemFactory(params: Partial<IDomainStatusItem>) {
   return Object.assign({}, mockDSI, params);
 }
 

@@ -1,27 +1,21 @@
 import React, { useState } from "react";
 import styles from "./SearchTextInput.css";
 import useSearch from "./useSearch";
+import { PartialPerson, fullName } from "../../models/Person";
+import { PartialOrganization } from "../../models/Organization";
 
 const MIN_QUERY_LENGTH = 2;
 
-interface SearchItem {
+export interface SearchItem {
   id: number;
   name: string;
-  first_name?: string;
-  last_name?: string;
-  roles?: string[];
 }
 
-const BLANK_ITEM = {
-  id: null,
-  name: "",
-  roles: []
-};
-
-interface IProps {
+interface IProps<T> {
   text?: string;
   queryPath: string;
-  updateValue: (value: SearchItem | typeof BLANK_ITEM) => void;
+  updateValue: (value: T | null) => void;
+  display: (item: T) => string;
   notListed?: { label: string; onClick: (text: string) => void };
   placeholder?: string;
   autoFocus?: boolean;
@@ -29,23 +23,22 @@ interface IProps {
   addBox?: boolean;
 }
 
-export default function SearchTextInput(props: IProps) {
+export default function SearchTextInput<T>(props: IProps<T>) {
   const [query, setQuery] = useState(props.text || "");
   const [showResults, setShowResults] = useState(false);
   const [selectedPosition, setSelectedPosition] = useState(-1);
-  const results = useSearch<SearchItem>(
-    props.queryPath,
-    query,
-    MIN_QUERY_LENGTH
-  );
+  const results = useSearch<T>(props.queryPath, query, MIN_QUERY_LENGTH);
 
-  const save = (item: SearchItem | typeof BLANK_ITEM) => {
-    setQuery(props.addBox ? "" : item.name);
+  const save = (item: T) => {
+    setQuery(props.addBox ? "" : props.display(item));
     setShowResults(false);
     props.updateValue(item);
   };
 
-  const saveBlank = () => save(BLANK_ITEM);
+  const saveBlank = () => {
+    setShowResults(false);
+    props.updateValue(null);
+  };
 
   const updateQuery = (q: string) => {
     setQuery(q);
@@ -94,7 +87,7 @@ export default function SearchTextInput(props: IProps) {
             const className = index == selectedPosition ? styles.selected : "";
             return (
               <li
-                key={item.id}
+                key={index}
                 className={className}
                 onMouseDown={() => {
                   save(item);
@@ -103,7 +96,7 @@ export default function SearchTextInput(props: IProps) {
                   setSelectedPosition(index);
                 }}
               >
-                {item.name}
+                {props.display(item)}
               </li>
             );
           })}
@@ -124,4 +117,32 @@ export default function SearchTextInput(props: IProps) {
       )}
     </div>
   );
+}
+
+type SimplifiedProps<T> = Omit<IProps<T>, "queryPath" | "display">;
+
+export function PersonSearchTextInput(props: SimplifiedProps<PartialPerson>) {
+  return SearchTextInput({
+    ...props,
+    queryPath: "/api/people/search",
+    display: p => fullName(p)
+  });
+}
+
+export function CountrySearchTextInput(props: SimplifiedProps<SearchItem>) {
+  return SearchTextInput({
+    ...props,
+    queryPath: "/api/countries/search",
+    display: c => c.name
+  });
+}
+
+export function OrganizationSearchTextInput(
+  props: SimplifiedProps<PartialOrganization>
+) {
+  return SearchTextInput<PartialOrganization>({
+    ...props,
+    queryPath: "/api/organizations/search",
+    display: org => org.short_name
+  });
 }

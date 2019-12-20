@@ -1,5 +1,7 @@
 import baseCompare from "../util/baseCompare";
 import { ICan } from "../actions/canActions";
+import List from "./List";
+import { emptyOrganization } from "../reducers/organizationsReducer";
 
 export interface IOrganization {
   id: number;
@@ -11,6 +13,8 @@ export interface IOrganization {
   can: ICan;
   country_id?: number;
 }
+
+export type PartialOrganization = Pick<IOrganization, "id" | "short_name">;
 
 export interface IOrganizationPerson {
   id: number;
@@ -27,6 +31,11 @@ function compare(a: IOrganization, b: IOrganization) {
   return b.id - a.id;
 }
 
+function orgList(orgs: IOrganization[] = []) {
+  return new List(emptyOrganization, orgs, compare);
+}
+
 export default {
-  compare
+  compare,
+  orgList
 };

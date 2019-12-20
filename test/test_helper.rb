@@ -1,8 +1,4 @@
-begin
-  `rails db:migrate`
-rescue
-  `rails db:schema:load`
-end
+`rails db:migrate`
 
 require File.expand_path("../../config/environment", __FILE__)
 require "rails/test_help"
@@ -61,21 +57,25 @@ class ActiveSupport::TestCase
     assert_response 401
   end
 
-  def assert_partial(exp, actual)
+  def assert_partial(exp, actual, no_assert = false)
     if exp.is_a? Hash
       exp.each_pair do |key, val|
         if val.nil?
           assert_nil actual[key]
         else
-          assert_equal val, actual[key]
+          assert_partial val, actual[key]
         end
       end
     elsif exp.is_a? Array
-      exp.each do |val|
-        assert_includes actual, val
+      exp.each do |exp_val|
+        assert(actual.any? { |act_val| assert_partial(exp_val, act_val, true) }, "Could not find exp_val in actual:\n - exp_val: #{exp_val}\n - actual: #{actual}")
       end
     else
-      raise "Expected Hash or Array to be supplied to assert_partial. Received #{exp.class}."
+      assert_equal exp, actual
     end
+  rescue Minitest::Assertion => e
+    return false if no_assert
+
+    raise e
   end
 end

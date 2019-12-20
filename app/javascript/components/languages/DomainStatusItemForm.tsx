@@ -23,14 +23,16 @@ import CheckBoxInput from "../shared/CheckboxInput";
 import EditActionBar from "../shared/EditActionBar";
 import FormGroup from "../shared/FormGroup";
 import TextInput from "../shared/TextInput";
-import { OrganizationPicker } from "../shared/SearchPicker";
 import { IPerson } from "../../models/Person";
 import { IOrganization } from "../../models/Organization";
-import List from "../../models/List";
 import useMergeState from "../../util/useMergeState";
 import StyledTable, { TableStyleClass } from "../shared/StyledTable";
 import { equals } from "../../util/arrayUtils";
-import PersonPicker from "../people/PersonPicker";
+import PersonPickerMulti from "../people/PersonPickerMulti";
+import OrganizationPickerMulti from "../organizations/OrganizationPickerMulti";
+import { useSelector } from "react-redux";
+import { AppState } from "../../reducers/appReducer";
+import useAppSelector from "../../reducers/useAppSelector";
 
 interface IProps {
   domainStatusItem?: IDomainStatusItem;
@@ -40,12 +42,13 @@ interface IProps {
   saving?: boolean;
   useEditActionBar?: boolean;
   cancel: () => void;
-  people: List<IPerson>;
-  organizations: List<IOrganization>;
 }
 
 export default function DomainStatusItemForm(props: IProps) {
   const t = useContext(I18nContext);
+
+  const allPeople = useAppSelector(state => state.people);
+  const allOrganizations = useAppSelector(state => state.organizations);
 
   const categories = props.categories ? props.categories : DSICategories;
   const [category, setCategory] = useState<DSICategory>(
@@ -99,12 +102,18 @@ export default function DomainStatusItemForm(props: IProps) {
     props.domainStatusItem ? props.domainStatusItem.year : null
   );
 
-  const [personId, setPersonId] = useState(
-    props.domainStatusItem ? props.domainStatusItem.person_id : null
+  const [people, setPeople] = useState<IPerson[]>(
+    props.domainStatusItem
+      ? props.domainStatusItem.person_ids.map(id => allPeople.get(id))
+      : []
   );
 
-  const [organizationId, setOrganizationId] = useState(
-    props.domainStatusItem ? props.domainStatusItem.organization_id : null
+  const [organizations, setOrganizations] = useState<IOrganization[]>(
+    props.domainStatusItem
+      ? props.domainStatusItem.organization_ids.map(id =>
+          allOrganizations.get(id)
+        )
+      : []
   );
 
   const [completeness, setCompleteness] = useState<DSICompleteness>(
@@ -129,8 +138,8 @@ export default function DomainStatusItemForm(props: IProps) {
     details,
     count: parseInt(count) || 0,
     platforms: DomainStatusItem.platformsStr(android, ios),
-    person_id: personId,
-    organization_id: organizationId,
+    person_ids: people.map(p => p.id),
+    organization_ids: organizations.map(o => o.id),
     bible_book_ids: bibleBooksIds,
     // Ignored by server:
     id: 0,
@@ -311,26 +320,16 @@ export default function DomainStatusItemForm(props: IProps) {
       )}
 
       <P>
-        <label>
-          {t("Person")}
-          <PersonPicker
-            value={personId === null ? null : props.people.get(personId)}
-            setValue={p => setPersonId(p && p.id)}
-            placeholder=""
-          />
-        </label>
+        <label>{t("People")}</label>
+        <PersonPickerMulti people={people} setPeople={setPeople} />
       </P>
 
       <P>
-        <label>
-          {t("Organization")}
-          <OrganizationPicker
-            collection={props.organizations}
-            selectedId={organizationId}
-            setSelected={org => setOrganizationId(org && org.id)}
-            allowBlank
-          />
-        </label>
+        <label>{t("Organizations")}</label>
+        <OrganizationPickerMulti
+          organizations={organizations}
+          setOrganizations={setOrganizations}
+        />
       </P>
 
       {!props.useEditActionBar && (

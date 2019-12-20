@@ -31,11 +31,9 @@ export default function peopleReducer(
   action: PeopleAction | LoadAction
 ) {
   if (isLoadAction(action)) {
-    return action.payload.people
-      ? state.add(action.payload.people)
-      : action.payload.person
-      ? state.add([action.payload.person])
-      : state;
+    return state
+      .add(action.payload.people)
+      .add(action.payload.person ? [action.payload.person] : null);
   }
   switch (action.type) {
     case SET_PEOPLE:

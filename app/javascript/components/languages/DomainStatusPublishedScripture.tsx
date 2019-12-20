@@ -38,7 +38,9 @@ export default function DomainStatusPublishedScripture(props: IProps) {
                 </Link>
                 {orBlank(item.year, " ")}
                 {orBlank(
-                  DomainStatusItem.orgName(item, props.organizations),
+                  DomainStatusItem.orgNames(item, props.organizations).join(
+                    ", "
+                  ),
                   " - "
                 )}
               </span>
@@ -54,7 +56,9 @@ export default function DomainStatusPublishedScripture(props: IProps) {
                   {takeFirst(item.year, t("New_testament"))}
                 </Link>
                 {orBlank(
-                  DomainStatusItem.orgName(item, props.organizations),
+                  DomainStatusItem.orgNames(item, props.organizations).join(
+                    ", "
+                  ),
                   " - "
                 )}
               </span>
@@ -70,7 +74,9 @@ export default function DomainStatusPublishedScripture(props: IProps) {
                   {takeFirst(item.year, t("Bible"))}
                 </Link>
                 {orBlank(
-                  DomainStatusItem.orgName(item, props.organizations),
+                  DomainStatusItem.orgNames(item, props.organizations).join(
+                    ", "
+                  ),
                   " - "
                 )}
               </span>

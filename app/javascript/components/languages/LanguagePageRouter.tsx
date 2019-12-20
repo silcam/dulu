@@ -7,11 +7,9 @@ import LanguageEventPage from "./LanguageEventPage";
 import LanguageActivityPage from "./LanguageActivityPage";
 import LanguageNewEventPage from "./LanguageNewEventPage";
 import Loading from "../shared/Loading";
-import {
-  DomainStatusItemPageContainer,
-  DomainStatusDataCollectionContainer
-} from "./DomainStatusContainer";
 import { ILanguage } from "../../models/Language";
+import DomainStatusItemPage from "./DomainStatusItemPage";
+import DomainStatusDataCollectionPage from "./DomainStatusDataCollectionPage";
 
 interface IProps {
   language: ILanguage;
@@ -69,7 +67,7 @@ export default function LanguagePageRouter(props: IProps) {
       <Route
         path={props.basePath + "/domain_status_items/lingdata/:collectionType"}
         render={({ match }) => (
-          <DomainStatusDataCollectionContainer
+          <DomainStatusDataCollectionPage
             collectionType={match.params.collectionType}
             language={language}
             {...props}
@@ -79,7 +77,7 @@ export default function LanguagePageRouter(props: IProps) {
       <Route
         path={props.basePath + "/domain_status_items/:domainStatusItemId"}
         render={({ match, history }) => (
-          <DomainStatusItemPageContainer
+          <DomainStatusItemPage
             domainStatusItemId={parseInt(match.params.domainStatusItemId)}
             history={history}
             {...props}

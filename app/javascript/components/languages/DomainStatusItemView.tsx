@@ -7,29 +7,30 @@ import DomainStatusItem, {
   DataCollection,
   countText
 } from "../../models/DomainStatusItem";
-import { IPerson } from "../../models/Person";
-import { IOrganization } from "../../models/Organization";
+import { fullName } from "../../models/Person";
 import { ILanguage } from "../../models/Language";
 import I18nContext from "../../contexts/I18nContext";
 import { orBlank } from "../../util/orBlank";
 import { Link } from "react-router-dom";
-import List from "../../models/List";
 import TextOrYesNo from "../shared/TextOrYesNo";
 import ReadonlyCheck from "../shared/ReadonlyCheck";
 import styles from "./DomainStatus.css";
 import Spacer from "../shared/Spacer";
 import DivInline from "../shared/DivInline";
 import capitalize from "../../util/capitalize";
+import CommaList from "../shared/CommaList";
+import useAppSelector from "../../reducers/useAppSelector";
 
 interface IProps {
   language: ILanguage;
   item: IDomainStatusItem;
-  people: List<IPerson>;
-  organizations: List<IOrganization>;
 }
 
 export default function DomainStatusItemView(props: IProps) {
   const t = useContext(I18nContext);
+
+  const people = useAppSelector(state => state.people);
+  const organizations = useAppSelector(state => state.organizations);
 
   return (
     <div>
@@ -126,23 +127,27 @@ export default function DomainStatusItemView(props: IProps) {
             <td>{orBlank(props.item.year)}</td>
           </tr>
           <tr>
-            <th>{t("Organization")}</th>
+            <th>{t("Organizations")}</th>
             <td>
-              {props.item.organization_id && (
-                <Link to={`/organizations/${props.item.organization_id}`}>
-                  {DomainStatusItem.orgName(props.item, props.organizations)}
-                </Link>
-              )}
+              <CommaList
+                list={props.item.organization_ids}
+                render={id => (
+                  <Link to={`/organizations/${id}`}>
+                    {organizations.get(id).short_name}
+                  </Link>
+                )}
+              />
             </td>
           </tr>
           <tr>
-            <th>{t("Person")}</th>
+            <th>{t("People")}</th>
             <td>
-              {props.item.person_id && (
-                <Link to={`/people/${props.item.person_id}`}>
-                  {DomainStatusItem.personName(props.item, props.people)}
-                </Link>
-              )}
+              <CommaList
+                list={props.item.person_ids}
+                render={id => (
+                  <Link to={`/people/${id}`}>{fullName(people.get(id))}</Link>
+                )}
+              />
             </td>
           </tr>
           {props.item.category == "Research" && (

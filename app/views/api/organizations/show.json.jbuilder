@@ -1,3 +1,3 @@
-json.organization do
-  json.partial! "org", org: @org
-end
+# frozen_string_literal: true
+
+json.partial! 'organizations', organizations: [@org]

@@ -1,5 +1,7 @@
 SIL:
   short_name: 'SIL'
+  long_name: 'SIL International'
+  country: Cameroon
 
 LBT:
   short_name: 'Lutheran Bible Translators'

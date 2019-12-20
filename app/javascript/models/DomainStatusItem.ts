@@ -1,5 +1,4 @@
 import { IPerson, fullName } from "./Person";
-import ifDef from "../util/ifDef";
 import { IOrganization } from "./Organization";
 import { T } from "../i18n/i18n";
 import BibleBook from "./BibleBook";
@@ -16,8 +15,8 @@ export interface IDomainStatusItem {
   title: string;
   year: number | null;
   platforms: string;
-  organization_id: number | null;
-  person_id: number | null;
+  organization_ids: number[];
+  person_ids: number[];
   creator_id: number;
   bible_book_ids: number[];
   count: number;
@@ -156,16 +155,15 @@ export function lingCompleteSat(item: IDomainStatusItem) {
   return item.completeness == "Satisfactory";
 }
 
-function personName(item: IDomainStatusItem, people: List<IPerson>) {
-  return ifDef(item.person_id, id =>
-    ifDef(people.get(id), person => fullName(person))
-  );
+function personNames(item: IDomainStatusItem, people: List<IPerson>): string[] {
+  return item.person_ids.map(id => fullName(people.get(id)));
 }
 
-function orgName(item: IDomainStatusItem, organizations: List<IOrganization>) {
-  return ifDef(item.organization_id, id =>
-    ifDef(organizations.get(id), org => org.short_name)
-  );
+function orgNames(
+  item: IDomainStatusItem,
+  organizations: List<IOrganization>
+): string[] {
+  return item.organization_ids.map(id => organizations.get(id).short_name);
 }
 
 function empty(): IDomainStatusItem {
@@ -178,8 +176,8 @@ function empty(): IDomainStatusItem {
     title: "",
     year: null,
     platforms: "",
-    organization_id: null,
-    person_id: null,
+    organization_ids: [],
+    person_ids: [],
     creator_id: 0,
     bible_book_ids: [],
     count: 0,
@@ -196,8 +194,8 @@ export default {
   categoryList,
   platformsStr,
   books,
-  personName,
-  orgName,
+  personNames,
+  orgNames,
   lingSubcategories,
   empty,
   emptyList

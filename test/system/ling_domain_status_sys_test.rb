@@ -69,7 +69,7 @@ class LingDomainStatusSysTest < ApplicationSystemTestCase
       within("label", text: "Subcategory") { find("select").select(subcategory) }
       fill_in "Description", with: "Cool #{subcategory}"
       fill_in "Year", with: "1995"
-      within("label", text: "Person") do
+      within(parent(find("label", text: "People"))) do
         fill_in_search_input("Rick")
       end
       yield if block_given?

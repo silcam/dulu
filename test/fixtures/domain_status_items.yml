@@ -3,6 +3,10 @@ HdiNT:
   category: PublishedScripture
   subcategory: New_testament
   year: 2005
-  organization: SIL
+  organizations: 
+    - SIL
+  people:
+    - Drew
+    - Abanda
   platforms: ''
   creator: Drew

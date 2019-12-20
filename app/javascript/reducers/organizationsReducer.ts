@@ -8,6 +8,7 @@ import {
 } from "../actions/organizationActions";
 import Organization, { IOrganization } from "../models/Organization";
 import List from "../models/List";
+import { LoadAction, isLoadAction } from "./LoadAction";
 
 export const emptyOrganization: IOrganization = {
   id: 0,
@@ -21,8 +22,11 @@ export const emptyOrganization: IOrganization = {
 
 export default function organizationsReducer(
   state = new List<IOrganization>(emptyOrganization, [], Organization.compare),
-  action: OrganizationAction
+  action: OrganizationAction | LoadAction
 ) {
+  if (isLoadAction(action)) {
+    return state.add(action.payload.organizations);
+  }
   switch (action.type) {
     case SET_ORGANIZATIONS:
       return state.addAndPrune(action.organizations!);

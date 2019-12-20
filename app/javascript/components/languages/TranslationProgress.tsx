@@ -17,7 +17,10 @@ export default function TranslationProgress(props: IProps) {
         "New_testament"
       ] as (keyof ILanguage["progress"])[]).map(testament =>
         props.language.progress[testament] ? (
-          <div style={{ paddingRight: "24px", verticalAlign: "top" }}>
+          <div
+            key={testament}
+            style={{ paddingRight: "24px", verticalAlign: "top" }}
+          >
             <label style={{ paddingRight: "8px" }}>{t(testament)}</label>
             <ProgressBarTranslation
               progress={props.language.progress[testament]!}

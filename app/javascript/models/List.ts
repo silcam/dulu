@@ -28,7 +28,8 @@ export default class List<T extends { id: number }> {
   }
 
   // New items are added. Existing items are updated by merging
-  add(itemsToAdd: PartialModel<T>[]) {
+  add(itemsToAdd: PartialModel<T>[] | null | undefined) {
+    if (!itemsToAdd || itemsToAdd.length == 0) return this;
     const newItems = itemsToAdd.reduce((items, itemToAdd) => {
       const existingIndex = items.findIndex(
         oldItem => oldItem.id == itemToAdd.id
@@ -67,13 +68,10 @@ export default class List<T extends { id: number }> {
   }
 
   reverse() {
-    const newItems = this.items.reduceRight(
-      (newItems, item) => {
-        newItems.push(item);
-        return newItems;
-      },
-      [] as T[]
-    );
+    const newItems = this.items.reduceRight((newItems, item) => {
+      newItems.push(item);
+      return newItems;
+    }, [] as T[]);
     const revSort = this.sort ? (a: T, b: T) => this.sort!(b, a) : undefined;
     return new List(this.emptyItem, newItems, revSort);
   }

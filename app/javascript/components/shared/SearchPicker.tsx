@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import styles from "./SearchTextInput.css";
 import accentFold from "../../util/accentFold";
-import { fullName, IPerson } from "../../models/Person";
 import { IOrganization } from "../../models/Organization";
 import List from "../../models/List";
 

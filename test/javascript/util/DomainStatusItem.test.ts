@@ -68,19 +68,19 @@ test("DSI books", () => {
 });
 
 test("DSI: personName", () => {
-  expect(DomainStatusItem.personName(dsiFactory({}), mockPeople)).toEqual(
+  expect(DomainStatusItem.personNames(dsiFactory({}), mockPeople)).toEqual([
     "Joe Shmoe"
-  );
-  const noJoe = domainStatusItemFactory({ person_id: null });
-  expect(DomainStatusItem.personName(noJoe, mockPeople)).toEqual("");
+  ]);
+  const noJoe = domainStatusItemFactory({ person_ids: [] });
+  expect(DomainStatusItem.personNames(noJoe, mockPeople)).toEqual([]);
 });
 
 test("DSI: orgName", () => {
-  expect(DomainStatusItem.orgName(dsiFactory({}), mockOrganizations)).toEqual(
+  expect(DomainStatusItem.orgNames(dsiFactory({}), mockOrganizations)).toEqual([
     "MocksRUs"
-  );
-  const noOrg = domainStatusItemFactory({ organization_id: null });
-  expect(DomainStatusItem.orgName(noOrg, mockOrganizations)).toEqual("");
+  ]);
+  const noOrg = domainStatusItemFactory({ organization_ids: [] });
+  expect(DomainStatusItem.orgNames(noOrg, mockOrganizations)).toEqual([]);
 });
 
 test("Count Unit", () => {

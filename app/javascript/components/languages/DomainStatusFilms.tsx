@@ -40,7 +40,10 @@ export default function DomainStatusFilms(props: IProps) {
                         {takeFirst(item.year, t(film))}
                       </Link>
                       {orBlank(
-                        DomainStatusItem.orgName(item, props.organizations),
+                        DomainStatusItem.orgNames(
+                          item,
+                          props.organizations
+                        ).join(", "),
                         " - "
                       )}
                     </span>

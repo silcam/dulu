@@ -32,6 +32,8 @@ export interface IPerson {
   isUser?: boolean;
 }
 
+export type PartialPerson = Pick<IPerson, "id" | "first_name" | "last_name">;
+
 export function personCompare(a: IPerson, b: IPerson): number {
   const lastNameComparison = baseCompare(a.last_name, b.last_name);
   if (lastNameComparison != 0) return lastNameComparison;

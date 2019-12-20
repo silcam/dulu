@@ -1,6 +1,6 @@
 import React, { useContext, useState } from "react";
 import { IPerson, fullName } from "../../models/Person";
-import SearchTextInput from "../shared/SearchTextInput";
+import { PersonSearchTextInput } from "../shared/SearchTextInput";
 import I18nContext from "../../contexts/I18nContext";
 import update from "immutability-helper";
 import { emptyPerson } from "../../reducers/peopleReducer";
@@ -87,15 +87,12 @@ export default function PersonPicker(props: IProps) {
       />
     </div>
   ) : (
-    <SearchTextInput
-      queryPath="/api/people/search"
+    <PersonSearchTextInput
       placeholder={
         props.placeholder === undefined ? t("Name") : props.placeholder
       }
-      updateValue={searchItem =>
-        props.setValue(
-          searchItem.id ? update(emptyPerson, { $merge: searchItem }) : null
-        )
+      updateValue={person =>
+        props.setValue(person ? update(emptyPerson, { $merge: person }) : null)
       }
       text={props.value ? fullName(props.value) : ""}
       autoFocus={props.autoFocus}
@@ -103,7 +100,7 @@ export default function PersonPicker(props: IProps) {
       notListed={{
         label: t("Add_person"),
         onClick: name => {
-          const names = splitOnLastSpace(name).map(fixCaps);
+          const names = splitOnLastSpace(fixCaps(name));
           setNewPerson({ first_name: names[0], last_name: names[1] });
           setNewPersonForm(true);
         }

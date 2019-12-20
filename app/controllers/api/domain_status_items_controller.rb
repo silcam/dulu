@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Api::DomainStatusItemsController < ApplicationController
   def create
     @language = Language.find(params[:language_id])
@@ -37,12 +39,12 @@ class Api::DomainStatusItemsController < ApplicationController
         :platforms,
         :description,
         :title,
-        :organization_id,
-        :person_id,
         :count,
         :completeness,
         details: {},
-        bible_book_ids: [],
+        person_ids: [],
+        organization_ids: [],
+        bible_book_ids: []
       )
   end
 end

@@ -53,7 +53,8 @@ export default function LanguagePage(props: IProps) {
             )}
             onSelect={index => {
               updateViewPrefs({ dashboardTab: tabs[index] });
-              history.push(`${props.basePath}/${tabs[index]}`);
+              if (props.basePath)
+                history.push(`${props.basePath}/${tabs[index]}`);
               return true;
             }}
           >

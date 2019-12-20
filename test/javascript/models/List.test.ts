@@ -49,6 +49,13 @@ test("Add one thing sorted", () => {
   expect(idsOf(list)).toEqual([1, 4, 5, 8, 10]);
 });
 
+test("Add no-ops", () => {
+  const list = aList();
+  expect(list.add(null)).toBe(list);
+  expect(list.add(undefined)).toBe(list);
+  expect(list.add([])).toBe(list);
+});
+
 test("Update one thing", () => {
   const list = aList().add([{ id: 4, word: "yo" }]);
   expect(list.length()).toBe(4);
