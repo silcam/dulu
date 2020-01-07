@@ -5,6 +5,7 @@ export interface ICan {
   update?: boolean;
   destroy?: boolean;
   update_activities?: boolean;
+  grant_login?: boolean;
 }
 
 export interface CanAction {

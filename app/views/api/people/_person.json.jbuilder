@@ -44,6 +44,7 @@ json.person do
 
   json.can do
     json.update can?(:update, @person)
+    json.grant_login can?(:grant_login, @person)
     json.destroy can?(:destroy, @person)
   end
 

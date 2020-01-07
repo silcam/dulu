@@ -9,6 +9,7 @@ class PeopleControllerTest < ActionDispatch::IntegrationTest
     @lance = people(:Lance)
     @kendall = people(:Kendall)
     @kevin = people(:Kevin)
+    @olga = people(:Olga)
   end
   
   def people_path(rest = '')
@@ -18,7 +19,7 @@ class PeopleControllerTest < ActionDispatch::IntegrationTest
   test 'Index' do
     api_login @drew
     data = api_get(people_path)
-    assert_equal({ create: true }, data[:can])
+    assert_equal({ create: true, grant_login: false }, data[:can])
     assert_equal(
       { id: @lance.id, first_name: 'Lance', last_name: 'Armstrong', has_login: true }, 
       data[:people].first
@@ -28,7 +29,7 @@ class PeopleControllerTest < ActionDispatch::IntegrationTest
   test 'Index permissions' do
     api_login @kevin
     data = api_get(people_path)
-    assert_equal({ create: false }, data[:can])
+    assert_equal({ create: false, grant_login: false }, data[:can])
   end
 
   test 'Show' do
@@ -83,17 +84,17 @@ class PeopleControllerTest < ActionDispatch::IntegrationTest
   test 'Show permissions' do
     api_login @kevin
     data = api_get(people_path("/#{@drew.id}"))
-    assert_equal({ update: false, destroy: false }, data[:person][:can])
+    assert_equal({ update: false, destroy: false, grant_login: false }, data[:person][:can])
     data = api_get(people_path("/#{@kevin.id}"))
-    assert_equal({ update: true, destroy: false }, data[:person][:can])
+    assert_equal({ update: true, destroy: false, grant_login: false }, data[:person][:can])
 
     api_login @rick
     data = api_get(people_path("/#{@drew.id}"))
-    assert_equal({ update: true, destroy: true }, data[:person][:can])
+    assert_equal({ update: true, destroy: true, grant_login: true }, data[:person][:can])
   end
 
   test 'Create' do
-    api_login @drew
+    api_login @olga
     ironman = { first_name: 'Iron', last_name: 'Man', gender: 'M', email: 'iron_man@sil.org', has_login: true }
     data = api_post(people_path, person: ironman)
     assert_partial ironman, data[:person]
@@ -103,6 +104,13 @@ class PeopleControllerTest < ActionDispatch::IntegrationTest
     api_login @kevin
     api_post(people_path, {})
     assert_not_allowed
+  end
+
+  test 'Grant login permission' do
+    api_login @drew
+    ironman = { first_name: 'Iron', last_name: 'Man', gender: 'M', email: 'iron_man@sil.org', has_login: true }
+    data = api_post(people_path, person: ironman)
+    assert_partial ironman.merge(has_login: false), data[:person]
   end
 
   test 'Create Duplicate' do

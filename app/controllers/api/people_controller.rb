@@ -57,19 +57,11 @@ class Api::PeopleController < ApplicationController
   private
 
   def person_params
+    fields = %i[first_name last_name gender email country_id ui_language email_pref notification_channels]
+    fields << :has_login if can?(:grant_login, Person)
     params
       .require(:person)
-      .permit(
-        :first_name,
-        :last_name,
-        :gender,
-        :email,
-        :country_id,
-        :has_login,
-        :ui_language,
-        :email_pref,
-        :notification_channels
-      )
+      .permit(fields)
   end
 
   def duplicate_person?

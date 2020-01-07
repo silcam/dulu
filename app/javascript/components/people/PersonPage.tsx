@@ -145,7 +145,7 @@ export default class PersonPage extends React.PureComponent<IProps, IState> {
         <EditActionBar
           can={person.can}
           editing={this.state.editing}
-          saveDisabled={!this.state.edited}
+          saveDisabled={!this.state.edited || !this.validate()}
           edit={this.edit}
           delete={() => this.setState({ deleting: true })}
           save={this.save}

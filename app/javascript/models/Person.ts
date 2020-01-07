@@ -10,7 +10,7 @@ export interface IPerson {
   id: number;
   first_name: string;
   last_name: string;
-  can: { update?: boolean; destroy?: boolean };
+  can: { update?: boolean; destroy?: boolean; grant_login?: boolean };
   roles: string[];
   email: string;
   ui_language: Locale;

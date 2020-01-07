@@ -73,6 +73,7 @@ export default class PeopleBoard extends React.PureComponent<IProps, IState> {
                     people={this.props.people}
                     addPerson={this.props.addPerson}
                     history={this.props.history}
+                    can={this.props.can}
                   />
                 )}
                 {this.props.action == "show" && this.props.id && (

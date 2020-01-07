@@ -15,10 +15,12 @@ import { History } from "history";
 import { emptyPerson } from "../../reducers/peopleReducer";
 import I18nContext from "../../contexts/I18nContext";
 import { Locale } from "../../i18n/i18n";
+import { ICan } from "../../actions/canActions";
 
 interface IProps {
   people: List<IPerson>;
   addPerson: Setter<IPerson>;
+  can: ICan;
 
   history: History;
 }
@@ -113,14 +115,16 @@ export default class NewPersonForm extends React.Component<IProps, IState> {
               />
             </FormGroup>
 
-            <FormGroup label={t("Dulu_account")}>
-              <CheckBoxInput
-                setValue={value => this.updatePerson({ has_login: value })}
-                name="has_login"
-                value={!!person.has_login}
-                text={t("Can_login")}
-              />
-            </FormGroup>
+            {this.props.can.grant_login && (
+              <FormGroup label={t("Dulu_account")}>
+                <CheckBoxInput
+                  setValue={value => this.updatePerson({ has_login: value })}
+                  name="has_login"
+                  value={!!person.has_login}
+                  text={t("Can_login")}
+                />
+              </FormGroup>
+            )}
 
             {person.has_login && (
               <div>

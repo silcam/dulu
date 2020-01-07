@@ -52,10 +52,11 @@ function PersonBasicInfo(props: IProps) {
               value={person.email}
               setValue={value => props.updatePerson({ email: value })}
               validateNotBlank={person.has_login}
+              showError
             />
           </td>
         </tr>
-        {!person.isUser && (
+        {!person.isUser && (!props.editing || person.can.grant_login) && (
           <tr>
             <th>{t("Dulu_account")}</th>
             <td>
