@@ -1,16 +1,18 @@
+# frozen_string_literal: true
+
 class SessionsController < ApplicationController
-  skip_before_action :require_login, only: [:new, :create, :test_create]
+  skip_before_action :require_login, only: %i[new create test_create]
 
   def new
     if logged_in?
       redirect_to root_path
     else
-      redirect_to "/auth/google_oauth2"
+      redirect_to '/auth/google_oauth2'
     end
   end
 
   def create
-    @gmail = request.env["omniauth.auth"]["info"]["email"]
+    @gmail = request.env['omniauth.auth']['info']['email']
     person = Person.where('email ILIKE ?', @gmail).first
     if person.try :has_login
       reset_user_session
@@ -23,7 +25,7 @@ class SessionsController < ApplicationController
   end
 
   def test_create
-    user = Person.find params[:id]
+    user = params[:id] ? Person.find(params[:id]) : Person.find_by(email: params[:email])
     log_in user
     response_ok
   end

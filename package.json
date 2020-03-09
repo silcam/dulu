@@ -1,13 +1,15 @@
 {
   "scripts": {
     "test": "jest --watch",
-    "testall": "rails test && yarn jest && rails test:system"
+    "testall": "rails test && yarn jest && rails test:system",
+    "test:cypress": "concurrently -p \"[{name}]\" -n \"Server,Cypress\"  -c yellow,green \"bin/rails server -e test -p 3002\"  \"yarn cypress open --project ./spec\""
   },
   "dependencies": {
     "@rails/webpacker": "^3.3.1",
     "@types/react-tabs": "^2.3.1",
     "axios": "^0.18.0",
     "babel-preset-react": "^6.24.1",
+    "cypress": "^4.1.0",
     "immutability-helper": "2.7.1",
     "prop-types": "^15.6.1",
     "react": "~16.8.0",
@@ -27,6 +29,7 @@
     "@types/react-router-dom": "^5.1.2",
     "babel-eslint": "^8.2.3",
     "babel-jest": "^23.6.0",
+    "concurrently": "^5.1.0",
     "css-loader": "^1.0.0",
     "enzyme": "^3.8.0",
     "enzyme-adapter-react-16": "^1.8.0",

@@ -78,6 +78,8 @@ GEM
       ffi (~> 1.0, >= 1.0.11)
     concurrent-ruby (1.1.5)
     crass (1.0.5)
+    cypress-on-rails (1.5.1)
+      rack
     daemons (1.2.6)
     debase (0.2.2)
       debase-ruby_core_source (>= 0.10.2)
@@ -281,6 +283,7 @@ DEPENDENCIES
   capistrano-passenger
   capistrano-rails
   capistrano-rbenv
+  cypress-on-rails
   daemons (~> 1.2)
   debase
   delayed_job_active_record (~> 4.1)

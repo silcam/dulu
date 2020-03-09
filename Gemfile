@@ -83,4 +83,5 @@ group :test do
   gem "selenium-webdriver"
   gem "brakeman", require: false
   gem "minitest-retry"
+  gem 'cypress-on-rails'
 end
