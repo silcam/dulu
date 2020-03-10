@@ -12,6 +12,7 @@ config/database.yml
 config/initializers/omniauth.rb
 db/*.sql
 db/*.sql.gz
+/spec/cypress/screenshots
 
 # Ignore bundler config.
 /.bundle

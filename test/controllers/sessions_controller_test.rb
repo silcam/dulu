@@ -69,7 +69,9 @@ class SessionsControllerTest < ActionDispatch::IntegrationTest
 
   test 'Logout if not logged in' do
     post '/logout'
-    assert_redirected_to '/auth/google_oauth2'
+    assert_redirected_to '/'
+    get '/'
+    assert_includes @response.body, 'Dulu is a tool developed by SIL Cameroon' # Public home
   end
 
   test 'Login as' do

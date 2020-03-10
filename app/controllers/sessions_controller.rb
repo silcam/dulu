@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class SessionsController < ApplicationController
-  skip_before_action :require_login, only: %i[new create test_create]
+  skip_before_action :require_login, only: %i[new create test_create destroy]
 
   def new
     if logged_in?

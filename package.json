@@ -1,8 +1,11 @@
 {
   "scripts": {
     "test": "jest --watch",
-    "testall": "rails test && yarn jest && rails test:system",
-    "test:cypress": "concurrently -p \"[{name}]\" -n \"Server,Cypress\"  -c yellow,green \"bin/rails server -e test -p 3002\"  \"yarn cypress open --project ./spec\""
+    "test:all": "rails test && yarn jest && yarn test:cypress:run",
+    "test:all:mod": "rails test && yarn jest && yarn test:cypress",
+    "testServer": "bin/rails server -e test -p 3002",
+    "test:cypress": "concurrently -p \"[{name}]\" -n \"Server,Cypress\"  -c yellow,green \"yarn testServer\"  \"yarn cypress open --project ./spec\"",
+    "test:cypress:run":"concurrently -p \"[{name}]\" -n \"Server, Cypress\" -c yellow,green \"yarn testServer\" \"yarn cypress run --project ./spec --browser chrome --headless\"" 
   },
   "dependencies": {
     "@rails/webpacker": "^3.3.1",

@@ -15,6 +15,7 @@
     },
     "exclude": [
       "**/*.spec.ts",
+      "spec",
       "node_modules",
       "vendor",
       "public"

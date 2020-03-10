@@ -152,7 +152,7 @@ export default function OrganizationPage(props: IProps) {
                 const country = c || { name: "", id: undefined };
                 updateOrganization({
                   country: country,
-                  country_id: undefined
+                  country_id: country.id
                 });
               }}
               allowBlank

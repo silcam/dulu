@@ -1,13 +1,17 @@
 describe("Logging in and out", () => {
   before(() => {
     cy.appFixtures();
+    cy.request("POST", "/logout");
   });
 
   it("Logs in and out", () => {
     cy.mockOauth();
     cy.visit("/");
     cy.contains("Welcome to Dulu").should("exist");
-    cy.get("img.img-normal[alt='Sign in with Google']").click();
+    cy.get("a#google-signin-link")
+      .find("img:visible")
+      .click();
+    // cy.get("img.img-normal[alt='Sign in with Google']").click();
     cy.contains("Drew").should("exist");
 
     cy.wait(300); // Not sure why...
