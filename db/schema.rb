@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20191220133305) do
+ActiveRecord::Schema.define(version: 20200312075605) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -157,6 +157,9 @@ ActiveRecord::Schema.define(version: 20191220133305) do
     t.json "details", default: {}
     t.integer "count", default: 0
     t.string "title", default: ""
+    t.string "link", default: ""
+    t.bigint "dsi_location_id"
+    t.index ["dsi_location_id"], name: "index_domain_status_items_on_dsi_location_id"
     t.index ["language_id"], name: "index_domain_status_items_on_language_id"
     t.index ["organization_id"], name: "index_domain_status_items_on_organization_id"
     t.index ["person_id"], name: "index_domain_status_items_on_person_id"
@@ -193,6 +196,18 @@ ActiveRecord::Schema.define(version: 20191220133305) do
     t.index ["status_parameter_id"], name: "index_domain_updates_on_status_parameter_id"
   end
 
+  create_table "dsi_locations", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "event_locations", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "event_participants", id: :serial, force: :cascade do |t|
     t.integer "event_id"
     t.integer "person_id"
@@ -214,6 +229,8 @@ ActiveRecord::Schema.define(version: 20191220133305) do
     t.integer "creator_id"
     t.string "category", default: ""
     t.string "subcategory", default: ""
+    t.bigint "event_location_id"
+    t.index ["event_location_id"], name: "index_events_on_event_location_id"
   end
 
   create_table "events_languages", id: :serial, force: :cascade do |t|
@@ -257,6 +274,16 @@ ActiveRecord::Schema.define(version: 20191220133305) do
     t.index ["country_region_id"], name: "index_languages_on_country_region_id"
     t.index ["language_status_id"], name: "index_languages_on_language_status_id"
     t.index ["parent_id"], name: "index_languages_on_parent_id"
+  end
+
+  create_table "notes", force: :cascade do |t|
+    t.bigint "person_id"
+    t.string "text"
+    t.string "for_type"
+    t.integer "for_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["person_id"], name: "index_notes_on_person_id"
   end
 
   create_table "notifications", force: :cascade do |t|

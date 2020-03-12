@@ -6,13 +6,11 @@ import {
   RouteComponentProps
 } from "react-router-dom";
 import Dashboard from "../components/dashboard/Dashboard";
-import PeopleContainer from "../components/people/PeopleContainer";
 import ReportsRouter from "../components/reports/ReportsRouter";
 import EventsPage from "../components/events/EventsPage";
 import ParticipantPage from "../components/participants/ParticipantPage";
 import ActivityPage from "../components/activities/ActivityPage";
 import OrganizationsContainer from "../components/organizations/OrganizationsContainer";
-import ProgramsRedirect from "../components/languages/ProgramsRedirect";
 import LanguagesContainer from "../components/languages/LanguagesContainer";
 import ErrorMessage from "./ErrorMessage";
 import axios from "axios";
@@ -23,6 +21,7 @@ import { AnyObj } from "../models/TypeBucket";
 import { User } from "./DuluApp";
 import CoreData from "./CoreData";
 import NotificationsPage from "../components/notifications/NotificationsPage";
+import PeopleBoard from "../components/people/PeopleBoard";
 
 interface IProps extends RouteComponentProps {
   t: T;
@@ -76,10 +75,6 @@ class MainRouter extends React.Component<IProps, IState> {
             )}
           />
           <Route
-            path="/programs/:idOrAction?"
-            render={({ match }) => <ProgramsRedirect match={match} />}
-          />
-          <Route
             path="/regions/:idOrAction?"
             render={({ history, match }) => (
               <RegionsContainer
@@ -102,7 +97,7 @@ class MainRouter extends React.Component<IProps, IState> {
           <Route
             path="/people/:actionOrId?/:id?"
             render={({ match, history }) => (
-              <PeopleContainer
+              <PeopleBoard
                 history={history}
                 {...routeActionAndId(match.params)}
                 updateLanguage={this.props.updateLanguage}

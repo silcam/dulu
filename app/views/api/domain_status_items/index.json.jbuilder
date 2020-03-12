@@ -22,8 +22,14 @@ json.languages [@language] do |language|
       :bible_book_ids,
       :count,
       :details,
-      :completeness
+      :completeness,
+      :link
     )
+    if ds_item.dsi_location
+      json.dsi_location do
+        json.call(ds_item.dsi_location, :id, :name)
+      end
+    end
   end
 end
 

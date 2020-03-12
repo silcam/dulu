@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 json.languages @event.languages do |language|
   json.call(language, :id, :name)
 end
@@ -11,13 +13,14 @@ json.people @event.people do |person|
 end
 
 if @event.workshop
-  json.partial! "api/workshops_activities/index", activities: [@event.workshop.linguistic_activity]
+  json.partial! 'api/workshops_activities/index', activities: [@event.workshop.linguistic_activity]
 else
   json.workshops_activities []
 end
 
 json.event do
   json.call(@event, :id, :name, :domain, :start_date, :end_date, :note, :language_ids, :cluster_ids, :category, :subcategory)
+  json.event_location { json.call(@event.event_location, :id, :name) } if @event.event_location
 
   json.event_participants @event.event_participants do |e_p|
     json.call(e_p, :id, :person_id, :roles)
@@ -29,7 +32,7 @@ json.event do
   end
 
   json.can do
-    json.update(can? :update, @event)
-    json.destroy(can? :destroy, @event)
+    json.update(can?(:update, @event))
+    json.destroy(can?(:destroy, @event))
   end
 end

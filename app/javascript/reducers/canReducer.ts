@@ -1,5 +1,6 @@
 import { SET_CAN, CanAction, ICan } from "../actions/canActions";
 import update from "immutability-helper";
+import { isLoadAction } from "./LoadAction";
 
 export interface CanState {
   events: ICan;
@@ -23,6 +24,9 @@ export default function canReducer(
   state = emptyState,
   action: CanAction
 ): CanState {
+  if (isLoadAction(action)) {
+    return update(state, { $merge: action.payload.can || {} });
+  }
   switch (action.type) {
     case SET_CAN:
       return update(state, { [action.key]: { $set: action.can } });

@@ -14,9 +14,12 @@ Rails.application.routes.draw do
 
     resources :clusters do
       resources :participants
-      get 'dashboard', on: :member
       get 'search', on: :collection
     end
+
+    resources :dsi_locations
+
+    resources :event_locations
 
     resources :events do
       get 'find/:year/:month', on: :collection, action: :find
@@ -30,14 +33,12 @@ Rails.application.routes.draw do
       resources :participants
       resources :events
       resources :domain_status_items, shallow: true
-      get 'more_events', on: :member
-      get 'get_event', on: :member
       get 'search', on: :collection
       get 'dashboard_list', on: :collection
-      get 'dashboard', on: :member
       get 'find_language_id', on: :collection
-      get 'pubs', on: :member
     end
+
+    resources :notes
 
     resources :notifications do
       get 'global', on: :collection

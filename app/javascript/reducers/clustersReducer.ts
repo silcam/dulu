@@ -6,11 +6,15 @@ import {
   DELETE_CLUSTER
 } from "../actions/clusterActions";
 import Cluster from "../models/Cluster";
+import { isLoadAction } from "./LoadAction";
 
 export default function clustersReducer(
   state = Cluster.emptyList(),
   action: ClusterAction
 ) {
+  if (isLoadAction(action)) {
+    return state.add(action.payload.clusters);
+  }
   switch (action.type) {
     case SET_CLUSTERS:
       return state.addAndPrune(action.clusters!);

@@ -16,18 +16,22 @@ HdiDialect:
 Bangolan:
   name: Bangolan
   cluster: Ndop
+  code: bgj
 
 Bambalang:
   name: Bambalang
   cluster: Ndop
+  code: bmo
 
 Ewondo:
   name: Ewondo
   region: SouthRegion
+  code: ewo
 
 Zulgo:
   name: Zulgo
   region: NorthRegion
+  code: gnd
 
 NoActivity:
   name: No Activity

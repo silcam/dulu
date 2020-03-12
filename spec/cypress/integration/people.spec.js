@@ -40,6 +40,20 @@ describe("People", () => {
     cy.request("POST", "/logout");
   });
 
+  it("Handles Duplicates", () => {
+    cy.login("rick_conrad@sil.org");
+    cy.visit("/people");
+    cy.icon("addIcon").click();
+    cy.inLabel("First Name").type("Drew");
+    cy.inLabel("Last Name").type("Mambo");
+    cy.contains("Save").click();
+
+    cy.contains("Drew Mambo may already exist");
+    cy.contains("button", "Save").should("be.disabled");
+    cy.contains("This is a different person").click();
+    cy.contains("Save").click();
+  });
+
   it("Adds organization", () => {
     cy.login("rick_conrad@sil.org");
     cy.visit(rickPath);

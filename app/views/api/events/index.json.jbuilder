@@ -1,13 +1,19 @@
+# frozen_string_literal: true
+
 language_ids = []
 cluster_ids = []
 person_ids = []
 
 json.events @events do |event|
   json.call(event, :id, :name, :start_date, :end_date, :domain, :note, :language_ids, :cluster_ids, :category, :subcategory)
+
+  json.event_location { json.call(event.event_location, :id, :name) } if event.event_location
+
   json.event_participants event.event_participants do |e_p|
     json.call(e_p, :id, :person_id, :roles)
     person_ids << e_p.person_id
   end
+  
   language_ids += event.language_ids
   cluster_ids += event.cluster_ids
 end

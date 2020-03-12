@@ -46,8 +46,8 @@ export default function PersonPicker(props: IProps) {
       duluAxios.post("/api/people", { person: newPerson })
     );
     if (data) {
-      if (data.person) {
-        props.setValue(data.person);
+      if (data.people) {
+        props.setValue(data.people[0]);
         setNewPersonForm(false);
       } else {
         setDuplicates(data.duplicates);

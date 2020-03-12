@@ -1,9 +1,11 @@
+# frozen_string_literal: true
+
 class Api::EventsController < ApplicationController
   def index
     event_src = get_event_src
     @events = event_src.for_period(params[:start_year], params[:start_month], params[:end_year], params[:end_month])
     @start_year = params[:start_year].to_i
-    if (@events.count == 0)
+    if @events.count.zero?
       @events = event_src.for_period(nil, nil, params[:end_year], params[:end_month])
       @start_year = nil
     end
@@ -15,7 +17,7 @@ class Api::EventsController < ApplicationController
 
   def show
     @event = Event.find(params[:id])
-  end
+  end 
 
   def create
     authorize! :create, Event
@@ -43,24 +45,29 @@ class Api::EventsController < ApplicationController
 
   def get_event_src
     if params[:language_id]
-      return Language.find(params[:language_id]).all_events
+      Language.find(params[:language_id]).all_events
     elsif params[:person_id]
-      return Person.find(params[:person_id]).events
+      Person.find(params[:person_id]).events
     else
-      return Event
+      Event
     end
   end
 
   def event_params
-    return params
-             .require(:event)
-             .permit(
-               :name, :domain, :note, :start_date, :end_date,
-               :category, :subcategory,
-               language_ids: [], cluster_ids: [],
-               event_participants_attributes: [
-                 :id, :person_id, :_destroy, roles: [],
-               ],
-             )
+    base_params = params
+                  .require(:event)
+                  .permit(
+                    :name, :domain, :note, :start_date, :end_date,
+                    :category, :subcategory, :event_location_id,
+                    language_ids: [], cluster_ids: [],
+                    event_participants_attributes: [
+                      :id, :person_id, :_destroy, roles: []
+                    ]
+                  )
+    if params[:event][:new_event_location]
+      event_location = EventLocation.create(name: params[:event][:new_event_location])
+      base_params[:event_location] = event_location
+    end
+    base_params
   end
 end

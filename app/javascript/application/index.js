@@ -9,7 +9,10 @@ import appReducer from "../reducers/appReducer";
 import PropTypes from "prop-types";
 import DispatchContext from "../contexts/DispatchContext";
 
-const store = createStore(appReducer);
+const store = createStore(
+  appReducer,
+  window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+);
 
 function App({ store }) {
   return (

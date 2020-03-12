@@ -21,4 +21,9 @@ class RegionTest < ActiveSupport::TestCase
   test 'languages' do
     assert_includes @south.languages, @ewondo
   end
+
+  test 'all_languages' do
+    exp = [@ewondo, languages(:Bambalang), languages(:Bangolan)]
+    assert_equal exp, @south.all_languages
+  end
 end

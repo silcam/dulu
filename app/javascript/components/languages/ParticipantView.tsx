@@ -135,7 +135,7 @@ export default class ParticipantView extends React.PureComponent<
     return (
       <I18nContext.Consumer>
         {t => (
-          <div>
+          <div className="padBottom">
             <EditActionBar
               can={can}
               editing={this.state.editing}
@@ -207,9 +207,7 @@ export default class ParticipantView extends React.PureComponent<
                       {this.props.languages.get(activity.language_id).name}
                       <Spacer width="10px" />
                       <Link
-                        to={`/languages/${activity.language_id}/activities/${
-                          activity.id
-                        }`}
+                        to={`/languages/${activity.language_id}/activities/${activity.id}`}
                       >
                         {Activity.name(activity, t)}
                       </Link>

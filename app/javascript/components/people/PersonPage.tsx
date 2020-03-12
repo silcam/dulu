@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useContext } from "react";
 import EditActionBar from "../shared/EditActionBar";
 import TextOrEditText from "../shared/TextOrEditText";
 import SaveIndicator from "../shared/SaveIndicator";
@@ -12,18 +12,21 @@ import RolesTable from "./RolesTable";
 import Loading from "../shared/Loading";
 import OrgPeopleContainer from "./OrgPeopleContainer";
 import PersonEventsContainer from "./PersonEventsContainer";
-import { Setter } from "../../models/TypeBucket";
 import { Locale, T } from "../../i18n/i18n";
 import { History } from "history";
 import DuluSettings from "./DuluSettings";
+import useLoad, { useLoadOnMount } from "../shared/useLoad";
+import useAppSelector from "../../reducers/useAppSelector";
+import I18nContext from "../../contexts/I18nContext";
+import { useDispatch } from "react-redux";
+import {
+  deletePerson as deletePersonAction,
+  setPerson
+} from "../../actions/peopleActions";
 // import styles from "./PersonPage.css";
 
 interface IProps {
   id: number;
-  person: IPerson;
-  setPerson: Setter<IPerson>;
-  deletePerson: (id: number) => void;
-  t: T;
   updateLanguage: (locale: Locale) => void;
   history: History;
 }
@@ -37,76 +40,36 @@ interface IState {
   edited?: boolean;
 }
 
-export default class PersonPage extends React.PureComponent<IProps, IState> {
-  state: IState = {};
+export default function PersonPage(props: IProps) {
+  const t = useContext(I18nContext);
+  const dispatch = useDispatch();
+  const [saveLoad] = useLoad();
+  const propsPerson = useAppSelector(state => state.people.get(props.id));
 
-  async componentDidMount() {
-    const data = await DuluAxios.get(`/api/people/${this.props.id}`);
-    if (data) {
-      this.props.setPerson(data.person);
-    }
-  }
+  const [state, _setState] = useState<IState>({});
+  const setState = (stateUpdate: Partial<IState>) =>
+    _setState({ ...state, ...stateUpdate });
 
-  edit = () =>
-    this.setState({
+  useLoadOnMount(`/api/people/${props.id}`);
+
+  const edit = () =>
+    setState({
       editing: true,
       savedChanges: false,
       edited: false,
-      person: { ...this.props.person }
+      person: { ...propsPerson }
     });
 
-  cancelEdit = () => this.setState({ editing: false, person: undefined });
+  const cancelEdit = () => setState({ editing: false, person: undefined });
 
-  updatePerson = (mergePerson: Partial<IPerson>) => {
-    this.setState(prevState => ({
+  const updatePerson = (mergePerson: Partial<IPerson>) => {
+    setState({
       edited: true,
-      person: update(prevState.person, { $merge: mergePerson })
-    }));
-  };
-
-  save = async () => {
-    if (!this.state.person || !this.validate()) return;
-    const data = await DuluAxios.put(`/api/people/${this.state.person.id}`, {
-      person: this.state.person
+      person: update(state.person, { $merge: mergePerson })
     });
-    if (data) {
-      this.props.setPerson(data.person);
-      this.setStateAfterSave();
-      this.updateLanguageIfNecessary();
-    }
   };
 
-  updatePersonAndSave = (mergePerson: Partial<IPerson>) => {
-    this.setState(
-      {
-        person: update(this.props.person, { $merge: mergePerson })
-      },
-      () => {
-        this.save();
-      }
-    );
-  };
-
-  updateLanguageIfNecessary = () => {
-    if (
-      this.props.person.isUser &&
-      this.props.person.ui_language != this.props.t.locale
-    )
-      this.props.updateLanguage(this.props.person.ui_language);
-  };
-
-  deletePerson = async () => {
-    const success = await DuluAxios.delete(
-      `/api/people/${this.props.person.id}`
-    );
-    if (success) {
-      this.props.history.push("/people");
-      this.props.deletePerson(this.props.person.id);
-    }
-  };
-
-  validate = () => {
-    const person = this.state.person;
+  const validate = (person: IPerson | undefined = state.person) => {
     return (
       person &&
       person.first_name.length > 0 &&
@@ -115,8 +78,8 @@ export default class PersonPage extends React.PureComponent<IProps, IState> {
     );
   };
 
-  setStateAfterSave = () => {
-    this.setState({
+  const setStateAfterSave = () => {
+    setState({
       editing: false,
       edited: false,
       saving: false,
@@ -125,94 +88,122 @@ export default class PersonPage extends React.PureComponent<IProps, IState> {
     });
   };
 
-  replaceRoles = (newRoles: string[]) => {
-    const newPerson = update(this.props.person, {
-      roles: { $set: newRoles }
+  const save = async (person: IPerson | undefined = state.person) => {
+    if (!person || !validate(person)) return;
+    saveLoad(async duluAxios => {
+      const data = await duluAxios.put(`/api/people/${person.id}`, { person });
+      if (data) {
+        setStateAfterSave();
+        updateLanguageIfNecessary(data.people[0]);
+      }
+      return data;
     });
-    this.setState({
-      person: newPerson
-    });
-    this.props.setPerson(newPerson);
   };
 
-  render() {
-    const person = this.state.editing ? this.state.person : this.props.person;
+  const updatePersonAndSave = (mergePerson: Partial<IPerson>) => {
+    const newPerson = update(propsPerson, { $merge: mergePerson });
+    setState({
+      person: newPerson
+    });
+    save(newPerson);
+  };
 
-    if (!person || person.id == 0) return <Loading />;
+  const updateLanguageIfNecessary = (person: IPerson) => {
+    if (person.isUser && person.ui_language != t.locale)
+      props.updateLanguage(person.ui_language);
+  };
 
-    return (
-      <div className="padBottom">
-        <EditActionBar
-          can={person.can}
-          editing={this.state.editing}
-          saveDisabled={!this.state.edited || !this.validate()}
-          edit={this.edit}
-          delete={() => this.setState({ deleting: true })}
-          save={this.save}
-          cancel={this.cancelEdit}
+  const deletePerson = async () => {
+    const success = await DuluAxios.delete(`/api/people/${propsPerson.id}`);
+    if (success) {
+      props.history.push("/people");
+      dispatch(deletePersonAction(propsPerson.id));
+    }
+  };
+
+  const replaceRoles = (newRoles: string[]) => {
+    const newPerson = update(propsPerson, {
+      roles: { $set: newRoles }
+    });
+    setState({
+      person: newPerson
+    });
+    dispatch(setPerson(newPerson));
+  };
+
+  const person = state.editing ? state.person : propsPerson;
+
+  if (!person || person.id == 0) return <Loading />;
+
+  return (
+    <div className="padBottom">
+      <EditActionBar
+        can={person.can}
+        editing={state.editing}
+        saveDisabled={!state.edited || !validate()}
+        edit={edit}
+        delete={() => setState({ deleting: true })}
+        save={() => save()}
+        cancel={cancelEdit}
+      />
+
+      {state.deleting && (
+        <DangerButton
+          handleClick={deletePerson}
+          handleCancel={() => setState({ deleting: false })}
+          message={t("delete_person_warning", {
+            name: fullName(person)
+          })}
+          buttonText={t("delete_person", {
+            name: fullName(person)
+          })}
         />
+      )}
 
-        {this.state.deleting && (
-          <DangerButton
-            handleClick={this.deletePerson}
-            handleCancel={() => this.setState({ deleting: false })}
-            message={this.props.t("delete_person_warning", {
-              name: fullName(person)
-            })}
-            buttonText={this.props.t("delete_person", {
-              name: fullName(person)
-            })}
-          />
-        )}
+      <SaveIndicator saving={state.saving} saved={state.savedChanges} />
 
-        <SaveIndicator
-          saving={this.state.saving}
-          saved={this.state.savedChanges}
+      <h2>
+        <TextOrEditText
+          editing={state.editing}
+          name="first_name"
+          value={person.first_name}
+          setValue={value => updatePerson({ first_name: value })}
+          validateNotBlank
         />
+        {!state.editing && " "}
+        <TextOrEditText
+          editing={state.editing}
+          name="last_name"
+          value={person.last_name}
+          setValue={value => updatePerson({ last_name: value })}
+          validateNotBlank
+        />
+      </h2>
 
-        <h2>
-          <TextOrEditText
-            editing={this.state.editing}
-            name="first_name"
-            value={person.first_name}
-            setValue={value => this.updatePerson({ first_name: value })}
-            validateNotBlank
-          />
-          {!this.state.editing && " "}
-          <TextOrEditText
-            editing={this.state.editing}
-            name="last_name"
-            value={person.last_name}
-            setValue={value => this.updatePerson({ last_name: value })}
-            validateNotBlank
-          />
-        </h2>
+      <PersonBasicInfo
+        person={person}
+        editing={state.editing}
+        updatePerson={updatePerson}
+      />
 
-        <PersonBasicInfo
+      <OrgPeopleContainer person={person} />
+
+      <RolesTable person={person} replaceRoles={replaceRoles} />
+
+      <ParticipantsTable person={person} />
+
+      <PersonEventsContainer
+        person={person}
+        history={props.history}
+        basePath={`/people/${props.id}`}
+      />
+
+      {person.isUser && !state.editing && (
+        <DuluSettings
           person={person}
-          editing={this.state.editing}
-          updatePerson={this.updatePerson}
+          updatePersonAndSave={updatePersonAndSave}
         />
-
-        <OrgPeopleContainer person={person} />
-
-        <RolesTable person={person} replaceRoles={this.replaceRoles} />
-
-        <ParticipantsTable person={person} />
-
-        <PersonEventsContainer
-          person={person}
-          history={this.props.history}
-          basePath={`/people/${this.props.id}`}
-        />
-
-        {person.isUser && !this.state.editing && (
-          <DuluSettings
-            person={person}
-            updatePersonAndSave={this.updatePersonAndSave}
-          />
-        )}
-      </div>
-    );
-  }
+      )}
+    </div>
+  );
 }

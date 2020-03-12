@@ -2,7 +2,6 @@ import React from "react";
 import SaveButton from "../shared/SaveButton";
 import DuplicateWarning, { Duplicate } from "./DuplicateWarning";
 import CancelButton from "../shared/CancelButton";
-import DuluAxios from "../../util/DuluAxios";
 import { IPerson } from "../../models/Person";
 import update from "immutability-helper";
 import FormGroup from "../shared/FormGroup";
@@ -10,16 +9,15 @@ import ValidatedTextInput from "../shared/ValidatedTextInput";
 import SelectInput from "../shared/SelectInput";
 import CheckBoxInput from "../shared/CheckboxInput";
 import List from "../../models/List";
-import { Setter } from "../../models/TypeBucket";
 import { History } from "history";
 import { emptyPerson } from "../../reducers/peopleReducer";
 import I18nContext from "../../contexts/I18nContext";
 import { Locale } from "../../i18n/i18n";
 import { ICan } from "../../actions/canActions";
+import useLoad from "../shared/useLoad";
 
 interface IProps {
   people: List<IPerson>;
-  addPerson: Setter<IPerson>;
   can: ICan;
 
   history: History;
@@ -32,7 +30,33 @@ interface IState {
   saving: boolean;
 }
 
-export default class NewPersonForm extends React.Component<IProps, IState> {
+export default function NewPersonForm(props: IProps) {
+  const [saveLoad] = useLoad();
+
+  const save = async (
+    person: IPerson,
+    setDuplicates: (d: Duplicate[]) => void
+  ) => {
+    saveLoad(async duluAxios => {
+      const data = await duluAxios.post("/api/people", { person });
+      if (data) {
+        if (data.people) props.history.push(`/people/${data.people[0].id}`);
+        else setDuplicates(data.duplicates);
+      }
+      return data;
+    });
+  };
+  return <OldNewPersonForm save={save} {...props} />;
+}
+
+interface OldIProps extends IProps {
+  save: (
+    person: IPerson,
+    setDuplicates: (d: Duplicate[]) => void
+  ) => Promise<void>;
+}
+
+class OldNewPersonForm extends React.Component<OldIProps, IState> {
   state: IState = {
     person: emptyPerson,
     failedSave: false,
@@ -61,17 +85,9 @@ export default class NewPersonForm extends React.Component<IProps, IState> {
 
   save = async () => {
     this.setState({ saving: true });
-    const data = await DuluAxios.post("/api/people", {
-      person: this.state.person
-    });
-    if (data) {
-      if (data.person) {
-        this.props.addPerson(data.person);
-        this.props.history.push(`/people/${data.person.id}`);
-      } else {
-        this.setState({ duplicates: data.duplicates });
-      }
-    }
+    await this.props.save(this.state.person, duplicates =>
+      this.setState({ duplicates })
+    );
     this.setState({ saving: false });
   };
 
@@ -160,7 +176,7 @@ export default class NewPersonForm extends React.Component<IProps, IState> {
             )}
             <p>
               <SaveButton
-                onClick={this.save}
+                onClick={() => this.save()}
                 saveInProgress={this.state.saving}
                 disabled={
                   !this.inputValid() ||

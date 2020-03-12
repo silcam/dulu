@@ -8,6 +8,8 @@ Style/ClassAndModuleChildren:
   Enabled: false
 Style/MultilineTernaryOperator:
   Enabled: false
+Style/NumericLiterals:
+  Enabled: false
 
 Metrics/LineLength:
   Enabled: false

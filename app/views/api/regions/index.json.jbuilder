@@ -1,6 +1,6 @@
-json.regions @regions do |region|
-  json.call(region, :id, :name)
-end
+# frozen_string_literal: true
+
+json.partial! 'api/regions/regions', regions: @regions
 
 json.can do
   json.create can?(:create, Region)

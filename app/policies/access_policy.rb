@@ -1,34 +1,36 @@
+# frozen_string_literal: true
+
 class AccessPolicy
   include AccessGranted::Policy
 
   def configure
     role :site_admin, proc { |u| u.has_role?(:DuluAdmin) } do
-      can [:grant_admin, :login_as_others, :destroy], Person
+      can %i[grant_admin login_as_others destroy], Person
       can :destroy, Participant
       can :read, Audited::Audit
       can :manage, Organization
-      can [:manage_participants, :create, :update, :destroy], Cluster
+      can %i[manage_participants create update destroy], Cluster
       can :manage, Region
     end
 
     role :supervisor, proc { |u| u.has_role_among?(Role::SUPERVISOR_ROLES) } do
       can [:grant_login], Person
-      can [:create_activity, :manage_participants, :manage_surveys, :update_activities], Language
-      can [:manage_participants, :create, :update], Cluster
+      can %i[create_activity manage_participants manage_surveys update_activities], Language
+      can %i[manage_participants create update], Cluster
       can :manage, Activity
       can :manage, Language
       can :manage, Event
       can :manage, Publication
       can :create, DomainUpdate
       can :manage, SurveyCompletion
-      can [:create, :update], Region
+      can %i[create update], Region
     end
 
     part_roles = Role::SUPERVISOR_ROLES + Role::PARTICIPANT_ROLES
     role :participant, proc { |u| u.has_role_among? part_roles } do
-      can [:create, :read, :update], Person
+      can %i[create read update], Person
 
-      can [:create, :read, :update], Organization
+      can %i[create read update], Organization
 
       can [:manage_participants, :create_activity, :manage_surveys, :update_activities], Language do |language, user|
         language.all_current_people.include? user
@@ -68,6 +70,10 @@ class AccessPolicy
     role :user do
       can [:read, :update], Person do |person, user|
         person == user
+      end
+      
+      can [:update, :destroy], Note do |note, user|
+        note.person == user
       end
     end
   end

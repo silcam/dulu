@@ -2,14 +2,21 @@ import { PartialModel } from "../models/TypeBucket";
 import { IPerson } from "../models/Person";
 import { ILanguage } from "../models/Language";
 import { IOrganization } from "../models/Organization";
+import { IParticipant } from "../models/Participant";
+import { ICluster } from "../models/Cluster";
+import { IRegion } from "../models/Region";
+import { CanState } from "./canReducer";
 
 export interface LoadAction {
   type: "Load";
   payload: {
     people?: PartialModel<IPerson>[];
-    person?: PartialModel<IPerson>; // Remove
     languages?: PartialModel<ILanguage>[];
+    clusters?: PartialModel<ICluster>[];
+    regions?: PartialModel<IRegion>[];
     organizations?: PartialModel<IOrganization>[];
+    participants?: PartialModel<IParticipant>[];
+    can?: Partial<CanState>;
     // ... add more here
   };
 }

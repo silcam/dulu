@@ -21,12 +21,12 @@ export default function useLoad(): [
   return [loader, loading];
 }
 
-export function useLoadOnMount(load: Load): boolean {
+export function useLoadOnMount(path: string, deps: any[] = []): boolean {
   const [loader, loading] = useLoad();
 
   useEffect(() => {
-    loader(load);
-  }, []);
+    loader(axios => axios.get(path));
+  }, deps);
 
   return loading;
 }

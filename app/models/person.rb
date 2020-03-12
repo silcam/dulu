@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Person < ApplicationRecord
   include HasRoles
   include MultiWordSearch
@@ -24,6 +26,8 @@ class Person < ApplicationRecord
 
   has_many :regions
 
+  has_many :notes
+
   audited
 
   validates :last_name, presence: true, allow_blank: false
@@ -35,7 +39,7 @@ class Person < ApplicationRecord
 
   before_save :normalize_name_email
 
-  enum email_pref: [:immediate, :daily, :weekly]
+  enum email_pref: %i[immediate daily weekly]
 
   def full_name
     "#{first_name} #{last_name}"
@@ -60,7 +64,7 @@ class Person < ApplicationRecord
 
   def remove_role(role)
     transaction do
-      person_roles.find_by(role: role, end_date: nil).try(:update, { end_date: Date.today })
+      person_roles.find_by(role: role, end_date: nil).try(:update, end_date: Date.today)
       remove_from_roles_field(role)
     end
   end
@@ -99,19 +103,19 @@ class Person < ApplicationRecord
       id: id,
       first_name: first_name,
       last_name: last_name,
-      roles: roles,
+      roles: roles
     }
   end
 
   def self.search(query)
-    people = Person.multi_word_where(query, "first_name", "last_name")
+    people = Person.multi_word_where(query, 'first_name', 'last_name')
     results = []
     people.each do |person|
       subresults = []
       person.current_participants.each do |participant|
         subresults << { title: participant.cluster_language.display_name,
-                       model: participant.cluster_language,
-                       description: participant.roles_text }
+                        model: participant.cluster_language,
+                        description: participant.roles_text }
       end
       results << { title: person.name,
                    model: person,
@@ -122,22 +126,21 @@ class Person < ApplicationRecord
   end
 
   def self.basic_search(query)
-    Person.multi_word_where(query, "first_name", "last_name")
+    Person.multi_word_where(query, 'first_name', 'last_name')
   end
 
   private
 
   def normalize_name_email
-    self.first_name = fix_caps(self.first_name).strip
-    self.last_name = fix_caps(self.last_name).strip
-    self.email&.strip!
+    self.first_name = fix_caps(first_name).strip
+    self.last_name = fix_caps(last_name).strip
+    email&.strip!
   end
 
   def fix_caps(text)
     return text unless text
-    if text == text.upcase || text == text.downcase
-      text = text[0].upcase + text[1..-1].downcase
-    end
+
+    text = text[0].upcase + text[1..-1].downcase if text == text.upcase || text == text.downcase
     text
   end
 end

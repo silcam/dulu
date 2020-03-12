@@ -19,9 +19,7 @@ interface IProps {
 export default function DomainStatusItemPage(props: IProps) {
   const t = useContext(I18nContext);
 
-  useLoadOnMount(duluAxios =>
-    duluAxios.get(`/api/languages/${props.language.id}/domain_status_items`)
-  );
+  useLoadOnMount(`/api/languages/${props.language.id}/domain_status_items`);
 
   const [saveLoad] = useLoad();
   const save = async (item: IDomainStatusItem) => {

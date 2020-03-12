@@ -17,9 +17,7 @@ interface IProps {
 export default function DomainStatusDataCollectionPage(props: IProps) {
   const t = useContext(I18nContext);
 
-  useLoadOnMount(duluAxios =>
-    duluAxios.get(`/api/languages/${props.language.id}/domain_status_items`)
-  );
+  useLoadOnMount(`/api/languages/${props.language.id}/domain_status_items`);
 
   const can = {
     add: props.language.can.update

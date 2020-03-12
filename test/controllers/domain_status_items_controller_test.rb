@@ -10,6 +10,7 @@ class DomainStatusItemsControllerTest < ActionDispatch::IntegrationTest
     @drew = people :Drew
     @abanda = people :Abanda
     @lance = people :Lance
+    @cmb_library = dsi_locations :CMB_Library
   end
 
   def dsi_path(rest = '')
@@ -41,7 +42,9 @@ class DomainStatusItemsControllerTest < ActionDispatch::IntegrationTest
               year: 2005,
               organization_ids: [@sil.id],
               person_ids: [@drew.id, @abanda.id],
-              creator_id: @drew.id
+              creator_id: @drew.id,
+              link: 'http://hdint.com',
+              dsi_location: { id: @cmb_library.id, name: 'CMB Library' }
             }
           ]
         }
@@ -54,12 +57,21 @@ class DomainStatusItemsControllerTest < ActionDispatch::IntegrationTest
 
   test 'Create' do
     api_login(@drew)
-    data = api_post(lang_dsi_path(@hdi.id), category: 'Film', subcategory: 'LumoMark')
+    data = api_post(
+      lang_dsi_path(@hdi.id), 
+      category: 'Film', subcategory: 'LumoMark', link: 'http://lumomark.com/hdi', dsi_location_id: @cmb_library.id
+    )
     partial_exp = {
       languages: [
         {
           domain_status_items: [
-            { category: 'Film', subcategory: 'LumoMark', creator_id: @drew.id }
+            { 
+              category: 'Film', 
+              subcategory: 'LumoMark', 
+              creator_id: @drew.id, 
+              link: 'http://lumomark.com/hdi',
+              dsi_location: { id: @cmb_library.id, name: 'CMB Library' } 
+            }
           ]
         }
       ]
@@ -71,6 +83,13 @@ class DomainStatusItemsControllerTest < ActionDispatch::IntegrationTest
     api_login(@drew)
     data = api_put(dsi_path("/#{@hdi_nt.id}"), description: 'words')
     assert_equal 'words', data[:languages][0][:domain_status_items][0][:description]
+  end
+
+  test 'Update with create new DsiLocation' do
+    api_login(@drew)
+    data = api_put(dsi_path("/#{@hdi_nt.id}"), new_dsi_location: 'Out Back')
+    assert_equal 'Out Back', data[:languages][0][:domain_status_items][0][:dsi_location][:name]
+    assert DsiLocation.find_by(name: 'Out Back')
   end
 
   test 'Update Permission' do

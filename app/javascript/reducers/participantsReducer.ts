@@ -5,6 +5,7 @@ import {
 } from "../actions/participantActions";
 import { IParticipant } from "../models/Participant";
 import List from "../models/List";
+import { isLoadAction } from "./LoadAction";
 
 export const emptyParticipant: IParticipant = {
   id: 0,
@@ -18,6 +19,9 @@ export default function participantsReducer(
   state = new List<IParticipant>(emptyParticipant, []),
   action: ParticipantAction
 ) {
+  if (isLoadAction(action)) {
+    return state.add(action.payload.participants);
+  }
   switch (action.type) {
     case ADD_PARTICIPANTS:
       return state.add(action.participants!);

@@ -18,8 +18,8 @@ export default function DomainStatus(props: DSProps) {
   const t = useContext(I18nContext);
   const [addingNew, setAddingNew] = useState(false);
 
-  const loading = useLoadOnMount(duluAxios =>
-    duluAxios.get(`/api/languages/${props.language.id}/domain_status_items`)
+  const loading = useLoadOnMount(
+    `/api/languages/${props.language.id}/domain_status_items`
   );
 
   const allDomainStatusItems = props.language.domain_status_items;

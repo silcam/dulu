@@ -1,6 +1,6 @@
-json.clusters @clusters do |cluster|
-  json.call(cluster, :id, :name, :region_id)
-end
+# frozen_string_literal: true
+
+json.partial! 'api/clusters/clusters', clusters: @clusters
 
 json.can do
   json.create can?(:create, Cluster)

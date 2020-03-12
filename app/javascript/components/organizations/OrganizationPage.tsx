@@ -33,7 +33,7 @@ export default function OrganizationPage(props: IProps) {
   const [draftOrg, setDraftOrg] = useState<IOrganization | null>(null);
   const draftOrgValid = draftOrg && draftOrg.short_name.length > 0;
 
-  useLoadOnMount(duluAxios => duluAxios.get(`/api/organizations/${props.id}`));
+  useLoadOnMount(`/api/organizations/${props.id}`);
   const [load, loading] = useLoad();
   const dispatch = useDispatch();
 

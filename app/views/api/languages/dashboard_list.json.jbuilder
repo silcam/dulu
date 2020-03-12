@@ -1,21 +1,16 @@
-json.user_participants current_user.participants do |participant|
+# frozen_string_literal: true
+
+json.participants current_user.participants do |participant|
   json.call(participant, :id, :person_id, :language_id, :cluster_id)
 end
 
-json.user do
-  json.call(current_user, :id, :first_name, :last_name)
-end
+json.partial! 'api/people/people', people: [current_user]
 
-json.regions Region.all do |region|
-  json.call(region, :id, :name)
-end
-
-json.clusters Cluster.all do |cluster|
-  json.call(cluster, :id, :name)
-  json.region_id cluster.region_id
-end
-
-json.languages Language.all do |language|
-  json.call(language, :id, :name, :cluster_id)
-  json.region_id language.region_id
-end
+regions = Region.all
+clusters = Cluster.where(region: regions)
+json.partial! 'api/regions/regions', regions: regions
+json.partial! 'api/clusters/clusters', clusters: clusters
+json.partial!(
+  'api/languages/languages', 
+  languages: Language.where('region_id IN (?) OR cluster_id IN (?)', regions.map(&:id), clusters.map(&:id))
+)

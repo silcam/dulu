@@ -10,15 +10,20 @@ import Loading from "../shared/Loading";
 import { ILanguage } from "../../models/Language";
 import DomainStatusItemPage from "./DomainStatusItemPage";
 import DomainStatusDataCollectionPage from "./DomainStatusDataCollectionPage";
+import { useLoadOnMount } from "../shared/useLoad";
 
 interface IProps {
   language: ILanguage;
   basePath: string;
+  id: number;
 }
 
 export default function LanguagePageRouter(props: IProps) {
+  useLoadOnMount(`/api/languages/${props.id}`);
+
   if (props.language.id == 0) return <Loading />;
   const language = props.language;
+
   return (
     <Switch>
       <Route

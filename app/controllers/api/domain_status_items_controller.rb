@@ -31,20 +31,27 @@ class Api::DomainStatusItemsController < ApplicationController
   private
 
   def dsi_params
-    params
-      .permit(
-        :category,
-        :subcategory,
-        :year,
-        :platforms,
-        :description,
-        :title,
-        :count,
-        :completeness,
-        details: {},
-        person_ids: [],
-        organization_ids: [],
-        bible_book_ids: []
-      )
+    base_params = params
+                  .permit(
+                    :category,
+                    :subcategory,
+                    :year,
+                    :platforms,
+                    :description,
+                    :title,
+                    :count,
+                    :completeness,
+                    :link,
+                    :dsi_location_id,
+                    details: {},
+                    person_ids: [],
+                    organization_ids: [],
+                    bible_book_ids: []
+                  )
+    if params[:new_dsi_location]
+      dsi_location = DsiLocation.create!(name: params[:new_dsi_location])
+      base_params[:dsi_location] = dsi_location
+    end
+    base_params
   end
 end

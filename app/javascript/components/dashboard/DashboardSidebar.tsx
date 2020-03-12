@@ -1,5 +1,4 @@
-import React, { useEffect, useContext } from "react";
-import DuluAxios from "../../util/DuluAxios";
+import React, { useContext } from "react";
 import { Adder } from "../../models/TypeBucket";
 import { IRegion } from "../../models/Region";
 import { ICluster } from "../../models/Cluster";
@@ -14,6 +13,7 @@ import { Selection } from "./Dashboard";
 import Loading from "../shared/Loading";
 import { IParticipant } from "../../models/Participant";
 import List from "../../models/List";
+import { useLoadOnMount } from "../shared/useLoad";
 
 interface IProps {
   selection: Selection;
@@ -34,7 +34,8 @@ interface IProps {
 export default function DashboardSidebar(props: IProps) {
   const t = useContext(I18nContext);
   const selection = props.selection;
-  useEffect(() => fetchDashboardList(props), []);
+
+  useLoadOnMount("/api/languages/dashboard_list");
 
   const languageSelector = (language: ILanguage) => () =>
     props.setSelection({ type: "language", id: language.id });
@@ -164,16 +165,4 @@ export default function DashboardSidebar(props: IProps) {
       </ul>
     </div>
   );
-}
-
-function fetchDashboardList(props: IProps) {
-  DuluAxios.get("/api/languages/dashboard_list").then(data => {
-    if (data) {
-      props.setClusters(data.clusters);
-      props.setLanguages(data.languages);
-      props.addPeople([data.user]);
-      props.addParticipants(data.user_participants);
-      props.setRegions(data.regions);
-    }
-  });
 }

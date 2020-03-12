@@ -1,6 +1,10 @@
-# Locals: person
+# frozen_string_literal: true
 
-json.call(person, :id, :first_name, :last_name, :has_login)
+# Locals: people
+
+json.people people do |person|
+  json.call(person, :id, :first_name, :last_name)
+end
 
 # json.organization_people @person.organization_people do |org_person|
 #   json.partial! '/api/organization_people/org_person', org_person: org_person

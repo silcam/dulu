@@ -7,6 +7,8 @@ HdiGenesisChecking:
   languages: Hdi
   name: Genesis Checking
   creator: Olga
+  event_location: Yaounde
+  note: ''
 
 HdiPastChecking:
   start_date: 2017-01
@@ -21,6 +23,7 @@ HdiCurrentChecking:
   domain: Translation
   languages: Hdi
   name: Check a book now
+  event_location: Yaounde
 
 LanceMadeAnEvent:
   start_date: 2019-01
@@ -28,6 +31,7 @@ LanceMadeAnEvent:
   domain: Translation
   name: Lance's Event
   creator: Lance
+  event_location: Mbouda
 
 EwondoNounWS:
   start_date: 2018-01-05
