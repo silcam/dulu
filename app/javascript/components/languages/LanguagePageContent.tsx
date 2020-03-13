@@ -96,6 +96,8 @@ function categoriesByDomain(domain: string): DSICategory[] {
       return ["AudioScripture", "Film", "ScriptureApp"];
     case "Linguistics":
       return ["DataCollection", "Research" /*"Community"*/];
+    case "Literacy":
+      return ["LiteracyMaterial"];
     default:
       return [];
   }

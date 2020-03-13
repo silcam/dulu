@@ -20,7 +20,7 @@ class LanguagesControllerTest < ActionDispatch::IntegrationTest
   test 'Index' do
     api_login
     data = api_get(lang_path)
-    assert_equal({ create: false }, data[:can])
+    assert_equal({ create: false }, data[:can][:languages])
     assert_equal({
                    id: @bambalang.id,
                    name: 'Bambalang',

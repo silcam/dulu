@@ -75,7 +75,7 @@ async function getEvents(
       const data = await DuluAxios.get(`/api/languages/${id}/events`, params);
       if (data) {
         props.addPeople(data.people);
-        props.setCan("events", data.can);
+        props.setCan("events", data.can.events);
         props.addEventsForLanguage(data.events, id, {
           start: data.startYear ? { year: data.startYear } : undefined,
           end: year ? { year: year } : undefined

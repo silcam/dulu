@@ -51,7 +51,7 @@ class EventsControllerTest < ActionDispatch::IntegrationTest
     assert_empty data[:clusters]
     assert_includes(data[:people], id: @drew.id, first_name: 'Drew', last_name: 'Mambo')
     assert_equal 2018, data[:startYear]
-    assert_equal({ create: true }, data[:can])
+    assert_equal({ create: true }, data[:can][:events])
   end
 
   test 'Most Current Events' do

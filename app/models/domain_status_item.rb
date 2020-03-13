@@ -14,6 +14,8 @@ class DomainStatusItem < ApplicationRecord
       %w[PublishedScripture AudioScripture ScriptureApp]
     when 'Linguistics'
       %w[DataCollection Research]
+    when 'Literacy'
+      %w[LiteracyMaterial]
     else
       []
     end 

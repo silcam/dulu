@@ -19,7 +19,7 @@ class OrganizationsControllerTest < ActionDispatch::IntegrationTest
     data = api_get(orgs_path)
     partial_exp = {
       can: {
-        create: true
+        organizations: { create: true }
       },
       organizations: [
         { id: @sil.id, short_name: 'SIL' }
@@ -31,7 +31,7 @@ class OrganizationsControllerTest < ActionDispatch::IntegrationTest
   test 'Index permissions' do
     api_login @kevin
     data = api_get(orgs_path)
-    assert_equal({ create: false }, data[:can])
+    assert_equal({ create: false }, data[:can][:organizations])
   end
 
   test 'Show' do

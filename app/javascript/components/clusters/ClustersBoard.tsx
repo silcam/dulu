@@ -33,7 +33,7 @@ export default class ClustersBoard extends React.Component<IProps> {
   async componentDidMount() {
     const data = await DuluAxios.get("/api/clusters");
     if (data) {
-      this.props.setCan("clusters", data.can);
+      this.props.setCan("clusters", data.can.clusters);
       this.props.setClusters(data.clusters);
     }
   }

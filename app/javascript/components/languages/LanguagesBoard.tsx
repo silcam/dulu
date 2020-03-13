@@ -35,7 +35,7 @@ export default class LanguagesBoard extends React.Component<IProps, IState> {
   async componentDidMount() {
     const data = await DuluAxios.get("/api/languages");
     if (data) {
-      this.props.setCan("languages", data.can);
+      this.props.setCan("languages", data.can.languages);
       this.props.setLanguages(data.languages);
     }
   }

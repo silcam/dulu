@@ -52,7 +52,7 @@ export default function DomainStatusItemView(props: IProps) {
             </tr>
           )}
 
-          {props.item.category == "Research" && (
+          {["Research", "LiteracyMaterial"].includes(props.item.category) && (
             <tr>
               <th>{t("Title")}</th>
               <td>{props.item.title}</td>
@@ -99,6 +99,13 @@ export default function DomainStatusItemView(props: IProps) {
               )}
             </td>
           </tr>
+
+          {props.item.subcategory == "InformationalBook" && (
+            <tr>
+              <th>{t("Genre")}</th>
+              <td>{t(props.item.details.informationGenre || "")}</td>
+            </tr>
+          )}
 
           {props.item.category == "DataCollection" && (
             <tr>

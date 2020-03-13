@@ -7,5 +7,7 @@ json.partial! 'api/clusters/clusters', clusters: Cluster.where(id: @languages.ma
 json.partial! 'api/regions/regions', regions: Region.where(id: @languages.map(&:region_id))
 
 json.can do
-  json.create false
+  json.languages do
+    json.create false
+  end
 end

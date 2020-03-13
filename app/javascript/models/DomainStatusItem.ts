@@ -30,7 +30,8 @@ export const DSICategories = <const>[
   "Film",
   "ScriptureApp",
   "Research",
-  "DataCollection"
+  "DataCollection",
+  "LiteracyMaterial"
   // "Community"
 ];
 export type DSICategory = typeof DSICategories[number];
@@ -53,12 +54,28 @@ export type DataCollection = typeof DataCollections[number];
 export const LingCommunityItems = <const>["Workshops"];
 export type LingCommunityItem = typeof LingCommunityItems[number];
 
+export const LiteracyMaterials = <const>[
+  "AlphabetChart",
+  "AlphabetBook",
+  "Primer_1",
+  "Primer_2",
+  "TransitionManual",
+  "BibleStoryBook",
+  "StoryBook",
+  "InformationalBook"
+];
+export type LiteracyMaterial = typeof LiteracyMaterials[number];
+
+export const InformationGenres = <const>["Agriculture", "Health", "Other"];
+export type InformationGenre = typeof InformationGenres[number];
+
 export type DSISubcategories =
   | MediaFilm
   | ScripturePortion
   | LingResearch
   | DataCollection
-  | LingCommunityItem;
+  | LingCommunityItem
+  | LiteracyMaterial;
 
 export const AppPlatforms = <const>["Android", "iOS"];
 export type AppPlatform = typeof AppPlatforms[number];
@@ -85,6 +102,7 @@ type GrammarTypeDetails = { [key in GrammarType]?: boolean };
 export interface DSIDetails extends DiscourseDetails, GrammarTypeDetails {
   toneOrthography?: boolean;
   ddpWork?: boolean;
+  informationGenre?: InformationGenre;
 }
 
 export const DSICompletenesses = <const>["Draft", "Satisfactory"];
@@ -99,7 +117,8 @@ const categoryList: DSCategoryList = {
   Film: Object.values(MediaFilm),
   ScriptureApp: ScripturePortions,
   Research: LingResearches,
-  DataCollection: DataCollections
+  DataCollection: DataCollections,
+  LiteracyMaterial: LiteracyMaterials
   // Community: LingCommunityItems
 };
 

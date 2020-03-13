@@ -7,6 +7,7 @@ import DomainStatusFilms from "./DomainStatusFilms";
 import DomainStatusDataCollection from "./DomainStatusDataCollection";
 import DomainStatusResearch from "./DomainStatusResearch";
 import useAppSelector from "../../reducers/useAppSelector";
+import DomainStatusLiteracyMaterials from "./DomainStatusLiteracyMaterial";
 
 interface IProps {
   category: DSICategory;
@@ -33,6 +34,8 @@ export default function DomainStatusX(props: IProps) {
       return <DomainStatusDataCollection {...otherProps} />;
     case "Research":
       return <DomainStatusResearch {...otherProps} />;
+    case "LiteracyMaterial":
+      return <DomainStatusLiteracyMaterials {...otherProps} />;
     // case "Community":
     //   return <DomainStatusCommunity {...otherProps} />;
     default:

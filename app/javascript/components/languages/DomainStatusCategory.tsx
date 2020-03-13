@@ -5,6 +5,7 @@ import styles from "./DomainStatus.css";
 
 interface IProps {
   category: DSICategory;
+  label?: string;
   domainStatusItems: IDomainStatusItem[];
   render: (items: IDomainStatusItem[]) => JSX.Element | JSX.Element[];
 }
@@ -16,7 +17,9 @@ export default function DomainStatusCategory(props: IProps) {
   );
   return (
     <tr>
-      <td className={styles.categoryHeader}>{t(props.category)}</td>
+      <td className={styles.categoryHeader}>
+        {props.label || t(props.category)}
+      </td>
       <td>{props.render(categoryDomainStatusItems)}</td>
     </tr>
   );

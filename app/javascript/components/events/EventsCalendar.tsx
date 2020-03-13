@@ -105,7 +105,7 @@ async function getEvents(period: IPeriod, props: IProps) {
     props.addPeople(data.people);
     props.addLanguages(data.languages);
     props.addClusters(data.clusters);
-    props.setCan("events", data.can);
+    props.setCan("events", data.can.events);
     props.addEvents(data.events, period);
   }
 }

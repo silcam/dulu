@@ -11,7 +11,9 @@ import DomainStatusItem, {
   DSICategory,
   countUnit,
   DataCollection,
-  DataCollections
+  DataCollections,
+  InformationGenre,
+  InformationGenres
 } from "../../models/DomainStatusItem";
 import I18nContext from "../../contexts/I18nContext";
 import useKeepStateOnList from "../../util/useKeepStateOnList";
@@ -30,8 +32,6 @@ import StyledTable, { TableStyleClass } from "../shared/StyledTable";
 import { equals } from "../../util/arrayUtils";
 import PersonPickerMulti from "../people/PersonPickerMulti";
 import OrganizationPickerMulti from "../organizations/OrganizationPickerMulti";
-import { useSelector } from "react-redux";
-import { AppState } from "../../reducers/appReducer";
 import useAppSelector from "../../reducers/useAppSelector";
 
 interface IProps {
@@ -244,7 +244,7 @@ export default function DomainStatusItemForm(props: IProps) {
         </P>
       )}
 
-      {category == "Research" && (
+      {["Research", "LiteracyMaterial"].includes(category) && (
         <FormGroup label={t("Title")}>
           <TextInput value={title} setValue={(t: string) => setTitle(t)} />
         </FormGroup>
@@ -256,6 +256,18 @@ export default function DomainStatusItemForm(props: IProps) {
           setValue={(d: string) => setDescription(d)}
         />
       </FormGroup>
+
+      {subcategory == "InformationalBook" && (
+        <FormGroup label={t("Genre")}>
+          <SelectInput
+            value={details.informationGenre || "Other"}
+            setValue={genre =>
+              setDetails({ informationGenre: genre as InformationGenre })
+            }
+            options={SelectInput.translatedOptions(InformationGenres, t)}
+          />
+        </FormGroup>
+      )}
 
       {subcategory == "Orthography" && (
         <P>

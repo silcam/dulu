@@ -20,7 +20,7 @@ class RegionsControllerTest < ActionDispatch::IntegrationTest
   test 'Index' do
     api_login @drew
     data = api_get(regions_path)
-    assert_equal({ create: false }, data[:can])
+    assert_equal({ create: false }, data[:can][:regions])
     assert_equal(
       { id: @south.id, name: 'South Region' }, 
       data[:regions].last
@@ -30,7 +30,7 @@ class RegionsControllerTest < ActionDispatch::IntegrationTest
   test 'Index - Can Create' do
     api_login @rick
     data = api_get(regions_path)
-    assert_equal({ create: true }, data[:can])
+    assert_equal({ create: true }, data[:can][:regions])
   end
 
   test 'Show' do
@@ -71,9 +71,9 @@ class RegionsControllerTest < ActionDispatch::IntegrationTest
       regions_path("/#{@north.id}"),
       region: { name: 'Alaska', lpf_id: @drew.id, cluster_ids: [@ndop.id], language_ids: [@hdi_dialect.id] }
     )
-    assert_partial({ id: @north.id, name: 'Alaska', lpf_id: @drew.id}, data[:region])
-    assert_partial([{id: @ndop.id, name: 'Ndop', region_id: @north.id}], data[:clusters])
-    assert_partial([{id: @hdi_dialect.id, name: 'HdiDialect', region_id: @north.id}], data[:languages])
+    assert_partial({ id: @north.id, name: 'Alaska', lpf_id: @drew.id }, data[:region])
+    assert_partial([{ id: @ndop.id, name: 'Ndop', region_id: @north.id }], data[:clusters])
+    assert_partial([{ id: @hdi_dialect.id, name: 'HdiDialect', region_id: @north.id }], data[:languages])
     assert_includes NotificationChannel.people_for_channels("Reg#{@north.id} "), @drew
   end
 

@@ -37,7 +37,7 @@ export default class OrganizationsBoard extends React.PureComponent<
   async componentDidMount() {
     const data = await DuluAxios.get("/api/organizations");
     if (data) {
-      this.props.setCan("organizations", data.can);
+      this.props.setCan("organizations", data.can.organizations);
       this.props.setOrganizations(data.organizations);
     }
   }

@@ -44,7 +44,7 @@ export default function EventsTable(props: IProps) {
       props.addPeople(data.people);
       props.addClusters(data.clusters);
       props.addLanguages(data.languages);
-      props.setCan("events", data.can);
+      props.setCan("events", data.can.events);
       props.addEventsFor(data.events, {
         start: data.startYear ? { year: data.startYear } : undefined,
         end: period.end_year ? { year: period.end_year } : undefined

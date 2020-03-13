@@ -33,5 +33,7 @@ json.people Person.where(id: person_ids) do |person|
 end
 
 json.can do
-  json.create can?(:create, Event)
+  json.events do
+    json.create can?(:create, Event)
+  end
 end

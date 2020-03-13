@@ -20,7 +20,7 @@ async function fetchAll(setRegions: Adder<IRegion>, setCan: SetCan) {
   const data = await DuluAxios.get("/api/regions");
   if (data) {
     setRegions(data.regions);
-    setCan("regions", data.can);
+    setCan("regions", data.can.regions);
   }
 }
 

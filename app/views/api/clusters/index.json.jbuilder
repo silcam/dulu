@@ -3,5 +3,7 @@
 json.partial! 'api/clusters/clusters', clusters: @clusters
 
 json.can do
-  json.create can?(:create, Cluster)
+  json.clusters do
+    json.create can?(:create, Cluster)
+  end
 end
