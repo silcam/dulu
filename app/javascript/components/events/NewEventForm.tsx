@@ -19,6 +19,7 @@ import EventCategoryPicker from "./EventCategoryPicker";
 import { Domain } from "../../models/Domain";
 import { T } from "../../i18n/i18n";
 import P from "../shared/P";
+import TyperPicker from "../shared/TyperPicker";
 
 interface IProps {
   cancelForm: () => void;
@@ -83,6 +84,14 @@ export default function NewEventForm(props: IProps) {
           dateIsInvalid={() => updateEvent({ end_date: "" })}
         />
       </P>
+
+      <FormGroup label={t("Location")}>
+        <TyperPicker
+          listUrl="/api/event_locations"
+          value={event.location}
+          setValue={location => updateEvent({ location })}
+        />
+      </FormGroup>
 
       <FormGroup label={t("Note")}>
         <TextArea value={event.note} setValue={note => updateEvent({ note })} />

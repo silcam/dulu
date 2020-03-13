@@ -26,7 +26,7 @@ json.languages [@language] do |language|
       :link
     )
     if ds_item.dsi_location
-      json.dsi_location do
+      json.dsiLocation do
         json.call(ds_item.dsi_location, :id, :name)
       end
     end

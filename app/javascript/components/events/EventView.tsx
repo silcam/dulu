@@ -26,6 +26,7 @@ import { useAPIGet, useAPIPut, useAPIDelete } from "../../util/useAPI";
 import I18nContext from "../../contexts/I18nContext";
 import { T } from "../../i18n/i18n";
 import EventCategoryPicker from "./EventCategoryPicker";
+import TyperPicker from "../shared/TyperPicker";
 
 interface IProps {
   id: number;
@@ -170,6 +171,19 @@ export default function EventView(props: IProps) {
             )}
           </h4>
         )}
+
+        {editing ? (
+          <FormGroup label={t("Location")}>
+            <TyperPicker
+              listUrl="/api/event_locations"
+              value={event.location}
+              setValue={location => updateEvent({ location })}
+            />
+          </FormGroup>
+        ) : event.location ? (
+          <h4>{event.location.name}</h4>
+        ) : null}
+
         <P>
           <TextOrTextArea
             label={t("Note")}

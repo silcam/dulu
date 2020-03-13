@@ -13,7 +13,8 @@ import DomainStatusItem, {
   DataCollection,
   DataCollections,
   InformationGenre,
-  InformationGenres
+  InformationGenres,
+  DSILocation
 } from "../../models/DomainStatusItem";
 import I18nContext from "../../contexts/I18nContext";
 import useKeepStateOnList from "../../util/useKeepStateOnList";
@@ -33,15 +34,26 @@ import { equals } from "../../util/arrayUtils";
 import PersonPickerMulti from "../people/PersonPickerMulti";
 import OrganizationPickerMulti from "../organizations/OrganizationPickerMulti";
 import useAppSelector from "../../reducers/useAppSelector";
+import { urlify } from "../../util/stringUtils";
+import TyperPicker from "../shared/TyperPicker";
 
 interface IProps {
   domainStatusItem?: IDomainStatusItem;
   categories?: DSICategory[];
   subcategory?: DSISubcategories;
-  save: (item: IDomainStatusItem) => void;
+  save: (item: DsiForServer) => void;
   saving?: boolean;
   useEditActionBar?: boolean;
   cancel: () => void;
+}
+
+export interface DsiForServer
+  extends Omit<
+    IDomainStatusItem,
+    "id" | "language_id" | "creator_id" | "dsiLocation"
+  > {
+  dsi_location_id: number | null;
+  new_dsi_location: string | null;
 }
 
 export default function DomainStatusItemForm(props: IProps) {
@@ -102,6 +114,14 @@ export default function DomainStatusItemForm(props: IProps) {
     props.domainStatusItem ? props.domainStatusItem.year : null
   );
 
+  const [dsiLocation, setDsiLocation] = useState<DSILocation | undefined>(
+    props.domainStatusItem && props.domainStatusItem.dsiLocation
+  );
+
+  const [link, setLink] = useState(
+    props.domainStatusItem ? props.domainStatusItem.link : ""
+  );
+
   const [people, setPeople] = useState<IPerson[]>(
     props.domainStatusItem
       ? props.domainStatusItem.person_ids.map(id => allPeople.get(id))
@@ -128,7 +148,7 @@ export default function DomainStatusItemForm(props: IProps) {
     props.domainStatusItem ? String(props.domainStatusItem.count) : ""
   );
 
-  const domainStatusItem: IDomainStatusItem = {
+  const domainStatusItem: DsiForServer = {
     category,
     subcategory,
     year,
@@ -136,15 +156,17 @@ export default function DomainStatusItemForm(props: IProps) {
     title,
     completeness,
     details,
+    dsi_location_id: dsiLocation && dsiLocation.id ? dsiLocation.id : null,
+    new_dsi_location:
+      dsiLocation && dsiLocation.id == 0 && dsiLocation.name
+        ? dsiLocation.name
+        : null,
+    link: urlify(link),
     count: parseInt(count) || 0,
     platforms: DomainStatusItem.platformsStr(android, ios),
     person_ids: people.map(p => p.id),
     organization_ids: organizations.map(o => o.id),
-    bible_book_ids: bibleBooksIds,
-    // Ignored by server:
-    id: 0,
-    language_id: 0,
-    creator_id: 0
+    bible_book_ids: bibleBooksIds
   };
 
   return (
@@ -330,6 +352,20 @@ export default function DomainStatusItemForm(props: IProps) {
           />
         </FormGroup>
       )}
+
+      {["Research", "DataCollection"].includes(category) && (
+        <FormGroup label={t("Location")}>
+          <TyperPicker
+            listUrl="/api/dsi_locations"
+            value={dsiLocation}
+            setValue={setDsiLocation}
+          />
+        </FormGroup>
+      )}
+
+      <FormGroup label={t("Link")}>
+        <TextInput value={link} setValue={setLink} placeholder="http://" />
+      </FormGroup>
 
       <P>
         <label>{t("People")}</label>

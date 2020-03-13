@@ -1,10 +1,6 @@
 import React from "react";
-import {
-  DSICategory,
-  DSISubcategories,
-  IDomainStatusItem
-} from "../../models/DomainStatusItem";
-import DomainStatusItemForm from "./DomainStatusItemForm";
+import { DSICategory, DSISubcategories } from "../../models/DomainStatusItem";
+import DomainStatusItemForm, { DsiForServer } from "./DomainStatusItemForm";
 import { ILanguage } from "../../models/Language";
 import useLoad from "../shared/useLoad";
 
@@ -17,7 +13,7 @@ interface IProps {
 
 export default function DomainStatusNew(props: IProps) {
   const [load, loading] = useLoad();
-  const save = async (item: IDomainStatusItem) => {
+  const save = async (item: DsiForServer) => {
     await load(duluAxios =>
       duluAxios.post(
         `/api/languages/${props.language.id}/domain_status_items`,

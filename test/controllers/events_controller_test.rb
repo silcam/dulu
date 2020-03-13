@@ -40,7 +40,7 @@ class EventsControllerTest < ActionDispatch::IntegrationTest
         note: '',
         category: '',
         subcategory: '',
-        event_location: { name: 'Yaoundé' },
+        location: { name: 'Yaoundé' },
         event_participants: [
           { person_id: @drew.id }
         ]
@@ -106,7 +106,7 @@ class EventsControllerTest < ActionDispatch::IntegrationTest
         note: '',
         category: '',
         subcategory: '',
-        event_location: { name: 'Yaoundé' },
+        location: { name: 'Yaoundé' },
         event_participants: [
           { person_id: @drew.id }
         ],
@@ -154,7 +154,7 @@ class EventsControllerTest < ActionDispatch::IntegrationTest
     new_event.delete(:event_participants_attributes)
     new_event[:event_participants] = [{ person_id: @kendall.id }]
     new_event.delete(:event_location_id)
-    new_event[:event_location] = { id: @yde_loc.id, name: 'Yaoundé' }
+    new_event[:location] = { id: @yde_loc.id, name: 'Yaoundé' }
 
     assert_partial(new_event, data[:event])
     assert_equal @drew, Event.find_by(name: 'Taco Party').creator
@@ -189,7 +189,7 @@ class EventsControllerTest < ActionDispatch::IntegrationTest
       event: { new_event_location: 'The Basketball Court' }
       
     )
-    assert_equal 'The Basketball Court', data[:event][:event_location][:name]
+    assert_equal 'The Basketball Court', data[:event][:location][:name]
     assert EventLocation.find_by(name: 'The Basketball Court')
   end
 

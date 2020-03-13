@@ -36,6 +36,12 @@ export default function MonthColumn(props: IProps) {
             event.end_date,
             t("month_names_short")
           )}
+          {event.location && (
+            <span>
+              <br />
+              {event.location.name}
+            </span>
+          )}
           <p>{participants(event, props)}</p>
           <p>
             <Truncate text={event.note} limit={500} />

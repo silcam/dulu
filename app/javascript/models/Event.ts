@@ -76,6 +76,7 @@ export interface IEvent {
   can: ICan;
   workshop_id?: number;
   workshop_activity_id?: number;
+  location?: { id: number; name: string };
   note: string;
 }
 
@@ -175,9 +176,14 @@ export default class Event {
       });
     }
     return update(event, {
-      cluster_ids: { $set: cluster_ids },
-      language_ids: { $set: language_ids },
-      event_participants_attributes: { $set: eventParticipantsAttributes }
+      $merge: {
+        cluster_ids,
+        language_ids,
+        event_participants_attributes: eventParticipantsAttributes,
+        event_location_id: (event.location && event.location.id) || null,
+        new_event_location:
+          event.location && event.location.id == 0 ? event.location.name : null
+      }
     });
   }
 

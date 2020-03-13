@@ -17,6 +17,7 @@ describe("Domain Status Updates", () => {
         cy.contains("Add").click();
         cy.contains("Android").click();
         cy.inLabel("Year").type("2010");
+        cy.inLabel("Link").type("appstore.com/Hdi_Ezra");
         cy.placeholder("Add Person").type("Rick");
         cy.contains("Rick Conrad").click();
         cy.placeholder("Add Organization").type("SIL");
@@ -27,6 +28,7 @@ describe("Domain Status Updates", () => {
     cy.contains("Ezra");
     cy.contains("Android");
     cy.contains("2010");
+    cy.contains("http://appstore.com/Hdi_Ezra");
     cy.contains("SIL");
     cy.contains("Rick Conrad");
   });

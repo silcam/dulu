@@ -133,6 +133,20 @@ export default function DomainStatusItemView(props: IProps) {
             <th>{t("Year")}</th>
             <td>{orBlank(props.item.year)}</td>
           </tr>
+          {props.item.dsiLocation && (
+            <tr>
+              <th>{t("Location")}</th>
+              <td>{props.item.dsiLocation.name}</td>
+            </tr>
+          )}
+          <tr>
+            <th>{t("Link")}</th>
+            <td>
+              <a href={props.item.link} target="_blank">
+                {props.item.link}
+              </a>
+            </td>
+          </tr>
           <tr>
             <th>{t("Organizations")}</th>
             <td>

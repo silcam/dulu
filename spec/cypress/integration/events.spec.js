@@ -15,6 +15,8 @@ describe("The Events", () => {
     cy.contains("div", "End Date").within(() => {
       cy.fillFuzzyDate(2017, "Jul", 1);
     });
+    cy.inLabel("Location").click();
+    cy.contains("li", "Mbouda").click();
     cy.inLabel("Note").type("Boatloads of tacos!");
     cy.contains("Save").click();
 
@@ -24,6 +26,7 @@ describe("The Events", () => {
       .within(() => {
         cy.contains("1 Jul 2017");
         cy.contains("Boatloads of tacos!");
+        cy.contains("Mbouda");
       });
   });
 
@@ -46,6 +49,26 @@ describe("The Events", () => {
     });
     cy.contains("Save").click();
     cy.contains("Feb 2017 - Feb 2018");
+  });
+
+  it("Edits event location", () => {
+    setupEdit();
+    cy.inLabel("Location").click();
+    cy.contains("li", "Mbouda").click();
+    cy.contains("Save").click();
+    cy.contains("Save").should("not.exist");
+    cy.contains("Mbouda");
+  });
+
+  it("Edits event location, creating a new one", () => {
+    setupEdit();
+    cy.inLabel("Location")
+      .click()
+      .clear()
+      .type("Drew's back yard");
+    cy.contains("Save").click();
+    cy.contains("Save").should("not.exist");
+    cy.contains("Drew's back yard");
   });
 
   it("Adds languages", () => {

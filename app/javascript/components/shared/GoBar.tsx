@@ -70,6 +70,7 @@ function BaseGoBar(props: IProps) {
       case "Escape":
         setQuery("");
         setActiveIndex(0);
+        return;
       case "Enter":
       case "Tab":
         if (query.length > 0 && matches.length > 0)
@@ -114,13 +115,27 @@ function search(query: string, props: IProps) {
   const q = accentFold(query);
   let matches = searchItems(q, props.languages, languageMatcher)
     .concat(
-      searchItems(q, props.people, textMatcher("/people", p => fullName(p)))
+      searchItems(
+        q,
+        props.people,
+        textMatcher("/people", p => fullName(p))
+      )
     )
     .concat(searchItems(q, props.organizations, orgMatcher))
     .concat(
-      searchItems(q, props.clusters, textMatcher("/clusters", c => c.name))
+      searchItems(
+        q,
+        props.clusters,
+        textMatcher("/clusters", c => c.name)
+      )
     )
-    .concat(searchItems(q, props.regions, textMatcher("/regions", r => r.name)))
+    .concat(
+      searchItems(
+        q,
+        props.regions,
+        textMatcher("/regions", r => r.name)
+      )
+    )
     .concat(
       routes
         .filter(route => route.includes(q))
@@ -145,10 +160,11 @@ function capIt(s: string) {
 function languageMatcher(language: ILanguage, q: string) {
   return (
     textMatcher("/languages", () => language.name)(language, q) ||
-    textMatcher("/languages", () => language.code, () => language.name)(
-      language,
-      q
-    )
+    textMatcher(
+      "/languages",
+      () => language.code,
+      () => language.name
+    )(language, q)
   );
 }
 

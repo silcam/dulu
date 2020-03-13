@@ -14,6 +14,8 @@ export interface IDomainStatusItem {
   description: string;
   title: string;
   year: number | null;
+  link: string;
+  dsiLocation?: DSILocation;
   platforms: string;
   organization_ids: number[];
   person_ids: number[];
@@ -22,6 +24,11 @@ export interface IDomainStatusItem {
   count: number;
   completeness: DSICompleteness;
   details: DSIDetails;
+}
+
+export interface DSILocation {
+  id: number;
+  name: string;
 }
 
 export const DSICategories = <const>[
@@ -195,6 +202,7 @@ function empty(): IDomainStatusItem {
     title: "",
     year: null,
     platforms: "",
+    link: "",
     organization_ids: [],
     person_ids: [],
     creator_id: 0,

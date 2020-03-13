@@ -44,7 +44,7 @@ class DomainStatusItemsControllerTest < ActionDispatch::IntegrationTest
               person_ids: [@drew.id, @abanda.id],
               creator_id: @drew.id,
               link: 'http://hdint.com',
-              dsi_location: { id: @cmb_library.id, name: 'CMB Library' }
+              dsiLocation: { id: @cmb_library.id, name: 'CMB Library' }
             }
           ]
         }
@@ -70,7 +70,7 @@ class DomainStatusItemsControllerTest < ActionDispatch::IntegrationTest
               subcategory: 'LumoMark', 
               creator_id: @drew.id, 
               link: 'http://lumomark.com/hdi',
-              dsi_location: { id: @cmb_library.id, name: 'CMB Library' } 
+              dsiLocation: { id: @cmb_library.id, name: 'CMB Library' } 
             }
           ]
         }
@@ -88,7 +88,7 @@ class DomainStatusItemsControllerTest < ActionDispatch::IntegrationTest
   test 'Update with create new DsiLocation' do
     api_login(@drew)
     data = api_put(dsi_path("/#{@hdi_nt.id}"), new_dsi_location: 'Out Back')
-    assert_equal 'Out Back', data[:languages][0][:domain_status_items][0][:dsi_location][:name]
+    assert_equal 'Out Back', data[:languages][0][:domain_status_items][0][:dsiLocation][:name]
     assert DsiLocation.find_by(name: 'Out Back')
   end
 

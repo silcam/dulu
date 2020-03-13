@@ -19,7 +19,8 @@ const mockDSI: IDomainStatusItem = {
   bible_book_ids: [1, 2],
   completeness: "Draft",
   details: {},
-  count: 0
+  count: 0,
+  link: "thosebibles.com"
 };
 
 export function monthNames() {

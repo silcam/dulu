@@ -20,7 +20,7 @@ end
 
 json.event do
   json.call(@event, :id, :name, :domain, :start_date, :end_date, :note, :language_ids, :cluster_ids, :category, :subcategory)
-  json.event_location { json.call(@event.event_location, :id, :name) } if @event.event_location
+  json.location { json.call(@event.event_location, :id, :name) } if @event.event_location
 
   json.event_participants @event.event_participants do |e_p|
     json.call(e_p, :id, :person_id, :roles)

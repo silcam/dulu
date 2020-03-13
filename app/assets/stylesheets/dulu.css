@@ -170,3 +170,7 @@ label.block {
 h3 label {
     font-size: 14px;
 }
+
+.subdued {
+    color: #999;
+}
