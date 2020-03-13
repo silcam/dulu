@@ -124,11 +124,6 @@ describe("The Events", () => {
     cy.contains("a", "Lance's Event").should("not.exist");
   });
 
-  it.skip("Doesn't change event creator on update", () => {
-    setupEdit();
-    // This needs to be a controller test
-  });
-
   it("Kevin's view, no add", () => {
     cy.login("kevin_barnes@sil.org");
     cy.visit("/events");

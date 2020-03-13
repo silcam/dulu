@@ -63,8 +63,7 @@ describe("People", () => {
         .within(() => {
           cy.contains("Lutheran").should("not.exist");
           cy.icon("addIcon").click();
-          cy.get("input").type("Lutheran");
-          cy.contains("Lutheran Bible").click();
+          cy.get("input").searchFill("Lutheran");
           cy.contains("Save").click();
           cy.contains("a", "Lutheran Bible Translators");
           cy.contains("tr", "Lutheran Bible").within(() => {
@@ -75,6 +74,7 @@ describe("People", () => {
             cy.fillFuzzyDate(2020, "Mar", 12);
           });
           cy.contains("Save").click();
+          cy.contains("Save").should("not.exist");
           cy.contains("tr", "Lutheran Bible").within(() => {
             cy.contains("Resident Baptist");
             cy.contains("12 Mar 2020 - ");

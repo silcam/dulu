@@ -1,6 +1,7 @@
 {
   "scripts": {
     "test": "jest --watch",
+    "test:most": "rails test && yarn jest",
     "test:all": "rails test && yarn jest && yarn test:cypress:run",
     "test:all:mod": "rails test && yarn jest && yarn test:cypress",
     "testServer": "bin/rails server -e test -p 3002",

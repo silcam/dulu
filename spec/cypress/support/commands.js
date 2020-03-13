@@ -79,3 +79,16 @@ Cypress.Commands.add("inLabel", label =>
     .find("input, select, textarea")
     .first()
 );
+
+Cypress.Commands.add(
+  "searchFill",
+  { prevSubject: "element" },
+  (textInput, searchTerm) => {
+    const searchInput = cy.wrap(textInput);
+    searchInput.clear().type(searchTerm);
+    searchInput.parent().within(() => {
+      cy.contains("li", searchTerm);
+    });
+    searchInput.type("{Enter}");
+  }
+);

@@ -7,6 +7,7 @@ class EventsControllerTest < ActionDispatch::IntegrationTest
     @drew = people :Drew
     @kendall = people :Kendall
     @lance = people :Lance
+    @olga = people :Olga
     @hdi = languages :Hdi
     @ewondo = languages :Ewondo
     @hdi_gen_check = events :HdiGenesisChecking
@@ -177,6 +178,8 @@ class EventsControllerTest < ActionDispatch::IntegrationTest
     )
     @hdi_gen_check.reload
     assert_equal '2018-02-06', @hdi_gen_check.end_date
+    # Creator was not changed:
+    assert_equal @olga, @hdi_gen_check.creator
   end
 
   test 'Update and create event location' do
