@@ -8,20 +8,13 @@ import FormGroup from "../shared/FormGroup";
 import ValidatedTextInput from "../shared/ValidatedTextInput";
 import SelectInput from "../shared/SelectInput";
 import CheckBoxInput from "../shared/CheckboxInput";
-import List from "../../models/List";
-import { History } from "history";
 import { emptyPerson } from "../../reducers/peopleReducer";
 import I18nContext from "../../contexts/I18nContext";
 import { Locale } from "../../i18n/i18n";
 import { ICan } from "../../actions/canActions";
 import useLoad from "../shared/useLoad";
-
-interface IProps {
-  people: List<IPerson>;
-  can: ICan;
-
-  history: History;
-}
+import useAppSelector from "../../reducers/useAppSelector";
+import { useHistory } from "react-router-dom";
 
 interface IState {
   person: IPerson;
@@ -30,7 +23,9 @@ interface IState {
   saving: boolean;
 }
 
-export default function NewPersonForm(props: IProps) {
+export default function NewPersonForm() {
+  const history = useHistory();
+  const can = useAppSelector(state => state.can.people);
   const [saveLoad] = useLoad();
 
   const save = async (
@@ -40,16 +35,17 @@ export default function NewPersonForm(props: IProps) {
     saveLoad(async duluAxios => {
       const data = await duluAxios.post("/api/people", { person });
       if (data) {
-        if (data.people) props.history.push(`/people/${data.people[0].id}`);
+        if (data.people) history.push(`/people/${data.people[0].id}`);
         else setDuplicates(data.duplicates);
       }
       return data;
     });
   };
-  return <OldNewPersonForm save={save} {...props} />;
+  return <OldNewPersonForm {...{ save, can }} />;
 }
 
-interface OldIProps extends IProps {
+interface OldIProps {
+  can: ICan;
   save: (
     person: IPerson,
     setDuplicates: (d: Duplicate[]) => void

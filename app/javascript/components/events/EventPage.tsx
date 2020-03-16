@@ -1,6 +1,6 @@
 import React from "react";
-import EventContainer from "./EventContainer";
 import { History } from "history";
+import EventView from "./EventView";
 
 export interface IProps {
   id: number;
@@ -8,5 +8,5 @@ export interface IProps {
 }
 
 export default function EventPage(props: IProps) {
-  return <EventContainer id={props.id} history={props.history} />;
+  return <EventView id={props.id} />;
 }

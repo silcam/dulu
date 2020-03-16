@@ -156,11 +156,9 @@ export default function DomainStatusItemForm(props: IProps) {
     title,
     completeness,
     details,
-    dsi_location_id: dsiLocation && dsiLocation.id ? dsiLocation.id : null,
+    dsi_location_id: dsiLocation?.id ? dsiLocation.id : null,
     new_dsi_location:
-      dsiLocation && dsiLocation.id == 0 && dsiLocation.name
-        ? dsiLocation.name
-        : null,
+      dsiLocation?.id == 0 && dsiLocation?.name ? dsiLocation.name : null,
     link: urlify(link),
     count: parseInt(count) || 0,
     platforms: DomainStatusItem.platformsStr(android, ios),

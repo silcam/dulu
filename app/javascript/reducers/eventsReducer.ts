@@ -10,6 +10,7 @@ import Event, { emptyEventList } from "../models/Event";
 import update from "immutability-helper";
 import { IEvent, IPeriod } from "../models/Event";
 import List from "../models/List";
+import { isLoadAction } from "./LoadAction";
 
 export interface EventState {
   list: List<IEvent>;
@@ -25,6 +26,14 @@ export default function eventsReducer(
   state = emptyState,
   action: EventAction
 ): EventState {
+  if (isLoadAction(action)) {
+    return {
+      ...state,
+      list: state.list
+        .add(action.payload.events)
+        .remove(action.payload.deletedEvents)
+    };
+  }
   switch (action.type) {
     case SET_EVENT:
       return update(state, {

@@ -114,7 +114,7 @@ class EventsControllerTest < ActionDispatch::IntegrationTest
           update: true,
           destroy: true
         } },
-      data[:event]
+      data[:events][0]
     )
   end
 
@@ -127,7 +127,7 @@ class EventsControllerTest < ActionDispatch::IntegrationTest
     )
     assert_partial(
       { workshop_id: @verb_ws.workshop.id, workshop_activity_id: @verb_ws.workshop.linguistic_activity_id },
-      data[:event]
+      data[:events][0]
     )
   end
 
@@ -156,7 +156,7 @@ class EventsControllerTest < ActionDispatch::IntegrationTest
     new_event.delete(:event_location_id)
     new_event[:location] = { id: @yde_loc.id, name: 'Yaoundé' }
 
-    assert_partial(new_event, data[:event])
+    assert_partial(new_event, data[:events][0])
     assert_equal @drew, Event.find_by(name: 'Taco Party').creator
   end
 
@@ -174,7 +174,7 @@ class EventsControllerTest < ActionDispatch::IntegrationTest
     )
     assert_partial(
       { id: @hdi_gen_check.id, end_date: '2018-02-06' },
-      data[:event]
+      data[:events][0]
     )
     @hdi_gen_check.reload
     assert_equal '2018-02-06', @hdi_gen_check.end_date
@@ -189,7 +189,7 @@ class EventsControllerTest < ActionDispatch::IntegrationTest
       event: { new_event_location: 'The Basketball Court' }
       
     )
-    assert_equal 'The Basketball Court', data[:event][:location][:name]
+    assert_equal 'The Basketball Court', data[:events][0][:location][:name]
     assert EventLocation.find_by(name: 'The Basketball Court')
   end
 
@@ -203,7 +203,7 @@ class EventsControllerTest < ActionDispatch::IntegrationTest
     api_login @drew
     data = api_delete(events_path("/#{@hdi_gen_check.id}"))
     assert_response 200
-    assert_equal({}, data)
+    assert_equal({ deletedEvents: [@hdi_gen_check.id] }, data)
     refute_includes Event.all, @hdi_gen_check
   end
 
@@ -211,7 +211,7 @@ class EventsControllerTest < ActionDispatch::IntegrationTest
     api_login @kendall
     data = api_delete(events_path("/#{@verb_ws.id}"))
     assert_response 200
-    assert_partial({ workshop: { name: 'Verb', event_id: nil } }, data)
+    assert_partial({ workshops_activities: [{ workshops: [{ name: 'Verb', event_id: nil }] }] }, data)
     refute_includes Event.all, @verb_ws
   end
 
@@ -224,7 +224,7 @@ class EventsControllerTest < ActionDispatch::IntegrationTest
   test 'Can update/destroy if creator' do
     api_login @lance
     data = api_get(events_path("/#{@lance_event.id}"))
-    assert_equal({ update: true, destroy: true }, data[:event][:can])
+    assert_equal({ update: true, destroy: true }, data[:events][0][:can])
 
     api_delete(events_path("/#{@lance_event.id}"))
     assert_response 200

@@ -58,7 +58,8 @@ export default class List<T extends { id: number }> {
     return list.add(itemsToAdd);
   }
 
-  remove(ids: number | number[]) {
+  remove(ids: number | number[] | undefined) {
+    if (!ids) return this;
     if (typeof ids == "number") return this.filter(item => item.id != ids);
     else return this.filter(item => !ids.some(id => id == item.id));
   }

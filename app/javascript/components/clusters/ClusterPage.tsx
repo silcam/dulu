@@ -111,7 +111,7 @@ export default function ClusterPage(props: IProps) {
     );
 
   return (
-    <div>
+    <div className="padBottom">
       {!loading && (
         <EditActionBar
           can={cluster.can}

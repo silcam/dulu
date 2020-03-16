@@ -3,7 +3,7 @@ import styles from "./StyledText.css";
 import { Children } from "../../models/TypeBucket";
 
 interface IProps {
-  styleClass: string;
+  styleClass: keyof typeof styles;
   children: Children;
 }
 

@@ -98,6 +98,11 @@ test("Removing non-existant item is a no-op", () => {
   expect(list.toArray()).toEqual(aList().toArray());
 });
 
+test("Removing undefined is a no-op", () => {
+  const list = aList();
+  expect(list.remove(undefined)).toBe(list);
+});
+
 test("Remove multiple ids", () => {
   const list = aList().remove([4, 8]);
   expect(list.length()).toBe(2);

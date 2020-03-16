@@ -6,6 +6,8 @@ import { IParticipant } from "../models/Participant";
 import { ICluster } from "../models/Cluster";
 import { IRegion } from "../models/Region";
 import { CanState } from "./canReducer";
+import { IEvent } from "../models/Event";
+import { IActivity } from "../models/Activity";
 
 export interface LoadAction {
   type: "Load";
@@ -16,6 +18,9 @@ export interface LoadAction {
     regions?: PartialModel<IRegion>[];
     organizations?: PartialModel<IOrganization>[];
     participants?: PartialModel<IParticipant>[];
+    events?: PartialModel<IEvent>[];
+    deletedEvents?: number[];
+    workshops_activities?: PartialModel<IActivity>[];
     can?: Partial<CanState>;
     // ... add more here
   };

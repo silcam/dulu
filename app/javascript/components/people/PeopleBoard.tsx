@@ -12,10 +12,10 @@ import { Locale } from "../../i18n/i18n";
 import PersonPage from "./PersonPage";
 import { useLoadOnMount } from "../shared/useLoad";
 import useAppSelector from "../../reducers/useAppSelector";
+import PeopleRouter from "./PeopleRouter";
 
 interface IProps {
   id?: number;
-  action?: string;
   history: History;
   updateLanguage: (locale: Locale) => void;
 }
@@ -49,18 +49,7 @@ export default function PeopleBoard(props: IProps) {
           <PeopleTable id={props.id} people={people} />
         </div>
         <div className={styles.detail}>
-          {props.action == "new" && (
-            <NewPersonForm people={people} history={props.history} can={can} />
-          )}
-          {props.action == "show" && props.id && (
-            <PersonPage
-              key={props.id}
-              id={props.id}
-              updateLanguage={props.updateLanguage}
-              history={props.history}
-            />
-          )}
-          {!props.action && <span />}
+          <PeopleRouter updateLanguage={props.updateLanguage} />
         </div>
       </div>
     </div>

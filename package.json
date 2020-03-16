@@ -23,7 +23,7 @@
     "react-tabs": "^2.2.1",
     "redux": "^4.0.1",
     "ts-loader": "3.5.0",
-    "typescript": "3.6.3"
+    "typescript": "3.8.3"
   },
   "devDependencies": {
     "@types/jest": "^24.0.4",

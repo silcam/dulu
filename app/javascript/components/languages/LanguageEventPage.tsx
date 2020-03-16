@@ -1,8 +1,8 @@
 import React from "react";
-import EventContainer from "../events/EventContainer";
 import { ILanguage } from "../../models/Language";
 import { History } from "history";
 import { LanguageBackLink } from "../shared/BreadCrumbs";
+import EventView from "../events/EventView";
 
 interface IProps {
   language: ILanguage;
@@ -19,7 +19,7 @@ export default function LanguageEventPage(props: IProps) {
     <div>
       <LanguageBackLink language={language} />
 
-      <EventContainer id={props.eventId} history={props.history} />
+      <EventView id={props.eventId} />
     </div>
   );
 }

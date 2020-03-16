@@ -8,6 +8,7 @@ import { findIndexById } from "../util/arrayUtils";
 import update from "immutability-helper";
 import Activity, { IActivity } from "../models/Activity";
 import List from "../models/List";
+import { isLoadAction } from "./LoadAction";
 
 export const emptyActivity: IActivity = {
   id: 0,
@@ -31,6 +32,9 @@ export default function activitiesReducer(
   state = new List<IActivity>(emptyActivity, [], Activity.compare),
   action: ActivityAction
 ) {
+  if (isLoadAction(action)) {
+    return state.add(action.payload.workshops_activities);
+  }
   switch (action.type) {
     case ADD_ACTIVITIES:
       return state.add(action.activities!);

@@ -18,7 +18,7 @@ else
   json.workshops_activities []
 end
 
-json.event do
+json.events [@event] do |_event|
   json.call(@event, :id, :name, :domain, :start_date, :end_date, :note, :language_ids, :cluster_ids, :category, :subcategory)
   json.location { json.call(@event.event_location, :id, :name) } if @event.event_location
 

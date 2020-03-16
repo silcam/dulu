@@ -12,8 +12,7 @@ import RolesTable from "./RolesTable";
 import Loading from "../shared/Loading";
 import OrgPeopleContainer from "./OrgPeopleContainer";
 import PersonEventsContainer from "./PersonEventsContainer";
-import { Locale, T } from "../../i18n/i18n";
-import { History } from "history";
+import { Locale } from "../../i18n/i18n";
 import DuluSettings from "./DuluSettings";
 import useLoad, { useLoadOnMount } from "../shared/useLoad";
 import useAppSelector from "../../reducers/useAppSelector";
@@ -24,11 +23,11 @@ import {
   setPerson
 } from "../../actions/peopleActions";
 // import styles from "./PersonPage.css";
+import { useHistory } from "react-router-dom";
 
-interface IProps {
+export interface PersonPageProps {
   id: number;
   updateLanguage: (locale: Locale) => void;
-  history: History;
 }
 
 interface IState {
@@ -40,9 +39,10 @@ interface IState {
   edited?: boolean;
 }
 
-export default function PersonPage(props: IProps) {
+export default function PersonPage(props: PersonPageProps) {
   const t = useContext(I18nContext);
   const dispatch = useDispatch();
+  const history = useHistory();
   const [saveLoad] = useLoad();
   const propsPerson = useAppSelector(state => state.people.get(props.id));
 
@@ -116,7 +116,7 @@ export default function PersonPage(props: IProps) {
   const deletePerson = async () => {
     const success = await DuluAxios.delete(`/api/people/${propsPerson.id}`);
     if (success) {
-      props.history.push("/people");
+      history.push("/people");
       dispatch(deletePersonAction(propsPerson.id));
     }
   };
@@ -194,7 +194,7 @@ export default function PersonPage(props: IProps) {
 
       <PersonEventsContainer
         person={person}
-        history={props.history}
+        history={history}
         basePath={`/people/${props.id}`}
       />
 

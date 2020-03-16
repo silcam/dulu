@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { ILanguage } from "../../models/Language";
 import Spacer from "./Spacer";
 import { ICluster } from "../../models/Cluster";
+import { IPerson, fullName } from "../../models/Person";
 
 interface IProps {
   links: [string, string][];
@@ -33,6 +34,14 @@ export function ClusterBackLink(props: { cluster: ICluster }) {
   return (
     <BreadCrumbs
       links={[[`/clusters/${props.cluster.id}`, props.cluster.name]]}
+    />
+  );
+}
+
+export function PersonBackLink(props: { person: IPerson }) {
+  return (
+    <BreadCrumbs
+      links={[[`/people/${props.person.id}`, fullName(props.person)]]}
     />
   );
 }
