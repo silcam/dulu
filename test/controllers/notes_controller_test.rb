@@ -7,11 +7,27 @@ class Api::NotesControllerTest < ActionDispatch::IntegrationTest
     @hdi = languages :Hdi
     @drew = people :Drew
     @hdi_note1 = notes :HdiNote1
+    @hdi_note2 = notes :HdiNote2
     @rick = people :Rick
+    @andreas = people :Andreas
   end
 
   def notes_path(rest = '')
     "/api/notes#{rest}"
+  end
+
+  test 'Index' do
+    # The notes controller doesn't have an index, but this is the best place
+    # to test the _notes.json.jbuilder partial
+    api_login
+    data = api_get("/api/languages/#{@hdi.id}")
+    assert_equal({
+                   id: @hdi_note2.id,
+                   person_id: @andreas.id,
+                   updated_at: @hdi_note2.updated_at.to_i * 1000,
+                   text: 'This language is cool',
+                   can: { update: false }
+                 }, data[:languages].first[:notes].first)
   end
 
   test 'Create' do
@@ -24,8 +40,8 @@ class Api::NotesControllerTest < ActionDispatch::IntegrationTest
         id: @note.id,
         text: 'Why is the ethnologue code xed?',
         person_id: @drew.id,
-        created_at: @note.created_at.to_i
-
+        updated_at: @note.updated_at.to_i * 1000,
+        can: { update: true }
       }],
       people: [{
         first_name: 'Drew',

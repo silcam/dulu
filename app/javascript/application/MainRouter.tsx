@@ -1,10 +1,5 @@
 import React, { ErrorInfo } from "react";
-import {
-  Switch,
-  Route,
-  withRouter,
-  RouteComponentProps
-} from "react-router-dom";
+import { Switch, Route, useHistory } from "react-router-dom";
 import Dashboard from "../components/dashboard/Dashboard";
 import ReportsRouter from "../components/reports/ReportsRouter";
 import EventsPage from "../components/events/EventsPage";
@@ -16,24 +11,31 @@ import ErrorMessage from "./ErrorMessage";
 import axios from "axios";
 import ClustersContainer from "../components/clusters/ClustersContainer";
 import RegionsContainer from "../components/regions/RegionsContainer";
-import { T, Locale } from "../i18n/i18n";
 import { AnyObj } from "../models/TypeBucket";
-import { User } from "./DuluApp";
 import CoreData from "./CoreData";
 import NotificationsPage from "../components/notifications/NotificationsPage";
 import PeopleBoard from "../components/people/PeopleBoard";
+import useAppSelector from "../reducers/useAppSelector";
+import { History } from "history";
+import { User } from "../reducers/currentUserReducer";
 
-interface IProps extends RouteComponentProps {
-  t: T;
+interface IProps {
   user: User;
-  updateLanguage: (l: Locale) => void;
+  history: History;
 }
 
 interface IState {
   hasError?: boolean;
 }
 
-class MainRouter extends React.Component<IProps, IState> {
+export default function MainRouter() {
+  const user = useAppSelector(state => state.currentUser);
+  const history = useHistory();
+
+  return <BaseMainRouter {...{ user, history }} />;
+}
+
+class BaseMainRouter extends React.Component<IProps, IState> {
   constructor(props: IProps) {
     super(props);
     this.state = {};
@@ -90,7 +92,6 @@ class MainRouter extends React.Component<IProps, IState> {
                 history={history}
                 location={location}
                 {...matchParamsForChild(match)}
-                t={this.props.t}
               />
             )}
           />
@@ -100,7 +101,6 @@ class MainRouter extends React.Component<IProps, IState> {
               <PeopleBoard
                 history={history}
                 {...routeActionAndId(match.params)}
-                updateLanguage={this.props.updateLanguage}
               />
             )}
           />
@@ -128,15 +128,13 @@ class MainRouter extends React.Component<IProps, IState> {
               <ActivityPage history={history} id={match.params.id} />
             )}
           />
-          <Route render={() => <Dashboard user={this.props.user} />} />
+          <Route render={() => <Dashboard />} />
         </Switch>
         <CoreData />
       </React.Fragment>
     );
   }
 }
-
-export default withRouter(MainRouter);
 
 function routeActionAndId(routeParams: AnyObj) {
   if (routeParams.actionOrId && routeParams.id)

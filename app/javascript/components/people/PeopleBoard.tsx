@@ -1,15 +1,12 @@
 import React, { useContext } from "react";
 import styles from "../shared/MasterDetail.css";
 import PeopleTable from "./PeopleTable";
-import NewPersonForm from "./NewPersonForm";
 import AddIcon from "../shared/icons/AddIcon";
 import { Link } from "react-router-dom";
 import FlexSpacer from "../shared/FlexSpacer";
 import GoBar from "../shared/GoBar";
 import { History } from "history";
 import I18nContext from "../../contexts/I18nContext";
-import { Locale } from "../../i18n/i18n";
-import PersonPage from "./PersonPage";
 import { useLoadOnMount } from "../shared/useLoad";
 import useAppSelector from "../../reducers/useAppSelector";
 import PeopleRouter from "./PeopleRouter";
@@ -17,7 +14,6 @@ import PeopleRouter from "./PeopleRouter";
 interface IProps {
   id?: number;
   history: History;
-  updateLanguage: (locale: Locale) => void;
 }
 
 export default function PeopleBoard(props: IProps) {
@@ -49,7 +45,7 @@ export default function PeopleBoard(props: IProps) {
           <PeopleTable id={props.id} people={people} />
         </div>
         <div className={styles.detail}>
-          <PeopleRouter updateLanguage={props.updateLanguage} />
+          <PeopleRouter />
         </div>
       </div>
     </div>

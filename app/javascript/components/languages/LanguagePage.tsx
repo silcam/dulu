@@ -3,9 +3,12 @@ import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import LanguagePageContent from "./LanguagePageContent";
 import { Route } from "react-router-dom";
 import I18nContext from "../../contexts/I18nContext";
-import ViewPrefsContext from "../../contexts/ViewPrefsContext";
 import { ILanguage } from "../../models/Language";
 import { Location, History } from "history";
+import NotesView from "../notes/NotesView";
+import { loadAction } from "../../reducers/LoadAction";
+import { useDispatch } from "react-redux";
+import useViewPrefs from "../../reducers/useViewPrefs";
 
 export type LanguagePageTab =
   | "Translation"
@@ -33,7 +36,8 @@ interface IProps {
 
 export default function LanguagePage(props: IProps) {
   const t = useContext(I18nContext);
-  const { viewPrefs, updateViewPrefs } = useContext(ViewPrefsContext);
+  const dispatch = useDispatch();
+  const { viewPrefs, setViewPrefs } = useViewPrefs();
   const language = props.language;
 
   return (
@@ -43,6 +47,13 @@ export default function LanguagePage(props: IProps) {
         {"  "}
         <span className="subheader">{language.code}</span>
       </h2>
+      <NotesView
+        notes={language.notes}
+        setNotes={notes =>
+          dispatch(loadAction({ languages: [{ ...language, notes }] }))
+        }
+        noteFor={{ for_type: "Language", for_id: language.id }}
+      />
       <Route
         path={props.basePath + "/:domain?"}
         render={({ match, history }) => (
@@ -52,7 +63,7 @@ export default function LanguagePage(props: IProps) {
               viewPrefs.dashboardTab as LanguagePageTab | undefined
             )}
             onSelect={index => {
-              updateViewPrefs({ dashboardTab: tabs[index] });
+              setViewPrefs({ dashboardTab: tabs[index] });
               if (props.basePath)
                 history.push(`${props.basePath}/${tabs[index]}`);
               return true;

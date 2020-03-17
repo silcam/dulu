@@ -49,12 +49,7 @@ class LanguagesControllerTest < ActionDispatch::IntegrationTest
                      cluster_id: nil,
                      region_id: @north.id
                    }], data[:languages])
-    assert_equal({
-                   id: notes(:HdiNote2).id,
-                   person_id: @andreas.id,
-                   created_at: notes(:HdiNote2).created_at.to_i,
-                   text: 'This language is cool'
-                 }, data[:languages].first[:notes].first)
+    assert_equal(2, data[:languages].first[:notes].length)
     assert_equal([{ id: @north.id, name: 'North Region' }], data[:regions])
     assert_equal(%w[Andreas Drew], data[:people].map { |p| p[:first_name] })
   end

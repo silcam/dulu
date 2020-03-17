@@ -7,7 +7,7 @@
 class Note < ApplicationRecord
   belongs_to :person
 
-  default_scope { order(created_at: :desc) }
+  default_scope { order(updated_at: :desc) }
 
   # Returns the object associated with this note
   def for

@@ -2,5 +2,8 @@
 
 json.notes notes do |note|
   json.call(note, :id, :person_id, :text)
-  json.created_at note.created_at.to_i
+  json.updated_at note.updated_at.to_i * 1000
+  json.can do
+    json.update can? :update, note
+  end
 end

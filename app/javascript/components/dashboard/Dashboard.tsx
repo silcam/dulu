@@ -1,12 +1,11 @@
-import React, { useState, useContext } from "react";
+import React, { useState } from "react";
 import Searcher from "./Searcher";
 import NotificationSidebar from "./NotificationSidebar";
 import styles from "./Dashboard.css";
-import DashboardSidebarContainer from "./DashboardSidebarContainer";
-import { User } from "../../application/DuluApp";
-import MainContentContainer from "./MainContentContainer";
-import ViewPrefsContext from "../../contexts/ViewPrefsContext";
 import LanguageContainer from "../languages/LanguageContainer";
+import useViewPrefs from "../../reducers/useViewPrefs";
+import MainContent from "./MainContent";
+import DashboardSidebar from "./DashboardSidebar";
 
 export type Selection =
   | {
@@ -18,26 +17,18 @@ export type Selection =
       id: number;
     };
 
-interface IProps {
-  user: User;
-}
-
-export default function Dashboard(props: IProps) {
-  const { viewPrefs, updateViewPrefs } = useContext(ViewPrefsContext);
+export default function Dashboard() {
+  const { viewPrefs, setViewPrefs } = useViewPrefs();
   const selection = viewPrefs.dashboardSelection || { type: "user" };
   const [searcherActive, setSearcherActive] = useState(false);
 
   const setSelection = (selection: Selection) =>
-    updateViewPrefs({ dashboardSelection: selection });
+    setViewPrefs({ dashboardSelection: selection });
 
   return (
     <div className={styles.container}>
       <div className={styles.sidebar}>
-        <DashboardSidebarContainer
-          user={props.user}
-          selection={selection}
-          setSelection={setSelection}
-        />
+        <DashboardSidebar selection={selection} setSelection={setSelection} />
       </div>
       <div className={styles.mainContent}>
         <Searcher setSeacherActive={setSearcherActive} />
@@ -49,10 +40,7 @@ export default function Dashboard(props: IProps) {
               key={selection.id}
             />
           ) : (
-            <MainContentContainer
-              selection={selection}
-              userId={props.user.id}
-            />
+            <MainContent selection={selection} />
           ))}
       </div>
       <div className={styles.notificationSidebar}>

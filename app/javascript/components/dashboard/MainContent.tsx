@@ -6,11 +6,10 @@ import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import I18nContext from "../../contexts/I18nContext";
 import DBEventsContainer from "./DBEventsContainer";
 import DBParticipantsContainer from "./DBParticipantsContainer";
-import ViewPrefsContext from "../../contexts/ViewPrefsContext";
+import useViewPrefs from "../../reducers/useViewPrefs";
+import useDashboardLanguages from "./useDashboardLanguages";
 
 interface IProps {
-  languageIds: number[];
-  selectedName?: string;
   selection: Selection;
 }
 
@@ -18,21 +17,22 @@ const tabs = ["Translation", "Linguistics", "Media", "People", "Events"];
 
 export default function MainContent(props: IProps) {
   const t = useContext(I18nContext);
-  const { viewPrefs, updateViewPrefs } = useContext(ViewPrefsContext);
+  const { viewPrefs, setViewPrefs } = useViewPrefs();
+  const { languageIds, selectedName } = useDashboardLanguages(props.selection);
 
   return (
     <div>
-      {props.selectedName && (
+      {selectedName && (
         <h3>
           <Link to={`/${props.selection.type}s/${props.selection.id!}`}>
-            {props.selectedName}
+            {selectedName}
           </Link>
         </h3>
       )}
-      {props.languageIds.length > 0 && (
+      {languageIds.length > 0 && (
         <Tabs
           selectedIndex={tabIndex(viewPrefs.dashboardTab)}
-          onSelect={index => updateViewPrefs({ dashboardTab: tabs[index] })}
+          onSelect={index => setViewPrefs({ dashboardTab: tabs[index] })}
         >
           <TabList>
             {tabs.map(name => (
@@ -41,20 +41,17 @@ export default function MainContent(props: IProps) {
           </TabList>
           <TabPanel>
             <DBActivitiesContainer
-              languageIds={props.languageIds}
+              languageIds={languageIds}
               sortOptions={["Language", "Book", "Stage"]}
               type="Translation"
             />
           </TabPanel>
           <TabPanel>
             <h4>{t("Research_activities")}</h4>
-            <DBActivitiesContainer
-              languageIds={props.languageIds}
-              type="Research"
-            />
+            <DBActivitiesContainer languageIds={languageIds} type="Research" />
             <h4>{t("Workshops_activities")}</h4>
             <DBActivitiesContainer
-              languageIds={props.languageIds}
+              languageIds={languageIds}
               type="Workshops"
               sortOptions={["Language"]}
               noAPILoad
@@ -63,18 +60,18 @@ export default function MainContent(props: IProps) {
 
           <TabPanel>
             <DBActivitiesContainer
-              languageIds={props.languageIds}
+              languageIds={languageIds}
               sortOptions={["Language", "Media", "Stage"]}
               type="Media"
             />
           </TabPanel>
 
           <TabPanel>
-            <DBParticipantsContainer languageIds={props.languageIds} />
+            <DBParticipantsContainer languageIds={languageIds} />
           </TabPanel>
 
           <TabPanel>
-            <DBEventsContainer languageIds={props.languageIds} />
+            <DBEventsContainer languageIds={languageIds} />
           </TabPanel>
         </Tabs>
       )}

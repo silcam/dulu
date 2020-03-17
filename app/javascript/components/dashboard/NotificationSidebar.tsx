@@ -6,7 +6,7 @@ import { INotification } from "../notifications/Notification";
 import update from "immutability-helper";
 import DuluAxios from "../../util/DuluAxios";
 import I18nContext from "../../contexts/I18nContext";
-import ViewPrefsContext from "../../contexts/ViewPrefsContext";
+import useViewPrefs from "../../reducers/useViewPrefs";
 
 export enum Channel {
   forMe,
@@ -31,7 +31,7 @@ interface ChannelState {
 
 export default function NotificationsSidebar() {
   const t = useContext(I18nContext);
-  const { viewPrefs, updateViewPrefs } = useContext(ViewPrefsContext);
+  const { viewPrefs, setViewPrefs } = useViewPrefs();
   const channels = [Channel.forMe, Channel.all];
   const channelPaths = ["/api/notifications", "/api/notifications/global"];
   const channelNames = [t("For_me"), t("All")];
@@ -93,7 +93,7 @@ export default function NotificationsSidebar() {
       <h3 style={{ marginTop: 0 }}>{t("Notifications")}</h3>
       <Tabs
         selectedIndex={currentChannel}
-        onSelect={index => updateViewPrefs({ notificationsTab: index })}
+        onSelect={index => setViewPrefs({ notificationsTab: index })}
       >
         <TabList>
           {state.map((channelState, channel) => (

@@ -14,9 +14,9 @@ import { Adder, Setter, SetCan } from "../../models/TypeBucket";
 import { ICan } from "../../actions/canActions";
 import GoBar from "../shared/GoBar";
 import List from "../../models/List";
+import useTranslation from "../../i18n/useTranslation";
 
 interface IProps {
-  t: T;
   id?: number;
   action: string;
   basePath: string;
@@ -27,9 +27,15 @@ interface IProps {
   setCluster: Setter<ICluster>;
   setCan: SetCan;
   can: ICan;
+  t: T;
 }
 
-export default class ClustersBoard extends React.Component<IProps> {
+export default function ClustersBoard(props: Omit<IProps, "t">) {
+  const t = useTranslation();
+  return <BaseClustersBoard {...props} t={t} />;
+}
+
+class BaseClustersBoard extends React.Component<IProps> {
   async componentDidMount() {
     const data = await DuluAxios.get("/api/clusters");
     if (data) {

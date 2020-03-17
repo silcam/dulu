@@ -4,6 +4,7 @@ import { IParticipant } from "./Participant";
 import Activity, { ActivityType } from "./Activity";
 import { IDomainStatusItem } from "./DomainStatusItem";
 import List from "./List";
+import { INote } from "./Note";
 
 interface Progress {
   [stage: string]: number;
@@ -20,6 +21,7 @@ export interface ILanguage {
     New_testament?: Progress;
   };
   domain_status_items: IDomainStatusItem[];
+  notes: INote[];
   can: {
     update_activities?: boolean;
     manage_participants?: boolean;
@@ -33,6 +35,7 @@ const emptyLanguage: ILanguage = {
   code: "",
   progress: {},
   domain_status_items: [],
+  notes: [],
   can: {}
 };
 

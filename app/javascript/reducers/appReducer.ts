@@ -9,6 +9,8 @@ import eventsReducer from "./eventsReducer";
 import clustersReducer from "./clustersReducer";
 import canReducer from "./canReducer";
 import regionsReducer from "./regionsReducer";
+import currentUserReducer from "./currentUserReducer";
+import networkReducer from "./networkReducer";
 
 const appReducer = combineReducers({
   languages: languagesReducer,
@@ -20,7 +22,9 @@ const appReducer = combineReducers({
   participants: participantsReducer,
   activities: activitiesReducer,
   events: eventsReducer,
-  can: canReducer
+  can: canReducer,
+  currentUser: currentUserReducer,
+  network: networkReducer
 });
 export type AppState = ReturnType<typeof appReducer>;
 

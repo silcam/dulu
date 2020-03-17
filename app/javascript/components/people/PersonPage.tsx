@@ -12,7 +12,6 @@ import RolesTable from "./RolesTable";
 import Loading from "../shared/Loading";
 import OrgPeopleContainer from "./OrgPeopleContainer";
 import PersonEventsContainer from "./PersonEventsContainer";
-import { Locale } from "../../i18n/i18n";
 import DuluSettings from "./DuluSettings";
 import useLoad, { useLoadOnMount } from "../shared/useLoad";
 import useAppSelector from "../../reducers/useAppSelector";
@@ -24,10 +23,10 @@ import {
 } from "../../actions/peopleActions";
 // import styles from "./PersonPage.css";
 import { useHistory } from "react-router-dom";
+import { setCurrentUserAction } from "../../reducers/currentUserReducer";
 
 export interface PersonPageProps {
   id: number;
-  updateLanguage: (locale: Locale) => void;
 }
 
 interface IState {
@@ -45,6 +44,7 @@ export default function PersonPage(props: PersonPageProps) {
   const history = useHistory();
   const [saveLoad] = useLoad();
   const propsPerson = useAppSelector(state => state.people.get(props.id));
+  const user = useAppSelector(state => state.currentUser);
 
   const [state, _setState] = useState<IState>({});
   const setState = (stateUpdate: Partial<IState>) =>
@@ -94,7 +94,7 @@ export default function PersonPage(props: PersonPageProps) {
       const data = await duluAxios.put(`/api/people/${person.id}`, { person });
       if (data) {
         setStateAfterSave();
-        updateLanguageIfNecessary(data.people[0]);
+        updateUserIfNecessary(data.people[0]);
       }
       return data;
     });
@@ -108,9 +108,10 @@ export default function PersonPage(props: PersonPageProps) {
     save(newPerson);
   };
 
-  const updateLanguageIfNecessary = (person: IPerson) => {
-    if (person.isUser && person.ui_language != t.locale)
-      props.updateLanguage(person.ui_language);
+  const updateUserIfNecessary = (person: IPerson) => {
+    if (user.id == person.id) {
+      dispatch(setCurrentUserAction(person));
+    }
   };
 
   const deletePerson = async () => {

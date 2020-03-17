@@ -13,11 +13,11 @@ import {
   ClusterMultiSelect
 } from "../shared/ModelMultiSelect";
 import Cluster, { ICluster } from "../../models/Cluster";
-import ViewPrefsContext from "../../contexts/ViewPrefsContext";
 import { Partial } from "../../models/TypeBucket";
 import update from "immutability-helper";
 import { DomainReport, DRDataParams } from "../../models/DomainReport";
 import { Domain } from "../../models/Domain";
+import useViewPrefs from "../../reducers/useViewPrefs";
 
 interface IProps {
   report: DomainReport;
@@ -32,11 +32,11 @@ function BaseSidebar(props: IProps) {
   const t = useContext(I18nContext);
   const report = props.report;
   const reportParams = props.report.dataParams;
-  const { updateViewPrefs } = useContext(ViewPrefsContext);
+  const { setViewPrefs } = useViewPrefs();
 
   const updateReportParams = (params: Partial<DRDataParams>) => {
     const dataParams = update(report.dataParams, { $merge: params });
-    updateViewPrefs({ domainReportParams: dataParams });
+    setViewPrefs({ domainReportParams: dataParams });
     props.setReport(update(report, { $merge: { dataParams } }));
   };
 

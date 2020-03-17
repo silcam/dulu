@@ -1,18 +1,17 @@
-import React, { useContext } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 import styles from "./NavBar.css";
 import DuluAxios from "../../util/DuluAxios";
-import { User } from "../../application/DuluApp";
-import I18nContext from "../../contexts/I18nContext";
 import NavLoadingIndicator from "./NavLoadingIndicator";
+import useAppSelector from "../../reducers/useAppSelector";
+import useTranslation from "../../i18n/useTranslation";
+import { User } from "../../reducers/currentUserReducer";
 
-interface IProps {
-  user: User;
-  loading: boolean;
-}
+export default function NavBar() {
+  const t = useTranslation();
+  const user = useAppSelector(state => state.currentUser);
+  const loading = useAppSelector(state => state.network.loadingCount) > 0;
 
-export default function NavBar(props: IProps) {
-  const t = useContext(I18nContext);
   return (
     <nav className={styles.nav}>
       <ul>
@@ -34,10 +33,10 @@ export default function NavBar(props: IProps) {
           <Link to="/reports">{t("Reports")}</Link>
         </li>
       </ul>
-      {props.user && (
+      {user.id && (
         <ul className={styles.ulRight}>
           <li>
-            <Link to={pathToUser(props.user)}>{props.user.first_name}</Link>
+            <Link to={pathToUser(user)}>{user.first_name}</Link>
           </li>
           <li>
             <a
@@ -53,7 +52,7 @@ export default function NavBar(props: IProps) {
           </li>
         </ul>
       )}
-      <NavLoadingIndicator loading={props.loading} />
+      <NavLoadingIndicator loading={loading} />
     </nav>
   );
 }

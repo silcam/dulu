@@ -2,12 +2,9 @@ import React from "react";
 import { Switch, Route } from "react-router-dom";
 import PersonEventPage from "./PersonEventPage";
 import NewPersonForm from "./NewPersonForm";
-import { Locale } from "../../i18n/i18n";
 import PersonPage from "./PersonPage";
 
-export default function PeopleRouter(props: {
-  updateLanguage: (loc: Locale) => void;
-}) {
+export default function PeopleRouter() {
   return (
     <Switch>
       <Route path="/people/new" render={() => <NewPersonForm />} />
@@ -22,12 +19,7 @@ export default function PeopleRouter(props: {
       />
       <Route
         path="/people/:id"
-        render={({ match }) => (
-          <PersonPage
-            id={parseInt(match.params.id)}
-            updateLanguage={props.updateLanguage}
-          />
-        )}
+        render={({ match }) => <PersonPage id={parseInt(match.params.id)} />}
       />
     </Switch>
   );

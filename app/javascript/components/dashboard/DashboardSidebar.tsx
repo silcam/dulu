@@ -1,39 +1,28 @@
 import React, { useContext } from "react";
-import { Adder } from "../../models/TypeBucket";
-import { IRegion } from "../../models/Region";
-import { ICluster } from "../../models/Cluster";
 import { ILanguage } from "../../models/Language";
-import { User } from "../../application/DuluApp";
-import { LoadedCluster, LoadedRegion } from "./DashboardSidebarContainer";
+import useDashboardRegions, {
+  LoadedCluster,
+  LoadedRegion
+} from "./useDashboardRegions";
 import I18nContext from "../../contexts/I18nContext";
 import DashboardSidebarList from "./DashboardSidebarList";
 import DashboardSidebarItem from "./DashboardSidebarItem";
-import { fullName, IPerson } from "../../models/Person";
+import { fullName } from "../../models/Person";
 import { Selection } from "./Dashboard";
 import Loading from "../shared/Loading";
-import { IParticipant } from "../../models/Participant";
-import List from "../../models/List";
 import { useLoadOnMount } from "../shared/useLoad";
+import useAppSelector from "../../reducers/useAppSelector";
 
 interface IProps {
   selection: Selection;
-  user: User;
-  userPrograms: {
-    clusters: LoadedCluster[];
-    languages: ILanguage[];
-  };
-  regions: List<LoadedRegion>;
   setSelection: (s: Selection) => void;
-  setRegions: Adder<IRegion>;
-  setClusters: Adder<ICluster>;
-  setLanguages: Adder<ILanguage>;
-  addPeople: Adder<IPerson>;
-  addParticipants: Adder<IParticipant>;
 }
 
 export default function DashboardSidebar(props: IProps) {
   const t = useContext(I18nContext);
   const selection = props.selection;
+  const user = useAppSelector(state => state.currentUser);
+  const { regions, userPrograms } = useDashboardRegions();
 
   useLoadOnMount("/api/languages/dashboard_list");
 
@@ -64,7 +53,7 @@ export default function DashboardSidebar(props: IProps) {
   const clusterStartExpanded = (cluster: LoadedCluster) =>
     cluster.languages.some(l => isSelected("language", l.id));
 
-  if (props.regions.length() == 0) return <Loading />;
+  if (regions.length() == 0) return <Loading />;
 
   return (
     <div>
@@ -76,7 +65,7 @@ export default function DashboardSidebar(props: IProps) {
           onClick={() => props.setSelection({ type: "cameroon" })}
           selected={isSelected("cameroon")}
         >
-          {props.regions.map(region => (
+          {regions.map(region => (
             <DashboardSidebarList
               key={region.id}
               header={region.name}
@@ -120,16 +109,16 @@ export default function DashboardSidebar(props: IProps) {
             </DashboardSidebarList>
           ))}
         </DashboardSidebarList>
-        {(props.userPrograms.clusters.length > 0 ||
-          props.userPrograms.languages.length > 0) && (
+        {(userPrograms.clusters.length > 0 ||
+          userPrograms.languages.length > 0) && (
           <DashboardSidebarList
-            header={fullName(props.user)}
+            header={fullName(user)}
             indent={0}
             startExpanded
             onClick={() => props.setSelection({ type: "user" })}
             selected={isSelected("user")}
           >
-            {props.userPrograms.clusters
+            {userPrograms.clusters
               .map(cluster => (
                 <DashboardSidebarList
                   key={cluster.id}
@@ -150,7 +139,7 @@ export default function DashboardSidebar(props: IProps) {
                 </DashboardSidebarList>
               ))
               .concat(
-                props.userPrograms.languages.map(language => (
+                userPrograms.languages.map(language => (
                   <DashboardSidebarItem
                     key={language.id}
                     header={language.name}
