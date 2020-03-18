@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Api::StagesController < ApplicationController
   def show
     @stage = Stage.find(params[:id])
@@ -7,7 +9,8 @@ class Api::StagesController < ApplicationController
     @stage = Stage.new_stage(stage_params)
     authorize! :update, @stage.activity
     @stage.save!
-    render :show
+    @activity = @stage.activity
+    render 'api/activities/show'
     Notification.new_stage(current_user, @stage)
   end
 
@@ -16,7 +19,7 @@ class Api::StagesController < ApplicationController
     authorize! :update, @stage.activity
     @stage.update(stage_params)
     @activity = Activity.find(@stage.activity_id)
-    render "api/activities/show"
+    render 'api/activities/show'
   end
 
   def destroy
@@ -24,7 +27,7 @@ class Api::StagesController < ApplicationController
     authorize! :update, @stage.activity
     @stage.destroy
     @activity = Activity.find(@stage.activity_id)
-    render "api/activities/show"
+    render 'api/activities/show'
   end
 
   private

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Api::WorkshopsActivitiesController < ApplicationController
   def index
     @language = Language.find(params[:language_id])
@@ -13,16 +15,16 @@ class Api::WorkshopsActivitiesController < ApplicationController
     authorize! :create_activity, @language
     @activity = @language.linguistic_activities.create!(workshops_activity_params)
     @workshops_activities = get_workshops_activities
-    render :show
+    render 'api/activities/show'
     Notification.new_activity(current_user, @activity)
   end
 
   private
 
   def workshops_activity_params
-    wa_params = params.require(:workshops_activity).permit(:title, { workshops_attributes: [:number, :name] })
+    wa_params = params.require(:workshops_activity).permit(:title, workshops_attributes: %i[number name])
     wa_params[:category] = :Workshops
-    return wa_params
+    wa_params
   end
 
   def get_workshops_activities

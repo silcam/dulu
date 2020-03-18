@@ -3,8 +3,6 @@
 json.languages [@language] do |language|
   json.call(language, :id, :name)
 
-  json.partial! 'api/languages/can', language: language
-
   json.domain_status_items language.domain_status_items do |ds_item|
     json.call(
       ds_item,

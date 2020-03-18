@@ -16,13 +16,6 @@ export interface IPerson {
   ui_language: Locale;
   email_pref: EmailPref;
   notification_channels: string;
-  participants: Array<{
-    id: number;
-    language_id: number | null;
-    cluster_id: number | null;
-    name: string;
-    roles: string[];
-  }>; // TODO - remove
   grantable_roles: GrRole[];
   gender: "M" | "F";
   has_login?: boolean;

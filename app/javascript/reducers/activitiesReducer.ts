@@ -33,7 +33,7 @@ export default function activitiesReducer(
   action: ActivityAction
 ) {
   if (isLoadAction(action)) {
-    return state.add(action.payload.workshops_activities);
+    return state.add(action.payload.activities);
   }
   switch (action.type) {
     case ADD_ACTIVITIES:

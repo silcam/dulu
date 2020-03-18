@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Api::ResearchActivitiesController < ApplicationController
   def index
     @language = Language.find(params[:language_id])
@@ -13,7 +15,7 @@ class Api::ResearchActivitiesController < ApplicationController
     authorize! :create_activity, @language
     @activity = @language.linguistic_activities.create!(research_activity_params)
     @research_activities = @language.research_activities
-    render :show
+    render '/api/activities/show'
     Notification.new_activity(current_user, @activity)
   end
 
@@ -22,6 +24,6 @@ class Api::ResearchActivitiesController < ApplicationController
   def research_activity_params
     ra_params = params.require(:research_activity).permit(:title)
     ra_params[:category] = :Research
-    return ra_params
+    ra_params
   end
 end

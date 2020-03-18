@@ -3,6 +3,7 @@ import { ICluster } from "./Cluster";
 import { BasicModel } from "./BasicModel";
 import List from "./List";
 import { ICan } from "../actions/canActions";
+import { ILanguage } from "./Language";
 
 export interface IParticipant {
   id: number;
@@ -18,11 +19,13 @@ export interface IParticipant {
 export interface IParticipantInflated extends IParticipant {
   person: IPerson;
   cluster?: ICluster;
-  language?: BasicModel;
+  language?: ILanguage;
 }
 
-function clusterProgram(participant: IParticipantInflated) {
-  return participant.cluster ? participant.cluster : participant.language;
+function clusterProgram(
+  participant: IParticipantInflated
+): ICluster | ILanguage {
+  return participant.cluster ? participant.cluster : participant.language!;
 }
 
 interface PtptPerson {

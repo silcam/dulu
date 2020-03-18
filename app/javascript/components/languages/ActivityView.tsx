@@ -10,11 +10,11 @@ import I18nContext from "../../contexts/I18nContext";
 import VSpacer from "../shared/VSpacer";
 import ActivityViewPeople from "./ActivityViewPeople";
 import { IParticipant } from "../../models/Participant";
-import { useAPIGet } from "../../util/useAPI";
 import { ICluster } from "../../models/Cluster";
 import List from "../../models/List";
 import ActivityViewStages from "./ActivityViewStages";
 import AudioBookList from "./AudioBookList";
+import { useLoadOnMount } from "../shared/useLoad";
 
 interface IProps {
   activityId: number;
@@ -41,9 +41,7 @@ export default function ActivityView(props: IProps) {
     setCluster: props.setCluster
   };
 
-  useAPIGet(`/api/activities/${props.activityId}`, {}, actions, [
-    props.activityId
-  ]);
+  useLoadOnMount(`/api/activities/${props.activityId}`, [props.activityId]);
 
   if (props.activity.id == 0) return <Loading />;
 

@@ -13,9 +13,9 @@ json.people @event.people do |person|
 end
 
 if @event.workshop
-  json.partial! 'api/workshops_activities/index', activities: [@event.workshop.linguistic_activity]
+  json.partial! 'api/activities/activities', activities: [@event.workshop.linguistic_activity]
 else
-  json.workshops_activities []
+  json.activities []
 end
 
 json.events [@event] do |_event|

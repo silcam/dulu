@@ -10,7 +10,6 @@ import {
   IMonth
 } from "./dateUtils";
 import AddIcon from "../shared/icons/AddIcon";
-import NewEventFormContainer from "./NewEventFormContainer";
 import MonthColumnContainer from "./MonthColumnContainer";
 import { Adder, SetCan } from "../../models/TypeBucket";
 import { IPerson } from "../../models/Person";
@@ -19,6 +18,7 @@ import { ICluster } from "../../models/Cluster";
 import { ICan } from "../../actions/canActions";
 import { IEvent, IPeriod } from "../../models/Event";
 import I18nContext from "../../contexts/I18nContext";
+import NewEventForm from "./NewEventForm";
 
 export interface IProps {
   year: string;
@@ -66,9 +66,7 @@ export default function EventsCalendar(props: IProps) {
             <AddIcon iconSize="large" onClick={() => setAddingNew(true)} />
           )}
         </h2>
-        {addingNew && (
-          <NewEventFormContainer cancelForm={() => setAddingNew(false)} />
-        )}
+        {addingNew && <NewEventForm cancelForm={() => setAddingNew(false)} />}
         <Link
           to={`/events/cal/${leftMonth.year}/${leftMonth.month}`}
           className="btn"

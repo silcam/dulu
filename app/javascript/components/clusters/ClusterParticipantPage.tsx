@@ -1,9 +1,9 @@
 import React from "react";
-import ParticipantContainer from "../languages/ParticipantContainer";
 import { T } from "../../i18n/i18n";
 import { ICluster } from "../../models/Cluster";
 import { History } from "history";
 import { ClusterBackLink } from "../shared/BreadCrumbs";
+import ParticipantView from "../languages/ParticipantView";
 
 interface IProps {
   t: T;
@@ -19,7 +19,7 @@ export default function ClusterParticipantPage(props: IProps) {
   return (
     <div>
       <ClusterBackLink cluster={cluster} />
-      <ParticipantContainer {...props} id={props.participantId} />
+      <ParticipantView {...props} id={props.participantId} />
     </div>
   );
 }

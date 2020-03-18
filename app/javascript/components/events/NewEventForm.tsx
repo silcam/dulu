@@ -2,37 +2,28 @@ import React, { useState, useContext } from "react";
 import update from "immutability-helper";
 import EditEventParticipantsTable from "./EditEventParticipantsTable";
 import SaveButton from "../shared/SaveButton";
-import Event, { IEventInflated, IEvent } from "../../models/Event";
+import Event, { IEventInflated } from "../../models/Event";
 import FormGroup from "../shared/FormGroup";
 import ValidatedTextInput from "../shared/ValidatedTextInput";
 import FuzzyDateInput from "../shared/FuzzyDateInput";
 import TextArea from "../shared/TextArea";
-import { Setter, Adder } from "../../models/TypeBucket";
-import { ILanguage } from "../../models/Language";
-import { IPerson } from "../../models/Person";
-import { ICluster } from "../../models/Cluster";
-import { IActivity } from "../../models/Activity";
 import I18nContext from "../../contexts/I18nContext";
-import { useAPIPost } from "../../util/useAPI";
 import { emptyEvent } from "../../models/Event";
 import EventCategoryPicker from "./EventCategoryPicker";
 import { Domain } from "../../models/Domain";
 import { T } from "../../i18n/i18n";
 import P from "../shared/P";
 import TyperPicker from "../shared/TyperPicker";
+import useLoad from "../shared/useLoad";
 
 interface IProps {
   cancelForm: () => void;
   startEvent?: Partial<IEventInflated>;
-  setEvent: Setter<IEvent>;
-  addLanguages: Adder<ILanguage>;
-  addPeople: Adder<IPerson>;
-  addClusters: Adder<ICluster>;
-  addActivities: Adder<IActivity>;
 }
 
 export default function NewEventForm(props: IProps) {
   const t = useContext(I18nContext);
+  const [saveLoad, saving] = useLoad();
   const [event, setEvent] = useState(newEvent(t, props.startEvent));
 
   const updateEvent = (mergeEvent: Partial<IEventInflated>) =>
@@ -40,18 +31,14 @@ export default function NewEventForm(props: IProps) {
 
   const eventInvalid = !event.name || !event.start_date;
 
-  const actions = {
-    setEvent: props.setEvent,
-    addLanguages: props.addLanguages,
-    addPeople: props.addPeople,
-    addClusters: props.addClusters,
-    addActivities: props.addActivities
+  const save = async () => {
+    const data = await saveLoad(duluAxios =>
+      duluAxios.post("/api/events", {
+        event: Event.prepareEventParams(Event.ensureEndDate(event))
+      })
+    );
+    if (data) props.cancelForm();
   };
-  const [saving, save] = useAPIPost(
-    "/api/events",
-    { event: Event.prepareEventParams(Event.ensureEndDate(event)) },
-    actions
-  );
 
   return (
     <div id="NewEventForm">
@@ -100,7 +87,7 @@ export default function NewEventForm(props: IProps) {
       <EditEventParticipantsTable event={event} replaceEvent={updateEvent} />
 
       <SaveButton
-        onClick={() => save(props.cancelForm)}
+        onClick={save}
         disabled={eventInvalid}
         saveInProgress={saving}
       />

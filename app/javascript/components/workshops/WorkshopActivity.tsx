@@ -12,6 +12,7 @@ import { ILanguage } from "../../models/Language";
 import { Setter } from "../../models/TypeBucket";
 import { IWorkshop } from "../../models/Workshop";
 import I18nContext from "../../contexts/I18nContext";
+import { T } from "../../i18n/i18n";
 
 interface IProps extends ActivityViewPeopleProps {
   activity: IActivity;

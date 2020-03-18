@@ -1,7 +1,6 @@
 import React from "react";
 import update from "immutability-helper";
 import SmallSaveAndCancel from "../shared/SmallSaveAndCancel";
-import DuluAxios from "../../util/DuluAxios";
 import CheckBoxInput from "../shared/CheckboxInput";
 import { arrayDelete } from "../../util/arrayUtils";
 import FuzzyDateInput from "../shared/FuzzyDateInput";
@@ -12,6 +11,7 @@ import { History } from "history";
 import I18nContext from "../../contexts/I18nContext";
 import P from "../shared/P";
 import PersonPicker from "../people/PersonPicker";
+import useLoad from "../shared/useLoad";
 
 interface NewParticipant extends IParticipant {
   person_name: string;
@@ -27,18 +27,20 @@ interface IProps {
 
   history: History;
   basePath: string;
+  saveLoad: ReturnType<typeof useLoad>[0];
 }
 
+export default function NewParticipantForm(props: Omit<IProps, "saveLoad">) {
+  const [saveLoad] = useLoad();
+  return <BaseNewParticipantForm {...props} saveLoad={saveLoad} />;
+}
 interface IState {
   participant: IParticipant;
   person: IPerson | null;
   saving?: boolean;
 }
 
-export default class NewParticipantForm extends React.PureComponent<
-  IProps,
-  IState
-> {
+class BaseNewParticipantForm extends React.PureComponent<IProps, IState> {
   constructor(props: IProps) {
     super(props);
     this.state = {
@@ -75,14 +77,14 @@ export default class NewParticipantForm extends React.PureComponent<
 
   save = async () => {
     this.setState({ saving: true });
-    const data = await DuluAxios.post("/api/participants", {
-      participant: this.state.participant
-    });
+    const data = await this.props.saveLoad(duluAxios =>
+      duluAxios.post("/api/participants", {
+        participant: this.state.participant
+      })
+    );
     if (data) {
-      this.props.addPeople([data.person]);
-      this.props.addParticipants([data.participant]);
       this.props.history.push(
-        `${this.props.basePath}/participants/${data.participant.id}`
+        `${this.props.basePath}/participants/${data.participants[0].id}`
       );
     } else {
       this.setState({ saving: false });

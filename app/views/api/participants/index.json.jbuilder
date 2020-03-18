@@ -1,22 +1,11 @@
-json.participants @participants, partial: "participant", as: :participant
+# frozen_string_literal: true
 
-json.people @participants do |participant|
-  json.call(participant.person, :id, :first_name, :last_name)
-end
+json.partial! 'participants', participants: @participants
+
+json.partial! 'api/people/people', people: Person.where(id: @participants.map(&:person_id))
 
 if @cluster_language.is_a? Language
-  json.language do
-    json.call(@cluster_language, :id, :name, :cluster_id)
-    json.partial! "api/languages/can", language: @cluster_language
-  end
-
-  if @cluster_language.cluster
-    json.cluster do
-      json.call(@cluster_language.cluster, :id, :name)
-    end
-  end
+  json.partial! 'api/languages/languages', languages: [@cluster_language]
 else
-  json.cluster do
-    json.call(@cluster_language, :id, :name)
-  end
+  json.partial! 'api/clusters/clusters', clusters: [@cluster_language]
 end

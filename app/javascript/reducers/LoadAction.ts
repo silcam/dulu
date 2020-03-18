@@ -12,15 +12,16 @@ import { IActivity } from "../models/Activity";
 export interface LoadAction {
   type: "Load";
   payload: {
+    activities?: PartialModel<IActivity>[];
     people?: PartialModel<IPerson>[];
     languages?: PartialModel<ILanguage>[];
     clusters?: PartialModel<ICluster>[];
     regions?: PartialModel<IRegion>[];
     organizations?: PartialModel<IOrganization>[];
     participants?: PartialModel<IParticipant>[];
+    deletedParticipants?: number[];
     events?: PartialModel<IEvent>[];
     deletedEvents?: number[];
-    workshops_activities?: PartialModel<IActivity>[];
     can?: Partial<CanState>;
     // ... add more here
   };

@@ -20,7 +20,9 @@ export default function participantsReducer(
   action: ParticipantAction
 ) {
   if (isLoadAction(action)) {
-    return state.add(action.payload.participants);
+    return state
+      .add(action.payload.participants)
+      .remove(action.payload.deletedParticipants);
   }
   switch (action.type) {
     case ADD_PARTICIPANTS:

@@ -1,8 +1,8 @@
 import React from "react";
-import NewEventFormContainer from "../events/NewEventFormContainer";
 import { Location, History } from "history";
 import { ILanguage } from "../../models/Language";
 import { LanguageBackLink } from "../shared/BreadCrumbs";
+import NewEventForm from "../events/NewEventForm";
 
 interface IProps {
   location: Location;
@@ -31,7 +31,7 @@ export default class LanguageNewEventPage extends React.PureComponent<
     return (
       <div>
         <LanguageBackLink language={this.props.language} />
-        <NewEventFormContainer
+        <NewEventForm
           cancelForm={() => this.props.history.goBack()}
           startEvent={this.startEvent()}
         />

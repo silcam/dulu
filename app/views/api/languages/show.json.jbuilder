@@ -7,6 +7,12 @@ json.languages [@language] do |language|
   json.code language.code_or_parent_code
 
   json.partial! 'api/notes/notes', notes: notes
+
+  json.can do
+    json.update_activities can?(:update_activities, language)
+    json.manage_participants can?(:manage_participants, language)
+    json.update can?(:update, language)
+  end
 end
 
 json.partial! 'api/clusters/clusters', clusters: [@language.cluster] if @language.cluster

@@ -1,41 +1,20 @@
-json.participant do
-  json.partial! "participant", participant: @participant
+# frozen_string_literal: true
 
+json.participants [@participant] do |participant|
+  json.call(participant, :id, :roles, :start_date, :end_date, :person_id, :language_id, :cluster_id)
+
+  can = can?(:manage_participants, participant.cluster_language)
   json.can do
-    json.update can?(:manage_participants, @participant.cluster_language)
-    json.destroy can?(:manage_participants, @participant.cluster_language)
+    json.update can
+    json.destroy can
   end
 end
 
-json.person do
-  json.call(@participant.person, :id, :first_name, :last_name)
-end
-
-json.activities @participant.activities do |activity|
-  json.call(activity,
-            :id,
-            :type,
-            :category,
-            :language_id,
-            :bible_book_id,
-            :title,
-            :name,
-            :participant_ids)
-  json.stage_name activity.current_stage.name
-end
+json.partial! 'api/people/people', people: [@participant.person]
+json.partial! 'api/activities/activities', activities: @participant.activities
 
 if @participant.language
-  json.language do
-    json.call(@participant.language, :id, :name)
-  end
-end
-
-if @participant.cluster
-  json.cluster do
-    json.call(@participant.cluster, :id, :name)
-  end
-
-  json.languages @participant.cluster.languages do |language|
-    json.call(language, :id, :name)
-  end
+  json.partial! 'api/languages/languages', languages: [@participant.language]
+else
+  json.partial! 'api/clusters/clusters', clusters: [@participant.cluster]
 end

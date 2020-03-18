@@ -14,7 +14,6 @@ export interface IActivity {
   stage_name: string;
   stage_date: string;
   stages: IStage[];
-  bible_book_id: number;
   title: string;
   category: string;
   workshops: IWorkshop[];
@@ -22,6 +21,7 @@ export interface IActivity {
   participant_ids: number[];
   film: string;
   scripture: string;
+  bible_book_id: number;
   bible_book_ids: number[];
 }
 

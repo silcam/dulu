@@ -52,23 +52,22 @@ class PeopleControllerTest < ActionDispatch::IntegrationTest
           'LinguisticConsultantTraining'
         ],
         can: { update: true, destroy: false },
-        loaded: true,
-        participants: [
-          {
-            id: participants(:KendallEwondo).id,
-            language_id: languages(:Ewondo).id,
-            cluster_id: nil,
-            name: 'Ewondo',
-            roles: ['LinguisticConsultantTraining']
-          }
-        ]
+        loaded: true
       },
       data[:people][0]
     )
+    assert_partial(
+      [{
+        id: participants(:KendallEwondo).id,
+        language_id: languages(:Ewondo).id,
+        cluster_id: nil,
+        roles: ['LinguisticConsultantTraining']
+      }],
+      data[:participants]
+    )    
   end
 
   test 'Move participants from person object to freestanding' do
-    skip
     api_login @drew
     data = api_get(people_path("/#{@kendall.id}"))
     assert_nil data[:people][0][:participants]

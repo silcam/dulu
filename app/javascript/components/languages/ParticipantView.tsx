@@ -1,6 +1,5 @@
 import React from "react";
 import EditActionBar from "../shared/EditActionBar";
-import DuluAxios from "../../util/DuluAxios";
 import ParticipantRoles from "./ParticipantRoles";
 import update from "immutability-helper";
 import style from "./ParticipantView.css";
@@ -10,37 +9,53 @@ import Activity, { IActivity } from "../../models/Activity";
 import Spacer from "../shared/Spacer";
 import ProgressBar from "../shared/ProgressBar";
 import Loading from "../shared/Loading";
-import { fullName, IPerson } from "../../models/Person";
-import { IParticipant } from "../../models/Participant";
-import { ClusterLanguage } from "../regions/ProgramList";
+import { fullName } from "../../models/Person";
+import Participant, {
+  IParticipant,
+  IParticipantInflated
+} from "../../models/Participant";
 import { ILanguage } from "../../models/Language";
 import List from "../../models/List";
 import { History } from "history";
-import { Setter, Adder } from "../../models/TypeBucket";
-import { ICluster } from "../../models/Cluster";
 import { T } from "../../i18n/i18n";
 import I18nContext from "../../contexts/I18nContext";
+import useParticipants from "../participants/useParticipants";
+import useAppSelector from "../../reducers/useAppSelector";
+import useLoad, { useLoadOnMount } from "../shared/useLoad";
 
 export interface IProps {
   id: number;
-  participant?: IParticipant;
-  person?: IPerson;
-  activities?: List<IActivity>;
-  clusterLanguage?: ClusterLanguage;
-  languages: List<ILanguage>;
-
   history: History;
   basePath: string;
-  setPerson: Setter<IPerson>;
-  addParticipants: Adder<IParticipant>;
-  deleteParticipant: (id: number) => void;
-  addActivities: Adder<IActivity>;
-  setLanguage: Setter<ILanguage>;
-  setCluster: Setter<ICluster>;
-  addLanguages: Adder<ILanguage>;
 
-  // language?: ILanguage // If in a language context
-  // cluster?: ICluster
+  // Inserted below
+  participant: IParticipantInflated;
+  activities: List<IActivity>;
+  languages: List<ILanguage>;
+  saveLoad: ReturnType<typeof useLoad>[0];
+}
+
+export default function ParticipantView(
+  props: Omit<IProps, "participant" | "activities" | "languages" | "saveLoad">
+) {
+  const [saveLoad] = useLoad();
+
+  const participant = useParticipants(ptpt => ptpt.id == props.id).get(
+    props.id
+  );
+  const activities = useAppSelector(state => state.activities).filter(a =>
+    a.participant_ids.includes(props.id)
+  );
+  const languages = useAppSelector(state => state.languages);
+
+  useLoadOnMount(`/api/participants/${props.id}`, [props.id]);
+
+  return (
+    <BaseParticipantView
+      {...props}
+      {...{ participant, activities, languages, saveLoad }}
+    />
+  );
 }
 
 interface IState {
@@ -50,25 +65,10 @@ interface IState {
   edited?: boolean;
 }
 
-export default class ParticipantView extends React.PureComponent<
-  IProps,
-  IState
-> {
+class BaseParticipantView extends React.PureComponent<IProps, IState> {
   constructor(props: IProps) {
     super(props);
     this.state = {};
-  }
-
-  async componentDidMount() {
-    const data = await DuluAxios.get(`/api/participants/${this.props.id}`);
-    if (data) {
-      this.props.setPerson(data.person);
-      data.language && this.props.setLanguage(data.language);
-      data.cluster && this.props.setCluster(data.cluster);
-      data.languages && this.props.addLanguages(data.languages);
-      this.props.addParticipants([data.participant]);
-      this.props.addActivities(data.activities);
-    }
   }
 
   updateParticipant = (mergeParticipant: Partial<IParticipant>) => {
@@ -87,14 +87,12 @@ export default class ParticipantView extends React.PureComponent<
 
   save = async () => {
     this.setState({ saving: true });
-    const data = await DuluAxios.put(
-      `/api/participants/${this.state.participant!.id}`,
-      {
+    const data = await this.props.saveLoad(duluAxios =>
+      duluAxios.put(`/api/participants/${this.state.participant!.id}`, {
         participant: this.state.participant
-      }
+      })
     );
     if (data) {
-      this.props.addParticipants([data.participant]);
       this.setState({
         editing: false,
         participant: undefined
@@ -107,16 +105,15 @@ export default class ParticipantView extends React.PureComponent<
     if (
       confirm(
         t("confirm_delete_participant", {
-          person: fullName(this.props.person!),
-          language: this.props.clusterLanguage!.name
+          person: fullName(this.props.participant.person),
+          language: Participant.clusterProgram(this.props.participant).name
         })
       )
     ) {
-      const success = await DuluAxios.delete(
-        `/api/participants/${this.props.id}`
+      const success = await this.props.saveLoad(duluAxios =>
+        duluAxios.delete(`/api/participants/${this.props.id}`)
       );
       if (success) {
-        this.props.deleteParticipant(this.props.id);
         this.props.history.push(this.props.basePath);
       }
     }
@@ -153,7 +150,7 @@ export default class ParticipantView extends React.PureComponent<
             />
             <h2>
               <Link className="notBlue" to={`/people/${participant.person_id}`}>
-                {fullName(this.props.person!)}
+                {fullName(this.props.participant.person)}
               </Link>
             </h2>
             <ParticipantRoles

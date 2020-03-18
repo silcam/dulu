@@ -30,12 +30,6 @@ json.people [@person] do |person|
     .collect { |r| { value: r, display: t(r) } }
     .sort_by { |a| a[:display] })
 
-  json.participants person.participants do |participant|
-    json.call(participant, :id, :language_id, :cluster_id)
-    json.name participant.cluster_language.display_name
-    json.roles participant.roles
-  end
-
   # json.events do
   #   json.current person.events.current, partial: 'api/people/event', as: :event
   #   json.upcoming person.events.upcoming, partial: 'api/people/event', as: :event
@@ -50,3 +44,5 @@ json.people [@person] do |person|
 
   json.loaded true
 end
+
+json.partial! 'api/participants/participants', participants: @person.participants

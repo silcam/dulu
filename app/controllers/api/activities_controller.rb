@@ -1,7 +1,18 @@
+# frozen_string_literal: true
+
 class Api::ActivitiesController < ApplicationController
   def index
     @language = Language.find(params[:language_id])
-    @domain = params[:domain] || "all"
+    @activities = case params[:domain] 
+                  when 'translation'
+                    @language.translation_activities
+                  when 'media'
+                    @language.media_activities
+                  when 'linguistic'
+                    @language.linguistic_activities
+                  else
+                    @language.activities
+                  end
   end
 
   def show
@@ -26,8 +37,6 @@ class Api::ActivitiesController < ApplicationController
 
   def notify(activity, old_people)
     new_people = activity.people - old_people
-    if new_people.length > 0
-      Notification.added_people_to_activity(current_user, new_people, activity)
-    end
+    Notification.added_people_to_activity(current_user, new_people, activity) unless new_people.empty?
   end
 end

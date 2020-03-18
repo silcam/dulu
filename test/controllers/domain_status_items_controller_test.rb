@@ -29,11 +29,6 @@ class DomainStatusItemsControllerTest < ActionDispatch::IntegrationTest
         {
           id: @hdi.id, 
           name: 'Hdi',
-          can: {
-            update: true,
-            update_activities: true,
-            manage_participants: true
-          },
           domain_status_items: [
             {
               id: @hdi_nt.id,

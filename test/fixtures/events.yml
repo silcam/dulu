@@ -36,13 +36,13 @@ LanceMadeAnEvent:
 EwondoNounWS:
   start_date: 2018-01-05
   end_date: 2018-01-21
-  domain: Linguistic
+  domain: Linguistics
   languages: Ewondo
   name: 'Workshop: Noun'
 
 EwondoVerbWS:
   start_date: 2018-03
   end_date: 2018-03
-  domain: Linguistic
+  domain: Linguistics
   languages: Ewondo
   name: 'Workshop: Verb'

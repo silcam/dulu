@@ -1,1 +1,3 @@
-json.partial! "index", activities: @workshops_activities
+# frozen_string_literal: true
+
+json.partial! 'api/activities/activities', activities: @workshops_activities

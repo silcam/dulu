@@ -1,0 +1,11 @@
+HdiLukeFilm:
+  type: MediaActivity
+  category: Film
+  film: LukeFilm
+  language: Hdi
+
+HdiAudioJohn:
+  type: MediaActivity
+  category: AudioScripture
+  scripture: Other
+  language: Hdi

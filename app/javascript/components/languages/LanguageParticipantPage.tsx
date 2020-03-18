@@ -1,8 +1,8 @@
 import React from "react";
-import ParticipantContainer from "./ParticipantContainer";
 import { ILanguage } from "../../models/Language";
 import { History } from "history";
 import { LanguageBackLink } from "../shared/BreadCrumbs";
+import ParticipantView from "./ParticipantView";
 
 interface IProps {
   language: ILanguage;
@@ -18,7 +18,7 @@ export default function LanguageParticipantPage(props: IProps) {
     <div>
       <LanguageBackLink language={language} />
 
-      <ParticipantContainer {...props} id={props.participantId} />
+      <ParticipantView {...props} id={props.participantId} />
     </div>
   );
 }

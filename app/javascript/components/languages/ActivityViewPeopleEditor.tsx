@@ -6,11 +6,11 @@ import Participant, { IParticipant } from "../../models/Participant";
 import DeleteIcon from "../shared/icons/DeleteIcon";
 import update from "immutability-helper";
 import SmallSaveAndCancel from "../shared/SmallSaveAndCancel";
-import { useAPIPut, ActionPack, useAPIGet } from "../../util/useAPI";
 import Language, { ILanguage } from "../../models/Language";
 import SelectInput from "../shared/SelectInput";
 import { subtract } from "../../util/arrayUtils";
 import List from "../../models/List";
+import useLoad, { useLoadOnMount } from "../shared/useLoad";
 
 interface IProps {
   cancelEdit: () => void;
@@ -19,19 +19,16 @@ interface IProps {
   participants: List<IParticipant>;
   people: List<IPerson>;
   basePath: string;
-  actions: ActionPack;
 }
 
 export default function ActivityViewPeopleEditor(props: IProps) {
   const t = useContext(I18nContext);
+  const [saveLoad, saving] = useLoad();
 
   // Make sure all ptpts for language are loaded
-  useAPIGet(
-    `/api/languages/${props.language.id}/participants`,
-    {},
-    props.actions,
-    []
-  );
+  useLoadOnMount(`/api/languages/${props.language.id}/participants`, [
+    props.language.id
+  ]);
 
   const [draftPtptIds, setDraftPtptIds] = useState(
     props.activity.participant_ids
@@ -62,15 +59,16 @@ export default function ActivityViewPeopleEditor(props: IProps) {
       setAddPtptId(availablePtptIds[0]);
   });
 
-  const [saving, save] = useAPIPut(
-    `/api/activities/${props.activity.id}`,
-    {
-      activity: {
-        participant_ids: draftPtptIds
-      }
-    },
-    props.actions
-  );
+  const save = async () => {
+    const data = await saveLoad(duluAxios =>
+      duluAxios.put(`/api/activities/${props.activity.id}`, {
+        activity: {
+          participant_ids: draftPtptIds
+        }
+      })
+    );
+    if (data) props.cancelEdit();
+  };
 
   return (
     <div>
@@ -82,9 +80,11 @@ export default function ActivityViewPeopleEditor(props: IProps) {
               <td>
                 <DeleteIcon
                   onClick={() =>
-                    setDraftPtptIds(update(draftPtptIds, {
-                      $splice: [[index, 1]]
-                    }) as number[])
+                    setDraftPtptIds(
+                      update(draftPtptIds, {
+                        $splice: [[index, 1]]
+                      }) as number[]
+                    )
                   }
                 />
               </td>
@@ -115,7 +115,7 @@ export default function ActivityViewPeopleEditor(props: IProps) {
         </tbody>
       </table>
       <SmallSaveAndCancel
-        handleSave={() => save(props.cancelEdit)}
+        handleSave={save}
         handleCancel={props.cancelEdit}
         saveInProgress={saving}
       />

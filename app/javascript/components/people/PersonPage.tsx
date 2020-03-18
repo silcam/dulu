@@ -50,7 +50,7 @@ export default function PersonPage(props: PersonPageProps) {
   const setState = (stateUpdate: Partial<IState>) =>
     _setState({ ...state, ...stateUpdate });
 
-  useLoadOnMount(`/api/people/${props.id}`);
+  useLoadOnMount(`/api/people/${props.id}`, [props.id]);
 
   const edit = () =>
     setState({

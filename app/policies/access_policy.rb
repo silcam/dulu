@@ -32,16 +32,12 @@ class AccessPolicy
 
       can %i[create read update], Organization
 
-      can [:manage_participants, :create_activity, :manage_surveys, :update_activities], Language do |language, user|
+      can [:manage_participants, :create_activity, :manage_surveys, :update_activities, :update], Language do |language, user|
         language.all_current_people.include? user
       end
 
       can [:manage_participants], Cluster do |cluster, user|
         cluster.all_current_people.include? user
-      end
-
-      can :manage, Language do |language, user|
-        language.all_current_people.include? user
       end
 
       can [:update, :destroy], Activity do |activity, user|

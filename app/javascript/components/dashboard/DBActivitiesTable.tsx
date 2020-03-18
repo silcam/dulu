@@ -1,7 +1,6 @@
 import React, { useEffect, useContext, useState } from "react";
-import DuluAxios from "../../util/DuluAxios";
 import { Adder } from "../../models/TypeBucket";
-import Activity, { IActivity } from "../../models/Activity";
+import Activity, { IActivity, ActivityType } from "../../models/Activity";
 import I18nContext from "../../contexts/I18nContext";
 import ProgressBar from "../shared/ProgressBar";
 import Spacer from "../shared/Spacer";
@@ -12,8 +11,10 @@ import sortActivities, { Sort, SortOption } from "./sortActivities";
 import CommaList from "../shared/CommaList";
 import StyledTable from "../shared/StyledTable";
 import List from "../../models/List";
+import useLoad from "../shared/useLoad";
 
 interface IProps {
+  type: ActivityType;
   languageIds: number[];
   languages: List<ILanguage>;
   activities: IActivity[];
@@ -24,10 +25,23 @@ interface IProps {
 
 export default function DBActivitiesTable(props: IProps) {
   const t = useContext(I18nContext);
+  const [load] = useLoad();
   const [sort, setSort] = useState<Sort>({ option: "Language" });
 
+  const domain = ["Research", "Workshops"].includes(props.type)
+    ? "linguistics"
+    : props.type.toLocaleLowerCase();
   useEffect(() => {
-    if (!props.noAPILoad) fetchActivities(props);
+    if (!props.noAPILoad) {
+      props.languageIds.forEach(id =>
+        load(duluAxios =>
+          duluAxios.get(`/api/activities`, {
+            language_id: id,
+            domain
+          })
+        )
+      );
+    }
   }, [JSON.stringify(props.languageIds)]);
 
   const sortOptions = props.sortOptions || ["Language", "Stage"];
@@ -85,22 +99,5 @@ export default function DBActivitiesTable(props: IProps) {
         </tbody>
       </StyledTable>
     </div>
-  );
-}
-
-async function fetchActivities(props: IProps) {
-  return Promise.all(
-    props.languageIds.map(async id => {
-      const data = await DuluAxios.get(`/api/activities`, {
-        language_id: id
-        // domain: "translation"
-      });
-      if (data) {
-        props.addActivities(data.translation_activities);
-        props.addActivities(data.media_activities);
-        props.addActivities(data.workshops_activities);
-        props.addActivities(data.research_activities);
-      }
-    })
   );
 }

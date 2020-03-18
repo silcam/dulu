@@ -2,28 +2,55 @@ import React from "react";
 import ActivityRow from "./ActivityRow";
 import InlineAddIcon from "../shared/icons/InlineAddIcon";
 import Activity, { IActivity, ActivityType } from "../../models/Activity";
-import DuluAxios from "../../util/DuluAxios";
 import NewMediaActivityForm from "./NewMediaActivityForm";
 import NewTranslationActivityForm from "./NewTranslationActivityForm";
 // import styles from "./ActivitiesTable.css";
 import NewResearchActivityForm from "./NewResearchActivityForm";
 import NewWorkshopsActivityForm from "./NewWorkshopsActivityForm";
-import { Adder, Setter, PSetter } from "../../models/TypeBucket";
 import { ILanguage } from "../../models/Language";
 import I18nContext from "../../contexts/I18nContext";
 import List from "../../models/List";
 import StyledTable from "../shared/StyledTable";
+import useAppSelector from "../../reducers/useAppSelector";
+import useLoad, { useLoadOnMount } from "../shared/useLoad";
 
 interface IProps {
-  activities: List<IActivity>;
-  addActivities: Adder<IActivity>;
-  setActivity: PSetter<IActivity>;
-  setLanguage: Setter<ILanguage>;
   type: ActivityType;
   language: ILanguage;
 
   heading?: string; // Default "Activities"
   basePath: string;
+
+  // Added below
+  activities: List<IActivity>;
+  saveLoad: ReturnType<typeof useLoad>[0];
+}
+
+export default function ActivitiesTable(
+  props: Omit<IProps, "activities" | "saveLoad">
+) {
+  const activities = useAppSelector(state => state.activities).filter(
+    propMatcher(props)
+  );
+
+  const [saveLoad] = useLoad();
+  useLoadOnMount(`/api/activities?language_id=${props.language.id}`);
+
+  return <BaseActivitiesTable {...props} {...{ activities, saveLoad }} />;
+}
+
+function propMatcher(props: { type: ActivityType; language: ILanguage }) {
+  return (activity: IActivity) => {
+    if (activity.language_id != props.language.id) return false;
+
+    if (props.type == "Research" || props.type == "Workshops") {
+      return (
+        activity.type == "LinguisticActivity" && activity.category == props.type
+      );
+    }
+
+    return `${props.type}Activity` == activity.type;
+  };
 }
 
 interface IState {
@@ -31,26 +58,10 @@ interface IState {
   newFormSaving: boolean;
 }
 
-export default class ActivitiesTable extends React.PureComponent<
-  IProps,
-  IState
-> {
+class BaseActivitiesTable extends React.PureComponent<IProps, IState> {
   constructor(props: IProps) {
     super(props);
     this.state = this.freshState();
-  }
-
-  async componentDidMount() {
-    const data = await DuluAxios.get(`/api/activities`, {
-      language_id: this.props.language.id
-    });
-    if (data) {
-      this.props.addActivities(data.translation_activities);
-      this.props.addActivities(data.media_activities);
-      this.props.addActivities(data.research_activities);
-      this.props.addActivities(data.workshops_activities);
-      this.props.setLanguage(data.language);
-    }
   }
 
   freshState = () => {
@@ -79,14 +90,15 @@ export default class ActivitiesTable extends React.PureComponent<
 
   addNewActivity = async (activity: Partial<IActivity>) => {
     this.setState({ newFormSaving: true });
-    const data = await DuluAxios.post(
-      `/api/languages/${this.props.language.id}/${this.x_activities()}/`,
-      {
-        [this.x_activity()]: activity
-      }
+    const data = await this.props.saveLoad(duluAxios =>
+      duluAxios.post(
+        `/api/languages/${this.props.language.id}/${this.x_activities()}/`,
+        {
+          [this.x_activity()]: activity
+        }
+      )
     );
     if (data) {
-      this.props.setActivity(data.activity);
       this.setState(this.freshState());
     } else {
       this.setState({ newFormSaving: false });
@@ -128,7 +140,6 @@ export default class ActivitiesTable extends React.PureComponent<
                     activity={activity}
                     can={this.props.language.can}
                     basePath={this.props.basePath}
-                    setActivity={this.props.setActivity}
                   />
                 ))}
               </tbody>

@@ -8,6 +8,6 @@ json.partial! 'api/regions/regions', regions: Region.where(id: @languages.map(&:
 
 json.can do
   json.languages do
-    json.create false
+    json.create can? :create, Language
   end
 end

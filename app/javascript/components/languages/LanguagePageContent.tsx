@@ -1,5 +1,4 @@
 import React, { useContext } from "react";
-import ActivitiesContainer from "./ActivitiesContainer";
 import ParticipantsContainer from "./ParticipantsContainer";
 import LanguageEventsContainer from "./LanguageEventsContainer";
 import { DSICategory } from "../../models/DomainStatusItem";
@@ -9,6 +8,7 @@ import { Location, History } from "history";
 import I18nContext from "../../contexts/I18nContext";
 import TranslationProgress from "./TranslationProgress";
 import DomainStatus from "./DomainStatus";
+import ActivitiesTable from "./ActivitiesTable";
 
 interface IProps {
   language: ILanguage;
@@ -46,7 +46,7 @@ export default function LanguagePageContent(props: IProps) {
       )}
 
       {(props.tab == "Translation" || props.tab == "Media") && (
-        <ActivitiesContainer
+        <ActivitiesTable
           {...props}
           type={props.tab}
           basePath={`/languages/${props.language.id}`}
@@ -54,13 +54,13 @@ export default function LanguagePageContent(props: IProps) {
       )}
       {props.tab == "Linguistics" && (
         <div>
-          <ActivitiesContainer
+          <ActivitiesTable
             {...props}
             type="Research"
             heading={t("Research_activities")}
             basePath={`/languages/${props.language.id}`}
           />
-          <ActivitiesContainer
+          <ActivitiesTable
             {...props}
             type="Workshops"
             heading={t("Workshops_activities")}

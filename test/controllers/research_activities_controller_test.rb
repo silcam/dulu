@@ -1,0 +1,34 @@
+# frozen_string_literal: true
+
+require 'test_helper'
+
+class ResearchActivitiesControllerTest < ActionDispatch::IntegrationTest
+  def setup
+    @ewondo = languages :Ewondo
+    @kendall = people :Kendall
+  end
+
+  test 'Index' do
+    api_login
+    data1 = api_get("/api/languages/#{@ewondo.id}/research_activities")
+    data2 = api_get("/api/activities?language_id=#{@ewondo.id}&domain=linguistic")
+    assert_includes(data2[:activities], data1[:activities][0])
+    # See ActivitiesControllerTest for more
+  end
+
+  test 'Create' do
+    api_login @kendall
+    data = api_post(
+      "/api/languages/#{@ewondo.id}/research_activities",
+      research_activity: { title: 'Words for Pizza' }
+    )
+    assert_partial({ 
+                     language_id: @ewondo.id, 
+                     category: 'Research',
+                     stage_name: 'Planned', 
+                     type: 'LinguisticActivity', 
+                     participant_ids: [],
+                     title: 'Words for Pizza'
+                   }, data[:activities][0])
+  end
+end

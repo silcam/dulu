@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Api::ParticipantsController < ApplicationController
   def index
     @cluster_language = params[:language_id] ?
@@ -33,7 +35,6 @@ class Api::ParticipantsController < ApplicationController
     @participant = Participant.find(params[:id])
     authorize! :manage_participants, @participant.cluster_language
     @participant.destroy!
-    response_ok
   end
 
   private

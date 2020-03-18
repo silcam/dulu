@@ -1,7 +1,6 @@
 import React from "react";
 import Activity, { IActivity, IStage } from "../../models/Activity";
 import update from "immutability-helper";
-import DuluAxios from "../../util/DuluAxios";
 import ProgressBar from "../shared/ProgressBar";
 import NewStageForm from "./NewStageForm";
 import styles from "./ActivitiesTable.css";
@@ -9,14 +8,22 @@ import Spacer from "../shared/Spacer";
 import { Link } from "react-router-dom";
 import { ICan } from "../../actions/canActions";
 import I18nContext from "../../contexts/I18nContext";
-import { PSetter } from "../../models/TypeBucket";
+import useLoad from "../shared/useLoad";
 
 interface IProps {
   activity: IActivity;
   can: ICan;
-  setActivity: PSetter<IActivity>;
 
   basePath: string;
+
+  // added below
+  saveLoad: ReturnType<typeof useLoad>[0];
+}
+
+export default function ActivityRow(props: Omit<IProps, "saveLoad">) {
+  const [saveLoad] = useLoad();
+
+  return <BaseActivityRow {...props} {...{ saveLoad }} />;
 }
 
 interface IState {
@@ -25,7 +32,7 @@ interface IState {
   updateFormState: "stage" | "saving" | "date" | "none";
 }
 
-export default class ActivityRow extends React.PureComponent<IProps, IState> {
+class BaseActivityRow extends React.PureComponent<IProps, IState> {
   constructor(props: IProps) {
     super(props);
     this.state = this.freshState(props);
@@ -47,15 +54,12 @@ export default class ActivityRow extends React.PureComponent<IProps, IState> {
 
   addNextStage = async () => {
     this.setState({ updateFormState: "saving" });
-    const data = await DuluAxios.post("/api/stages", {
-      stage: this.state.nextStage
-    });
+    const data = await this.props.saveLoad(duluAxios =>
+      duluAxios.post("/api/stages", {
+        stage: this.state.nextStage
+      })
+    );
     if (data) {
-      this.props.setActivity({
-        id: this.props.activity.id,
-        stage_name: data.stage.name,
-        stage_date: data.stage.start_date
-      });
       this.setState(this.freshState(this.props));
     } else {
       this.setState({ updateFormState: "date" });

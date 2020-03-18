@@ -12,6 +12,7 @@ HdiEzra:
   type: TranslationActivity
   language: Hdi
   bible_book_id: 15
+  updated_at: 2018-03-11 13:15:42.139502
 
 ZulgoEzra:
   type: TranslationActivity

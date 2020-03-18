@@ -94,7 +94,7 @@ class EventsControllerTest < ActionDispatch::IntegrationTest
     assert_includes(data[:languages], id: @hdi.id, name: 'Hdi')
     assert_empty data[:clusters]
     assert_includes(data[:people], id: @drew.id, first_name: 'Drew', last_name: 'Mambo')
-    assert_empty data[:workshops_activities]
+    assert_empty data[:activities]
     assert_partial(
       { id: @hdi_gen_check.id, 
         name: 'Genesis Checking', 
@@ -123,7 +123,7 @@ class EventsControllerTest < ActionDispatch::IntegrationTest
     data = api_get(events_path("/#{@verb_ws.id}"))
     assert_partial(
       [{ type: 'LinguisticActivity', title: 'Grammar Intro' }],
-      data[:workshops_activities]
+      data[:activities]
     )
     assert_partial(
       { workshop_id: @verb_ws.workshop.id, workshop_activity_id: @verb_ws.workshop.linguistic_activity_id },
@@ -211,7 +211,7 @@ class EventsControllerTest < ActionDispatch::IntegrationTest
     api_login @kendall
     data = api_delete(events_path("/#{@verb_ws.id}"))
     assert_response 200
-    assert_partial({ workshops_activities: [{ workshops: [{ name: 'Verb', event_id: nil }] }] }, data)
+    assert_partial([{ name: 'Verb', event_id: nil }], data[:activities][0][:workshops])
     refute_includes Event.all, @verb_ws
   end
 

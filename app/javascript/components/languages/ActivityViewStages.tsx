@@ -5,9 +5,9 @@ import EditIcon from "../shared/icons/EditIcon";
 import DeleteIcon from "../shared/icons/DeleteIcon";
 import FuzzyDateInput from "../shared/FuzzyDateInput";
 import SmallSaveAndCancel from "../shared/SmallSaveAndCancel";
-import DuluAxios from "../../util/DuluAxios";
 import Loading from "../shared/Loading";
 import { Setter } from "../../models/TypeBucket";
+import useLoad from "../shared/useLoad";
 
 interface IProps {
   activity: IActivity;
@@ -16,10 +16,10 @@ interface IProps {
 
 export default function ActivityViewStages(props: IProps) {
   const t = useContext(I18nContext);
+  const [saveLoad, saving] = useLoad();
 
   const [editId, setEditId] = useState(0);
   const [draftDate, setDraftDate] = useState("");
-  const [loading, setLoading] = useState(false);
 
   const editStage = (stage: IStage) => {
     setDraftDate(stage.start_date);
@@ -27,34 +27,28 @@ export default function ActivityViewStages(props: IProps) {
   };
 
   const updateStage = async (stage: IStage) => {
-    setLoading(true);
-    const data = await DuluAxios.put(`/api/stages/${stage.id}`, {
-      stage: { ...stage, start_date: draftDate }
-    });
+    const data = await saveLoad(duluAxios =>
+      duluAxios.put(`/api/stages/${stage.id}`, {
+        stage: { ...stage, start_date: draftDate }
+      })
+    );
     if (data) {
-      props.setActivity(data.activity);
       setEditId(0);
     }
-    setLoading(false);
   };
 
   const deleteStage = async (stage: IStage) => {
     if (
       confirm(t("confirm_delete", { name: t(`stage_names.${stage.name}`) }))
     ) {
-      setLoading(true);
-      const data = await DuluAxios.delete(`/api/stages/${stage.id}`);
-      if (data) {
-        props.setActivity(data.activity);
-      }
-      setLoading(false);
+      await saveLoad(duluAxios => duluAxios.delete(`/api/stages/${stage.id}`));
     }
   };
 
   return (
     <div>
       <h3>{t("History")}</h3>
-      {loading && <Loading />}
+      {saving && <Loading />}
       <table style={{ width: "auto" }}>
         <tbody>
           {props.activity.stages.map(stage => (

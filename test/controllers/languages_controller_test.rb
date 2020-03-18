@@ -33,10 +33,9 @@ class LanguagesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test 'Index - Can Create' do
-    skip 'Currently hardcoded to false'
     api_login @andreas
     data = api_get(lang_path)
-    assert_equal({ create: true }, data[:can])
+    assert_equal({ create: true }, data[:can][:languages])
   end
 
   test 'Show' do

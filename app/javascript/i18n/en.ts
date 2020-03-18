@@ -89,7 +89,7 @@ export default {
   delete_person: "Permanently Delete %{name}",
   delete_person_warning:
     "Are you sure you want to delete %{name}? This can't be undone.",
-  Delete_workshop_confirmation: "Delete the workshop %{name}?",
+  Delete_workshop_confirmation: "Delete the %{name} workshop?",
   domains: {
     Anthropology: "Anthropology",
     Community_development: "Community Development",
