@@ -1,5 +1,5 @@
-import en from "./en";
-import fr from "./fr";
+import { fr } from "../../../config/locales/fr.json";
+import { en } from "../../../config/locales/en.json";
 
 // This is totally naive, fyi
 

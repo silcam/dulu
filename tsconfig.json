@@ -8,6 +8,7 @@
     "module": "es6",
     "moduleResolution": "node",
     "noEmit": true,
+    "resolveJsonModule": true,
     "sourceMap": true,
     "target": "es3",
     "jsx": "react",

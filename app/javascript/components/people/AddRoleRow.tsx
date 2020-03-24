@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import SelectInput from "../shared/SelectInput";
 import DuluAxios from "../../util/DuluAxios";
 import SmallSaveAndCancel from "../shared/SmallSaveAndCancel";
 import { IPerson } from "../../models/Person";
+import useTranslation from "../../i18n/useTranslation";
 
 interface IProps {
   person: IPerson;
@@ -10,46 +11,41 @@ interface IProps {
   cancel: () => void;
 }
 
-interface IState {
-  role: string;
-}
+export default function AddRoleRow(props: IProps) {
+  const t = useTranslation();
 
-export default class AddRoleRow extends React.PureComponent<IProps, IState> {
-  constructor(props: IProps) {
-    super(props);
-    this.state = {
-      role: props.person.grantable_roles[0].value
-    };
-  }
+  const [role, setRole] = useState(props.person.grantable_roles[0]);
 
-  addRole = async () => {
+  const addRole = async () => {
     const data = await DuluAxios.post("/api/person_roles", {
-      person_id: this.props.person.id,
-      role: this.state.role
+      person_id: props.person.id,
+      role
     });
     if (data) {
-      this.props.replaceRoles(data.roles);
-      this.props.cancel();
+      props.replaceRoles(data.roles);
+      props.cancel();
     }
   };
 
-  render() {
-    return (
-      <tr>
-        <td>
-          <SelectInput
-            value={this.state.role}
-            options={this.props.person.grantable_roles}
-            setValue={role => this.setState({ role })}
-            autoFocus
-          />
-          <SmallSaveAndCancel
-            handleSave={this.addRole}
-            handleCancel={this.props.cancel}
-            style={{ marginTop: "8px" }}
-          />
-        </td>
-      </tr>
-    );
-  }
+  return (
+    <tr>
+      <td>
+        <SelectInput
+          value={role}
+          options={SelectInput.translatedOptions(
+            props.person.grantable_roles,
+            t,
+            "roles"
+          )}
+          setValue={setRole}
+          autoFocus
+        />
+        <SmallSaveAndCancel
+          handleSave={addRole}
+          handleCancel={props.cancel}
+          style={{ marginTop: "8px" }}
+        />
+      </td>
+    </tr>
+  );
 }

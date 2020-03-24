@@ -1,10 +1,6 @@
 import baseCompare from "../util/baseCompare";
 import { Locale } from "../i18n/i18n";
 
-export interface GrRole {
-  value: string;
-  display: string;
-}
 export type EmailPref = "immediate" | "daily" | "weekly";
 export interface IPerson {
   id: number;
@@ -16,7 +12,7 @@ export interface IPerson {
   ui_language: Locale;
   email_pref: EmailPref;
   notification_channels: string;
-  grantable_roles: GrRole[];
+  grantable_roles: string[];
   gender: "M" | "F";
   has_login?: boolean;
   not_a_duplicate?: boolean;

@@ -7,7 +7,7 @@ class TranslationHelperTest < ActiveSupport::TestCase
 
   test 't_nested' do
     params = t_params(
-      'notification.new_stage', 
+      'notifications.new_stage', 
       user_name: 'Jojo',
       language_name: 'Anglish',
       stage_name: t_params(:Drafting),

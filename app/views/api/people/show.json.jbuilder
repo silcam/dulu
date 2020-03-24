@@ -25,10 +25,7 @@ json.people [@person] do |person|
     json.home_country nil
   end
 
-  json.grantable_roles(Role
-    .grantable_roles(current_user, person)
-    .collect { |r| { value: r, display: t(r) } }
-    .sort_by { |a| a[:display] })
+  json.grantable_roles(Role.grantable_roles(current_user, person))
 
   # json.events do
   #   json.current person.events.current, partial: 'api/people/event', as: :event

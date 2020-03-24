@@ -29,7 +29,7 @@ class Notification < ApplicationRecord
     def new_language_participant(user, participant)
       language = participant.language
       params = t_params(
-        'notification.new_language_participant',
+        'notifications.new_language_participant',
         participant_name: participant.full_name, 
         language_name: language.name 
       )
@@ -44,7 +44,7 @@ class Notification < ApplicationRecord
     def new_cluster_participant(user, participant)
       cluster = participant.cluster
       params = t_params(
-        'notification.new_cluster_participant',
+        'notifications.new_cluster_participant',
         participant_name: participant.full_name, 
         cluster_name: cluster.name
       )
@@ -60,7 +60,7 @@ class Notification < ApplicationRecord
       activity = stage.activity
       language = activity.language
       params = t_params(
-        'notification.new_stage',
+        'notifications.new_stage',
         language_name: language.name,
         stage_name: t_params(stage.name),
         activity_name: activity_name(activity)
@@ -76,7 +76,7 @@ class Notification < ApplicationRecord
     def workshop_complete(user, workshop)
       language = workshop.linguistic_activity.language
       params = t_params(
-        'notification.workshop_complete',
+        'notifications.workshop_complete',
         workshop_name: workshop.name,
         language_name: language.name
       )
@@ -91,7 +91,7 @@ class Notification < ApplicationRecord
     def new_activity(user, activity)
       language = activity.language
       params = t_params(
-        'notification.new_activity',
+        'notifications.new_activity',
         language_name: language.name,
         activity_name: activity_name(activity)
       )
@@ -107,7 +107,7 @@ class Notification < ApplicationRecord
       return if user == person
       
       params = t_params(
-        'notification.updated_person',
+        'notifications.updated_person',
         person_name: person.full_name
       )
       links = { person_name: person }
@@ -116,7 +116,7 @@ class Notification < ApplicationRecord
 
     def gave_person_role(user, person, role)
       params = t_params(
-        'notification.gave_person_role',
+        'notifications.gave_person_role',
         person_name: person.full_name,
         role_name: {
           key: role
@@ -129,7 +129,7 @@ class Notification < ApplicationRecord
     def added_people_to_activity(user, people, activity)
       language = activity.language
       params = t_params(
-        'notification.added_people_to_activity',
+        'notifications.added_people_to_activity',
         person_names: people.map(&:full_name).join(', '),
         activity_name: activity_name(activity),
         language_name: language.name
@@ -147,7 +147,7 @@ class Notification < ApplicationRecord
       event = event_participants[0].event
       event_people = event_participants.map(&:person)
       params = t_params(
-        'notification.added_people_to_event',
+        'notifications.added_people_to_event',
         person_names: event_people.map(&:full_name).join(', '),
         event_name: event.name
       )
@@ -160,7 +160,7 @@ class Notification < ApplicationRecord
 
     def new_event_for_language(user, event, language)
       params = t_params(
-        'notification.new_event_for_language',
+        'notifications.new_event_for_language',
         event_name: event.name,
         language_name: language.name
       )
@@ -174,7 +174,7 @@ class Notification < ApplicationRecord
 
     def added_language_to_event(user, language, event)
       params = t_params(
-        'notification.added_language_to_event',
+        'notifications.added_language_to_event',
         language_name: language.name,
         event_name: event.name
       )
@@ -188,7 +188,7 @@ class Notification < ApplicationRecord
 
     def added_cluster_to_event(user, cluster, event)
       params = t_params(
-        'notification.added_cluster_to_event',
+        'notifications.added_cluster_to_event',
         cluster_name: cluster.name,
         event_name: event.name
       )

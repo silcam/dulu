@@ -97,15 +97,15 @@ class Person < ApplicationRecord
     languages
   end
 
-  def to_hash
-    roles = self.roles.collect { |r| { role: r, t_role: I18n.t(r) } }
-    {
-      id: id,
-      first_name: first_name,
-      last_name: last_name,
-      roles: roles
-    }
-  end
+  # def to_hash
+  #   roles = self.roles.collect { |r| { role: r, t_role: I18n.t(r) } }
+  #   {
+  #     id: id,
+  #     first_name: first_name,
+  #     last_name: last_name,
+  #     roles: roles
+  #   }
+  # end
 
   def self.search(query)
     people = Person.multi_word_where(query, 'first_name', 'last_name')
