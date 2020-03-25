@@ -3,6 +3,7 @@
     "All_changes_saved": "All changes saved.",
     "As_of": "As of",
     "Audio_x": "Audio %{x}",
+    "Audio_Portions": "Audio Scripture Portions",
     "BackTranslators": "Back-Translators",
     "bible_books": [
       "Genesis",
@@ -172,10 +173,12 @@
       "new_event_for_language": "%{user_name} created the %{event_name} event for the %{language_name} program.",
       "added_language_to_event": "%{user_name} added the %{language_name} program to the %{event_name} event.",
       "added_cluster_to_event": "%{user_name} added the %{cluster_name} cluster to the %{event_name} event.",
+      "added_dsi": "%{user_name} updated the %{domain} status for %{language_name}: %{dsi_name}.",
       "his": { "M": "his", "F": "her" },
       "himself": { "M": "himself", "F": "herself" }
     },
     "PreChecking": "Pre-checking",
+    "Published_Portions": "Published Scripture Portions",
     "roles": {
       "Administration": "Administration",
       "BackTranslator": "Back-Translator",
@@ -230,6 +233,7 @@
     },
     "Try_again": "Try again",
     "Update_stage": "Update Stage:",
+    "Updated_Texts": "Updated Text Collection",
     "validation": { "Not_blank": "Can't be blank" },
     "email": {
       "welcome": {

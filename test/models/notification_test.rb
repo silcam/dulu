@@ -5,8 +5,8 @@ require 'test_helper'
 class NotificationTest < ActiveSupport::TestCase
   include ApplicationHelper
 
-  def mp(arg)
-    model_path(arg)
+  def mp(*args)
+    model_path(*args)
   end
 
   def setup
@@ -187,6 +187,16 @@ class NotificationTest < ActiveSupport::TestCase
     ntfn = Notification.last
     assert_equal "[Rick Conrad](#{mp(@rick)}) added the [Ndop](#{mp(clusters(:Ndop))}) cluster to the [Genesis Checking](#{mp(gen_checking)}) event.", ntfn.english
     assert_includes people(:Freddie).notifications, ntfn
+    assert_includes people(:Nancy).notifications, ntfn
+  end
+
+  test 'Added Domain Status Item' do
+    dsi = domain_status_items :HdiNT
+    Notification.added_dsi(@rick, dsi)
+    ntfn = Notification.last
+    assert_equal "[Rick Conrad](#{mp(@rick)}) updated the translation status for [Hdi](#{mp(@hdi)}): [Published New Testament](#{mp(@hdi, dsi)}).", ntfn.english
+    assert_equal "[Rick Conrad](#{mp(@rick)}) a mis à jour le statut de traduction de la langue [Hdi](#{mp(@hdi)}) : [Nouveau Testament publié](#{mp(@hdi, dsi)}).", ntfn.french
+    assert_includes people(:Drew).notifications, ntfn
     assert_includes people(:Nancy).notifications, ntfn
   end
 end

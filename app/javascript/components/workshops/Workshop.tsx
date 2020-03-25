@@ -224,7 +224,7 @@ export default class Workshop extends React.PureComponent<IProps, IState> {
                 />
               </td>
               <td>
-                {this.state.completed
+                {this.props.workshop.completed
                   ? t("Completed")
                   : this.props.can.update && (
                       <button onClick={this.completeWorkshop}>

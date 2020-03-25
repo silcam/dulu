@@ -58,5 +58,5 @@ export default function NavBar() {
 }
 
 function pathToUser(user: User) {
-  return `/people/show/${user.id}`;
+  return `/people/${user.id}`;
 }

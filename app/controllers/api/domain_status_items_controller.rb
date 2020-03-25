@@ -5,6 +5,7 @@ class Api::DomainStatusItemsController < ApplicationController
     @language = Language.find(params[:language_id])
     authorize! :update, @language
     @dsi = @language.domain_status_items.create!(dsi_params.merge(creator: current_user))
+    Notification.added_dsi(current_user, @dsi)
     render :index
   end
 

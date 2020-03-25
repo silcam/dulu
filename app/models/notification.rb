@@ -200,6 +200,21 @@ class Notification < ApplicationRecord
       send_notification(generate(params, links, channels, user))
     end
 
+    def added_dsi(user, dsi)
+      params = t_params(
+        'notifications.added_dsi',
+        domain: t_params(dsi.primary_domain_or_media.downcase),
+        language_name: dsi.language.name,
+        dsi_name: t_params(dsi.name_for_notification)
+      )
+      links = {
+        language_name: dsi.language,
+        dsi_name: model_path(dsi.language, dsi)
+      }
+      channels = NotificationChannel.channels_for(dsi.language, dsi.primary_domain)
+      send_notification(generate(params, links, channels, user))
+    end
+
     private
 
     def activity_name(activity)

@@ -18,6 +18,10 @@ export default function PeopleRouter() {
         )}
       />
       <Route
+        path="/people/show/:id"
+        render={({ match }) => <PersonPage id={parseInt(match.params.id)} />}
+      />
+      <Route
         path="/people/:id"
         render={({ match }) => <PersonPage id={parseInt(match.params.id)} />}
       />

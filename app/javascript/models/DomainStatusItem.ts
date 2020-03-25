@@ -40,6 +40,7 @@ export const DSICategories = <const>[
   "DataCollection",
   "LiteracyMaterial"
   // "Community"
+  // If you add a category, update domain_status_item.rb
 ];
 export type DSICategory = typeof DSICategories[number];
 
