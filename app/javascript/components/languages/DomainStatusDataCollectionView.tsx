@@ -14,6 +14,7 @@ import capitalize from "../../util/capitalize";
 import StyledTable from "../shared/StyledTable";
 import CommaList from "../shared/CommaList";
 import useAppSelector from "../../reducers/useAppSelector";
+import LexiconFormat from "./LexiconFormat";
 
 interface IProps {
   language: ILanguage;
@@ -62,6 +63,7 @@ export default function DomainStatusDataCollectionView(props: IProps) {
                     } ${t(discourseType)}`}</div>
                   )
                 )}
+                {item.subcategory == "Lexicon" && <LexiconFormat dsi={item} />}
               </td>
               <td>
                 <CommaList

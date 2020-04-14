@@ -13,9 +13,7 @@ describe("The venerable Linguistic Domain Status Item", () => {
       cy.contains("Tone Orthography").click();
     });
     goToItem("Orthography");
-    cy.contains("th", "Tone Orthography")
-      .parent()
-      .should("contain", "Yes");
+    cy.contains("th", "Tone Orthography").parent().should("contain", "Yes");
   });
 
   it("Adds Grammar DSI", () => {
@@ -39,22 +37,21 @@ describe("The venerable Linguistic Domain Status Item", () => {
   it("Adds Lexicon DSI", () => {
     addItem("Lexicon", () => {
       cy.inLabel("Total Words").type("800");
+      cy.contains("Flex Database").click();
     });
     cy.contains("a", "800 words 1995").click();
     cy.contains("800");
     cy.contains("1995").click();
     cy.contains("Cool Lexicon");
+    cy.inLabel("Flex Database").should("be.checked");
+    cy.inLabel("Language Depo").should("not.be.checked");
   });
 
   it("Adds Text DSI", () => {
     addItem("Texts", () => {
       cy.inLabel("Total Texts").type("5");
-      cy.contains("tr", "Narrative")
-        .find("input")
-        .type("3");
-      cy.contains("tr", "Hortatory")
-        .find("input")
-        .type("2");
+      cy.contains("tr", "Narrative").find("input").type("3");
+      cy.contains("tr", "Hortatory").find("input").type("2");
     });
     cy.contains("5 texts 1995").click();
     cy.contains("Draft");
@@ -66,19 +63,13 @@ describe("The venerable Linguistic Domain Status Item", () => {
 
   it("Creates a new DSI Location for new Phonology", () => {
     addItem("Phonology", () => {
-      cy.inLabel("Year")
-        .clear()
-        .type("1985");
-      cy.inLabel("Location")
-        .clear()
-        .type("Random File Cabinet Somewhere");
+      cy.inLabel("Year").clear().type("1985");
+      cy.inLabel("Location").clear().type("Random File Cabinet Somewhere");
     });
     cy.contains("1985").click();
     cy.contains("Random File Cabinet Somewhere");
     cy.actionBarIcon("editIcon").click();
-    cy.inLabel("Location")
-      .click()
-      .clear();
+    cy.inLabel("Location").click().clear();
     cy.contains("li", "Random File Cabinet Somewhere");
   });
 });
@@ -101,9 +92,7 @@ function addItem(subcategory, cb = () => {}) {
     .within(() => {
       cy.icon("addIcon").click();
       cy.inLabel("Subcategory").select(subcategory);
-      cy.inLabel("Description")
-        .type("Cool ")
-        .type(subcategory);
+      cy.inLabel("Description").type("Cool ").type(subcategory);
       cy.inLabel("Year").type("1995");
       cy.inLabel("Location").click();
       cy.contains("li", "REAP").click();

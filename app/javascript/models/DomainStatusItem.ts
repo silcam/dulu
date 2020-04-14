@@ -111,6 +111,8 @@ export interface DSIDetails extends DiscourseDetails, GrammarTypeDetails {
   toneOrthography?: boolean;
   ddpWork?: boolean;
   informationGenre?: InformationGenre;
+  flexDatabase?: boolean;
+  languageDepo?: boolean;
 }
 
 export const DSICompletenesses = <const>["Draft", "Satisfactory"];

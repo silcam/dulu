@@ -26,9 +26,7 @@ describe("Regions", () => {
     cy.login("olga_ngombo@sil.org");
     cy.visit(northRegionPath);
     cy.actionBarIcon("editIcon").click();
-    cy.byValue("North Region")
-      .clear()
-      .type("El Norte!");
+    cy.byValue("North Region").clear().type("El Norte!");
     cy.contains("Save").click();
     cy.contains("tr", "El Norte!");
     cy.contains("h2", "El Norte!");
@@ -80,10 +78,7 @@ describe("Regions", () => {
     cy.login("olga_ngombo@sil.org");
     cy.visit(northRegionPath);
     cy.actionBarIcon("editIcon").click();
-    cy.inLabel("LPF")
-      .clear()
-      .type("Drew Mambo");
-    cy.contains("li", "Drew Mambo").click();
+    cy.inLabel("LPF").searchFill("Drew Mambo");
     cy.contains("Save").click();
     cy.contains("LPF: Drew Mambo");
   });

@@ -327,6 +327,33 @@ export default function DomainStatusItemForm(props: IProps) {
         </P>
       )}
 
+      {subcategory == "Lexicon" && (
+        <P>
+          <div>
+            <CheckBoxInput
+              text={t("Flex_database")}
+              value={!!details.flexDatabase}
+              setValue={flexDatabase =>
+                setDetails(
+                  flexDatabase
+                    ? { flexDatabase }
+                    : { flexDatabase, languageDepo: false }
+                )
+              }
+            />
+          </div>
+          <div>
+            {details.flexDatabase && (
+              <CheckBoxInput
+                text={t("Language_depo")}
+                value={!!details.languageDepo}
+                setValue={languageDepo => setDetails({ languageDepo })}
+              />
+            )}
+          </div>
+        </P>
+      )}
+
       <P>
         <label>
           {t("Year")}

@@ -20,6 +20,7 @@ import DivInline from "../shared/DivInline";
 import capitalize from "../../util/capitalize";
 import CommaList from "../shared/CommaList";
 import useAppSelector from "../../reducers/useAppSelector";
+import LexiconFormat from "./LexiconFormat";
 
 interface IProps {
   language: ILanguage;
@@ -96,6 +97,9 @@ export default function DomainStatusItemView(props: IProps) {
                     </DivInline>
                   ))}
                 </div>
+              )}
+              {props.item.subcategory == "Lexicon" && (
+                <LexiconFormat dsi={props.item} />
               )}
             </td>
           </tr>
