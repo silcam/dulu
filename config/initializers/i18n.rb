@@ -18,4 +18,6 @@ module I18n
   end
 end
 
-I18n.exception_handler = I18n::MissingTranslationHandler.new
+Rails.application.config.after_initialize do
+  I18n.exception_handler = I18n::MissingTranslationHandler.new
+end

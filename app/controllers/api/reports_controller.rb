@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Api::ReportsController < ApplicationController
   def create
     @report = Report.new(report_params)
@@ -13,15 +15,15 @@ class Api::ReportsController < ApplicationController
   def show
     @db_report = Report.find(params[:id])
     ViewedReport.mark_viewed(@db_report, current_user)
-    case @db_report.report["type"]
-    when "Domain"
+    case @db_report.report['type']
+    when 'Domain'
       @report = DomainReport.from_database(@db_report)
       @report.generate
       render :domain_report
-    when "LanguageComparison"
+    when 'LanguageComparison'
       render :translation_progress_report
     else
-      raise "Unknown report type #{@db_report.report["type"]} for report {#{@db_report.id}}."
+      raise "Unknown report type #{@db_report.report['type']} for report {#{@db_report.id}}."
     end
   end
 
@@ -37,6 +39,12 @@ class Api::ReportsController < ApplicationController
   def domain_report
     @report = DomainReport.from_web_params(params)
     @report.generate
+  end
+
+  # Check that I18n fall-back-to-key is working in production
+  def debug_i18n
+    names = %i[Genesis Exodus Leviticus Numbers Deuteronomy].map { |n| I18n.t(n, locale: :en) }
+    render json: names
   end
 
   private
