@@ -1,4 +1,35 @@
 // Place your settings in this file to overwrite default and user settings.
 {
-    "typescript.tsdk": "node_modules/typescript/lib"
+    "typescript.tsdk": "node_modules/typescript/lib",
+    "[ruby]": {
+        "editor.tabSize": 2,
+        "editor.formatOnSave": true
+    },
+    "ruby.useLanguageServer": true,
+    "solargraph.commandPath": "/Users/rick/.rbenv/shims/solargraph",
+    "ruby.format": "rubocop",
+    "ruby.useBundler": true,
+    "ruby.lint": {
+        "rubocop": {
+            "useBundler": true
+        }
+    },
+    "[typescript]": {
+        "editor.formatOnSave": true,
+        "editor.tabSize": 2,
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[typescriptreact]": {
+        "editor.formatOnSave": true,
+        "editor.tabSize": 2
+    },
+    "[json]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "ruby.codeCompletion": "rcodetools",
+    "ruby.intellisense": "rubyLocate",
+    "solargraph.checkGemVersion": false,
+    "prettier.packageManager": "yarn",
+    "prettier.trailingComma": "none",
+    "prettier.arrowParens": "avoid"
 }
