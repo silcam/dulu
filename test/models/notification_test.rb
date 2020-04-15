@@ -70,6 +70,7 @@ class NotificationTest < ActiveSupport::TestCase
     Notification.new_cluster_participant(@drew, kendall_ndop)
     ntfn = Notification.last
     assert_equal "[Drew Mambo](#{mp(@drew)}) added [Kendall Ingles](#{mp(kendall_ndop)}) to the [Ndop](#{mp(ndop)}) cluster.", ntfn.english
+    assert_equal "[Drew Mambo](/people/883742519) a ajouté [Kendall Ingles](#{mp(kendall_ndop)}) au groupe [Ndop](/clusters/657561020).", ntfn.french
     assert_includes people(:Freddie).notifications, ntfn
     assert_includes @nancy.notifications, ntfn
   end
@@ -84,6 +85,7 @@ class NotificationTest < ActiveSupport::TestCase
     Notification.new_stage(@drew, ezra_testing)
     ntfn = Notification.last
     assert_equal "[Drew Mambo](#{mp(@drew)}) updated [Ezra](#{mp(ezra_testing.activity)}) to the Testing stage for the [Hdi](#{mp(@hdi)}) program.", ntfn.english
+    assert_equal '[Drew Mambo](/people/883742519) a mis à jour [Esdras](/translation_activities/1071624995) à Testing pour le programme [Hdi](/languages/876048951).', ntfn.french
     assert_includes people(:Abanda).notifications, ntfn
     assert_includes people(:Nancy).notifications, ntfn
   end
@@ -97,6 +99,10 @@ class NotificationTest < ActiveSupport::TestCase
       "[Rick Conrad](#{mp(@rick)}) updated the [Verb](#{mp(verbshop.linguistic_activity)}) workshop for the [Ewondo](#{mp(languages(:Ewondo))}) program as complete.",
       ntfn.english
     )
+    assert_equal(
+      "[Rick Conrad](/people/334915632) a mis à jour l'atelier [Verb](/linguistic_activities/364981178) pour le programme [Ewondo](/languages/406181303) comme réalisé.",
+      ntfn.french
+    )
     assert_includes people(:Kendall).notifications, ntfn
   end
 
@@ -109,6 +115,10 @@ class NotificationTest < ActiveSupport::TestCase
       "[Drew Mambo](#{mp(@drew)}) added a new activity to the [Hdi](#{mp(@hdi)}) program: [Research: Dvu](#{mp(dvu_study)}).",
       ntfn.english
     )
+    assert_equal(
+      "[Drew Mambo](/people/883742519) a ajouté une nouvelle activité au programme [Hdi](/languages/876048951) : [Research: Dvu](#{mp(dvu_study)}).",
+      ntfn.french
+    )
     assert_includes @abanda.notifications, ntfn
     assert_includes @nancy.notifications, ntfn
   end
@@ -119,6 +129,10 @@ class NotificationTest < ActiveSupport::TestCase
     assert_equal(
       "[Rick Conrad](#{mp(@rick)}) updated the info for [Drew Mambo](#{mp(@drew)}).",
       ntfn.english
+    )
+    assert_equal(
+      '[Rick Conrad](/people/334915632) a mis à jour les infos pour [Drew Mambo](/people/883742519).',
+      ntfn.french
     )
     assert_equal 1, ntfn.person_notifications.count
     assert_includes @drew.notifications, ntfn
@@ -131,6 +145,10 @@ class NotificationTest < ActiveSupport::TestCase
       "[Rick Conrad](#{mp(@rick)}) gave the Literacy Specialist role to [Drew Mambo](#{mp(@drew)}).",
       ntfn.english
     )
+    assert_equal(
+      '[Rick Conrad](/people/334915632) a donné le rôle Spécialiste en alphabétisation à [Drew Mambo](/people/883742519).',
+      ntfn.french
+    )
     assert_equal 1, ntfn.person_notifications.count
     assert_includes @drew.notifications, ntfn
   end
@@ -142,6 +160,10 @@ class NotificationTest < ActiveSupport::TestCase
     assert_equal(
       "[Rick Conrad](#{mp(@rick)}) added [Drew Mambo](#{mp(@drew)}) & [Abanda Dunno](#{mp(@abanda)}) to [Exodus](#{mp(hdi_exodus)}) for the [Hdi](#{mp(@hdi)}) program.",
       ntfn.english
+    )
+    assert_equal(
+      '[Rick Conrad](/people/334915632) a ajouté [Drew Mambo](/people/883742519) & [Abanda Dunno](/people/751031655) à [Exode](/translation_activities/673450894) pour le programme [Hdi](/languages/876048951).',
+      ntfn.french
     )
     assert_includes @abanda.notifications, ntfn
     assert_includes @nancy.notifications, ntfn
@@ -158,6 +180,10 @@ class NotificationTest < ActiveSupport::TestCase
       "[Rick Conrad](#{mp(@rick)}) added [Lance Armstrong](#{mp(@lance)}) & [Kendall Ingles](#{mp(kendall)}) to the [Genesis Checking](#{mp(gen_checking)}) event.",
       ntfn.english
     )
+    assert_equal(
+      "[Rick Conrad](/people/334915632) a ajouté [Lance Armstrong](/people/704289197) & [Kendall Ingles](/people/356934054) à l'événement [Genesis Checking](/events/704985269).",
+      ntfn.french
+    )
     assert_includes @lance.notifications, ntfn
   end
 
@@ -169,6 +195,10 @@ class NotificationTest < ActiveSupport::TestCase
       "[Drew Mambo](#{mp(@drew)}) created the [Exodus Checking](#{mp(event)}) event for the [Hdi](#{mp(@hdi)}) program.",
       ntfn.english
     )
+    assert_equal(
+      "[Drew Mambo](/people/883742519) a créé l'événement [Exodus Checking](/events/) pour le programme [Hdi](/languages/876048951).",
+      ntfn.french
+    )
     assert_includes @abanda.notifications, ntfn
   end
 
@@ -177,6 +207,7 @@ class NotificationTest < ActiveSupport::TestCase
     Notification.added_language_to_event(@drew, @hdi, gen_checking)
     ntfn = Notification.last
     assert_equal "[Drew Mambo](#{mp(@drew)}) added the [Hdi](#{mp(@hdi)}) program to the [Genesis Checking](#{mp(gen_checking)}) event.", ntfn.english
+    assert_equal "[Drew Mambo](/people/883742519) a ajouté le programme [Hdi](/languages/876048951) à l'événement [Genesis Checking](/events/704985269).", ntfn.french
     assert_includes people(:Abanda).notifications, ntfn
     assert_includes people(:Nancy).notifications, ntfn
   end
@@ -186,6 +217,7 @@ class NotificationTest < ActiveSupport::TestCase
     Notification.added_cluster_to_event(@rick, clusters(:Ndop), gen_checking)
     ntfn = Notification.last
     assert_equal "[Rick Conrad](#{mp(@rick)}) added the [Ndop](#{mp(clusters(:Ndop))}) cluster to the [Genesis Checking](#{mp(gen_checking)}) event.", ntfn.english
+    assert_equal "[Rick Conrad](/people/334915632) a ajouté le groupe [Ndop](/clusters/657561020) à l'événement [Genesis Checking](/events/704985269).", ntfn.french
     assert_includes people(:Freddie).notifications, ntfn
     assert_includes people(:Nancy).notifications, ntfn
   end

@@ -119,7 +119,7 @@ class Notification < ApplicationRecord
         'notifications.gave_person_role',
         person_name: person.full_name,
         role_name: {
-          key: role
+          key: "roles.#{role}"
         }
       )
       links = { person_name: person }

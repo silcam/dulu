@@ -6,6 +6,7 @@ import {
   IReportElements,
   IReportActivities
 } from "../../models/TranslationProgressReport";
+import BibleBook from "../../models/BibleBook";
 
 interface IProps {
   elements: IReportElements;
@@ -27,10 +28,12 @@ export default function BibleBooksTable(props: IProps) {
     <table>
       <tbody>
         {[0, 1, 2].map(rowIndex => {
-          let bookNames = t("bible_books").slice(
-            bookNamesStart + rowIndex * rowLength,
-            bookNamesStart + (rowIndex + 1) * rowLength
-          );
+          let bookNames = BibleBook.books(t)
+            .slice(
+              bookNamesStart + rowIndex * rowLength,
+              bookNamesStart + (rowIndex + 1) * rowLength
+            )
+            .map(book => book.name);
           return (
             <tr key={rowIndex}>
               {bookNames.map((bookName: string, colIndex: number) => {
