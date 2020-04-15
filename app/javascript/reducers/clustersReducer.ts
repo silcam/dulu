@@ -13,7 +13,9 @@ export default function clustersReducer(
   action: ClusterAction
 ) {
   if (isLoadAction(action)) {
-    return state.add(action.payload.clusters);
+    return state
+      .add(action.payload.clusters)
+      .remove(action.payload.deletedClusters);
   }
   switch (action.type) {
     case SET_CLUSTERS:

@@ -34,7 +34,7 @@ class ClustersControllerTest < ActionDispatch::IntegrationTest
     api_login @drew
     data = api_get(clusters_path("/#{@ndop.id}"))
     assert_equal(
-      { cluster: { id: 657561020, name: 'Ndop', region_id: 961289125, can: { update: false, destroy: false, manage_participants: true } }, languages: [{ id: 292428285, name: 'Bambalang', cluster_id: 657561020, progress: {} }, { id: 248732538, name: 'Bangolan', cluster_id: 657561020, progress: {} }] },
+      { clusters: [{ id: 657561020, name: 'Ndop', region_id: 961289125, can: { update: false, destroy: false, manage_participants: true } }], languages: [{ id: 292428285, name: 'Bambalang', cluster_id: 657561020, progress: {} }, { id: 248732538, name: 'Bangolan', cluster_id: 657561020, progress: {} }] },
       data
     )
   end
@@ -44,21 +44,21 @@ class ClustersControllerTest < ActionDispatch::IntegrationTest
     data = api_get(clusters_path("/#{@ndop.id}"))
     assert_equal(
       { update: true, destroy: true, manage_participants: true },
-      data[:cluster][:can]
+      data[:clusters][0][:can]
     )
 
     api_login @olga
     data = api_get(clusters_path("/#{@ndop.id}"))
     assert_equal(
       { update: true, destroy: false, manage_participants: true },
-      data[:cluster][:can]
+      data[:clusters][0][:can]
     )
 
     api_login @kendall
     data = api_get(clusters_path("/#{@ndop.id}"))
     assert_equal(
       { update: false, destroy: false, manage_participants: false },
-      data[:cluster][:can]
+      data[:clusters][0][:can]
     )
   end
 
@@ -66,7 +66,7 @@ class ClustersControllerTest < ActionDispatch::IntegrationTest
     api_login @olga
     data = api_post(clusters_path, cluster: { name: 'Misaje' })
     assert_equal(
-      { cluster: { id: 657561021, name: 'Misaje', region_id: nil, can: { update: true, destroy: false, manage_participants: true } }, languages: [] },
+      { clusters: [{ id: 657561021, name: 'Misaje', region_id: nil, can: { update: true, destroy: false, manage_participants: true } }], languages: [] },
       data
     )
   end
@@ -85,7 +85,7 @@ class ClustersControllerTest < ActionDispatch::IntegrationTest
       cluster: { name: 'Ndop Party', language_ids: [292428285, 406181303] }
     )
     assert_equal(
-      { cluster: { id: 657561020, name: 'Ndop Party', region_id: 961289125, can: { update: true, destroy: false, manage_participants: true } }, languages: [{ id: 292428285, name: 'Bambalang', cluster_id: 657561020, progress: {} }, { id: 406181303, name: 'Ewondo', cluster_id: 657561020, progress: {} }, { id: 248732538, name: 'Bangolan', cluster_id: nil, progress: nil }] },
+      { clusters: [{ id: 657561020, name: 'Ndop Party', region_id: 961289125, can: { update: true, destroy: false, manage_participants: true } }], languages: [{ id: 292428285, name: 'Bambalang', cluster_id: 657561020, progress: {} }, { id: 406181303, name: 'Ewondo', cluster_id: 657561020, progress: {} }, { id: 248732538, name: 'Bangolan', cluster_id: nil, progress: nil }] },
       data
     )
   end
@@ -101,8 +101,11 @@ class ClustersControllerTest < ActionDispatch::IntegrationTest
 
   test 'Destroy' do
     api_login @rick
-    api_delete(clusters_path("/#{@ndop.id}"))
-    assert_response 204
+    data = api_delete(clusters_path("/#{@ndop.id}"))
+    assert_equal(
+      { deletedClusters: [657561020] },
+      data
+    )
     refute Cluster.find_by(id: @ndop.id)
   end
 

@@ -8,11 +8,10 @@ import { UpdaterFunc } from "../../models/TypeBucket";
 import I18nContext from "../../contexts/I18nContext";
 import { ILanguage } from "../../models/Language";
 import SearchPicker from "../shared/SearchPicker";
-import List from "../../models/List";
+import useAppSelector from "../../reducers/useAppSelector";
 
 interface IProps {
   cluster: IClusterInflated;
-  languages: List<ILanguage>;
   editing?: boolean;
   edit: () => void;
   updateCluster: UpdaterFunc;
@@ -21,6 +20,8 @@ interface IProps {
 export default function ClusterLanguagesTable(props: IProps) {
   const cluster = props.cluster;
   const t = useContext(I18nContext);
+
+  const languages = useAppSelector(state => state.languages);
 
   const addLanguage = (language: ILanguage) => {
     props.updateCluster({
@@ -48,7 +49,7 @@ export default function ClusterLanguagesTable(props: IProps) {
             <tr>
               <td colSpan={2}>
                 <SearchPicker
-                  collection={props.languages}
+                  collection={languages}
                   selectedId={null}
                   setSelected={language => language && addLanguage(language)}
                   placeholder={t("Add_language")}

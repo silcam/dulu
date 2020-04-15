@@ -16,6 +16,7 @@ export interface LoadAction {
     people?: PartialModel<IPerson>[];
     languages?: PartialModel<ILanguage>[];
     clusters?: PartialModel<ICluster>[];
+    deletedClusters?: number[];
     regions?: PartialModel<IRegion>[];
     organizations?: PartialModel<IOrganization>[];
     participants?: PartialModel<IParticipant>[];

@@ -1,63 +1,44 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useContext } from "react";
 import EditActionBar from "../shared/EditActionBar";
 import TextOrEditText from "../shared/TextOrEditText";
 import update from "immutability-helper";
-import DuluAxios from "../../util/DuluAxios";
 // import styles from "./PersonPage.css";
 import ClusterLanguagesTable from "./ClusterLanguagesTable";
 import ParticipantsContainer from "../languages/ParticipantsContainer";
-import Cluster, { IClusterInflated, ICluster } from "../../models/Cluster";
+import Cluster, { IClusterInflated } from "../../models/Cluster";
 import { History } from "history";
 import Loading from "../shared/Loading";
-import { Deleter, Adder } from "../../models/TypeBucket";
-import { IPerson } from "../../models/Person";
-import { ILanguage } from "../../models/Language";
 import I18nContext from "../../contexts/I18nContext";
-import { IParticipant } from "../../models/Participant";
-import List from "../../models/List";
+import useLoad, { useLoadOnMount } from "../shared/useLoad";
+import useAppSelector from "../../reducers/useAppSelector";
 
 interface IProps {
   id: number;
-  cluster: IClusterInflated;
-  setCluster: (c: ICluster) => void;
-  deleteCluster: Deleter;
-  addPeople: Adder<IPerson>;
-  addParticipants: Adder<IParticipant>;
-  addLanguages: Adder<ILanguage>;
   basePath: string;
   history: History<any>;
-  languages: List<ILanguage>;
+  loading: boolean;
 }
 
 type MaybeIClusterInflated = IClusterInflated | undefined;
 
 export default function ClusterPage(props: IProps) {
   const t = useContext(I18nContext);
-  const [loading, setLoading] = useState(true);
+  const [saveLoad, saving] = useLoad();
   const [editing, setEditing] = useState(false);
-  const [saving, setSaving] = useState(false);
+
+  const stateCluster = useAppSelector(state =>
+    Cluster.inflate(state, state.clusters.get(props.id))
+  );
+
   const [draftCluster, setDraftCluster] = useState<MaybeIClusterInflated>(
     undefined
   );
-
-  const fetchCluster = async () => {
-    const data = await DuluAxios.get(`/api/clusters/${props.id}`);
-    if (data) {
-      props.addLanguages(data.languages);
-      props.setCluster(data.cluster);
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchCluster();
-  }, []);
 
   const updateCluster = (mergeCluster: { [prop: string]: any }) =>
     setDraftCluster(update(draftCluster, { $merge: mergeCluster }));
 
   const edit = () => {
-    setDraftCluster({ ...props.cluster });
+    setDraftCluster({ ...stateCluster });
     setEditing(true);
   };
 
@@ -67,29 +48,26 @@ export default function ClusterPage(props: IProps) {
   };
 
   const save = async () => {
-    setSaving(true);
-    const data = await DuluAxios.put(`/api/clusters/${props.id}`, {
-      cluster: Cluster.clusterParams(draftCluster as IClusterInflated)
-    });
-    if (data) {
-      props.addLanguages(data.languages);
-      props.setCluster(data.cluster);
-      cancelEdit();
-    }
-    setSaving(false);
+    const data = await saveLoad(duluAxios =>
+      duluAxios.put(`/api/clusters/${props.id}`, {
+        cluster: Cluster.clusterParams(draftCluster as IClusterInflated)
+      })
+    );
+    if (data) cancelEdit();
   };
 
   const del = async () => {
     if (
       confirm(
         t("confirm_delete_cluster", {
-          name: props.cluster!.name
+          name: stateCluster.name
         })
       )
     ) {
-      const data = await DuluAxios.delete(`/api/clusters/${props.id}`);
+      const data = await saveLoad(duluAxios =>
+        duluAxios.delete(`/api/clusters/${props.id}`)
+      );
       if (data) {
-        props.deleteCluster(props.id);
         props.history.replace("/clusters");
       }
     }
@@ -99,7 +77,7 @@ export default function ClusterPage(props: IProps) {
     return draftCluster && draftCluster.name.length == 0;
   };
 
-  const cluster = editing ? draftCluster : props.cluster;
+  const cluster = editing ? draftCluster : stateCluster;
 
   if (!cluster || cluster.id == 0) return <Loading />;
 
@@ -112,7 +90,7 @@ export default function ClusterPage(props: IProps) {
 
   return (
     <div className="padBottom">
-      {!loading && (
+      {!props.loading && (
         <EditActionBar
           can={cluster.can}
           editing={editing}
@@ -138,7 +116,6 @@ export default function ClusterPage(props: IProps) {
         editing={editing}
         updateCluster={updateCluster}
         edit={edit}
-        languages={props.languages}
       />
       {!editing && (
         <ParticipantsContainer

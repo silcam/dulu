@@ -1,10 +1,12 @@
-json.cluster do
-  json.call(@cluster, :id, :name, :region_id)
+# frozen_string_literal: true
+
+json.clusters [@cluster] do |cluster|
+  json.call(cluster, :id, :name, :region_id)
 
   json.can do
-    json.update can?(:update, @cluster)
-    json.destroy can?(:destroy, @cluster)
-    json.manage_participants can?(:manage_participants, @cluster)
+    json.update can?(:update, cluster)
+    json.destroy can?(:destroy, cluster)
+    json.manage_participants can?(:manage_participants, cluster)
   end
 end
 

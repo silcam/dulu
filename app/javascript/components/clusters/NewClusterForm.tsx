@@ -1,77 +1,47 @@
-import React from "react";
+import React, { useState } from "react";
 import FormGroup from "../shared/FormGroup";
 import SaveButton from "../shared/SaveButton";
 import CancelButton from "../shared/CancelButton";
-import update from "immutability-helper";
-import { T } from "../../i18n/i18n";
-import { ICluster } from "../../models/Cluster";
-import { AnyObj } from "../../models/TypeBucket";
-import DuluAxios from "../../util/DuluAxios";
 import { History } from "history";
 import TextInput from "../shared/TextInput";
+import useTranslation from "../../i18n/useTranslation";
+import useLoad from "../shared/useLoad";
 
 interface IProps {
-  t: T;
-  setCluster: (c: ICluster) => void;
   history: History;
 }
 
-interface IState {
-  cluster: { name: string };
-  saving?: boolean;
-}
+export default function NewClusterForm(props: IProps) {
+  const t = useTranslation();
+  const [saveLoad, saving] = useLoad();
 
-export default class NewClusterForm extends React.PureComponent<
-  IProps,
-  IState
-> {
-  constructor(props: IProps) {
-    super(props);
-    this.state = {
-      cluster: { name: "" }
-    };
-  }
+  const [name, setName] = useState("");
 
-  updateCluster = (mergeCluster: AnyObj) => {
-    this.setState(prevState => ({
-      cluster: update(prevState.cluster, { $merge: mergeCluster })
-    }));
-  };
-
-  save = async () => {
-    this.setState({ saving: true });
-    const data = await DuluAxios.post("/api/clusters", {
-      cluster: this.state.cluster
-    });
-    if (data) {
-      this.props.setCluster(data.cluster);
-      this.props.history.push(`/clusters/${data.cluster.id}`);
-    } else {
-      this.setState({ saving: false });
-    }
-  };
-
-  render() {
-    const t = this.props.t;
-    return (
-      <div>
-        <h2>{t("New_cluster")}</h2>
-        <FormGroup>
-          <TextInput
-            value={this.state.cluster.name}
-            setValue={(name: string) => this.updateCluster({ name })}
-            placeholder={t("Name")}
-            name="name"
-            autoFocus
-          />
-        </FormGroup>
-        <SaveButton
-          onClick={this.save}
-          saveInProgress={this.state.saving}
-          disabled={this.state.cluster.name.length == 0}
-        />
-        <CancelButton />
-      </div>
+  const save = async () => {
+    const data = await saveLoad(duluAxios =>
+      duluAxios.post("/api/clusters", { cluster: { name } })
     );
-  }
+    if (data) props.history.push(`/clusters/${data.clusters[0].id}`);
+  };
+
+  return (
+    <div>
+      <h2>{t("New_cluster")}</h2>
+      <FormGroup>
+        <TextInput
+          value={name}
+          setValue={setName}
+          placeholder={t("Name")}
+          name="name"
+          autoFocus
+        />
+      </FormGroup>
+      <SaveButton
+        onClick={save}
+        saveInProgress={saving}
+        disabled={name.length == 0}
+      />
+      <CancelButton />
+    </div>
+  );
 }

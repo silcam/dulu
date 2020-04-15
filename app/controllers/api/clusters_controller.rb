@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Api::ClustersController < ApplicationController
   def create
     authorize! :create, Cluster
@@ -34,7 +36,6 @@ class Api::ClustersController < ApplicationController
     @cluster = Cluster.find(params[:id])
     authorize! :destroy, @cluster
     @cluster.destroy!
-    response_ok
   end
 
   private

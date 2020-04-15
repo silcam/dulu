@@ -9,7 +9,6 @@ import OrganizationsContainer from "../components/organizations/OrganizationsCon
 import LanguagesContainer from "../components/languages/LanguagesContainer";
 import ErrorMessage from "./ErrorMessage";
 import axios from "axios";
-import ClustersContainer from "../components/clusters/ClustersContainer";
 import RegionsContainer from "../components/regions/RegionsContainer";
 import { AnyObj } from "../models/TypeBucket";
 import CoreData from "./CoreData";
@@ -18,6 +17,7 @@ import PeopleBoard from "../components/people/PeopleBoard";
 import useAppSelector from "../reducers/useAppSelector";
 import { History } from "history";
 import { User } from "../reducers/currentUserReducer";
+import ClustersBoard from "../components/clusters/ClustersBoard";
 
 interface IProps {
   user: User;
@@ -88,7 +88,7 @@ class BaseMainRouter extends React.Component<IProps, IState> {
           <Route
             path="/clusters/:idOrAction?"
             render={({ history, match, location }) => (
-              <ClustersContainer
+              <ClustersBoard
                 history={history}
                 location={location}
                 {...matchParamsForChild(match)}
