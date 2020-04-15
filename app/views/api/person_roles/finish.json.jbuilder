@@ -1,1 +1,0 @@
-json.roles @person.roles

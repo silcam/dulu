@@ -1,5 +1,4 @@
 import React from "react";
-// import PropTypes from "prop-types";
 import LanguagePage from "./LanguagePage";
 import { Switch, Route } from "react-router-dom";
 import LanguageParticipantPage from "./LanguageParticipantPage";
@@ -7,22 +6,22 @@ import LanguageEventPage from "./LanguageEventPage";
 import LanguageActivityPage from "./LanguageActivityPage";
 import LanguageNewEventPage from "./LanguageNewEventPage";
 import Loading from "../shared/Loading";
-import { ILanguage } from "../../models/Language";
 import DomainStatusItemPage from "./DomainStatusItemPage";
 import DomainStatusDataCollectionPage from "./DomainStatusDataCollectionPage";
 import { useLoadOnMount } from "../shared/useLoad";
+import useAppSelector from "../../reducers/useAppSelector";
 
 interface IProps {
-  language: ILanguage;
   basePath: string;
   id: number;
 }
 
 export default function LanguagePageRouter(props: IProps) {
+  const language = useAppSelector(state => state.languages.get(props.id));
+
   useLoadOnMount(`/api/languages/${props.id}`);
 
-  if (props.language.id == 0) return <Loading />;
-  const language = props.language;
+  if (language.id == 0) return <Loading />;
 
   return (
     <Switch>

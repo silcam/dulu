@@ -1,11 +1,7 @@
-import {
-  ADD_ORGANIZATION_PEOPLE,
-  SET_ORGANIZATION_PERSON,
-  DELETE_ORGANIZATION_PERSON,
-  OrganizationPeopleAction
-} from "../actions/organizationPeopleActions";
 import { IOrganizationPerson } from "../models/Organization";
 import List from "../models/List";
+import { isLoadAction } from "./LoadAction";
+import { Action } from "redux";
 
 const emptyOrganizationPerson: IOrganizationPerson = {
   id: 0,
@@ -15,15 +11,12 @@ const emptyOrganizationPerson: IOrganizationPerson = {
 
 export default function organizationPeopleReducer(
   state = new List<IOrganizationPerson>(emptyOrganizationPerson, []),
-  action: OrganizationPeopleAction
+  action: Action
 ) {
-  switch (action.type) {
-    case ADD_ORGANIZATION_PEOPLE:
-      return state.add(action.organizationPeople!);
-    case SET_ORGANIZATION_PERSON:
-      return state.add([action.organizationPerson!]);
-    case DELETE_ORGANIZATION_PERSON:
-      return state.remove(action.id!);
+  if (isLoadAction(action)) {
+    return state
+      .add(action.payload.organizationPeople)
+      .remove(action.payload.deletedOrganizationPeople);
   }
   return state;
 }

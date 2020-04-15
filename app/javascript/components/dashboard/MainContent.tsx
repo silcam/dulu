@@ -1,13 +1,13 @@
 import React, { useContext } from "react";
 import { Link } from "react-router-dom";
 import { Selection } from "./Dashboard";
-import DBActivitiesContainer from "./DBActivitiesContainer";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import I18nContext from "../../contexts/I18nContext";
 import DBEventsContainer from "./DBEventsContainer";
-import DBParticipantsContainer from "./DBParticipantsContainer";
 import useViewPrefs from "../../reducers/useViewPrefs";
 import useDashboardLanguages from "./useDashboardLanguages";
+import DBActivitiesTable from "./DBActivitiesTable";
+import DBParticipantsTable from "./DBParticipantsTable";
 
 interface IProps {
   selection: Selection;
@@ -40,7 +40,7 @@ export default function MainContent(props: IProps) {
             ))}
           </TabList>
           <TabPanel>
-            <DBActivitiesContainer
+            <DBActivitiesTable
               languageIds={languageIds}
               sortOptions={["Language", "Book", "Stage"]}
               type="Translation"
@@ -48,9 +48,9 @@ export default function MainContent(props: IProps) {
           </TabPanel>
           <TabPanel>
             <h4>{t("Research_activities")}</h4>
-            <DBActivitiesContainer languageIds={languageIds} type="Research" />
+            <DBActivitiesTable languageIds={languageIds} type="Research" />
             <h4>{t("Workshops_activities")}</h4>
-            <DBActivitiesContainer
+            <DBActivitiesTable
               languageIds={languageIds}
               type="Workshops"
               sortOptions={["Language"]}
@@ -59,7 +59,7 @@ export default function MainContent(props: IProps) {
           </TabPanel>
 
           <TabPanel>
-            <DBActivitiesContainer
+            <DBActivitiesTable
               languageIds={languageIds}
               sortOptions={["Language", "Media", "Stage"]}
               type="Media"
@@ -67,7 +67,7 @@ export default function MainContent(props: IProps) {
           </TabPanel>
 
           <TabPanel>
-            <DBParticipantsContainer languageIds={languageIds} />
+            <DBParticipantsTable languageIds={languageIds} />
           </TabPanel>
 
           <TabPanel>

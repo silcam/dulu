@@ -33,8 +33,8 @@ class WorkshopsActivitiesControllerTest < ActionDispatch::IntegrationTest
                      participant_ids: [],
                      title: 'Pizza Seminars',
                      workshops: [
-                       { number: 1, name: 'Pepperoni' },
-                       { number: 2, name: 'Cheese' }
+                       {  name: 'Pepperoni' },
+                       {  name: 'Cheese' }
                      ]
                    }, data[:activities][0])
   end

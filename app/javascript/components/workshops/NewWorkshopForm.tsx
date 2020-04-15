@@ -1,106 +1,50 @@
-import React from "react";
+import React, { useState } from "react";
 import TextInput from "../shared/TextInput";
 import AddIcon from "../shared/icons/AddIcon";
 import SmallSaveAndCancel from "../shared/SmallSaveAndCancel";
-import DuluAxios from "../../util/DuluAxios";
-import { IWorkshop } from "../../models/Workshop";
-import I18nContext from "../../contexts/I18nContext";
+import useLoad from "../shared/useLoad";
+import useTranslation from "../../i18n/useTranslation";
 
 interface IProps {
-  handleNewWorkshop: (workshop: IWorkshop) => void;
   activity_id: number;
 }
 
-interface IState {
-  editing: boolean;
-  saving: boolean;
-  name: string;
-}
+export default function NewWorkshopForm(props: IProps) {
+  const t = useTranslation();
+  const [saveLoad, saving] = useLoad();
 
-export default class NewWorkshopForm extends React.PureComponent<
-  IProps,
-  IState
-> {
-  constructor(props: IProps) {
-    super(props);
-    this.state = {
-      editing: false,
-      saving: false,
-      name: ""
-    };
-  }
+  const [editing, setEditing] = useState(false);
+  const [name, setName] = useState("");
 
-  showForm = () => {
-    this.setState({
-      editing: true,
-      saving: false
-    });
-  };
-
-  cancelForm = () => {
-    this.setState({
-      editing: false,
-      saving: false
-    });
-  };
-
-  setName = (name: string) => {
-    this.setState({
-      name
-    });
-  };
-
-  createWorkshop = async () => {
-    const workshop = {
-      name: this.state.name
-    };
-    this.setState({ saving: true });
-    const data = await DuluAxios.post(
-      `/api/activities/${this.props.activity_id}/workshops`,
-      {
-        workshop: workshop
-      }
+  const createWorkshop = async () => {
+    const data = saveLoad(duluAxios =>
+      duluAxios.post(`/api/activities/${props.activity_id}/workshops`, {
+        workshop: { name }
+      })
     );
-    if (data) {
-      this.props.handleNewWorkshop(data as IWorkshop);
-      this.setState({
-        editing: false,
-        saving: false,
-        name: ""
-      });
-    } else {
-      this.setState({
-        saving: false
-      });
-    }
+    if (data) setEditing(false);
   };
 
-  render() {
-    if (this.state.editing) {
-      return (
-        <I18nContext.Consumer>
-          {t => (
-            <div>
-              <TextInput
-                setValue={this.setName}
-                name="name"
-                value={this.state.name}
-                placeholder={t("Workshop_name")}
-                handleEnter={this.createWorkshop}
-                autoFocus
-              />
-              <SmallSaveAndCancel
-                handleSave={this.createWorkshop}
-                handleCancel={this.cancelForm}
-                saveDisabled={!this.state.name}
-                saveInProgress={this.state.saving}
-              />
-            </div>
-          )}
-        </I18nContext.Consumer>
-      );
-    } else {
-      return <AddIcon onClick={this.showForm} />;
-    }
+  if (editing) {
+    return (
+      <div>
+        <TextInput
+          setValue={setName}
+          name="name"
+          value={name}
+          placeholder={t("Workshop_name")}
+          handleEnter={createWorkshop}
+          autoFocus
+        />
+        <SmallSaveAndCancel
+          handleSave={createWorkshop}
+          handleCancel={() => setEditing(false)}
+          saveDisabled={!name}
+          saveInProgress={saving}
+        />
+      </div>
+    );
+  } else {
+    return <AddIcon onClick={() => setEditing(true)} />;
   }
 }

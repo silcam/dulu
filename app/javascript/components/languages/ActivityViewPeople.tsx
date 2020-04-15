@@ -4,22 +4,18 @@ import Spacer from "../shared/Spacer";
 import EditIcon from "../shared/icons/EditIcon";
 import styles from "./ActivityView.css";
 import { Link } from "react-router-dom";
-import { IPerson, fullName } from "../../models/Person";
+import { fullName } from "../../models/Person";
 import CommaList from "../shared/CommaList";
 import { IActivity } from "../../models/Activity";
-import Participant, { IParticipant } from "../../models/Participant";
-import { ActionPack } from "../../util/useAPI";
+import Participant from "../../models/Participant";
 import { ILanguage } from "../../models/Language";
 import ActivityViewPeopleEditor from "./ActivityViewPeopleEditor";
-import List from "../../models/List";
+import useAppSelector from "../../reducers/useAppSelector";
 
 export interface IProps {
   activity: IActivity;
   language: ILanguage;
-  participants: List<IParticipant>;
-  people: List<IPerson>;
   basePath: string;
-  actions: ActionPack;
 }
 
 export default function ActivityViewPeople(props: IProps) {
@@ -27,6 +23,9 @@ export default function ActivityViewPeople(props: IProps) {
   const [editing, setEditing] = useState(false);
   const edit = () => setEditing(true);
   const cancelEdit = () => setEditing(false);
+
+  const participants = useAppSelector(state => state.participants);
+  const people = useAppSelector(state => state.people);
 
   return (
     <div>
@@ -41,14 +40,12 @@ export default function ActivityViewPeople(props: IProps) {
         <ul className={styles.stdList}>
           {Participant.participantPeople(
             props.activity.participant_ids,
-            props.participants,
-            props.people
+            participants,
+            people
           ).map(ptptPerson => (
             <li key={ptptPerson.participant.id}>
               <Link
-                to={`${props.basePath}/participants/${
-                  ptptPerson.participant.id
-                }`}
+                to={`${props.basePath}/participants/${ptptPerson.participant.id}`}
               >
                 {fullName(ptptPerson.person)}
               </Link>

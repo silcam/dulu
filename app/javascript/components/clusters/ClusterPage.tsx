@@ -4,13 +4,13 @@ import TextOrEditText from "../shared/TextOrEditText";
 import update from "immutability-helper";
 // import styles from "./PersonPage.css";
 import ClusterLanguagesTable from "./ClusterLanguagesTable";
-import ParticipantsContainer from "../languages/ParticipantsContainer";
 import Cluster, { IClusterInflated } from "../../models/Cluster";
 import { History } from "history";
 import Loading from "../shared/Loading";
 import I18nContext from "../../contexts/I18nContext";
-import useLoad, { useLoadOnMount } from "../shared/useLoad";
+import useLoad from "../shared/useLoad";
 import useAppSelector from "../../reducers/useAppSelector";
+import ParticipantsTable from "../languages/ParticipantsTable";
 
 interface IProps {
   id: number;
@@ -118,7 +118,7 @@ export default function ClusterPage(props: IProps) {
         edit={edit}
       />
       {!editing && (
-        <ParticipantsContainer
+        <ParticipantsTable
           cluster={cluster}
           can={cluster.can}
           basePath={props.basePath}

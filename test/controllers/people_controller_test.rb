@@ -149,8 +149,11 @@ class PeopleControllerTest < ActionDispatch::IntegrationTest
 
   test 'Destroyed!' do
     api_login @rick
-    api_delete(people_path("/#{@drew.id}"))
-    assert_response 204
+    data = api_delete(people_path("/#{@drew.id}"))
+    assert_equal(
+      { deletedPeople: [@drew.id] },
+      data
+    )
     refute Person.find_by(first_name: 'Drew')
   end
 

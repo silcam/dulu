@@ -5,6 +5,7 @@ import Activity, { ActivityType } from "./Activity";
 import { IDomainStatusItem } from "./DomainStatusItem";
 import List from "./List";
 import { INote } from "./Note";
+import { ClusterLanguage } from "../components/regions/ProgramList";
 
 interface Progress {
   [stage: string]: number;
@@ -67,10 +68,15 @@ function emptyList() {
   return new List(emptyLanguage, [], compare);
 }
 
+function isLanguage(program: ClusterLanguage): program is ILanguage {
+  return "code" in program;
+}
+
 export default {
   emptyLanguage,
   compare,
   activities,
   participants,
-  emptyList
+  emptyList,
+  isLanguage
 };

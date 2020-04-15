@@ -13,7 +13,7 @@ interface IProps {
 }
 
 function dateText(
-  date: string | null,
+  date: string | undefined,
   languageId: number,
   eventId: number | null
 ) {
@@ -58,7 +58,7 @@ function newEventLocation(
 export default function DateCell(props: IProps) {
   const t = useContext(I18nContext);
   const theDateText = dateText(
-    props.workshop.formattedDate,
+    props.workshop.date,
     props.language.id,
     props.workshop.event_id
   );

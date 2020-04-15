@@ -93,30 +93,24 @@ class ActivitiesControllerTest < ActionDispatch::IntegrationTest
                    workshops: [{
                      id: 558284262, 
                      name: 'Noun',
-                     number: 1,
                      event_id: 773726370,
                      completed: true, 
                      activityId: 364981178, 
-                     date: '2018-01-21',
-                     formattedDate: 'Jan 21, 2018'
+                     date: '2018-01-21'
                    }, {
                      id: 1066114473,
                      name: 'Verb', 
-                     number: 2,
                      event_id: 535197996,
                      completed: false,
                      activityId: 364981178,
-                     date: '2018-03', 
-                     formattedDate: 'Mar 2018'
+                     date: '2018-03'
                    }, {
                      id: 623098385, 
                      name: 'Syntax', 
-                     number: 3, 
                      event_id: nil,
                      completed: false, 
                      activityId: 364981178, 
-                     date: '', 
-                     formattedDate: nil
+                     date: ''
                    }]
                  }, {
                    id: @ewondo_research.id,
@@ -199,30 +193,24 @@ class ActivitiesControllerTest < ActionDispatch::IntegrationTest
                    workshops: [{
                      id: 558284262, 
                      name: 'Noun',
-                     number: 1,
                      event_id: 773726370,
                      completed: true, 
                      activityId: 364981178, 
-                     date: '2018-01-21',
-                     formattedDate: 'Jan 21, 2018'
+                     date: '2018-01-21'
                    }, {
                      id: 1066114473,
                      name: 'Verb', 
-                     number: 2,
                      event_id: 535197996,
                      completed: false,
                      activityId: 364981178,
-                     date: '2018-03', 
-                     formattedDate: 'Mar 2018'
+                     date: '2018-03'
                    }, {
                      id: 623098385, 
                      name: 'Syntax', 
-                     number: 3, 
                      event_id: nil,
                      completed: false, 
                      activityId: 364981178, 
-                     date: '', 
-                     formattedDate: nil
+                     date: ''
                    }]
                  }, data[:activities][0])
   end

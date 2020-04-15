@@ -2,10 +2,10 @@ import React, { useState } from "react";
 import Searcher from "./Searcher";
 import NotificationSidebar from "./NotificationSidebar";
 import styles from "./Dashboard.css";
-import LanguageContainer from "../languages/LanguageContainer";
 import useViewPrefs from "../../reducers/useViewPrefs";
 import MainContent from "./MainContent";
 import DashboardSidebar from "./DashboardSidebar";
+import LanguagePageRouter from "../languages/LanguagePageRouter";
 
 export type Selection =
   | {
@@ -34,7 +34,7 @@ export default function Dashboard() {
         <Searcher setSeacherActive={setSearcherActive} />
         {!searcherActive &&
           (selection.type == "language" ? (
-            <LanguageContainer
+            <LanguagePageRouter
               basePath=""
               id={selection.id}
               key={selection.id}

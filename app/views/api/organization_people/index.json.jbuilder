@@ -1,9 +1,9 @@
-json.organization_people @org_people, partial: "org_person", as: :org_person
+# frozen_string_literal: true
 
-json.people @org_people do |org_person|
-  json.call(org_person.person, :id, :first_name, :last_name)
-end
+json.organizationPeople @org_people, partial: 'org_person', as: :org_person
 
-json.organizations @org_people do |org_person|
-  json.call(org_person.organization, :id, :short_name)
-end
+people = @org_people.map(&:person).uniq
+organizations = @org_people.map(&:organization).uniq
+
+json.partial! 'api/people/people', people: people
+json.partial! 'api/organizations/organizations', organizations: organizations

@@ -1,5 +1,5 @@
 import React from "react";
-import DuluAxios from "../../util/DuluAxios";
+import { MaybeAnyObj } from "../../util/DuluAxios";
 import DeleteIcon from "../shared/icons/DeleteIcon";
 import EditIcon from "../shared/icons/EditIcon";
 import FuzzyDateInput from "../shared/FuzzyDateInput";
@@ -12,19 +12,17 @@ import { T } from "../../i18n/i18n";
 import { ICan } from "../../actions/canActions";
 import { ILanguage } from "../../models/Language";
 import I18nContext from "../../contexts/I18nContext";
+import useLoad, { Load } from "../shared/useLoad";
 
 interface IProps {
   workshop: IWorkshop;
   can: ICan;
   displayDelete?: boolean;
-  handleUpdatedWorkshop: (ws: IWorkshop) => void;
-  deleteWorkshop: (id: number) => void;
   language: ILanguage;
 }
 
 interface IState {
   editing: boolean;
-  saving: boolean;
   name: string;
   completed: boolean;
   date?: string;
@@ -34,12 +32,21 @@ interface IState {
   nameError?: string | null;
 }
 
-export default class Workshop extends React.PureComponent<IProps, IState> {
-  constructor(props: IProps) {
+export default function Workshop(props: IProps) {
+  const [saveLoad, saving] = useLoad();
+  return <BaseWorkshop {...props} {...{ saveLoad, saving }} />;
+}
+
+interface BaseWSProps extends IProps {
+  saveLoad: (load: Load) => Promise<MaybeAnyObj>;
+  saving: boolean;
+}
+
+class BaseWorkshop extends React.PureComponent<BaseWSProps, IState> {
+  constructor(props: BaseWSProps) {
     super(props);
     this.state = {
       editing: false,
-      saving: false,
       name: props.workshop.name,
       completed: props.workshop.completed,
       date: props.workshop.date
@@ -47,7 +54,7 @@ export default class Workshop extends React.PureComponent<IProps, IState> {
   }
 
   editMode = () => {
-    this.setState({ editing: true, saving: false });
+    this.setState({ editing: true });
   };
 
   cancelEdit = () => {
@@ -56,8 +63,7 @@ export default class Workshop extends React.PureComponent<IProps, IState> {
       completed: this.props.workshop.completed,
       date: this.props.workshop.date,
       editing: false,
-      enteringDate: false,
-      saving: false
+      enteringDate: false
     });
   };
 
@@ -87,7 +93,9 @@ export default class Workshop extends React.PureComponent<IProps, IState> {
         t("Delete_workshop_confirmation").replace("%{name}", this.state.name)
       )
     ) {
-      this.props.deleteWorkshop(this.props.workshop.id);
+      this.props.saveLoad(duluAxios =>
+        duluAxios.delete(`/api/workshops/${this.props.workshop.id}`)
+      );
     }
   };
 
@@ -111,25 +119,22 @@ export default class Workshop extends React.PureComponent<IProps, IState> {
   };
 
   updateWorkshop = async () => {
-    this.setState({ saving: true });
     const id = this.props.workshop.id;
     const workshop = {
       name: this.state.name,
       completed: this.state.completed,
       date: this.state.date
     };
-    const data = await DuluAxios.put(`/api/workshops/${id}/`, {
-      workshop: workshop
-    });
+    const data = await this.props.saveLoad(duluAxios =>
+      duluAxios.put(`/api/workshops/${id}/`, {
+        workshop: workshop
+      })
+    );
     if (data) {
-      this.props.handleUpdatedWorkshop(data as IWorkshop);
       this.setState({
         editing: false,
-        enteringDate: false,
-        saving: false
+        enteringDate: false
       });
-    } else {
-      this.setState({ saving: false });
     }
   };
 
@@ -177,7 +182,7 @@ export default class Workshop extends React.PureComponent<IProps, IState> {
                 <SmallSaveAndCancel
                   handleSave={this.save}
                   handleCancel={this.cancelEdit}
-                  saveInProgress={this.state.saving}
+                  saveInProgress={this.props.saving}
                 />
               </td>
             </tr>
@@ -203,7 +208,7 @@ export default class Workshop extends React.PureComponent<IProps, IState> {
                 <SmallSaveAndCancel
                   handleSave={this.save}
                   handleCancel={this.cancelEdit}
-                  saveInProgress={this.state.saving}
+                  saveInProgress={this.props.saving}
                 />
               </td>
             </tr>

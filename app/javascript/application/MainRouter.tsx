@@ -5,11 +5,8 @@ import ReportsRouter from "../components/reports/ReportsRouter";
 import EventsPage from "../components/events/EventsPage";
 import ParticipantPage from "../components/participants/ParticipantPage";
 import ActivityPage from "../components/activities/ActivityPage";
-import OrganizationsContainer from "../components/organizations/OrganizationsContainer";
-import LanguagesContainer from "../components/languages/LanguagesContainer";
 import ErrorMessage from "./ErrorMessage";
 import axios from "axios";
-import RegionsContainer from "../components/regions/RegionsContainer";
 import { AnyObj } from "../models/TypeBucket";
 import CoreData from "./CoreData";
 import NotificationsPage from "../components/notifications/NotificationsPage";
@@ -18,6 +15,9 @@ import useAppSelector from "../reducers/useAppSelector";
 import { History } from "history";
 import { User } from "../reducers/currentUserReducer";
 import ClustersBoard from "../components/clusters/ClustersBoard";
+import OrganizationsBoard from "../components/organizations/OrganizationsBoard";
+import RegionsBoard from "../components/regions/RegionsBoard";
+import LanguagesBoard from "../components/languages/LanguagesBoard";
 
 interface IProps {
   user: User;
@@ -69,7 +69,7 @@ class BaseMainRouter extends React.Component<IProps, IState> {
           <Route
             path="/languages/:idOrAction?"
             render={({ match, history, location }) => (
-              <LanguagesContainer
+              <LanguagesBoard
                 history={history}
                 location={location}
                 {...matchParamsForChild(match)}
@@ -79,10 +79,7 @@ class BaseMainRouter extends React.Component<IProps, IState> {
           <Route
             path="/regions/:idOrAction?"
             render={({ history, match }) => (
-              <RegionsContainer
-                history={history}
-                {...matchParamsForChild(match)}
-              />
+              <RegionsBoard history={history} {...matchParamsForChild(match)} />
             )}
           />
           <Route
@@ -107,7 +104,7 @@ class BaseMainRouter extends React.Component<IProps, IState> {
           <Route
             path="/organizations/:actionOrId?/:id?"
             render={({ match, history }) => (
-              <OrganizationsContainer
+              <OrganizationsBoard
                 history={history}
                 {...routeActionAndId(match.params)}
               />

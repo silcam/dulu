@@ -6,6 +6,7 @@ describe("Domain Status Updates", () => {
   it("Creates App", () => {
     cy.login();
     cy.visit(hdiPath + "/Translation");
+    cy.contains("xed");
     cy.contains("h3", "Status")
       .parent()
       .within(_ => {
@@ -47,15 +48,12 @@ describe("Domain Status Updates", () => {
   it("Deletes Hdi NT DSI", () => {
     cy.login();
     cy.visit(hdiPath + "/Translation");
-    cy.contains("h5", "New Testament")
-      .find("input")
-      .should("be.checked");
+    cy.contains("xed");
+    cy.contains("h5", "New Testament").find("input").should("be.checked");
     cy.contains("a", "2005").click();
     cy.actionBarIcon("deleteIcon").click();
     cy.location("pathname").should("eq", hdiPath);
-    cy.contains("h5", "New Testament")
-      .find("input")
-      .should("not.be.checked");
+    cy.contains("h5", "New Testament").find("input").should("not.be.checked");
   });
 
   it("Kevin's view - no editing", () => {

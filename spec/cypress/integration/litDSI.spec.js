@@ -26,6 +26,7 @@ describe("The most excellent Literacy Domain Status Item", () => {
 function addItem(infos, cb = () => {}) {
   cy.login();
   cy.visit(hdiPath + "/Literacy");
+  cy.contains("xed");
   cy.contains("h3", "Status")
     .parent()
     .within(() => {

@@ -65,8 +65,9 @@ class ClustersControllerTest < ActionDispatch::IntegrationTest
   test 'Create' do
     api_login @olga
     data = api_post(clusters_path, cluster: { name: 'Misaje' })
+    misaje = Cluster.find_by(name: 'Misaje')
     assert_equal(
-      { clusters: [{ id: 657561021, name: 'Misaje', region_id: nil, can: { update: true, destroy: false, manage_participants: true } }], languages: [] },
+      { clusters: [{ id: misaje.id, name: 'Misaje', region_id: nil, can: { update: true, destroy: false, manage_participants: true } }], languages: [] },
       data
     )
   end

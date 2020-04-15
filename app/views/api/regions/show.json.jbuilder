@@ -1,18 +1,16 @@
-json.region do
-  json.call(@region, :id, :name, :lpf_id)
+# frozen_string_literal: true
+
+json.regions [@region] do |region|
+  json.call(region, :id, :name, :lpf_id)
 
   json.can do
-    json.update can? :update, @region
-    json.destroy can? :destroy, @region
+    json.update can? :update, region
+    json.destroy can? :destroy, region
   end
 end
 
-if @region_updated
-  json.clusters Cluster.all do |cluster|
-    json.call(cluster, :id, :name, :region_id)
-  end
+cluster_ids = @region.cluster_ids + (@old_cluster_ids || [])
+language_ids = @region.language_ids + (@old_language_ids || [])
 
-  json.languages Language.all do |language|
-    json.call(language, :id, :name, :region_id)
-  end
-end
+json.partial! 'api/clusters/clusters', clusters: Cluster.where(id: cluster_ids)
+json.partial! 'api/languages/languages', languages: Language.where(id: language_ids)
