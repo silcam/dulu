@@ -77,19 +77,25 @@ test("prepareEventParams", () => {
     name: "My Event",
     clusters: [{ id: 101 }, { id: 202 }],
     languages: [{ id: 303 }, { id: 404 }],
-    event_participants: [{ id: 505 }, { id: 606 }]
+    event_participants: [{ id: 505 }, { id: 606 }],
+    dockets: [{id: 2, name: 'Test'}]
   };
   const oldEventParticipants = event.event_participants.concat([{ id: 707 }]);
+  const oldDockets = event.dockets.concat([{ docket_id: 5, event_id: 6, serial_event_id: 3, name: "Other Test" }]);
 
   // First without oldEvent
-  let params = Event.prepareEventParams(event);
+  let params = Event.prepareEventParams(event, null, null);
   expect(params.name).toEqual("My Event");
   expect(params.cluster_ids).toEqual([101, 202]);
   expect(params.language_ids).toEqual([303, 404]);
   expect(params.event_participants_attributes).toEqual({
     0: { id: 505 },
     1: { id: 606 }
-  });
+  
+  },
+  expect(params.dockets_attributes).toEqual({
+    0: { series_event_id: 2 }
+  }));
 
   // Now with oldEvent
   params = Event.prepareEventParams(event, oldEventParticipants);
@@ -98,4 +104,20 @@ test("prepareEventParams", () => {
     1: { id: 606 },
     2: { id: 707, _destroy: true }
   });
+
+  // Now with oldEvent
+  params = Event.prepareEventParams(event, oldEventParticipants, oldDockets);
+  expect(params.event_participants_attributes).toEqual({
+    0: { id: 505 },
+    1: { id: 606 },
+    2: { id: 707, _destroy: true }
+    });
+
+  // Now with oldEvent
+  event.dockets = [];
+  params = Event.prepareEventParams(event, oldEventParticipants, oldDockets);
+  expect(params.dockets_attributes).toEqual({
+    0: { docket_id: 5, _destroy: true }
+  });
+ 
 });

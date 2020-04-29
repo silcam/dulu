@@ -193,6 +193,56 @@ class EventsControllerTest < ActionDispatch::IntegrationTest
     assert EventLocation.find_by(name: 'The Basketball Court')
   end
 
+  test 'Update event to create series, then delete' do
+    api_login @drew
+
+    assert_equal(0, @hdi_gen_check.serial_events.size, 'no serial events by default')
+
+    new_event = new_taco_party
+    new_event_data = api_post(events_path, event: new_event)
+    @taco_party_event = Event.find(new_event_data[:events][0][:id])
+    assert(@taco_party_event, 'can find the event after creating it through API')
+
+    data = api_put(
+      events_path("/#{@hdi_gen_check.id}"),
+      event: { 
+        event_series_attributes: {
+          "0": { 
+            serial_event_id: new_event_data[:events][0][:id]
+          }
+        } 
+      }
+    )
+
+    @hdi_gen_check.reload
+    assert_equal(1, @hdi_gen_check.serial_events.size, 'added 1 serial events')
+    assert(@hdi_gen_check.serial_events.exists?(@taco_party_event.id), 'is a serial event')
+
+    important_id = nil
+    collect = @hdi_gen_check.event_series
+    collect.each do |item|
+      important_id = item.id
+    end
+
+    # delete series
+    data = api_put(
+      events_path("/#{@hdi_gen_check.id}"),
+      event: {
+        event_series_attributes: {
+          "0": {
+            id: important_id,
+            serial_event_id: new_event_data[:events][0][:id],
+            _destroy: '1' 
+          }
+        }
+      }
+    )
+
+    @hdi_gen_check.reload
+    assert_equal(0, @hdi_gen_check.serial_events.size, 'added 1 serial events')
+    refute(@hdi_gen_check.serial_events.exists?(@taco_party_event.id), 'is a serial event')
+  end
+
   test 'Update Permissions' do
     api_login @drew
     api_put(events_path("/#{@lance_event.id}"), event: { name: "Drew's Event" })

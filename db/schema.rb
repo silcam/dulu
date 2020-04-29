@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20200312075605) do
+ActiveRecord::Schema.define(version: 20200422141217) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -143,6 +143,15 @@ ActiveRecord::Schema.define(version: 20200312075605) do
     t.index ["priority", "run_at"], name: "delayed_jobs_priority"
   end
 
+  create_table "dockets", force: :cascade do |t|
+    t.bigint "series_event_id"
+    t.bigint "event_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["event_id"], name: "index_dockets_on_event_id"
+    t.index ["series_event_id"], name: "index_dockets_on_series_event_id"
+  end
+
   create_table "domain_status_items", force: :cascade do |t|
     t.string "category"
     t.string "subcategory"
@@ -230,7 +239,9 @@ ActiveRecord::Schema.define(version: 20200312075605) do
     t.string "category", default: ""
     t.string "subcategory", default: ""
     t.bigint "event_location_id"
+    t.bigint "serial_event_id"
     t.index ["event_location_id"], name: "index_events_on_event_location_id"
+    t.index ["serial_event_id"], name: "index_events_on_serial_event_id"
   end
 
   create_table "events_languages", id: :serial, force: :cascade do |t|

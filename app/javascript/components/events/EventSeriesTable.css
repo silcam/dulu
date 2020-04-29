@@ -1,0 +1,18 @@
+table.eventSeries {
+    width: auto !important;
+}
+
+table.eventSeries tbody tr th, 
+table.eventSeries tbody tr td {
+    border: none;
+    padding: 0 4px 4px ;
+    text-align: left;
+}
+
+span.listItem::after {
+    content: ", ";
+}
+
+span.listItem:last-child::after {
+    content: '';
+}

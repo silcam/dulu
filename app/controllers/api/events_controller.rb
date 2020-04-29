@@ -24,6 +24,10 @@ class Api::EventsController < ApplicationController
     render :show
   end
 
+  def search
+    @events = Event.search(params[:q])
+  end
+
   def update
     @event = Event.find(params[:id])
     authorize! :update, @event
@@ -55,6 +59,9 @@ class Api::EventsController < ApplicationController
                   .permit(
                     :name, :domain, :note, :start_date, :end_date,
                     :category, :subcategory, :event_location_id,
+                    dockets_attributes: %i[
+                      id series_event_id event_id _destroy
+                    ],
                     language_ids: [], cluster_ids: [],
                     event_participants_attributes: [
                       :id, :person_id, :_destroy, roles: []

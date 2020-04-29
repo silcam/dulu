@@ -24,6 +24,14 @@ export interface IEventParticipant {
   _destroy?: boolean; // For API
 }
 
+export interface IDocket {
+  id: number;
+  name: string;
+  series_event_id: number;
+  event_id: number;
+  _destroy?: boolean;
+}
+
 export interface IEventParticipantExtended extends IEventParticipant {
   full_name: string;
 }
@@ -73,6 +81,7 @@ export interface IEvent {
   language_ids: number[];
   cluster_ids: number[];
   event_participants: IEventParticipant[];
+  dockets: IDocket[];
   can: ICan;
   workshop_id?: number;
   workshop_activity_id?: number;
@@ -153,7 +162,8 @@ export default class Event {
 
   static prepareEventParams(
     event: IEventInflated,
-    oldEventParticipants?: IEventParticipant[]
+    oldEventParticipants: IEventParticipant[],
+    oldDockets: IDocket[]
   ): AnyObj {
     const cluster_ids = event.clusters.map(c => c.id);
     const language_ids = event.languages.map(p => p.id);
@@ -175,10 +185,35 @@ export default class Event {
           };
       });
     }
+    // TODO This is largely duplicated. Fix.
+    let docketsAttributes: AnyObj = event.dockets.reduce(
+      (accum, docket, index) => {
+        accum[index] = {
+          series_event_id: docket.series_event_id,
+          event_id: docket.event_id
+        };
+        return accum;
+      },
+      {} as AnyObj
+    );
+    if (oldDockets) {
+      oldDockets.forEach(docket => {
+        if (
+          // TODO or on docket ID
+          !event.dockets.some(p => p.series_event_id == docket.series_event_id)
+        )
+          docketsAttributes[Object.keys(docketsAttributes).length] = {
+            id: docket.id,
+            _destroy: true
+          };
+      });
+    }
+    // end duplication.
     return update(event, {
       $merge: {
         cluster_ids,
         language_ids,
+        dockets_attributes: docketsAttributes,
         event_participants_attributes: eventParticipantsAttributes,
         event_location_id: (event.location && event.location.id) || null,
         new_event_location:
@@ -207,6 +242,7 @@ export function emptyEvent(): IEvent {
     language_ids: [],
     cluster_ids: [],
     event_participants: [],
+    dockets: [],
     can: {},
     note: ""
   };

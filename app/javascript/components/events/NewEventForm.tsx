@@ -34,7 +34,7 @@ export default function NewEventForm(props: IProps) {
   const save = async () => {
     const data = await saveLoad(duluAxios =>
       duluAxios.post("/api/events", {
-        event: Event.prepareEventParams(Event.ensureEndDate(event))
+        event: Event.prepareEventParams(Event.ensureEndDate(event), [], [])
       })
     );
     if (data) props.cancelForm();

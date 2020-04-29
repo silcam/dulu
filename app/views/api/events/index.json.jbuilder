@@ -13,7 +13,12 @@ json.events @events do |event|
     json.call(e_p, :id, :person_id, :roles)
     person_ids << e_p.person_id
   end
-  
+
+  json.dockets event.dockets do |es|
+    json.call(es, :id, :event_id, :series_event_id)
+    json.name event.series_events.find(es.series_event_id).name
+  end
+
   language_ids += event.language_ids
   cluster_ids += event.cluster_ids
 end

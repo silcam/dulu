@@ -26,6 +26,11 @@ json.events [@event] do |_event|
     json.call(e_p, :id, :person_id, :roles)
   end
 
+  json.dockets @event.dockets do |es|
+    json.call(es, :id, :event_id, :series_event_id)
+    json.name @event.series_events.find(es.series_event_id).name
+  end
+
   if @event.workshop
     json.workshop_id @event.workshop.id
     json.workshop_activity_id @event.workshop.linguistic_activity_id

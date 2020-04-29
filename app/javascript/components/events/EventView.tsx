@@ -3,6 +3,7 @@ import Loading from "../shared/Loading";
 import EditActionBar from "../shared/EditActionBar";
 import eventDateString from "../../util/eventDateString";
 import EventsParticipantsTable from "./EventsParticipantsTable";
+import EventSeriesTable from "./EventSeriesTable";
 import TextOrEditText from "../shared/TextOrEditText";
 import update from "immutability-helper";
 import TextOrTextArea from "../shared/TextOrTextArea";
@@ -12,7 +13,6 @@ import EditEventParticipantsTable from "./EditEventParticipantsTable";
 import Event, { IEvent, IEventInflated } from "../../models/Event";
 import FormGroup from "../shared/FormGroup";
 import FuzzyDateInput from "../shared/FuzzyDateInput";
-// import { useAPIGet, useAPIPut, useAPIDelete } from "../../util/useAPI";
 import I18nContext from "../../contexts/I18nContext";
 import { T } from "../../i18n/i18n";
 import EventCategoryPicker from "./EventCategoryPicker";
@@ -66,7 +66,11 @@ export default function EventView(props: IProps) {
     const data = await saveLoad(duluAxios =>
       duluAxios.put(`/api/events/${props.id}`, {
         event: draftEvent
-          ? Event.prepareEventParams(draftEvent, eventParticipants)
+          ? Event.prepareEventParams(
+              draftEvent,
+              eventParticipants,
+              storedEvent.dockets // use this directly?
+            )
           : {}
       })
     );
@@ -167,6 +171,13 @@ export default function EventView(props: IProps) {
             editing={editing}
             value={event.note}
             setValue={value => updateEvent({ note: value })}
+          />
+        </P>
+        <P>
+          <EventSeriesTable
+            editing={editing}
+            event={event}
+            replaceEvent={updateEvent}
           />
         </P>
         <div className={style.participantsTable}>

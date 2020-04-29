@@ -1,9 +1,11 @@
+# frozen_string_literal: true
+
 `rails db:migrate`
 
-require File.expand_path("../../config/environment", __FILE__)
-require "rails/test_help"
-require "minitest/reporters"
-require "minitest/rails/capybara"
+require File.expand_path('../config/environment', __dir__)
+require 'rails/test_help'
+require 'minitest/reporters'
+require 'minitest/rails/capybara'
 Minitest::Reporters.use!
 
 Delayed::Worker.delay_jobs = false
@@ -38,6 +40,7 @@ class ActiveSupport::TestCase
   end
 
   def api_put(path, params)
+    Rails.logger.error("PUT: #{params}")
     put(path, xhr: true, params: params)
     response_body
   end

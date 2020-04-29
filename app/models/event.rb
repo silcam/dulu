@@ -12,6 +12,11 @@ class Event < ApplicationRecord
   has_one :workshop, dependent: :nullify
   belongs_to :event_location, required: false
 
+  has_many :dockets
+  has_many :serial_events, through: :dockets, foreign_key: 'event_id', class_name: 'Event'
+  has_many :series_events, through: :dockets, class_name: 'Event'
+  accepts_nested_attributes_for :dockets, allow_destroy: true
+
   audited
 
   default_scope { order(start_date: :desc) }
@@ -66,6 +71,10 @@ class Event < ApplicationRecord
       all += c.languages
     end
     all
+  end
+
+  def add_to_series(event)
+    series_events << event
   end
 
   def unassoc_languages
@@ -137,11 +146,12 @@ class Event < ApplicationRecord
     events = Event.multi_word_where(query, 'name')
     results = []
     events.each do |event|
+      id = event.id
       title = event.name.to_s
       description = event.dates_display_text
       description_cluster_progs = (event.clusters + event.languages).collect(&:display_name).join(', ')
       description += ' - ' + description_cluster_progs unless description_cluster_progs.blank?
-      results << { title: title, description: description, model: event }
+      results << { id: id, title: title, description: description, model: event }
     end
     results
   end

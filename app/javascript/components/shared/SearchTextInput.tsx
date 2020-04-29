@@ -129,6 +129,16 @@ export function PersonSearchTextInput(props: SimplifiedProps<PartialPerson>) {
   });
 }
 
+// This should probably be a SearchPicker, instead. Change in future.
+export function EventSearchTextInput(props: SimplifiedProps<SearchItem>) {
+  return SearchTextInput({
+    ...props,
+    queryPath: "/api/events/search",
+    display: e => e.name,
+    allowBlank: true
+  });
+}
+
 export function CountrySearchTextInput(props: SimplifiedProps<SearchItem>) {
   return SearchTextInput({
     ...props,
