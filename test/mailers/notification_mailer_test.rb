@@ -1,9 +1,12 @@
-require "test_helper"
+# frozen_string_literal: true
+
+require 'test_helper'
 
 class NotificationMailerTest < ActionMailer::TestCase
   def setup
     @rick = people(:Rick)
     @drew = people(:Drew)
+    I18n.locale = :en
   end
 
   def generate_notification

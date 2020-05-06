@@ -6,12 +6,10 @@ import DeleteIcon from "../shared/icons/DeleteIcon";
 import FuzzyDateInput from "../shared/FuzzyDateInput";
 import SmallSaveAndCancel from "../shared/SmallSaveAndCancel";
 import Loading from "../shared/Loading";
-import { Setter } from "../../models/TypeBucket";
 import useLoad from "../shared/useLoad";
 
 interface IProps {
   activity: IActivity;
-  setActivity: Setter<IActivity>;
 }
 
 export default function ActivityViewStages(props: IProps) {

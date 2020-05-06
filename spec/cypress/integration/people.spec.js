@@ -10,9 +10,7 @@ describe("People", () => {
     cy.login("kevin_barnes@sil.org");
     cy.visit(kevinPath);
     cy.actionBarIcon("editIcon").click();
-    cy.byValue("Kevin")
-      .clear()
-      .type("Da Boss");
+    cy.byValue("Kevin").clear().type("Da Boss");
     cy.contains("Save").click();
     cy.contains("All changes saved");
     cy.contains("h2", "Da Boss Barnes");
@@ -54,7 +52,7 @@ describe("People", () => {
     cy.contains("Save").click();
   });
 
-  it("Adds organization", () => {
+  it("Adds, updates, removes organization", () => {
     cy.login("rick_conrad@sil.org");
     cy.visit(rickPath);
     cy.contains("div", "Rick Conrad").within(() => {
@@ -79,6 +77,10 @@ describe("People", () => {
             cy.contains("Resident Baptist");
             cy.contains("12 Mar 2020 - ");
           });
+          cy.contains("tr", "Lutheran").within(() => {
+            cy.icon("deleteIcon").click();
+          });
+          cy.contains("Lutheran").should("not.exist");
         });
     });
   });
@@ -121,9 +123,7 @@ describe("People", () => {
   it("Changes language", () => {
     cy.login("kevin_barnes@sil.org");
     cy.visit(kevinPath);
-    cy.contains("tr", "Preferred language")
-      .find("select")
-      .select("Français");
+    cy.contains("tr", "Preferred language").find("select").select("Français");
     cy.contains("Pays d'origine");
   });
 
@@ -143,23 +143,17 @@ describe("People", () => {
       .find("td")
       .should("have.text", "");
 
-    cy.contains("tr", "Add Channel")
-      .find("select")
-      .select("Language");
+    cy.contains("tr", "Add Channel").find("select").select("Language");
     cy.placeholder("Add Language").type("Ewond");
     cy.contains("Ewondo").click();
     cy.contains("tr", "Notification Channels").should("contain", "Ewondo");
 
-    cy.contains("tr", "Add Channel")
-      .find("select")
-      .select("Cluster");
+    cy.contains("tr", "Add Channel").find("select").select("Cluster");
     cy.placeholder("Add Cluster").type("Ndo");
     cy.contains("Ndop").click();
     cy.contains("tr", "Notification Channels").should("contain", "Ndop");
 
-    cy.contains("tr", "Add Channel")
-      .find("select")
-      .select("Region");
+    cy.contains("tr", "Add Channel").find("select").select("Region");
     cy.placeholder("Add Region").type("North");
     cy.contains("North Region").click();
     cy.contains("tr", "Notification Channels").should(
@@ -167,9 +161,7 @@ describe("People", () => {
       "North Region"
     );
 
-    cy.contains("tr", "Add Channel")
-      .find("select")
-      .select("Domain");
+    cy.contains("tr", "Add Channel").find("select").select("Domain");
     cy.contains("select", "Literacy").select("Literacy");
     cy.contains("button", "Add").click();
     cy.contains("tr", "Notification Channels").should("contain", "Literacy");

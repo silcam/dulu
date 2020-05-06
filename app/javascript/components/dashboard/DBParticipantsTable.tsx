@@ -1,42 +1,43 @@
 import React, { useState, useEffect, useContext } from "react";
 import DomainFilterer from "./DomainFilterer";
 import { Link } from "react-router-dom";
-import { fullName, IPerson } from "../../models/Person";
+import { fullName } from "../../models/Person";
 import CommaList from "../shared/CommaList";
-import { PeopleParticipants } from "./DBParticipantsContainer";
-import { Adder } from "../../models/TypeBucket";
-import DuluAxios from "../../util/DuluAxios";
+import usePeopleParticipants from "./usePeopleParticipants";
 import { domainFromRole } from "../../models/Role";
 import I18nContext from "../../contexts/I18nContext";
 import StyledTable from "../shared/StyledTable";
-import { IParticipant } from "../../models/Participant";
+import useLoad from "../shared/useLoad";
 
-export interface IProps extends PeopleParticipants {
+export interface IProps {
   languageIds: number[];
-  addPeople: Adder<IPerson>;
-  addParticipants: Adder<IParticipant>;
 }
 
 export default function DBParticipantsTable(props: IProps) {
   const t = useContext(I18nContext);
+  const [load] = useLoad();
   const [domainFilter, setDomainFilter] = useState("All");
 
-  useEffect(() => {
-    fetchParticipants(props);
-  }, [JSON.stringify(props.languageIds)]);
+  const { people, participants } = usePeopleParticipants(props.languageIds);
 
-  const people =
+  const filteredPeople =
     domainFilter == "All"
-      ? props.people
-      : props.people.filter(person =>
-          props.participants[person.id].some(ptpt =>
+      ? people
+      : people.filter(person =>
+          participants[person.id].some(ptpt =>
             ptpt.roles.some(role => domainFromRole(role) == domainFilter)
           )
         );
 
+  useEffect(() => {
+    props.languageIds.map(async id => {
+      load(duluAxios => duluAxios.get(`/api/languages/${id}/participants`));
+    });
+  }, props.languageIds);
+
   return (
     <div>
-      {props.people.length > 0 && (
+      {people.length > 0 && (
         <DomainFilterer
           domainFilter={domainFilter}
           setDomainFilter={setDomainFilter}
@@ -44,9 +45,9 @@ export default function DBParticipantsTable(props: IProps) {
       )}
       <StyledTable>
         <tbody>
-          {people.map(person => {
-            const participants = props.participants[person.id];
-            const roles = participants.reduce(
+          {filteredPeople.map(person => {
+            const personParticipants = participants[person.id];
+            const roles = personParticipants.reduce(
               (accum: string[], ptpt) =>
                 accum.concat(ptpt.roles.filter(role => !accum.includes(role))),
               []
@@ -58,7 +59,7 @@ export default function DBParticipantsTable(props: IProps) {
                 </td>
                 <td>
                   <CommaList
-                    list={participants}
+                    list={personParticipants}
                     render={ptpt => (
                       <Link to={ptpt.program.path}>{ptpt.program.name}</Link>
                     )}
@@ -73,17 +74,5 @@ export default function DBParticipantsTable(props: IProps) {
         </tbody>
       </StyledTable>
     </div>
-  );
-}
-
-async function fetchParticipants(props: IProps) {
-  await Promise.all(
-    props.languageIds.map(async id => {
-      const data = await DuluAxios.get(`/api/languages/${id}/participants`);
-      if (data) {
-        props.addPeople(data.people);
-        props.addParticipants(data.participants);
-      }
-    })
   );
 }

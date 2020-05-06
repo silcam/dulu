@@ -1,51 +1,45 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState } from "react";
 import EditActionBar from "../shared/EditActionBar";
 import TextOrEditText from "../shared/TextOrEditText";
 import update from "immutability-helper";
-import { IRegionInflated, IRegion } from "../../models/Region";
+import Region, { IRegionInflated } from "../../models/Region";
 import ProgramList from "./ProgramList";
 import P from "../shared/P";
 import { Link } from "react-router-dom";
-import { Adder, Setter, Deleter, AnyObj } from "../../models/TypeBucket";
-import { IPerson, fullName } from "../../models/Person";
-import { ICluster } from "../../models/Cluster";
-import { ILanguage } from "../../models/Language";
+import { AnyObj } from "../../models/TypeBucket";
+import { fullName } from "../../models/Person";
 import Loading from "../shared/Loading";
-import API from "./RegionsAPI";
 import { History } from "history";
-import I18nContext from "../../contexts/I18nContext";
 import FormGroup from "../shared/FormGroup";
-import List from "../../models/List";
 import PersonPicker from "../people/PersonPicker";
+import useTranslation from "../../i18n/useTranslation";
+import useLoad, { useLoadOnMount } from "../shared/useLoad";
+import useAppSelector from "../../reducers/useAppSelector";
 
 interface IProps {
   id: number;
-  region: IRegionInflated;
-  addPeople: Adder<IPerson>;
-  addClusters: Adder<ICluster>;
-  addLanguages: Adder<ILanguage>;
-  setRegion: Setter<IRegion>;
-  deleteRegion: Deleter;
   history: History;
-  people: List<IPerson>;
-  languages: List<ILanguage>;
-  clusters: List<ICluster>;
 }
 
 export default function RegionPage(props: IProps) {
+  const t = useTranslation();
+  const [saveLoad, saving] = useLoad();
+
+  const storeRegion = useAppSelector(state =>
+    Region.inflate(state, state.regions.get(props.id))
+  );
+  const languages = useAppSelector(state => state.languages);
+  const clusters = useAppSelector(state => state.clusters);
+
   const [draftRegion, setDraftRegion] = useState<IRegionInflated | undefined>(
     undefined
   );
   const [editing, setEditing] = useState(false);
-  const [saving, setSaving] = useState(false);
-  const t = useContext(I18nContext);
 
-  useEffect(() => {
-    API.fetch(props.id, props);
-  }, [props.id]);
+  useLoadOnMount(`/api/regions/${props.id}`);
 
   const edit = () => {
-    setDraftRegion({ ...props.region });
+    setDraftRegion({ ...storeRegion });
     setEditing(true);
   };
 
@@ -60,20 +54,24 @@ export default function RegionPage(props: IProps) {
   const invalid = draftRegion && draftRegion.name.length == 0;
 
   const save = async () => {
-    setSaving(true);
-    const newRegion = API.update(draftRegion!, props);
-    if (newRegion) cancel();
-    setSaving(false);
+    const data = await saveLoad(duluAxios =>
+      duluAxios.put(`/api/regions/${props.id}`, {
+        region: Region.regionParams(draftRegion!)
+      })
+    );
+    if (data) cancel();
   };
 
   const del = async () => {
-    if (confirm(t("confirm_delete_region", { name: props.region!.name }))) {
-      const success = await API.delete(props.id, props.deleteRegion);
-      if (success) props.history.replace("/regions");
+    if (confirm(t("confirm_delete_region", { name: storeRegion.name }))) {
+      const data = await saveLoad(duluAxios =>
+        duluAxios.delete(`/api/regions/${props.id}`)
+      );
+      if (data) props.history.replace("/regions");
     }
   };
 
-  const region = editing ? draftRegion : props.region;
+  const region = editing ? draftRegion : storeRegion;
 
   if (!region || region.id == 0) return <Loading />;
 
@@ -122,14 +120,14 @@ export default function RegionPage(props: IProps) {
         regionList={region.clusters}
         thing="cluster"
         updateRegion={updateRegion}
-        collection={props.clusters}
+        collection={clusters}
       />
       <ProgramList
         editing={editing}
         regionList={region.languages}
         thing="language"
         updateRegion={updateRegion}
-        collection={props.languages}
+        collection={languages}
       />
     </div>
   );

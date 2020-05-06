@@ -1,11 +1,4 @@
-import {
-  SET_PEOPLE,
-  ADD_PERSON,
-  SET_PERSON,
-  DELETE_PERSON,
-  ADD_PEOPLE,
-  PeopleAction
-} from "../actions/peopleActions";
+import { ADD_PEOPLE, PeopleAction } from "../actions/peopleActions";
 import { personCompare, IPerson } from "../models/Person";
 import List from "../models/List";
 import { Locale } from "../i18n/i18n";
@@ -30,18 +23,13 @@ export default function peopleReducer(
   action: PeopleAction | LoadAction
 ) {
   if (isLoadAction(action)) {
-    return state.add(action.payload.people);
+    return state
+      .add(action.payload.people)
+      .remove(action.payload.deletedPeople);
   }
   switch (action.type) {
-    case SET_PEOPLE:
-      return state.add(action.people!);
     case ADD_PEOPLE:
       return state.add(action.people!);
-    case ADD_PERSON:
-    case SET_PERSON:
-      return state.add([action.person!]);
-    case DELETE_PERSON:
-      return state.remove(action.id!);
   }
   return state;
 }

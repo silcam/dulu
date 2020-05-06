@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { loadAction } from "../../reducers/LoadAction";
 
-type Load = (DuluAxios: IDuluAxios) => Promise<MaybeAnyObj>;
+export type Load = (DuluAxios: IDuluAxios) => Promise<MaybeAnyObj>;
 
 export default function useLoad(): [
   (load: Load) => Promise<MaybeAnyObj>,

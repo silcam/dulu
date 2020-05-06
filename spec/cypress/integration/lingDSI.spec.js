@@ -87,6 +87,7 @@ function goToItem(subcategory) {
 function addItem(subcategory, cb = () => {}) {
   cy.login();
   cy.visit(hdiPath + "/Linguistics");
+  cy.contains("xed");
   cy.contains("h3", "Status")
     .parent()
     .within(() => {

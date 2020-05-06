@@ -23,9 +23,7 @@ describe("Linguistic Activities", () => {
       cy.placeholder("Title").type("Bangolan Grammarz");
       cy.placeholder("Name").type("Nounz");
       cy.icon("addIcon").click();
-      cy.contains("tr", "2")
-        .find("input")
-        .type("Verbz");
+      cy.contains("tr", "2").find("input").type("Verbz");
       cy.contains("Save").click();
     });
     cy.contains("tr", "Bangolan Grammarz").should("contain", "Nounz");
@@ -58,14 +56,14 @@ describe("Linguistic Activities", () => {
       cy.contains("button", "Completed").click();
       cy.fillFuzzyDate(2019, "Mar", 19);
       cy.contains("Save").click();
-      cy.contains("Mar 19, 2019");
+      cy.contains("2019-03-19");
       cy.contains("Completed");
       cy.contains("button", "Completed").should("not.exist");
       cy.icon("editIcon").click();
       cy.contains("Completed").click();
       cy.contains("Save").click();
       cy.contains("button", "Completed");
-      cy.contains("Mar 19, 2019").should("not.exist");
+      cy.contains("2019-03-19").should("not.exist");
       cy.contains("Add Event").click();
     });
     cy.contains("div", "Start Date").within(() =>
@@ -75,7 +73,7 @@ describe("Linguistic Activities", () => {
       cy.fillFuzzyDate(2020, "Jan", 7)
     );
     cy.contains("Save").click();
-    cy.contains("a", "Jan 7, 2020");
+    cy.contains("a", "2020-01-07");
 
     // Add Workshop
     cy.icon("addIcon").click();

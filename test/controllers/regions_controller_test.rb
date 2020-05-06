@@ -37,7 +37,7 @@ class RegionsControllerTest < ActionDispatch::IntegrationTest
     api_login @drew
     data = api_get(regions_path("/#{@south.id}"))
     assert_equal(
-      { region: { id: @south.id, name: 'South Region', lpf_id: @olga.id, can: { update: false, destroy: false } } },
+      { regions: [{ id: @south.id, name: 'South Region', lpf_id: @olga.id, can: { update: false, destroy: false } }], clusters: [{ id: 657561020, name: 'Ndop', region_id: 961289125 }], languages: [{ id: 406181303, name: 'Ewondo', cluster_id: nil, region_id: 961289125 }] },
       data
     )
   end
@@ -47,16 +47,14 @@ class RegionsControllerTest < ActionDispatch::IntegrationTest
     data = api_get(regions_path("/#{@south.id}"))
     assert_equal(
       { update: true, destroy: true },
-      data[:region][:can]
+      data[:regions][0][:can]
     )
   end
 
   test 'Create' do
     api_login @rick
     data = api_post(regions_path, region: { name: 'Wisconsin' })
-    refute_empty data[:clusters]
-    refute_empty data[:languages]
-    assert_equal 'Wisconsin', data[:region][:name]
+    assert_equal 'Wisconsin', data[:regions][0][:name]
   end
 
   test 'Create permissions' do
@@ -71,7 +69,7 @@ class RegionsControllerTest < ActionDispatch::IntegrationTest
       regions_path("/#{@north.id}"),
       region: { name: 'Alaska', lpf_id: @drew.id, cluster_ids: [@ndop.id], language_ids: [@hdi_dialect.id] }
     )
-    assert_partial({ id: @north.id, name: 'Alaska', lpf_id: @drew.id }, data[:region])
+    assert_partial({ id: @north.id, name: 'Alaska', lpf_id: @drew.id }, data[:regions][0])
     assert_partial([{ id: @ndop.id, name: 'Ndop', region_id: @north.id }], data[:clusters])
     assert_partial([{ id: @hdi_dialect.id, name: 'HdiDialect', region_id: @north.id }], data[:languages])
     assert_includes NotificationChannel.people_for_channels("Reg#{@north.id} "), @drew
@@ -85,8 +83,8 @@ class RegionsControllerTest < ActionDispatch::IntegrationTest
 
   test 'Destroyed!' do
     api_login @rick
-    api_delete(regions_path("/#{@south.id}"))
-    assert_response 204
+    data = api_delete(regions_path("/#{@south.id}"))
+    assert_equal({ deletedRegions: [@south.id] }, data)
     refute Region.find_by(name: 'South Region')
   end
 

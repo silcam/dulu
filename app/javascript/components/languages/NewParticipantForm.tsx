@@ -5,7 +5,6 @@ import CheckBoxInput from "../shared/CheckboxInput";
 import { arrayDelete } from "../../util/arrayUtils";
 import FuzzyDateInput from "../shared/FuzzyDateInput";
 import { IParticipant } from "../../models/Participant";
-import { Adder } from "../../models/TypeBucket";
 import { IPerson } from "../../models/Person";
 import { History } from "history";
 import I18nContext from "../../contexts/I18nContext";
@@ -20,8 +19,6 @@ interface NewParticipant extends IParticipant {
 
 interface IProps {
   cancel: () => void;
-  addParticipants: Adder<IParticipant>;
-  addPeople: Adder<IPerson>;
   language_id?: number;
   cluster_id?: number;
 

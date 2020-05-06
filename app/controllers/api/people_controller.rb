@@ -40,7 +40,6 @@ class Api::PeopleController < ApplicationController
     @person = Person.find(params[:id])
     authorize! :destroy, @person
     @person.destroy!
-    response_ok
   end
 
   def update_view_prefs

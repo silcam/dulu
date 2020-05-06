@@ -7,23 +7,18 @@ import DangerButton from "../shared/DangerButton";
 import { fullName, IPerson } from "../../models/Person";
 import update from "immutability-helper";
 import ParticipantsTable from "./ParticipantsTable";
-import DuluAxios from "../../util/DuluAxios";
 import RolesTable from "./RolesTable";
 import Loading from "../shared/Loading";
-import OrgPeopleContainer from "./OrgPeopleContainer";
 import PersonEventsContainer from "./PersonEventsContainer";
 import DuluSettings from "./DuluSettings";
 import useLoad, { useLoadOnMount } from "../shared/useLoad";
 import useAppSelector from "../../reducers/useAppSelector";
 import I18nContext from "../../contexts/I18nContext";
 import { useDispatch } from "react-redux";
-import {
-  deletePerson as deletePersonAction,
-  setPerson
-} from "../../actions/peopleActions";
 // import styles from "./PersonPage.css";
 import { useHistory } from "react-router-dom";
 import { setCurrentUserAction } from "../../reducers/currentUserReducer";
+import MyOrganizationsTable from "./MyOrganizationsTable";
 
 export interface PersonPageProps {
   id: number;
@@ -115,21 +110,10 @@ export default function PersonPage(props: PersonPageProps) {
   };
 
   const deletePerson = async () => {
-    const success = await DuluAxios.delete(`/api/people/${propsPerson.id}`);
-    if (success) {
-      history.push("/people");
-      dispatch(deletePersonAction(propsPerson.id));
-    }
-  };
-
-  const replaceRoles = (newRoles: string[]) => {
-    const newPerson = update(propsPerson, {
-      roles: { $set: newRoles }
-    });
-    setState({
-      person: newPerson
-    });
-    dispatch(setPerson(newPerson));
+    const success = await saveLoad(duluAxios =>
+      duluAxios.delete(`/api/people/${propsPerson.id}`)
+    );
+    if (success) history.push("/people");
   };
 
   const person = state.editing ? state.person : propsPerson;
@@ -187,11 +171,15 @@ export default function PersonPage(props: PersonPageProps) {
         updatePerson={updatePerson}
       />
 
-      <OrgPeopleContainer person={person} />
+      {!state.editing && (
+        <React.Fragment>
+          <MyOrganizationsTable person={person} />
 
-      <RolesTable person={person} replaceRoles={replaceRoles} />
+          <RolesTable person={person} />
 
-      <ParticipantsTable person={person} />
+          <ParticipantsTable person={person} />
+        </React.Fragment>
+      )}
 
       <PersonEventsContainer
         person={person}

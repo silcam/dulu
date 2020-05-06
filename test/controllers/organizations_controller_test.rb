@@ -86,8 +86,11 @@ class OrganizationsControllerTest < ActionDispatch::IntegrationTest
 
   test 'Destroyed!' do
     api_login @rick
-    api_delete(orgs_path("/#{@sil.id}"))
-    assert_response 204
+    data = api_delete(orgs_path("/#{@sil.id}"))
+    assert_equal(
+      { deletedOrganizations: [@sil.id] },
+      data
+    )
     refute Organization.find_by(short_name: 'SIL')
   end
 

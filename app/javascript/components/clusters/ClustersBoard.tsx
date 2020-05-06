@@ -6,15 +6,11 @@ import FlexSpacer from "../shared/FlexSpacer";
 import { Link } from "react-router-dom";
 import AddIcon from "../shared/icons/AddIcon";
 import NewClusterForm from "./NewClusterForm";
-import { T } from "../../i18n/i18n";
-import DuluAxios from "../../util/DuluAxios";
-import { ICluster } from "../../models/Cluster";
 import { History, Location } from "history";
-import { Adder, Setter, SetCan } from "../../models/TypeBucket";
-import { ICan } from "../../actions/canActions";
 import GoBar from "../shared/GoBar";
-import List from "../../models/List";
 import useTranslation from "../../i18n/useTranslation";
+import { useLoadOnMount } from "../shared/useLoad";
+import useAppSelector from "../../reducers/useAppSelector";
 
 interface IProps {
   id?: number;
@@ -22,73 +18,50 @@ interface IProps {
   basePath: string;
   history: History;
   location: Location;
-  clusters: List<ICluster>;
-  setClusters: Adder<ICluster>;
-  setCluster: Setter<ICluster>;
-  setCan: SetCan;
-  can: ICan;
-  t: T;
 }
 
 export default function ClustersBoard(props: Omit<IProps, "t">) {
   const t = useTranslation();
-  return <BaseClustersBoard {...props} t={t} />;
-}
 
-class BaseClustersBoard extends React.Component<IProps> {
-  async componentDidMount() {
-    const data = await DuluAxios.get("/api/clusters");
-    if (data) {
-      this.props.setCan("clusters", data.can.clusters);
-      this.props.setClusters(data.clusters);
-    }
-  }
+  const clusters = useAppSelector(state => state.clusters);
+  const can = useAppSelector(state => state.can.clusters);
 
-  render() {
-    const t = this.props.t;
+  useLoadOnMount("/api/clusters");
 
-    return (
-      <div className={style.container}>
-        <div className={style.headerBar}>
-          <h2>
-            <Link to="/clusters">{t("Clusters")}</Link>
-          </h2>
-          {this.props.can.create && (
-            <Link to="/clusters/new">
-              <AddIcon iconSize="large" />
-            </Link>
-          )}
-          <GoBar />
-          <FlexSpacer />
-          <h3>
-            <Link to="/regions">{t("Regions")}</Link>
-            &nbsp;&nbsp;&nbsp;&nbsp;
-            <Link to={"/languages"}>{t("Languages")}</Link>
-          </h3>
+  return (
+    <div className={style.container}>
+      <div className={style.headerBar}>
+        <h2>
+          <Link to="/clusters">{t("Clusters")}</Link>
+        </h2>
+        {can.create && (
+          <Link to="/clusters/new">
+            <AddIcon iconSize="large" />
+          </Link>
+        )}
+        <GoBar />
+        <FlexSpacer />
+        <h3>
+          <Link to="/regions">{t("Regions")}</Link>
+          &nbsp;&nbsp;&nbsp;&nbsp;
+          <Link to={"/languages"}>{t("Languages")}</Link>
+        </h3>
+      </div>
+      <div className={style.masterDetailContainer}>
+        <div className={style.master}>
+          <ClustersTable id={props.id} clusters={clusters} />
         </div>
-        <div className={style.masterDetailContainer}>
-          <div className={style.master}>
-            <ClustersTable id={this.props.id} clusters={this.props.clusters} />
-          </div>
-          <div className={style.detail}>
-            {this.props.action == "new" && (
-              <NewClusterForm
-                t={t}
-                setCluster={this.props.setCluster}
-                history={this.props.history}
-              />
-            )}
-            {!!this.props.id && (
-              <ClusterPageRouter
-                key={this.props.id}
-                id={this.props.id}
-                t={t}
-                basePath={this.props.basePath}
-              />
-            )}
-          </div>
+        <div className={style.detail}>
+          {props.action == "new" && <NewClusterForm history={props.history} />}
+          {!!props.id && (
+            <ClusterPageRouter
+              key={props.id}
+              id={props.id}
+              basePath={props.basePath}
+            />
+          )}
         </div>
       </div>
-    );
-  }
+    </div>
+  );
 }

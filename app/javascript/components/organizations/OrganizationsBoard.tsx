@@ -5,87 +5,61 @@ import NewOrganizationForm from "./NewOrganizationForm";
 import { Link } from "react-router-dom";
 import AddIcon from "../shared/icons/AddIcon";
 import FlexSpacer from "../shared/FlexSpacer";
-import DuluAxios from "../../util/DuluAxios";
 import GoBar from "../shared/GoBar";
-import { Adder, Setter, SetCan } from "../../models/TypeBucket";
-import { IOrganization } from "../../models/Organization";
-import { ICan } from "../../actions/canActions";
 import { History } from "history";
-import I18nContext from "../../contexts/I18nContext";
-import List from "../../models/List";
 import OrganizationPage from "./OrganizationPage";
+import useTranslation from "../../i18n/useTranslation";
+import { useLoadOnMount } from "../shared/useLoad";
+import useAppSelector from "../../reducers/useAppSelector";
 
 interface IProps {
-  setOrganizations: Adder<IOrganization>;
-  addOrganization: Setter<IOrganization>;
-  setCan: SetCan;
-  organizations: List<IOrganization>;
   id?: number;
   action?: string;
   history: History;
-  can: ICan;
 }
 
-interface IState {}
+export default function OrganizationsBoard(props: IProps) {
+  const t = useTranslation();
+  useLoadOnMount("/api/organizations");
 
-export default class OrganizationsBoard extends React.PureComponent<
-  IProps,
-  IState
-> {
-  state: IState = {};
+  const organizations = useAppSelector(state => state.organizations);
+  const can = useAppSelector(state => state.can.organizations);
 
-  async componentDidMount() {
-    const data = await DuluAxios.get("/api/organizations");
-    if (data) {
-      this.props.setCan("organizations", data.can.organizations);
-      this.props.setOrganizations(data.organizations);
-    }
-  }
-
-  render() {
-    return (
-      <I18nContext.Consumer>
-        {t => (
-          <div className={styles.container}>
-            <div className={styles.headerBar}>
-              <h2>
-                <Link to="/organizations">{t("Organizations")}</Link>
-              </h2>
-              {this.props.can.create && (
-                <Link to="/organizations/new">
-                  <AddIcon iconSize="large" />
-                </Link>
-              )}
-              <GoBar />
-              <FlexSpacer />
-              <h3>
-                <Link to="/people">{t("People")}</Link>
-              </h3>
-            </div>
-            <div className={styles.masterDetailContainer}>
-              <div className={styles.master}>
-                <OrganizationsTable
-                  id={this.props.id}
-                  organizations={this.props.organizations}
-                />
-              </div>
-              <div className={styles.detail}>
-                {this.props.action == "new" && (
-                  <NewOrganizationForm history={this.props.history} />
-                )}
-                {this.props.action == "show" && (
-                  <OrganizationPage
-                    key={this.props.id}
-                    id={this.props.id!}
-                    history={this.props.history}
-                  />
-                )}
-                {!this.props.action && <span />}
-              </div>
-            </div>
-          </div>
+  return (
+    <div className={styles.container}>
+      <div className={styles.headerBar}>
+        <h2>
+          <Link to="/organizations">{t("Organizations")}</Link>
+        </h2>
+        {can.create && (
+          <Link to="/organizations/new">
+            <AddIcon iconSize="large" />
+          </Link>
         )}
-      </I18nContext.Consumer>
-    );
-  }
+        <GoBar />
+        <FlexSpacer />
+        <h3>
+          <Link to="/people">{t("People")}</Link>
+        </h3>
+      </div>
+      <div className={styles.masterDetailContainer}>
+        <div className={styles.master}>
+          <OrganizationsTable id={props.id} organizations={organizations} />
+        </div>
+        <div className={styles.detail}>
+          {props.action == "new" && (
+            <NewOrganizationForm history={props.history} />
+          )}
+          {props.action == "show" && (
+            <OrganizationPage
+              key={props.id}
+              id={props.id!}
+              history={props.history}
+            />
+          )}
+          {!props.action && <span />}
+        </div>
+      </div>
+    </div>
+  );
 }

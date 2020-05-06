@@ -1,44 +1,31 @@
-import React, { useEffect, useContext } from "react";
-import { IRegion } from "../../models/Region";
+import React from "react";
 import style from "../shared/MasterDetail.css";
 import RegionsTable from "./RegionsTable";
 import AddIcon from "../shared/icons/AddIcon";
 import FlexSpacer from "../shared/FlexSpacer";
 import { Link } from "react-router-dom";
 import NewRegionForm from "./NewRegionForm";
-import RegionContainer from "./RegionContainer";
-import { Adder, Setter, SetCan } from "../../models/TypeBucket";
-import API from "./RegionsAPI";
-import { IPerson } from "../../models/Person";
-import { ICluster } from "../../models/Cluster";
-import { ILanguage } from "../../models/Language";
 import { History } from "history";
-import I18nContext from "../../contexts/I18nContext";
-import { ICan } from "../../actions/canActions";
 import GoBar from "../shared/GoBar";
-import List from "../../models/List";
+import { useLoadOnMount } from "../shared/useLoad";
+import useAppSelector from "../../reducers/useAppSelector";
+import useTranslation from "../../i18n/useTranslation";
+import RegionPage from "./RegionPage";
 
 interface IProps {
   id?: number;
   basePath: string;
   history: History;
   action: string;
-  regions: List<IRegion>;
-  setRegions: Adder<IRegion>;
-  addPeople: Adder<IPerson>;
-  addClusters: Adder<ICluster>;
-  addLanguages: Adder<ILanguage>;
-  setRegion: Setter<IRegion>;
-  can: ICan;
-  setCan: SetCan;
 }
 
 export default function RegionsBoard(props: IProps) {
-  const t = useContext(I18nContext);
+  const t = useTranslation();
 
-  useEffect(() => {
-    API.fetchAll(props.setRegions, props.setCan);
-  }, []);
+  const regions = useAppSelector(state => state.regions);
+  const can = useAppSelector(state => state.can.regions);
+
+  useLoadOnMount("/api/regions");
 
   return (
     <div className={style.container}>
@@ -46,7 +33,7 @@ export default function RegionsBoard(props: IProps) {
         <h2>
           <Link to="/regions">{t("Regions")}</Link>
         </h2>
-        {props.can.create && (
+        {can.create && (
           <Link to="/regions/new">
             <AddIcon iconSize="large" />
           </Link>
@@ -61,23 +48,12 @@ export default function RegionsBoard(props: IProps) {
       </div>
       <div className={style.masterDetailContainer}>
         <div className={style.master}>
-          <RegionsTable id={props.id} regions={props.regions} />
+          <RegionsTable id={props.id} regions={regions} />
         </div>
         <div className={style.detail}>
-          {props.action == "new" && (
-            <NewRegionForm
-              setRegion={props.setRegion}
-              addClusters={props.addClusters}
-              addLanguages={props.addLanguages}
-              history={props.history}
-            />
-          )}
+          {props.action == "new" && <NewRegionForm history={props.history} />}
           {props.id && (
-            <RegionContainer
-              key={props.id}
-              id={props.id}
-              history={props.history}
-            />
+            <RegionPage key={props.id} id={props.id} history={props.history} />
           )}
         </div>
       </div>

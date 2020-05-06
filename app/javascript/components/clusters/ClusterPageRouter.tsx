@@ -1,24 +1,35 @@
 import React from "react";
 import { Switch, Route } from "react-router-dom";
-import ClusterParticipantPageContainer from "./ClusterParticipantPageContainer";
-import ClusterContainer from "./ClusterContainer";
+import ClusterParticipantPage from "./ClusterParticipantPage";
+import ClusterPage from "./ClusterPage";
+import { useLoadOnMount } from "../shared/useLoad";
+import useAppSelector from "../../reducers/useAppSelector";
 
-export default function ClusterPageRouter(props: any) {
+interface IProps {
+  id: number;
+  basePath: string;
+}
+
+export default function ClusterPageRouter(props: IProps) {
+  const loading = useLoadOnMount(`/api/clusters/${props.id}`);
+  const cluster = useAppSelector(state => state.clusters.get(props.id));
+
   return (
     <Switch>
       <Route
         path="/clusters/:id/participants/:participantId"
         render={({ match, history }) => (
-          <ClusterParticipantPageContainer
+          <ClusterParticipantPage
             participantId={parseInt(match.params.participantId)}
             history={history}
+            cluster={cluster}
             {...props}
           />
         )}
       />
       <Route
         render={({ history }) => (
-          <ClusterContainer {...props} history={history} />
+          <ClusterPage {...props} history={history} loading={loading} />
         )}
       />
     </Switch>

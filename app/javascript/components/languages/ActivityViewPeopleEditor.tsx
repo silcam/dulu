@@ -1,29 +1,30 @@
 import React, { useState, useContext, useEffect } from "react";
 import I18nContext from "../../contexts/I18nContext";
-import { IPerson, fullName } from "../../models/Person";
+import { fullName } from "../../models/Person";
 import { IActivity } from "../../models/Activity";
-import Participant, { IParticipant } from "../../models/Participant";
+import Participant from "../../models/Participant";
 import DeleteIcon from "../shared/icons/DeleteIcon";
 import update from "immutability-helper";
 import SmallSaveAndCancel from "../shared/SmallSaveAndCancel";
 import Language, { ILanguage } from "../../models/Language";
 import SelectInput from "../shared/SelectInput";
 import { subtract } from "../../util/arrayUtils";
-import List from "../../models/List";
 import useLoad, { useLoadOnMount } from "../shared/useLoad";
+import useAppSelector from "../../reducers/useAppSelector";
 
 interface IProps {
   cancelEdit: () => void;
   activity: IActivity;
   language: ILanguage;
-  participants: List<IParticipant>;
-  people: List<IPerson>;
   basePath: string;
 }
 
 export default function ActivityViewPeopleEditor(props: IProps) {
   const t = useContext(I18nContext);
   const [saveLoad, saving] = useLoad();
+
+  const participants = useAppSelector(state => state.participants);
+  const people = useAppSelector(state => state.people);
 
   // Make sure all ptpts for language are loaded
   useLoadOnMount(`/api/languages/${props.language.id}/participants`, [
@@ -36,12 +37,12 @@ export default function ActivityViewPeopleEditor(props: IProps) {
 
   const draftPtptPeople = Participant.participantPeople(
     draftPtptIds,
-    props.participants,
-    props.people
+    participants,
+    people
   );
   const availablePtptIds = subtract(
     Language.participants(
-      props.participants,
+      participants,
       props.language.id,
       props.language.cluster_id
     ).map(ptpt => ptpt.id),
@@ -49,8 +50,8 @@ export default function ActivityViewPeopleEditor(props: IProps) {
   );
   const availablePtptPeople = Participant.participantPeople(
     availablePtptIds,
-    props.participants,
-    props.people
+    participants,
+    people
   );
 
   const [addPtptId, setAddPtptId] = useState(availablePtptIds[0]); // Undef if list is empty

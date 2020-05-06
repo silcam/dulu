@@ -15,7 +15,6 @@ import useLoad, { useLoadOnMount } from "../shared/useLoad";
 import { useSelector, useDispatch } from "react-redux";
 import { AppState } from "../../reducers/appReducer";
 import OrganizationPicker from "./OrganizationPicker";
-import { deleteOrganization } from "../../actions/organizationActions";
 
 interface IProps {
   id: number;
@@ -63,7 +62,6 @@ export default function OrganizationPage(props: IProps) {
     );
     if (success) {
       props.history.push("/organizations");
-      dispatch(deleteOrganization(props.id));
     }
   };
 

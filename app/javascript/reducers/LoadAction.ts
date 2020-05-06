@@ -1,7 +1,7 @@
 import { PartialModel } from "../models/TypeBucket";
 import { IPerson } from "../models/Person";
 import { ILanguage } from "../models/Language";
-import { IOrganization } from "../models/Organization";
+import { IOrganization, IOrganizationPerson } from "../models/Organization";
 import { IParticipant } from "../models/Participant";
 import { ICluster } from "../models/Cluster";
 import { IRegion } from "../models/Region";
@@ -14,16 +14,21 @@ export interface LoadAction {
   payload: {
     activities?: PartialModel<IActivity>[];
     people?: PartialModel<IPerson>[];
+    deletedPeople?: number[];
     languages?: PartialModel<ILanguage>[];
     clusters?: PartialModel<ICluster>[];
+    deletedClusters?: number[];
     regions?: PartialModel<IRegion>[];
+    deletedRegions?: number[];
     organizations?: PartialModel<IOrganization>[];
+    deletedOrganizations?: number[];
+    organizationPeople?: PartialModel<IOrganizationPerson>[];
+    deletedOrganizationPeople?: number[];
     participants?: PartialModel<IParticipant>[];
     deletedParticipants?: number[];
     events?: PartialModel<IEvent>[];
     deletedEvents?: number[];
     can?: Partial<CanState>;
-    // ... add more here
   };
 }
 

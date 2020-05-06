@@ -17,7 +17,7 @@ class PersonRolesControllerTest < ActionDispatch::IntegrationTest
   test 'Add a role for Drew' do
     api_login @rick
     data = api_post(person_roles_route, person_id: @drew.id, role: 'LinguisticConsultant')
-    assert_equal(%w[TranslationConsultant LinguisticConsultant], data[:roles])
+    assert_equal(%w[TranslationConsultant LinguisticConsultant], data[:people][0][:roles])
   end
 
   test 'Add roles authorization' do
@@ -29,7 +29,7 @@ class PersonRolesControllerTest < ActionDispatch::IntegrationTest
   test 'Finish role' do
     api_login @rick
     data = api_post(person_roles_route('/finish'), person_id: @drew.id, role: 'TranslationConsultant')
-    assert_empty data[:roles]
+    assert_empty data[:people][0][:roles]
   end
 
   test 'Finish role auth' do

@@ -1,5 +1,4 @@
 import React, { useContext } from "react";
-import ParticipantsContainer from "./ParticipantsContainer";
 import LanguageEventsContainer from "./LanguageEventsContainer";
 import { DSICategory } from "../../models/DomainStatusItem";
 import { ILanguage } from "../../models/Language";
@@ -9,6 +8,7 @@ import I18nContext from "../../contexts/I18nContext";
 import TranslationProgress from "./TranslationProgress";
 import DomainStatus from "./DomainStatus";
 import ActivitiesTable from "./ActivitiesTable";
+import ParticipantsTable from "./ParticipantsTable";
 
 interface IProps {
   language: ILanguage;
@@ -29,7 +29,7 @@ export default function LanguagePageContent(props: IProps) {
   }
   if (props.tab == "People") {
     return (
-      <ParticipantsContainer
+      <ParticipantsTable
         {...props}
         can={props.language.can}
         basePath={`/languages/${props.language.id}`}
@@ -75,7 +75,7 @@ export default function LanguagePageContent(props: IProps) {
         history={props.history}
         domain={props.tab}
       />
-      <ParticipantsContainer
+      <ParticipantsTable
         domain={props.tab}
         language={props.language}
         can={props.language.can}

@@ -19,8 +19,9 @@ class Api::RegionsController < ApplicationController
   def update
     @region = Region.find(params[:id])
     authorize! :update, @region
+    @old_cluster_ids = @region.cluster_ids
+    @old_language_ids = @region.language_ids
     @region.update(region_params)
-    @region_updated = true
     @region.lpf&.add_notification_channel(NotificationChannel.region_channel(@region))
     render :show
   end
@@ -29,7 +30,6 @@ class Api::RegionsController < ApplicationController
     @region = Region.find(params[:id])
     authorize! :destroy, @region
     @region.destroy!
-    response_ok
   end
 
   private

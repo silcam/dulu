@@ -1,5 +1,7 @@
+# frozen_string_literal: true
+
 class LinguisticActivity < Activity
-  CATEGORIES = %i( Research Workshops )
+  CATEGORIES = %i[Research Workshops].freeze
 
   default_scope { where(archived: false) }
 
@@ -10,7 +12,7 @@ class LinguisticActivity < Activity
   validates :category, inclusion: CATEGORIES
 
   def category
-    self.attributes["category"].try(:to_sym)
+    attributes['category'].try(:to_sym)
   end
 
   def name
@@ -22,8 +24,8 @@ class LinguisticActivity < Activity
   end
 
   def available_stages
-    (category == :Workshops) ?
-      workshops.collect { |w| w.name } :
+    category == :Workshops ?
+      workshops.collect(&:name) :
       Stage.stages(:Linguistic)
   end
 
@@ -50,13 +52,13 @@ class LinguisticActivity < Activity
   # end
 
   def progress
-    (category == :Workshops) ?
+    category == :Workshops ?
       workshop_progress :
       current_stage.progress
   end
 
   def archivable?
-    (category == :Workshops) ?
+    category == :Workshops ?
       stages.count == workshops.count :
       super
   end
@@ -78,25 +80,6 @@ class LinguisticActivity < Activity
   #   end
   # end
 
-  def update_workshops(params)
-    params[:workshops] ||= {}
-    workshops.each do |workshop|
-      ws_params = params[:workshops][workshop.id.to_s]
-      if ws_params.nil?
-        workshop.destroy
-      else
-        workshop.update(name: ws_params[:name], number: ws_params[:number])
-        if workshop.completed? && !ws_params[:completed]
-          workshop.stage.destroy
-        end
-      end
-    end
-    params[:new_workshops].try(:each_with_index) do |name, i|
-      number = params[:new_workshop_numbers][i]
-      workshops.create(name: name, number: number)
-    end
-  end
-
   def self.build(params, language, participants)
     activity = LinguisticActivity.new
     LinguisticActivity.transaction do
@@ -116,13 +99,13 @@ class LinguisticActivity < Activity
   end
 
   def self.search(query)
-    activities = LinguisticActivity.where("unaccent(title) ILIKE unaccent(:q) OR category ILIKE :q", { q: "%#{query}%" })
+    activities = LinguisticActivity.where('unaccent(title) ILIKE unaccent(:q) OR category ILIKE :q', q: "%#{query}%")
     results = []
     activities.each do |activity|
       results << {
         title: activity.name,
         description: "#{activity.language.name} - #{activity.current_stage.name}",
-        route: "/activities/#{activity.id}",
+        route: "/activities/#{activity.id}"
       }
     end
     results
@@ -131,10 +114,11 @@ class LinguisticActivity < Activity
   private
 
   def workshop_progress
-    return 0 if workshops.count == 0  # Unlikely case
+    return 0 if workshops.count == 0 # Unlikely case
+
     complete = stages.count
     percent = (100 * complete) / workshops.count
-    color = (percent == 100) ? :purple : :yellow
-    return percent, color
+    color = percent == 100 ? :purple : :yellow
+    [percent, color]
   end
 end
