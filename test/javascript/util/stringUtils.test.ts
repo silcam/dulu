@@ -1,7 +1,8 @@
 import {
   allMatches,
   fixCaps,
-  splitOnLastSpace
+  splitOnLastSpace,
+  truncate
 } from "../../../app/javascript/util/stringUtils";
 
 test("allMatches", () => {
@@ -33,3 +34,13 @@ test("splitOnLastSpace", () => {
   expect(splitOnLastSpace("Ending Space ")).toEqual(["Ending Space", ""]);
   expect(splitOnLastSpace("No-space")).toEqual(["No-space", ""]);
 });
+
+test("Truncate", () => {
+  expect(truncate("123456", 100)).toEqual("123456");
+  expect(truncate("123456", 3)).toEqual("123...");
+  expect(truncate("123456", 0)).toEqual("123456");
+  expect(truncate("123456", -1)).toEqual("123456");
+  expect(truncate("123456", 6)).toEqual("123456");
+  expect(truncate("123456", 5)).toEqual("12345...");
+  expect(truncate("123456", 1)).toEqual("1...");
+})

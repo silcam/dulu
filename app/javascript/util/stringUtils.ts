@@ -13,6 +13,16 @@ export function allMatches(
   return found;
 }
 
+export function truncate(text: string, truncateAt = 200) {
+  if (text == null || text == undefined) return "";
+  if (text.length > truncateAt && truncateAt > 0) {
+    return text.substr(0, truncateAt).padEnd(truncateAt + 3, "...");
+  } else {
+    return text;
+  }
+}
+
+
 export function fixCaps(text: string) {
   if (text == text.toLowerCase() || text == text.toUpperCase()) {
     return text

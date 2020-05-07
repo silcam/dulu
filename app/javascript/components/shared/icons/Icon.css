@@ -7,6 +7,14 @@
     fill: #aaa;
 }
 
+.iconInactive {
+    display: inline-block;
+}
+
+.iconInactive path {
+    fill: #aaa;
+}
+
 .iconBlue {
     composes: icon;
 }
@@ -41,4 +49,22 @@
 
 .iconRed:hover:active path {
     fill: #c9302c;
+}
+
+.right {
+    margin-left: 5px;
+}
+
+.left {
+    margin-right: 5px;
+}
+
+.right.middleAlign {
+    margin-left: 5px;
+    vertical-align: middle;
+}
+
+.left.middleAlign {
+    margin-right: 5px;
+    vertical-align: middle;
 }

@@ -1,4 +1,5 @@
 const genesisConsultPath = "/events/704985269";
+const hdiLanguagePath = "/languages/876048951";
 
 describe("The Events", () => {
   beforeEach(cy.appFixtures);
@@ -101,6 +102,22 @@ describe("The Events", () => {
     });
     cy.contains("Save").click();
     cy.contains("tr", "Clusters").should("contain", "None");
+  });
+
+  it("Adds Note and Sees Icon", () => {
+    setupEdit();
+    cy.inLabel("Note").type("This is an event note");
+    cy.contains("Save").click();
+
+    cy.contains("span", "This is an event note");
+
+    cy.visit(hdiLanguagePath);
+    cy.contains("a", "Genesis Checking")
+      .next()
+      .should('have.attr', "hovertext", "This is an event note")
+      .should('have.attr', "data-icon-name", "noteIcon");
+    cy.contains("a", "Check a book now")
+      .next().should('not.exist');
   });
 
   it("Adds Rick", () => {
