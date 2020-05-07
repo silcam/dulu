@@ -15,6 +15,7 @@ describe("Translation Activity", () => {
     cy.get("select").select("Genesis");
     cy.contains("Save").click();
     cy.contains("tr", "Genesis").should("contain", "Planned");
+    cy.contains("tr", "Genesis").find('td:nth-child(3)').should('be.empty')
   });
 
   it("Updates the stage", () => {
@@ -43,6 +44,13 @@ describe("Translation Activity", () => {
       cy.contains("Save").click();
       cy.contains("2018-04-02");
     });
+  });
+
+  it("Dates show on refresh", () => {
+    cy.login();
+    cy.visit(hdiPath + "/Translation");
+    cy.contains("tr", "Genesis").find('td:nth-child(3)').should("contain", '2017-05-29');
+    cy.contains("tr", "Ezra").find('td:nth-child(3)').should('contain', '2017-02')
   });
 
   it("Deletes stages", () => {
