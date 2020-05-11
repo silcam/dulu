@@ -43,6 +43,7 @@ class ActivitiesControllerTest < ActionDispatch::IntegrationTest
                    title: nil, 
                    participant_ids: [], 
                    stage_name: 'Planned',
+                   stage_date: nil,
                    scripture: nil,
                    film: 'LukeFilm'
                  }, {
@@ -54,6 +55,7 @@ class ActivitiesControllerTest < ActionDispatch::IntegrationTest
                    title: nil, 
                    participant_ids: [],
                    stage_name: 'Planned',
+                   stage_date: nil,
                    scripture: 'Other',
                    film: nil
                  }], data[:activities])
@@ -71,6 +73,7 @@ class ActivitiesControllerTest < ActionDispatch::IntegrationTest
                     participant_ids: [@drew_hdi.id, @abanda_hdi.id],
                     name: 'Ezra',
                     stage_name: 'Drafting',
+                    stage_date: '2017-02',
                     scripture: nil,
                     film: nil)
   end
@@ -88,6 +91,7 @@ class ActivitiesControllerTest < ActionDispatch::IntegrationTest
                    participant_ids: [@kendall_ewondo.id], 
                    name: 'Workshops: Grammar Intro', 
                    stage_name: 'Noun',
+                   stage_date: '2018-01-21',
                    scripture: nil,
                    film: nil,
                    workshops: [{
@@ -122,6 +126,7 @@ class ActivitiesControllerTest < ActionDispatch::IntegrationTest
                    participant_ids: [@kendall_ewondo.id], 
                    name: 'Research: Lə the Complementizer', 
                    stage_name: 'Research',
+                   stage_date: '2017-12',
                    scripture: nil,
                    film: nil
                  }], data[:activities])
