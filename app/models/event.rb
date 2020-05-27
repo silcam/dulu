@@ -3,6 +3,8 @@
 class Event < ApplicationRecord
   include MultiWordSearch
 
+  has_and_belongs_to_many :tags
+
   has_and_belongs_to_many :languages
   has_and_belongs_to_many :clusters
   has_many :event_participants, autosave: true, dependent: :destroy

@@ -1,5 +1,5 @@
 import Event from "../models/Event";
-import { IEvent, IPeriod } from "../models/Event";
+import { IEvent, IPeriod, ITag } from "../models/Event";
 import { IPerson } from "../models/Person";
 
 export const ADD_EVENTS = "ADD_EVENTS";
@@ -7,6 +7,7 @@ export const ADD_EVENTS_FOR_LANGUAGE = "ADD_EVENTS_FOR_LANGUAGE";
 export const ADD_EVENTS_FOR_PERSON = "ADD_EVENTS_FOR_PERSON";
 export const SET_EVENT = "SET_EVENT";
 export const DELETE_EVENT = "DELETE_EVENT";
+export const ADD_TAG = "ADD_TAG";
 
 export interface EventAction {
   type: string;
@@ -17,6 +18,12 @@ export interface EventAction {
   backToId?: string;
   person?: IPerson;
   id?: number;
+}
+
+// TODO, own file?
+export interface TagAction {
+  type: string;
+  tag: ITag;
 }
 
 export function setEvent(event: IEvent): EventAction {

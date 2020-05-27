@@ -16,6 +16,7 @@ import FuzzyDateInput from "../shared/FuzzyDateInput";
 import I18nContext from "../../contexts/I18nContext";
 import { T } from "../../i18n/i18n";
 import EventCategoryPicker from "./EventCategoryPicker";
+import EventTagger from "./EventTagger";
 import TyperPicker from "../shared/TyperPicker";
 import useLoad, { useLoadOnMount } from "../shared/useLoad";
 import useAppSelector, {
@@ -114,6 +115,12 @@ export default function EventView(props: IProps) {
             </span>
           )}
         </h2>
+
+        <EventTagger
+          editing={editing}
+          event={event}
+          updateEvent={updateEvent}
+        />
 
         {editing ? (
           <div>

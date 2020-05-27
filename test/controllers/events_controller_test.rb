@@ -193,6 +193,23 @@ class EventsControllerTest < ActionDispatch::IntegrationTest
     assert EventLocation.find_by(name: 'The Basketball Court')
   end
 
+  test 'Update tags' do
+    api_login @drew
+
+    assert_equal(0, @hdi_gen_check.tags.size, 'no tags')
+    yaounde_tag = tags :YaoundeTag
+
+    api_put(      
+      events_path("/#{@hdi_gen_check.id}"),
+      event: {
+        tag_ids: [yaounde_tag.id]
+      }
+    )
+
+    @hdi_gen_check.reload
+    assert_equal(1, @hdi_gen_check.tags.size, 'no tags')
+  end
+
   test 'Update Permissions' do
     api_login @drew
     api_put(events_path("/#{@lance_event.id}"), event: { name: "Drew's Event" })

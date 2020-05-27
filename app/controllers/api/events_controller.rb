@@ -11,9 +11,13 @@ class Api::EventsController < ApplicationController
     end
   end
 
+  def tagged
+    @events = Event.joins(:tags).where('tagname = ?', params[:tagname])
+  end
+
   def show
     @event = Event.find(params[:id])
-  end 
+  end
 
   def create
     authorize! :create, Event
@@ -55,7 +59,7 @@ class Api::EventsController < ApplicationController
                   .permit(
                     :name, :domain, :note, :start_date, :end_date,
                     :category, :subcategory, :event_location_id,
-                    language_ids: [], cluster_ids: [],
+                    tag_ids: [], language_ids: [], cluster_ids: [],
                     event_participants_attributes: [
                       :id, :person_id, :_destroy, roles: []
                     ]

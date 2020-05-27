@@ -11,6 +11,7 @@ import canReducer from "./canReducer";
 import regionsReducer from "./regionsReducer";
 import currentUserReducer from "./currentUserReducer";
 import networkReducer from "./networkReducer";
+import tagsReducer from "./tagsReducer";
 
 const appReducer = combineReducers({
   languages: languagesReducer,
@@ -24,7 +25,8 @@ const appReducer = combineReducers({
   events: eventsReducer,
   can: canReducer,
   currentUser: currentUserReducer,
-  network: networkReducer
+  network: networkReducer,
+  tags: tagsReducer
 });
 export type AppState = ReturnType<typeof appReducer>;
 

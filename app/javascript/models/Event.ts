@@ -72,12 +72,19 @@ export interface IEvent {
   end_date: string;
   language_ids: number[];
   cluster_ids: number[];
+  tag_ids: number[];
+  tags: ITag[];
   event_participants: IEventParticipant[];
   can: ICan;
   workshop_id?: number;
   workshop_activity_id?: number;
   location?: { id: number; name: string };
   note: string;
+}
+
+export interface ITag {
+  id: number;
+  name: string;
 }
 
 export interface IEventInflated extends IEvent {
@@ -207,6 +214,8 @@ export function emptyEvent(): IEvent {
     language_ids: [],
     cluster_ids: [],
     event_participants: [],
+    tag_ids: [],
+    tags: [],
     can: {},
     note: ""
   };

@@ -7,6 +7,7 @@ import { ICluster } from "../models/Cluster";
 import { IRegion } from "../models/Region";
 import { CanState } from "./canReducer";
 import { IEvent } from "../models/Event";
+import { ITag } from "../models/Event";
 import { IActivity } from "../models/Activity";
 
 export interface LoadAction {
@@ -28,6 +29,8 @@ export interface LoadAction {
     deletedParticipants?: number[];
     events?: PartialModel<IEvent>[];
     deletedEvents?: number[];
+    tags?: PartialModel<ITag>[];
+    deletedTags?: number[];
     can?: Partial<CanState>;
   };
 }
