@@ -70,7 +70,8 @@ export const LiteracyMaterials = <const>[
   "TransitionManual",
   "BibleStoryBook",
   "StoryBook",
-  "InformationalBook"
+  "InformationalBook",
+  "MathBook"
 ];
 export type LiteracyMaterial = typeof LiteracyMaterials[number];
 
