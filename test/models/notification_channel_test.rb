@@ -117,7 +117,7 @@ class NotificationChannelTest < ActiveSupport::TestCase
       NotificationChannel.channels_for(:Translation, languages(:Ewondo), clusters(:Ndop))
     )
     assert_equal(
-      [people(:Kendall), people(:Drew), people(:Nancy), people(:Olga), people(:Freddie)], 
+      [people(:JohnCarlos), people(:Kendall), people(:Drew), people(:Nancy), people(:Olga), people(:Freddie)],
       notify_people
     )
   end

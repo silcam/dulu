@@ -18,6 +18,17 @@ Rick:
   roles_field: '|DuluAdmin|'
   ui_language: en
 
+JohnCarlos:
+  first_name: JohnCarlos
+  last_name: Gerber
+  gender: M
+  email: johncarlos_gerber@sil.org
+  country: USA
+  has_login: true
+  roles_field: '|TranslationConsultant|'
+  ui_language: fr
+  notification_channels: 'Lng<%= hdi_id %> Cls<%= ndop_id %> '
+
 Drew:
   first_name: Drew
   last_name: Mambo
