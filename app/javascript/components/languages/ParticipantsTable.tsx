@@ -32,8 +32,8 @@ export default function ParticipantsTable(props: IProps) {
 
   const ptptFilter = props.language
     ? (ptpt: IParticipant) =>
-        ptpt.language_id === props.language!.id ||
-        ptpt.cluster_id === props.language!.cluster_id
+      ptpt.language_id === props.language!.id ||
+      (ptpt.cluster_id != undefined && ptpt.cluster_id === props.language!.cluster_id)
     : (ptpt: IParticipant) => ptpt.cluster_id === props.cluster!.id;
   const programParticipants = useParticipants(ptptFilter);
 

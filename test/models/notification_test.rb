@@ -11,6 +11,7 @@ class NotificationTest < ActiveSupport::TestCase
 
   def setup
     @drew = people :Drew
+    @johncarlos = people :JohnCarlos
     @rick = people :Rick
     @lance = people :Lance
     @andreas = people :Andreas
@@ -49,7 +50,7 @@ class NotificationTest < ActiveSupport::TestCase
     assert_equal "Lng#{@hdi.id} Reg#{regions(:NorthRegion).id} DTra ", ntfn.channels
     assert_equal @drew, ntfn.creator
     assert_equal [ntfn], @drew.created_notifications
-    assert_equal 5, PersonNotification.count
+    assert_equal 6, PersonNotification.count
     assert_includes @drew.notifications, ntfn
     assert_includes @lance.notifications, ntfn
     assert_includes @abanda.notifications, ntfn
@@ -77,9 +78,9 @@ class NotificationTest < ActiveSupport::TestCase
 
   test 'New Stage' do
     ezra_testing = Stage.create!(
-      activity: translation_activities(:HdiEzra), 
-      start_date: '2018', 
-      name: :Testing, 
+      activity: translation_activities(:HdiEzra),
+      start_date: '2018',
+      name: :Testing,
       kind: :Translation
     )
     Notification.new_stage(@drew, ezra_testing)
@@ -88,6 +89,27 @@ class NotificationTest < ActiveSupport::TestCase
     assert_equal '[Drew Mambo](/people/883742519) a mis à jour [Esdras](/translation_activities/1071624995) à Testing pour le programme [Hdi](/languages/876048951).', ntfn.french
     assert_includes people(:Abanda).notifications, ntfn
     assert_includes people(:Nancy).notifications, ntfn
+  end
+
+  test 'New Stage from Francophone' do
+    ezra_review = Stage.create!(
+      activity: translation_activities(:HdiEzra),
+      start_date: '2019',
+      name: :Review_committee,
+      kind: :Translation
+    )
+    Notification.new_stage(@johncarlos, ezra_review)
+    ntfn = Notification.last
+    assert_equal "[JohnCarlos Gerber](#{mp(@johncarlos)}) updated [Ezra](#{mp(ezra_review.activity)}) to the Review Committee stage for the [Hdi](#{mp(@hdi)}) program.", ntfn.english
+    assert_equal "[JohnCarlos Gerber](#{mp(@johncarlos)}) a mis à jour [Esdras](#{mp(ezra_review.activity)}) à Comité de révision pour le programme [Hdi](#{mp(@hdi)}).", ntfn.french
+    assert_includes people(:Abanda).notifications, ntfn
+    assert_includes people(:Nancy).notifications, ntfn
+  end
+
+  test 'Translation Test from French locale' do
+    I18n.locale = :fr
+    assert_equal("Ezra", I18n.t("Ezra", { :locale => :en }), "should not give translation missing error")
+    assert_equal("Esdras", I18n.t("Ezra", { :locale => :fr }), "should not give translation missing error")
   end
 
   test 'Workshop Complete' do

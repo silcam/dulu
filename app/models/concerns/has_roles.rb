@@ -15,7 +15,7 @@ module HasRoles
   end
 
   def roles_text
-    roles.collect { |r| I18n.t(r) }.join(", ")
+    roles.collect { |r| I18n.t("roles.#{r}") }.join(", ")
   end
 
   def has_role?(role)

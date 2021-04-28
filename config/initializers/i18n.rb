@@ -3,7 +3,7 @@
 module I18n
   class MissingTranslationHandler < ExceptionHandler
     def call(exception, locale, key, options)
-      if exception.is_a?(MissingTranslation) && I18n.locale == :en
+      if exception.is_a?(MissingTranslation) && locale == :en
         prettify key.to_s
       else
         super

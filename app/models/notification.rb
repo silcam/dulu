@@ -30,8 +30,8 @@ class Notification < ApplicationRecord
       language = participant.language
       params = t_params(
         'notifications.new_language_participant',
-        participant_name: participant.full_name, 
-        language_name: language.name 
+        participant_name: participant.full_name,
+        language_name: language.name
       )
       links = {
         participant_name: participant,
@@ -45,14 +45,14 @@ class Notification < ApplicationRecord
       cluster = participant.cluster
       params = t_params(
         'notifications.new_cluster_participant',
-        participant_name: participant.full_name, 
+        participant_name: participant.full_name,
         cluster_name: cluster.name
       )
       links = {
         participant_name: participant,
         cluster_name: cluster
       }
-      channels = NotificationChannel.channels_for(cluster, participant.domains) 
+      channels = NotificationChannel.channels_for(cluster, participant.domains)
       send_notification(generate(params, links, channels, user))
     end
 
@@ -62,14 +62,14 @@ class Notification < ApplicationRecord
       params = t_params(
         'notifications.new_stage',
         language_name: language.name,
-        stage_name: t_params(stage.name),
+        stage_name: t_params("stage_names.#{stage.name}"),
         activity_name: activity_name(activity)
       )
       links = {
         language_name: language,
         activity_name: activity
       }
-      channels = NotificationChannel.channels_for(language, activity.domain)  
+      channels = NotificationChannel.channels_for(language, activity.domain)
       send_notification(generate(params, links, channels, user))
     end
 
@@ -84,7 +84,7 @@ class Notification < ApplicationRecord
         workshop_name: workshop.linguistic_activity,
         language_name: language
       }
-      channels = NotificationChannel.channels_for(language, :Linguistics) 
+      channels = NotificationChannel.channels_for(language, :Linguistics)
       send_notification(generate(params, links, channels, user))
     end
 
@@ -99,13 +99,13 @@ class Notification < ApplicationRecord
         language_name: language,
         activity_name: activity
       }
-      channels = NotificationChannel.channels_for(language, activity.domain)  
+      channels = NotificationChannel.channels_for(language, activity.domain)
       send_notification(generate(params, links, channels, user))
     end
 
     def updated_person(user, person)
       return if user == person
-      
+
       params = t_params(
         'notifications.updated_person',
         person_name: person.full_name
@@ -139,7 +139,7 @@ class Notification < ApplicationRecord
         activity_name: activity,
         language_name: language
       }
-      channels = NotificationChannel.channels_for(language, activity.domain) 
+      channels = NotificationChannel.channels_for(language, activity.domain)
       send_notification(generate(params, links, channels, user))
     end
 
@@ -168,7 +168,7 @@ class Notification < ApplicationRecord
         event_name: event,
         language_name: language
       }
-      channels = NotificationChannel.channels_for(language, event.domain)  
+      channels = NotificationChannel.channels_for(language, event.domain)
       send_notification(generate(params, links, channels, user))
     end
 
@@ -182,7 +182,7 @@ class Notification < ApplicationRecord
         language_name: language,
         event_name: event
       }
-      channels = NotificationChannel.channels_for(language, event.domain) 
+      channels = NotificationChannel.channels_for(language, event.domain)
       send_notification(generate(params, links, channels, user))
     end
 
@@ -196,7 +196,7 @@ class Notification < ApplicationRecord
         cluster_name: cluster,
         event_name: event
       }
-      channels = NotificationChannel.channels_for(cluster, event.domain) 
+      channels = NotificationChannel.channels_for(cluster, event.domain)
       send_notification(generate(params, links, channels, user))
     end
 
