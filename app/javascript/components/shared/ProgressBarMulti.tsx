@@ -16,7 +16,7 @@ export default function ProgressBarMulti(props: IProps) {
         width: "100px",
         height: "15px",
         backgroundColor: "#ddd",
-        overflowX: "hidden"
+        overflow: "hidden"
       }}
     >
       {props.bars.map((bar, index) => (
