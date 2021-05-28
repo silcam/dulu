@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20200312075605) do
+ActiveRecord::Schema.define(version: 20200512172414) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -240,6 +240,13 @@ ActiveRecord::Schema.define(version: 20200312075605) do
     t.index ["event_id"], name: "index_events_languages_on_event_id"
     t.index ["language_id"], name: "index_events_languages_on_language_id"
     t.index ["program_id"], name: "index_events_languages_on_program_id"
+  end
+
+  create_table "events_tags", id: false, force: :cascade do |t|
+    t.bigint "event_id"
+    t.bigint "tag_id"
+    t.index ["event_id"], name: "index_events_tags_on_event_id"
+    t.index ["tag_id"], name: "index_events_tags_on_tag_id"
   end
 
   create_table "language_statuses", id: :serial, force: :cascade do |t|
@@ -480,6 +487,12 @@ ActiveRecord::Schema.define(version: 20200312075605) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "open", default: false
+  end
+
+  create_table "tags", force: :cascade do |t|
+    t.string "tagname"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "territories", id: :serial, force: :cascade do |t|

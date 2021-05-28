@@ -5,6 +5,7 @@ import LanguageParticipantPage from "./LanguageParticipantPage";
 import LanguageEventPage from "./LanguageEventPage";
 import LanguageActivityPage from "./LanguageActivityPage";
 import LanguageNewEventPage from "./LanguageNewEventPage";
+import TaggedEventPage from "../events/TaggedEventsPage";
 import Loading from "../shared/Loading";
 import DomainStatusItemPage from "./DomainStatusItemPage";
 import DomainStatusDataCollectionPage from "./DomainStatusDataCollectionPage";
@@ -56,6 +57,14 @@ export default function LanguagePageRouter(props: IProps) {
             {...props}
             language={language}
           />
+        )}
+      />
+      <Route
+        // TODO: This should be one level above, not specific
+        // to a language?
+        path={props.basePath + "/taggedevents/:tag"}
+        render={({ match }) => (
+          <TaggedEventPage {...props} tag={match.params.tag} />
         )}
       />
       <Route

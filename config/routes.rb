@@ -37,6 +37,7 @@ Rails.application.routes.draw do
       get 'dashboard_list', on: :collection
       get 'find_language_id', on: :collection
     end
+    get 'languages/:language_id/events/tagged/:tagname', to: 'events#tagged'
 
     resources :notes
 
@@ -74,6 +75,11 @@ Rails.application.routes.draw do
     end
 
     resources :stages
+
+    resources :tags do
+      get 'search', on: :collection
+    end
+
   end
 
   # Sessions

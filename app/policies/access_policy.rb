@@ -50,6 +50,8 @@ class AccessPolicy
 
       can :create, Event
 
+      can :manage, Tag
+
       can :manage, Publication do |pub, user|
         pub.language.all_current_people.include? user
       end
@@ -67,7 +69,7 @@ class AccessPolicy
       can [:read, :update], Person do |person, user|
         person == user
       end
-      
+
       can [:update, :destroy], Note do |note, user|
         note.person == user
       end
