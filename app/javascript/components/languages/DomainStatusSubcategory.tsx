@@ -32,14 +32,12 @@ export default function DomainStatusSubcategory(props: IProps) {
     <div className={styles.subcategory}>
       <h5
         className={
-          props.showCheckbox && !checkboxChecked
-            ? styles.subcategoryHeaderUnchecked
-            : styles.subcategoryHeader
+          props.showCheckbox && checkboxChecked
+            ? styles.subcategoryHeader
+            : styles.subcategoryHeaderUnchecked
         }
       >
-        {props.showCheckbox && (
-          <input type="checkbox" checked={checkboxChecked} readOnly />
-        )}
+
         {t(props.subcategory)}
       </h5>
       {props.render ? (

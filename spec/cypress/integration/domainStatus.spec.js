@@ -49,11 +49,13 @@ describe("Domain Status Updates", () => {
     cy.login();
     cy.visit(hdiPath + "/Translation");
     cy.contains("xed");
-    cy.contains("h5", "New Testament").find("input").should("be.checked");
+    //cy.contains("h5", "New Testament").find("input").should("be.checked");
+    cy.contains("h5","New Testament").should('have.css','font-weight','700');
     cy.contains("a", "2005").click();
     cy.actionBarIcon("deleteIcon").click();
     cy.location("pathname").should("eq", hdiPath);
-    cy.contains("h5", "New Testament").find("input").should("not.be.checked");
+    //cy.contains("h5", "New Testament").find("input").should("not.be.checked");
+    cy.contains("h5","New Testament").should('have.css',"color","rgb(128, 128, 128)");
   });
 
   it("Kevin's view - no editing", () => {
