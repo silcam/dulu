@@ -57,7 +57,8 @@ The Readme is still a work in progress. It actually won't get you very far, beca
 
 If you just want to run the tests, you can after a few more steps. The test database does not need to be seeded.
 
-1. In `secrets.yml`, add Rails.application.secrets.gmail_username, set to something fake.
+1. In `secrets.yml`, add Rails.application.secrets.smtp_username, set to something fake. (previously gmail_username,
+   which is deprecated)
 
 1. Run tests.
 
