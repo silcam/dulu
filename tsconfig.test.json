@@ -14,8 +14,10 @@
       "jsx": "react",
       "strict": true
     },
+    "include": [
+      "**/*.spec.ts"
+    ],
     "exclude": [
-      "**/*.spec.ts",
       "spec",
       "node_modules",
       "vendor",
