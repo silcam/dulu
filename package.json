@@ -62,6 +62,9 @@
     "node-releases": "2.0.19",
     "node-sass": "9.0.0"
   },
+  "browserslist": [
+    "defaults"
+  ],
   "jest": {
     "preset": "ts-jest/presets/js-with-babel",
     "globals": {

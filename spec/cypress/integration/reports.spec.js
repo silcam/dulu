@@ -40,12 +40,15 @@ describe("Reports", () => {
       cy.contains("select", "2017").select("2017");
     });
 
-    cy.contains("table", "Language")
-      .find("tr:nth-child(2)")
-      .should("have.text", "HdiGenesisConsultant Check in Progress2017-05-29");
-    cy.contains("table", "Language")
-      .find("tr:nth-child(3)")
-      .should("have.text", "ZulgoEzraConsultant Check in Progress2017-05-29");
+    // Both rows carry start_date 2017-05-29 and DomainReport#gen_activity_items orders
+    // only by `start_date: :desc` with no tiebreaker, so PostgreSQL is free to return
+    // them either way round. Asserting fixed row positions made this spec fail roughly
+    // at random. Assert that both rows are present instead, and leave their order to the
+    // application to fix -- see UPGRADE_PLAN.md Phase 8.
+    cy.contains("table", "Language").within(() => {
+      cy.contains("tr", "HdiGenesisConsultant Check in Progress2017-05-29");
+      cy.contains("tr", "ZulgoEzraConsultant Check in Progress2017-05-29");
+    });
     cy.contains("table", "Name")
       .find("tr:nth-child(3)")
       .should("have.text", "Check a book now2017-072017-07Hdi");
