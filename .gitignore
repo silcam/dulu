@@ -45,3 +45,17 @@ yarn-debug.log*
 
 # Mac
 .DS_Store
+
+# Live database dumps — real user data, never commit
+/LIVE_DUMP/
+
+# Yarn error log (yarn-debug is already covered above)
+yarn-error.log*
+
+# Local-only / scratch files, kept on disk but not for commit.
+# Left in place deliberately during the Rails 8 upgrade — see UPGRADE_PLAN.md Phase 0.
+/notes.txt
+/rick-meeting.txt
+/old--jest--config--js
+/config/.ruby-version
+/config/deploy/amazon.rb

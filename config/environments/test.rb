@@ -34,8 +34,11 @@ Rails.application.configure do
   # ActionMailer::Base.deliveries array.
   config.action_mailer.delivery_method = :test
 
-  # Print deprecation notices to the stderr.
-  config.active_support.deprecation = :stderr
+  # Raise on deprecation notices rather than printing them.
+  # Set during the Rails 8 upgrade (see UPGRADE_PLAN.md): this converts each Rails
+  # version's deprecation warnings into test failures at the hop that introduces them,
+  # instead of letting them scroll past and become hard errors two versions later.
+  config.active_support.deprecation = :raise
 
   # Raises error for missing translations
   config.action_view.raise_on_missing_translations = true
