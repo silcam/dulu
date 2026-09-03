@@ -6,11 +6,15 @@ git_source(:github) do |repo_name|
 end
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem "rails", "~> 5.1.6.2"
+gem "rails", "~> 5.2.8"
 # Be Awesome
 # gem 'bootsnap', require: false
 # Use postgres as the database for Active Record
 gem "pg"
+# Transitive, pinned only for Ruby 2.7 compatibility: nokogiri >= 1.16 requires
+# Ruby >= 3.0, and bundler otherwise resolves capybara/xpath to a nokogiri that
+# cannot install here. Drop this pin once Ruby 3.1 lands in Phase 5.
+gem "nokogiri", "~> 1.15.7"
 # Use Puma as the app server
 # gem 'puma', '~> 3.0'
 # Use SCSS for stylesheets
@@ -35,13 +39,13 @@ gem "jbuilder", "~> 2.5"
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
 # Internationalization
-gem "rails-i18n", "~> 5.0.4"
+gem "rails-i18n", "~> 5.1"
 # Google authentication
 gem "omniauth-google-oauth2", "~> 0.5"
 # User roles
 gem "access-granted", "~> 1.2.0"
 # Activity Log
-gem "audited", "~> 4.5"
+gem "audited", "~> 4.9"
 # xlsx Export
 # gem 'rubyzip', '>= 1.2.1'
 # gem 'axlsx', git: 'https://github.com/randym/axlsx.git', ref: '776037c0fc799bb09da8c9ea47980bd3bf296874'
@@ -49,6 +53,11 @@ gem "audited", "~> 4.5"
 # Pagination
 # gem 'kaminari', '~> 1.1'
 # Delayed Job for background jobs
+# delayed_job 4.2 requires ActiveJob::QueueAdapters::AbstractAdapter, which only
+# exists in Rails 7.1+. Held at the 4.1 line until Phase 5 reaches Rails 7.1;
+# without this the production environment fails to boot (it is the only env that
+# sets active_job.queue_adapter = :delayed_job).
+gem "delayed_job", "~> 4.1.11"
 gem "delayed_job_active_record", "~> 4.1"
 gem "daemons", "~> 1.2"
 gem "delayed_job_recurring"
@@ -84,9 +93,18 @@ end
 
 group :test do
   gem "minitest-reporters"
-  gem "minitest-rails-capybara"
+  # Capybara backs ActionDispatch::SystemTestCase (test/system). Previously this
+  # came in transitively via minitest-rails-capybara, which is unmaintained and
+  # broke on minitest 5.26 (Minitest::Metadata was removed). Its only consumers
+  # were two integration test files with zero live tests, now deleted, so it is
+  # replaced by a direct capybara dependency.
+  gem "capybara"
   gem "selenium-webdriver"
-  gem "brakeman", require: false
+  # brakeman 6+ requires Ruby >= 3.0, so 5.4.x is the ceiling while on Ruby 2.7.
+  # 4.2.0 crashed outright on Ruby 2.7: its vendored unicode-display_width calls
+  # Gem.gunzip, which no longer exists, so brakeman exited 0 with no output --
+  # a silently useless security gate. Raise this to ~> 7.0 in Phase 5 with Ruby 3.1.
+  gem "brakeman", "~> 5.4", require: false
   gem "minitest-retry"
   gem 'cypress-on-rails'
 end

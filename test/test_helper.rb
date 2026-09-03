@@ -4,8 +4,11 @@
 
 require File.expand_path('../config/environment', __dir__)
 require 'rails/test_help'
+# Provides Object#stub, used by the notification and report tests to freeze
+# Time/Date. This was previously loaded transitively via minitest-rails-capybara;
+# it is required directly now that that gem is gone.
+require 'minitest/mock'
 require 'minitest/reporters'
-require 'minitest/rails/capybara'
 Minitest::Reporters.use!
 
 Delayed::Worker.delay_jobs = false

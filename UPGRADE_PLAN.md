@@ -71,14 +71,36 @@ Phase 7), not in a long tail of application rewrites.
 Defined once here; each phase says "run the gate" rather than repeating it.
 
 ```shell
-bin/rails test                                  # must stay at 396 tests, 0 failures
-npx jest --ci                                   # must stay at 125 passed
-yarn test:cypress:run                           # 18 integration specs
-bundle exec brakeman                             # no new warnings
+bin/rails test                     # must stay at 396 tests / 1285 assertions, 0 failures
+npx jest --ci                      # must stay at 125 passed
+yarn test:cypress:gate             # 18 specs / 92 tests -- see note on Electron below
+bundle exec brakeman               # compare against the 7 known warnings (below)
 bin/rails runner -e development 'puts Rails.version'
-bin/rails runner -e production  'puts Rails.version'   # catches prod-only config breakage
-bin/rails zeitwerk:check                        # Phase 3 onward only
+bin/rails zeitwerk:check           # Phase 3 onward only
+
+# Production-config boot. Needs both env vars: config/database.yml's production block
+# has no credentials (it would try to connect as the local OS user), and the local
+# config/secrets.yml has no production section, which Rails 5.2+ treats as fatal.
+DATABASE_URL=postgres://dulu:dulu@localhost/dulu_test \
+SECRET_KEY_BASE=$(ruby -rsecurerandom -e 'print SecureRandom.hex(64)') \
+  bin/rails runner -e production 'puts Rails.version'
+
+# From Phase 2 onward, also confirm what deploy actually runs:
+RAILS_ENV=production bin/rails assets:precompile
 ```
+
+**Use `test:cypress:gate`, not `test:cypress:run`.** The pre-existing
+`test:cypress:run` passes `--browser chrome`. This machine has Chrome 152 while Cypress
+is pinned at 4.1.0 (early 2020, contemporary with Chrome 80), and that pairing kills the
+browser mid-run: the suite hangs indefinitely with the Rails server still answering in
+20ms and no database contention. `test:cypress:gate` uses Cypress' bundled Electron,
+which is version-matched and completed the suite reliably every time. Revisit once
+Cypress itself is upgraded in Phase 6.
+
+**Watch for orphaned test servers.** `concurrently -k` does not always reap the Puma
+child. A leftover process on port 3002 makes the *next* run bind-fail and silently test
+stale code. Confirm the port is free before each gate run:
+`ss -ltnp | grep :3002`.
 
 **Turn deprecations into failures.** Before the first hop, add to
 `config/environments/test.rb`:
@@ -171,9 +193,9 @@ Ruby moves first and moves once. Verified against the real gemspecs:
 Ruby 2.7 therefore covers **Rails 5.2 through 7.1** — four hops with no further Ruby
 change. `rbenv` already has 2.7.4 installed locally.
 
-1. `rbenv local 2.7.4`, update root `.ruby-version`, and update
-   `config/deploy.rb` (`capistrano-rbenv` pins the Ruby version for deploys — this must
-   match or production breaks).
+1. `rbenv local 2.7.4`, update root `.ruby-version`, and update `Capfile`'s
+   `set :rbenv_ruby` (capistrano-rbenv pins the Ruby version for deploys — this must
+   match or production breaks). The pin is in `Capfile`, not `config/deploy.rb`.
 2. Expect **keyword-argument deprecation warnings** — this is Ruby 2.7's signature noise.
    With `deprecation = :raise` set, these surface as failures. Fix them; they are real
    Ruby 3.0 blockers you would otherwise hit in Phase 5.
@@ -186,6 +208,60 @@ change. `rbenv` already has 2.7.4 installed locally.
 6. Bump `pg` (1.0.0 → 1.5.x) and `sprockets` while here.
 
 **Gate:** full recipe green.
+
+---
+
+## Pre-existing security findings (surfaced, not fixed)
+
+`brakeman 4.2.0` **crashed silently on Ruby 2.7** — its vendored
+`unicode-display_width` calls the removed `Gem.gunzip`, so it exited 0 printing nothing
+and was a useless gate. Raised to 5.4.1 (the ceiling on Ruby 2.7; brakeman 6+ needs Ruby
+3.0) in Phase 1, which made these visible. **These are pre-existing application issues,
+not upgrade regressions**, and were deliberately not fixed as part of an upgrade commit:
+
+| Confidence | Type | Location |
+|---|---|---|
+| High | Remote Code Execution | `app/controllers/api/permissions_controller.rb:3` — `params[:type].constantize` |
+| Medium | Mass Assignment | `app/controllers/api/people_controller.rb:46` — `params.permit!` |
+| Medium | SQL Injection | `app/models/event.rb:120` |
+| Medium | SQL Injection | `app/models/concerns/multi_word_search.rb:13` |
+| Weak | SQL Injection | `app/models/domain_report.rb:64` — interpolated `@period.finish` |
+
+The unsafe `constantize` on user-supplied input is worth looking at first. These deserve
+their own focused pass, separate from this plan.
+
+Two further brakeman warnings are **expected** mid-upgrade and resolve on their own by
+Phase 6: "Support for Rails 5.2.8.1 ended" and "Support for Ruby 2.7.4 ended".
+
+Also note `config/brakeman.ignore` holds 5 entries that no longer match anything — they
+reference `app/views/dashboard/dashboard.html.erb`, `app/views/languages/show.html.erb`
+and `app/views/clusters/index.html.erb`, ERB views deleted during the React migration.
+The file can be regenerated or emptied.
+
+---
+
+## Deferred pins to unwind later
+
+Phase 1 added three constraints that exist only to hold the dependency graph on Ruby 2.7.
+Each should be revisited at the phase named:
+
+| Pin | Reason | Unwind at |
+|---|---|---|
+| `nokogiri "~> 1.15.7"` | nokogiri >= 1.16 requires Ruby >= 3.0 | Phase 5 (Ruby 3.1) |
+| `delayed_job "~> 4.1.11"` | 4.2 needs `ActiveJob::QueueAdapters::AbstractAdapter`, Rails 7.1+ only | Phase 5 (Rails 7.1) |
+| `brakeman "~> 5.4"` | brakeman 6+ requires Ruby >= 3.0 | Phase 5 (Ruby 3.1) |
+
+Two more known blockers, not yet actionable:
+
+- **`rb-inotify` 0.9.10** warns `rb_safe_level will be removed in Ruby 3.0`. Dev-group
+  only (the `listen` file watcher). Bundler will not move it while `listen` is held at
+  3.1.5; expect this to free up when `sass-rails` moves in Phase 3/4. **Must be resolved
+  before Phase 5.**
+- **`capybara` 2.18.0** is now a direct dependency (see Phase 1 notes) and is ancient.
+  It only backs `test/system`, which `bin/rails test` does not run by default, so a bump
+  would be unverified by the gate. Bump it in Phase 3 alongside the Rails 6 work, and be
+  aware capybara 3 changed text-matching semantics.
+- **`debase`** will not build on Ruby 3.4; replace with the `debug` gem in Phase 6.
 
 ---
 
@@ -535,8 +611,10 @@ that, the split holds.
    gate required, with no staging environment to rehearse on.
 2. **Asset precompilation** is only exercised at deploy time. Add
    `RAILS_ENV=production bin/rails assets:precompile` to the gate from Phase 2 onward.
-3. **`config/deploy.rb` needs touching in Phases 1, 5a, and 6** (rbenv Ruby pin) and
-   Phase 5b (`linked_files`). A missed pin update fails at deploy, not in tests.
+3. **`Capfile` needs touching in Phases 1, 5a, and 6** (`set :rbenv_ruby`), and
+   `config/deploy.rb` in Phase 5b (`linked_files`). Note the rbenv pin lives in
+   `Capfile:32`, *not* in `config/deploy.rb`. A missed pin update fails at deploy, not
+   in tests.
 4. **The three gitignored config files** (`secrets.yml`, `database.yml`,
    `initializers/omniauth.rb`) exist only on developer machines and the production server.
    Confirmed never committed to git history. Any change to their shape must be
