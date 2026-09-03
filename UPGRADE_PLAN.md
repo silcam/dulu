@@ -64,9 +64,10 @@ Phase 7), not in a long tail of application rewrites.
 Defined once here; each phase says "run the gate" rather than repeating it.
 
 ```shell
+nvm use                            # Phase 2 onward: .nvmrc pins Node 20.11.1
 bin/rails test                     # must stay at 396 tests / 1285 assertions, 0 failures
 npx jest --ci                      # must stay at 125 passed
-yarn test:cypress:gate             # 19 specs / 93 tests -- see note on Electron below
+yarn test:cypress:gate             # 19 specs / 93 tests -- see notes below
 yarn typecheck                     # Phase 2 onward -- see "Where type-checking lives"
 bundle exec brakeman               # compare against the 7 known warnings (below)
 bin/rails runner -e development 'puts Rails.version'
@@ -81,7 +82,27 @@ SECRET_KEY_BASE=$(ruby -rsecurerandom -e 'print SecureRandom.hex(64)') \
 
 # From Phase 2 onward, also confirm what deploy actually runs:
 RAILS_ENV=production bin/rails assets:precompile
+yarn install --check-files         # MANDATORY after the line above -- see below
 ```
+
+**`assets:precompile` prunes your node_modules.** Rails enhances that task with
+`yarn:install`, which under `RAILS_ENV=production` runs
+`yarn install --production --frozen-lockfile` and deletes every devDependency from the
+local tree. Jest and ts-jest are gone until you reinstall, and the *next* precompile then
+fails on whatever the build itself needed but was not a real dependency — which is how
+`@babel/preset-react` and the `@types/*` packages were found to be misfiled. Two
+consequences, both permanent: every package the build touches belongs in `dependencies`,
+not `devDependencies`; and `yarn install --check-files` follows every precompile. Plain
+`yarn install` is not enough — after a partial install yarn considers the tree done and
+skips relinking.
+
+**`yarn testPacks` before Cypress, not `bin/webpack`.** `yarn test:cypress:gate` now runs
+`RAILS_ENV=test bin/rails webpacker:compile` first. It has to be the rake task:
+`bin/webpack` compiles but does not write `tmp/cache/webpacker/last-compilation-digest-test`,
+so Rails still considers the packs stale and recompiles on the first request. A cold
+`public/packs-test` otherwise makes the first `cy.visit` of a run sit through a ~60s
+webpack build and fail as `ESOCKETTIMEDOUT` — in whichever spec happens to run first,
+which reads like a random failure and is not one.
 
 **`spec/cypress/integration/cssModules.spec.js` is load-bearing.** Nothing else in any
 suite can see CSS Modules break. Jest maps `*.css` to `styleMock.js`, and every other
@@ -103,6 +124,17 @@ browser mid-run: the suite hangs indefinitely with the Rails server still answer
 20ms and no database contention. `test:cypress:gate` uses Cypress' bundled Electron,
 which is version-matched and completed the suite reliably every time. Revisit once
 Cypress itself is upgraded in Phase 6.
+
+**Read a single Cypress failure as noise until it repeats.** During Phase 2c the suite
+settled into roughly one failure per two runs — a *different* spec every time, always a
+`Timed out retrying:`, on a development machine sitting at load ~11 on 8 cores with under
+1 GB of RAM free and browser renderers pegged at 90% CPU. No test on that tree ever failed
+twice in a row, and warm runs went 93/93 repeatedly. A broken bundle does not behave that
+way: it fails the *same* test every run. `defaultCommandTimeout` is now 30s (from 10s) to
+widen the retry window, which hides nothing — a genuinely broken build never resolves and
+still fails, just later. The rule for the remaining phases: a failure that moves between
+runs is environmental; a failure that repeats is real. Re-run before investigating, and
+check `/proc/loadavg` before blaming the migration.
 
 **`git diff db/schema.rb` after every gate run.** `test/test_helper.rb` line 3 executes
 `` `rails db:migrate` `` at load time, so *every* `bin/rails test` can silently rewrite a
@@ -329,23 +361,45 @@ Two facts checked while writing it, both of which shape the migration:
   (`styles[styleClass]` in `AlertBox`, `StyledTable`, `StyledText`, `icons/Icon`), which
   is exactly where a camelCasing convention change would bite. It cannot here.
 
-### 2b. Do not front-load the Node bump
+### 2b. Node 12 → 20 first, not last (revised — the original plan was wrong)
 
-The obvious ordering — Node 20 first, then the webpack ladder — does not stay green.
-**webpack 4 and below hash with MD4, which fails outright on Node 17+**
-(`error:0308010C:digital envelope routines::unsupported`), so it would mean carrying
-`NODE_OPTIONS=--openssl-legacy-provider` through the webpacker 4 and 5.4.4 hops purely to
-build. Instead **pair the Node bump to the webpack bump**: stay on a contemporaneous Node
-through webpacker 4 → 5.4.4, then move Node up at the Shakapacker 6 boundary, where
-webpack 5 lands. `nvm` already has 14.11.0, 16.20.1, 18.20.8 and 20.11.1 installed. Read
-`engines` in the `webpacker`/`shakapacker` `package.json` actually installed at each hop
-and let that drive the choice rather than guessing.
+This section originally said the opposite: stay on a contemporaneous Node through the
+webpacker 4 and 5.4.4 hops, and move Node up only at the Shakapacker 6 boundary where
+webpack 5 lands, so as not to fight MD4-on-OpenSSL-3. The reasoning was sound and the
+conclusion was wrong. **Node 12 cannot resolve this dependency tree at all in 2026**, and
+neither can Node 18:
 
-The second reason to keep Node low early: **Cypress 4.1.0 is the only gate that can see
-asset compilation break**, and a 2020 Cypress may not install or run at all on Node 20.
-Losing E2E during the phase most likely to break asset compilation is the worst available
-trade. If that happens, pull the Cypress upgrade forward from Phase 6 into this phase
-rather than proceeding without an E2E gate, and record it as an explicit deviation.
+| Package | Engine floor | Reached via |
+|---|---|---|
+| `node-releases` 2.0.54 | `>=18` | `browserslist` ← `@babel/preset-env` |
+| `minimatch` 10.2.6 | `18 \|\| 20 \|\| >=22` | (many) |
+| `brace-expansion` 5.0.9 | `20 \|\| >=22` | `minimatch` |
+
+These are 2026 publishes of packages that old `^` ranges still resolve to. Pinning them
+one at a time is whack-a-mole with no end. So: **Node 20.11.1**, pinned in `.nvmrc`, at
+the very first hop. The gate now starts with `nvm use`.
+
+Three consequences that came with it:
+
+- **MD4 is a real problem, but a small and localised one.** webpack 4.47 handles it
+  internally. `compression-webpack-plugin` 4.0.1 does not — it calls
+  `crypto.createHash("md4")` directly and unconditionally (`cache: false` does not avoid
+  it), and Webpacker registers that plugin **only in its production environment**. So dev
+  and test builds are unaffected and `RAILS_ENV=production assets:precompile` is the only
+  thing that fails — meaning without that check in the gate, the deploy would have been
+  the first place to find out. `config/webpack/md4-shim.js`, required at the top of
+  `config/webpack/environment.js`, redirects that one algorithm to sha256. The hash is a
+  cache key, so nothing observable changes. **Delete the shim at the webpack 5 hop.**
+- **yarn must be pinned.** Corepack on Node 20 resolves a bare `yarn` to Yarn 4, which
+  would rewrite the v1 lockfile into a Yarn Berry migration nobody asked for.
+  `"packageManager": "yarn@1.22.22"` in `package.json` holds Yarn Classic.
+- **`node-sass` is resolution-pinned to 9.0.0.** Webpacker 4 depends on it; this app has
+  zero `.sass`/`.scss` files, so it only has to *install*, and 9.0.0 is the first release
+  that builds on Node 20. It disappears with Webpacker.
+
+The worry that Cypress 4.1.0 would not run on Node 20 **did not materialise** — it drives
+its own bundled Electron 78 and completed the suite normally. No need to pull the Cypress
+upgrade forward from Phase 6.
 
 ### 2c. The ladder
 
@@ -356,20 +410,51 @@ and you would debug webpack 5 breakage and Shakapacker config breakage simultane
 
 Four real hops, each gated:
 
-1. **`webpacker 3.3.1 → 4.x`** — really a **Babel 6 → 7 migration**. `.babelrc` is Babel
-   6 syntax throughout (`"env"`, `"react"`, `transform-object-rest-spread`,
-   `transform-class-properties`, `syntax-dynamic-import`); webpacker 4 expects
-   `babel.config.js` with `@babel/*` packages. The load-bearing detail: the `env.test`
-   block in `.babelrc` is what leaves `modules` at commonjs for Jest. Drop it in
-   translation and Jest dies with "Cannot use import statement outside a module" — and
-   the obvious-but-wrong reading of that error is that `ts-jest` needs attention. Port
-   that block deliberately.
-2. **`webpacker 4.x → 5.4.4`** — Webpacker's final release; still supports Rails 5.2.
+1. **`webpacker 3.3.1 → 4.3.0` — done.** Really a **Babel 6 → 7 migration**: `.babelrc`
+   was Babel 6 syntax throughout, and webpacker 4 expects `babel.config.js` with
+   `@babel/*` packages. Both `babel.config.js` and `postcss.config.js` come from the
+   gem's own install templates (`lib/install/config/`), with one addition —
+   `@babel/preset-react`, which the template omits because it targets plain JS. The
+   `isTestEnv` branch is load-bearing: `@babel/preset-env` with `targets: { node:
+   'current' }` leaves `modules` at "auto" (commonjs), which is what `.babelrc`'s
+   `env.test` block did by omitting `modules: false`. Drop it and Jest dies with "Cannot
+   use import statement outside a module" — and the obvious-but-wrong reading of that
+   error is that `ts-jest` needs attention.
+
+   **Copying the templates by hand skips the installer, which also writes a
+   `browserslist` key.** Without it `@babel/preset-env` has no targets, compiles for the
+   oldest conceivable browser, and `useBuiltIns: "entry"` expands `import "core-js/stable"`
+   to nearly the whole core-js surface. Adding `browserslist: ["defaults"]` cut the test
+   bundle from 709,425 to 575,540 bytes. If a later hop regenerates config from a
+   template, check for this again — nothing fails, the bundle just quietly grows.
+
+   Landed alongside, because Babel 7 forces them: `jest` 23 → 26, `ts-jest` 23 → 26,
+   `babel-jest` 23 → 26 (`babel-jest` 23 is Babel 6 only), `setupTestFrameworkScriptFile`
+   → `setupFilesAfterEnv`, `ts-loader` 3 → 8 (webpack 4), `webpack-dev-server` 2 → 3, and
+   `babel-polyfill` → `core-js/stable` + `regenerator-runtime/runtime`. Jest stops at 26
+   rather than 29 on purpose: 27 changes the default `testEnvironment` from jsdom to node,
+   which this suite's Enzyme tests need. Do 26 → 29 with the React 18 work in Phase 7,
+   where Enzyme has to be reconsidered anyway.
+
+   **TypeScript 3.8 cannot *parse* the modern `@types/babel__traverse`** that Jest 26
+   pulls in — `TS1005`/`TS1160`, which `skipLibCheck` cannot suppress because they are
+   parse errors, not type errors. The fix is to stop auto-loading every package under
+   `node_modules/@types`: `tsconfig.json` now names `"types": ["node"]` (for the
+   `require()` in `NavBar.tsx`) and `tsconfig.test.json` names `["jest"]`. Explicit module
+   imports still resolve through `@types` regardless — that field only controls *global*
+   inclusion. `@types/node` is held at 14.x for the same parse reason. Both unwind with
+   the TypeScript 5 bump.
+
+2. **`webpacker 4.3.0 → 5.4.4`** — Webpacker's final release; still supports Rails 5.2.
+   Expect the `webpacker.yml` `extract_css`/`static_assets_extensions` shape to carry over
+   unchanged, and `check_yarn_integrity` to disappear (5.x removed it).
 3. **`shakapacker 6.x`** — webpack 5 lands here. Migrate `config/webpacker.yml` →
    `config/shakapacker.yml` and rewrite `config/webpack/environment.js` to Shakapacker's
-   config API (the `environment.loaders.append` style is gone). Bump Node at this
-   boundary. Also drop `(\.erb)?` from the TypeScript loader `test` pattern — Shakapacker
-   moved ERB support out of core, and there are **zero** `.erb`-suffixed JS/TS files.
+   config API (the `environment.loaders.append` style is gone). **Delete
+   `config/webpack/md4-shim.js` at this hop** — webpack 5 drops MD4 and the shim becomes
+   dead weight. Also drop `(\.erb)?` from the TypeScript loader `test` pattern —
+   Shakapacker moved ERB support out of core, and there are **zero** `.erb`-suffixed JS/TS
+   files. Node is already on 20, so nothing to do there.
 4. **`shakapacker 6 → current (10.x)`** — mostly config renames on a now-stable
    webpack 5, so the 7 → 8 → 10 steps collapse into one hop. Read each release's guide,
    but expect no webpack-level work here.
@@ -451,26 +536,73 @@ Confirmed the script still catches real type errors (verified against a delibera
 introduced `TS2322`) rather than passing vacuously — the same failure mode that made
 brakeman useless for years.
 
+**Keeping `ts-loader` has a packaging consequence.** Because the production build
+type-checks, everything it type-checks against must survive
+`yarn install --production`, which `assets:precompile` runs. `@types/node`,
+`@types/react`, `@types/react-dom`, `@types/react-redux` and `@types/react-router-dom`
+are therefore `dependencies`, not `devDependencies` — as are `@babel/preset-react`,
+`css-loader` and `style-loader`, which the build needs and which had been misfiled since
+before this upgrade. If the type-checking decision is ever revisited in favour of
+`transpileOnly`, these can move back.
+
 ### 2f. Remaining work items
 
 - **Clear the 12 `TS6133` unused-import/local errors** so `yarn typecheck` can drop its
   `--noUnusedLocals`/`--noUnusedParameters` escape hatches (see above). Mechanical.
-- Upgrade the JS test chain: `jest` 23 → 29, `ts-jest` 23 → 29, `babel-jest`,
-  `typescript` 3.8 → 5.x. `setupTestFrameworkScriptFile` in `package.json` is removed in
-  modern Jest — it becomes `setupFilesAfterEnv`.
+- **`typescript` 3.8 → 5.x.** This is the unlock for three separate pins: `@types/node`
+  can leave 14.x, `tsconfig`'s `"types"` allow-lists can go away, and `--skipLibCheck` can
+  come out of `tsconfig.json`. Note `ts-loader` 8 handles TypeScript 5 but `ts-loader` 9
+  is the supported pairing, and 9 requires webpack 5 — so this may want to follow the
+  Shakapacker 6 hop rather than precede it.
+- **`jest` 26 → 29 and `ts-jest` 26 → 29.** Deliberately *not* done in hop 1: Jest 27
+  changes the default `testEnvironment` from jsdom to node, which breaks the Enzyme
+  tests. Do this in Phase 7 alongside React 18, where Enzyme has to be replaced anyway
+  (`enzyme-adapter-react-16` has no React 18 equivalent).
 - **Fix `tsconfig.json`: `"target": "es3"` → `"es2020"`** (and the same in
   `tsconfig.test.json`, which duplicates it). ES3 will fight modern TypeScript and
-  library typings. Cheap, do it here.
-- Replace `node-sass` if it reappears in the lockfile; move to `sass` (dart-sass).
+  library typings. Cheap, do it with the TypeScript bump.
+- Drop the `node-sass` resolution pin once Webpacker is gone; if a `.sass`/`.scss` file is
+  ever added, use `sass` (dart-sass), never node-sass.
 - `app/javascript/packs/application.js` does a bare `import "application"`, which depends
   on `source_path` staying in webpack's `resolve.modules`. Low risk — it fails loudly with
   "module not found" rather than silently — but know it is there.
-- `yarn` 1.22.19 is Yarn Classic and is fine to keep; Shakapacker supports it. Do not add
-  a Yarn 2+ migration to this phase.
+- `yarn` stays on Classic, now pinned by `"packageManager": "yarn@1.22.22"`. Shakapacker
+  supports it. Do not add a Yarn 2+ migration to this phase.
+- `eslint` 4 and its plugins are installed but **there is no eslint config anywhere** in
+  the repo, so nothing lints. Either configure it or drop the four packages; do not leave
+  it looking like a lint gate exists.
+- `cypress` sits in `dependencies` rather than `devDependencies`, so
+  `yarn install --production` on the server pulls the whole browser download. Pre-existing;
+  worth moving, but it is a deploy-shaped change — see below.
 
-**Gate:** full recipe green, including the CSS Modules spec and `tsc --noEmit`. Also
+### 2g. Deploy will break unless someone changes it — needs Brian
+
+This is not the deploy-*destination* question that was closed above; it is deploy
+mechanics, and it is a direct consequence of Phase 2. Two lines in the Capistrano config:
+
+```ruby
+# config/deploy.rb
+append :linked_dirs, "tmp/pids", "node_modules"   # shared across releases
+# Capfile
+require "capistrano/rails/assets"                 # runs assets:precompile on the server
+# require "capistrano/yarn"                       # commented out -- yarn install never runs
+```
+
+So the server's `node_modules` is a hand-maintained shared directory that no deploy step
+ever updates, while `assets:precompile` *does* run on every deploy. After this phase the
+checked-out code needs Webpacker 4, Babel 7 and Node 20; the server's `node_modules` still
+holds the Webpacker 3 / Babel 6 tree. **Precompile will fail on the server** even though
+it passes locally.
+
+Whoever owns the server has to do at least: install Node 20 there, and either enable
+`capistrano/yarn` (so `yarn install` runs as part of deploy) or update the shared
+`node_modules` by hand before the first Phase 2 deploy. Enabling `capistrano/yarn` is the
+right long-term answer, but it changes deploy behaviour and is not something to slip into
+an upgrade commit unannounced. **Left unchanged deliberately; raise before deploying.**
+
+**Gate:** full recipe green, including the CSS Modules spec and `yarn typecheck`. Also
 verify `RAILS_ENV=production bin/rails assets:precompile` succeeds, since that is what
-deploy runs.
+deploy runs — and re-run `yarn install --check-files` immediately afterwards.
 
 **Trap on that precompile check:** it loads `config/environments/production.rb`, which
 until Phase 5b still reads `Rails.application.secrets.smtp_username` and
@@ -740,12 +872,19 @@ Work items, in the order they deserve attention:
 3. **Three SQL injection findings** — `app/models/event.rb:120`,
    `app/models/concerns/multi_word_search.rb:13`, and `app/models/domain_report.rb:64`
    (interpolated `@period.finish`). Convert to bound parameters.
-4. **Regenerate `config/brakeman.ignore`.** Its 5 entries no longer match anything —
+4. **`DomainReport#gen_activity_items` has no deterministic order.**
+   `app/models/domain_report.rb:66` orders by `start_date: :desc` with no tiebreaker, so
+   rows sharing a date come back in whatever order PostgreSQL feels like — users see the
+   report reshuffle between loads. It is the same method as the SQL injection finding
+   above, so fix both in one pass. `spec/cypress/integration/reports.spec.js` was made
+   order-agnostic in Phase 2 to stop it failing at random; tighten it back up once the
+   query is deterministic.
+5. **Regenerate `config/brakeman.ignore`.** Its 5 entries no longer match anything —
    they reference `app/views/dashboard/dashboard.html.erb`,
    `app/views/languages/show.html.erb` and `app/views/clusters/index.html.erb`, all ERB
    views deleted during the React migration. A stale ignore file is worse than none: it
    reads as "reviewed and accepted" for findings that no longer exist.
-5. **Re-run `bundle exec brakeman` expecting zero warnings**, and consider adding it to
+6. **Re-run `bundle exec brakeman` expecting zero warnings**, and consider adding it to
    the gate as a hard failure rather than a compare-against-known-list.
 
 By the time this phase runs, brakeman will be unpinned (Phase 5 lifts it to 6+ on Ruby
@@ -762,7 +901,7 @@ Write the test first in each case — that is the actual work here, not the one-
 ```
 Phase 0  Hygiene, Cypress baseline, branch triage           no version changes
 Phase 1  Ruby 2.7 + Rails 5.2                    Ruby moves once, covers 4 hops
-Phase 2  Shakapacker + Node 20 + Jest/TS      <- joint frontend/backend step
+Phase 2  Node 20 + Webpacker 4 -> Shakapacker  <- joint frontend/backend step
 Phase 3  Rails 6.0 -> 6.1 (Zeitwerk) + audited 5
 Phase 4  OmniAuth 2                              auth risk; manual browser gate
 Phase 5  Ruby 3.1 + secrets -> ENV + Rails 7.0 -> 7.1        deploy-affecting
