@@ -1,4 +1,5 @@
 {
+  "packageManager": "yarn@1.22.22",
   "scripts": {
     "test:js": "jest --watch",
     "test:rails": "nodemon --exec \"bin/rails test\" -e rb,yml,jbuilder --watch app --watch test",
@@ -8,14 +9,24 @@
     "testServer": "bin/rails server -e test -p 3002",
     "test:cypress": "concurrently -p \"[{name}]\" -n \"Server,Cypress\"  -c yellow,green \"yarn testServer\"  \"yarn cypress open --project ./spec\"",
     "test:cypress:run": "concurrently -p \"[{name}]\" -n \"Server, Cypress\" -c yellow,green \"yarn testServer\" \"yarn cypress run --project ./spec --browser chrome --headless\"",
-    "test:cypress:gate": "concurrently -p \"[{name}]\" -n \"Server,Cypress\" -k -s last -c yellow,green \"yarn testServer\" \"yarn cypress run --project ./spec\"",
-    "typecheck": "tsc --noEmit --skipLibCheck --noUnusedLocals false --noUnusedParameters false"
+    "test:cypress:gate": "yarn testPacks && concurrently -p \"[{name}]\" -n \"Server,Cypress\" -k -s last -c yellow,green \"yarn testServer\" \"yarn cypress run --project ./spec\"",
+    "typecheck": "tsc --noEmit --noUnusedLocals false --noUnusedParameters false",
+    "testPacks": "RAILS_ENV=test bin/rails webpacker:compile"
   },
   "dependencies": {
-    "@rails/webpacker": "^3.3.1",
+    "@babel/plugin-proposal-private-methods": "^7.18.6",
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
+    "@babel/preset-react": "^7.12.13",
+    "@rails/webpacker": "^4.3.0",
+    "@types/node": "^14.18.63",
+    "@types/react": "^16.8.3",
+    "@types/react-dom": "^16.8.1",
+    "@types/react-redux": "^7.1.5",
+    "@types/react-router-dom": "^5.1.2",
     "@types/react-tabs": "^2.3.1",
     "axios": "^0.21.1",
-    "babel-preset-react": "^6.24.1",
+    "core-js": "^3.6.5",
+    "css-loader": "^1.0.0",
     "cypress": "^4.1.0",
     "immutability-helper": "2.7.1",
     "prop-types": "^15.6.1",
@@ -25,32 +36,31 @@
     "react-router-dom": "^5.1.2",
     "react-tabs": "^2.2.1",
     "redux": "^4.0.1",
-    "ts-loader": "3.5.0",
+    "regenerator-runtime": "^0.13.7",
+    "style-loader": "^0.23.0",
+    "ts-loader": "^8.0.18",
     "typescript": "3.8.3"
   },
   "devDependencies": {
-    "@types/jest": "^24.0.4",
-    "@types/react": "^16.8.3",
-    "@types/react-dom": "^16.8.1",
-    "@types/react-redux": "^7.1.5",
-    "@types/react-router-dom": "^5.1.2",
-    "babel-eslint": "^8.2.3",
-    "babel-jest": "^23.6.0",
+    "@types/jest": "^26.0.24",
+    "babel-jest": "^26.6.3",
     "concurrently": "^5.1.0",
-    "css-loader": "^1.0.0",
     "enzyme": "^3.8.0",
     "enzyme-adapter-react-16": "^1.8.0",
     "eslint": "^4.19.1",
     "eslint-plugin-jest": "^22.1.3",
     "eslint-plugin-react": "^7.7.0",
     "eslint-plugin-react-hooks": "^1.0.1",
-    "jest": "^23.6.0",
+    "jest": "^26.6.3",
     "jest-enzyme": "^7.0.1",
     "mockdate": "^2.0.2",
     "nodemon": "^2.0.2",
-    "style-loader": "^0.23.0",
-    "ts-jest": "^23.10.5",
-    "webpack-dev-server": "2.11.2"
+    "ts-jest": "^26.5.3",
+    "webpack-dev-server": "^3.11.2"
+  },
+  "resolutions": {
+    "node-releases": "2.0.19",
+    "node-sass": "9.0.0"
   },
   "jest": {
     "preset": "ts-jest/presets/js-with-babel",
@@ -67,7 +77,9 @@
       "node_modules",
       "app/javascript"
     ],
-    "setupTestFrameworkScriptFile": "./test/javascript/setupTests.js",
+    "setupFilesAfterEnv": [
+      "./test/javascript/setupTests.js"
+    ],
     "moduleNameMapper": {
       "\\.png$": "<rootDir>/test/javascript/__mocks__/fileMock.js",
       "\\.css$": "<rootDir>/test/javascript/__mocks__/styleMock.js"

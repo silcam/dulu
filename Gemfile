@@ -27,7 +27,8 @@ gem "uglifier", ">= 1.3.0"
 # gem 'therubyracer', platforms: :ruby
 
 # Use Webpacker
-gem "webpacker"
+# Held at 4.x for this hop of the Webpacker -> Shakapacker ladder (UPGRADE_PLAN.md Phase 2c).
+gem "webpacker", "~> 4.3.0"
 # Use jquery as the JavaScript library
 # gem 'jquery-rails'
 # Turbolinks makes navigating your web application faster. Read more: https://github.com/turbolinks/turbolinks

@@ -9,6 +9,18 @@
     "moduleResolution": "node",
     "noEmit": true,
     "resolveJsonModule": true,
+    "skipLibCheck": true,
+    // Do not auto-load every package under node_modules/@types. Explicit module imports
+    // (react, react-dom, redux, ...) resolve through @types regardless; this field only
+    // controls which packages are pulled in *globally*, and application code needs none.
+    // Left unset, TypeScript 3.8 tries to parse @types/babel__traverse -- dragged in by
+    // Jest 26 -- and fails on syntax it does not understand (TS1005/TS1160, which
+    // skipLibCheck cannot suppress because they are parse errors, not type errors).
+    // Revisit once TypeScript reaches 5.x in Phase 2f.
+    // "node" is needed only for the `require()` call in components/layout/NavBar.tsx
+    // (a webpack image require). @types/node is held at 14.x because newer releases use
+    // syntax TypeScript 3.8 cannot parse -- unwind with the TypeScript bump in Phase 2f.
+    "types": ["node"],
     "sourceMap": true,
     "target": "es3",
     "jsx": "react",

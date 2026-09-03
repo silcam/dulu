@@ -9,6 +9,11 @@
       "moduleResolution": "node",
       "noEmit": true,
       "resolveJsonModule": true,
+      "skipLibCheck": true,
+      // See the note in tsconfig.json. Tests additionally need Jest's globals
+      // (describe/it/expect), so those are named explicitly rather than picked up by
+      // scanning all of node_modules/@types.
+      "types": ["jest"],
       "sourceMap": true,
       "target": "es3",
       "jsx": "react",

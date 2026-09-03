@@ -1,3 +1,5 @@
+require("./md4-shim");
+
 const { environment } = require("@rails/webpacker");
 const typescript = require("./loaders/typescript");
 

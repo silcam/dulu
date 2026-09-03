@@ -66,7 +66,16 @@ describe("Clusters", () => {
       .parent()
       .within(_ => {
         cy.icon("addIcon").click();
-        cy.placeholder("Name").type("Lance Arm{Enter}");
+        // Type and Enter must not be one command. The person search is asynchronous, so
+        // sending "{Enter}" with the text submits before any result exists: nothing gets
+        // selected, and the results <li> list then renders on top of the date <select>,
+        // failing fillFuzzyDate with "covered by another element". Wait for the match,
+        // then Enter, then confirm the selection actually landed. Same fix as the
+        // `searchFill` command in support/commands.js.
+        cy.placeholder("Name").type("Lance Arm");
+        cy.contains("li", "Lance Armstrong");
+        cy.placeholder("Name").type("{Enter}");
+        cy.placeholder("Name").should("have.value", "Lance Armstrong");
         cy.fillFuzzyDate(2016, "Jul", 31);
         cy.contains("Save").click();
       });

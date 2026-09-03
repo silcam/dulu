@@ -77,8 +77,15 @@ describe("Those Participants...", () => {
       .parent()
       .within(() => {
         cy.icon("addIcon").click();
+        // Select with Enter rather than by clicking the result. The search re-renders its
+        // <li> list as results arrive, so clicking one races the re-render and fails with
+        // "element is detached from the DOM" -- re-querying immediately before the click
+        // is not enough, because the detach happens inside the click command itself.
+        // Mouse selection in the picker is still covered by personPicker.spec.js.
         cy.placeholder("Name").type("Drew Mamb");
-        cy.contains("Drew Mambo").click();
+        cy.contains("li", "Drew Mambo");
+        cy.placeholder("Name").type("{Enter}");
+        cy.placeholder("Name").should("have.value", "Drew Mambo");
         cy.fillFuzzyDate(2016, "Jul", 31);
         cy.contains("Save").click();
       });

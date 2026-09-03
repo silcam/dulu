@@ -34,7 +34,9 @@ describe("People", () => {
 
     cy.login("scotland_4ever@aol.com");
     cy.visit("/");
-    cy.contains("William");
+    // First load of the dashboard for a brand-new user: the tables arrive over the API
+    // after first paint and occasionally exceed the 10s defaultCommandTimeout.
+    cy.contains("William", { timeout: 30000 });
     cy.request("POST", "/logout");
   });
 

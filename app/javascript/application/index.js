@@ -1,4 +1,8 @@
-import "babel-polyfill";
+// Babel 7 replacement for `babel-polyfill`. babel.config.js sets
+// `useBuiltIns: "entry", corejs: 3` for the dev/production presets, which rewrites
+// this pair of imports into only the polyfills the browser targets actually need.
+import "core-js/stable";
+import "regenerator-runtime/runtime";
 import React from "react";
 import ReactDOM from "react-dom";
 import { BrowserRouter } from "react-router-dom";

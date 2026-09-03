@@ -2,5 +2,8 @@
   "baseUrl": "http://localhost:3002",
   "defaultCommandTimeout": 10000,
   "chromeWebSecurity": false,
-  "video": false
+  "video": false,
+  "_comment": "responseTimeout/pageLoadTimeout are raised above Cypress' 30s/60s defaults because the test environment compiles packs on demand (webpacker.yml test: compile: true). A cold public/packs-test makes the first cy.visit() of a run wait ~60s for webpack, which surfaced as a random ESOCKETTIMEDOUT in whichever spec happened to run first. yarn test:cypress:gate precompiles first, so this is belt-and-braces; a genuinely dead server still fails, just later.",
+  "responseTimeout": 120000,
+  "pageLoadTimeout": 120000
 }
