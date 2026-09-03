@@ -445,9 +445,21 @@ Four real hops, each gated:
    inclusion. `@types/node` is held at 14.x for the same parse reason. Both unwind with
    the TypeScript 5 bump.
 
-2. **`webpacker 4.3.0 → 5.4.4`** — Webpacker's final release; still supports Rails 5.2.
-   Expect the `webpacker.yml` `extract_css`/`static_assets_extensions` shape to carry over
-   unchanged, and `check_yarn_integrity` to disappear (5.x removed it).
+2. **`webpacker 4.3.0 → 5.4.4` — done.** Webpacker's final release; still supports
+   Rails 5.2 (`railties >= 5.2`, `activesupport >= 5.2`). A small hop: `webpacker.yml`
+   loses `check_yarn_integrity` and renames `resolved_paths` → `additional_paths`;
+   `babel.config.js` is re-taken from the v5 template, which already carries the
+   `loose`-mode alignment that had to be added by hand at v4 and drops
+   `regenerator`/`corejs` from `plugin-transform-runtime`. The binstubs and
+   `postcss.config.js` are byte-identical between v4 and v5.
+
+   **Both `resolutions` pins came out here.** Webpacker 5 swapped `node-sass` for `sass`
+   (dart-sass), so the `node-sass` pin is simply gone — no native build, nothing to
+   compile. Dropping the `node-releases` pin needed one more thing: `sass` requires
+   Node `>=20.19.0`, so Node moved 20.11.1 → **20.20.2** (`.nvmrc`). Note nvm's 20.20.2
+   installs corepack but no `yarn` shim until `corepack enable` is run once. Prefer moving
+   Node to the newest 20.x over pinning a package: these engine floors cluster around
+   `20 || >=22`, and the next one costs another pin.
 3. **`shakapacker 6.x`** — webpack 5 lands here. Migrate `config/webpacker.yml` →
    `config/shakapacker.yml` and rewrite `config/webpack/environment.js` to Shakapacker's
    config API (the `environment.loaders.append` style is gone). **Delete
@@ -872,19 +884,27 @@ Work items, in the order they deserve attention:
 3. **Three SQL injection findings** — `app/models/event.rb:120`,
    `app/models/concerns/multi_word_search.rb:13`, and `app/models/domain_report.rb:64`
    (interpolated `@period.finish`). Convert to bound parameters.
-4. **`DomainReport#gen_activity_items` has no deterministic order.**
+4. **The person/organization search pickers do not discard stale responses.** Typing into
+   a picker fires a request per keystroke and each response overwrites the results list,
+   so a slow earlier response can land after a later one and replace the correct results.
+   Observed in E2E as pressing Enter selecting the wrong person entirely ("expected input
+   to have value 'Drew Mambo', but the value was 'Lance Armstrong'"), and as clicking a
+   result failing because the list re-rendered underneath the click. Users hit the same
+   thing on a slow connection. Fix by tagging each request and ignoring any response that
+   is not for the current query.
+5. **`DomainReport#gen_activity_items` has no deterministic order.**
    `app/models/domain_report.rb:66` orders by `start_date: :desc` with no tiebreaker, so
    rows sharing a date come back in whatever order PostgreSQL feels like — users see the
    report reshuffle between loads. It is the same method as the SQL injection finding
    above, so fix both in one pass. `spec/cypress/integration/reports.spec.js` was made
    order-agnostic in Phase 2 to stop it failing at random; tighten it back up once the
    query is deterministic.
-5. **Regenerate `config/brakeman.ignore`.** Its 5 entries no longer match anything —
+6. **Regenerate `config/brakeman.ignore`.** Its 5 entries no longer match anything —
    they reference `app/views/dashboard/dashboard.html.erb`,
    `app/views/languages/show.html.erb` and `app/views/clusters/index.html.erb`, all ERB
    views deleted during the React migration. A stale ignore file is worse than none: it
    reads as "reviewed and accepted" for findings that no longer exist.
-6. **Re-run `bundle exec brakeman` expecting zero warnings**, and consider adding it to
+7. **Re-run `bundle exec brakeman` expecting zero warnings**, and consider adding it to
    the gate as a hard failure rather than a compare-against-known-list.
 
 By the time this phase runs, brakeman will be unpinned (Phase 5 lifts it to 6+ on Ruby

@@ -1,6 +1,6 @@
 # Note: You must restart bin/webpack-dev-server for changes to take effect
 #
-# Migrated to Webpacker 4's shape (UPGRADE_PLAN.md Phase 2c). Deviations from the v4
+# Migrated to Webpacker 5's shape (UPGRADE_PLAN.md Phase 2c). Deviations from the v5
 # template, both deliberate:
 #
 #   * `extensions` keeps this app's .tsx/.ts/.jsx entries, which the template drops.
@@ -10,9 +10,6 @@
 #     bundle rather than extracted -- which is why there is no `stylesheet_pack_tag` in
 #     app/views/web/index.html.erb. Setting this true would only take effect alongside
 #     that tag, so it stays false; see Phase 2d.
-#   * `check_yarn_integrity` is false in development too. It is a frequent false-positive
-#     mid-migration and was removed outright in Webpacker 5, so gating dev boot on it buys
-#     nothing here.
 
 default: &default
   source_path: app/javascript
@@ -20,12 +17,11 @@ default: &default
   public_root_path: public
   public_output_path: packs
   cache_path: tmp/cache/webpacker
-  check_yarn_integrity: false
   webpack_compile_output: true
 
   # Additional paths webpack should lookup modules
   # ['app/assets', 'engine/foo/app/assets']
-  resolved_paths: []
+  additional_paths: []
 
   # Reload manifest.json on all requests so we reload latest compiled packs
   cache_manifest: false

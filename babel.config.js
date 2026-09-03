@@ -1,4 +1,4 @@
-// Babel 7 config, replacing the Babel 6 `.babelrc`. Generated from Webpacker 4's template
+// Babel 7 config, replacing the Babel 6 `.babelrc`. Taken from Webpacker 5's template
 // (`lib/install/config/babel.config.js`) with one addition: `@babel/preset-react`, which
 // the template omits because it targets plain JS. See UPGRADE_PLAN.md Phase 2c.
 //
@@ -7,6 +7,10 @@
 // ESM to CommonJS -- exactly what the old `.babelrc`'s `env.test` block did by omitting
 // `modules: false`. Remove that branch and Jest fails with "Cannot use import statement
 // outside a module", which reads like a ts-jest problem and is not one.
+//
+// Browser targets come from the `browserslist` key in package.json. Without it
+// `@babel/preset-env` has no targets and `useBuiltIns: 'entry'` pulls in nearly all of
+// core-js; see Phase 2c.
 module.exports = function(api) {
   var validEnv = ['development', 'test', 'production']
   var currentEnv = api.env()
@@ -57,9 +61,12 @@ module.exports = function(api) {
           loose: true
         }
       ],
-      // Babel 7 requires these three to agree on `loose`. The Webpacker 4 template only
-      // sets it on class-properties, which makes @babel/preset-env emit a wall of
-      // "The 'loose' option must be the same for ..." warnings on every build.
+      [
+        '@babel/plugin-proposal-object-rest-spread',
+        {
+          useBuiltIns: true
+        }
+      ],
       [
         '@babel/plugin-proposal-private-methods',
         {
@@ -73,17 +80,9 @@ module.exports = function(api) {
         }
       ],
       [
-        '@babel/plugin-proposal-object-rest-spread',
-        {
-          useBuiltIns: true
-        }
-      ],
-      [
         '@babel/plugin-transform-runtime',
         {
-          helpers: false,
-          regenerator: true,
-          corejs: false
+          helpers: false
         }
       ],
       [
