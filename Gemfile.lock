@@ -81,9 +81,9 @@ GEM
     cypress-on-rails (1.5.1)
       rack
     daemons (1.2.6)
-    debase (0.2.2)
-      debase-ruby_core_source (>= 0.10.2)
-    debase-ruby_core_source (0.10.2)
+    debase (0.2.9)
+      debase-ruby_core_source (>= 3.4.1)
+    debase-ruby_core_source (4.0.1)
     delayed_job (4.1.4)
       activesupport (>= 3.0, < 5.2)
     delayed_job_active_record (4.1.2)
@@ -222,7 +222,7 @@ GEM
       rainbow (>= 2.2.2, < 4.0)
       ruby-progressbar (~> 1.7)
       unicode-display_width (>= 1.4.0, < 1.7)
-    ruby-debug-ide (0.6.1)
+    ruby-debug-ide (0.7.5)
       rake (>= 0.8.1)
     ruby-progressbar (1.9.0)
     ruby_dep (1.5.0)
@@ -255,7 +255,7 @@ GEM
     thor (0.20.3)
     thread_safe (0.3.6)
     tilt (2.0.8)
-    tzinfo (1.2.5)
+    tzinfo (1.2.11)
       thread_safe (~> 0.1)
     uglifier (4.1.20)
       execjs (>= 0.3.0, < 3)
@@ -288,7 +288,7 @@ DEPENDENCIES
   capistrano-rbenv
   cypress-on-rails
   daemons (~> 1.2)
-  debase
+  debase (~> 0.2.9)
   delayed_job_active_record (~> 4.1)
   delayed_job_recurring
   foreman
@@ -303,7 +303,7 @@ DEPENDENCIES
   rails (~> 5.1.6.2)
   rails-i18n (~> 5.0.4)
   rubocop
-  ruby-debug-ide
+  ruby-debug-ide (~> 0.7.5)
   rufo
   sass-rails (~> 5.0)
   selenium-webdriver

@@ -72,8 +72,13 @@ group :development do
   # gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
   gem "listen"
 
-  gem "debase"
-  gem "ruby-debug-ide"
+  # Pinned to versions that build on Ruby 2.7+. debase 0.2.2 could not compile
+  # its native extension against Ruby 2.7 core headers. The .vscode/launch.json
+  # "Listen for rdebug-ide" configuration depends on these, so they are upgraded
+  # rather than dropped. Note: debase is effectively unmaintained and will not
+  # build on Ruby 3.4 -- plan to replace it with the `debug` gem in Phase 6.
+  gem "debase", "~> 0.2.9"
+  gem "ruby-debug-ide", "~> 0.7.5"
   gem "rufo"
 end
 
