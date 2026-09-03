@@ -4,29 +4,22 @@
 **From:** Rails 5.1.6.2 + Ruby 2.5.0, React 16.8, Node 12.22.6, Webpacker 3.3.1
 **Live deploy target:** `config/deploy/production.rb` (Capistrano + Passenger)
 
-### Deploy reality — needs your confirmation before Phase 4
+### Deploy reality — settled by Brian, 2026-09-03
 
-The Capistrano configs do not match the story the hostnames tell, and this affects every
-deploy gate in the plan:
+Two questions were open here. Both are now closed and this plan does not re-raise them:
 
-| Config | Server | Resolves to | State |
-|---|---|---|---|
-| `deploy/production.rb` (tracked, *you said this is live*) | `vote` | **192.168.0.18** — LAN address via your `~/.ssh/config` | points at a local machine, not a public host |
-| `deploy/testing.rb` (tracked) | `dulu` | 192.168.0.101 — LAN | **dead**: also sets `branch: "testing"`, and no `testing` branch exists in the repo |
-| `deploy/amazon.rb` (untracked) | `13.38.125.101` | `ec2-13-38-125-101.eu-west-3.compute.amazonaws.com` — public, resolves | matches your `dulutest` SSH alias (Lightsail, eu-west-3) |
-
-Two consequences baked into this plan:
-
-1. **There is no working staging environment.** `testing.rb` targets a branch that does
-   not exist. Every phase gate therefore ends at "tests green + local production-env boot",
-   and the risky phases (4 and 5) carry explicit rollback notes instead of "deploy to
-   staging first". **If standing up staging is cheap, do it in Phase 0** — it would
-   materially de-risk Phases 4, 5, and 6.
-2. **Confirm which host actually serves production.** You said `production.rb`, but it
-   points at a LAN address while the untracked `amazon.rb` points at a live AWS host. If
-   `vote` resolves differently from the production network this is fine; if not, the live
-   target is really `amazon.rb` and Phase 0 should commit it. Resolve this before Phase 4,
-   because that is the first phase whose correctness can only be proven on the real host.
+1. **Which host actually serves production is Brian's to determine**, and is out of scope
+   for this plan. The tracked configs are `deploy/production.rb`, `deploy/testing.rb`, and
+   an untracked `deploy/amazon.rb`; the plan assumes `production.rb` and touches no deploy
+   config except where a phase requires it (`Capfile`'s `rbenv_ruby` in Phases 1, 5a, 6;
+   `linked_files` in Phase 5b).
+2. **No staging environment will be stood up.** `deploy/testing.rb` sets
+   `branch: "testing"` and no such branch exists, so it is dead as written — and that is
+   accepted rather than fixed. The consequence, carried deliberately through the rest of
+   this plan: every phase gate ends at *tests green + local production-env boot*, and the
+   two phases whose correctness cannot be fully proven that way (4 and 5) carry explicit
+   rollback notes instead of "rehearse on staging". Phase 4's OmniAuth change in
+   particular has **no automated gate at all** — see that phase.
 
 ---
 
@@ -73,7 +66,8 @@ Defined once here; each phase says "run the gate" rather than repeating it.
 ```shell
 bin/rails test                     # must stay at 396 tests / 1285 assertions, 0 failures
 npx jest --ci                      # must stay at 125 passed
-yarn test:cypress:gate             # 18 specs / 92 tests -- see note on Electron below
+yarn test:cypress:gate             # 19 specs / 93 tests -- see note on Electron below
+yarn typecheck                     # Phase 2 onward -- see "Where type-checking lives"
 bundle exec brakeman               # compare against the 7 known warnings (below)
 bin/rails runner -e development 'puts Rails.version'
 bin/rails zeitwerk:check           # Phase 3 onward only
@@ -89,6 +83,19 @@ SECRET_KEY_BASE=$(ruby -rsecurerandom -e 'print SecureRandom.hex(64)') \
 RAILS_ENV=production bin/rails assets:precompile
 ```
 
+**`spec/cypress/integration/cssModules.spec.js` is load-bearing.** Nothing else in any
+suite can see CSS Modules break. Jest maps `*.css` to `styleMock.js`, and every other
+Cypress assertion selects by text, so the entire app can ship with each
+`className={styles.x}` evaluating to `undefined` while all 125 Jest tests and all 92
+pre-existing E2E tests still pass; `assets:precompile` only proves the build ran. That
+spec checks the two halves of the interop separately, because they fail separately: that
+`styles.foo` produced a real scoped name, and that a rule for that exact generated name
+reached the browser and applied. Only the second catches correctly-hashed CSS paired with
+a JS side that got nothing. It was committed and confirmed green *before* the first
+version bump in Phase 2, so a failure identifies the hop that caused it. If a migration
+step deliberately changes `localIdentName`, update the regex in that file -- do not loosen
+it to where `undefined` would pass.
+
 **Use `test:cypress:gate`, not `test:cypress:run`.** The pre-existing
 `test:cypress:run` passes `--browser chrome`. This machine has Chrome 152 while Cypress
 is pinned at 4.1.0 (early 2020, contemporary with Chrome 80), and that pairing kills the
@@ -97,7 +104,7 @@ browser mid-run: the suite hangs indefinitely with the Rails server still answer
 which is version-matched and completed the suite reliably every time. Revisit once
 Cypress itself is upgraded in Phase 6.
 
-**`git diff db/schema.rb` after every gate run.** `test/helper.rb` line 3 executes
+**`git diff db/schema.rb` after every gate run.** `test/test_helper.rb` line 3 executes
 `` `rails db:migrate` `` at load time, so *every* `bin/rails test` can silently rewrite a
 tracked file. In Phase 1 this produced a harmless reformat (Rails 5.2 writes the version
 as `2020_03_12_075605` instead of `20200312075605`, same value). From Phase 3 onward a
@@ -224,7 +231,7 @@ change. `rbenv` already has 2.7.4 installed locally.
 
 ---
 
-## Pre-existing security findings (surfaced, not fixed)
+## Pre-existing security findings (surfaced in Phase 1, fixed in Phase 8)
 
 `brakeman 4.2.0` **crashed silently on Ruby 2.7** — its vendored
 `unicode-display_width` calls the removed `Gem.gunzip`, so it exited 0 printing nothing
@@ -240,8 +247,10 @@ not upgrade regressions**, and were deliberately not fixed as part of an upgrade
 | Medium | SQL Injection | `app/models/concerns/multi_word_search.rb:13` |
 | Weak | SQL Injection | `app/models/domain_report.rb:64` — interpolated `@period.finish` |
 
-The unsafe `constantize` on user-supplied input is worth looking at first. These deserve
-their own focused pass, separate from this plan.
+The unsafe `constantize` on user-supplied input is worth looking at first. **Brian's
+decision (2026-09-03): these are folded into a post-upgrade pass — Phase 8 below.** They
+stay out of every upgrade commit so that a security change is never entangled with a
+version bump.
 
 Two further brakeman warnings are **expected** mid-upgrade and resolve on their own by
 Phase 6: "Support for Rails 5.2.8.1 ended" and "Support for Ruby 2.7.4 ended".
@@ -278,7 +287,7 @@ Two more known blockers, not yet actionable:
 
 ---
 
-## Phase 2 — Node 12 → 20 and Webpacker 3 → Shakapacker (joint frontend/backend step)
+## Phase 2 — Webpacker 3 → Shakapacker, and Node 12 → 20 (joint frontend/backend step)
 
 This is the phase most upgrade plans get wrong by splitting it. It cannot be split:
 
@@ -286,62 +295,156 @@ This is the phase most upgrade plans get wrong by splitting it. It cannot be spl
   maintained continuation is `shakapacker` (currently 10.3.2). The gem and the npm
   package are version-locked to each other, so `webpacker (3.3.1)` +
   `@rails/webpacker (^3.3.1)` must move together.
-- **Node 12 → 20 breaks jest 23 / ts-jest 23** regardless of anything Rails does.
+- **Modern Node breaks jest 23 / ts-jest 23** regardless of anything Rails does.
 - Rails 7 (Phase 5) *forces* the bundler decision. Doing it here, on the stable Rails 5.2
   footing from Phase 1, means one variable at a time — and Shakapacker only requires
   `railties >= 5.2` and Ruby >= 2.7 (verified against rubygems), both of which Phase 1
   delivers. So this does not need to wait for Rails 6.1.
 
-`nvm` already has Node 20.11.1 and 18.20.8 installed.
-
-**Recommendation: Shakapacker**, not `jsbundling-rails`+esbuild or Vite. Reason: your
+**Recommendation: Shakapacker**, not `jsbundling-rails`+esbuild or Vite. Reason: the
 webpack config is genuinely small — one pack (`app/javascript/packs/application.js`) and
 three appended loaders in `config/webpack/environment.js` (style-loader, CSS modules,
-TypeScript). Shakapacker is the continuation of what you already have, so this becomes a
-config migration rather than a build-system rewrite. Revisit Vite only if you later want
-faster dev rebuilds as a goal in its own right.
+TypeScript). Shakapacker is the continuation of what is already here, so this becomes a
+config migration rather than a build-system rewrite. Revisit Vite only if faster dev
+rebuilds later become a goal in their own right.
 
-Work items:
+### 2a. The CSS Modules gate comes first (done)
 
-1. Node 20 + `yarn` lockfile regeneration.
-2. `webpacker` → `shakapacker` (gem + `shakapacker` npm package), migrate
-   `config/webpacker.yml` → `config/shakapacker.yml`, and rewrite
-   `config/webpack/environment.js` to Shakapacker's config API (the
-   `environment.loaders.append` style is gone).
+Before any version changes: `spec/cypress/integration/cssModules.spec.js`, described in
+the verification recipe above. The ladder below walks through several css-loader and
+style-loader majors that each touched the CSS-Modules-to-JS interop, and no other test in
+any suite can see that break. Committed green on webpacker 3.3.1 so that a later failure
+names the hop that caused it.
 
-   **Do not jump 3.3.1 → 10 in one move.** Shakapacker's documented migration guides
-   assume you are coming from Webpacker 5/6, and webpack itself goes 3 → 5 underneath you
-   (loader API, `resolve`, and plugin changes at each major). Step it:
-   `webpacker 3.3.1 → 4.x → 5.4.4` (5.4.4 is Webpacker's final release and still supports
-   Rails 5.2), then `shakapacker 6.x`, then `7 → 8 → 10`. Each step has an upgrade guide
-   to follow; a direct leap has none, and you will be debugging webpack 5 breakage and
-   Shakapacker config breakage simultaneously with no reference for either.
-3. **Replace `typings-for-css-modules-loader`** — unmaintained, and the blocker for
-   modern webpack. All 65 CSS imports use the default-import form
-   (`import styles from "./Dashboard.css"`), so you do **not** need per-file generated
-   typings. Replace the loader with `css-loader`'s built-in `modules` option plus a single
-   ambient declaration:
+Two facts checked while writing it, both of which shape the migration:
 
-   ```ts
-   // app/javascript/types/css.d.ts
-   declare module "*.css" {
-     const styles: { [className: string]: string };
-     export default styles;
-   }
-   ```
+- **All 64 CSS imports use the default-import form** (`import styles from "./X.css"`),
+  while `config/webpack/environment.js` configures the loader with
+  `namedExport: true`. Those disagree; the default import works today only because
+  something in the current loader chain re-exports the locals object. css-loader's
+  `modules.namedExport` default has since flipped, which would break all 64 call sites at
+  once — so set it explicitly rather than inheriting a default.
+- **Zero CSS class names are kebab-case**, so `exportLocalsConvention` is not
+  load-bearing. This matters because four components use bracket access
+  (`styles[styleClass]` in `AlertBox`, `StyledTable`, `StyledText`, `icons/Icon`), which
+  is exactly where a camelCasing convention change would bite. It cannot here.
 
-   Then delete the 34 checked-in `*.css.d.ts` files. This is a net simplification, not
-   just a swap.
-4. Upgrade the JS test chain: `jest` 23 → 29, `ts-jest` 23 → 29, `babel-jest`,
-   `typescript` 3.8 → 5.x. Note `setupTestFrameworkScriptFile` in `package.json` is
-   removed in modern Jest — it becomes `setupFilesAfterEnv`.
-5. **Fix `tsconfig.json`: `"target": "es3"` → `"es2020"`.** ES3 will fight modern
-   TypeScript and library typings. Cheap, do it here.
-6. Replace `node-sass` if it reappears in the lockfile; move to `sass` (dart-sass).
+### 2b. Do not front-load the Node bump
 
-**Gate:** full recipe green. Pay special attention to Cypress here — this is the phase
-most likely to break asset compilation in a way unit tests cannot see. Also verify
-`RAILS_ENV=production bin/rails assets:precompile` succeeds, since that is what deploy runs.
+The obvious ordering — Node 20 first, then the webpack ladder — does not stay green.
+**webpack 4 and below hash with MD4, which fails outright on Node 17+**
+(`error:0308010C:digital envelope routines::unsupported`), so it would mean carrying
+`NODE_OPTIONS=--openssl-legacy-provider` through the webpacker 4 and 5.4.4 hops purely to
+build. Instead **pair the Node bump to the webpack bump**: stay on a contemporaneous Node
+through webpacker 4 → 5.4.4, then move Node up at the Shakapacker 6 boundary, where
+webpack 5 lands. `nvm` already has 14.11.0, 16.20.1, 18.20.8 and 20.11.1 installed. Read
+`engines` in the `webpacker`/`shakapacker` `package.json` actually installed at each hop
+and let that drive the choice rather than guessing.
+
+The second reason to keep Node low early: **Cypress 4.1.0 is the only gate that can see
+asset compilation break**, and a 2020 Cypress may not install or run at all on Node 20.
+Losing E2E during the phase most likely to break asset compilation is the worst available
+trade. If that happens, pull the Cypress upgrade forward from Phase 6 into this phase
+rather than proceeding without an E2E gate, and record it as an explicit deviation.
+
+### 2c. The ladder
+
+**Do not jump 3.3.1 → 10 in one move.** Shakapacker's migration guides assume you are
+coming from Webpacker 5/6, and webpack itself goes 3 → 5 underneath you (loader API,
+`resolve`, and plugin changes at each major). A direct leap has no guide for either half,
+and you would debug webpack 5 breakage and Shakapacker config breakage simultaneously.
+
+Four real hops, each gated:
+
+1. **`webpacker 3.3.1 → 4.x`** — really a **Babel 6 → 7 migration**. `.babelrc` is Babel
+   6 syntax throughout (`"env"`, `"react"`, `transform-object-rest-spread`,
+   `transform-class-properties`, `syntax-dynamic-import`); webpacker 4 expects
+   `babel.config.js` with `@babel/*` packages. The load-bearing detail: the `env.test`
+   block in `.babelrc` is what leaves `modules` at commonjs for Jest. Drop it in
+   translation and Jest dies with "Cannot use import statement outside a module" — and
+   the obvious-but-wrong reading of that error is that `ts-jest` needs attention. Port
+   that block deliberately.
+2. **`webpacker 4.x → 5.4.4`** — Webpacker's final release; still supports Rails 5.2.
+3. **`shakapacker 6.x`** — webpack 5 lands here. Migrate `config/webpacker.yml` →
+   `config/shakapacker.yml` and rewrite `config/webpack/environment.js` to Shakapacker's
+   config API (the `environment.loaders.append` style is gone). Bump Node at this
+   boundary. Also drop `(\.erb)?` from the TypeScript loader `test` pattern — Shakapacker
+   moved ERB support out of core, and there are **zero** `.erb`-suffixed JS/TS files.
+4. **`shakapacker 6 → current (10.x)`** — mostly config renames on a now-stable
+   webpack 5, so the 7 → 8 → 10 steps collapse into one hop. Read each release's guide,
+   but expect no webpack-level work here.
+
+### 2d. Replace `typings-for-css-modules-loader`
+
+Unmaintained, and the blocker for modern webpack. Since all 64 imports are default-form,
+per-file generated typings are unnecessary. Replace the loader with `css-loader`'s
+built-in `modules` option plus a single ambient declaration:
+
+```ts
+// app/javascript/types/css.d.ts
+declare module "*.css" {
+  const styles: { [className: string]: string };
+  export default styles;
+}
+```
+
+Then delete the 34 checked-in `*.css.d.ts` files. A net simplification, not just a swap.
+Note this trades per-class type safety for an index signature: a typo in `styles.contaner`
+stops being a compile error. Given the four bracket-access call sites already defeat
+per-class checking, that is an acceptable trade — but it is a trade, not a free win.
+
+### 2e. Where type-checking lives (decide explicitly)
+
+`ts-loader` currently type-checks as part of the build, which is the only thing enforcing
+`"strict": true` on application code. Two paths:
+
+- **Keep `ts-loader`** — requires 9.x for webpack 5.
+- **Take Shakapacker's babel-TypeScript path** — faster, but type-checking silently
+  leaves the build entirely, surviving only in `tsconfig.test.json` via ts-jest.
+
+**Decision: keep `ts-loader`, and add a standalone type-check to the gate recipe in the
+same commit** (done — `yarn typecheck` in `package.json`). Left implicit, this degrades
+quietly across every remaining phase; the explicit gate means it cannot.
+
+Bare `tsc --noEmit` is **not** the right gate command, and would have been red from day
+one — 16 errors on unchanged code. The script mirrors what the build actually enforces:
+
+- `--noUnusedLocals false --noUnusedParameters false`, because
+  `config/webpack/loaders/typescript.js` already overrides both to `false` (along with
+  `noImplicitAny`). Twelve `TS6133 declared but never read` errors sit in the codebase
+  today precisely because the build has never enforced them. **They are worth cleaning up
+  in this phase** — 12 unused imports and locals across 11 files, a mechanical change —
+  after which these two flags can be dropped from the script. Until then, gating on them
+  would mean a red gate that says nothing about the migration.
+- `--skipLibCheck`, because `@types/react-router-dom` 5.x declares re-exports
+  (`useHistory`, `useLocation`, `useParams`, `useRouteMatch`) that the pinned
+  `@types/react-router` does not provide — 4 errors inside `node_modules`, not fixable
+  from here. This resolves in **Phase 7** with the React Router 6 work; drop the flag then.
+
+Confirmed the script still catches real type errors (verified against a deliberately
+introduced `TS2322`) rather than passing vacuously — the same failure mode that made
+brakeman useless for years.
+
+### 2f. Remaining work items
+
+- **Clear the 12 `TS6133` unused-import/local errors** so `yarn typecheck` can drop its
+  `--noUnusedLocals`/`--noUnusedParameters` escape hatches (see above). Mechanical.
+- Upgrade the JS test chain: `jest` 23 → 29, `ts-jest` 23 → 29, `babel-jest`,
+  `typescript` 3.8 → 5.x. `setupTestFrameworkScriptFile` in `package.json` is removed in
+  modern Jest — it becomes `setupFilesAfterEnv`.
+- **Fix `tsconfig.json`: `"target": "es3"` → `"es2020"`** (and the same in
+  `tsconfig.test.json`, which duplicates it). ES3 will fight modern TypeScript and
+  library typings. Cheap, do it here.
+- Replace `node-sass` if it reappears in the lockfile; move to `sass` (dart-sass).
+- `app/javascript/packs/application.js` does a bare `import "application"`, which depends
+  on `source_path` staying in webpack's `resolve.modules`. Low risk — it fails loudly with
+  "module not found" rather than silently — but know it is there.
+- `yarn` 1.22.19 is Yarn Classic and is fine to keep; Shakapacker supports it. Do not add
+  a Yarn 2+ migration to this phase.
+
+**Gate:** full recipe green, including the CSS Modules spec and `tsc --noEmit`. Also
+verify `RAILS_ENV=production bin/rails assets:precompile` succeeds, since that is what
+deploy runs.
 
 **Trap on that precompile check:** it loads `config/environments/production.rb`, which
 until Phase 5b still reads `Rails.application.secrets.smtp_username` and
@@ -406,7 +509,7 @@ Also bump `omniauth-google-oauth2` 0.6.0 → 1.2.x here (1.x requires OmniAuth 2
 move together).
 
 **Gate:** full recipe green **+ manual Google login verified in a real browser.** Note
-that there is no working staging environment to rehearse this on (see *Deploy reality*
+that there is deliberately no staging environment to rehearse this on (see *Deploy reality*
 above), so plan a low-traffic window and know your rollback: this phase should be a single
 revertable commit, and the previous release directory is still on the server under
 Capistrano.
@@ -590,17 +693,56 @@ the class of bug that passes unit tests and breaks the app.
 
 ---
 
+## Phase 8 — Post-upgrade security pass (no version changes)
+
+**Brian's decision, 2026-09-03:** the security findings brakeman surfaced are fixed
+*after* the upgrade, not during it. Rationale, and worth keeping: a security fix inside an
+upgrade commit is a change to application behaviour hidden inside a change to
+dependencies. If the gate goes red you cannot tell which half did it, and if a fix is
+wrong it is buried in a diff nobody reviews line by line. Keeping them separate also means
+this phase can be reviewed by someone who does not care about Rails versions at all.
+
+Work items, in the order they deserve attention:
+
+1. **`app/controllers/api/permissions_controller.rb:3` — `params[:type].constantize`.**
+   High confidence, remote code execution. User-supplied input reaching `constantize`
+   lets a caller instantiate arbitrary constants. Fix by allowlisting the permitted type
+   strings and mapping to classes explicitly; never derive a class from raw params.
+2. **`app/controllers/api/people_controller.rb:46` — `params.permit!`.** Mass assignment:
+   permits every parameter, including any attribute a future migration adds. Replace with
+   an explicit permit list.
+3. **Three SQL injection findings** — `app/models/event.rb:120`,
+   `app/models/concerns/multi_word_search.rb:13`, and `app/models/domain_report.rb:64`
+   (interpolated `@period.finish`). Convert to bound parameters.
+4. **Regenerate `config/brakeman.ignore`.** Its 5 entries no longer match anything —
+   they reference `app/views/dashboard/dashboard.html.erb`,
+   `app/views/languages/show.html.erb` and `app/views/clusters/index.html.erb`, all ERB
+   views deleted during the React migration. A stale ignore file is worse than none: it
+   reads as "reviewed and accepted" for findings that no longer exist.
+5. **Re-run `bundle exec brakeman` expecting zero warnings**, and consider adding it to
+   the gate as a hard failure rather than a compare-against-known-list.
+
+By the time this phase runs, brakeman will be unpinned (Phase 5 lifts it to 6+ on Ruby
+3.1) and the two EOL warnings for Rails 5.2.8.1 and Ruby 2.7.4 will have resolved
+themselves.
+
+**Note:** each of these is a genuine behaviour change with no test covering it today.
+Write the test first in each case — that is the actual work here, not the one-line fix.
+
+---
+
 ## Sequencing summary
 
 ```
-Phase 0  Hygiene, Cypress baseline, branch triage, staging?   no version changes
+Phase 0  Hygiene, Cypress baseline, branch triage           no version changes
 Phase 1  Ruby 2.7 + Rails 5.2                    Ruby moves once, covers 4 hops
-Phase 2  Node 20 + Shakapacker + Jest/TS      <- joint frontend/backend step
+Phase 2  Shakapacker + Node 20 + Jest/TS      <- joint frontend/backend step
 Phase 3  Rails 6.0 -> 6.1 (Zeitwerk) + audited 5
 Phase 4  OmniAuth 2                              auth risk; manual browser gate
 Phase 5  Ruby 3.1 + secrets -> ENV + Rails 7.0 -> 7.1        deploy-affecting
 Phase 6  Ruby 3.4 + Rails 7.2 -> 8.0 + Cypress/cypress-on-rails
 Phase 7  React 18 -> react-redux 9 -> React Router 6   independent; router is the big one
+Phase 8  Security pass                            post-upgrade, no version changes
 ```
 
 **Why not "backend first, then frontend."** The instinct is right for Phases 4–6 and 7,
@@ -621,7 +763,8 @@ that, the split holds.
 ## Standing risks
 
 1. **OmniAuth request phase is invisible to the test suite** (Phase 4). Manual browser
-   gate required, with no staging environment to rehearse on.
+   gate required, and — by decision, not oversight — no staging environment to rehearse
+   on. This is the single largest unmitigated risk in the plan.
 2. **Asset precompilation** is only exercised at deploy time. Add
    `RAILS_ENV=production bin/rails assets:precompile` to the gate from Phase 2 onward.
 3. **`Capfile` needs touching in Phases 1, 5a, and 6** (`set :rbenv_ruby`), and
