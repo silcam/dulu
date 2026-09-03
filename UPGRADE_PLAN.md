@@ -37,7 +37,7 @@ Two consequences baked into this plan:
 | `bin/rails test` | **396 tests, 1285 assertions, 0 failures, 0 errors, 1 skip** |
 | `npx jest --ci` | **24 suites passed, 125 tests passed, 1 skipped** |
 | `bundle check` | dependencies satisfied |
-| Cypress | 18 integration specs in `spec/cypress/integration` (not run for baseline — see Phase 0) |
+| `yarn test:cypress:run` | **18 specs, 92 tests, 92 passing** (after the two spec fixes in Phase 0) |
 
 **The baseline is green.** That is the single most important fact in this plan: every
 subsequent phase has a trustworthy pass/fail signal, so breakage is always attributable
@@ -126,10 +126,23 @@ verification instrument for everything that follows, and right now it is unreada
    `package.json` runs `cypress --project ./spec`). Removing the root copies eliminates a
    trap where someone runs Cypress from the wrong project root and sees example tests pass.
 
-3. **Establish the Cypress baseline.** It was not part of the verified baseline above.
-   Run `yarn test:cypress:run` and record the result. If specs are already failing, fix
-   or explicitly skip them **now** — Cypress is the only end-to-end net, and it needs to
-   be trustworthy before the phases that can silently break rendering.
+3. **Establish the Cypress baseline.** DONE. First run was 90/92, with two failures,
+   both since fixed (test-only changes — the application renders correctly in both cases,
+   verified against the DOM):
+
+   - `spec/cypress/support/commands.js` — `searchFill` stored one `cy.wrap()` chainable
+     and reused it for three commands. A wrapped subject is consumed by the command it is
+     passed to, so the final `.type("{Enter}")` ran against the leftover subject from
+     `.parent().within()` — the dropdown `<li>`, which React detaches as soon as search
+     results re-render. Intermittent "element is detached from the DOM". Fixed by
+     re-wrapping per command. Affects 4 call sites across 3 specs.
+   - `spec/cypress/integration/translationActivities.spec.js` — `cy.contains("tr",
+     "Genesis")` was ambiguous. The Events table loads asynchronously and renders a
+     "Genesis Checking" row with only two `<td>`s, so which row matched depended on load
+     timing and `td:nth-child(3)` was sometimes absent. Fixed by matching the name cell
+     exactly (`/^Genesis$/`).
+
+   Suite is now **92/92 green** and is a trustworthy gate.
 
 4. **Triage the branch backlog.** 15 local feature branches and 21 unmerged remote
    dependabot branches. Merge or close what matters *before* upgrading; after Ruby and

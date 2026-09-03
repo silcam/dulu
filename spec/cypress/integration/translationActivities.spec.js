@@ -49,8 +49,18 @@ describe("Translation Activity", () => {
   it("Dates show on refresh", () => {
     cy.login();
     cy.visit(hdiPath + "/Translation");
-    cy.contains("tr", "Genesis").find('td:nth-child(3)').should("contain", '2017-05-29');
-    cy.contains("tr", "Ezra").find('td:nth-child(3)').should('contain', '2017-02')
+    // Match the activity name cell exactly. Plain `cy.contains("tr", "Genesis")`
+    // is ambiguous: the Events table below loads asynchronously and renders a
+    // "Genesis Checking" row with only two <td>s, so the row this resolved to
+    // depended on load timing and `td:nth-child(3)` was sometimes absent.
+    cy.contains("td", /^Genesis$/)
+      .parent()
+      .find("td:nth-child(3)")
+      .should("contain", "2017-05-29");
+    cy.contains("td", /^Ezra$/)
+      .parent()
+      .find("td:nth-child(3)")
+      .should("contain", "2017-02");
   });
 
   it("Deletes stages", () => {

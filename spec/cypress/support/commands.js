@@ -84,11 +84,20 @@ Cypress.Commands.add(
   "searchFill",
   { prevSubject: "element" },
   (textInput, searchTerm) => {
-    const searchInput = cy.wrap(textInput);
-    searchInput.clear().type(searchTerm);
-    searchInput.parent().within(() => {
-      cy.contains("li", searchTerm);
-    });
-    searchInput.type("{Enter}");
+    // Re-wrap the element for each command rather than reusing one chainable.
+    // A `cy.wrap()` result is consumed by the command it is passed to, so
+    // reusing it meant the final `.type("{Enter}")` ran against the subject
+    // left over from `.parent().within()` -- the dropdown <li>, which React
+    // detaches from the DOM as soon as the search results re-render. That
+    // produced intermittent "element is detached from the DOM" failures.
+    cy.wrap(textInput)
+      .clear()
+      .type(searchTerm);
+    cy.wrap(textInput)
+      .parent()
+      .within(() => {
+        cy.contains("li", searchTerm);
+      });
+    cy.wrap(textInput).type("{Enter}");
   }
 );
