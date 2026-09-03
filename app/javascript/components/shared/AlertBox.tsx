@@ -1,5 +1,5 @@
 import React from "react";
-import * as styles from "./AlertBox.css";
+import styles from "./AlertBox.css";
 
 type StyleClasses = "alertBox" | "alertBoxRed";
 

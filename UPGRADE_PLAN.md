@@ -374,7 +374,7 @@ Four real hops, each gated:
    webpack 5, so the 7 → 8 → 10 steps collapse into one hop. Read each release's guide,
    but expect no webpack-level work here.
 
-### 2d. Replace `typings-for-css-modules-loader`
+### 2d. Replace `typings-for-css-modules-loader` (done)
 
 Unmaintained, and the blocker for modern webpack. Since all 64 imports are default-form,
 per-file generated typings are unnecessary. Replace the loader with `css-loader`'s
@@ -392,6 +392,32 @@ Then delete the 34 checked-in `*.css.d.ts` files. A net simplification, not just
 Note this trades per-class type safety for an index signature: a typo in `styles.contaner`
 stops being a compile error. Given the four bracket-access call sites already defeat
 per-class checking, that is an acceptable trade — but it is a trade, not a free win.
+
+Done ahead of the version ladder, because it can be: `css-loader` was already a declared
+dependency at `^1.0.0`, and 1.0.1 still takes flat `modules` / `localIdentName` options, so
+the swap lands on webpacker 3.3.1 with the CSS gate proving the interop unchanged. Doing it
+here rather than at the webpacker 4 hop matters: webpacker 4 pulls in `css-loader ^3.2.0`,
+which `typings-for-css-modules-loader` 1.7 (a wrapper around css-loader 0.28/1.x, still
+using webpack-1-era `query` syntax) would not survive — so it had to go either way, and
+going first means it is not tangled up with the Babel 6 → 7 work.
+
+Two things found while doing it, both worth knowing:
+
+- **`loaders.append(key, …)` replaces rather than adds.** Webpacker's `ConfigList.add`
+  deletes any existing entry with the same key first, so the repo's
+  `environment.loaders.append("css", …)` has always been *replacing* Webpacker's built-in
+  `.css` rule, not supplementing it. Consequence: `postcss-loader` and `ExtractTextPlugin`
+  never applied to `.css` in this app, which is why CSS is inlined by style-loader even in
+  production and why `app/views/web/index.html.erb` has no `stylesheet_pack_tag`. Do not
+  "restore" extraction during the migration — that is a behaviour change, and a
+  `stylesheet_pack_tag` would have to be added in the same breath. `.postcssrc.yml`
+  (`postcss-import`, `postcss-cssnext`) is therefore dead config for `.css`; it still needs
+  translating to `postcss.config.js` at the webpacker 4 hop, but nothing depends on it.
+- **`AlertBox.tsx` was the one outlier import** — `import * as styles from "./AlertBox.css"`
+  rather than the default form used by the other 63. That typed fine against generated
+  named-export declarations and fails against the ambient default export, so it is now a
+  default import. Runtime behaviour is unchanged (style-loader assigns the locals object to
+  `module.exports`, so both forms resolve to the same object).
 
 ### 2e. Where type-checking lives (decide explicitly)
 
