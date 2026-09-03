@@ -97,6 +97,19 @@ browser mid-run: the suite hangs indefinitely with the Rails server still answer
 which is version-matched and completed the suite reliably every time. Revisit once
 Cypress itself is upgraded in Phase 6.
 
+**`git diff db/schema.rb` after every gate run.** `test/helper.rb` line 3 executes
+`` `rails db:migrate` `` at load time, so *every* `bin/rails test` can silently rewrite a
+tracked file. In Phase 1 this produced a harmless reformat (Rails 5.2 writes the version
+as `2020_03_12_075605` instead of `20200312075605`, same value). From Phase 3 onward a
+schema diff appearing mid-phase will look like "the upgrade changed my schema" when it is
+just this line. Expect the diff to be empty, and explain it when it is not.
+
+**Confirm the lockfile stays deployable.** `config/deploy.rb` sets
+`bundle_flags '--deployment'`, which refuses to re-resolve: if `Gemfile.lock` does not
+satisfy `Gemfile` exactly, the deploy fails at `bundle install` and no local test catches
+it. After any dependency change, run `BUNDLE_FROZEN=true bundle install` and confirm it
+succeeds *and* leaves `Gemfile.lock` unmodified.
+
 **Watch for orphaned test servers.** `concurrently -k` does not always reap the Puma
 child. A leftover process on port 3002 makes the *next* run bind-fail and silently test
 stale code. Confirm the port is free before each gate run:
