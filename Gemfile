@@ -6,7 +6,7 @@ git_source(:github) do |repo_name|
 end
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem "rails", "~> 5.2.8"
+gem "rails", "~> 6.0.0"
 # Be Awesome
 # gem 'bootsnap', require: false
 # Use postgres as the database for Active Record
@@ -17,8 +17,16 @@ gem "pg"
 gem "nokogiri", "~> 1.15.7"
 # Use Puma as the app server
 # gem 'puma', '~> 3.0'
-# Use SCSS for stylesheets
-gem "sass-rails", "~> 5.0"
+# Use SCSS for stylesheets. sass-rails 6 is a thin wrapper over sassc-rails
+# (libsass); the Ruby `sass` gem it used to pull in is EOL. Sprockets is still
+# live here -- app/views/layouts/application.html.erb links application.css,
+# which require_tree's the .scss files -- so this is not a dead dependency.
+gem "sass-rails", "~> 6.0"
+# Pinned deliberately: sass-rails 6 would otherwise resolve sprockets 4, whose
+# manifest and link-directive rules are a behaviour change of their own. Held at
+# 3 for the Rails 6.0/6.1 hops so an asset failure is attributable, then lifted
+# to 4 in its own commit at the end of Phase 3.
+gem "sprockets", "~> 3.7"
 # Use Uglifier as compressor for JavaScript assets
 gem "uglifier", ">= 1.3.0"
 # Use CoffeeScript for .coffee assets and views
@@ -35,13 +43,15 @@ gem "shakapacker", "~> 10.3.2"
 # Turbolinks makes navigating your web application faster. Read more: https://github.com/turbolinks/turbolinks
 # gem 'turbolinks', '~> 5'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
-gem "jbuilder", "~> 2.5"
+# 2.7 registers a single-arity template handler, which Rails 6.0 deprecates --
+# and test.rb raises on deprecations, so it blocks boot. 2.11 takes (template, source).
+gem "jbuilder", "~> 2.11"
 # Use Redis adapter to run Action Cable in production
 # gem 'redis', '~> 3.0'
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
 # Internationalization
-gem "rails-i18n", "~> 5.1"
+gem "rails-i18n", "~> 6.0"
 # Google authentication
 gem "omniauth-google-oauth2", "~> 0.5"
 # User roles
