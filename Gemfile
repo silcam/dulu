@@ -57,7 +57,7 @@ gem "omniauth-google-oauth2", "~> 0.5"
 # User roles
 gem "access-granted", "~> 1.2.0"
 # Activity Log
-gem "audited", "~> 4.9"
+gem "audited", "~> 5.8"
 # xlsx Export
 # gem 'rubyzip', '>= 1.2.1'
 # gem 'axlsx', git: 'https://github.com/randym/axlsx.git', ref: '776037c0fc799bb09da8c9ea47980bd3bf296874'
