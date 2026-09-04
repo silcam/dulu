@@ -65,11 +65,11 @@ Defined once here; each phase says "run the gate" rather than repeating it.
 
 ```shell
 nvm use                            # Phase 2 onward: .nvmrc pins Node 20.11.1
-bin/rails test                     # 400 tests / 1308 assertions as of Phase 5, 0 failures
+bin/rails test                     # 400 tests / 1319 assertions as of Phase 6, 0 failures
 npx jest --ci                      # must stay at 125 passed
 yarn test:cypress:gate             # 19 specs / 93 tests -- see notes below
 yarn typecheck                     # Phase 2 onward -- see "Where type-checking lives"
-bundle exec brakeman               # 7 as of Phase 5a: 5 findings + 2 EOL checks (below)
+bundle exec brakeman               # 6 as of Phase 6b: 5 findings + 1 EOLRails check (below)
 bin/rails runner -e development 'puts Rails.version'
 bin/rails zeitwerk:check           # Phase 3 onward only
 foreman s                          # the documented way to run this app -- see below
@@ -359,7 +359,7 @@ Each should be revisited at the phase named:
 | Pin | Reason | Unwind at | Status |
 |---|---|---|---|
 | `nokogiri "~> 1.15.7"` | nokogiri >= 1.16 requires Ruby >= 3.0 | Phase 5 (Ruby 3.1) | **done in 5a** — pin deleted, now 1.18.10 |
-| `delayed_job "~> 4.1.11"` | 4.2 needs `ActiveJob::QueueAdapters::AbstractAdapter` — **Rails 7.2+, not 7.1**, verified on 7.1.6 | **Phase 6** (Rails 7.2) | still open after 5c |
+| `delayed_job "~> 4.1.11"` | 4.2 needs `ActiveJob::QueueAdapters::AbstractAdapter` — **Rails 7.2+, not 7.1**, verified on 7.1.6 | Phase 6a (Rails 7.2) | **done in 6a** — now `~> 4.2` |
 | `brakeman "~> 5.4"` | brakeman 6+ requires Ruby >= 3.0 | Phase 5 (Ruby 3.1) | **done in 5a** — now `~> 7.0` (7.1.1) |
 | `capybara "~> 3.39.0"` | capybara 3.40+ requires Ruby >= 3.0 | Phase 5 (Ruby 3.1) | **done in 5a** — now `~> 3.40` |
 | `sprockets "~> 4.0"` | added in Phase 3; upper bound only, not a hold-back | — | — |
@@ -375,11 +375,12 @@ not a regression. It adds two EOL checks the 5.4 line did not have:
 
 | Check | Message | Clears at |
 |---|---|---|
-| `EOLRuby` (`.ruby-version:1`) | Support for Ruby 3.1.3 ended 2025-03-31 | Phase 6 (Ruby 3.4) |
-| `EOLRails` (`Gemfile.lock`) | Support for Rails 6.1.7.10 ended 2024-10-01 | Phase 6 (Rails 8.0) — 7.1 is EOL too, so this stays lit through 5c |
+| `EOLRuby` (`.ruby-version:1`) | Support for Ruby 3.1.3 ended 2025-03-31 | **cleared in Phase 6b** (Ruby 3.4.9) |
+| `EOLRails` (`Gemfile.lock`) | Support for Rails 6.1.7.10 ended 2024-10-01 | **still lit on Rails 8.0.5.1** — brakeman now says support ends 2026-10-07; see the Rails 8.1 question in Phase 6 |
 
 So from 5a on, **the expected brakeman total is 7 = the 5 pre-existing application
-findings + 2 EOL warnings**, and both EOL warnings clear in Phase 6, not Phase 5. Also
+findings + 2 EOL warnings**. From Phase 6b it is **6** — the Ruby EOL warning cleared, the
+Rails one did not, and it will not until a Rails release with a support date in the future. Also
 brakeman 7 reports **3** obsolete entries in `config/brakeman.ignore` rather than the 5
 noted above; the cleanup is still a Phase 8 item.
 
@@ -391,7 +392,7 @@ Two more known blockers, not yet actionable:
   requires `capybara >= 3.26`. Now `~> 3.39.0`, itself a Ruby-2.7 ceiling (see the table
   above). `test/system` still cannot run on this machine for want of a `chromedriver`;
   see Phase 3g.
-- **`debase`** will not build on Ruby 3.4; replace with the `debug` gem in Phase 6.
+- ~~**`debase`**~~ **resolved in Phase 6b** — it did not merely fail to build on Ruby 3.4, it would not install at all. Replaced with the `debug` gem.
 
 ---
 
@@ -1429,43 +1430,166 @@ use.
 
 ---
 
-## Phase 6 — Rails 7.2 → 8.0, Ruby 3.1 → 3.4
+## Phase 6 — Rails 7.2 → 8.0, Ruby 3.1 → 3.4 (Rails/Ruby done; Cypress remaining)
 
-The home stretch. All key gems have maintained Rails 8-compatible releases (verified
-against rubygems.org):
+**The plan's ordering was wrong and a probe fixed it before any commit.** It said Ruby 3.4
+first, then 7.2, then 8.0. A throwaway `bundle lock` under Ruby 3.1.3 settled it in one
+run: Rails 7.2 resolves there, Rails 8.0 does not — `rails-i18n` 8.0 requires Ruby ≥ 3.2,
+so version solving fails outright. Actual order:
 
-| Gem | Current | Latest | Note |
-|---|---|---|---|
-| `rails` | 5.1.6.2 | 8.1.3.1 | targeting 8.0.x |
-| `audited` | 4.7.0 | 5.8.0 | major — handled in Phase 3 |
-| `access-granted` | 1.2.0 | 1.3.3 | minor |
-| `omniauth-google-oauth2` | 0.6.0 | 1.2.3 | handled in Phase 4 |
-| `delayed_job_active_record` | 4.1.2 | 4.1.11 | still maintained |
-| `rails-i18n` | 5.0.4 | 8.1.0 | tracks Rails major |
-| `cypress-on-rails` | 1.5.1 | 1.20.1 | large jump, config changed |
+| Step | What | Status |
+|---|---|---|
+| 6a | Rails 7.1.6 → 7.2.3.2, `load_defaults 7.2`, unpin `delayed_job` | done |
+| 6b | Ruby 3.1.3 → 3.4.9, `debase` → `debug`, and two forced tooling bumps | done |
+| 6c | Rails 7.2.3.2 → 8.0.5.1, `load_defaults 8.0` | done |
+| 6d | `cypress-on-rails` layout migration (`spec/cypress` → `spec/e2e`) | **not started** |
+| 6e | Cypress 4 → 15 (config, directory rename, package.json scripts) | **not started** |
 
-1. Ruby 3.1 → 3.4 (`rbenv` has 3.4.9). Update the deploy rbenv pin.
-2. Rails 7.2, then 8.0. Standard two-commit recipe each.
-3. `cypress-on-rails` 1.5.1 → 1.20.x — its configuration format changed substantially
-   (`spec/cypress/app_commands/`, `config/initializers/cypress_on_rails.rb`). Budget real
-   time; this is your E2E harness.
-4. Bump Cypress itself (4.x → 15.x). A genuine migration, not a version bump — three
-   distinct moving parts, each worth its own commit:
-   - `spec/cypress.json` (the real config — `baseUrl`, `defaultCommandTimeout`,
-     `chromeWebSecurity`, `video`) becomes `spec/cypress.config.js`. Note this is *not*
-     the root `cypress.json` you deleted in Phase 0.
-   - `spec/cypress/integration/` → `spec/cypress/e2e/`, moving all 18 spec files. Do the
-     rename in its own commit so `git log --follow` stays useful.
-   - Both `package.json` scripts pass `--project ./spec`, whose semantics changed in
-     Cypress 10+ for this layout. `test:cypress` and `test:cypress:run` both need
-     rewriting, as does `--headless` (now the default; the flag was removed).
-5. **Optional, not required:** Rails 8 ships Solid Queue. You currently run
-   `delayed_job_active_record` + `delayed_job_recurring` + `daemons`, with recurring jobs
-   in `config/initializers/recurring_jobs.rb` and a `Procfile`. `delayed_job` is still
-   maintained, so **defer this**. Migrating background jobs in the same phase as a Rails
-   major is how you lose a weekend. File it as separate follow-up work.
+Putting Rails 7.2 first also kept `debase` — which does not survive Ruby 3.4 — out of the
+same commit as a Rails major.
 
-**Gate:** full recipe green + staging deploy + production deploy.
+`rails-i18n` moved at every single hop (6.0 → 7.0 → 7.2-compatible → 8.1.0). It caps
+railties at `< N+1`, so it fails resolution every time it is forgotten. Its Gemfile
+comment now says so.
+
+### 6a. Rails 7.2 — one application change, with a badly misleading error
+
+`delayed_job` is unpinned here, which is where it always belonged:
+`ActiveJob::QueueAdapters::AbstractAdapter` really does arrive in 7.2 (§5c corrected the
+plan's claim of 7.1). Verified by booting production, the only environment that sets
+`queue_adapter = :delayed_job`.
+
+Rails 7.2 deprecates the keyword form of `enum`, so `Person`'s
+`enum email_pref: %i[...]` became `enum :email_pref, %i[...]`. **Under
+`deprecation = :raise` this does not present as a deprecation at all.** The exception
+fires partway through the class body, Zeitwerk re-runs it, and all 400 tests error with:
+
+```
+ArgumentError: You tried to define an enum named "email_pref" on the model "Person",
+but this will generate a instance method "immediate?", which is already defined by
+another enum
+```
+
+`Person` has exactly one enum. This is the third time `deprecation = :raise` has turned a
+one-line deprecation into a false trail (see §3b, §5c). **Expect it, and read the Gemfile
+diff before believing the error.**
+
+### 6b. Ruby 3.4 — no application changes, and three tooling casualties from one removal
+
+The suite passed on 3.4.9 unmodified and the Gemfile resolved without conflict. Everything
+that broke was tooling, and **all of it was the same removal: `File.exists?`**, the
+long-deprecated alias of `File.exist?`, is gone in Ruby 3.4. Our own code calls it nowhere
+— checked. Three gems still did, and not one of the three failures resembles its cause:
+
+| Gem | Symptom | Fix |
+|---|---|---|
+| `debase` / `ruby-debug-ide` | would not install at all — `debase-ruby_core_source` fails | replaced with `debug` (ruby/debug) |
+| `cypress-on-rails` 1.5.1 | every `app_command` 500s; **all 19 Cypress specs fail in their `before` hooks** with a `CypressError` about a non-2xx response, four layers from the cause | → `~> 1.20` |
+| `foreman` 0.64.0 | `foreman s` dies before reading the `Procfile` | → `~> 0.90` |
+
+**Both `foreman` and `cypress-on-rails` were unpinned in the Gemfile but held back in the
+lockfile**, so `bundle install` never moved them — each needed an explicit
+`bundle update`. Same trap as `nokogiri` in §5a. Assume a version-driven bug is still
+present until the lockfile says otherwise.
+
+`.vscode/launch.json` moved from `"type": "Ruby"` (ruby-debug-ide) to `"type": "rdbg"`,
+and the stale `bin/rdebug-ide` binstub is gone. Four configurations were dropped while
+rewriting it because they could never have run here: they point at `main.rb`, `bin/rspec`
+(twice) and `bin/cucumber`, none of which exist and none of whose gems are in the Gemfile.
+
+**The `cypress-on-rails` migration was far smaller than this plan feared.** 1.20 keeps
+`cypress_folder` as a deprecated alias for `install_folder`, and its `CommandExecutor`
+still supports the legacy `spec/cypress` layout. So the config change is one renamed
+attribute, not a restructure. Two deprecations remain logged, and both are layout changes
+belonging to 6d/6e:
+
+- `cypress_helper.rb is deprecated, please rename the file to e2e_helper.rb`
+- `/__cypress__/command is deprecated ... use /__e2e__/command instead`
+
+`use_middleware = Rails.env.test?` was kept deliberately — it is stricter than the gem's
+own suggested `!Rails.env.production?`, and that endpoint **executes arbitrary Ruby**.
+
+### 6c. Rails 8.0 — the one hop where gems and defaults could not be split
+
+Every earlier hop was verified twice: new gems with old defaults, then the new defaults.
+That is impossible at 8.0. Rails 8.0 emits a `to_time_preserves_timezone` deprecation
+unconditionally until the 8.0 default is set, and `test.rb` raises on deprecations, so
+"8.0 gems with 7.2 defaults" cannot be green by construction. Adopting it is inert here
+anyway: **zero `to_time` call sites** in `app/`, `lib/`, `test/` or `spec/`. The only other
+8.0 default is `action_dispatch.strict_freshness`, which changes ETag/Last-Modified
+precedence — immaterial to a JSON API with no HTTP caching configured.
+
+**One real break, and it is minitest's, not Rails'.** `bundle update rails` pulled
+**minitest 6.0.6**, and minitest 6 dropped `minitest/mock.rb` — its own `History.rdoc`
+says "extracted to the minitest-mock gem". `test_helper.rb` requires it for `Object#stub`,
+which the notification and report tests use to freeze Time/Date, so the entire suite
+failed to load. Added `gem "minitest-mock"` rather than pinning minitest back: the
+extraction is the intended path and minitest 6 is otherwise fine here.
+
+Phase 5c's actioncable asset rename pays off: the Sprockets half of the production
+precompile still emits an `actioncable-*.js`, so Rails 8 dropping the `action_cable.js`
+alias is a non-event.
+
+### 6c. Generated files — what was kept and what was thrown away
+
+`app:update` produced files at both 7.2 and 8.0. Kept: `bin/brakeman`, `bin/rubocop` (they
+match gems already in the Gemfile) and `public/400.html` (the app already ships 404/422/500
+and Rails 8 serves 400). Deleted every time: `public/icon.png`, `public/icon.svg`,
+`public/406-unsupported-browser.html` — unreferenced default-app decoration, and the 406
+page is only used by `allow_browser`, which this app never calls. Also deleted `bin/dev`,
+which is just `exec ./bin/rails server`: a misleading second entry point beside the
+documented `foreman s`, since it starts no webpack dev server.
+
+### Rails 8.1 — an open scope question, not a decision to make silently
+
+brakeman on Rails 8.0.5.1 reports **"Support for Rails 8.0.5.1 ends on 2026-10-07"** —
+roughly a month after this phase was done — and `rails-i18n` already resolves to 8.1.0.
+This plan targeted 8.0.x. Whether to add an 8.1 hop is Brian's call.
+
+### Gate at close of 6c (Ruby 3.4.9 / Rails 8.0.5.1 / Node 20.20.2 / Shakapacker 10.3.2)
+
+Rails **400 tests / 1319 assertions, 0 failures, 0 errors, 1 skip** (the assertion count
+rose from 1308 with minitest 6); Jest **125**; `tsc --noEmit` clean; `zeitwerk:check`
+clean; Cypress **93/93** first try; brakeman **6** — the 5 application findings plus one
+EOLRails warning, the EOLRuby one having cleared at 6b; production boot; full production
+precompile with caches cleared; `foreman s` serving 200.
+
+**Two machine facts that cost time in this phase, both unrelated to Dulu.** The other
+project's puma is on port 3000 again, and because the `Procfile` hardcodes `-p 3000` the
+conflict does not present as a bind error — `curl` reaches the *neighbouring app* and
+returns its 302 and its session cookie, which looks alarming and is not Dulu at all.
+`foreman s` was verified via a copied Procfile on port 3001
+(`foreman start -f <copy> -d /work/work/dulu`; the `-d` matters, or `./bin/...` resolves
+relative to the Procfile's directory). Separately, a leftover test-env puma on **3002**
+made one Cypress run fail to boot its server; its process title is rewritten to
+`puma ... [dulu]`, so `pkill -f "rails server"` does not match it.
+
+### 6d / 6e. What remains — the Cypress migration
+
+Deliberately not started in the same stretch as a Rails major: the E2E suite is what tells
+you whether anything else broke, so it should not be in flux at the same time.
+
+1. **`cypress-on-rails` layout** — `spec/cypress/cypress_helper.rb` → `e2e_helper.rb`,
+   `app_commands/` up to the install-folder root, and the endpoint `/__cypress__/command`
+   → `/__e2e__/command` (the specs' `cy.request` calls and `support/on-rails.js` reference
+   it). Read `spec/cypress/app_commands/mock_oauth.rb` first — it is the OmniAuth 2 test
+   seam, and if it breaks, `log_in.spec.js` fails in a way that looks like a Phase 4
+   regression.
+2. **Cypress 4 → 15**, eleven majors, in three commits:
+   - `spec/cypress.json` → `spec/cypress.config.js`. **Its five non-default timeouts must
+     survive** — that file's long `_comment` is the record of two separate flake
+     investigations, and losing it re-opens both.
+   - `spec/cypress/integration/` → `spec/cypress/e2e/` (19 files) in its own commit so
+     `git log --follow` stays useful. `support/index.js` → `support/e2e.js`, with
+     `supportFile` pointed at it.
+   - `spec/cypress/plugins/` is a Cypress ≤ 9 concept and disappears; fold it into
+     `setupNodeEvents`. Both `package.json` scripts pass `--project ./spec`, whose
+     semantics changed in Cypress 10+, and `--headless` is now the default (the flag was
+     removed).
+   - Grep all 19 specs for `cy.route` / `cy.server`, removed in Cypress 12 in favour of
+     `cy.intercept`.
+   - **Confirm Node first:** Cypress 15 requires Node ≥ 20.19; `.nvmrc` pins 20.20.2,
+     which should satisfy it, but check rather than assume.
 
 ---
 
@@ -1763,7 +1887,7 @@ Phase 2  Node 20 + Webpacker -> Shakapacker 10      DONE  joint frontend/backend
 Phase 3  Rails 6.0 -> 6.1 (Zeitwerk) + audited 5    DONE  + sprockets 4, capybara 3
 Phase 4  OmniAuth 2                              DONE  browser login verified
 Phase 5  Ruby 3.1 + secrets -> ENV + Rails 7.0 -> 7.1   DONE  deploy-affecting; see 8b item 7
-Phase 6  Ruby 3.4 + Rails 7.2 -> 8.0 + Cypress/cypress-on-rails
+Phase 6  Ruby 3.4 + Rails 7.2 -> 8.0                  6a-6c DONE; 6d/6e Cypress remain
 Phase 7  React 18 -> react-redux 9 -> React Router 6   independent; router is the big one
 Phase 8  Security pass + deploy mechanics         post-upgrade, no version changes
          (8b's deploy prerequisites are needed at the FIRST deploy of this
