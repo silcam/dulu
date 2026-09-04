@@ -701,9 +701,10 @@ Whoever owns the server has to do all of this before the first Phase 2 deploy:
    long-term answer, but it changes deploy behaviour and is not something to slip into an
    upgrade commit unannounced.
 
-**Left unchanged deliberately; raise before deploying.** The same three prerequisites
-belong in the README, whose "Prerequisites" section still says ruby 2.3.3 and does not
-mention Node at all.
+**Left unchanged deliberately; raise before deploying.** Tracked as **Phase 8b** so it
+does not get lost — but note the timing there: it is needed at the *first* deploy of this
+branch, not after Phase 7. The README's "Prerequisites" section was rewritten in Phase 2
+and now carries the same three requirements for developer machines.
 
 **Gate:** full recipe green, including the CSS Modules spec and `yarn typecheck`. Also
 verify `RAILS_ENV=production bin/rails assets:precompile` succeeds, since that is what
@@ -956,7 +957,7 @@ the class of bug that passes unit tests and breaks the app.
 
 ---
 
-## Phase 8 — Post-upgrade security pass (no version changes)
+## Phase 8 — Post-upgrade pass: security, plus deploy mechanics (no version changes)
 
 **Brian's decision, 2026-09-03:** the security findings brakeman surfaced are fixed
 *after* the upgrade, not during it. Rationale, and worth keeping: a security fix inside an
@@ -1004,6 +1005,32 @@ By the time this phase runs, brakeman will be unpinned (Phase 5 lifts it to 6+ o
 3.1) and the two EOL warnings for Rails 5.2.8.1 and Ruby 2.7.4 will have resolved
 themselves.
 
+### 8b. Deploy mechanics — parked here, but **not** sequenced after Phase 7
+
+Filed in this phase so it is not lost, not because it comes last. These are prerequisites
+for the **first deploy of `upgrade/rails-8`, whenever that happens** — after Phase 3, after
+Phase 5, or only at the end. Whoever deploys hits them on that deploy regardless of which
+phase the branch has reached. Nothing here is a security finding and nothing changes a
+version; the full reasoning is in §2g, which is where a reader in Phase 2 context will
+look.
+
+The short form: the server's `node_modules` is a shared `linked_dirs` entry that no deploy
+step ever updates, while `capistrano/rails/assets` runs `assets:precompile` on every
+deploy. Post-Phase-2 code needs Node 20 and the Shakapacker tree; the server still has the
+Webpacker 3 / Node 12 one, so **precompile fails on the server even though it passes
+locally.** Three things fix it:
+
+1. **Node 20.20.2** on the server (not just "Node 20" — dart-sass requires `>=20.19.0`).
+2. **`corepack enable`, once** — otherwise there is no `yarn` on `PATH` at all.
+3. **Either uncomment `require "capistrano/yarn"` in `Capfile`** so `yarn install` runs as
+   part of deploy, **or** update the shared `node_modules` by hand. Enabling it is the
+   right long-term answer and changes deploy behaviour, so it is Brian's call, not
+   something to slip into an upgrade commit.
+
+**Deliberately not done.** No deploy config has been touched. This is separate from the
+deploy *destination* question, which is closed and out of scope (see the top of this
+plan).
+
 **Note:** each of these is a genuine behaviour change with no test covering it today.
 Write the test first in each case — that is the actual work here, not the one-line fix.
 
@@ -1020,7 +1047,9 @@ Phase 4  OmniAuth 2                              auth risk; manual browser gate
 Phase 5  Ruby 3.1 + secrets -> ENV + Rails 7.0 -> 7.1        deploy-affecting
 Phase 6  Ruby 3.4 + Rails 7.2 -> 8.0 + Cypress/cypress-on-rails
 Phase 7  React 18 -> react-redux 9 -> React Router 6   independent; router is the big one
-Phase 8  Security pass                            post-upgrade, no version changes
+Phase 8  Security pass + deploy mechanics         post-upgrade, no version changes
+         (8b's deploy prerequisites are needed at the FIRST deploy of this
+          branch, not after Phase 7 -- see 8b)
 ```
 
 **Why not "backend first, then frontend."** The instinct is right for Phases 4–6 and 7,
