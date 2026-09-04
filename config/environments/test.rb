@@ -41,7 +41,10 @@ Rails.application.configure do
   config.active_support.deprecation = :raise
 
   # Raises error for missing translations
-  config.action_view.raise_on_missing_translations = true
+  # Renamed in Rails 6.1 (action_view.* removed in 7.0). Note this is not a
+  # pure rename: i18n.raise_on_missing_translations also covers translations
+  # looked up from controllers, not just views, so it is strictly stricter.
+  config.i18n.raise_on_missing_translations = true
 
   # Log to log/test.log rather than discarding output. `Logger.new(nil)` made
   # `bin/rails test` marginally faster, but it also meant the Cypress failure-capture
