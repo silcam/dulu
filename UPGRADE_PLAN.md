@@ -69,7 +69,7 @@ bin/rails test                     # 400 tests / 1319 assertions as of Phase 6, 
 npx jest --ci                      # must stay at 125 passed
 yarn test:cypress:gate             # 19 specs / 93 tests -- see notes below
 yarn typecheck                     # Phase 2 onward -- see "Where type-checking lives"
-bundle exec brakeman               # 6 as of Phase 6b: 5 findings + 1 EOLRails check (below)
+bundle exec brakeman               # 5 as of Phase 6c2: the application findings, no EOL noise
 bin/rails runner -e development 'puts Rails.version'
 bin/rails zeitwerk:check           # Phase 3 onward only
 foreman s                          # the documented way to run this app -- see below
@@ -382,11 +382,12 @@ not a regression. It adds two EOL checks the 5.4 line did not have:
 | Check | Message | Clears at |
 |---|---|---|
 | `EOLRuby` (`.ruby-version:1`) | Support for Ruby 3.1.3 ended 2025-03-31 | **cleared in Phase 6b** (Ruby 3.4.9) |
-| `EOLRails` (`Gemfile.lock`) | Support for Rails 6.1.7.10 ended 2024-10-01 | **still lit on Rails 8.0.5.1** — brakeman now says support ends 2026-10-07; see the Rails 8.1 question in Phase 6 |
+| `EOLRails` (`Gemfile.lock`) | Support for Rails 6.1.7.10 ended 2024-10-01 | **cleared in Phase 6c2** (Rails 8.1.3.1) |
 
 So from 5a on, **the expected brakeman total is 7 = the 5 pre-existing application
-findings + 2 EOL warnings**. From Phase 6b it is **6** — the Ruby EOL warning cleared, the
-Rails one did not, and it will not until a Rails release with a support date in the future. Also
+findings + 2 EOL warnings**. From Phase 6b it is **6** (Ruby EOL cleared), and from
+Phase 6c2 it is **5** — Rails 8.1 cleared the last EOL warning, so the number is now
+exactly the pre-existing application findings. Also
 brakeman 7 reports **3** obsolete entries in `config/brakeman.ignore` rather than the 5
 noted above; the cleanup is still a Phase 8 item.
 
@@ -1436,7 +1437,7 @@ use.
 
 ---
 
-## Phase 6 — Rails 7.2 → 8.0, Ruby 3.1 → 3.4 (Rails/Ruby done; Cypress remaining)
+## Phase 6 — Rails 7.2 → 8.1, Ruby 3.1 → 3.4, Cypress 4 → 15 (done)
 
 **The plan's ordering was wrong and a probe fixed it before any commit.** It said Ruby 3.4
 first, then 7.2, then 8.0. A throwaway `bundle lock` under Ruby 3.1.3 settled it in one
@@ -1448,8 +1449,9 @@ so version solving fails outright. Actual order:
 | 6a | Rails 7.1.6 → 7.2.3.2, `load_defaults 7.2`, unpin `delayed_job` | done |
 | 6b | Ruby 3.1.3 → 3.4.9, `debase` → `debug`, and two forced tooling bumps | done |
 | 6c | Rails 7.2.3.2 → 8.0.5.1, `load_defaults 8.0` | done |
-| 6d | `cypress-on-rails` layout migration (`spec/cypress` → `spec/e2e`) | **not started** |
-| 6e | Cypress 4 → 15 (config, directory rename, package.json scripts) | **not started** |
+| 6c2 | Rails 8.0.5.1 → 8.1.3.1, `load_defaults 8.1` — added at Brian's request | done |
+| 6d | `cypress-on-rails` post-1.17 layout | done |
+| 6e | Cypress 4.1 → 15.21.1, in two commits | done |
 
 Putting Rails 7.2 first also kept `debase` — which does not survive Ruby 3.4 — out of the
 same commit as a Rails major.
@@ -1565,12 +1567,6 @@ page is only used by `allow_browser`, which this app never calls. Also deleted `
 which is just `exec ./bin/rails server`: a misleading second entry point beside the
 documented `foreman s`, since it starts no webpack dev server.
 
-### Rails 8.1 — an open scope question, not a decision to make silently
-
-brakeman on Rails 8.0.5.1 reports **"Support for Rails 8.0.5.1 ends on 2026-10-07"** —
-roughly a month after this phase was done — and `rails-i18n` already resolves to 8.1.0.
-This plan targeted 8.0.x. Whether to add an 8.1 hop is Brian's call.
-
 ### Gate at close of 6c (Ruby 3.4.9 / Rails 8.0.5.1 / Node 20.20.2 / Shakapacker 10.3.2)
 
 Rails **400 tests / 1319 assertions, 0 failures, 0 errors, 1 skip** (the assertion count
@@ -1589,10 +1585,98 @@ relative to the Procfile's directory). Separately, a leftover test-env puma on *
 made one Cypress run fail to boot its server; its process title is rewritten to
 `puma ... [dulu]`, so `pkill -f "rails server"` does not match it.
 
-### 6d / 6e. What remains — the Cypress migration
+### 6c2. Rails 8.1 — added because 8.0 was about to go EOL
 
-Deliberately not started in the same stretch as a Rails major: the E2E suite is what tells
-you whether anything else broke, so it should not be in flux at the same time.
+brakeman on 8.0.5.1 reported *"Support for Rails 8.0.5.1 ends on 2026-10-07"*, roughly a
+month out, so Brian asked for 8.1. Ordered **before** the Cypress work, on the same
+argument used to defer it: the E2E suite is what tells you whether a Rails hop broke
+something, so it should not be mid-migration during a version bump.
+
+Resolution was clean — only Rails moved. One gem had to come with it:
+**`omniauth-rails_csrf_protection` 1.0.2 includes `ActiveSupport::Configurable`**, which
+8.1 deprecates and 8.2 removes, so on 1.x the suite fails to boot outright. 2.0.1 includes
+it only conditionally on older Rails. That gem is Phase 4's CSRF seam, so the bump was
+checked at the source, not just by a green suite.
+
+All six 8.1 defaults were checked and none affects this app. The two JSON-escaping ones are
+the only ones that looked risky, and they govern **Rails' JSON renderer** — the single
+place this app puts JSON inside a `<script>` tag (`app/views/web/index.html.erb`) builds
+it with plain `JSON.generate`, which those settings do not touch.
+
+**`db/schema.rb` has a 296-line diff and it is nothing but reordering: Rails 8.1
+alphabetises columns within each table.** Proved rather than assumed — extracted every
+`t.*` / `create_table` / index / foreign-key line from both versions, sorted, and diffed:
+identical as multisets, so no column was added, removed or altered. Then ran the
+round-trip: `db:schema:load` from scratch, full suite green against the freshly loaded
+schema, and a load → migrate → dump cycle reproduces the file byte for byte.
+
+**brakeman is now 5** — exactly the five pre-existing application findings, with no EOL
+noise for the first time in the upgrade.
+
+`app:update` at 8.1 also generates `bin/ci` and `config/ci.rb`. Deleted: that pipeline
+would fail out of the box here, running `bin/importmap audit` (no importmap — this app uses
+Shakapacker) and `brakeman --exit-on-warn` against 5 known findings. There is no CI config
+in this repo at all, so it is broken scaffolding rather than a starting point.
+
+### 6d. cypress-on-rails' post-1.17 layout — two lines, not a restructure
+
+This plan assumed the step meant relocating `spec/cypress` to `spec/e2e`. Reading the gem
+shows otherwise: the endpoint is decided purely by request path, and app commands resolve
+as `"#{install_folder}/app_commands/#{name}.rb"`, which `spec/cypress/app_commands` already
+satisfies. So it is:
+
+- `spec/cypress/cypress_helper.rb` → `spec/cypress/e2e_helper.rb`
+- `support/on-rails.js` POSTs to `/__e2e__/command`, not `/__cypress__/command` (two
+  places: the `appCommands` helper and the `fail` handler's raw ajax call)
+
+Both deprecations were logged **once per app command**, so this is also a large reduction
+in noise in any failing run's output. Keeping `spec/cypress` as the root leaves
+`--project ./spec` working and avoids churning 19 files' history.
+
+### 6e. Cypress 4.1 → 15.21.1 — eleven majors, and two behaviour changes that needed code
+
+**15.21.1, not the current 16.0.0**: 16 requires Node `^22 || ^24 || >=26` and `.nvmrc`
+pins 20.20.2. 15.x accepts `^20.1.0`, so no Node bump — which would be a Phase 2-shaped
+change and does not belong here.
+
+Split into two commits so the renames stay reviewable and `git log --follow` keeps working:
+first `cypress/integration/` → `cypress/e2e/` (19 files) and `support/index.js` →
+`support/e2e.js`, bridged by temporary `integrationFolder`/`supportFile` keys so the suite
+stays green on Cypress 4; then the upgrade itself.
+
+`spec/cypress.json` → `spec/cypress.config.js`. `specPattern` must be explicit because the
+specs are `*.spec.js`, not Cypress 10+'s default `*.cy.js`. **The five raised timeouts and
+their comment carried over verbatim** — that comment is the record of two separate flake
+investigations. `cypress/plugins/index.js` was the generated stub with an empty function
+body, so it is deleted rather than folded into `setupNodeEvents`.
+
+Two Cypress behaviour changes needed actual fixes:
+
+1. **`testIsolation` has been on by default since Cypress 12**, resetting the browser
+   between tests. This suite is deliberately stateful. Set `testIsolation: false`, which is
+   exactly the Cypress 4 behaviour. Making 19 specs isolation-clean changes what the tests
+   do and is separate work.
+2. **Cypress 12 re-runs the entire query chain on every retry.** That breaks
+   `cy.contains("tr", X).within(...)` blocks whose own clicks change the row. The first
+   diagnosis — a detached subject — was **wrong, and a screenshot disproved it**: the edit
+   form was plainly on screen. The real cause is that the row's text `"Verb"` moves into an
+   `<input value="Verb">`, and **`cy.contains` matches text, not input values**, so the
+   re-query stops matching. Fixed in `linguisticActivities.spec.js` and
+   `translationActivities.spec.js` by capturing the row with `.then($row)` and re-entering
+   via `cy.wrap($row)`, which pins a concrete element. **Take the screenshot before
+   theorising** — `spec/cypress/screenshots/` is written on every failure.
+
+Also `allowCypressEnv: false` (Cypress 15 warns every run that it is insecure and going
+away; nothing here calls `Cypress.env()`), and **`cypress` moved from `dependencies` to
+`devDependencies`** — in `dependencies` the production server downloads the ~200 MB binary
+on every `yarn install --production` during `assets:precompile`.
+
+**On flakiness, honestly:** four full-gate runs during 6e — two clean at 93/93, two failing
+`people.spec.js` "Creates person" on `cy.contains("William")`, an assertion that already
+carries a 30s override and a comment from an earlier timing investigation. It passes 11/11
+with that spec alone, the failures did not correlate with any config change (checked in
+isolation), and load average was ~9. That is the documented one-spec-per-two-runs
+behaviour. Re-run and check `/proc/loadavg` before calling it a regression.
 
 1. **`cypress-on-rails` layout** — `spec/cypress/cypress_helper.rb` → `e2e_helper.rb`,
    `app_commands/` up to the install-folder root, and the endpoint `/__cypress__/command`
@@ -1912,7 +1996,7 @@ Phase 2  Node 20 + Webpacker -> Shakapacker 10      DONE  joint frontend/backend
 Phase 3  Rails 6.0 -> 6.1 (Zeitwerk) + audited 5    DONE  + sprockets 4, capybara 3
 Phase 4  OmniAuth 2                              DONE  browser login verified
 Phase 5  Ruby 3.1 + secrets -> ENV + Rails 7.0 -> 7.1   DONE  deploy-affecting; see 8b item 7
-Phase 6  Ruby 3.4 + Rails 7.2 -> 8.0                  6a-6c DONE; 6d/6e Cypress remain
+Phase 6  Ruby 3.4 + Rails 7.2 -> 8.1 + Cypress 15     DONE  Rails 8.1 added: 8.0 EOL 2026-10-07
 Phase 7  React 18 -> react-redux 9 -> React Router 6   independent; router is the big one
 Phase 8  Security pass + deploy mechanics         post-upgrade, no version changes
          (8b's deploy prerequisites are needed at the FIRST deploy of this
