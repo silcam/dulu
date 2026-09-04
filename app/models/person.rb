@@ -39,7 +39,13 @@ class Person < ApplicationRecord
 
   before_save :normalize_name_email
 
-  enum email_pref: %i[immediate daily weekly]
+  # Positional, not keyword: Rails 7.2 deprecates `enum email_pref: [...]` and
+  # Rails 8.0 removes it. Worth knowing how this fails under
+  # `deprecation = :raise` -- the deprecation fires partway through the class
+  # body, the reload re-runs `enum`, and the error you actually see is
+  # `ArgumentError: ... "immediate?" ... already defined by another enum`,
+  # which points at a conflict that does not exist.
+  enum :email_pref, %i[immediate daily weekly]
 
   def full_name
     "#{first_name} #{last_name}"

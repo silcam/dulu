@@ -6,7 +6,7 @@ git_source(:github) do |repo_name|
 end
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem "rails", "~> 7.1.0"
+gem "rails", "~> 7.2.0"
 # Be Awesome
 # gem 'bootsnap', require: false
 # Use postgres as the database for Active Record
@@ -72,15 +72,7 @@ gem "audited", "~> 5.8"
 # Pagination
 # gem 'kaminari', '~> 1.1'
 # Delayed Job for background jobs
-# delayed_job 4.2 requires ActiveJob::QueueAdapters::AbstractAdapter. The plan
-# said that constant arrives in Rails 7.1 -- it does not. Verified on 7.1.6:
-# activejob-7.1.6/lib/active_job/queue_adapters/ has no abstract_adapter.rb and
-# the string appears nowhere in the gem. It is a **Rails 7.2** addition, so this
-# pin survives 5c and unwinds in Phase 6. Without it, booting production dies
-# with `uninitialized constant ActiveJob::QueueAdapters::AbstractAdapter` --
-# production is the only env that sets active_job.queue_adapter = :delayed_job,
-# so no other environment and no test would catch it.
-gem "delayed_job", "~> 4.1.11"
+gem "delayed_job", "~> 4.2"
 gem "delayed_job_active_record", "~> 4.1"
 gem "daemons", "~> 1.2"
 gem "delayed_job_recurring"

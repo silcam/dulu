@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2026_09_04_135304) do
+ActiveRecord::Schema[7.2].define(version: 2026_09_04_135304) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "unaccent"
@@ -510,5 +510,4 @@ ActiveRecord::Schema[7.1].define(version: 2026_09_04_135304) do
     t.index ["linguistic_activity_id"], name: "index_workshops_on_linguistic_activity_id"
     t.index ["stage_id"], name: "index_workshops_on_stage_id"
   end
-
 end
