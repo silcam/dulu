@@ -17,6 +17,17 @@ class NotificationMailerTest < ActionMailer::TestCase
     text.gsub(/\s+/, ' ')
   end
 
+  test 'sender identity comes from the environment, not config/secrets.yml' do
+    # `default from:` is evaluated in the class body at load time, so a missing
+    # value does not raise -- it silently makes every email `From: nil`, and
+    # production sets `raise_delivery_errors = false`, so no one would see it.
+    # Rails.application.secrets is removed in Rails 7.1; this asserts the ENV
+    # replacement is actually wired through.
+    assert_equal Rails.application.config.x.smtp_username,
+                 NotificationMailer.default[:from]
+    refute_nil NotificationMailer.default[:from]
+  end
+
   test 'Welcome Email' do
     email = NotificationMailer.welcome(@drew, @rick)
     assert_emails 1 do

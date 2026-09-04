@@ -26,6 +26,28 @@ require "rails/test_unit/railtie"
 Bundler.require(*Rails.groups)
 
 module Dulu
+  # Values that used to live in config/secrets.yml. `Rails.application.secrets`
+  # is removed in Rails 7.1, so they move to the environment. ENV rather than
+  # encrypted credentials because config/secrets.yml, config/database.yml and
+  # config/initializers/omniauth.rb are already gitignored and Capistrano-
+  # symlinked -- the team's model is "secrets live on the server, outside git",
+  # and ENV preserves it without adding master.key distribution.
+  #
+  # **Production deliberately has no fallback.** A missing variable raises at
+  # boot, which means it fails during `assets:precompile` before the release is
+  # published, rather than leaving `default from:` nil and losing mail in
+  # silence -- production.rb sets `raise_delivery_errors = false`, so a bad
+  # sender address produces no error anyone would see.
+  #
+  # Development and test do get a placeholder, and it is inert: both set
+  # `action_mailer.delivery_method = :test`, so nothing is ever handed to an
+  # SMTP server. A fresh clone needs no setup step for these.
+  def self.env_config(name, non_production_default)
+    return ENV.fetch(name) if Rails.env.production?
+
+    ENV.fetch(name, non_production_default)
+  end
+
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 6.1
@@ -35,5 +57,13 @@ module Dulu
     # -- all .rb files in that directory are automatically loaded.
 
     config.action_mailer.default_url_options = { host: "dulu.sil.org" }
+
+    # Formerly Rails.application.secrets.{smtp_username,smtp_password,admin_email}.
+    # `config.x` is an OrderedOptions, so a typo in one of these names reads back
+    # as nil rather than raising -- the `ENV.fetch` above is doing all the
+    # safety work, not the lookup.
+    config.x.smtp_username = Dulu.env_config("SMTP_USERNAME", "dulu_sender@example.com")
+    config.x.smtp_password = Dulu.env_config("SMTP_PASSWORD", "placeholder-not-a-password")
+    config.x.admin_email = Dulu.env_config("ADMIN_EMAIL", "dulu_sender@example.com")
   end
 end

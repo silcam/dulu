@@ -1159,45 +1159,114 @@ One environment note that cost time and is not Dulu's fault: **a fresh shell her
 Node 12 on `PATH`**, so `yarn typecheck` and `yarn jest` fail with 25 broken suites and a
 `internal/modules/cjs/loader.js` stack that looks like a real regression. `nvm use` first.
 
-### 5b. `config/secrets.yml` → credentials or ENV — **hard blocker for Rails 7.1**
+### 5b. `config/secrets.yml` → ENV (done)
 
-`Rails.application.secrets` is **removed** in Rails 7.1. This must be done before that hop.
-The surface is small and fully enumerated — 6 call sites, 4 keys:
+`Rails.application.secrets` is **removed** in Rails 7.1, so this had to land before 5c.
+Went with ENV rather than encrypted credentials, for the reason the forecast gave:
+`config/secrets.yml`, `config/database.yml` and `config/initializers/omniauth.rb` are
+already gitignored and Capistrano-symlinked, so the team's model is already "secrets live
+on the server, outside git". ENV preserves it; credentials would add `master.key`
+distribution for no gain here.
 
-| Location | Usage |
-|---|---|
-| `app/mailers/notification_mailer.rb:5` | `secrets.smtp_username` |
-| `app/mailers/error_mailer.rb:10` | `secrets.admin_email` |
-| `app/views/notification_mailer/welcome.html.erb:26` | `secrets.admin_email` |
-| `app/views/notification_mailer/welcome.text.erb:14` | `secrets.admin_email` |
-| `config/environments/production.rb:77-78` | `secrets.smtp_username`, `secrets.smtp_password` |
+**Six call sites, all rewritten, and the enumeration in the forecast was exact** (bar one
+line number — production.rb is 74-75, not 77-78):
 
-Keys in `config/secrets.yml`: `secret_key_base`, `smtp_username`, `smtp_password`,
-`admin_email`, plus a deprecated `gmail_username`.
+| Location | Was | Now |
+|---|---|---|
+| `app/mailers/notification_mailer.rb:5` | `secrets.smtp_username` | `config.x.smtp_username` |
+| `app/mailers/error_mailer.rb:10` | `secrets.admin_email` | `config.x.admin_email` |
+| `app/views/notification_mailer/welcome.html.erb:26` | `secrets.admin_email` | `config.x.admin_email` |
+| `app/views/notification_mailer/welcome.text.erb:14` | `secrets.admin_email` | `config.x.admin_email` |
+| `config/environments/production.rb:74-75` | `secrets.smtp_{username,password}` | `config.x.smtp_{username,password}` |
 
-**`secret_key_base` is not like the other keys and needs its own ordering.** It has
-**zero call sites** — Rails reads it out of `secrets.yml` internally — so it does not
-appear in the table above and is easy to miss. Under the ENV approach it becomes
-`SECRET_KEY_BASE`. If it is not already set in the production environment when the deploy
-drops `config/secrets.yml` from `linked_files`, the app **fails to boot**, and if it is
-set to a *different* value than the old file held, **every existing session cookie
-invalidates** and all users are silently logged out. Sequence it explicitly:
+Two things the forecast did not list and this commit also removed:
 
-1. Set `SECRET_KEY_BASE` on the server to the **exact value currently in
-   `config/secrets.yml`** (do not generate a fresh one).
-2. Deploy the code that reads from ENV.
-3. Only then remove `config/secrets.yml` from `linked_files`.
+- **`config/environments/production.rb:20` had `config.read_encrypted_secrets = true`**,
+  pointing at a `config/secrets.yml.enc` that does not exist and never has. It is part of
+  the same removed API. Deleted.
+- **`gmail_username`** is referenced by nothing but the README and this plan. Dropped from
+  the README; the key can be deleted from each machine's `secrets.yml` at leisure.
 
-**This is deploy-affecting.** `config/deploy.rb:10` has
-`append :linked_files, "config/secrets.yml", "config/initializers/omniauth.rb", "config/database.yml"`.
-Whichever route you choose, `linked_files` and the files on the production server must
-change in lockstep with the code, or the deploy boots into a crash.
+#### The design: fail loud in production, inert placeholders everywhere else
 
-Recommendation: **ENV vars via `Rails.application.config`**, not encrypted credentials.
-The three files are already gitignored and Capistrano-symlinked, which means the team's
-existing workflow is "secrets live on the server, outside git" — ENV preserves that model.
-Encrypted credentials would additionally require managing `master.key` distribution for a
-gain you do not currently need. Update the README's secrets instructions in the same commit.
+`config/application.rb` gains `Dulu.env_config(name, non_production_default)`:
+
+```ruby
+def self.env_config(name, non_production_default)
+  return ENV.fetch(name) if Rails.env.production?
+
+  ENV.fetch(name, non_production_default)
+end
+```
+
+**Production has no fallback on purpose.** The failure mode being avoided is specific:
+`notification_mailer.rb:5` is `default from:` in the *class body*, evaluated at load time,
+so a missing value does not raise — it makes every email `From: nil`. Combined with
+production.rb's `raise_delivery_errors = false`, that loses mail in total silence. A
+`KeyError` at boot is strictly better.
+
+**Development and test get a placeholder, and it is genuinely inert.** Both
+`config/environments/development.rb:35` and `test.rb:35` set
+`action_mailer.delivery_method = :test`, so nothing is ever handed to an SMTP server. Net
+effect: a fresh clone now needs *no* setup step here, where the README previously told
+developers to hand-add a fake `smtp_username` to `secrets.yml`.
+
+`config.x` is an `ActiveSupport::OrderedOptions`, so a **typo in one of these key names
+reads back as `nil` rather than raising** — the `ENV.fetch` is doing all the safety work,
+not the lookup. That is why the two new mailer tests assert `refute_nil` rather than only
+comparing values.
+
+#### What was verified, and the one number that matters
+
+- **`assets:precompile` does boot `application.rb`.** Ran
+  `env -u SMTP_USERNAME … SECRET_KEY_BASE=x RAILS_ENV=production bin/rails
+  assets:precompile` and it died with `KeyError: key not found: "SMTP_USERNAME"` at
+  `config/application.rb:46`. This is the intended failure — it happens before the release
+  is published — but it makes the environment variables a **hard prerequisite for the
+  first deploy of this branch**, not a nice-to-have. See §8b.
+- With the three variables set, production config loads and
+  `config.action_mailer.smtp_settings[:user_name]` is populated; boot then stops at the
+  Postgres connection, which is only because there is no production database on this
+  machine.
+- `NotificationMailer.default[:from]` is a real address, not `nil`.
+- **Dev/test self-heal without `secrets.yml`.** Moved the local file aside, booted, and
+  `Rails.application.secret_key_base` came back 128 bytes with a freshly generated
+  `tmp/development_secret.txt` (note: `development_secret.txt`, not the
+  `local_secret.txt` that older docs name). Restored the file afterwards. So dropping
+  `secret_key_base` from a developer's local copy is safe; the only cost is that the local
+  dev session cookie invalidates once.
+
+**Two new tests**, because nothing covered any of this: `notification_mailer_test.rb`
+asserts `default[:from]` tracks `config.x.smtp_username` and is not nil, and a new
+`error_mailer_test.rb` covers the `admin_email` path that addresses the report both to and
+from — a `nil` there would mail the report to nobody without raising.
+
+#### The server side, which is not in this commit
+
+`secret_key_base` **has zero call sites** — Rails reads it out of `secrets.yml` internally
+— which is exactly why it is easy to miss. Under ENV it becomes `SECRET_KEY_BASE`. If it
+is unset when the deploy stops symlinking `config/secrets.yml`, the app **fails to boot**;
+if it is set to a *different* value than the old file held, **every session cookie
+invalidates** and every user is silently logged out.
+
+`config/deploy.rb:10` still has
+`append :linked_files, "config/secrets.yml", …` and **this commit deliberately leaves it
+alone**. Rails 6.1 still reads `secrets.yml`, so nothing is broken by keeping the symlink;
+removing it is a sequenced deploy step, not a code change. Tracked as §8b item 7.
+
+**One trap worth stating plainly, because it is easy to get wrong:** `set :default_env`
+in `config/deploy.rb` will not work here. Capistrano evaluates `deploy.rb` on *your*
+machine, so `ENV["SECRET_KEY_BASE"]` inside it reads the laptop's environment, not the
+server's — and hardcoding the values would put them in git, which is the whole thing this
+setup exists to avoid. The variables have to be set **server-side**, in whatever the
+deploy user's non-interactive SSH shell actually reads (`~/.ssh/environment`, a systemd
+unit, or a file sourced by an SSHKit command prefix). That choice is server work; see §8b
+item 7.
+
+**Gate:** Rails **400 tests / 1305 assertions, 0 failures, 0 errors, 1 skip**; Cypress
+**93/93**; `zeitwerk:check` clean; brakeman **7** (the expected 5 + 2 EOL). Production
+config boot verified with dummy variables as above. **Not** gated on a staging deploy —
+there is no staging environment, by decision.
 
 ### 5c. Rails 7.0 → 7.1
 
@@ -1448,12 +1517,52 @@ never been reviewed against the upgraded gems. Read them on the server before de
    POST from the browser to Dulu's own middleware; Google still receives the same GET
    authorize request and the same GET callback at the same URL. No redirect URI or console
    setting changes.
-5. **`config/secrets.yml`** — `production.rb` reads `smtp_username` / `smtp_password` from
-   it until Phase 5b moves secrets to ENV. Until then it must stay populated on the
-   server, and it is what makes `assets:precompile` succeed there (see §2g).
+5. **`config/secrets.yml`** — no longer read by application code as of Phase 5b, but
+   **still the source of `secret_key_base`** while the app is on Rails 6.1, and still
+   symlinked. Do not delete it from the server; see item 7 for the order.
 6. **`config/database.yml`** — the production block carries the real credentials only on
    the server. Untouched by any phase so far; listed so nobody assumes the repo copy is
    authoritative.
+
+#### 7. Four environment variables, which are a hard prerequisite for the first deploy of this branch
+
+Phase 5b moved the mail identities out of `config/secrets.yml` and into ENV, with **no
+fallback in production** — deliberately, so a missing value fails at boot instead of
+sending mail `From: nil` into a `raise_delivery_errors = false` void. The consequence,
+verified rather than assumed: **`assets:precompile` boots `config/application.rb`**, so
+without these variables the deploy dies at precompile with
+`KeyError: key not found: "SMTP_USERNAME"`.
+
+| Variable | Value | Notes |
+|---|---|---|
+| `SMTP_USERNAME` | the current `smtp_username` from the server's `config/secrets.yml` | was the mailgun user |
+| `SMTP_PASSWORD` | the current `smtp_password` | **exists only on the server** — it is not in any developer's local copy |
+| `ADMIN_EMAIL` | the current `admin_email` | used as both `to:` and `from:` on JS error reports |
+| `SECRET_KEY_BASE` | the **exact** current value, copied verbatim | see below |
+
+**`SECRET_KEY_BASE` has its own ordering and its own failure mode.** It has zero call
+sites — Rails reads it from `secrets.yml` internally — so it is the one that gets
+forgotten. Set it to the exact existing value, not a fresh one: a *different* value
+invalidates every session cookie and silently logs out every user. Sequence:
+
+1. Set all four variables on the server.
+2. Deploy. `config/deploy.rb:10` still symlinks `config/secrets.yml` at this point, which
+   is fine and intentional — Rails 6.1 reads `secret_key_base` from either source.
+3. Only after a deploy has succeeded with the variables in place, remove
+   `config/secrets.yml` from `linked_files`.
+
+Step 3 becomes mandatory at Rails 7.1 (Phase 5c), which removes
+`Rails.application.secrets` entirely and will stop reading the file at all.
+
+**`set :default_env` in `config/deploy.rb` is the wrong mechanism and will not work.**
+Capistrano evaluates `deploy.rb` on the deploying machine, so `ENV[...]` there reads the
+laptop's environment, not the server's; and literal values in that file would be committed
+to git, which is exactly what this whole symlinked-secrets setup exists to prevent. The
+variables must be set where the deploy user's **non-interactive** SSH shell will see them
+— `~/.ssh/environment` (needs `PermitUserEnvironment`), a systemd unit if the app runs
+under one, or a server-side file pulled in via an SSHKit command prefix. Note that
+`~/.bashrc` and `~/.profile` are **not** sourced for Capistrano's non-interactive
+commands, which is the usual way this gets missed.
 
 Two lockfile facts for whoever runs that deploy, since `config/deploy.rb` sets
 `bundle_flags '--deployment'` and that mode refuses to re-resolve:

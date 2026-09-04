@@ -65,8 +65,13 @@ The Readme is still a work in progress. It actually won't get you very far, beca
 
 If you just want to run the tests, you can after a few more steps. The test database does not need to be seeded.
 
-1. In `secrets.yml`, add Rails.application.secrets.smtp_username, set to something fake. (previously gmail_username,
-   which is deprecated)
+Nothing to set up: the mail identities that used to require a hand-edited
+`secrets.yml` entry now come from the environment (`SMTP_USERNAME`,
+`SMTP_PASSWORD`, `ADMIN_EMAIL`) and fall back to placeholders outside
+production. Development and test both use `action_mailer.delivery_method =
+:test`, so the placeholders never reach a mail server. Set the variables only if
+you want to send real mail from a local server. **Production has no fallback** —
+a missing variable raises at boot, on purpose. See `config/application.rb`.
 
 1. Run tests.
 
