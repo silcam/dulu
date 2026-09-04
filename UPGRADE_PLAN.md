@@ -1041,20 +1041,9 @@ this phase, the Google half still works after it.
 
 **One thing that has not been seen and cannot be seen from this repo:** the *server's*
 `config/initializers/omniauth.rb`. It is gitignored, so it is a different file from the
-local one and may pass provider options the 1.x strategy no longer accepts. The local file
-passes only `prompt` and `hd`, both still supported. `omniauth-google-oauth2` 1.2.3
-forwards these and nothing else:
-
-```
-access_type  hd  login_hint  prompt  request_visible_actions  scope  state
-redirect_uri  include_granted_scopes  enable_granular_consent  openid_realm
-device_id  device_name
-```
-
-plus the strategy options `name`, `skip_jwt`, `jwt_leeway`, `authorize_options`,
-`overridable_authorize_options`, `authorized_client_ids`, `client_options`, `image_size`
-and `image_aspect_ratio`. **Check the server's initializer against that list before
-deploying.** Anything else in it is silently ignored at best.
+local one and may pass provider options the 1.x strategy no longer accepts — silently, since
+unrecognised options are ignored rather than rejected. **Tracked as a deploy prerequisite
+in §8b item 4**, with the list of options 1.2.3 actually forwards.
 
 ### 4f. Notes for the deploy
 
@@ -1325,6 +1314,10 @@ By the time this phase runs, brakeman will be unpinned (Phase 5 lifts it to 6+ o
 3.1) and the two EOL warnings for Rails 5.2.8.1 and Ruby 2.7.4 will have resolved
 themselves.
 
+**Note:** each of the items above is a genuine behaviour change with no test covering it
+today. Write the test first in each case — that is the actual work here, not the one-line
+fix.
+
 ### 8b. Deploy mechanics — parked here, but **not** sequenced after Phase 7
 
 Filed in this phase so it is not lost, not because it comes last. These are prerequisites
@@ -1347,6 +1340,41 @@ locally.** Three things fix it:
    right long-term answer and changes deploy behaviour, so it is Brian's call, not
    something to slip into an upgrade commit.
 
+**Untracked config on the server, which nothing in this repo can verify.** Three files are
+gitignored, so the server's copies are *different files* from the local ones and have
+never been reviewed against the upgraded gems. Read them on the server before deploying:
+
+4. **`config/initializers/omniauth.rb` — check it against what
+   `omniauth-google-oauth2` 1.2.3 still accepts.** Phase 4 took this gem from 0.6.0, and
+   options it no longer recognises are **silently ignored**, not rejected — so a stale
+   option does not fail the deploy, it just stops doing whatever it was doing. That is the
+   worst failure mode available: `hd`, for instance, would quietly stop being sent.
+   The local copy passes only `prompt` and `hd`, both fine. 1.2.3 forwards these to
+   Google and nothing else:
+
+   ```
+   access_type  hd  login_hint  prompt  request_visible_actions  scope  state
+   redirect_uri  include_granted_scopes  enable_granular_consent  openid_realm
+   device_id  device_name
+   ```
+
+   plus the strategy options `name`, `skip_jwt`, `jwt_leeway`, `authorize_options`,
+   `overridable_authorize_options`, `authorized_client_ids`, `client_options`,
+   `image_size` and `image_aspect_ratio`. Anything else in the server's file is dead
+   weight and should be removed or replaced deliberately.
+
+   Note the *client ID and secret* need no attention: production uses a different Google
+   app from the dev one, and Phase 4 changed nothing Google sees. The request phase is a
+   POST from the browser to Dulu's own middleware; Google still receives the same GET
+   authorize request and the same GET callback at the same URL. No redirect URI or console
+   setting changes.
+5. **`config/secrets.yml`** — `production.rb` reads `smtp_username` / `smtp_password` from
+   it until Phase 5b moves secrets to ENV. Until then it must stay populated on the
+   server, and it is what makes `assets:precompile` succeed there (see §2g).
+6. **`config/database.yml`** — the production block carries the real credentials only on
+   the server. Untouched by any phase so far; listed so nobody assumes the repo copy is
+   authoritative.
+
 Two lockfile facts for whoever runs that deploy, since `config/deploy.rb` sets
 `bundle_flags '--deployment'` and that mode refuses to re-resolve:
 
@@ -1360,9 +1388,6 @@ Two lockfile facts for whoever runs that deploy, since `config/deploy.rb` sets
 **Deliberately not done.** No deploy config has been touched. This is separate from the
 deploy *destination* question, which is closed and out of scope (see the top of this
 plan).
-
-**Note:** each of these is a genuine behaviour change with no test covering it today.
-Write the test first in each case — that is the actual work here, not the one-line fix.
 
 ---
 
