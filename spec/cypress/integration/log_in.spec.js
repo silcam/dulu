@@ -8,7 +8,9 @@ describe("Logging in and out", () => {
     cy.mockOauth();
     cy.visit("/");
     cy.contains("Welcome to Dulu").should("exist");
-    cy.get("a#google-signin-link")
+    // A button inside a button_to form now, not an <a>: OmniAuth 2 requires the
+    // request phase to be POSTed.
+    cy.get("button#google-signin-link")
       .find("img:visible")
       .click();
     // cy.get("img.img-normal[alt='Sign in with Google']").click();
@@ -22,7 +24,15 @@ describe("Logging in and out", () => {
   it("Does redirects", () => {
     cy.mockOauth();
     cy.contains("Welcome to Dulu").should("exist");
+    // A logged-out deep link used to bounce straight through to Google. Under
+    // OmniAuth 2 it renders the welcome page and the sign-in button has to be
+    // clicked -- but session[:original_request] still carries the destination
+    // across the OAuth round trip, which is what this test is really checking.
     cy.visit("/organizations");
+    cy.contains("Welcome to Dulu").should("exist");
+    cy.get("button#google-signin-link")
+      .find("img:visible")
+      .click();
     cy.url().should("include", "organizations");
 
     cy.wait(300); // Not sure why...

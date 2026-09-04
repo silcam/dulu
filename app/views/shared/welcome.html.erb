@@ -50,13 +50,22 @@
         </p>
     <% end %>
 
-      <p class="welcome">
-        <a  id='google-signin-link' href="/auth/google_oauth2">
+      <%# This was a <p class="welcome">. button_to emits a <form>, which is not
+          phrasing content, so a browser silently closes the <p> before it and
+          the padding is lost. A div holds the same class with no such rule. %>
+      <div class="welcome">
+        <%# OmniAuth 2 requires the request phase to be a POST carrying a CSRF
+            token (omniauth-rails_csrf_protection verifies it). This was an
+            <a href>, which OmniAuth 2 refuses. button_to gives a real form;
+            the button is unstyled on purpose so the three image_tag states
+            below keep working exactly as they did. %>
+        <%= button_to "/auth/google_oauth2", id: 'google-signin-link',
+                      class: 'google-signin-button' do %>
           <%= image_tag 'btn_google_signin_light_normal_web@2x.png', class: 'img-normal', size: '287x69', alt: 'Sign in with Google' %>
           <%= image_tag 'btn_google_signin_light_focus_web@2x.png', class: 'img-focus', size: '287x69', alt: 'Sign in with Google' %>
           <%= image_tag 'btn_google_signin_light_pressed_web@2x.png', class: 'img-pressed', size: '287x69', alt: 'Sign in with Google' %>
-        </a>
-      </p>
+        <% end %>
+      </div>
 
   </div>
   <div>

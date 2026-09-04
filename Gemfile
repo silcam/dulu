@@ -50,8 +50,14 @@ gem "jbuilder", "~> 2.11"
 # gem 'bcrypt', '~> 3.1.7'
 # Internationalization
 gem "rails-i18n", "~> 6.0"
-# Google authentication
-gem "omniauth-google-oauth2", "~> 0.5"
+# Google authentication. omniauth-google-oauth2 1.x requires OmniAuth 2, so the
+# two move together. OmniAuth 2 makes the *request* phase POST-only as a CSRF
+# fix, which omniauth-rails_csrf_protection supplies the token verification for.
+# Never set OmniAuth.config.allowed_request_methods to include :get -- that is
+# the top search result for the resulting error and it re-opens the exact hole
+# this version bump exists to close. A surviving GET path is a missed call site.
+gem "omniauth-google-oauth2", "~> 1.2"
+gem "omniauth-rails_csrf_protection", "~> 1.0"
 # User roles
 gem "access-granted", "~> 1.2.0"
 # Activity Log

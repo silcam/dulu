@@ -7,7 +7,9 @@ class SessionsController < ApplicationController
     if logged_in?
       redirect_to root_path
     else
-      redirect_to '/auth/google_oauth2'
+      # Cannot redirect to the request phase any more -- OmniAuth 2 requires a
+      # POST. Render the welcome page and let its button issue that POST.
+      render 'shared/welcome'
     end
   end
 

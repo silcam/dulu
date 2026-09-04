@@ -30,6 +30,27 @@ div.container-fluid {
   padding-bottom: 20px;
 }
 
+// This is now a <button> inside a button_to form, not an <a> (OmniAuth 2
+// requires the request phase to be POSTed). Strip the browser's button chrome
+// and the global `button, a.btn` rule in dulu.css so it looks exactly like the
+// bare image link it replaced. The three-image hover swap below is unchanged --
+// #google-signin-link is still the id, it is just on a button now.
+#google-signin-link {
+  padding: 0;
+  border: none;
+  background: none;
+  line-height: 0;
+  cursor: pointer;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+// button_to wraps the button in a form; keep it from adding layout of its own.
+form.button_to {
+  display: inline;
+  margin: 0;
+}
+
 #google-signin-link {
   .img-normal {
     display: block;
