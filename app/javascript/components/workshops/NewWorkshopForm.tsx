@@ -17,7 +17,11 @@ export default function NewWorkshopForm(props: IProps) {
   const [name, setName] = useState("");
 
   const createWorkshop = async () => {
-    const data = saveLoad(duluAxios =>
+    // `await` was missing: `data` was a Promise, so `if (data)` was always true and the
+    // form closed even when the save failed. TypeScript 5 reports this as TS2801;
+    // TypeScript 3.8 did not. This is a behaviour change -- the form now stays open on a
+    // failed save, which is what the `if (data)` was always trying to express.
+    const data = await saveLoad(duluAxios =>
       duluAxios.post(`/api/activities/${props.activity_id}/workshops`, {
         workshop: { name }
       })

@@ -10,19 +10,21 @@
     "noEmit": true,
     "resolveJsonModule": true,
     "skipLibCheck": true,
-    // Do not auto-load every package under node_modules/@types. Explicit module imports
-    // (react, react-dom, redux, ...) resolve through @types regardless; this field only
-    // controls which packages are pulled in *globally*, and application code needs none.
-    // Left unset, TypeScript 3.8 tries to parse @types/babel__traverse -- dragged in by
-    // Jest 26 -- and fails on syntax it does not understand (TS1005/TS1160, which
-    // skipLibCheck cannot suppress because they are parse errors, not type errors).
-    // Revisit once TypeScript reaches 5.x in Phase 2f.
-    // "node" is needed only for the `require()` call in components/layout/NavBar.tsx
-    // (a webpack image require). @types/node is held at 14.x because newer releases use
-    // syntax TypeScript 3.8 cannot parse -- unwind with the TypeScript bump in Phase 2f.
+    // "node" is here only for the `require()` call in components/layout/NavBar.tsx (a
+    // webpack image require). The allow-list also keeps the program small; nothing else in
+    // application code needs an ambient global, and explicit module imports (react,
+    // react-dom, redux, ...) resolve through @types regardless of this field.
     "types": ["node"],
     "sourceMap": true,
-    "target": "es3",
+    // es2019, not es2020. ts-loader emits whatever `target` says and never consults
+    // browserslist, so this -- not package.json -- is the real browser floor for every
+    // .ts/.tsx file. es2020 emits optional chaining (`?.`) and nullish coalescing natively,
+    // which Chromium below 80 cannot even parse: the Cypress 4.1 gate runs on Electron 78
+    // and the whole app died with "Uncaught SyntaxError: Unexpected token '.'". es2019
+    // downlevels those two and keeps everything else modern. Raise this when Cypress moves
+    // in Phase 6 -- and check the browserslist floor at the same time, since the two have
+    // been silently disagreeing.
+    "target": "es2019",
     "jsx": "react",
     "strict": true,
     "noUnusedLocals": true,
@@ -34,7 +36,15 @@
     "spec",
     "node_modules",
     "vendor",
-    "public"
+    "public",
+    // Build configuration, not application code. With `allowJs` and no `include`, these
+    // would otherwise be pulled into the program, and TypeScript would follow their
+    // `require`s into webpack's and Shakapacker's own .d.ts files -- which are typed for a
+    // much newer TypeScript than this project needs to care about.
+    "config",
+    "babel.config.js",
+    "postcss.config.js",
+    "cypress.json"
   ],
   "compileOnSave": true
 }

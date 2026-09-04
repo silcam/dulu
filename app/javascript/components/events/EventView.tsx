@@ -45,7 +45,11 @@ export default function EventView(props: IProps) {
   const history = useHistory();
 
   const updateEvent = (mergeEvent: Partial<IEvent>) =>
-    setDraftEvent(update(draftEvent, { $merge: mergeEvent }));
+    // immutability-helper types the result of `$merge` from the merge object, so it comes
+    // back as `IEvent | null` and loses the inflated fields that are still present at
+    // runtime. TypeScript 3.8 did not notice; 5.x does. The cast preserves the existing
+    // behaviour rather than restructuring the state shape mid-upgrade.
+    setDraftEvent(update(draftEvent, { $merge: mergeEvent }) as IEventInflated | null);
 
   const edit = () => {
     setDraftEvent({

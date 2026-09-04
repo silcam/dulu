@@ -35,7 +35,10 @@ const DuluAxios: IDuluAxios = {
       clearNetworkError();
       return response.data;
     } catch (error) {
-      handleError(error);
+      // `error` is `unknown` from TypeScript 4.4 on (useUnknownInCatchVariables, implied
+      // by `strict`). The cast keeps the pre-TS-5 behaviour exactly; handleError already
+      // guards on `error.response` before touching it.
+      handleError(error as AxiosError);
     } finally {
       DuluAxios.subtractLoading();
     }
@@ -50,7 +53,10 @@ const DuluAxios: IDuluAxios = {
       clearNetworkError();
       return response.data;
     } catch (error) {
-      handleError(error);
+      // `error` is `unknown` from TypeScript 4.4 on (useUnknownInCatchVariables, implied
+      // by `strict`). The cast keeps the pre-TS-5 behaviour exactly; handleError already
+      // guards on `error.response` before touching it.
+      handleError(error as AxiosError);
     } finally {
       DuluAxios.subtractLoading();
     }
@@ -65,7 +71,10 @@ const DuluAxios: IDuluAxios = {
       clearNetworkError();
       return response.data;
     } catch (error) {
-      handleError(error);
+      // `error` is `unknown` from TypeScript 4.4 on (useUnknownInCatchVariables, implied
+      // by `strict`). The cast keeps the pre-TS-5 behaviour exactly; handleError already
+      // guards on `error.response` before touching it.
+      handleError(error as AxiosError);
     } finally {
       DuluAxios.subtractLoading();
     }
@@ -85,7 +94,10 @@ const DuluAxios: IDuluAxios = {
       clearNetworkError();
       return response.data || true;
     } catch (error) {
-      handleError(error);
+      // `error` is `unknown` from TypeScript 4.4 on (useUnknownInCatchVariables, implied
+      // by `strict`). The cast keeps the pre-TS-5 behaviour exactly; handleError already
+      // guards on `error.response` before touching it.
+      handleError(error as AxiosError);
       return false;
     } finally {
       DuluAxios.subtractLoading();
