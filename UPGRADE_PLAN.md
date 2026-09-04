@@ -1252,7 +1252,19 @@ Work items, in the order they deserve attention:
    page open past session expiry, click sign in, and `omniauth-rails_csrf_protection`
    raises from middleware. Rails maps that to 422, but the user sees an error page rather
    than a retry. Rescue it and re-render the welcome page.
-9. **Re-run `bundle exec brakeman` expecting zero warnings**, and consider adding it to
+9. **`hd: 'sil.org'` does not restrict who can log in, and someone probably thinks it
+   does.** `config/initializers/omniauth.rb` passes `hd` to Google, and Phase 4 confirmed
+   it still reaches the authorize URL under `omniauth-google-oauth2` 1.x. But `hd` is a
+   *hint* to Google's account chooser, not a guarantee, and Google's own guidance is to
+   verify the `hd` claim on the returned identity rather than trust the request
+   parameter. `SessionsController#create` does not: it reads `omniauth.auth.info.email`
+   and looks up `Person.where('email ILIKE ?', @gmail).first`, so authorization rests
+   entirely on there being a matching `Person` with `has_login`. A non-sil.org address
+   that matches such a row logs in. **Pre-existing, not a Phase 4 regression** — the
+   Person allowlist is a defensible design — but the belief that `hd` enforces the domain
+   should either be made true (check the returned `hd`/email domain in `#create`) or
+   written down as false.
+10. **Re-run `bundle exec brakeman` expecting zero warnings**, and consider adding it to
    the gate as a hard failure rather than a compare-against-known-list.
 
 By the time this phase runs, brakeman will be unpinned (Phase 5 lifts it to 6+ on Ruby

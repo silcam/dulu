@@ -25,10 +25,13 @@ class SessionsControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_select 'form[action="/auth/google_oauth2"][method="post"]' do
       assert_select 'button#google-signin-link'
-      assert_select 'input[name="authenticity_token"]', false,
-                    'expected no inline token: protect_from_forgery injects it ' \
-                    'via the csrf-token meta tag / form builder at request time'
     end
+    # Deliberately not asserting anything about the authenticity_token input.
+    # config/environments/test.rb sets allow_forgery_protection = false, so
+    # button_to emits no token here at all -- asserting either way would encode
+    # a test-env artifact. That the token is present and verified in a real
+    # environment was confirmed by hand against a dev server; see the Phase 4
+    # notes in UPGRADE_PLAN.md.
     refute_includes @response.body, %(<a id='google-signin-link')
     refute_includes @response.body, %(<a  id='google-signin-link')
   end
