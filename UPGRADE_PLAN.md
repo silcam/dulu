@@ -72,6 +72,7 @@ yarn typecheck                     # Phase 2 onward -- see "Where type-checking 
 bundle exec brakeman               # 7 known warnings, 6 from Phase 3 (below)
 bin/rails runner -e development 'puts Rails.version'
 bin/rails zeitwerk:check           # Phase 3 onward only
+foreman s                          # the documented way to run this app -- see below
 
 # Production-config boot. Needs both env vars: config/database.yml's production block
 # has no credentials (it would try to connect as the local OS user), and the local
@@ -170,6 +171,19 @@ just this line. Expect the diff to be empty, and explain it when it is not.
 satisfy `Gemfile` exactly, the deploy fails at `bundle install` and no local test catches
 it. After any dependency change, run `BUNDLE_FROZEN=true bundle install` and confirm it
 succeeds *and* leaves `Gemfile.lock` unmodified.
+
+**`bin/rails server` passing does not mean `foreman s` passes.** The `Procfile` runs
+three processes, and the `webpacker:` one is `bin/shakapacker-dev-server`. That binstub —
+like nineteen others under `bin/` — loads `bundler/setup` and then activesupport
+*without* going through `config/boot.rb`, so anything fixed in `boot.rb` does not apply
+to it. This is exactly how a broken `foreman s` survived Phase 3's gate: Rails was only
+ever started through `bin/rails`. Start `foreman s` after any change to an entry point, a
+binstub, or a gem on the boot path, and confirm all three processes stay up.
+
+**Port 3000 may belong to another project.** `foreman s` binds 3000 and fails with
+`Errno::EADDRINUSE` if something else holds it — on this machine a `cmbpayroll` puma
+does. Check `ss -ltnp | grep :3000` before concluding the app is broken; the webpack
+dev server's port 3035 is separate and can succeed while `web.1` fails.
 
 **Watch for orphaned test servers.** `concurrently -k` does not always reap the Puma
 child. A leftover process on port 3002 makes the *next* run bind-fail and silently test
@@ -329,7 +343,7 @@ Each should be revisited at the phase named:
 | `brakeman "~> 5.4"` | brakeman 6+ requires Ruby >= 3.0 | Phase 5 (Ruby 3.1) |
 | `capybara "~> 3.39.0"` | capybara 3.40+ requires Ruby >= 3.0 | Phase 5 (Ruby 3.1) |
 | `sprockets "~> 4.0"` | added in Phase 3; upper bound only, not a hold-back | — |
-| `require "logger"` in `config/boot.rb` | concurrent-ruby 1.3.5 dropped it; ActiveSupport <= 7.0 needs it | Phase 5c (Rails 7.1) |
+| `concurrent-ruby "< 1.3.5"` | 1.3.5 dropped its transitive `require "logger"`; ActiveSupport <= 7.0 needs it | Phase 5c (Rails 7.1) |
 
 Two more known blockers, not yet actionable:
 
@@ -744,10 +758,18 @@ None of these are Zeitwerk, and each stops the app dead:
 
 1. **`concurrent-ruby` 1.3.5 dropped its transitive `require "logger"`.** ActiveSupport
    up to 7.0 relies on it, so every `bin/rails` command dies with
-   `uninitialized constant ActiveSupport::LoggerThreadSafeLevel::Logger`. Fixed with an
-   explicit `require "logger"` in `config/boot.rb`, which is annotated to be removed in
-   Phase 5c when Rails 7.1 requires it itself. Pinning `concurrent-ruby < 1.3.5` would
-   have to be carried exactly as far and holds back an unrelated gem.
+   `uninitialized constant ActiveSupport::LoggerThreadSafeLevel::Logger`. **Fixed by
+   pinning `concurrent-ruby < 1.3.5`** — the pin comes out in Phase 5c, where Rails 7.1
+   requires logger itself.
+
+   The first attempt was a `require "logger"` in `config/boot.rb`, and **it was wrong.**
+   Twenty binstubs under `bin/` never load `config/boot.rb` at all — they load
+   `bundler/setup` and then activesupport directly — so `bin/shakapacker-dev-server`
+   still died, and because that is the `webpacker:` line in the `Procfile`, **`foreman s`
+   exited immediately while `bin/rails server` worked fine.** The gate missed it because
+   the dev server was verified back in Phase 2 and Phase 3 only ever started Rails
+   through `bin/rails`. **`foreman s` is the documented way to run this app and belongs
+   in the gate** — add it whenever an entry point, binstub or boot-path gem changes.
 2. **`rails/all` loads Action Text, which autoloads during initialization.** Zeitwerk
    deprecates that, and `config/environments/test.rb` raises on deprecations, so the
    whole suite failed to boot. `config/application.rb` now requires railties explicitly.
