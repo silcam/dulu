@@ -65,26 +65,37 @@ Defined once here; each phase says "run the gate" rather than repeating it.
 
 ```shell
 nvm use                            # Phase 2 onward: .nvmrc pins Node 20.11.1
-bin/rails test                     # must stay at 396 tests / 1285 assertions, 0 failures
+bin/rails test                     # 400 tests / 1308 assertions as of Phase 5, 0 failures
 npx jest --ci                      # must stay at 125 passed
 yarn test:cypress:gate             # 19 specs / 93 tests -- see notes below
 yarn typecheck                     # Phase 2 onward -- see "Where type-checking lives"
-bundle exec brakeman               # 7 known warnings, 6 from Phase 3 (below)
+bundle exec brakeman               # 7 as of Phase 5a: 5 findings + 2 EOL checks (below)
 bin/rails runner -e development 'puts Rails.version'
 bin/rails zeitwerk:check           # Phase 3 onward only
 foreman s                          # the documented way to run this app -- see below
 
-# Production-config boot. Needs both env vars: config/database.yml's production block
-# has no credentials (it would try to connect as the local OS user), and the local
-# config/secrets.yml has no production section, which Rails 5.2+ treats as fatal.
+# Production-environment boot. DATABASE_URL because config/database.yml's production
+# block has no credentials, and the four secrets because Phase 5b deliberately gives
+# production no fallback for them.
 DATABASE_URL=postgres://dulu:dulu@localhost/dulu_test \
 SECRET_KEY_BASE=$(ruby -rsecurerandom -e 'print SecureRandom.hex(64)') \
+SMTP_USERNAME=a@b.c SMTP_PASSWORD=x ADMIN_EMAIL=a@b.c \
   bin/rails runner -e production 'puts Rails.version'
 
-# From Phase 2 onward, also confirm what deploy actually runs:
+# From Phase 2 onward, also confirm what deploy actually runs. Same env as above --
+# precompile boots the app, and recurring_jobs.rb needs the database.
 RAILS_ENV=production bin/rails assets:precompile
 yarn install --check-files         # MANDATORY after the line above -- see below
 ```
+
+**Do not skip the last two lines. They are not decoration.** Phase 5c found four problems
+by booting the production environment, and **three of them were invisible to every other
+check in this recipe** — `delayed_job`'s missing `AbstractAdapter` (production is the only
+environment that sets `queue_adapter = :delayed_job`), `recurring_jobs.rb` autoloading
+during initialization, and an `uglifier` failure on Rails 7's ES6 actioncable asset that
+had been **sitting broken since the 7.0 hop** because `js_compressor` is only configured
+in `production.rb`. The precompile line was already written here before Phase 5; it
+evidently was not being run. It is the single highest-value check in this list.
 
 **`assets:precompile` prunes your node_modules.** Rails enhances that task with
 `yarn:install`, which under `RAILS_ENV=production` runs
@@ -339,11 +350,11 @@ Each should be revisited at the phase named:
 | Pin | Reason | Unwind at | Status |
 |---|---|---|---|
 | `nokogiri "~> 1.15.7"` | nokogiri >= 1.16 requires Ruby >= 3.0 | Phase 5 (Ruby 3.1) | **done in 5a** — pin deleted, now 1.18.10 |
-| `delayed_job "~> 4.1.11"` | 4.2 needs `ActiveJob::QueueAdapters::AbstractAdapter`, Rails 7.1+ only | Phase 5 (Rails 7.1) | open, unwinds at 5c |
+| `delayed_job "~> 4.1.11"` | 4.2 needs `ActiveJob::QueueAdapters::AbstractAdapter` — **Rails 7.2+, not 7.1**, verified on 7.1.6 | **Phase 6** (Rails 7.2) | still open after 5c |
 | `brakeman "~> 5.4"` | brakeman 6+ requires Ruby >= 3.0 | Phase 5 (Ruby 3.1) | **done in 5a** — now `~> 7.0` (7.1.1) |
 | `capybara "~> 3.39.0"` | capybara 3.40+ requires Ruby >= 3.0 | Phase 5 (Ruby 3.1) | **done in 5a** — now `~> 3.40` |
 | `sprockets "~> 4.0"` | added in Phase 3; upper bound only, not a hold-back | — | — |
-| `concurrent-ruby "< 1.3.5"` | 1.3.5 dropped its transitive `require "logger"`; ActiveSupport <= 7.0 needs it | Phase 5c (Rails 7.1) | open, unwinds at 5c |
+| `concurrent-ruby "< 1.3.5"` | 1.3.5 dropped its transitive `require "logger"`; ActiveSupport <= 7.0 needs it | Phase 5c (Rails 7.1) | **done in 5c** — pin deleted, now 1.3.8 |
 
 **Dropping the `nokogiri` pin is not enough on its own** — `bundle install` does not
 upgrade a gem already present in the lockfile, so nokogiri sat at 1.15.7 with no pin
@@ -1268,16 +1279,139 @@ item 7.
 config boot verified with dummy variables as above. **Not** gated on a staging deploy —
 there is no staging environment, by decision.
 
-### 5c. Rails 7.0 → 7.1
+### 5c. Rails 6.1 → 7.0.10 → 7.1.6 (done)
 
-- Two hops, standard recipe. `load_defaults 7.0` then `7.1`.
-- Rails 7 drops Webpacker entirely — already handled in Phase 2, which is why that phase
-  came first.
-- Rails 7.1 removes `Rails.application.secrets` — already handled in 5b.
+Two hops, each split into "move the gems, keep the old defaults" and then "adopt the new
+defaults", so that a behaviour change and a dependency change are never in the same
+commit. Both times the suite was green on the new gems *before* `load_defaults` moved,
+which is worth keeping as a habit — it makes a later bisect meaningful.
 
-**Gate:** full recipe green. Boot production env explicitly (`bin/rails runner -e production`)
-— 5b's changes are prod-config-heavy and unit tests will not exercise them. **Do a real
-staging deploy before proceeding.**
+`rails-i18n` had to move in lockstep both times. It caps railties at `< N+1`, so version
+solving fails outright otherwise; its Gemfile comment now says so.
+
+**Use a targeted `bundle update`, not a broad one.** A probe with `bundle lock --update`
+pulled rubocop 0.76 → 1.90, capistrano 3.10 → 3.20, cypress-on-rails 1.5 → 1.20, foreman,
+web-console and about a dozen others. `bundle update rails rails-i18n` moved only the
+framework.
+
+#### The 7.0 hop was quiet, and here is why
+
+`app:update` produced exactly two useful things: `new_framework_defaults_7_0.rb` (adopted
+wholesale, then deleted) and a `db/schema.rb` rewrite to `ActiveRecord::Schema[7.0]` with
+**`precision: nil` on every existing datetime column**. That annotation is load-bearing:
+Rails 7 changes the default datetime precision to 6, so without it a schema load would
+create columns that differ from production's.
+
+Two of the riskiest 7.0 defaults were already no-ops here:
+
+- **`cookies_serializer`** is already `:json` in its own initializer, so the
+  marshal → json cookie break does not apply.
+- **`wrap_parameters_by_default`** — `config/initializers/wrap_parameters.rb` already sets
+  `wrap_parameters format: [:json]` explicitly.
+
+Two took effect and were checked by hand rather than assumed:
+
+- **`button_to_generates_button_tag = true`** — directly touches Phase 4's welcome page.
+  No change, because that `button_to` already used the block form, which emitted
+  `<button>` under 6.1 too. Verified by rendering `shared/welcome` and confirming the
+  output is still `<button id="google-signin-link">` inside `<form method="post">`.
+- **`raise_on_open_redirects = true`** — the only dynamic redirect in the app is
+  `sessions_controller.rb:51`'s `redirect_to session[:original_request]`, and that value is
+  only ever assigned from `request.path`, so it stays same-origin. The Cypress "Does
+  redirects" spec covers it.
+
+**One 7.0 default is deploy-affecting:** `key_generator_hash_digest_class` moves to
+SHA256, which invalidates every existing session cookie. Every user gets logged out once
+on deploy. Acceptable, but it should not arrive as a support ticket — §8b item 7.
+
+#### The 7.1 hop found three real things
+
+**1. `Rails.application.secrets` is deprecated in 7.1, not removed — and the plan's
+framing hid the actual failure.** Removal is 7.2. But merely *having* a `secret_key_base`
+in `config/secrets.yml` makes Rails emit the deprecation, and `test.rb` sets
+`deprecation = :raise`, so `bin/rails test` died at boot even though Phase 5b had already
+migrated every call site. Rails only falls back to generating its own local secret when
+`secrets.secret_key_base` is absent.
+
+Fixed in `config/application.rb` with `config.paths["config/secrets"] = []`, which stops
+Rails reading the file at all. That is what 5b's migration actually meant. The alternative
+— telling each developer to delete a key from a gitignored file — would hand everyone a
+hard boot failure and a confusing error. With the path emptied, `secret_key_base` resolves
+correctly on its own: dev and test self-generate a stable `tmp/local_secret.txt`,
+production requires `SECRET_KEY_BASE`.
+
+**2. `delayed_job` cannot be unpinned here — the plan was wrong about which Rails version
+adds `AbstractAdapter`.** It says 7.1+; it is **7.2**. Verified on 7.1.6:
+`activejob-7.1.6/lib/active_job/queue_adapters/` has no `abstract_adapter.rb` and the
+constant appears nowhere in the gem. Unpinning got as far as
+`uninitialized constant ActiveJob::QueueAdapters::AbstractAdapter` while booting
+production. Restored to `~> 4.1.11`; it unwinds in **Phase 6**. Note that **production is
+the only environment that sets `active_job.queue_adapter = :delayed_job`**, so no test and
+no other environment would ever have caught this — it is only visible by booting the
+production environment deliberately.
+
+**3. `config/initializers/recurring_jobs.rb` referenced an autoloaded constant during
+initialization**, which 7.1 turns from a deprecation into an error:
+`uninitialized constant DailyEmailTask` on every production boot. Moved inside
+`Rails.application.config.after_initialize`, which runs after eager loading and preserves
+the old behaviour exactly.
+
+#### The thing the gate had never covered: a real production precompile
+
+Everything above was found by deliberately booting the production environment. Running the
+*whole* `assets:precompile RAILS_ENV=production` went further and found a **deploy-breaking
+bug that had been latent since the 7.0 hop**:
+
+```
+Uglifier::Error: Unexpected token: punc ((). To use ES6 syntax,
+harmony mode must be enabled with Uglifier.new(:harmony => true).
+```
+
+Rails 7's `actioncable` ships an **ES6** Sprockets asset — classes, arrow functions,
+template literals, spread — and `uglifier` 4 cannot parse it. Rails 6.1's actioncable
+shipped an ES5 build, so this appeared precisely at the 7.0 hop and **no phase gate would
+ever have shown it**: `js_compressor` is only set in `production.rb`, and nothing in the
+recipe compiled production assets.
+
+Replaced `uglifier` with **`terser`** (`config.assets.js_compressor = :terser`). Uglifier's
+`harmony: true` would also work, but terser is Rails 7's own default and needs no flag.
+
+While there: `app/assets/javascripts/cable.js` required `action_cable`, which now logs
+`DEPRECATION: action_cable.js has been renamed to actioncable.js – please update your
+reference before Rails 8`. Since Phase 6 targets Rails 8, changed to
+`//= require actioncable`. The two assets are the same UMD build and both define the
+`ActionCable` global, so this is a rename and nothing more.
+
+**`assets:precompile RAILS_ENV=production` needs a reachable database**, because
+`recurring_jobs.rb` schedules a Delayed::Job on boot. That is pre-existing and unchanged —
+it was true when the code sat in an initializer too — but it is worth knowing before
+someone tries to precompile on a build box without database access. Locally it was run
+against the development database via `DATABASE_URL`.
+
+#### Pins after 5c
+
+| Pin | Status |
+|---|---|
+| `concurrent-ruby "< 1.3.5"` | **dropped** — Rails 7.1 requires `logger` itself; now on 1.3.8 |
+| `delayed_job "~> 4.1.11"` | **still pinned**, and now correctly attributed to Rails 7.2 |
+| `uglifier` | **removed entirely**, replaced by `terser` |
+
+**Gate at close** (Ruby 3.1.3 / Rails 7.1.6 / Node 20.20.2 / Shakapacker 10.3.2): Rails
+**400 tests / 1308 assertions, 0 failures, 0 errors, 1 skip**; Jest **125**; `tsc
+--noEmit` clean; `zeitwerk:check` clean; Cypress **93/93**; brakeman **7** (5 + 2 EOL);
+`foreman s` serving 200 on 3000; and, new to the recipe from here on, a **full
+`assets:precompile RAILS_ENV=production`**.
+
+**Not** gated on a staging deploy — the earlier text here said "do a real staging deploy
+before proceeding", which contradicts the standing decision that there is no staging
+environment. Replaced by the production-environment boot and precompile above, which is
+what can actually be run.
+
+**The lesson, and it is an uncomfortable one:** the verification recipe *already*
+listed `RAILS_ENV=production bin/rails assets:precompile`. It was not being run. Three of
+the four findings above were invisible to everything else in the gate, and the uglifier
+one had been broken for an entire hop. The recipe now says so in bold at the point of
+use.
 
 ---
 
@@ -1540,6 +1674,12 @@ without these variables the deploy dies at precompile with
 | `ADMIN_EMAIL` | the current `admin_email` | used as both `to:` and `from:` on JS error reports |
 | `SECRET_KEY_BASE` | the **exact** current value, copied verbatim | see below |
 
+**Every user gets logged out once on this deploy, regardless of `SECRET_KEY_BASE`.**
+Rails 7.0's defaults move `key_generator_hash_digest_class` to SHA256, which changes how
+session cookies are signed, so existing cookies stop verifying. This is unavoidable and
+harmless — people log in again — but it should be expected rather than reported as a bug.
+It arrives from a second direction on top of the `secret_key_base` risk below.
+
 **`SECRET_KEY_BASE` has its own ordering and its own failure mode.** It has zero call
 sites — Rails reads it from `secrets.yml` internally — so it is the one that gets
 forgotten. Set it to the exact existing value, not a fresh one: a *different* value
@@ -1553,6 +1693,11 @@ invalidates every session cookie and silently logs out every user. Sequence:
 
 Step 3 becomes mandatory at Rails 7.1 (Phase 5c), which removes
 `Rails.application.secrets` entirely and will stop reading the file at all.
+
+**`assets:precompile` needs a reachable database.** `config/initializers/recurring_jobs.rb`
+schedules a `Delayed::Job` on every production boot, and precompile boots the app. This is
+pre-existing, not new, but it rules out precompiling on a build box that cannot reach
+Postgres.
 
 **`set :default_env` in `config/deploy.rb` is the wrong mechanism and will not work.**
 Capistrano evaluates `deploy.rb` on the deploying machine, so `ENV[...]` there reads the
@@ -1588,7 +1733,7 @@ Phase 1  Ruby 2.7 + Rails 5.2                       DONE  Ruby moves once, 4 hop
 Phase 2  Node 20 + Webpacker -> Shakapacker 10      DONE  joint frontend/backend step
 Phase 3  Rails 6.0 -> 6.1 (Zeitwerk) + audited 5    DONE  + sprockets 4, capybara 3
 Phase 4  OmniAuth 2                              DONE  browser login verified
-Phase 5  Ruby 3.1 + secrets -> ENV + Rails 7.0 -> 7.1        deploy-affecting
+Phase 5  Ruby 3.1 + secrets -> ENV + Rails 7.0 -> 7.1   DONE  deploy-affecting; see 8b item 7
 Phase 6  Ruby 3.4 + Rails 7.2 -> 8.0 + Cypress/cypress-on-rails
 Phase 7  React 18 -> react-redux 9 -> React Router 6   independent; router is the big one
 Phase 8  Security pass + deploy mechanics         post-upgrade, no version changes

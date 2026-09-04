@@ -6,17 +6,7 @@ git_source(:github) do |repo_name|
 end
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem "rails", "~> 7.0.0"
-# concurrent-ruby 1.3.5 dropped its transitive `require "logger"`, which
-# ActiveSupport <= 7.0 relies on; without it anything that loads activesupport
-# dies with `uninitialized constant
-# ActiveSupport::LoggerThreadSafeLevel::Logger`. Pinned rather than fixed with a
-# `require "logger"`, because the binstubs under bin/ load `bundler/setup` and
-# then activesupport WITHOUT going through config/boot.rb -- `foreman s` fails
-# on bin/shakapacker-dev-server even when `bin/rails server` is fine. One pin
-# covers every entry point; twenty binstub patches would not. Drop this in
-# Phase 5c: Rails 7.1 requires logger itself.
-gem "concurrent-ruby", "< 1.3.5"
+gem "rails", "~> 7.1.0"
 # Be Awesome
 # gem 'bootsnap', require: false
 # Use postgres as the database for Active Record
@@ -31,8 +21,13 @@ gem "sass-rails", "~> 6.0"
 # Sprockets 4. Rails 7 requires it, so it is not optional for long; done here
 # on its own so an asset regression is attributable to it and not to Zeitwerk.
 gem "sprockets", "~> 4.0"
-# Use Uglifier as compressor for JavaScript assets
-gem "uglifier", ">= 1.3.0"
+# Terser, not Uglifier, as the Sprockets JS compressor. Rails 7's actioncable
+# ships an ES6 asset (classes, arrows, template literals, spread), and
+# Uglifier 4 cannot parse it -- `assets:precompile RAILS_ENV=production` dies
+# with `Unexpected token: punc ((). To use ES6 syntax, harmony mode must be
+# enabled`. Uglifier's harmony mode would also work, but terser is Rails 7's
+# own default and does not need the flag.
+gem "terser"
 # Use CoffeeScript for .coffee assets and views
 # gem 'coffee-rails', '~> 4.2'
 # See https://github.com/rails/execjs#readme for more supported runtimes
@@ -77,10 +72,14 @@ gem "audited", "~> 5.8"
 # Pagination
 # gem 'kaminari', '~> 1.1'
 # Delayed Job for background jobs
-# delayed_job 4.2 requires ActiveJob::QueueAdapters::AbstractAdapter, which only
-# exists in Rails 7.1+. Held at the 4.1 line until Phase 5 reaches Rails 7.1;
-# without this the production environment fails to boot (it is the only env that
-# sets active_job.queue_adapter = :delayed_job).
+# delayed_job 4.2 requires ActiveJob::QueueAdapters::AbstractAdapter. The plan
+# said that constant arrives in Rails 7.1 -- it does not. Verified on 7.1.6:
+# activejob-7.1.6/lib/active_job/queue_adapters/ has no abstract_adapter.rb and
+# the string appears nowhere in the gem. It is a **Rails 7.2** addition, so this
+# pin survives 5c and unwinds in Phase 6. Without it, booting production dies
+# with `uninitialized constant ActiveJob::QueueAdapters::AbstractAdapter` --
+# production is the only env that sets active_job.queue_adapter = :delayed_job,
+# so no other environment and no test would catch it.
 gem "delayed_job", "~> 4.1.11"
 gem "delayed_job_active_record", "~> 4.1"
 gem "daemons", "~> 1.2"

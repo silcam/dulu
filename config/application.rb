@@ -50,13 +50,26 @@ module Dulu
 
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
-    config.load_defaults 7.0
+    config.load_defaults 7.1
 
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded.
 
     config.action_mailer.default_url_options = { host: "dulu.sil.org" }
+
+    # Rails.application.secrets is deprecated in Rails 7.1 and removed in 7.2,
+    # and merely *having* a `secret_key_base` in config/secrets.yml is enough to
+    # trigger the deprecation -- which config/environments/test.rb turns into a
+    # boot failure via `deprecation = :raise`. Emptying this path stops Rails
+    # reading the file at all, which is what Phase 5b's migration actually
+    # meant, rather than depending on every developer remembering to delete a
+    # key from a gitignored file.
+    #
+    # With no secrets.yml in play, secret_key_base resolves the way it should:
+    # development and test self-generate a stable one in tmp/local_secret.txt,
+    # and production requires SECRET_KEY_BASE in the environment.
+    config.paths["config/secrets"] = []
 
     # Formerly Rails.application.secrets.{smtp_username,smtp_password,admin_email}.
     # `config.x` is an OrderedOptions, so a typo in one of these names reads back
