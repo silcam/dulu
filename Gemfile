@@ -6,7 +6,7 @@ git_source(:github) do |repo_name|
 end
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem "rails", "~> 8.0.0"
+gem "rails", "~> 8.1.0"
 # Be Awesome
 # gem 'bootsnap', require: false
 # Use postgres as the database for Active Record
@@ -60,7 +60,10 @@ gem "rails-i18n", "~> 8.0"
 # the top search result for the resulting error and it re-opens the exact hole
 # this version bump exists to close. A surviving GET path is a missed call site.
 gem "omniauth-google-oauth2", "~> 1.2"
-gem "omniauth-rails_csrf_protection", "~> 1.0"
+# 2.x, not 1.x: 1.0.2 includes ActiveSupport::Configurable, deprecated in Rails
+# 8.1 and removed in 8.2. test.rb raises on deprecations, so on 1.x the whole
+# suite fails to boot.
+gem "omniauth-rails_csrf_protection", "~> 2.0"
 # User roles
 gem "access-granted", "~> 1.2.0"
 # Activity Log
