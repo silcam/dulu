@@ -22,11 +22,9 @@ gem "nokogiri", "~> 1.15.7"
 # live here -- app/views/layouts/application.html.erb links application.css,
 # which require_tree's the .scss files -- so this is not a dead dependency.
 gem "sass-rails", "~> 6.0"
-# Pinned deliberately: sass-rails 6 would otherwise resolve sprockets 4, whose
-# manifest and link-directive rules are a behaviour change of their own. Held at
-# 3 for the Rails 6.0/6.1 hops so an asset failure is attributable, then lifted
-# to 4 in its own commit at the end of Phase 3.
-gem "sprockets", "~> 3.7"
+# Sprockets 4. Rails 7 requires it, so it is not optional for long; done here
+# on its own so an asset regression is attributable to it and not to Zeitwerk.
+gem "sprockets", "~> 4.0"
 # Use Uglifier as compressor for JavaScript assets
 gem "uglifier", ">= 1.3.0"
 # Use CoffeeScript for .coffee assets and views
