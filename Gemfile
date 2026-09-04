@@ -108,8 +108,12 @@ group :test do
   # broke on minitest 5.26 (Minitest::Metadata was removed). Its only consumers
   # were two integration test files with zero live tests, now deleted, so it is
   # replaced by a direct capybara dependency.
-  gem "capybara"
-  gem "selenium-webdriver"
+  # Rails 6.1's ActionDispatch::SystemTestCase requires capybara >= 3.26, so
+  # this is not optional from Phase 3 on -- 2.18.0 makes test/system fail to
+  # load outright. Note `bin/rails test` does not run test/system, so the gate
+  # does not cover this; see the Phase 3 notes.
+  gem "capybara", "~> 3.39.0"
+  gem "selenium-webdriver", "~> 4.9"
   # brakeman 6+ requires Ruby >= 3.0, so 5.4.x is the ceiling while on Ruby 2.7.
   # 4.2.0 crashed outright on Ruby 2.7: its vendored unicode-display_width calls
   # Gem.gunzip, which no longer exists, so brakeman exited 0 with no output --

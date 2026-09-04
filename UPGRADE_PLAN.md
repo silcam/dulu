@@ -69,7 +69,7 @@ bin/rails test                     # must stay at 396 tests / 1285 assertions, 0
 npx jest --ci                      # must stay at 125 passed
 yarn test:cypress:gate             # 19 specs / 93 tests -- see notes below
 yarn typecheck                     # Phase 2 onward -- see "Where type-checking lives"
-bundle exec brakeman               # compare against the 7 known warnings (below)
+bundle exec brakeman               # 7 known warnings, 6 from Phase 3 (below)
 bin/rails runner -e development 'puts Rails.version'
 bin/rails zeitwerk:check           # Phase 3 onward only
 
@@ -306,8 +306,9 @@ decision (2026-09-03): these are folded into a post-upgrade pass — Phase 8 bel
 stay out of every upgrade commit so that a security change is never entangled with a
 version bump.
 
-Two further brakeman warnings are **expected** mid-upgrade and resolve on their own by
-Phase 6: "Support for Rails 5.2.8.1 ended" and "Support for Ruby 2.7.4 ended".
+Two further brakeman warnings were **expected** mid-upgrade and resolve on their own:
+"Support for Rails 5.2.8.1 ended" (gone as of Phase 3) and "Support for Ruby 2.7.4 ended"
+(clears in Phase 5). So the expected total is 7 before Phase 3 and **6 from Phase 3 on**.
 
 Also note `config/brakeman.ignore` holds 5 entries that no longer match anything — they
 reference `app/views/dashboard/dashboard.html.erb`, `app/views/languages/show.html.erb`
@@ -326,17 +327,18 @@ Each should be revisited at the phase named:
 | `nokogiri "~> 1.15.7"` | nokogiri >= 1.16 requires Ruby >= 3.0 | Phase 5 (Ruby 3.1) |
 | `delayed_job "~> 4.1.11"` | 4.2 needs `ActiveJob::QueueAdapters::AbstractAdapter`, Rails 7.1+ only | Phase 5 (Rails 7.1) |
 | `brakeman "~> 5.4"` | brakeman 6+ requires Ruby >= 3.0 | Phase 5 (Ruby 3.1) |
+| `capybara "~> 3.39.0"` | capybara 3.40+ requires Ruby >= 3.0 | Phase 5 (Ruby 3.1) |
+| `sprockets "~> 4.0"` | added in Phase 3; upper bound only, not a hold-back | — |
+| `require "logger"` in `config/boot.rb` | concurrent-ruby 1.3.5 dropped it; ActiveSupport <= 7.0 needs it | Phase 5c (Rails 7.1) |
 
 Two more known blockers, not yet actionable:
 
-- **`rb-inotify` 0.9.10** warns `rb_safe_level will be removed in Ruby 3.0`. Dev-group
-  only (the `listen` file watcher). Bundler will not move it while `listen` is held at
-  3.1.5; expect this to free up when `sass-rails` moves in Phase 3/4. **Must be resolved
-  before Phase 5.**
-- **`capybara` 2.18.0** is now a direct dependency (see Phase 1 notes) and is ancient.
-  It only backs `test/system`, which `bin/rails test` does not run by default, so a bump
-  would be unverified by the gate. Bump it in Phase 3 alongside the Rails 6 work, and be
-  aware capybara 3 changed text-matching semantics.
+- ~~**`rb-inotify` 0.9.10**~~ **resolved in Phase 3.** `listen` 3.1.5 → 3.10.0 carried
+  `rb-inotify` to 0.11.1 and the `rb_safe_level` warning wall is gone.
+- ~~**`capybara` 2.18.0**~~ **resolved in Phase 3, and it was not optional** — Rails 6.1
+  requires `capybara >= 3.26`. Now `~> 3.39.0`, itself a Ruby-2.7 ceiling (see the table
+  above). `test/system` still cannot run on this machine for want of a `chromedriver`;
+  see Phase 3g.
 - **`debase`** will not build on Ruby 3.4; replace with the `debug` gem in Phase 6.
 
 ---
@@ -719,24 +721,173 @@ chasing a phantom Shakapacker bug.
 
 ---
 
-## Phase 3 — Rails 5.2 → 6.0 → 6.1
+## Phase 3 — Rails 5.2 → 6.0 → 6.1 (done)
 
-Two hops, same recipe each time, still on Ruby 2.7. The main event is **Zeitwerk**
-autoloading (Rails 6.0's default).
+Two hops, still on Ruby 2.7. Delivered in five commits: Rails 6.0 + Zeitwerk, `audited` 5
+on its own, Rails 6.1, the sprockets pin lifted, and the trailing pins. Predicted
+correctly: Zeitwerk was the main event, `audited` needed isolation, and `rails-i18n` and
+`sass-rails` had to move in step. What the plan did not predict is below — all of it cost
+time, and all of it is the kind of thing that reads as a mystery if you meet it cold.
 
-1. **Rails 6.0:** `rails app:update`, `load_defaults 6.0`, adopt, delete the defaults file.
-   - Run `bin/rails zeitwerk:check` and add it to the gate from here on.
-   - Zeitwerk enforces strict file/constant naming. With 162 Ruby files this is
-     manageable, and `config/initializers/inflections.rb` is empty (comments only), so
-     there are no custom acronyms for Zeitwerk to hold you to — one less failure mode.
-   - `config/environments/*.rb` gain new required keys.
-2. **Rails 6.1:** smaller hop. `load_defaults 6.1`, adopt, delete.
-3. Bump the Rails-coupled gems in step: `rails-i18n` 5.0 → 6.0, `sass-rails` → 6.x.
-4. `audited` 4.7 → 5.x is a **major** version jump with schema/API changes. It is the
-   one application-level gem that carries real risk (it touches every audited model).
-   Give it its own commit within this phase so it can be reverted independently.
+### 3a. Resolve the dependency graph before writing any config
 
-**Gate:** full recipe green + `zeitwerk:check` clean.
+Ten minutes of `bundle lock` in a throwaway directory answered the question the plan had
+left open: does the Ruby-2.7 `nokogiri "~> 1.15.7"` pin survive Rails 6.1? It does —
+Rails 6.1's `loofah`/`rails-html-sanitizer` chain resolves happily against nokogiri
+1.15.7. Rails 6.0, 6.1, `rails-i18n` 6.0, `sass-rails` 6.0 and `audited` 5.8 were all
+proven resolvable *before* the first line of config changed. Do this at the top of every
+remaining phase; the alternative is finding a hard blocker after a day of fixes.
+
+### 3b. Four things blocked boot before any Rails-6 behaviour was reachable
+
+None of these are Zeitwerk, and each stops the app dead:
+
+1. **`concurrent-ruby` 1.3.5 dropped its transitive `require "logger"`.** ActiveSupport
+   up to 7.0 relies on it, so every `bin/rails` command dies with
+   `uninitialized constant ActiveSupport::LoggerThreadSafeLevel::Logger`. Fixed with an
+   explicit `require "logger"` in `config/boot.rb`, which is annotated to be removed in
+   Phase 5c when Rails 7.1 requires it itself. Pinning `concurrent-ruby < 1.3.5` would
+   have to be carried exactly as far and holds back an unrelated gem.
+2. **`rails/all` loads Action Text, which autoloads during initialization.** Zeitwerk
+   deprecates that, and `config/environments/test.rb` raises on deprecations, so the
+   whole suite failed to boot. `config/application.rb` now requires railties explicitly.
+   Action Text, Active Storage and Action Mailbox are all genuinely unused here — no
+   `*_blobs`/`*_attachments` tables, no `has_*_attached`, no `rich_text`, no
+   `app/mailboxes` — so dropping them is honest, not a workaround. Action Cable stays,
+   because `app/assets/javascripts/cable.js` does `//= require action_cable` and
+   sprockets would fail without it.
+3. **`jbuilder` 2.7.0 registers a single-arity template handler**, deprecated in 6.0 and
+   therefore fatal under `deprecation = :raise`. 2.13 takes `(template, source)`.
+4. **`pg` was silently stuck at 1.0.0** — `Gemfile` leaves it unpinned, so `bundle
+   install` never moved it, and Rails 6.1's activerecord requires `pg ~> 1.1`. Presents
+   as `Gem::LoadError: can't activate pg (~> 1.1)` on *every* rails command, which reads
+   like a Rails problem and is a lockfile problem. `bundle update pg`.
+
+The lesson generalises: with `deprecation = :raise` (which is what makes a multi-hop
+upgrade tractable, and worth keeping), a deprecation in a *third-party* gem is a boot
+failure. Expect one or two per hop and read the trace for the gem name before assuming
+the app is at fault.
+
+### 3c. Zeitwerk was nearly free — one dead file
+
+`bin/rails zeitwerk:check` found exactly one problem:
+`app/controllers/concerns/redirect_to_referrer.rb` was commented out end to end, so it
+defined no constant. Its only `include` in `application_controller.rb` was commented out
+too. Deleted rather than added to an `ignore` list. `config/initializers/inflections.rb`
+being empty really did pay off — there were no custom acronyms to satisfy.
+
+`zeitwerk:check` is now in the gate. It is not sufficient on its own — it only validates
+what is eager-loadable — so the production-env boot stays in the gate alongside it. Note
+it also reports `test/mailers/previews` as unchecked; that is expected and not a finding.
+
+### 3d. The two "not backwards compatible" 6.1 defaults were checked, not assumed
+
+`new_framework_defaults_6_1.rb` flags two. Both are fine here, and the reasoning matters
+because Phase 4 must not inherit either as a mystery:
+
+- **`cookies_same_site_protection = :lax`.** The only cross-site entry point is the
+  Google OAuth callback, and `config/routes.rb:83` declares it as
+  `get '/auth/:provider/callback'`. SameSite=Lax still sends cookies on top-level GET
+  navigations, so the session survives. **If login breaks in Phase 4, this is not why.**
+- **`urlsafe_csrf_tokens = true`.** Rails accepts both encodings on read, so this only
+  bites on rollback.
+
+`load_defaults 6.0`'s cookie change (`use_cookies_with_metadata`) carries the same
+rollback caveat as every phase here: cookies written under 6.x defaults are not readable
+by 5.2 code, so **rolling back a deploy past this phase logs every user out.** That is
+recoverable — they log in again — but it should not be a surprise.
+
+Also renamed: `config.action_view.raise_on_missing_translations` →
+`config.i18n.raise_on_missing_translations`. **Not a pure rename** — the i18n form also
+raises for translations looked up from controllers, so the suite is now strictly stricter.
+It stayed at 396/1285, so nothing was relying on a silently-missing controller
+translation.
+
+### 3e. `audited` 4.10 → 5.8 — the gate could not have caught the schema half
+
+The API surface this app uses is tiny (the `audited` macro, `:associated_with` on six
+models, and `can :read, Audited::Audit`), and none of it changed. The schema did.
+audited 5 expects the polymorphic indexes as `[type, id]` where this table has had
+`[id, type]` since installation, and expects `version` as a third column on
+`auditable_index`. **Nothing fails without them** — they are query-plan changes — so the
+"empty `git diff db/schema.rb`" gate would have read as "audited 5 is happy" when it was
+not.
+
+`rails generate audited:upgrade` must be run **twice**: its checks are sequential, and it
+only offers `add_version_to_auditable_index` once the column order has been reverted. Run
+it a third time and it produces nothing, which is how you know the table is finally the
+shape audited 5 expects. Two migrations resulted, and this is the only schema change in
+the phase.
+
+No test covers audit writing at all, so it was verified by hand: create + update on an
+audited model yields two rows, actions `create`/`update`, versions 1/2, and the expected
+`audited_changes` diff.
+
+### 3f. Sprockets 3 → 4, deliberately last
+
+`sass-rails` 6 would have pulled sprockets 4 in at hop 1. It was pinned at `~> 3.7`
+through both Rails hops so that an asset failure could not be confused with Zeitwerk, then
+lifted in its own commit. Rails 7 requires sprockets 4, so this was not deferrable past
+Phase 5 regardless.
+
+Verified past "precompile exited 0", because silently empty stylesheets are exactly how
+this fails. From a cleared `public/assets` and `tmp/cache/assets`, `application.css` is
+3446 bytes and equals `dulu.css` + `react_tabs.scss` + `welcome.scss`, matching the sum of
+those three compiled outputs. Dev mode takes a different path (`assets.debug = true`), so
+development was booted separately and confirmed to link
+`application.debug-<digest>.css` and serve it, `application.js` and `dulu.css` with
+content.
+
+**Sprockets is not dead here** — `app/views/layouts/application.html.erb:7` links
+`application.css`. But three of the seven stylesheets are:
+`components.scss`, `custom.scss` and `fuzzy_date_field.scss` are commented out line by
+line and compile to 0 bytes. That is correct output, not a regression. They are dead code
+for a later hygiene pass; left alone here to keep the phase's scope honest.
+`react_tabs.scss` imports from `node_modules`, so **`node_modules` must exist on the
+server at precompile time** — another reason Phase 8b is not optional.
+
+Incidental improvement: sprockets 3 was emitting
+`public/assets/express/lib/application-<digest>.js`, because
+`config/initializers/assets.rb:9` adds `node_modules` to `assets.paths`. Sprockets 4 only
+compiles what `app/assets/config/manifest.js` links, so the stray file is gone.
+
+### 3g. `capybara` was mandatory, and `test/system` still cannot run here
+
+The plan called the capybara bump optional-ish ("bump it in Phase 3 … a bump would be
+unverified by the gate"). It is **mandatory**: Rails 6.1's
+`ActionDispatch::SystemTestCase` requires `capybara >= 3.26`, and 2.18.0 makes
+`test/system` fail to load outright. Capybara is held at `~> 3.39.0` because 3.40 requires
+Ruby >= 3.0 — **another pin to unwind in Phase 5.** `selenium-webdriver` went 3.14 → 4.9
+with it.
+
+`test/system/notifications_int_test.rb` has 15 live tests and, contrary to the Phase 1
+note, is not empty. It still does not run: there is no `chromedriver` on this machine, so
+all 15 error at driver startup. That is **pre-existing and unrelated to the upgrade** —
+capybara 2.18 + selenium 3.14 needed a chromedriver too. After this phase the file at
+least *loads*; it fails only on the missing binary. Deliberately not chased: `bin/rails
+test` does not run `test/system`, the Cypress suite covers the same ground and is the
+maintained gate, and installing browser drivers is not an upgrade task. Someone should
+decide whether these 15 tests are worth reviving or should be deleted as superseded by
+Cypress.
+
+### 3h. Pins resolved and pins added
+
+`listen` 3.1.5 → 3.10.0 pulled `rb-inotify` 0.9.10 → 0.11.1, which **clears the
+`rb_safe_level will be removed in Ruby 3.0` warning wall** that made every command's
+output unreadable. The plan predicted this would free up here, and it did. Phase 5's
+blocker list is one item shorter.
+
+`brakeman` is now **6 warnings, not 7** — "Support for Rails 5.2.8.1 ended" resolved
+itself. The remaining six are the five real findings tracked in Phase 8 plus the Ruby
+2.7.4 EOL warning, which Phase 5 clears.
+
+**Gate at close** (Ruby 2.7.4 / Rails 6.1.7.10 / Node 20.20.2 / Shakapacker 10.3.2):
+`bin/rails test` 396 tests / 1285 assertions / 0 failures / 1 skip — assertion count
+unchanged from the pre-upgrade baseline; `npx jest --ci` 125 passed; `yarn
+test:cypress:gate` 19 specs / 93 tests all passing on all four gate runs of this phase;
+`yarn typecheck` clean; `zeitwerk:check` clean; brakeman 6 known / 0 errors; development
+and production boots green; `RAILS_ENV=production bin/rails assets:precompile` green with
+output content verified; `BUNDLE_FROZEN=true bundle install` clean.
 
 ---
 
@@ -1039,10 +1190,10 @@ Write the test first in each case — that is the actual work here, not the one-
 ## Sequencing summary
 
 ```
-Phase 0  Hygiene, Cypress baseline, branch triage           no version changes
-Phase 1  Ruby 2.7 + Rails 5.2                    Ruby moves once, covers 4 hops
-Phase 2  Node 20 + Webpacker 4 -> Shakapacker  <- joint frontend/backend step
-Phase 3  Rails 6.0 -> 6.1 (Zeitwerk) + audited 5
+Phase 0  Hygiene, Cypress baseline, branch triage    DONE  no version changes
+Phase 1  Ruby 2.7 + Rails 5.2                       DONE  Ruby moves once, 4 hops
+Phase 2  Node 20 + Webpacker -> Shakapacker 10      DONE  joint frontend/backend step
+Phase 3  Rails 6.0 -> 6.1 (Zeitwerk) + audited 5    DONE  + sprockets 4, capybara 3
 Phase 4  OmniAuth 2                              auth risk; manual browser gate
 Phase 5  Ruby 3.1 + secrets -> ENV + Rails 7.0 -> 7.1        deploy-affecting
 Phase 6  Ruby 3.4 + Rails 7.2 -> 8.0 + Cypress/cypress-on-rails
