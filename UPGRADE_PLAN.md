@@ -921,7 +921,7 @@ output content verified; `BUNDLE_FROZEN=true bundle install` clean.
 
 ---
 
-## Phase 4 — OmniAuth 1.9 → 2.1.4 (done, except the human gate)
+## Phase 4 — OmniAuth 1.9 → 2.1.4 (done, login verified in a browser)
 
 Delivered as **one commit** — deliberately, because it is the rollback unit. Get this
 wrong in production and nobody can log in.
@@ -1022,28 +1022,60 @@ SSL and this could not be confirmed over plain HTTP locally. The practical case 
 welcome page left open in a tab past session expiry: clicking sign-in shows an error page
 instead of simply retrying. Small, real, and a Phase 8 candidate.
 
-### 4e. The remaining gate is a person
+### 4e. Verified by Brian in a real browser, 2026-09-04
 
-**Still outstanding: a real browser login through Google.** Nothing above substitutes for
-it, and there is deliberately no staging environment to rehearse on (see *Deploy reality*).
-Two facts live in the Google Cloud console and in no file in this repo, so they have to be
-asked rather than looked up:
+**Local login works.** Brian clicked sign-in at `localhost:3000` and logged in. Google did
+not re-prompt for consent, because his account already had a valid grant for the dev
+client — so the *consent screen* is untested, but nothing else is. The path that ran is
+the whole application path: `button_to` POST → `omniauth-rails_csrf_protection` token
+check → OmniAuth 2 request phase → redirect to Google → callback (still a GET) →
+`SessionsController#create` → `Person` lookup → session.
 
-- Do the authorised redirect URIs include `http://localhost:3000/auth/google_oauth2/callback`,
-  for the local test?
-- Is production's callback URI registered?
+**The Google console is not affected by this phase, and the dev/live client split is not a
+gap.** Google never sees the request phase: the POST goes browser → Dulu's Rack
+middleware, which answers with a 302 to `accounts.google.com`. What Google receives is the
+same GET authorize request as before, and the callback is the same GET at the same URL.
+No redirect URI, client ID or console setting changes. Brian's dev and production Google
+apps are separate and unconnected, and that is fine — if production login worked before
+this phase, the Google half still works after it.
 
-Use port **3000** locally; the `redirect_uri` OmniAuth builds embeds the port, so a server
-on 3009 sends Google a URI that is almost certainly not registered.
+**One thing that has not been seen and cannot be seen from this repo:** the *server's*
+`config/initializers/omniauth.rb`. It is gitignored, so it is a different file from the
+local one and may pass provider options the 1.x strategy no longer accepts. The local file
+passes only `prompt` and `hd`, both still supported. `omniauth-google-oauth2` 1.2.3
+forwards these and nothing else:
 
-Deploy this in a low-traffic window. The rollback is `git revert` of the single commit,
+```
+access_type  hd  login_hint  prompt  request_visible_actions  scope  state
+redirect_uri  include_granted_scopes  enable_granular_consent  openid_realm
+device_id  device_name
+```
+
+plus the strategy options `name`, `skip_jwt`, `jwt_leeway`, `authorize_options`,
+`overridable_authorize_options`, `authorized_client_ids`, `client_options`, `image_size`
+and `image_aspect_ratio`. **Check the server's initializer against that list before
+deploying.** Anything else in it is silently ignored at best.
+
+### 4f. Notes for the deploy
+
+There is deliberately no staging environment to rehearse on (see *Deploy reality*), so
+deploy this in a low-traffic window.
+
+Optional, if someone wants the consent screen exercised too: revoke Dulu's access at
+`myaccount.google.com/permissions` and log in again, or use a fresh account. That tests
+Google's UI rather than this code, which is why it is optional.
+
+Note when testing locally that the `redirect_uri` OmniAuth builds embeds the port, so use
+**3000** — a server on another port sends Google a URI that is almost certainly not
+registered. The rollback is `git revert` of the single commit,
 and Capistrano still has the previous release directory on the server.
 
-**Gate:** 398 tests / 1298 assertions / 0 failures / 1 skip; jest 125 passed; Cypress 93/93
+**Gate:** 398 tests / 1297 assertions / 0 failures / 1 skip; jest 125 passed; Cypress 93/93
 including the rewritten `log_in.spec.js`; `tsc` clean; `zeitwerk:check` clean; brakeman 6
 known / 0 errors; development and production boots green; `RAILS_ENV=production
 assets:precompile` green; `BUNDLE_FROZEN=true bundle install` clean; empty
-`git diff db/schema.rb`. **Plus the manual browser login, which is not yet done.**
+`git diff db/schema.rb`; `foreman s` starts all three processes. **Plus the manual
+browser login, done — see 4e.**
 
 ---
 
@@ -1341,7 +1373,7 @@ Phase 0  Hygiene, Cypress baseline, branch triage    DONE  no version changes
 Phase 1  Ruby 2.7 + Rails 5.2                       DONE  Ruby moves once, 4 hops
 Phase 2  Node 20 + Webpacker -> Shakapacker 10      DONE  joint frontend/backend step
 Phase 3  Rails 6.0 -> 6.1 (Zeitwerk) + audited 5    DONE  + sprockets 4, capybara 3
-Phase 4  OmniAuth 2                              DONE  except the manual browser gate
+Phase 4  OmniAuth 2                              DONE  browser login verified
 Phase 5  Ruby 3.1 + secrets -> ENV + Rails 7.0 -> 7.1        deploy-affecting
 Phase 6  Ruby 3.4 + Rails 7.2 -> 8.0 + Cypress/cypress-on-rails
 Phase 7  React 18 -> react-redux 9 -> React Router 6   independent; router is the big one
