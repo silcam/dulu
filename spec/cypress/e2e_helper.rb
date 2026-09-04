@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
-# This is loaded once before the first command is executed
+# This is loaded once before the first command is executed.
+# Named e2e_helper.rb, not cypress_helper.rb: cypress-on-rails >= 1.17 warns on
+# the old name, which it now treats as the pre-1.17 layout.
 
 # begin
 #  require 'database_cleaner'

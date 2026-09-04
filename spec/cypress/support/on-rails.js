@@ -1,9 +1,12 @@
 // CypressOnRails: dont remove these command
+// Endpoint is /__e2e__/command, not the pre-1.17 /__cypress__/command. Both are
+// still routed by the middleware, but the old path logs a deprecation on every
+// single app command -- which is once or more per test.
 Cypress.Commands.add('appCommands', function (body) {
   cy.log("APP: " + JSON.stringify(body))
   return cy.request({
     method: 'POST',
-    url: "/__cypress__/command",
+    url: "/__e2e__/command",
     body: JSON.stringify(body),
     log: true,
     failOnStatusCode: true
@@ -44,7 +47,7 @@ Cypress.Commands.add('appFixtures', function (options) {
 Cypress.on('fail', (err, runnable) => {
   // allow app to generate additional logging data
   Cypress.$.ajax({
-    url: '/__cypress__/command',
+    url: '/__e2e__/command',
     data: JSON.stringify({name: 'log_fail', options: {error_message: err.message, runnable_full_title: runnable.fullTitle() }}),
     async: false,
     method: 'POST'
