@@ -6,7 +6,7 @@ git_source(:github) do |repo_name|
 end
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem "rails", "~> 6.1.0"
+gem "rails", "~> 7.0.0"
 # concurrent-ruby 1.3.5 dropped its transitive `require "logger"`, which
 # ActiveSupport <= 7.0 relies on; without it anything that loads activesupport
 # dies with `uninitialized constant
@@ -54,8 +54,10 @@ gem "jbuilder", "~> 2.11"
 # gem 'redis', '~> 3.0'
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
-# Internationalization
-gem "rails-i18n", "~> 6.0"
+# Internationalization. The major version tracks Rails: rails-i18n caps
+# railties at `< N+1`, so this must be bumped in lockstep with every Rails hop
+# or version solving fails outright.
+gem "rails-i18n", "~> 7.0"
 # Google authentication. omniauth-google-oauth2 1.x requires OmniAuth 2, so the
 # two move together. OmniAuth 2 makes the *request* phase POST-only as a CSRF
 # fix, which omniauth-rails_csrf_protection supplies the token verification for.
