@@ -899,43 +899,129 @@ output content verified; `BUNDLE_FROZEN=true bundle install` clean.
 
 ---
 
-## Phase 4 — OmniAuth 1.9 → 2.1 (isolated, manual browser gate)
+## Phase 4 — OmniAuth 1.9 → 2.1.4 (done, except the human gate)
 
-Deliberately isolated in its own phase: get this wrong in production and nobody can log
-in. A three-file diff is diagnosable; the same change buried in a Rails major is not.
+Delivered as **one commit** — deliberately, because it is the rollback unit. Get this
+wrong in production and nobody can log in.
 
-**Why here and not first.** It is genuinely Rails-version-independent (OmniAuth 2 needs
-only Ruby ≥ 2.2 and Rack ≥ 2.2.3, both already satisfied), so first was tempting. It sits
-here instead because the only gate that can prove it works is a **manual browser login**,
-and that gate is only trustworthy on a stack you already trust. Placed first, a failed
-login is ambiguous — OmniAuth 2 wiring, or an OAuth callback URL mismatch on a 2018-era
-Rails 5.1 stack? Placed here, everything else is green and modern, and you are one phase
-from the deploy that needs auth working anyway.
+`omniauth` 1.9.0 → 2.1.4, `omniauth-google-oauth2` 0.6.0 → 1.2.3 (1.x requires OmniAuth 2,
+so they move together), plus `omniauth-rails_csrf_protection`. That carries `oauth2`
+1.4 → 2.0.25, `faraday` 0.15.4 → 2.8.1, `jwt` 2.1 → 3.2 and `hashie` 3.6 → 5.1 — a bigger
+transitive jump than it looks, but none of those four is used directly anywhere in `app/`,
+`lib/` or `config/`. Resolved on Ruby 2.7 with the `nokogiri ~> 1.15.7` pin intact and
+`PLATFORMS` still `ruby`, checked in a throwaway lockfile before any code changed.
 
-`origin/dependabot/bundler/omniauth-2.1.0` already exists — use it as a reference.
+**The reference branch is useless.** `origin/dependabot/bundler/omniauth-2.1.0` is a
+**lockfile-only** commit — no code changes at all. Merging it would have broken login
+outright. It is not a template for this work.
 
-**The breaking change, specifically:** OmniAuth 2 requires the *request* phase to be a
-POST with a CSRF token. Two places currently issue a GET:
+### 4a. Three call sites, and the third one reshapes the fix
 
-- `app/views/shared/welcome.html.erb:54` — `<a id='google-signin-link' href="/auth/google_oauth2">`
-- `app/controllers/sessions_controller.rb:10` — `redirect_to '/auth/google_oauth2'`
+The plan predicted two GETs into the request phase. There are three, and the one it missed
+is the one that cannot be fixed the same way:
 
-Both must become POST form submissions (`button_to`, or a form with
-`authenticity_token`), and you need `omniauth-rails_csrf_protection` in the Gemfile.
+1. **`app/controllers/application_controller.rb` — `require_login`.** A logged-out deep
+   link redirected straight to `/auth/google_oauth2`. **A redirect is always a GET, so
+   this cannot become a POST** — `button_to` is no help here. It now renders
+   `shared/welcome` and the user clicks the button. `session[:original_request]` is still
+   recorded first, so `send_to_correct_page` still lands them where they were headed.
+2. **`app/controllers/sessions_controller.rb#new`** — same problem, same fix.
+3. **`app/views/shared/welcome.html.erb`** — the `<a href>` became `button_to`. Its
+   wrapping `<p>` had to become a `<div>`: `button_to` emits a `<form>`, which is not
+   phrasing content, so a browser silently closes the `<p>` before it and the padding is
+   lost.
 
-**Your test suite cannot catch this.** `OmniAuth.config.test_mode = true` (in
-`test/controllers/sessions_controller_test.rb`, `test/application_system_test_case.rb`,
-and `spec/cypress/app_commands/mock_oauth.rb`) short-circuits the request phase entirely.
-The tests cover the *callback* phase and will stay green while real login is broken.
+**The one user-visible change in this phase:** a logged-out deep link used to bounce
+straight to Google, and now shows the welcome page first. One extra click. **Forced by
+OmniAuth 2, not chosen** — worth saying out loud to anyone who notices.
 
-Also bump `omniauth-google-oauth2` 0.6.0 → 1.2.x here (1.x requires OmniAuth 2, so they
-move together).
+`config/routes.rb:83` **stays a `get`.** OmniAuth 2 changes only the *request* phase, and
+the callback being a GET is precisely why Phase 3d's `cookies_same_site_protection = :lax`
+is safe. Converting it to POST would silently break login under 6.1 defaults.
 
-**Gate:** full recipe green **+ manual Google login verified in a real browser.** Note
-that there is deliberately no staging environment to rehearse this on (see *Deploy reality*
-above), so plan a low-traffic window and know your rollback: this phase should be a single
-revertable commit, and the previous release directory is still on the server under
-Capistrano.
+### 4b. The API had to be answered differently from the browser
+
+Every `Api::*` controller inherits `ApplicationController`, so `require_login` fires for
+XHRs too. A logged-out XHR now gets **401**. It used to get the 302, which axios follows
+into a cross-origin Google redirect; rendering the welcome page for it would be worse
+still, because `DuluAxios` cannot tell 200-with-HTML from real data — `response.data`
+would hand an HTML string to the caller as though it were a successful payload.
+
+The condition is deliberately `request.format.json? || request.xhr?` and **not**
+`unless request.format.html?`. Those look equivalent and are not: a bare `Accept: */*`
+(curl, uptime monitors, link checkers) lands on the non-HTML branch and would get a 401
+where a browser gets the page. This was caught empirically, not by reading — the first
+version of the fix used the `html?` form and `curl localhost:3000/` returned 401. Anything
+ambiguous now gets the page.
+
+The frontend still has **no session-expiry handling at all** — `DuluAxios.handleError`
+knows only `"server"` and `"connection"`. A 401 surfaces as a generic error rather than
+"you have been logged out". Not this phase's business, but a fair Phase 8 candidate.
+
+### 4c. The suite cannot gate this, and the plan understated by how much
+
+`OmniAuth.config.test_mode = true` short-circuits the request phase in
+`test/controllers/sessions_controller_test.rb`, `test/application_system_test_case.rb` and
+`spec/cypress/app_commands/mock_oauth.rb`. On top of that,
+`config/environments/test.rb:29` sets `allow_forgery_protection = false`, so **neither the
+Rails suite nor Cypress can exercise the CSRF verification** that is the entire point of
+OmniAuth 2. Both suites stay green with real login completely broken.
+
+Two tests encoded the behaviour just removed and were **rewritten, not deleted** —
+`test '/login'` and `test 'Create Session - Redirect to original request'`. The second
+still checks the mechanism that matters (`original_request` surviving the OAuth round
+trip); only its first assertion changed. Three tests were added, the useful one being
+*the welcome page must contain a POST form to the request phase and no `<a>` version of
+the control*. That is the only automated assertion in any suite that touches the request
+phase at all. It will not catch a broken OAuth handshake, but it will catch someone
+turning the button back into a link.
+
+### 4d. What was verified by hand, which is more than the plan thought possible
+
+Against a live development server, with no Google account involved:
+
+| Check | Result |
+|---|---|
+| `POST /auth/google_oauth2` **with** a valid CSRF token | **302 to `accounts.google.com`** with the correct `client_id`, `scope`, `state`, `prompt=select_account`, `hd=sil.org` |
+| `POST` with **no** token | rejected — the CSRF layer is live |
+| `GET /auth/google_oauth2` | **no redirect to Google** — the breaking change, working |
+| browser-style `GET /` and `GET /people` | 200, welcome page |
+| axios-style `GET /api/people` | 401 |
+
+That covers everything except Google's own consent screen. **Never fix a surviving GET
+path by setting `OmniAuth.config.allowed_request_methods` to include `:get`.** It is the
+top search result for the error and it re-opens exactly the hole this bump closes; a
+surviving GET is a missed call site.
+
+One rough edge, **unverified in production**: a missing or stale CSRF token on the sign-in
+POST raises from middleware, so in development it renders a 500. Rails maps
+`ActionController::InvalidAuthenticityToken` to 422 by default, but `production.rb` forces
+SSL and this could not be confirmed over plain HTTP locally. The practical case is a
+welcome page left open in a tab past session expiry: clicking sign-in shows an error page
+instead of simply retrying. Small, real, and a Phase 8 candidate.
+
+### 4e. The remaining gate is a person
+
+**Still outstanding: a real browser login through Google.** Nothing above substitutes for
+it, and there is deliberately no staging environment to rehearse on (see *Deploy reality*).
+Two facts live in the Google Cloud console and in no file in this repo, so they have to be
+asked rather than looked up:
+
+- Do the authorised redirect URIs include `http://localhost:3000/auth/google_oauth2/callback`,
+  for the local test?
+- Is production's callback URI registered?
+
+Use port **3000** locally; the `redirect_uri` OmniAuth builds embeds the port, so a server
+on 3009 sends Google a URI that is almost certainly not registered.
+
+Deploy this in a low-traffic window. The rollback is `git revert` of the single commit,
+and Capistrano still has the previous release directory on the server.
+
+**Gate:** 398 tests / 1298 assertions / 0 failures / 1 skip; jest 125 passed; Cypress 93/93
+including the rewritten `log_in.spec.js`; `tsc` clean; `zeitwerk:check` clean; brakeman 6
+known / 0 errors; development and production boots green; `RAILS_ENV=production
+assets:precompile` green; `BUNDLE_FROZEN=true bundle install` clean; empty
+`git diff db/schema.rb`. **Plus the manual browser login, which is not yet done.**
 
 ---
 
@@ -1157,7 +1243,16 @@ Work items, in the order they deserve attention:
    `app/views/languages/show.html.erb` and `app/views/clusters/index.html.erb`, all ERB
    views deleted during the React migration. A stale ignore file is worse than none: it
    reads as "reviewed and accepted" for findings that no longer exist.
-7. **Re-run `bundle exec brakeman` expecting zero warnings**, and consider adding it to
+7. **The frontend has no session-expiry handling.** `DuluAxios.handleError` knows only
+   `"server"` and `"connection"`. Phase 4 made a logged-out XHR return 401 (it used to
+   return a 302 that axios followed cross-origin), so the status is now clean and
+   distinguishable — nothing consumes it. Surface "you have been logged out, sign in
+   again" instead of a generic error.
+8. **A stale CSRF token on the sign-in button gives an error page.** Leave the welcome
+   page open past session expiry, click sign in, and `omniauth-rails_csrf_protection`
+   raises from middleware. Rails maps that to 422, but the user sees an error page rather
+   than a retry. Rescue it and re-render the welcome page.
+9. **Re-run `bundle exec brakeman` expecting zero warnings**, and consider adding it to
    the gate as a hard failure rather than a compare-against-known-list.
 
 By the time this phase runs, brakeman will be unpinned (Phase 5 lifts it to 6+ on Ruby
@@ -1212,7 +1307,7 @@ Phase 0  Hygiene, Cypress baseline, branch triage    DONE  no version changes
 Phase 1  Ruby 2.7 + Rails 5.2                       DONE  Ruby moves once, 4 hops
 Phase 2  Node 20 + Webpacker -> Shakapacker 10      DONE  joint frontend/backend step
 Phase 3  Rails 6.0 -> 6.1 (Zeitwerk) + audited 5    DONE  + sprockets 4, capybara 3
-Phase 4  OmniAuth 2                              auth risk; manual browser gate
+Phase 4  OmniAuth 2                              DONE  except the manual browser gate
 Phase 5  Ruby 3.1 + secrets -> ENV + Rails 7.0 -> 7.1        deploy-affecting
 Phase 6  Ruby 3.4 + Rails 7.2 -> 8.0 + Cypress/cypress-on-rails
 Phase 7  React 18 -> react-redux 9 -> React Router 6   independent; router is the big one
