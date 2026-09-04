@@ -26,11 +26,15 @@ require "rails/test_unit/railtie"
 Bundler.require(*Rails.groups)
 
 module Dulu
-  # Values that used to live in config/secrets.yml. `Rails.application.secrets`
-  # is removed in Rails 7.1, so they move to the environment. ENV rather than
-  # encrypted credentials because config/secrets.yml, config/database.yml and
-  # config/initializers/omniauth.rb are already gitignored and Capistrano-
-  # symlinked -- the team's model is "secrets live on the server, outside git",
+  # Values that used to live in config/secrets.yml. Rails.application.secrets
+  # was deprecated in 7.1 and **removed in 7.2**, so nothing reads that file any
+  # more -- not even for secret_key_base, which is why production now requires
+  # SECRET_KEY_BASE in the environment and dev/test self-generate a stable one
+  # in tmp/local_secret.txt.
+  #
+  # ENV rather than encrypted credentials because config/secrets.yml,
+  # config/database.yml and config/initializers/omniauth.rb are already
+  # gitignored and Capistrano-symlinked -- the team's model is "secrets live on the server, outside git",
   # and ENV preserves it without adding master.key distribution.
   #
   # **Production deliberately has no fallback.** A missing variable raises at
@@ -57,19 +61,6 @@ module Dulu
     # -- all .rb files in that directory are automatically loaded.
 
     config.action_mailer.default_url_options = { host: "dulu.sil.org" }
-
-    # Rails.application.secrets is deprecated in Rails 7.1 and removed in 7.2,
-    # and merely *having* a `secret_key_base` in config/secrets.yml is enough to
-    # trigger the deprecation -- which config/environments/test.rb turns into a
-    # boot failure via `deprecation = :raise`. Emptying this path stops Rails
-    # reading the file at all, which is what Phase 5b's migration actually
-    # meant, rather than depending on every developer remembering to delete a
-    # key from a gitignored file.
-    #
-    # With no secrets.yml in play, secret_key_base resolves the way it should:
-    # development and test self-generate a stable one in tmp/local_secret.txt,
-    # and production requires SECRET_KEY_BASE in the environment.
-    config.paths["config/secrets"] = []
 
     # Formerly Rails.application.secrets.{smtp_username,smtp_password,admin_email}.
     # `config.x` is an OrderedOptions, so a typo in one of these names reads back

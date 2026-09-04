@@ -87,6 +87,12 @@ SMTP_USERNAME=a@b.c SMTP_PASSWORD=x ADMIN_EMAIL=a@b.c \
 rm -rf tmp/shakapacker public/packs public/assets   # or the webpack half silently skips
 RAILS_ENV=production bin/rails assets:precompile
 yarn install --check-files         # MANDATORY after the line above -- see below
+
+# db/schema.rb round-trip. `bin/rails test` maintains the test database with
+# db:migrate, so NOTHING else in this recipe ever executes schema.rb -- a broken
+# dump is invisible to all 400 tests and all 93 Cypress specs, and surfaces only
+# for a new developer following the README or a fresh production database.
+bin/rails db:schema:load RAILS_ENV=test && bin/rails test
 ```
 
 **Do not skip the last two lines. They are not decoration.** Phase 5c found four problems
@@ -1530,7 +1536,26 @@ Phase 5c's actioncable asset rename pays off: the Sprockets half of the producti
 precompile still emits an `actioncable-*.js`, so Rails 8 dropping the `action_cable.js`
 alias is a non-event.
 
-### 6c. Generated files — what was kept and what was thrown away
+**`db/schema.rb` changed at both hops and needed checking, which the gate cannot do.**
+7.2 was cosmetic (`ActiveRecord::Schema[7.1]` → `[7.2]`). **8.0 was not**: the dumper now
+writes `enable_extension "pg_catalog.plpgsql"` instead of `"plpgsql"` — schema-qualified.
+That is a real change to the file the README tells a new developer to run, and
+`bin/rails test` maintains the test database via `db:migrate`, so **no test, no Cypress
+spec and no precompile ever executes `schema.rb`**. Verified explicitly instead:
+`db:schema:load RAILS_ENV=test` succeeds from scratch, the full suite passes against the
+freshly loaded schema, and a subsequent `db:migrate` re-dump produces no diff, so the
+round-trip is stable. Same failure class as the uglifier bug in §5c — broken, green and
+latent — so **the round-trip is now a permanent line in the verification recipe.**
+
+**One line of Phase 5c is now dead and has been deleted.**
+`config.paths["config/secrets"] = []` existed because Rails 7.1 *deprecated*
+`Rails.application.secrets`. Rails **7.2 removed it**, so the line does nothing on 8.0 —
+`Rails.application.respond_to?(:secrets)` is `false`. Removed, along with the seven-line
+comment justifying it. §8b item 5 and item 7 previously attributed the inertness of the
+`config/secrets.yml` symlink to that line; both now attribute it to the API's removal,
+which is a simpler and more durable reason.
+
+### Generated files across 6a and 6c — what was kept and what was thrown away
 
 `app:update` produced files at both 7.2 and 8.0. Kept: `bin/brakeman`, `bin/rubocop` (they
 match gems already in the Gemfile) and `public/400.html` (the app already ships 404/422/500
@@ -1790,10 +1815,9 @@ never been reviewed against the upgraded gems. Read them on the server before de
    authorize request and the same GET callback at the same URL. No redirect URI or console
    setting changes.
 5. **`config/secrets.yml`** — **nothing reads this file any more.** Phase 5b moved every
-   call site to ENV, and Phase 5c added `config.paths["config/secrets"] = []` to
-   `config/application.rb`, which stops Rails opening it even for `secret_key_base`. The
-   symlink in `linked_files` is inert. It is listed here only so nobody assumes it is
-   still doing something.
+   call site to ENV, and Rails 7.2 removed `Rails.application.secrets` from the framework
+   entirely, so not even `secret_key_base` comes from it. The symlink in `linked_files` is
+   inert. It is listed here only so nobody assumes it is still doing something.
 6. **`config/database.yml`** — the production block carries the real credentials only on
    the server. Untouched by any phase so far; listed so nobody assumes the repo copy is
    authoritative.
@@ -1832,9 +1856,10 @@ set this string with `bin/rails credentials:edit`
 
 Note carefully: **the `config/secrets.yml` symlink does not save you.** An earlier draft of
 this note said step 2 below could rely on it, on the grounds that Rails reads
-`secret_key_base` from either source. That stopped being true when 5c added
-`config.paths["config/secrets"] = []` — `Rails::Application#secrets` is the only consumer
-of that path, so with it emptied the file is never opened. A missing `SECRET_KEY_BASE` is a
+`secret_key_base` from either source. That is no longer true for the simplest possible
+reason: **`Rails.application.secrets` was removed outright in Rails 7.2**, so the framework
+has no code that opens that file. (Confirmed on 8.0.5.1 —
+`Rails.application.respond_to?(:secrets)` is `false`.) A missing `SECRET_KEY_BASE` is a
 boot crash, not a degraded boot.
 
 Set it to the **exact existing value** from the server's current `config/secrets.yml`, not
