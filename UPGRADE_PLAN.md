@@ -96,10 +96,10 @@ not `devDependencies`; and `yarn install --check-files` follows every precompile
 `yarn install` is not enough — after a partial install yarn considers the tree done and
 skips relinking.
 
-**`yarn testPacks` before Cypress, not `bin/webpack`.** `yarn test:cypress:gate` now runs
-`RAILS_ENV=test bin/rails webpacker:compile` first. It has to be the rake task:
-`bin/webpack` compiles but does not write `tmp/cache/webpacker/last-compilation-digest-test`,
-so Rails still considers the packs stale and recompiles on the first request. A cold
+**`yarn testPacks` before Cypress, not the webpack binstub.** `yarn test:cypress:gate`
+runs `RAILS_ENV=test bin/rails webpacker:compile` first. It has to be the rake task: the
+binstub compiles but does not record the compilation digest, so Rails still considers the
+packs stale and recompiles on the first request. A cold
 `public/packs-test` otherwise makes the first `cy.visit` of a run sit through a ~60s
 webpack build and fail as `ESOCKETTIMEDOUT` — in whichever spec happens to run first,
 which reads like a random failure and is not one.
@@ -460,13 +460,56 @@ Four real hops, each gated:
    installs corepack but no `yarn` shim until `corepack enable` is run once. Prefer moving
    Node to the newest 20.x over pinning a package: these engine floors cluster around
    `20 || >=22`, and the next one costs another pin.
-3. **`shakapacker 6.x`** — webpack 5 lands here. Migrate `config/webpacker.yml` →
-   `config/shakapacker.yml` and rewrite `config/webpack/environment.js` to Shakapacker's
-   config API (the `environment.loaders.append` style is gone). **Delete
-   `config/webpack/md4-shim.js` at this hop** — webpack 5 drops MD4 and the shim becomes
-   dead weight. Also drop `(\.erb)?` from the TypeScript loader `test` pattern —
-   Shakapacker moved ERB support out of core, and there are **zero** `.erb`-suffixed JS/TS
-   files. Node is already on 20, so nothing to do there.
+3. **`shakapacker 6.6.0` — done.** webpack 5 lands here, and the config surface changes
+   shape completely. Shakapacker 6 still uses the `Webpacker` Ruby constant,
+   `config/webpacker.yml` and `javascript_pack_tag`, so the Rails side is unchanged; it is
+   the JavaScript side that is rewritten.
+
+   - **Four files become one.** `config/webpack/{environment,development,production,test}.js`
+     and the `environment.loaders.append(...)` API are gone, replaced by a single
+     `config/webpack/webpack.config.js` exporting a plain webpack config object, composed
+     with `webpack-merge`. `config/webpack/md4-shim.js` is deleted — webpack 5 does not use
+     MD4.
+   - **Everything moves to peerDependencies.** Shakapacker 6 declares `webpack`,
+     `webpack-cli`, `webpack-merge`, `babel-loader`, `@babel/*`, `terser-webpack-plugin`,
+     `compression-webpack-plugin`, `webpack-assets-manifest` and `webpack-dev-server` as
+     peers, so the app must depend on them directly. `mini-css-extract-plugin` and
+     `css-minimizer-webpack-plugin` are additionally required at *require* time even
+     though they are not listed — Shakapacker's style rule imports them unconditionally,
+     and without them `require('shakapacker')` throws `MODULE_NOT_FOUND` before webpack
+     runs.
+   - **Two Shakapacker defaults are overridden, both documented in the config file.**
+     Shakapacker treats plain `.css` as global stylesheets and reserves CSS Modules for
+     `*.module.css`; this app's 36 `.css` files are all CSS Modules, imported for their
+     class map and never linked. So its `.css` rule and `MiniCssExtractPlugin` are dropped
+     for style-loader + css-loader with `modules` on. And its babel rule matches
+     `.ts`/`.tsx`, which would fight ts-loader, so that rule is narrowed to
+     `.js`/`.jsx`/`.mjs`/`.coffee`. Renaming 36 files to `*.module.css` and adding a
+     `stylesheet_pack_tag` is the idiomatic fix and a behaviour change; not in a migration
+     commit.
+   - **css-loader 1 → 6 needs its options spelled out.** `modules: true` becomes an object,
+     and `namedExport` / `exportLocalsConvention` must be set explicitly rather than
+     inherited — css-loader 6 camelCases locals when `namedExport` is on, which would break
+     all 64 default-form imports at once. `cssModules.spec.js` is what proves this landed.
+   - **webpack 5 rejects named imports from JSON.** `app/javascript/i18n/i18n.ts` did
+     `import { en } from "en.json"`. Neither a named nor a namespace import survives — only
+     the default export exists. Switching to a default import then breaks Jest, where
+     ts-jest emits CommonJS and a plain JSON require has no `default` property, so
+     `esModuleInterop: true` is set in `tsconfig.test.json` **only**. Scoping it to the test
+     compile avoids changing emit for every module in the app.
+   - `(\.erb)?` dropped from the TypeScript loader `test` pattern: Shakapacker moved ERB
+     support out of core and there are **zero** `.erb`-suffixed JS/TS files.
+   - Binstubs are renamed `bin/webpack` → `bin/webpacker` (and `-dev-server` likewise);
+     `Procfile` references the old name and must be updated. `bin/yarn` is replaced by
+     Shakapacker's version, which looks for `yarn` as well as `yarnpkg` — necessary now
+     that corepack provides `yarn`.
+   - `ensure_consistent_versioning: true` is set in `webpacker.yml`, so a gem/npm version
+     mismatch fails loudly. That mismatch is the exact hazard this ladder walks through:
+     the repo was already running gem 3.3.1 against npm 3.6.0 before it started.
+   - **webpack 5 splits the bundle** into `runtime`, a vendor chunk and `application`.
+     `javascript_pack_tag` reads the manifest's `entrypoints` and emits all three, so no
+     view change is needed — but a deploy that copies only `application-*.js` would ship a
+     broken page.
 4. **`shakapacker 6 → current (10.x)`** — mostly config renames on a now-stable
    webpack 5, so the 7 → 8 → 10 steps collapse into one hop. Read each release's guide,
    but expect no webpack-level work here.

@@ -9,6 +9,11 @@
       "moduleResolution": "node",
       "noEmit": true,
       "resolveJsonModule": true,
+      // ts-jest emits CommonJS, so default-importing a JSON module needs the interop
+      // helper -- see the note in app/javascript/i18n/i18n.ts. Deliberately not set in
+      // tsconfig.json: the webpack build emits ESM and does not need it, and turning it on
+      // there would change emit for every module in the app.
+      "esModuleInterop": true,
       "skipLibCheck": true,
       // See the note in tsconfig.json. Tests additionally need Jest's globals
       // (describe/it/expect), so those are named explicitly rather than picked up by

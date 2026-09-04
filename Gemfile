@@ -26,10 +26,9 @@ gem "uglifier", ">= 1.3.0"
 # See https://github.com/rails/execjs#readme for more supported runtimes
 # gem 'therubyracer', platforms: :ruby
 
-# Use Webpacker
-# Held at 5.x -- Webpacker's final release -- for this hop of the Webpacker -> Shakapacker
-# ladder (UPGRADE_PLAN.md Phase 2c). Next stop is the shakapacker gem.
-gem "webpacker", "~> 5.4.4"
+# Shakapacker, the maintained continuation of Webpacker (which ended at 5.4.4).
+# Held at 6.x for this hop of the ladder; 7 -> 10 follow (UPGRADE_PLAN.md Phase 2c).
+gem "shakapacker", "~> 6.6.0"
 # Use jquery as the JavaScript library
 # gem 'jquery-rails'
 # Turbolinks makes navigating your web application faster. Read more: https://github.com/turbolinks/turbolinks

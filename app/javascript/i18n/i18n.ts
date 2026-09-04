@@ -1,5 +1,17 @@
-import { fr } from "../../../config/locales/fr.json";
-import { en } from "../../../config/locales/en.json";
+// Default imports. webpack 5 exposes only the default export of a JSON module and rejects
+// anything else -- both the original `import { en } from "...json"` and a namespace import
+// whose properties are then read fail with "Should not import the named export ... from
+// default-exporting module". webpack 4 allowed the named form.
+//
+// Under Jest this needs `esModuleInterop`, which is set in tsconfig.test.json rather than
+// tsconfig.json: ts-jest emits CommonJS, where a plain JSON require has no `default`
+// property, so without the interop helper these are `undefined`. The webpack build emits
+// ESM and needs no such help, so the flag is scoped to the test compile.
+import frLocale from "../../../config/locales/fr.json";
+import enLocale from "../../../config/locales/en.json";
+
+const fr = frLocale.fr;
+const en = enLocale.en;
 
 // This is totally naive, fyi
 
