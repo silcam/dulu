@@ -27,7 +27,7 @@ gem "sprockets", "~> 4.0"
 # with `Unexpected token: punc ((). To use ES6 syntax, harmony mode must be
 # enabled`. Uglifier's harmony mode would also work, but terser is Rails 7's
 # own default and does not need the flag.
-gem "terser"
+gem "terser", "~> 1.2"
 # Use CoffeeScript for .coffee assets and views
 # gem 'coffee-rails', '~> 4.2'
 # See https://github.com/rails/execjs#readme for more supported runtimes

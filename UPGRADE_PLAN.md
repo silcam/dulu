@@ -84,6 +84,7 @@ SMTP_USERNAME=a@b.c SMTP_PASSWORD=x ADMIN_EMAIL=a@b.c \
 
 # From Phase 2 onward, also confirm what deploy actually runs. Same env as above --
 # precompile boots the app, and recurring_jobs.rb needs the database.
+rm -rf tmp/shakapacker public/packs public/assets   # or the webpack half silently skips
 RAILS_ENV=production bin/rails assets:precompile
 yarn install --check-files         # MANDATORY after the line above -- see below
 ```
@@ -96,6 +97,14 @@ during initialization, and an `uglifier` failure on Rails 7's ES6 actioncable as
 had been **sitting broken since the 7.0 hop** because `js_compressor` is only configured
 in `production.rb`. The precompile line was already written here before Phase 5; it
 evidently was not being run. It is the single highest-value check in this list.
+
+**And clear the caches first, or the line half-runs and still looks green.** Shakapacker
+keys its build on a digest in `tmp/shakapacker`; on a warm tree the task ends with
+`[Shakapacker] Everything's up-to-date. Nothing to do` and the **production-mode webpack
+build never executes** — you have proven the Sprockets half only. That happened on the
+first 5c run and was caught on re-reading the output. With the caches cleared the same
+command spends ~21s in webpack and emits `react-dom.production.min.js`, which is how you
+know it really ran.
 
 **`assets:precompile` prunes your node_modules.** Rails enhances that task with
 `yarn:install`, which under `RAILS_ENV=production` runs
@@ -1196,7 +1205,8 @@ Two things the forecast did not list and this commit also removed:
   pointing at a `config/secrets.yml.enc` that does not exist and never has. It is part of
   the same removed API. Deleted.
 - **`gmail_username`** is referenced by nothing but the README and this plan. Dropped from
-  the README; the key can be deleted from each machine's `secrets.yml` at leisure.
+  the README. (As of 5c the whole `secrets.yml` file is unread, so the leftover key in each
+  machine's copy is moot rather than merely deprecated.)
 
 #### The design: fail loud in production, inert placeholders everywhere else
 
@@ -1334,7 +1344,11 @@ migrated every call site. Rails only falls back to generating its own local secr
 `secrets.secret_key_base` is absent.
 
 Fixed in `config/application.rb` with `config.paths["config/secrets"] = []`, which stops
-Rails reading the file at all. That is what 5b's migration actually meant. The alternative
+Rails reading the file at all. **This has a deploy consequence that is easy to miss:** it
+also makes the `config/secrets.yml` symlink on the production server inert, so
+`SECRET_KEY_BASE` in the environment becomes the *only* source in production and its
+absence is a boot crash. §8b item 7 previously said the symlink could be relied on as a
+fallback during the transition; that is no longer true and has been corrected there. That is what 5b's migration actually meant. The alternative
 — telling each developer to delete a key from a gitignored file — would hand everyone a
 hard boot failure and a confusing error. With the path emptied, `secret_key_base` resolves
 correctly on its own: dev and test self-generate a stable `tmp/local_secret.txt`,
@@ -1651,9 +1665,11 @@ never been reviewed against the upgraded gems. Read them on the server before de
    POST from the browser to Dulu's own middleware; Google still receives the same GET
    authorize request and the same GET callback at the same URL. No redirect URI or console
    setting changes.
-5. **`config/secrets.yml`** — no longer read by application code as of Phase 5b, but
-   **still the source of `secret_key_base`** while the app is on Rails 6.1, and still
-   symlinked. Do not delete it from the server; see item 7 for the order.
+5. **`config/secrets.yml`** — **nothing reads this file any more.** Phase 5b moved every
+   call site to ENV, and Phase 5c added `config.paths["config/secrets"] = []` to
+   `config/application.rb`, which stops Rails opening it even for `secret_key_base`. The
+   symlink in `linked_files` is inert. It is listed here only so nobody assumes it is
+   still doing something.
 6. **`config/database.yml`** — the production block carries the real credentials only on
    the server. Untouched by any phase so far; listed so nobody assumes the repo copy is
    authoritative.
@@ -1680,19 +1696,32 @@ session cookies are signed, so existing cookies stop verifying. This is unavoida
 harmless — people log in again — but it should be expected rather than reported as a bug.
 It arrives from a second direction on top of the `secret_key_base` risk below.
 
-**`SECRET_KEY_BASE` has its own ordering and its own failure mode.** It has zero call
-sites — Rails reads it from `secrets.yml` internally — so it is the one that gets
-forgotten. Set it to the exact existing value, not a fresh one: a *different* value
-invalidates every session cookie and silently logs out every user. Sequence:
+**`SECRET_KEY_BASE` is the one that gets forgotten, because it has zero call sites** —
+Rails used to read it out of `secrets.yml` internally. As of Phase 5c **the environment is
+its only source in production, and there is no fallback of any kind.** Verified by booting
+production with the SMTP variables set and `SECRET_KEY_BASE` unset:
 
-1. Set all four variables on the server.
-2. Deploy. `config/deploy.rb:10` still symlinks `config/secrets.yml` at this point, which
-   is fine and intentional — Rails 6.1 reads `secret_key_base` from either source.
-3. Only after a deploy has succeeded with the variables in place, remove
-   `config/secrets.yml` from `linked_files`.
+```
+ArgumentError: Missing `secret_key_base` for 'production' environment,
+set this string with `bin/rails credentials:edit`
+```
 
-Step 3 becomes mandatory at Rails 7.1 (Phase 5c), which removes
-`Rails.application.secrets` entirely and will stop reading the file at all.
+Note carefully: **the `config/secrets.yml` symlink does not save you.** An earlier draft of
+this note said step 2 below could rely on it, on the grounds that Rails reads
+`secret_key_base` from either source. That stopped being true when 5c added
+`config.paths["config/secrets"] = []` — `Rails::Application#secrets` is the only consumer
+of that path, so with it emptied the file is never opened. A missing `SECRET_KEY_BASE` is a
+boot crash, not a degraded boot.
+
+Set it to the **exact existing value** from the server's current `config/secrets.yml`, not
+a fresh one: a different value invalidates every session cookie. Sequence:
+
+1. Set all four variables where the deploy user's non-interactive shell will see them.
+2. Deploy. There is no fallback, so step 1 is not optional.
+3. Whenever convenient, drop `config/secrets.yml` from `config/deploy.rb:10`'s
+   `linked_files` and delete it from the server. This is **cosmetic cleanup, not a
+   sequenced prerequisite** — the file is already unread. Doing it just stops a stale file
+   full of live credentials sitting on the server pretending to matter.
 
 **`assets:precompile` needs a reachable database.** `config/initializers/recurring_jobs.rb`
 schedules a `Delayed::Job` on every production boot, and precompile boots the app. This is

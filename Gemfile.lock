@@ -437,7 +437,7 @@ DEPENDENCIES
   selenium-webdriver (~> 4.9)
   shakapacker (~> 10.3.2)
   sprockets (~> 4.0)
-  terser
+  terser (~> 1.2)
   web-console (>= 3.3.0)
 
 BUNDLED WITH
