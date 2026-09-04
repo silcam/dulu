@@ -7,7 +7,7 @@ The Readme is still a work in progress. It actually won't get you very far, beca
 
 ### Prerequisites
 * [Ruby](https://www.ruby-lang.org/en/downloads/) — rbenv, version as pinned in
-  `.ruby-version` (currently 3.1.3). `Capfile` pins the same version for deploys, so the
+  `.ruby-version` (currently 3.4.9). `Capfile` pins the same version for deploys, so the
   two must be changed together.
 * [Node.js](https://nodejs.org/) — version as pinned in `.nvmrc` (currently 20.20.2). With
   nvm: `nvm install && nvm use`.

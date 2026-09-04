@@ -86,7 +86,9 @@ group :development do
   gem "capistrano-rails"
   gem "capistrano-rbenv"
   gem "capistrano-passenger"
-  gem "foreman"
+  # foreman 0.64 calls File.exists?, removed in Ruby 3.4, so `foreman s` -- the
+  # documented way to run this app -- dies before reading the Procfile.
+  gem "foreman", "~> 0.90"
   gem "rubocop"
   # gem 'capistrano-yarn'
 
@@ -96,13 +98,13 @@ group :development do
   # gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
   gem "listen"
 
-  # Pinned to versions that build on Ruby 2.7+. debase 0.2.2 could not compile
-  # its native extension against Ruby 2.7 core headers. The .vscode/launch.json
-  # "Listen for rdebug-ide" configuration depends on these, so they are upgraded
-  # rather than dropped. Note: debase is effectively unmaintained and will not
-  # build on Ruby 3.4 -- plan to replace it with the `debug` gem in Phase 6.
-  gem "debase", "~> 0.2.9"
-  gem "ruby-debug-ide", "~> 0.7.5"
+  # `debug` (ruby/debug), not debase + ruby-debug-ide. Both of those are
+  # unmaintained and, as predicted, debase does not survive Ruby 3.4: its
+  # debase-ruby_core_source dependency fails to install outright. `debug` is
+  # the maintained successor, ships in Ruby 3.1+ as a default gem, and is what
+  # the VS Code rdbg extension drives -- .vscode/launch.json was migrated from
+  # `"type": "Ruby"` to `"type": "rdbg"` in the same commit.
+  gem "debug", require: false
   gem "rufo"
 end
 
@@ -125,5 +127,8 @@ group :test do
   # lifts it.
   gem "brakeman", "~> 7.0", require: false
   gem "minitest-retry"
-  gem 'cypress-on-rails'
+  # >= 1.17 is not optional on Ruby 3.4: 1.5.1's middleware calls File.exists?,
+  # removed in Ruby 3.4, so every app_command 500s and all 19 Cypress specs
+  # fail in their before hooks.
+  gem "cypress-on-rails", "~> 1.20"
 end

@@ -124,13 +124,13 @@ GEM
     concurrent-ruby (1.3.8)
     connection_pool (2.5.5)
     crass (1.0.7)
-    cypress-on-rails (1.5.1)
+    cypress-on-rails (1.20.1)
       rack
     daemons (1.2.6)
     date (3.5.1)
-    debase (0.2.9)
-      debase-ruby_core_source (>= 3.4.1)
-    debase-ruby_core_source (4.0.1)
+    debug (1.11.1)
+      irb (~> 1.10)
+      reline (>= 0.3.8)
     delayed_job (4.2.0)
       activesupport (>= 3.0, < 9.0)
       benchmark
@@ -141,7 +141,6 @@ GEM
     delayed_job_recurring (0.3.9)
       delayed_job (>= 3.0)
       delayed_job_active_record
-    dotenv (0.7.0)
     drb (2.2.3)
     erb (4.0.4.1)
       cgi (>= 0.3.3)
@@ -154,9 +153,8 @@ GEM
       ruby2_keywords (>= 0.0.4)
     faraday-net_http (3.0.2)
     ffi (1.17.4)
-    foreman (0.64.0)
-      dotenv (~> 0.7.0)
-      thor (>= 0.13.6)
+    foreman (0.90.0)
+      thor (~> 1.4)
     globalid (1.4.0)
       activesupport (>= 6.1)
     hashie (5.1.0)
@@ -328,8 +326,6 @@ GEM
       rainbow (>= 2.2.2, < 4.0)
       ruby-progressbar (~> 1.7)
       unicode-display_width (>= 1.4.0, < 1.7)
-    ruby-debug-ide (0.7.5)
-      rake (>= 0.8.1)
     ruby-progressbar (1.13.0)
     ruby2_keywords (0.0.5)
     rubyzip (2.4.1)
@@ -409,13 +405,13 @@ DEPENDENCIES
   capistrano-rails
   capistrano-rbenv
   capybara (~> 3.40)
-  cypress-on-rails
+  cypress-on-rails (~> 1.20)
   daemons (~> 1.2)
-  debase (~> 0.2.9)
+  debug
   delayed_job (~> 4.2)
   delayed_job_active_record (~> 4.1)
   delayed_job_recurring
-  foreman
+  foreman (~> 0.90)
   jbuilder (~> 2.11)
   listen
   minitest-reporters
@@ -427,7 +423,6 @@ DEPENDENCIES
   rails (~> 7.2.0)
   rails-i18n (~> 7.0)
   rubocop
-  ruby-debug-ide (~> 0.7.5)
   rufo
   sass-rails (~> 6.0)
   selenium-webdriver (~> 4.9)
