@@ -24,11 +24,17 @@ describe("Translation Activity", () => {
     cy.contains("tr", "Ezra").within(() => {
       cy.contains("Drafting").click();
     });
-    cy.contains("tr", "Update Stage").within(() => {
-      cy.get("select").select("Ready for Consultant Check");
-      cy.contains("button", "Update").click();
-      cy.fillFuzzyDate(2020, "Mar", 12);
-      cy.contains("button", "Save").click();
+    // Same reason as linguisticActivities.spec.js: Cypress 12 re-runs the whole
+    // query chain on retry, and clicking Update changes the row so
+    // cy.contains("tr", "Update Stage") no longer matches. cy.wrap pins the
+    // element instead of re-finding it by text.
+    cy.contains("tr", "Update Stage").then($row => {
+      cy.wrap($row).within(() => {
+        cy.get("select").select("Ready for Consultant Check");
+        cy.contains("button", "Update").click();
+        cy.fillFuzzyDate(2020, "Mar", 12);
+        cy.contains("button", "Save").click();
+      });
     });
     cy.contains("tr", "Ezra")
       .should("contain", "Ready for Consultant Check")

@@ -78,11 +78,24 @@ a missing variable raises at boot, on purpose. See `config/application.rb`.
    See the definitions in `package.json` for the different testing options. `yarn test:most`
    runs the Rails unit tests and the Jest tests.
 
-   For the end-to-end suite use **`yarn test:cypress:gate`**, not `test:cypress:run`. It
-   precompiles the test packs first and runs Cypress under its own bundled Electron;
-   `test:cypress:run` passes `--browser chrome`, and a modern Chrome cannot drive the
-   pinned Cypress 4.1. Make sure port 3002 is free first (`ss -ltn | grep 3002`) — a
-   leftover Puma there makes the run silently test stale code.
+   For the end-to-end suite use **`yarn test:cypress:gate`**. It precompiles the test
+   packs first, which `test:cypress:run` does not — without that the first `cy.visit()`
+   of a run waits for webpack and can time out. Both run under Cypress' own bundled
+   Electron; neither passes `--browser chrome` any more.
+
+   Make sure port 3002 is free first (`ss -ltn | grep 3002`) — a leftover Puma there
+   either makes the run test stale code or stops the test server binding at all. Note its
+   process title is rewritten to `puma ... [dulu]`, so `pkill -f "rails server"` will not
+   match it; find it by port.
+
+   Config lives in **`spec/cypress.config.js`**, specs in `spec/cypress/e2e/`. Two
+   settings there are load-bearing and should not be "tidied": the raised timeouts (see
+   the comment in that file) and `testIsolation: false`, without which specs that build on
+   the page the previous test left behind fail.
+
+   On a loaded machine expect roughly one spec per two runs to fail on timing — usually a
+   search picker or the new-user dashboard in `people.spec.js`. Check `/proc/loadavg` and
+   re-run before treating it as a regression; `UPGRADE_PLAN.md` has the triage note.
 
    `yarn typecheck` runs the TypeScript check on its own. The webpack build type-checks
    too, but this is faster and is part of the upgrade gate.
