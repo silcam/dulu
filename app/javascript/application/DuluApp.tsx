@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import NavBar from "../components/layout/NavBar";
 import styles from "./DuluApp.css";
 import NetworkErrorAlerts from "./NetworkErrorAlerts";

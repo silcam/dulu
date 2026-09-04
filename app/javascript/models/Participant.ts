@@ -1,6 +1,5 @@
 import { IPerson } from "./Person";
 import { ICluster } from "./Cluster";
-import { BasicModel } from "./BasicModel";
 import List from "./List";
 import { ICan } from "../actions/canActions";
 import { ILanguage } from "./Language";

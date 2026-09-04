@@ -5,7 +5,6 @@ import InlineAddIcon from "../shared/icons/InlineAddIcon";
 import { OrganizationPicker } from "../shared/SearchPicker";
 import { IPerson } from "../../models/Person";
 import { IOrganization } from "../../models/Organization";
-import I18nContext from "../../contexts/I18nContext";
 import useLoad, { useLoadOnMount } from "../shared/useLoad";
 import useAppSelector from "../../reducers/useAppSelector";
 import useTranslation from "../../i18n/useTranslation";

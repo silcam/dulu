@@ -9,6 +9,6 @@ interface IProps {
   people: List<IPerson>;
 }
 
-export default function DomainStatusCommunity(props: IProps) {
+export default function DomainStatusCommunity(_props: IProps) {
   return <tr />;
 }

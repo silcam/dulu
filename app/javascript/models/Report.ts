@@ -9,7 +9,6 @@ import {
   DRDataParams,
   domainReportParams
 } from "./DomainReport";
-import update from "immutability-helper";
 
 export const ReportTypes = <const>["LanguageComparison", "Domain"];
 export type ReportType = typeof ReportTypes[number];

@@ -12,7 +12,7 @@ import TextOrInput from "../shared/TextOrInput";
 import { CountrySearchTextInput } from "../shared/SearchTextInput";
 import update from "immutability-helper";
 import useLoad, { useLoadOnMount } from "../shared/useLoad";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import { AppState } from "../../reducers/appReducer";
 import OrganizationPicker from "./OrganizationPicker";
 
@@ -34,7 +34,6 @@ export default function OrganizationPage(props: IProps) {
 
   useLoadOnMount(`/api/organizations/${props.id}`);
   const [load, loading] = useLoad();
-  const dispatch = useDispatch();
 
   const updateOrganization = (mergeOrg: Partial<IOrganization>) =>
     setDraftOrg(update(draftOrg, { $merge: mergeOrg }));

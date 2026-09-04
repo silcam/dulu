@@ -1,6 +1,5 @@
 import React, { useContext, useState } from "react";
 import P from "../shared/P";
-import DeleteIcon from "../shared/icons/DeleteIcon";
 import Report, {
   TranslationProgressReport,
   IReportElements
@@ -10,12 +9,11 @@ import update from "immutability-helper";
 import { SearchPickerAutoClear } from "../shared/SearchPicker";
 import { connect } from "react-redux";
 import I18nContext from "../../contexts/I18nContext";
-import Cluster, { ICluster } from "../../models/Cluster";
+import { ICluster } from "../../models/Cluster";
 import { ILanguage } from "../../models/Language";
 import { AppState } from "../../reducers/appReducer";
 import List from "../../models/List";
 import DuluAxios from "../../util/DuluAxios";
-import { ClusterMultiSelect } from "../shared/ModelMultiSelect";
 import MultiSelectItemList from "../shared/MultiSelectItemList";
 
 interface IProps {

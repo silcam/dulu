@@ -6,7 +6,15 @@ The Readme is still a work in progress. It actually won't get you very far, beca
 ## For Development
 
 ### Prerequisites
-* [Ruby](https://www.ruby-lang.org/en/downloads/) - We're using rbenv and ruby 2.3.3.
+* [Ruby](https://www.ruby-lang.org/en/downloads/) — rbenv, version as pinned in
+  `.ruby-version` (currently 2.7.4). `Capfile` pins the same version for deploys, so the
+  two must be changed together.
+* [Node.js](https://nodejs.org/) — version as pinned in `.nvmrc` (currently 20.20.2). With
+  nvm: `nvm install && nvm use`.
+* **Yarn Classic**, via corepack: run `corepack enable` once after installing Node. nvm's
+  Node 20.20.2 ships `corepack` but no `yarn` shim, so without this there is no `yarn` on
+  your `PATH`. The `packageManager` field in `package.json` then pins Yarn to 1.22.22 —
+  do not run Yarn 2+ against this repo, it will rewrite the v1 lockfile.
 * [PostGreSQL](https://www.postgresql.org/)
 
 ### Setup
@@ -62,7 +70,17 @@ If you just want to run the tests, you can after a few more steps. The test data
 
 1. Run tests.
 
-   See the definitions in `package.json` about the different testing options. For example, you can run `yarn test:most` to run the rails units and the jest tests.    
+   See the definitions in `package.json` for the different testing options. `yarn test:most`
+   runs the Rails unit tests and the Jest tests.
+
+   For the end-to-end suite use **`yarn test:cypress:gate`**, not `test:cypress:run`. It
+   precompiles the test packs first and runs Cypress under its own bundled Electron;
+   `test:cypress:run` passes `--browser chrome`, and a modern Chrome cannot drive the
+   pinned Cypress 4.1. Make sure port 3002 is free first (`ss -ltn | grep 3002`) — a
+   leftover Puma there makes the run silently test stale code.
+
+   `yarn typecheck` runs the TypeScript check on its own. The webpack build type-checks
+   too, but this is faster and is part of the upgrade gate.
    
 
 ### Starting the Server

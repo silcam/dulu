@@ -1,10 +1,9 @@
-import React, { useContext } from "react";
+import React from "react";
 import LCProgram from "./LCProgram";
 import style from "./ReportsViewer.css";
 import { Link } from "react-router-dom";
 import ColorKey from "./ColorKey";
 import { TranslationProgressReport } from "../../models/TranslationProgressReport";
-import I18nContext from "../../contexts/I18nContext";
 
 interface IProps {
   report: TranslationProgressReport;
@@ -12,7 +11,6 @@ interface IProps {
 
 export default function TranslationProgressReportBody(props: IProps) {
   const report = props.report;
-  const t = useContext(I18nContext);
   return (
     <div className={style.lcReport}>
       <div>

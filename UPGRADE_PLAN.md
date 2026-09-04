@@ -125,16 +125,38 @@ browser mid-run: the suite hangs indefinitely with the Rails server still answer
 which is version-matched and completed the suite reliably every time. Revisit once
 Cypress itself is upgraded in Phase 6.
 
-**Read a single Cypress failure as noise until it repeats.** During Phase 2c the suite
-settled into roughly one failure per two runs — a *different* spec every time, always a
-`Timed out retrying:`, on a development machine sitting at load ~11 on 8 cores with under
-1 GB of RAM free and browser renderers pegged at 90% CPU. No test on that tree ever failed
-twice in a row, and warm runs went 93/93 repeatedly. A broken bundle does not behave that
-way: it fails the *same* test every run. `defaultCommandTimeout` is now 30s (from 10s) to
-widen the retry window, which hides nothing — a genuinely broken build never resolves and
-still fails, just later. The rule for the remaining phases: a failure that moves between
-runs is environmental; a failure that repeats is real. Re-run before investigating, and
-check `/proc/loadavg` before blaming the migration.
+**Triage a Cypress failure by its mechanism, not by whether the spec name changes.**
+Through Phase 2 the suite settled at roughly one failure per two runs, in a different spec
+each time. It is tempting to read "different spec every run" as noise. It is not — the
+failures fall into two distinct groups, and only one of them is noise:
+
+1. **A search picker was involved** — `clusters.spec.js` "Adds cluster participants",
+   `participants.spec.js` "Adds, edits and finishes Drew", `regions.spec.js` "Changes LPF",
+   anything going through the `searchFill` command or `cy.placeholder("Name")`. These are
+   all **one application bug**: the pickers fire a request per keystroke and let a late
+   response overwrite a newer one (Phase 8, item 4). It presents as a detached `<li>`, as a
+   dropdown covering the next form control, or — most clearly — as
+   `expected input to have value 'Drew Mambo', but the value was 'Lance Armstrong'`. It
+   moves between specs because the race is probabilistic, not because it is noise. **Do not
+   chase these as migration regressions, and do not expect the E2E gate to be reliably
+   green until the picker is fixed.**
+2. **Anything else timing out** — re-run and check `/proc/loadavg` first. Phase 2's runs
+   happened on a machine at load ~11 on 8 cores with under 1 GB of RAM free and browser
+   renderers pegged at 90% CPU; clean 93/93 runs correlated with load dropping to 6–8. A
+   broken *bundle* does not behave this way at all — it fails the same test every run, and
+   usually every test on the page (see the Electron-78 optional-chaining failure in Phase
+   2c hop 4, where the entire events page died).
+
+`defaultCommandTimeout` is 30s, up from 10s, to widen the retry window. That hides nothing:
+a genuinely broken build never resolves and still fails, just later.
+
+**A failing test now captures the server-side log.** `spec/cypress/app_commands/log_fail.rb`
+used `tail -r`, which is macOS-only, so on Linux it wrote an empty capture for every
+failure; and the `APPCLEANED` marker it cuts on was commented out in `clean.rb`; and
+`config/environments/test.rb` set `config.logger = Logger.new(nil)`, so there was nothing to
+capture in the first place. All three are fixed, at a cost of about 2 seconds on
+`bin/rails test`. A failing spec now leaves `log/<full test name>.log` with that test's
+requests in it — which is the first thing to look at before theorising.
 
 **`git diff db/schema.rb` after every gate run.** `test/test_helper.rb` line 3 executes
 `` `rails db:migrate` `` at load time, so *every* `bin/rails test` can silently rewrite a
@@ -585,7 +607,18 @@ one — 16 errors on unchanged code. The script mirrors what the build actually 
 - `--skipLibCheck`, because `@types/react-router-dom` 5.x declares re-exports
   (`useHistory`, `useLocation`, `useParams`, `useRouteMatch`) that the pinned
   `@types/react-router` does not provide — 4 errors inside `node_modules`, not fixable
-  from here. This resolves in **Phase 7** with the React Router 6 work; drop the flag then.
+  from here. This resolves in **Phase 7** with the React Router 6 work.
+
+**Both escape hatches are gone as of the end of Phase 2, and the script is now a plain
+`tsc --noEmit`.** `skipLibCheck` moved from the CLI into `tsconfig.json` (where the build
+sees it too), the 12 `TS6133` errors were cleared, and `config/webpack/loaders/typescript.js`
+no longer relaxes `noUnusedLocals`/`noUnusedParameters`/`noImplicitAny` — so the webpack
+build and the standalone type-check now enforce exactly the same `tsconfig.json`.
+
+**One asymmetry to collapse later:** `esModuleInterop` is `true` in `tsconfig.test.json`
+and `false` in `tsconfig.json`, so Jest and webpack disagree about CommonJS default-import
+semantics. It is correct for `i18n.ts` (see hop 3) and both suites pass, but it is worth
+unifying the next time module settings are revisited.
 
 Confirmed the script still catches real type errors (verified against a deliberately
 introduced `TS2322`) rather than passing vacuously — the same failure mode that made
@@ -600,35 +633,42 @@ are therefore `dependencies`, not `devDependencies` — as are `@babel/preset-re
 before this upgrade. If the type-checking decision is ever revisited in favour of
 `transpileOnly`, these can move back.
 
-### 2f. Remaining work items
+### 2f. Work items — status
 
-- **Clear the 12 `TS6133` unused-import/local errors** so `yarn typecheck` can drop its
-  `--noUnusedLocals`/`--noUnusedParameters` escape hatches (see above). Mechanical.
-- **`typescript` 3.8 → 5.x.** This is the unlock for three separate pins: `@types/node`
-  can leave 14.x, `tsconfig`'s `"types"` allow-lists can go away, and `--skipLibCheck` can
-  come out of `tsconfig.json`. Note `ts-loader` 8 handles TypeScript 5 but `ts-loader` 9
-  is the supported pairing, and 9 requires webpack 5 — so this may want to follow the
-  Shakapacker 6 hop rather than precede it.
-- **`jest` 26 → 29 and `ts-jest` 26 → 29.** Deliberately *not* done in hop 1: Jest 27
-  changes the default `testEnvironment` from jsdom to node, which breaks the Enzyme
-  tests. Do this in Phase 7 alongside React 18, where Enzyme has to be replaced anyway
+**Done in this phase**, listed so nobody redoes them:
+
+- **`typescript` 3.8 → 5.4** (hop 4). Forced earlier than planned: Shakapacker 10 drags in
+  `@types/babel__core` and webpack's own `types.d.ts`, neither of which TypeScript 3.8 can
+  *parse*. It unlocked `@types/node` off its 14.x pin, and `tsconfig` now also excludes
+  `config/` and the root config JS files — with `allowJs` and no `include`, build
+  configuration was being pulled into the program.
+- **`target: "es3"` → `"es2019"`** — note **es2019, not es2020**. ts-loader emits whatever
+  `target` says and never consults `browserslist`, so tsconfig is the real browser floor
+  for `.ts`/`.tsx`. es2020 emits optional chaining natively, which Chromium below 80 cannot
+  parse; Cypress 4.1 drives Electron 78 and the whole app died on it. Raise this when
+  Cypress moves in Phase 6, and reconcile the two floors then.
+- **The 12 `TS6133` errors are cleared** and both escape hatches removed, so `yarn typecheck`
+  is a plain `tsc --noEmit` and the build enforces the same config (see 2e).
+- **`node-sass` is gone entirely** (hop 2) — Webpacker 5 replaced it with dart-sass. Both
+  `resolutions` pins came out with it.
+
+**Still open:**
+
+- **`jest` 26 → 29 and `ts-jest` 26 → 29.** Deliberately not done here: Jest 27 changes the
+  default `testEnvironment` from jsdom to node, which breaks the Enzyme tests. Do it in
+  Phase 7 alongside React 18, where Enzyme has to be replaced anyway
   (`enzyme-adapter-react-16` has no React 18 equivalent).
-- **Fix `tsconfig.json`: `"target": "es3"` → `"es2020"`** (and the same in
-  `tsconfig.test.json`, which duplicates it). ES3 will fight modern TypeScript and
-  library typings. Cheap, do it with the TypeScript bump.
-- Drop the `node-sass` resolution pin once Webpacker is gone; if a `.sass`/`.scss` file is
-  ever added, use `sass` (dart-sass), never node-sass.
-- `app/javascript/packs/application.js` does a bare `import "application"`, which depends
-  on `source_path` staying in webpack's `resolve.modules`. Low risk — it fails loudly with
-  "module not found" rather than silently — but know it is there.
-- `yarn` stays on Classic, now pinned by `"packageManager": "yarn@1.22.22"`. Shakapacker
-  supports it. Do not add a Yarn 2+ migration to this phase.
-- `eslint` 4 and its plugins are installed but **there is no eslint config anywhere** in
-  the repo, so nothing lints. Either configure it or drop the four packages; do not leave
-  it looking like a lint gate exists.
-- `cypress` sits in `dependencies` rather than `devDependencies`, so
+- **`eslint` 4 and its plugins are installed but there is no eslint config anywhere** in
+  the repo, so nothing lints. Either configure it or drop the packages; do not leave it
+  looking like a lint gate exists.
+- **`cypress` sits in `dependencies` rather than `devDependencies`**, so
   `yarn install --production` on the server pulls the whole browser download. Pre-existing;
-  worth moving, but it is a deploy-shaped change — see below.
+  worth moving, but it changes what deploy installs — see 2g.
+- `app/javascript/packs/application.js` does a bare `import "application"`, which depends on
+  `source_path` staying in webpack's `resolve.modules`. Low risk — it fails loudly with
+  "module not found" rather than silently — but know it is there.
+- `yarn` stays on Classic, pinned by `"packageManager": "yarn@1.22.22"`. Shakapacker
+  supports it. Do not add a Yarn 2+ migration to this project as part of the upgrade.
 
 ### 2g. Deploy will break unless someone changes it — needs Brian
 
@@ -649,11 +689,21 @@ checked-out code needs Webpacker 4, Babel 7 and Node 20; the server's `node_modu
 holds the Webpacker 3 / Babel 6 tree. **Precompile will fail on the server** even though
 it passes locally.
 
-Whoever owns the server has to do at least: install Node 20 there, and either enable
-`capistrano/yarn` (so `yarn install` runs as part of deploy) or update the shared
-`node_modules` by hand before the first Phase 2 deploy. Enabling `capistrano/yarn` is the
-right long-term answer, but it changes deploy behaviour and is not something to slip into
-an upgrade commit unannounced. **Left unchanged deliberately; raise before deploying.**
+Whoever owns the server has to do all of this before the first Phase 2 deploy:
+
+1. **Node 20.20.2** (not just "Node 20" — Webpacker 5's dart-sass requires `>=20.19.0`).
+2. **`corepack enable`, once.** nvm's 20.20.2 ships `corepack` but no `yarn` shim, so a
+   fresh environment has no `yarn` on `PATH` at all. `"packageManager": "yarn@1.22.22"` in
+   `package.json` then pins Yarn Classic; without the pin, corepack hands you Yarn 4 and it
+   rewrites the v1 lockfile.
+3. **Either enable `capistrano/yarn`** (uncomment it in `Capfile`, so `yarn install` runs as
+   part of deploy) **or update the shared `node_modules` by hand.** Enabling it is the right
+   long-term answer, but it changes deploy behaviour and is not something to slip into an
+   upgrade commit unannounced.
+
+**Left unchanged deliberately; raise before deploying.** The same three prerequisites
+belong in the README, whose "Prerequisites" section still says ruby 2.3.3 and does not
+mention Node at all.
 
 **Gate:** full recipe green, including the CSS Modules spec and `yarn typecheck`. Also
 verify `RAILS_ENV=production bin/rails assets:precompile` succeeds, since that is what
