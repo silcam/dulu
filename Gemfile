@@ -6,7 +6,7 @@ git_source(:github) do |repo_name|
 end
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem "rails", "~> 7.2.0"
+gem "rails", "~> 8.0.0"
 # Be Awesome
 # gem 'bootsnap', require: false
 # Use postgres as the database for Active Record
@@ -52,7 +52,7 @@ gem "jbuilder", "~> 2.11"
 # Internationalization. The major version tracks Rails: rails-i18n caps
 # railties at `< N+1`, so this must be bumped in lockstep with every Rails hop
 # or version solving fails outright.
-gem "rails-i18n", "~> 7.0"
+gem "rails-i18n", "~> 8.0"
 # Google authentication. omniauth-google-oauth2 1.x requires OmniAuth 2, so the
 # two move together. OmniAuth 2 makes the *request* phase POST-only as a CSRF
 # fix, which omniauth-rails_csrf_protection supplies the token verification for.
@@ -110,6 +110,10 @@ end
 
 group :test do
   gem "minitest-reporters"
+  # minitest 6 dropped minitest/mock.rb -- its own History.rdoc says "extracted
+  # to the minitest-mock gem". test_helper.rb requires it for Object#stub, which
+  # the notification and report tests use to freeze Time/Date.
+  gem "minitest-mock"
   # Capybara backs ActionDispatch::SystemTestCase (test/system). Previously this
   # came in transitively via minitest-rails-capybara, which is unmaintained and
   # broke on minitest 5.26 (Minitest::Metadata was removed). Its only consumers
