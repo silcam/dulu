@@ -846,6 +846,13 @@ for a later hygiene pass; left alone here to keep the phase's scope honest.
 `react_tabs.scss` imports from `node_modules`, so **`node_modules` must exist on the
 server at precompile time** — another reason Phase 8b is not optional.
 
+`uglifier` is kept as the JS compressor even though Rails 6.1 defaults to `terser` and
+uglifier cannot parse ES6+. That is safe here because sprockets only compiles
+`application.js` and `cable.js`, and `application.js` is nothing but Action Cable's ES5
+source — 22495 bytes in dev, minified to 11984 in production, verified byte-for-byte as
+real output rather than an empty file. The webpack bundle does not go through sprockets at
+all. Swapping to terser is a Phase 5/6 tidy-up, not this phase's business.
+
 Incidental improvement: sprockets 3 was emitting
 `public/assets/express/lib/application-<digest>.js`, because
 `config/initializers/assets.rb:9` adds `node_modules` to `assets.paths`. Sprockets 4 only
@@ -860,15 +867,16 @@ unverified by the gate"). It is **mandatory**: Rails 6.1's
 Ruby >= 3.0 — **another pin to unwind in Phase 5.** `selenium-webdriver` went 3.14 → 4.9
 with it.
 
-`test/system/notifications_int_test.rb` has 15 live tests and, contrary to the Phase 1
-note, is not empty. It still does not run: there is no `chromedriver` on this machine, so
-all 15 error at driver startup. That is **pre-existing and unrelated to the upgrade** —
-capybara 2.18 + selenium 3.14 needed a chromedriver too. After this phase the file at
-least *loads*; it fails only on the missing binary. Deliberately not chased: `bin/rails
-test` does not run `test/system`, the Cypress suite covers the same ground and is the
-maintained gate, and installing browser drivers is not an upgrade task. Someone should
-decide whether these 15 tests are worth reviving or should be deleted as superseded by
-Cypress.
+`test/system/notifications_int_test.rb` has **15 live tests**. (No contradiction with the
+Phase 1 note — that was about two *other* integration files, which had no live tests and
+were deleted. Nobody has run `test/system` in a long time simply because `bin/rails test`
+does not.) It still does not run here: there is no `chromedriver` on this machine, so all
+15 error at driver startup. That is **pre-existing and unrelated to the upgrade** —
+capybara 2.18 + selenium 3.14 needed a chromedriver too. What this phase changed is that
+the file *loads* again: mid-phase, between the 6.1 bump and the capybara bump, it did not
+load at all. Deliberately not chased further: the Cypress suite covers the same ground and
+is the maintained gate, and installing browser drivers is not an upgrade task. Someone
+should decide whether these 15 tests are worth reviving or are superseded by Cypress.
 
 ### 3h. Pins resolved and pins added
 
@@ -1177,6 +1185,16 @@ locally.** Three things fix it:
    part of deploy, **or** update the shared `node_modules` by hand. Enabling it is the
    right long-term answer and changes deploy behaviour, so it is Brian's call, not
    something to slip into an upgrade commit.
+
+Two lockfile facts for whoever runs that deploy, since `config/deploy.rb` sets
+`bundle_flags '--deployment'` and that mode refuses to re-resolve:
+
+- `Gemfile.lock`'s `BUNDLED WITH` is still **2.4.22** and `PLATFORMS` is unchanged across
+  every hop of Phases 1–3. Nothing new is required of the server's bundler.
+- The local `.bundle/config` sets `BUNDLE_WITHOUT: "db"`, which is a **stale no-op** —
+  there is no `group :db` in the `Gemfile`. It is gitignored and never deployed, so it
+  affects nothing but the `Gems in the group 'db' were not installed.` line every
+  `bundle install` prints. Do not read that line as a missing dependency.
 
 **Deliberately not done.** No deploy config has been touched. This is separate from the
 deploy *destination* question, which is closed and out of scope (see the top of this
