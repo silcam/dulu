@@ -7,6 +7,16 @@ end
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem "rails", "~> 6.1.0"
+# concurrent-ruby 1.3.5 dropped its transitive `require "logger"`, which
+# ActiveSupport <= 7.0 relies on; without it anything that loads activesupport
+# dies with `uninitialized constant
+# ActiveSupport::LoggerThreadSafeLevel::Logger`. Pinned rather than fixed with a
+# `require "logger"`, because the binstubs under bin/ load `bundler/setup` and
+# then activesupport WITHOUT going through config/boot.rb -- `foreman s` fails
+# on bin/shakapacker-dev-server even when `bin/rails server` is fine. One pin
+# covers every entry point; twenty binstub patches would not. Drop this in
+# Phase 5c: Rails 7.1 requires logger itself.
+gem "concurrent-ruby", "< 1.3.5"
 # Be Awesome
 # gem 'bootsnap', require: false
 # Use postgres as the database for Active Record
