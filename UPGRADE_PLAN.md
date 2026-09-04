@@ -1072,12 +1072,73 @@ browser login, done — see 4e.**
 
 Three coupled sub-steps. Split them into separate commits.
 
-### 5a. Ruby 2.7 → 3.1
+### 5a. Ruby 2.7 → 3.1.3 (done)
 
-Rails 7.2 requires Ruby ≥ 3.1, so 3.1 is the right landing spot (not 3.0). If Phase 2's
-keyword-argument warnings were fixed properly, this hop is mostly uneventful — that is
-the payoff for having done it there. `rbenv` has 3.1.3 installed. Update
-`config/deploy.rb`'s rbenv pin again.
+Rails 7.2 requires Ruby ≥ 3.1, so 3.1 is the right landing spot (not 3.0).
+
+**The dependency graph did not move at all.** Probed first with a throwaway `bundle lock`
+in a scratch directory under `RBENV_VERSION=3.1.3`, the same technique as §3a: the
+resolved `GEM` section came out **byte-identical** to the Ruby 2.7 lockfile. So this hop
+needed no Gemfile change and produced no `Gemfile.lock` diff. Three specific Ruby-3.1
+hazards were checked and all three were already handled:
+
+- **`net-smtp`/`net-imap`/`net-pop` left the default gems in Ruby 3.1**, which kills
+  `mail` < 2.8 with `cannot load such file -- net/smtp`. Not an issue here: `mail` is
+  already 2.9.1 and declares them, and all three are already in the lockfile.
+- **psych 4 ships with Ruby 3.1** and makes `safe_load` the default path, which can break
+  `secrets.yml`, `database.yml` aliases and YAML fixtures. Rails 6.1.7 already carries the
+  psych-4 fix, and `config/database.yml` has one anchor (`test: &TEST`) that nothing
+  references, so there is no alias to trip over. Verified by booting, not assumed.
+- **`debase` 0.2.9** — expected to be the casualty, since it will not build on Ruby 3.4
+  (see the pins list). It builds fine on 3.1; `debase-ruby_core_source` 4.0.1 ships
+  `ruby-3.1.0-p0` headers. One `bundle install` did fail on a `debase-ruby_core_source`
+  header path, but it was transient and did not recur — not a real incompatibility.
+
+**What actually broke was keyword arguments, in two places, and the plan was too
+optimistic that Phase 2 had covered it.** Phase 2 fixed *warnings emitted by the code
+paths the suites exercise*. These two were a hash passed positionally to a
+keyword-argument method, which Ruby 2.7 only warned about at the call site if it ran:
+
+1. **`config/initializers/session_store.rb`** — `session_store :cookie_store, { key:
+   ..., expire_after: ... }` against Rails' `session_store(new_session_store = nil,
+   **options)`. This is a **boot failure**, not a test failure: `wrong number of arguments
+   (given 2, expected 0..1)` on every `bin/rails` command. Braces removed.
+2. **`app/controllers/concerns/translation_helper.rb:58`** — `I18n.t(params[:key], subs)`
+   where `subs` is a built-up hash. Splatted to `**subs`. This one was worth 29 test
+   errors across `NotificationTest` and `ParticipantsControllerTest`, because every
+   notification's text goes through `t_nested`. A matching positional hash in
+   `test/models/notification_test.rb:111` (`I18n.t("Ezra", { locale: :fr })`) was fixed
+   the same way.
+
+The lesson for Phase 6's Ruby 3.4 hop: **grep for hashes passed positionally into
+framework methods before running anything**, because the first one blocks boot and hides
+the rest.
+
+**Two corrections to what this section used to say:**
+
+- The rbenv pin is **`Capfile:32` — `set :rbenv_ruby`**, not `config/deploy.rb`, which
+  has no rbenv line. `.ruby-version` and `Capfile` must move together; the README already
+  says so and its "currently 2.7.4" was updated in the same commit.
+- The table in §5b says `config/environments/production.rb:77-78`; the real lines are
+  **74-75**. The rest of the six-call-site enumeration is exact.
+
+**Noise, not a failure:** `rails test` now prints `PG::Coder.new(hash) is deprecated.
+Please use keyword arguments instead!` twice per run, from *inside* `activerecord
+6.1.7.10`'s postgresql adapter. It is a `pg` gem warning on stderr, not an
+`ActiveSupport::Deprecation`, so `deprecation = :raise` does not catch it and it is not
+worth pinning around. It should disappear at Rails 7.
+
+**Gate at close** (Ruby 3.1.3 / Rails 6.1.7.10 / Node 20.20.2 / Shakapacker 10.3.2):
+Rails **398 tests / 1297 assertions, 0 failures, 0 errors, 1 skip**; Jest **125 passed**;
+`tsc --noEmit` clean; `zeitwerk:check` clean; Cypress **93/93**; brakeman **5 warnings**,
+which is the predicted drop from 6 — "Support for Ruby 2.7.4 ended" cleared exactly as
+§"Pre-existing security findings" said it would, and the remaining 5 match that table
+line for line. `foreman s` verified by hand: web.1 listening on 3000 and answering 200,
+webpacker.1 compiling successfully.
+
+One environment note that cost time and is not Dulu's fault: **a fresh shell here has
+Node 12 on `PATH`**, so `yarn typecheck` and `yarn jest` fail with 25 broken suites and a
+`internal/modules/cjs/loader.js` stack that looks like a real regression. `nvm use` first.
 
 ### 5b. `config/secrets.yml` → credentials or ENV — **hard blocker for Rails 7.1**
 

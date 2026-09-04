@@ -55,6 +55,9 @@ module TranslationHelper
     subs = subs.transform_values { |v| v.is_a?(Hash) ? t_nested(v, locale) : v }
     subs = extra_transform.call(subs) if block_given?
     subs.merge!(locale: locale)
-    I18n.t(params[:key], subs)
+    # Splatted, not passed as a positional hash: `I18n.t` takes its
+    # interpolations as keyword arguments and Ruby 3 no longer converts a
+    # trailing hash into them.
+    I18n.t(params[:key], **subs)
   end
 end

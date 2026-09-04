@@ -108,8 +108,10 @@ class NotificationTest < ActiveSupport::TestCase
 
   test 'Translation Test from French locale' do
     I18n.locale = :fr
-    assert_equal("Ezra", I18n.t("Ezra", { :locale => :en }), "should not give translation missing error")
-    assert_equal("Esdras", I18n.t("Ezra", { :locale => :fr }), "should not give translation missing error")
+    # Keyword arguments, not a positional hash -- see the note in
+    # app/controllers/concerns/translation_helper.rb.
+    assert_equal("Ezra", I18n.t("Ezra", locale: :en), "should not give translation missing error")
+    assert_equal("Esdras", I18n.t("Ezra", locale: :fr), "should not give translation missing error")
   end
 
   test 'Workshop Complete' do
