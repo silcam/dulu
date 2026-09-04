@@ -21,10 +21,6 @@ gem "concurrent-ruby", "< 1.3.5"
 # gem 'bootsnap', require: false
 # Use postgres as the database for Active Record
 gem "pg"
-# Transitive, pinned only for Ruby 2.7 compatibility: nokogiri >= 1.16 requires
-# Ruby >= 3.0, and bundler otherwise resolves capybara/xpath to a nokogiri that
-# cannot install here. Drop this pin once Ruby 3.1 lands in Phase 5.
-gem "nokogiri", "~> 1.15.7"
 # Use Puma as the app server
 # gem 'puma', '~> 3.0'
 # Use SCSS for stylesheets. sass-rails 6 is a thin wrapper over sassc-rails
@@ -128,13 +124,13 @@ group :test do
   # this is not optional from Phase 3 on -- 2.18.0 makes test/system fail to
   # load outright. Note `bin/rails test` does not run test/system, so the gate
   # does not cover this; see the Phase 3 notes.
-  gem "capybara", "~> 3.39.0"
+  gem "capybara", "~> 3.40"
   gem "selenium-webdriver", "~> 4.9"
-  # brakeman 6+ requires Ruby >= 3.0, so 5.4.x is the ceiling while on Ruby 2.7.
   # 4.2.0 crashed outright on Ruby 2.7: its vendored unicode-display_width calls
   # Gem.gunzip, which no longer exists, so brakeman exited 0 with no output --
-  # a silently useless security gate. Raise this to ~> 7.0 in Phase 5 with Ruby 3.1.
-  gem "brakeman", "~> 5.4", require: false
+  # a silently useless security gate. 5.4.x was the Ruby 2.7 ceiling; Ruby 3.1
+  # lifts it.
+  gem "brakeman", "~> 7.0", require: false
   gem "minitest-retry"
   gem 'cypress-on-rails'
 end

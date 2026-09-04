@@ -336,14 +336,32 @@ The file can be regenerated or emptied.
 Phase 1 added three constraints that exist only to hold the dependency graph on Ruby 2.7.
 Each should be revisited at the phase named:
 
-| Pin | Reason | Unwind at |
+| Pin | Reason | Unwind at | Status |
+|---|---|---|---|
+| `nokogiri "~> 1.15.7"` | nokogiri >= 1.16 requires Ruby >= 3.0 | Phase 5 (Ruby 3.1) | **done in 5a** — pin deleted, now 1.18.10 |
+| `delayed_job "~> 4.1.11"` | 4.2 needs `ActiveJob::QueueAdapters::AbstractAdapter`, Rails 7.1+ only | Phase 5 (Rails 7.1) | open, unwinds at 5c |
+| `brakeman "~> 5.4"` | brakeman 6+ requires Ruby >= 3.0 | Phase 5 (Ruby 3.1) | **done in 5a** — now `~> 7.0` (7.1.1) |
+| `capybara "~> 3.39.0"` | capybara 3.40+ requires Ruby >= 3.0 | Phase 5 (Ruby 3.1) | **done in 5a** — now `~> 3.40` |
+| `sprockets "~> 4.0"` | added in Phase 3; upper bound only, not a hold-back | — | — |
+| `concurrent-ruby "< 1.3.5"` | 1.3.5 dropped its transitive `require "logger"`; ActiveSupport <= 7.0 needs it | Phase 5c (Rails 7.1) | open, unwinds at 5c |
+
+**Dropping the `nokogiri` pin is not enough on its own** — `bundle install` does not
+upgrade a gem already present in the lockfile, so nokogiri sat at 1.15.7 with no pin
+holding it. It took an explicit `bundle update nokogiri` to reach 1.18.10. Worth
+remembering for the remaining unwinds at 5c.
+
+**brakeman 7.1.1 changed the expected warning count from 5 back up to 7**, and this is
+not a regression. It adds two EOL checks the 5.4 line did not have:
+
+| Check | Message | Clears at |
 |---|---|---|
-| `nokogiri "~> 1.15.7"` | nokogiri >= 1.16 requires Ruby >= 3.0 | Phase 5 (Ruby 3.1) |
-| `delayed_job "~> 4.1.11"` | 4.2 needs `ActiveJob::QueueAdapters::AbstractAdapter`, Rails 7.1+ only | Phase 5 (Rails 7.1) |
-| `brakeman "~> 5.4"` | brakeman 6+ requires Ruby >= 3.0 | Phase 5 (Ruby 3.1) |
-| `capybara "~> 3.39.0"` | capybara 3.40+ requires Ruby >= 3.0 | Phase 5 (Ruby 3.1) |
-| `sprockets "~> 4.0"` | added in Phase 3; upper bound only, not a hold-back | — |
-| `concurrent-ruby "< 1.3.5"` | 1.3.5 dropped its transitive `require "logger"`; ActiveSupport <= 7.0 needs it | Phase 5c (Rails 7.1) |
+| `EOLRuby` (`.ruby-version:1`) | Support for Ruby 3.1.3 ended 2025-03-31 | Phase 6 (Ruby 3.4) |
+| `EOLRails` (`Gemfile.lock`) | Support for Rails 6.1.7.10 ended 2024-10-01 | Phase 6 (Rails 8.0) — 7.1 is EOL too, so this stays lit through 5c |
+
+So from 5a on, **the expected brakeman total is 7 = the 5 pre-existing application
+findings + 2 EOL warnings**, and both EOL warnings clear in Phase 6, not Phase 5. Also
+brakeman 7 reports **3** obsolete entries in `config/brakeman.ignore` rather than the 5
+noted above; the cleanup is still a Phase 8 item.
 
 Two more known blockers, not yet actionable:
 
@@ -1133,7 +1151,8 @@ Rails **398 tests / 1297 assertions, 0 failures, 0 errors, 1 skip**; Jest **125 
 `tsc --noEmit` clean; `zeitwerk:check` clean; Cypress **93/93**; brakeman **5 warnings**,
 which is the predicted drop from 6 — "Support for Ruby 2.7.4 ended" cleared exactly as
 §"Pre-existing security findings" said it would, and the remaining 5 match that table
-line for line. `foreman s` verified by hand: web.1 listening on 3000 and answering 200,
+line for line. (The follow-up commit that raised brakeman to 7.1.1 moves that expected
+number back to 7 — see the pins table for why that is not a regression.) `foreman s` verified by hand: web.1 listening on 3000 and answering 200,
 webpacker.1 compiling successfully.
 
 One environment note that cost time and is not Dulu's fault: **a fresh shell here has
