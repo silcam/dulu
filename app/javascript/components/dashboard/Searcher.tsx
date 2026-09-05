@@ -3,8 +3,7 @@ import TextInput from "../shared/TextInput";
 import styles from "./Searcher.css";
 import I18nContext from "../../contexts/I18nContext";
 import useSearch from "../shared/useSearch";
-import { withRouter, RouteComponentProps } from "react-router";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 
 const minQueryLength = 3;
 
@@ -16,12 +15,13 @@ export interface SearchResult {
   level?: number;
 }
 
-interface IProps extends RouteComponentProps {
+interface IProps {
   setSeacherActive: (a: boolean) => void;
 }
 
-function BasicSearcher(props: IProps) {
+function Searcher(props: IProps) {
   const t = useContext(I18nContext);
+  const history = useHistory();
   const [query, setQuery] = useState("");
   const [selectedPosition, setSelectedPosition] = useState(-1);
 
@@ -46,7 +46,7 @@ function BasicSearcher(props: IProps) {
       case "Enter":
         const index = Math.max(selectedPosition, 0);
         if (flatResults[index] && flatResults[index].route)
-          props.history.push(flatResults[index].route!);
+          history.push(flatResults[index].route!);
     }
   };
 
@@ -103,7 +103,5 @@ function flattenResults(results: SearchResult[], level = 0) {
     return flatResults;
   }, []);
 }
-
-const Searcher = withRouter(BasicSearcher);
 
 export default Searcher;

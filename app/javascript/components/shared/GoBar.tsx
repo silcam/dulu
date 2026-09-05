@@ -1,5 +1,5 @@
 import React, { useContext, useState, useEffect } from "react";
-import { RouteComponentProps, withRouter } from "react-router";
+import { useHistory } from "react-router-dom";
 import { IPerson, fullName } from "../../models/Person";
 import { IOrganization } from "../../models/Organization";
 import { ILanguage } from "../../models/Language";
@@ -22,7 +22,7 @@ interface Matcher<T> {
   (item: T, q: string): Match | null;
 }
 
-interface IProps extends RouteComponentProps {
+interface IProps {
   people: List<IPerson>;
   organizations: List<IOrganization>;
   languages: List<ILanguage>;
@@ -42,6 +42,7 @@ const routes = [
 
 function BaseGoBar(props: IProps) {
   const t = useContext(I18nContext);
+  const history = useHistory();
   const [query, setQuery] = useState("");
   const [matches, setMatches] = useState<Match[]>([]);
   const [activeIndex, setActiveIndex] = useState(0);
@@ -54,7 +55,7 @@ function BaseGoBar(props: IProps) {
   };
 
   const goTo = (match: Match) => {
-    props.history.push(match.url);
+    history.push(match.url);
     setQuery("");
     setActiveIndex(0);
   };
@@ -209,6 +210,6 @@ const GoBar = connect((state: AppState) => ({
   languages: state.languages,
   clusters: state.clusters,
   regions: state.regions
-}))(withRouter(BaseGoBar));
+}))(BaseGoBar);
 
 export default GoBar;

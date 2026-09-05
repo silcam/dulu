@@ -1,18 +1,19 @@
 import React from "react";
-import { withRouter, RouteComponentProps } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import Loading from "../shared/Loading";
 import style from "../shared/MasterDetail.css";
 import { ICluster } from "../../models/Cluster";
 import List from "../../models/List";
 
-interface IProps extends RouteComponentProps<any> {
+interface IProps {
   clusters: List<ICluster>;
   id?: number;
 }
 
-export default withRouter(ClustersTable);
+export default ClustersTable;
 
 function ClustersTable(props: IProps) {
+  const history = useHistory();
   const clusters = props.clusters;
 
   if (clusters.length() == 0) return <Loading />;
@@ -25,7 +26,7 @@ function ClustersTable(props: IProps) {
             <tr
               key={cluster.id}
               className={cluster.id == props.id ? style.selected : undefined}
-              onClick={() => props.history.push(`/clusters/${cluster.id}`)}
+              onClick={() => history.push(`/clusters/${cluster.id}`)}
             >
               <td>{cluster.name}</td>
             </tr>

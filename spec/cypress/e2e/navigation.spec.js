@@ -65,4 +65,30 @@ describe("Navigation", () => {
     cy.location("pathname").should("eq", hdiPath + "/Translation");
     cy.contains("h2", "Hdi");
   });
+
+  it("Goes back from the GoBar and from Cancel", () => {
+    // Neither of these had any coverage: no spec typed into the GoBar, and the
+    // only mention of Cancel in the suite is an assertion that it is *absent*.
+    // Both take their history from the router rather than from a prop, so a
+    // green suite would otherwise say nothing about them.
+    // Olga, not Drew: adding a region is permission-gated, as regions.spec.js
+    // also has to account for.
+    cy.login("olga_ngombo@sil.org");
+    cy.visit("/regions");
+
+    // GoBar pushes. Its results are <li> driven by onMouseDown, not a <Link>.
+    cy.get("input[placeholder='Go']").type("Hdi");
+    cy.contains("li", "Hdi").click();
+    cy.location("pathname").should("eq", hdiPath);
+
+    cy.go("back");
+    cy.location("pathname").should("eq", "/regions");
+
+    // CancelButton is history.goBack(), the only caller of it in the app.
+    cy.icon("addIcon").click();
+    cy.placeholder("Name").should("exist");
+    cy.contains("Cancel").click();
+    cy.location("pathname").should("eq", "/regions");
+    cy.placeholder("Name").should("not.exist");
+  });
 });
