@@ -32,6 +32,9 @@ describe("Navigation", () => {
 
   it("Goes back from a link click", () => {
     // The ordinary <Link> case: ActivityRow's link into an activity page.
+    // Logging in per test rather than leaning on testIsolation:false, so this
+    // spec does not depend on where it lands in the run order.
+    cy.login();
     cy.visit(hdiPath + "/Translation");
     cy.contains("a", "Ezra").click();
     cy.location("pathname").should("eq", hdiEzraPath);
@@ -46,6 +49,7 @@ describe("Navigation", () => {
     // LanguagePage pushes a tab change from inside a nested <Route>, so each
     // tab is its own history entry. Deep-linking to these URLs is well covered
     // elsewhere; arriving by click and then reversing is not.
+    cy.login();
     cy.visit(hdiPath);
     cy.contains("Translation").click();
     cy.location("pathname").should("eq", hdiPath + "/Translation");

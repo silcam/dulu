@@ -30,7 +30,13 @@ describe("Notifications", () => {
     cy.login();
     cy.visit("/feed");
 
-    cy.contains("added a new activity").should("exist");
+    // Structural, not just textual: NotificationsPage renders the list inside
+    // MasterDetail's `detail` pane, and a Routes conversion that mounts the
+    // page at the wrong point in the tree can still produce the right words in
+    // the wrong layout. Same localIdentName pattern cssModules.spec.js checks.
+    cy.get("div[class^='MasterDetail__detail___']").within(() => {
+      cy.contains("added a new activity").should("exist");
+    });
 
     // The subclass path, redirected to the canonical one by ActivityPage.
     cy.contains("a", "Ezra").click();

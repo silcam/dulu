@@ -161,7 +161,7 @@ failures fall into two distinct groups, and only one of them is noise:
    `participants.spec.js` "Adds, edits and finishes Drew", `regions.spec.js` "Changes LPF",
    anything going through the `searchFill` command or `cy.placeholder("Name")`. These are
    all **one application bug**: the pickers fire a request per keystroke and let a late
-   response overwrite a newer one (Phase 8, item 4). It presents as a detached `<li>`, as a
+   response overwrite a newer one (Phase 8, item 5). It presents as a detached `<li>`, as a
    dropdown covering the next form control, or — most clearly — as
    `expected input to have value 'Drew Mambo', but the value was 'Lance Armstrong'`. It
    moves between specs because the race is probabilistic, not because it is noise. **Do not
@@ -1760,7 +1760,9 @@ commented out of `Api::SearchesController`, and `flattenResults`
 (`Searcher.tsx:98`) discards the result of `flatResults.concat(...)`, so subresults never
 render at all. Notification links are the wildcard route's only live caller.
 
-Full suite green at **97/97** including `people.spec.js`, which passed this run.
+Full suite green at **97/97** including `people.spec.js` — **one run; this is not a
+status change.** See 6e's flakiness note above and re-read it before treating any Cypress
+failure as a regression.
 
 ---
 
@@ -1889,7 +1891,15 @@ Work items, in the order they deserve attention:
 3. **Three SQL injection findings** — `app/models/event.rb:120`,
    `app/models/concerns/multi_word_search.rb:13`, and `app/models/domain_report.rb:64`
    (interpolated `@period.finish`). Convert to bound parameters.
-4. **The person/organization search pickers do not discard stale responses.** Typing into
+4. **Two defects in the global search, both found in Phase 6g while establishing
+   that `Searcher` is not a route consumer.** Neither is a regression from this upgrade;
+   both predate it. (a) `Searcher.tsx`'s `flattenResults` discards the result of
+   `flatResults.concat(flattenResults(result.subresults.results, level + 1))` — the return
+   value is thrown away, so **subresults never render at all**. (b) `Activity.search` is
+   commented out of `Api::SearchesController`, so activities are absent from global search
+   entirely. Worth asking whether (b) was deliberate before "fixing" it; (a) is plainly a
+   bug.
+5. **The person/organization search pickers do not discard stale responses.** Typing into
    a picker fires a request per keystroke and each response overwrites the results list,
    so a slow earlier response can land after a later one and replace the correct results.
    Observed in E2E as pressing Enter selecting the wrong person entirely ("expected input
@@ -1897,28 +1907,28 @@ Work items, in the order they deserve attention:
    result failing because the list re-rendered underneath the click. Users hit the same
    thing on a slow connection. Fix by tagging each request and ignoring any response that
    is not for the current query.
-5. **`DomainReport#gen_activity_items` has no deterministic order.**
+6. **`DomainReport#gen_activity_items` has no deterministic order.**
    `app/models/domain_report.rb:66` orders by `start_date: :desc` with no tiebreaker, so
    rows sharing a date come back in whatever order PostgreSQL feels like — users see the
    report reshuffle between loads. It is the same method as the SQL injection finding
    above, so fix both in one pass. `spec/cypress/integration/reports.spec.js` was made
    order-agnostic in Phase 2 to stop it failing at random; tighten it back up once the
    query is deterministic.
-6. **Regenerate `config/brakeman.ignore`.** Its 5 entries no longer match anything —
+7. **Regenerate `config/brakeman.ignore`.** Its 5 entries no longer match anything —
    they reference `app/views/dashboard/dashboard.html.erb`,
    `app/views/languages/show.html.erb` and `app/views/clusters/index.html.erb`, all ERB
    views deleted during the React migration. A stale ignore file is worse than none: it
    reads as "reviewed and accepted" for findings that no longer exist.
-7. **The frontend has no session-expiry handling.** `DuluAxios.handleError` knows only
+8. **The frontend has no session-expiry handling.** `DuluAxios.handleError` knows only
    `"server"` and `"connection"`. Phase 4 made a logged-out XHR return 401 (it used to
    return a 302 that axios followed cross-origin), so the status is now clean and
    distinguishable — nothing consumes it. Surface "you have been logged out, sign in
    again" instead of a generic error.
-8. **A stale CSRF token on the sign-in button gives an error page.** Leave the welcome
+9. **A stale CSRF token on the sign-in button gives an error page.** Leave the welcome
    page open past session expiry, click sign in, and `omniauth-rails_csrf_protection`
    raises from middleware. Rails maps that to 422, but the user sees an error page rather
    than a retry. Rescue it and re-render the welcome page.
-9. **`hd: 'sil.org'` does not restrict who can log in, and someone probably thinks it
+10. **`hd: 'sil.org'` does not restrict who can log in, and someone probably thinks it
    does.** `config/initializers/omniauth.rb` passes `hd` to Google, and Phase 4 confirmed
    it still reaches the authorize URL under `omniauth-google-oauth2` 1.x. But `hd` is a
    *hint* to Google's account chooser, not a guarantee, and Google's own guidance is to
@@ -1930,7 +1940,7 @@ Work items, in the order they deserve attention:
    Person allowlist is a defensible design — but the belief that `hd` enforces the domain
    should either be made true (check the returned `hd`/email domain in `#create`) or
    written down as false.
-10. **Re-run `bundle exec brakeman` expecting zero warnings**, and consider adding it to
+11. **Re-run `bundle exec brakeman` expecting zero warnings**, and consider adding it to
    the gate as a hard failure rather than a compare-against-known-list.
 
 By the time this phase runs, brakeman will be unpinned (Phase 5 lifts it to 6+ on Ruby
