@@ -67,7 +67,9 @@ Defined once here; each phase says "run the gate" rather than repeating it.
 nvm use                            # Phase 2 onward: .nvmrc pins Node 20.11.1
 bin/rails test                     # 400 tests / 1319 assertions as of Phase 6, 0 failures
 npx jest --ci                      # must stay at 125 passed
-yarn test:cypress:gate             # 21 specs / 97 tests as of Phase 6g -- see notes below
+yarn test:cypress:gate             # 21 specs / 98 tests as of Phase 7c -- see notes below
+                                   # NB: its `yarn testPacks` step exits 0 on the run after
+                                   # a FAILED compile -- see Phase 7c's build-hazard note
 yarn typecheck                     # Phase 2 onward -- see "Where type-checking lives"
 bundle exec brakeman               # 5 as of Phase 6c2: the application findings, no EOL noise
 bin/rails runner -e development 'puts Rails.version'
@@ -90,7 +92,7 @@ yarn install --check-files         # MANDATORY after the line above -- see below
 
 # db/schema.rb round-trip. `bin/rails test` maintains the test database with
 # db:migrate, so NOTHING else in this recipe ever executes schema.rb -- a broken
-# dump is invisible to all 400 tests and all 97 Cypress specs, and surfaces only
+# dump is invisible to all 400 tests and all 98 Cypress specs, and surfaces only
 # for a new developer following the README or a fresh production database.
 bin/rails db:schema:load RAILS_ENV=test && bin/rails test
 ```
@@ -1812,7 +1814,7 @@ Sized concretely:
 |---|---|
 | `<Link` | 81 |
 | `<Route` | 33 |
-| `withRouter` | 18 |
+| `withRouter` | ~~18~~ **9** — see below |
 | `useHistory` | 8 |
 | `<Switch` | 6 |
 | `<Redirect` | 1 |
@@ -1820,8 +1822,21 @@ Sized concretely:
 
 This is an API rewrite, not a version bump: `Switch`→`Routes`, `component=`→`element=`,
 `useHistory`→`useNavigate`, `Redirect`→`Navigate`, changed nested-route and relative-path
-semantics, and **`withRouter` is removed entirely** (all 18 uses must become hooks — which
-also means any class component using it must be converted).
+semantics, and **`withRouter` is removed entirely**.
+
+**Both `withRouter` claims above were wrong, and the correction shrinks this phase.**
+The 18 was import lines plus usage lines double-counted: there are **9** call sites, in 9
+files. And "any class component using it must be converted" applies to **one** —
+`SaveReportBar`, a `React.PureComponent`; the other eight are function components that
+needed nothing but the hook. `BaseMainRouter` is also a class, but it never used
+`withRouter` — it already takes `history` from a `useHistory` wrapper, which is the
+pattern `SaveReportBar` now copies.
+
+**Done in 7c (1/n)**, on react-router 5: v5.1 already ships the hooks, so this landed with
+the suite green and without depending on v6. Each `IProps` also stopped extending
+`RouteComponentProps` — leaving it would keep a live second path for a parent to pass
+`history`/`match`/`location` with `tsc` staying quiet about it. No parent does today; all
+nine were checked.
 
 **That 64-file, 18-`withRouter` number — not the React version — is what determines this
 phase's length.** Consider `react-router` 6.4+ data APIs out of scope; port to the v6
@@ -1887,6 +1902,18 @@ child component calling `useParams`/`useNavigate` for itself.
 `react-tabs` 2.2 → current, `eslint` 4 → 9 (flat config), and drop
 `babel-preset-react` / `ts-loader` / `webpack-dev-server` 2.11 pins left over from the
 old build.
+
+**A build hazard found while doing 7c (1/n), which affects every phase's gate:**
+`yarn testPacks` — and therefore `yarn test:cypress:gate`, which runs it — **exits 0 with
+"Everything's up-to-date. Nothing to do" on the run immediately after a compile that
+failed.** Shakapacker records the digest regardless of whether webpack succeeded, so the
+second attempt is a cache hit. Cypress then runs against the last *good* bundle and the
+suite is green while the code does not compile. Reproduced deliberately: fail a compile,
+re-run, exit 0, and again on a third run. **Read the first `testPacks` output, not the
+exit code of a re-run**, and `rm -rf tmp/shakapacker` when a build's result is in doubt.
+This is the same digest-cache trap the verification recipe already warns about for
+`assets:precompile`, in a worse form — there it silently skipped work, here it silently
+launders a failure into a pass.
 
 **Gate:** full recipe green + manual click-through of the main boards
 (dashboard, people, organizations, events, activities) — routing regressions are exactly
@@ -2128,6 +2155,7 @@ Phase 6  Ruby 3.4 + Rails 7.2 -> 8.1 + Cypress 15     DONE  Rails 8.1 added: 8.0
 Phase 7  React Router 6 -> React 18 -> react-redux 9   independent; router is the big one
          (router FIRST, on React 16 -- see 7c)
          react-router-dom ^6.30.6; v7 needs React >=18, so not this phase
+         7c (1/n) withRouter removed on v5           DONE  9 sites, not 18
 Phase 8  Security pass + deploy mechanics         post-upgrade, no version changes
          (8b's deploy prerequisites are needed at the FIRST deploy of this
           branch, not after Phase 7 -- see 8b)
