@@ -1825,9 +1825,13 @@ also means any class component using it must be converted).
 
 **That 64-file, 18-`withRouter` number — not the React version — is what determines this
 phase's length.** Consider `react-router` 6.4+ data APIs out of scope; port to the v6
-component API and stop.
+component API and stop. **`react-router-dom` 7 is out of scope for this phase on a hard
+constraint, not a preference:** every 7.x declares `peerDependencies: { react: ">=18" }`,
+so it cannot land before 7a. If it is wanted at all, it is a separate hop after React 18.
 
-**Do 7c first, on React 16.** React Router 6 supports React 16.8+, while react-redux 8+
+**Do 7c first, on React 16.** React Router 6 supports React 16.8+ — confirmed from the
+package rather than the docs: `react-router-dom@6.30.6` declares
+`peerDependencies: { react: ">=16.8", "react-dom": ">=16.8" }` — while react-redux 8+
 requires React 18 — so the router rewrite, which is the large one, can land against a
 suite that is currently green rather than against a freshly-changed React. Doing 7a, 7b
 and 7c together means every failure has three candidate causes. Order: **7c → 7a → 7b**,
@@ -1837,7 +1841,10 @@ not the numbering above.
 Phase 6g):
 
 - **`MainRouter.tsx:123` — `path="/*activities/:id"` cannot be expressed in v6**, where a
-  splat must be trailing. It is not dead code: it is the landing point for every activity
+  splat must be trailing. Confirmed the same way: on 6.30.6,
+  `matchPath("/*activities/:id", "/translation_activities/1071624995")` returns **`null`**
+  — again silent, again falling through to the `Dashboard` catch-all. (`matchPath` is what
+  was tested; whether `<Routes>` additionally warns at render time was not.) It is not dead code: it is the landing point for every activity
   link in a notification, which `ApplicationHelper#model_path` renders as the STI subclass
   path (`/translation_activities/:id`, `/linguistic_activities/:id`,
   `/media_activities/:id`). Enumerate the subclasses and give each an explicit route, or
@@ -1847,9 +1854,26 @@ Phase 6g):
   un-redirected URL if the route stops matching.
 - **Three routes rely on optional params** — `/languages/:idOrAction?`,
   `/people/:actionOrId?/:id?`, `/organizations/:actionOrId?/:id?`. Optional segments were
-  dropped in early v6 and reintroduced in 6.5. **Confirm the target version supports them
-  before writing anything**: if it does not, each of those splits into two routes, which
-  changes the shape of the migration rather than just its size.
+  dropped in early v6 and reintroduced in 6.5. **Settled: target `react-router-dom`
+  `^6.30.6`** (latest 6.x), and this stops being a migration concern at all — no
+  split-then-unsplit, and no reason to pin at 6.5 itself, since every 6.x from 6.5 onward
+  has them.
+
+  Verified rather than assumed, by installing the package and calling `matchPath`
+  directly:
+
+  | pattern | url | 6.30.6 | 6.4.5 |
+  |---|---|---|---|
+  | `/languages/:idOrAction?` | `/languages` | `{}` | — |
+  | `/languages/:idOrAction?` | `/languages/876048951` | `{idOrAction: "876048951"}` | **`null`** |
+  | `/people/:actionOrId?/:id?` | `/people/edit/732959017` | `{actionOrId: "edit", id: "732959017"}` | — |
+  | `/organizations/:actionOrId?/:id?` | `/organizations/show/258650127` | `{actionOrId: "show", id: "258650127"}` | — |
+
+  Same param names, same shape as v5. **Note the 6.4.5 column: a version without optional
+  segment support returns `null`, it does not throw** — so on a too-old version these
+  routes would silently stop matching and fall through to `MainRouter`'s unpathed
+  `<Route render={() => <Dashboard />} />`. A wrong version number presents as "clicking a
+  language shows the dashboard", not as an error.
 
 `MainRouter`'s routes all use `render={({ match, history, location }) => ...}` and hand
 `history` down as a prop — `BaseMainRouter` itself is a class component that takes
@@ -2103,6 +2127,7 @@ Phase 6  Ruby 3.4 + Rails 7.2 -> 8.1 + Cypress 15     DONE  Rails 8.1 added: 8.0
          6f drop Enzyme, 6g routing specs (93->97)  DONE  pre-Phase-7 groundwork
 Phase 7  React Router 6 -> React 18 -> react-redux 9   independent; router is the big one
          (router FIRST, on React 16 -- see 7c)
+         react-router-dom ^6.30.6; v7 needs React >=18, so not this phase
 Phase 8  Security pass + deploy mechanics         post-upgrade, no version changes
          (8b's deploy prerequisites are needed at the FIRST deploy of this
           branch, not after Phase 7 -- see 8b)
