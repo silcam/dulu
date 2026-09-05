@@ -67,7 +67,7 @@ Defined once here; each phase says "run the gate" rather than repeating it.
 nvm use                            # Phase 2 onward: .nvmrc pins Node 20.11.1
 bin/rails test                     # 400 tests / 1319 assertions as of Phase 6, 0 failures
 npx jest --ci                      # must stay at 125 passed
-yarn test:cypress:gate             # 19 specs / 93 tests -- see notes below
+yarn test:cypress:gate             # 21 specs / 97 tests as of Phase 6g -- see notes below
 yarn typecheck                     # Phase 2 onward -- see "Where type-checking lives"
 bundle exec brakeman               # 5 as of Phase 6c2: the application findings, no EOL noise
 bin/rails runner -e development 'puts Rails.version'
@@ -90,7 +90,7 @@ yarn install --check-files         # MANDATORY after the line above -- see below
 
 # db/schema.rb round-trip. `bin/rails test` maintains the test database with
 # db:migrate, so NOTHING else in this recipe ever executes schema.rb -- a broken
-# dump is invisible to all 400 tests and all 93 Cypress specs, and surfaces only
+# dump is invisible to all 400 tests and all 97 Cypress specs, and surfaces only
 # for a new developer following the README or a fresh production database.
 bin/rails db:schema:load RAILS_ENV=test && bin/rails test
 ```
@@ -518,7 +518,8 @@ Four real hops, each gated:
    `babel-polyfill` → `core-js/stable` + `regenerator-runtime/runtime`. Jest stops at 26
    rather than 29 on purpose: 27 changes the default `testEnvironment` from jsdom to node,
    which this suite's Enzyme tests need. Do 26 → 29 with the React 18 work in Phase 7,
-   where Enzyme has to be reconsidered anyway.
+   where Enzyme has to be reconsidered anyway. **Superseded by Phase 6f** — see the
+   "Still open" note below.
 
    **TypeScript 3.8 cannot *parse* the modern `@types/babel__traverse`** that Jest 26
    pulls in — `TS1005`/`TS1160`, which `skipLibCheck` cannot suppress because they are
@@ -716,10 +717,14 @@ before this upgrade. If the type-checking decision is ever revisited in favour o
 
 **Still open:**
 
-- **`jest` 26 → 29 and `ts-jest` 26 → 29.** Deliberately not done here: Jest 27 changes the
-  default `testEnvironment` from jsdom to node, which breaks the Enzyme tests. Do it in
-  Phase 7 alongside React 18, where Enzyme has to be replaced anyway
-  (`enzyme-adapter-react-16` has no React 18 equivalent).
+- **`jest` 26 → 29 and `ts-jest` 26 → 29.** The stated blocker was that Jest 27 changes
+  the default `testEnvironment` from jsdom to node, breaking the Enzyme tests. **Phase 6f
+  removed Enzyme, and the premise was wrong anyway: there were no Enzyme tests.** No test
+  under `test/javascript/` references `document`, `window`, `localStorage`, or
+  `navigator`, so the jsdom default is not load-bearing today. That makes this a plain
+  version bump rather than a migration — but re-check it at the point of doing it, since
+  Phase 7 may add rendering tests that *do* need jsdom, in which case set
+  `testEnvironment: "jsdom"` explicitly rather than relying on a default.
 - **`eslint` 4 and its plugins are installed but there is no eslint config anywhere** in
   the repo, so nothing lints. Either configure it or drop the packages; do not leave it
   looking like a lint gate exists.
@@ -1700,6 +1705,65 @@ behaviour. Re-run and check `/proc/loadavg` before calling it a regression.
    - **Confirm Node first:** Cypress 15 requires Node ≥ 20.19; `.nvmrc` pins 20.20.2,
      which should satisfy it, but check rather than assume.
 
+### 6f — drop Enzyme (done)
+
+Forecast for Phase 2, actually done here, and it was as small as predicted:
+`test/javascript/setupTests.js` contained nothing but `Enzyme.configure`, no test in the
+repo calls `shallow`/`mount` or a `jest-enzyme` matcher, so the file, its
+`setupFilesAfterEnv` hook, and `enzyme` / `enzyme-adapter-react-16` / `jest-enzyme` all
+went together. `enzyme-adapter-react-16` has no React 18 successor, so this had to happen
+before Phase 7 regardless; doing it while the suite is known-good keeps `yarn jest` from
+breaking mid-migration for a reason unrelated to React. Jest unchanged at 125.
+
+### 6g — three specs for the routing behaviours Phase 7 can break (done)
+
+**Not a coverage-building exercise, and deliberately not one.** The question asked was
+whether to write Cypress specs before the React work. The answer was mostly no: the 19
+existing specs deep-link via `cy.visit` at ~30 distinct URL shapes, so URL-to-component
+resolution — the thing React Router 6 most threatens — is already the suite's
+best-covered behaviour. Writing more of the same buys surface to debug, not signal. Three
+holes that resolution coverage cannot see were worth filling. Cypress 93 → **97**.
+
+1. **`spec/cypress/e2e/navigation.spec.js` — history semantics.** `cy.go` and `cy.reload`
+   appeared **nowhere** in the suite: every spec navigated forward only, so a `push` that
+   should have been a `replace`, or a component that stops re-rendering when only the
+   location changes, was invisible. One test per navigation mechanism the app actually
+   uses: a `<Link>`, an `onClick` calling `history.push` directly (`RegionsTable`), and a
+   nested `<Route>`'s own push (`LanguagePage`'s tabs, plus a reload to prove the URL and
+   not component state selects the tab). Phase 7c converts 18 `withRouter` and 8
+   `useHistory` sites to `useNavigate`; this is the class of failure that introduces.
+
+2. **`spec/cypress/e2e/notifications.spec.js` — `/feed` and `/*activities/:id`.** Nothing
+   visited either. **That wildcard route is load-bearing, and the reason is not obvious
+   from the route table:** `Notification#linkify` (`app/models/notification.rb:263`)
+   builds every activity link through `ApplicationHelper#model_path`, which yields the STI
+   *subclass* path — `/translation_activities/:id`, `/linguistic_activities/:id`,
+   `/media_activities/:id`. The leading `*` is what absorbs the varying prefix.
+   `ActivityPage` then resolves the activity and `history.replace`s to the canonical
+   `/languages/:lid/activities/:aid`. The spec pins both the redirect and the
+   replace-not-push, which is what keeps the intermediate URL out of the back button.
+
+   The fixtures ship no notifications and the feed is read-only, so the spec seeds one
+   with `cy.appEval` — the mechanism `support/on-rails.js` already exposes.
+
+**Both specs were negative-controlled, not trusted for passing.** Repointing the wildcard
+route to a dead path fails `notifications.spec.js` on the un-redirected subclass URL;
+turning `RegionsTable`'s `push` into a `replace` fails `navigation.spec.js`. A new spec
+that has never been seen to fail is not yet evidence of anything.
+
+**A dead end worth recording so nobody re-walks it.** The first attempt at the `<Link>`
+test clicked the dashboard sidebar, on the assumption that `dashboard.spec.js`'s
+`cy.contains("li", "Ewondo").click()` → `cy.contains("h2", "Ewondo")` was a navigation.
+**It is not** — the sidebar only sets an in-page selection, and no URL changes. Related:
+`Searcher` is *not* a route consumer either, on two counts — `Activity.search` is
+commented out of `Api::SearchesController`, and `flattenResults`
+(`Searcher.tsx:98`) discards the result of `flatResults.concat(...)`, so subresults never
+render at all. Notification links are the wildcard route's only live caller.
+
+Full suite green at **97/97** including `people.spec.js`, which passed this run.
+
+---
+
 ---
 
 ## Phase 7 — Frontend libraries: React 18, React Router 6, react-redux
@@ -1718,16 +1782,15 @@ components).
 - One call site to change: `app/javascript/application/index.js:33` —
   `ReactDOM.render(<App store={store} />, appDiv)` becomes `createRoot(appDiv).render(...)`.
 - Bump `@types/react` and `@types/react-dom` to 18.x.
-- **Enzyme costs you nothing.** It has no React 18 adapter and never will, but it is
-  *configured without being used*: `test/javascript/setupTests.js` calls
-  `Enzyme.configure({ adapter: new EnzymeAdapter() })` and **no test in the repo ever calls
-  `shallow` or `mount`** (the only `shallow*` matches are `shallowEqual` from react-redux
-  in `app/javascript/reducers/useAppSelector.ts`, which is unrelated). So this is not a
-  migration — delete the four lines in `setupTests.js` and drop `enzyme`,
-  `enzyme-adapter-react-16`, and `jest-enzyme` from `package.json`. Do it in Phase 2 when
-  the Jest chain moves, and React 18 arrives with no test-harness debt at all.
+- ~~**Enzyme costs you nothing.**~~ **Done in Phase 6f**, not Phase 2 — the forecast was
+  right that it was configured without being used, and the removal was four lines plus
+  three `devDependencies`. React 18 now arrives with no test-harness debt at all.
 - Expect `StrictMode` double-invocation surprises in development if you opt into it. You
-  may leave it off.
+  may leave it off — and note `index.js` does **not** use it today, so this is an opt-in,
+  not something inherited. Weigh it knowing that **Cypress runs against the test bundle**,
+  so a non-idempotent mount effect surfaces there as duplicated rows or double-fired
+  requests, which reads exactly like a router bug. Adopting `createRoot` is required;
+  adopting `StrictMode` is a separate, deferrable choice.
 
 ### 7b. react-redux 7 → 9
 
@@ -1761,6 +1824,36 @@ also means any class component using it must be converted).
 **That 64-file, 18-`withRouter` number — not the React version — is what determines this
 phase's length.** Consider `react-router` 6.4+ data APIs out of scope; port to the v6
 component API and stop.
+
+**Do 7c first, on React 16.** React Router 6 supports React 16.8+, while react-redux 8+
+requires React 18 — so the router rewrite, which is the large one, can land against a
+suite that is currently green rather than against a freshly-changed React. Doing 7a, 7b
+and 7c together means every failure has three candidate causes. Order: **7c → 7a → 7b**,
+not the numbering above.
+
+**Two route patterns need a decision before any of it is written** (both surveyed in
+Phase 6g):
+
+- **`MainRouter.tsx:123` — `path="/*activities/:id"` cannot be expressed in v6**, where a
+  splat must be trailing. It is not dead code: it is the landing point for every activity
+  link in a notification, which `ApplicationHelper#model_path` renders as the STI subclass
+  path (`/translation_activities/:id`, `/linguistic_activities/:id`,
+  `/media_activities/:id`). Enumerate the subclasses and give each an explicit route, or
+  route on a single `/activities/:id` and change `model_path`'s callers — but the
+  redirect-to-canonical-URL behaviour must survive either way.
+  **`spec/cypress/e2e/notifications.spec.js` is the acceptance test**, and it fails on the
+  un-redirected URL if the route stops matching.
+- **Three routes rely on optional params** — `/languages/:idOrAction?`,
+  `/people/:actionOrId?/:id?`, `/organizations/:actionOrId?/:id?`. Optional segments were
+  dropped in early v6 and reintroduced in 6.5. **Confirm the target version supports them
+  before writing anything**: if it does not, each of those splits into two routes, which
+  changes the shape of the migration rather than just its size.
+
+`MainRouter`'s routes all use `render={({ match, history, location }) => ...}` and hand
+`history` down as a prop — `BaseMainRouter` itself is a class component that takes
+`history` from a `useHistory` wrapper. v6 has no `render` prop and no `match`/`history`
+objects, so these are not mechanical `component=` → `element=` swaps; each becomes a
+child component calling `useParams`/`useNavigate` for itself.
 
 ### 7d. Remaining dependency cleanup
 
@@ -1997,7 +2090,9 @@ Phase 3  Rails 6.0 -> 6.1 (Zeitwerk) + audited 5    DONE  + sprockets 4, capybar
 Phase 4  OmniAuth 2                              DONE  browser login verified
 Phase 5  Ruby 3.1 + secrets -> ENV + Rails 7.0 -> 7.1   DONE  deploy-affecting; see 8b item 7
 Phase 6  Ruby 3.4 + Rails 7.2 -> 8.1 + Cypress 15     DONE  Rails 8.1 added: 8.0 EOL 2026-10-07
-Phase 7  React 18 -> react-redux 9 -> React Router 6   independent; router is the big one
+         6f drop Enzyme, 6g routing specs (93->97)  DONE  pre-Phase-7 groundwork
+Phase 7  React Router 6 -> React 18 -> react-redux 9   independent; router is the big one
+         (router FIRST, on React 16 -- see 7c)
 Phase 8  Security pass + deploy mechanics         post-upgrade, no version changes
          (8b's deploy prerequisites are needed at the FIRST deploy of this
           branch, not after Phase 7 -- see 8b)
