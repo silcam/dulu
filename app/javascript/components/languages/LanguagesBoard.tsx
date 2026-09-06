@@ -5,7 +5,7 @@ import AddIcon from "../shared/icons/AddIcon";
 import LanguagesTable from "./LanguagesTable";
 import FlexSpacer from "../shared/FlexSpacer";
 import GoBar from "../shared/GoBar";
-import { Location, History } from "history";
+import { Location } from "history";
 import LanguagePageRouter from "./LanguagePageRouter";
 import { useLoadOnMount } from "../shared/useLoad";
 import useTranslation from "../../i18n/useTranslation";
@@ -16,7 +16,6 @@ interface IProps {
   id?: number;
   basePath: string;
   location: Location;
-  history: History;
 }
 
 export default function LanguagesBoard(props: IProps) {

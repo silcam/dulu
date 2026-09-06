@@ -1,3 +1,5 @@
+import { History } from "history";
+import { useHistory } from "react-router-dom";
 import React from "react";
 import update from "immutability-helper";
 import SmallSaveAndCancel from "../shared/SmallSaveAndCancel";
@@ -6,7 +8,6 @@ import { arrayDelete } from "../../util/arrayUtils";
 import FuzzyDateInput from "../shared/FuzzyDateInput";
 import { IParticipant } from "../../models/Participant";
 import { IPerson } from "../../models/Person";
-import { History } from "history";
 import I18nContext from "../../contexts/I18nContext";
 import P from "../shared/P";
 import PersonPicker from "../people/PersonPicker";
@@ -22,14 +23,21 @@ interface IProps {
   language_id?: number;
   cluster_id?: number;
 
-  history: History;
   basePath: string;
+
+  // Inserted by the wrapper below
   saveLoad: ReturnType<typeof useLoad>[0];
+  history: History;
 }
 
-export default function NewParticipantForm(props: Omit<IProps, "saveLoad">) {
+export default function NewParticipantForm(
+  props: Omit<IProps, "saveLoad" | "history">
+) {
   const [saveLoad] = useLoad();
-  return <BaseNewParticipantForm {...props} saveLoad={saveLoad} />;
+  const history = useHistory();
+  return (
+    <BaseNewParticipantForm {...props} saveLoad={saveLoad} history={history} />
+  );
 }
 interface IState {
   participant: IParticipant;

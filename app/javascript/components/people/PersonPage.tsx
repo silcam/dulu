@@ -183,7 +183,6 @@ export default function PersonPage(props: PersonPageProps) {
 
       <PersonEventsContainer
         person={person}
-        history={history}
         basePath={`/people/${props.id}`}
       />
 

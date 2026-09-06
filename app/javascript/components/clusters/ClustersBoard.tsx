@@ -6,7 +6,7 @@ import FlexSpacer from "../shared/FlexSpacer";
 import { Link } from "react-router-dom";
 import AddIcon from "../shared/icons/AddIcon";
 import NewClusterForm from "./NewClusterForm";
-import { History, Location } from "history";
+import { Location } from "history";
 import GoBar from "../shared/GoBar";
 import useTranslation from "../../i18n/useTranslation";
 import { useLoadOnMount } from "../shared/useLoad";
@@ -16,7 +16,6 @@ interface IProps {
   id?: number;
   action: string;
   basePath: string;
-  history: History;
   location: Location;
 }
 
@@ -52,7 +51,7 @@ export default function ClustersBoard(props: Omit<IProps, "t">) {
           <ClustersTable id={props.id} clusters={clusters} />
         </div>
         <div className={style.detail}>
-          {props.action == "new" && <NewClusterForm history={props.history} />}
+          {props.action == "new" && <NewClusterForm />}
           {!!props.id && (
             <ClusterPageRouter
               key={props.id}

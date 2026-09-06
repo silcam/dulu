@@ -6,7 +6,6 @@ import { Link } from "react-router-dom";
 import AddIcon from "../shared/icons/AddIcon";
 import FlexSpacer from "../shared/FlexSpacer";
 import GoBar from "../shared/GoBar";
-import { History } from "history";
 import OrganizationPage from "./OrganizationPage";
 import useTranslation from "../../i18n/useTranslation";
 import { useLoadOnMount } from "../shared/useLoad";
@@ -15,7 +14,6 @@ import useAppSelector from "../../reducers/useAppSelector";
 interface IProps {
   id?: number;
   action?: string;
-  history: History;
 }
 
 export default function OrganizationsBoard(props: IProps) {
@@ -48,13 +46,12 @@ export default function OrganizationsBoard(props: IProps) {
         </div>
         <div className={styles.detail}>
           {props.action == "new" && (
-            <NewOrganizationForm history={props.history} />
+            <NewOrganizationForm />
           )}
           {props.action == "show" && (
             <OrganizationPage
               key={props.id}
               id={props.id!}
-              history={props.history}
             />
           )}
           {!props.action && <span />}

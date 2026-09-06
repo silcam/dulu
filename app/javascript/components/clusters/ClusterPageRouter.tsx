@@ -18,18 +18,17 @@ export default function ClusterPageRouter(props: IProps) {
     <Switch>
       <Route
         path="/clusters/:id/participants/:participantId"
-        render={({ match, history }) => (
+        render={({ match }) => (
           <ClusterParticipantPage
             participantId={parseInt(match.params.participantId)}
-            history={history}
             cluster={cluster}
             {...props}
           />
         )}
       />
       <Route
-        render={({ history }) => (
-          <ClusterPage {...props} history={history} loading={loading} />
+        render={() => (
+          <ClusterPage {...props} loading={loading} />
         )}
       />
     </Switch>

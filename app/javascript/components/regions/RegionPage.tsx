@@ -9,7 +9,7 @@ import { Link } from "react-router-dom";
 import { AnyObj } from "../../models/TypeBucket";
 import { fullName } from "../../models/Person";
 import Loading from "../shared/Loading";
-import { History } from "history";
+import { useHistory } from "react-router-dom";
 import FormGroup from "../shared/FormGroup";
 import PersonPicker from "../people/PersonPicker";
 import useTranslation from "../../i18n/useTranslation";
@@ -18,11 +18,11 @@ import useAppSelector from "../../reducers/useAppSelector";
 
 interface IProps {
   id: number;
-  history: History;
 }
 
 export default function RegionPage(props: IProps) {
   const t = useTranslation();
+  const history = useHistory();
   const [saveLoad, saving] = useLoad();
 
   const storeRegion = useAppSelector(state =>
@@ -67,7 +67,7 @@ export default function RegionPage(props: IProps) {
       const data = await saveLoad(duluAxios =>
         duluAxios.delete(`/api/regions/${props.id}`)
       );
-      if (data) props.history.replace("/regions");
+      if (data) history.replace("/regions");
     }
   };
 

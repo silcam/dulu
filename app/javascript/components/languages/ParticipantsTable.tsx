@@ -5,7 +5,6 @@ import { domainFromRole } from "../../models/Role";
 import { Link } from "react-router-dom";
 import { fullName } from "../../models/Person";
 import { ICluster } from "../../models/Cluster";
-import { History } from "history";
 import { IParticipantInflated, IParticipant } from "../../models/Participant";
 import StyledTable from "../shared/StyledTable";
 import { useLoadOnMount } from "../shared/useLoad";
@@ -23,7 +22,6 @@ interface IProps {
   cluster?: ICluster;
   can: { manage_participants?: boolean };
   basePath: string;
-  history: History<any>;
 }
 
 export default function ParticipantsTable(props: IProps) {
@@ -64,7 +62,6 @@ export default function ParticipantsTable(props: IProps) {
           cancel={() => setShowNewForm(false)}
           language_id={props.language && props.language.id}
           cluster_id={props.cluster && props.cluster.id}
-          history={props.history}
           basePath={props.basePath}
         />
       )}

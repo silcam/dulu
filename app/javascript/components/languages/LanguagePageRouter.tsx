@@ -27,32 +27,29 @@ export default function LanguagePageRouter(props: IProps) {
     <Switch>
       <Route
         path={props.basePath + "/participants/:participantId"}
-        render={({ match, history }) => (
+        render={({ match }) => (
           <LanguageParticipantPage
             {...props}
             participantId={parseInt(match.params.participantId)}
-            history={history}
             language={language}
           />
         )}
       />
       <Route
         path={props.basePath + "/events/new"}
-        render={({ location, history }) => (
+        render={({ location }) => (
           <LanguageNewEventPage
             {...props}
             location={location}
-            history={history}
             language={language}
           />
         )}
       />
       <Route
         path={props.basePath + "/events/:eventId"}
-        render={({ match, history }) => (
+        render={({ match }) => (
           <LanguageEventPage
             eventId={match.params.eventId}
-            history={history}
             {...props}
             language={language}
           />
@@ -80,19 +77,17 @@ export default function LanguagePageRouter(props: IProps) {
       />
       <Route
         path={props.basePath + "/domain_status_items/:domainStatusItemId"}
-        render={({ match, history }) => (
+        render={({ match }) => (
           <DomainStatusItemPage
             domainStatusItemId={parseInt(match.params.domainStatusItemId)}
-            history={history}
             {...props}
             language={language}
           />
         )}
       />
       <Route
-        render={({ history, location }) => (
+        render={({ location }) => (
           <LanguagePage
-            history={history}
             {...props}
             location={location}
             language={language}

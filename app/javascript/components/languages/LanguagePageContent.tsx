@@ -3,7 +3,7 @@ import LanguageEventsContainer from "./LanguageEventsContainer";
 import { DSICategory } from "../../models/DomainStatusItem";
 import { ILanguage } from "../../models/Language";
 import { LanguagePageTab } from "./LanguagePage";
-import { Location, History } from "history";
+import { Location } from "history";
 import I18nContext from "../../contexts/I18nContext";
 import TranslationProgress from "./TranslationProgress";
 import DomainStatus from "./DomainStatus";
@@ -15,7 +15,6 @@ interface IProps {
   tab: LanguagePageTab;
   location: Location;
 
-  history: History;
 }
 
 export default function LanguagePageContent(props: IProps) {
@@ -72,7 +71,6 @@ export default function LanguagePageContent(props: IProps) {
       <LanguageEventsContainer
         language={props.language}
         basePath={`/languages/${props.language.id}`}
-        history={props.history}
         domain={props.tab}
       />
       <ParticipantsTable
@@ -80,7 +78,6 @@ export default function LanguagePageContent(props: IProps) {
         language={props.language}
         can={props.language.can}
         basePath={`/languages/${props.language.id}`}
-        history={props.history}
       />
 
       <DomainStatus {...props} categories={categoriesByDomain(props.tab)} />

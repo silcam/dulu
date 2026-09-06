@@ -1,6 +1,5 @@
 import React from "react";
 import { ILanguage } from "../../models/Language";
-import { History } from "history";
 import { LanguageBackLink } from "../shared/BreadCrumbs";
 import EventView from "../events/EventView";
 
@@ -9,7 +8,6 @@ interface IProps {
   eventId: number;
   basePath: string;
 
-  history: History;
 }
 
 export default function LanguageEventPage(props: IProps) {

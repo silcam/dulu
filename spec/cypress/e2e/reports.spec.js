@@ -26,6 +26,17 @@ describe("Reports", () => {
     cy.contains("button", "Save").click();
     cy.contains("h2", "Ndop-Hdi");
     cy.contains("Created by Drew Mambo");
+
+    // Editing a saved report is the only place in the app that carries router
+    // location state: SavedReportViewer pushes the report as the second
+    // positional argument to history.push, and ReportViewer reads it back off
+    // location.state. React Router 6 changes that call's *shape* --
+    // navigate(to, { state }) -- rather than just its name, so it is worth
+    // having under test before the conversion.
+    cy.actionBarIcon("editIcon").click();
+    cy.location("pathname").should("include", "/reports/new/");
+    cy.contains("h3", "Ndop");
+    cy.contains("h4", "Hdi");
   });
 
   it("Domain Reports", () => {

@@ -1,5 +1,6 @@
+import { useHistory } from "react-router-dom";
 import React, { useState, useEffect, useContext } from "react";
-import { History, Location } from "history";
+import { Location } from "history";
 import DuluAxios from "../../util/DuluAxios";
 import { IReport } from "../../models/Report";
 import Loading from "../shared/Loading";
@@ -10,10 +11,10 @@ import I18nContext from "../../contexts/I18nContext";
 
 interface IProps {
   id: number;
-  history: History;
   location: Location;
 }
 export default function SavedReportViewer(props: IProps) {
+  const history = useHistory();
   const t = useContext(I18nContext);
   const [report, setReport] = useState<IReport | null>(null);
   useEffect(() => {
@@ -29,7 +30,7 @@ export default function SavedReportViewer(props: IProps) {
       <EditActionBar
         can={{ update: true }}
         edit={() =>
-          props.history.push(`/reports/new/${report.type}`, {
+          history.push(`/reports/new/${report.type}`, {
             report
           })
         }

@@ -1,3 +1,4 @@
+import { useHistory } from "react-router-dom";
 import React, { useState, useContext } from "react";
 import EditActionBar from "../shared/EditActionBar";
 import TextOrEditText from "../shared/TextOrEditText";
@@ -5,7 +6,6 @@ import update from "immutability-helper";
 // import styles from "./PersonPage.css";
 import ClusterLanguagesTable from "./ClusterLanguagesTable";
 import Cluster, { IClusterInflated } from "../../models/Cluster";
-import { History } from "history";
 import Loading from "../shared/Loading";
 import I18nContext from "../../contexts/I18nContext";
 import useLoad from "../shared/useLoad";
@@ -15,13 +15,13 @@ import ParticipantsTable from "../languages/ParticipantsTable";
 interface IProps {
   id: number;
   basePath: string;
-  history: History<any>;
   loading: boolean;
 }
 
 type MaybeIClusterInflated = IClusterInflated | undefined;
 
 export default function ClusterPage(props: IProps) {
+  const history = useHistory();
   const t = useContext(I18nContext);
   const [saveLoad, saving] = useLoad();
   const [editing, setEditing] = useState(false);
@@ -68,7 +68,7 @@ export default function ClusterPage(props: IProps) {
         duluAxios.delete(`/api/clusters/${props.id}`)
       );
       if (data) {
-        props.history.replace("/clusters");
+        history.replace("/clusters");
       }
     }
   };
@@ -122,7 +122,6 @@ export default function ClusterPage(props: IProps) {
           cluster={cluster}
           can={cluster.can}
           basePath={props.basePath}
-          history={props.history}
         />
       )}
     </div>

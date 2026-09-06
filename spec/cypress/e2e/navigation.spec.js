@@ -71,10 +71,20 @@ describe("Navigation", () => {
     // only mention of Cancel in the suite is an assertion that it is *absent*.
     // Both take their history from the router rather than from a prop, so a
     // green suite would otherwise say nothing about them.
+
     // Olga, not Drew: adding a region is permission-gated, as regions.spec.js
     // also has to account for.
     cy.login("olga_ngombo@sil.org");
-    cy.visit("/regions");
+
+    // On the languages board, not the regions board, and the table assertion is
+    // load-bearing rather than decorative. GoBar searches the languages/people/
+    // organizations that CoreData fetches after first paint, and its
+    // `useEffect(..., [query])` only recomputes on a query change -- so typing
+    // before that fetch lands leaves the dropdown permanently empty. Waiting on
+    // a row proves the store is populated first. (That the app behaves this way
+    // at all is a real defect; it is filed as a Phase 8 item.)
+    cy.visit("/languages");
+    cy.contains("tr", "Hdi");
 
     // GoBar pushes. Its results are <li> driven by onMouseDown, not a <Link>.
     cy.get("input[placeholder='Go']").type("Hdi");
@@ -82,9 +92,10 @@ describe("Navigation", () => {
     cy.location("pathname").should("eq", hdiPath);
 
     cy.go("back");
-    cy.location("pathname").should("eq", "/regions");
+    cy.location("pathname").should("eq", "/languages");
 
     // CancelButton is history.goBack(), the only caller of it in the app.
+    cy.visit("/regions");
     cy.icon("addIcon").click();
     cy.placeholder("Name").should("exist");
     cy.contains("Cancel").click();

@@ -21,6 +21,9 @@ import LanguagesBoard from "../components/languages/LanguagesBoard";
 
 interface IProps {
   user: User;
+  // Not used for navigation -- BaseMainRouter only puts it in the payload it
+  // POSTs to /api/errors from componentDidCatch. React Router 6 has no history
+  // object to hand over, so this becomes the location at that point.
   history: History;
 }
 
@@ -68,9 +71,8 @@ class BaseMainRouter extends React.Component<IProps, IState> {
         <Switch>
           <Route
             path="/languages/:idOrAction?"
-            render={({ match, history, location }) => (
+            render={({ match, location }) => (
               <LanguagesBoard
-                history={history}
                 location={location}
                 {...matchParamsForChild(match)}
               />
@@ -78,15 +80,14 @@ class BaseMainRouter extends React.Component<IProps, IState> {
           />
           <Route
             path="/regions/:idOrAction?"
-            render={({ history, match }) => (
-              <RegionsBoard history={history} {...matchParamsForChild(match)} />
+            render={({ match }) => (
+              <RegionsBoard {...matchParamsForChild(match)} />
             )}
           />
           <Route
             path="/clusters/:idOrAction?"
-            render={({ history, match, location }) => (
+            render={({ match, location }) => (
               <ClustersBoard
-                history={history}
                 location={location}
                 {...matchParamsForChild(match)}
               />
@@ -94,18 +95,16 @@ class BaseMainRouter extends React.Component<IProps, IState> {
           />
           <Route
             path="/people/:actionOrId?/:id?"
-            render={({ match, history }) => (
+            render={({ match }) => (
               <PeopleBoard
-                history={history}
                 {...routeActionAndId(match.params)}
               />
             )}
           />
           <Route
             path="/organizations/:actionOrId?/:id?"
-            render={({ match, history }) => (
+            render={({ match }) => (
               <OrganizationsBoard
-                history={history}
                 {...routeActionAndId(match.params)}
               />
             )}
@@ -115,14 +114,14 @@ class BaseMainRouter extends React.Component<IProps, IState> {
           <Route path="/feed" render={() => <NotificationsPage />} />
           <Route
             path="/participants/:id"
-            render={({ match, history }) => (
-              <ParticipantPage history={history} id={match.params.id} />
+            render={({ match }) => (
+              <ParticipantPage id={match.params.id} />
             )}
           />
           <Route
             path="/*activities/:id"
-            render={({ match, history }) => (
-              <ActivityPage history={history} id={match.params.id} />
+            render={({ match }) => (
+              <ActivityPage id={match.params.id} />
             )}
           />
           <Route render={() => <Dashboard />} />

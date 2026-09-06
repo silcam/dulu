@@ -3,7 +3,6 @@ import DuluAxios from "../../util/DuluAxios";
 import { lastYear } from "../../util/Date";
 import BasicEventsTable from "./BasicEventsTable";
 import { IEvent, IPeriod } from "../../models/Event";
-import { History } from "history";
 import { Adder, SetCan } from "../../models/TypeBucket";
 import { IPerson } from "../../models/Person";
 import { ICluster } from "../../models/Cluster";
@@ -14,7 +13,6 @@ import List from "../../models/List";
 export interface IProps {
   events: List<IEvent>;
   basePath: string;
-  history: History;
   addPeople: Adder<IPerson>;
   addClusters: Adder<ICluster>;
   addLanguages: Adder<ILanguage>;
@@ -63,7 +61,6 @@ export default function EventsTable(props: IProps) {
       basePath={props.basePath}
       can={props.can}
       noAdd={props.noAdd}
-      history={props.history}
       moreEventsState={
         loadingMore ? "loading" : props.eventsBackTo ? "button" : "none"
       }

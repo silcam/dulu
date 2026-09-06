@@ -1,17 +1,29 @@
 import React from "react";
-import { Location, History } from "history";
+import { History, Location } from "history";
+import { useHistory } from "react-router-dom";
 import { ILanguage } from "../../models/Language";
 import { LanguageBackLink } from "../shared/BreadCrumbs";
 import NewEventForm from "../events/NewEventForm";
 
-interface IProps {
+interface IOwnProps {
   location: Location;
-  history: History;
   language: ILanguage;
   basePath: string;
 }
 
-export default class LanguageNewEventPage extends React.PureComponent<
+interface IProps extends IOwnProps {
+  history: History;
+}
+
+// Hooks cannot be called in a class, so the history arrives as a prop from this
+// wrapper rather than from withRouter -- the shape MainRouter already uses.
+export default function LanguageNewEventPage(props: IOwnProps) {
+  const history = useHistory();
+
+  return <BaseLanguageNewEventPage {...props} history={history} />;
+}
+
+class BaseLanguageNewEventPage extends React.PureComponent<
   IProps,
   {}
 > {

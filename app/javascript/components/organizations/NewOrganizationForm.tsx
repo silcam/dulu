@@ -1,3 +1,4 @@
+import { useHistory } from "react-router-dom";
 import React, { useContext, useState } from "react";
 import SaveButton from "../shared/SaveButton";
 import CancelButton from "../shared/CancelButton";
@@ -5,15 +6,11 @@ import ValidatedTextInput from "../shared/ValidatedTextInput";
 import FormGroup from "../shared/FormGroup";
 import TextInput from "../shared/TextInput";
 import TextArea from "../shared/TextArea";
-import { History } from "history";
 import I18nContext from "../../contexts/I18nContext";
 import useLoad from "../shared/useLoad";
 
-interface IProps {
-  history: History;
-}
-
-export default function NewOrganizationForm(props: IProps) {
+export default function NewOrganizationForm() {
+  const history = useHistory();
   const t = useContext(I18nContext);
 
   const [shortName, setShortName] = useState("");
@@ -34,7 +31,7 @@ export default function NewOrganizationForm(props: IProps) {
         })
       );
       if (data)
-        props.history.push(`/organizations/${data.organizations[0].id}`);
+        history.push(`/organizations/${data.organizations[0].id}`);
     }
   };
 

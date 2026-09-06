@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import style from "./ReportsViewer.css";
 import ReportSideBar from "./ReportSideBar";
 import Loading from "../shared/Loading";
-import { History, Location } from "history";
+import { Location } from "history";
 import { ReportType, blankReport } from "../../models/Report";
 import SaveReportBar from "./SaveReportBar";
 import ReportBody from "./ReportBody";
@@ -10,7 +10,6 @@ import useViewPrefs from "../../reducers/useViewPrefs";
 
 interface IProps {
   type: ReportType;
-  history: History;
   location: Location;
 }
 

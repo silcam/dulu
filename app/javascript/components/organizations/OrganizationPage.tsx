@@ -4,9 +4,8 @@ import TextOrEditText from "../shared/TextOrEditText";
 import SaveIndicator from "../shared/SaveIndicator";
 import DangerButton from "../shared/DangerButton";
 import TextOrTextArea from "../shared/TextOrTextArea";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { IOrganization } from "../../models/Organization";
-import { History } from "history";
 import I18nContext from "../../contexts/I18nContext";
 import TextOrInput from "../shared/TextOrInput";
 import { CountrySearchTextInput } from "../shared/SearchTextInput";
@@ -18,10 +17,10 @@ import OrganizationPicker from "./OrganizationPicker";
 
 interface IProps {
   id: number;
-  history: History;
 }
 
 export default function OrganizationPage(props: IProps) {
+  const history = useHistory();
   const t = useContext(I18nContext);
 
   const organization = useSelector((state: AppState) =>
@@ -60,7 +59,7 @@ export default function OrganizationPage(props: IProps) {
       duluAxios.delete(`/api/organizations/${props.id}`)
     );
     if (success) {
-      props.history.push("/organizations");
+      history.push("/organizations");
     }
   };
 

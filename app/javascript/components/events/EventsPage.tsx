@@ -24,8 +24,8 @@ export default function EventsPage() {
 
       <Route
         path="/events/:id"
-        render={({ match, history }) => (
-          <EventPage id={match.params.id} history={history} />
+        render={({ match }) => (
+          <EventPage id={match.params.id} />
         )}
       />
       <Route

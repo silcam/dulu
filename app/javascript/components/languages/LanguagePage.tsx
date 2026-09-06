@@ -4,7 +4,7 @@ import LanguagePageContent from "./LanguagePageContent";
 import { Route } from "react-router-dom";
 import I18nContext from "../../contexts/I18nContext";
 import { ILanguage } from "../../models/Language";
-import { Location, History } from "history";
+import { Location } from "history";
 import NotesView from "../notes/NotesView";
 import { loadAction } from "../../reducers/LoadAction";
 import { useDispatch } from "react-redux";
@@ -31,7 +31,6 @@ interface IProps {
   basePath: string;
   language: ILanguage;
   location: Location;
-  history: History;
 }
 
 export default function LanguagePage(props: IProps) {
@@ -80,7 +79,6 @@ export default function LanguagePage(props: IProps) {
                   language={language}
                   tab={name}
                   location={props.location}
-                  history={props.history}
                 />
               </TabPanel>
             ))}

@@ -12,20 +12,18 @@ export default function ReportsRouter() {
     <Switch>
       <Route
         path="/reports/new/:type"
-        render={({ match, history, location }) => (
+        render={({ match, location }) => (
           <ReportViewer
             type={match.params.type}
-            history={history}
             location={location}
           />
         )}
       />
       <Route
         path="/reports/:id"
-        render={({ match, history, location }) => (
+        render={({ match, location }) => (
           <SavedReportViewer
             id={match.params.id}
-            history={history}
             location={location}
           />
         )}

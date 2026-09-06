@@ -5,7 +5,6 @@ import AddIcon from "../shared/icons/AddIcon";
 import FlexSpacer from "../shared/FlexSpacer";
 import { Link } from "react-router-dom";
 import NewRegionForm from "./NewRegionForm";
-import { History } from "history";
 import GoBar from "../shared/GoBar";
 import { useLoadOnMount } from "../shared/useLoad";
 import useAppSelector from "../../reducers/useAppSelector";
@@ -15,7 +14,6 @@ import RegionPage from "./RegionPage";
 interface IProps {
   id?: number;
   basePath: string;
-  history: History;
   action: string;
 }
 
@@ -51,9 +49,9 @@ export default function RegionsBoard(props: IProps) {
           <RegionsTable id={props.id} regions={regions} />
         </div>
         <div className={style.detail}>
-          {props.action == "new" && <NewRegionForm history={props.history} />}
+          {props.action == "new" && <NewRegionForm />}
           {props.id && (
-            <RegionPage key={props.id} id={props.id} history={props.history} />
+            <RegionPage key={props.id} id={props.id} />
           )}
         </div>
       </div>
