@@ -67,7 +67,7 @@ Defined once here; each phase says "run the gate" rather than repeating it.
 nvm use                            # Phase 2 onward: .nvmrc pins Node 20.11.1
 bin/rails test                     # 400 tests / 1319 assertions as of Phase 6, 0 failures
 npx jest --ci                      # must stay at 125 passed
-yarn test:cypress:gate             # 21 specs / 98 tests as of Phase 7c -- see notes below
+yarn test:cypress:gate             # 21 specs / 98 tests as of Phase 7c(2) -- see notes below
                                    # NB: its `yarn testPacks` step exits 0 on the run after
                                    # a FAILED compile -- see Phase 7c's build-hazard note
 yarn typecheck                     # Phase 2 onward -- see "Where type-checking lives"
@@ -163,7 +163,7 @@ failures fall into two distinct groups, and only one of them is noise:
    `participants.spec.js` "Adds, edits and finishes Drew", `regions.spec.js` "Changes LPF",
    anything going through the `searchFill` command or `cy.placeholder("Name")`. These are
    all **one application bug**: the pickers fire a request per keystroke and let a late
-   response overwrite a newer one (Phase 8, item 5). It presents as a detached `<li>`, as a
+   response overwrite a newer one (Phase 8, item 6). It presents as a detached `<li>`, as a
    dropdown covering the next form control, or — most clearly — as
    `expected input to have value 'Drew Mambo', but the value was 'Lance Armstrong'`. It
    moves between specs because the race is probabilistic, not because it is noise. **Do not
@@ -1818,7 +1818,7 @@ Sized concretely:
 | `useHistory` | 8 |
 | `<Switch` | 6 |
 | `<Redirect` | 1 |
-| **files importing `react-router`** | **64** |
+| **files importing `react-router`** | ~~**64**~~ — **44 of them import only `Link`** |
 
 This is an API rewrite, not a version bump: `Switch`→`Routes`, `component=`→`element=`,
 `useHistory`→`useNavigate`, `Redirect`→`Navigate`, changed nested-route and relative-path
@@ -1838,8 +1838,21 @@ the suite green and without depending on v6. Each `IProps` also stopped extendin
 `history`/`match`/`location` with `tsc` staying quiet about it. No parent does today; all
 nine were checked.
 
-**That 64-file, 18-`withRouter` number — not the React version — is what determines this
-phase's length.** Consider `react-router` 6.4+ data APIs out of scope; port to the v6
+~~**That 64-file, 18-`withRouter` number — not the React version — is what determines this
+phase's length.**~~ **Wrong for the third time, and in the same direction.** `Link` is
+unchanged in v6, and **44 of the 64 files import nothing else** — they need no work at
+all. Counting what actually changes:
+
+| | | status |
+|---|---|---|
+| `withRouter` call sites | 9 | **done, 7c (1/n)** |
+| components declaring a `history` prop | 25 | **done, 7c (2/n)** |
+| `history={...}` pass-downs | 30 | **done, 7c (2/n)** |
+| `<Switch>` / `<Route>` files | **7** | remaining |
+| `push` / `replace` / `goBack` call sites | 26 | remaining (mechanical) |
+| files importing only `Link` | 44 | no work |
+
+Consider `react-router` 6.4+ data APIs out of scope; port to the v6
 component API and stop. **`react-router-dom` 7 is out of scope for this phase on a hard
 constraint, not a preference:** every 7.x declares `peerDependencies: { react: ">=18" }`,
 so it cannot land before 7a. If it is wanted at all, it is a separate hop after React 18.
@@ -1942,7 +1955,14 @@ Work items, in the order they deserve attention:
 3. **Three SQL injection findings** — `app/models/event.rb:120`,
    `app/models/concerns/multi_word_search.rb:13`, and `app/models/domain_report.rb:64`
    (interpolated `@period.finish`). Convert to bound parameters.
-4. **Two defects in the global search, both found in Phase 6g while establishing
+4. **`GoBar` never recomputes its matches when its data arrives.** Its
+   `useEffect(() => setMatches(search(query, props)), [query])` lists only `query` as a
+   dependency, while the languages/people/organizations it searches are fetched by
+   `CoreData` *after* first paint. Type before that lands and the dropdown stays empty
+   until you type another character. Found in Phase 7c while writing a test that had to
+   wait on a table row before typing, purely to work around it. Same family as the search
+   picker race below. Add the searched lists to the dependency array.
+5. **Two defects in the global search, both found in Phase 6g while establishing
    that `Searcher` is not a route consumer.** Neither is a regression from this upgrade;
    both predate it. (a) `Searcher.tsx`'s `flattenResults` discards the result of
    `flatResults.concat(flattenResults(result.subresults.results, level + 1))` — the return
@@ -1950,7 +1970,7 @@ Work items, in the order they deserve attention:
    commented out of `Api::SearchesController`, so activities are absent from global search
    entirely. Worth asking whether (b) was deliberate before "fixing" it; (a) is plainly a
    bug.
-5. **The person/organization search pickers do not discard stale responses.** Typing into
+6. **The person/organization search pickers do not discard stale responses.** Typing into
    a picker fires a request per keystroke and each response overwrites the results list,
    so a slow earlier response can land after a later one and replace the correct results.
    Observed in E2E as pressing Enter selecting the wrong person entirely ("expected input
@@ -1958,28 +1978,28 @@ Work items, in the order they deserve attention:
    result failing because the list re-rendered underneath the click. Users hit the same
    thing on a slow connection. Fix by tagging each request and ignoring any response that
    is not for the current query.
-6. **`DomainReport#gen_activity_items` has no deterministic order.**
+7. **`DomainReport#gen_activity_items` has no deterministic order.**
    `app/models/domain_report.rb:66` orders by `start_date: :desc` with no tiebreaker, so
    rows sharing a date come back in whatever order PostgreSQL feels like — users see the
    report reshuffle between loads. It is the same method as the SQL injection finding
    above, so fix both in one pass. `spec/cypress/integration/reports.spec.js` was made
    order-agnostic in Phase 2 to stop it failing at random; tighten it back up once the
    query is deterministic.
-7. **Regenerate `config/brakeman.ignore`.** Its 5 entries no longer match anything —
+8. **Regenerate `config/brakeman.ignore`.** Its 5 entries no longer match anything —
    they reference `app/views/dashboard/dashboard.html.erb`,
    `app/views/languages/show.html.erb` and `app/views/clusters/index.html.erb`, all ERB
    views deleted during the React migration. A stale ignore file is worse than none: it
    reads as "reviewed and accepted" for findings that no longer exist.
-8. **The frontend has no session-expiry handling.** `DuluAxios.handleError` knows only
+9. **The frontend has no session-expiry handling.** `DuluAxios.handleError` knows only
    `"server"` and `"connection"`. Phase 4 made a logged-out XHR return 401 (it used to
    return a 302 that axios followed cross-origin), so the status is now clean and
    distinguishable — nothing consumes it. Surface "you have been logged out, sign in
    again" instead of a generic error.
-9. **A stale CSRF token on the sign-in button gives an error page.** Leave the welcome
+10. **A stale CSRF token on the sign-in button gives an error page.** Leave the welcome
    page open past session expiry, click sign in, and `omniauth-rails_csrf_protection`
    raises from middleware. Rails maps that to 422, but the user sees an error page rather
    than a retry. Rescue it and re-render the welcome page.
-10. **`hd: 'sil.org'` does not restrict who can log in, and someone probably thinks it
+11. **`hd: 'sil.org'` does not restrict who can log in, and someone probably thinks it
    does.** `config/initializers/omniauth.rb` passes `hd` to Google, and Phase 4 confirmed
    it still reaches the authorize URL under `omniauth-google-oauth2` 1.x. But `hd` is a
    *hint* to Google's account chooser, not a guarantee, and Google's own guidance is to
@@ -1991,7 +2011,7 @@ Work items, in the order they deserve attention:
    Person allowlist is a defensible design — but the belief that `hd` enforces the domain
    should either be made true (check the returned `hd`/email domain in `#create`) or
    written down as false.
-11. **Re-run `bundle exec brakeman` expecting zero warnings**, and consider adding it to
+12. **Re-run `bundle exec brakeman` expecting zero warnings**, and consider adding it to
    the gate as a hard failure rather than a compare-against-known-list.
 
 By the time this phase runs, brakeman will be unpinned (Phase 5 lifts it to 6+ on Ruby
@@ -2156,6 +2176,8 @@ Phase 7  React Router 6 -> React 18 -> react-redux 9   independent; router is th
          (router FIRST, on React 16 -- see 7c)
          react-router-dom ^6.30.6; v7 needs React >=18, so not this phase
          7c (1/n) withRouter removed on v5           DONE  9 sites, not 18
+         7c (2/n) history prop-drilling removed on v5 DONE  25 components, 30 pass-downs
+         7c (3/n) install v6: 7 router files + 26 navigate calls
 Phase 8  Security pass + deploy mechanics         post-upgrade, no version changes
          (8b's deploy prerequisites are needed at the FIRST deploy of this
           branch, not after Phase 7 -- see 8b)
