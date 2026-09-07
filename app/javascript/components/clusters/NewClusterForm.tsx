@@ -1,4 +1,4 @@
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import React, { useState } from "react";
 import FormGroup from "../shared/FormGroup";
 import SaveButton from "../shared/SaveButton";
@@ -8,7 +8,7 @@ import useTranslation from "../../i18n/useTranslation";
 import useLoad from "../shared/useLoad";
 
 export default function NewClusterForm() {
-  const history = useHistory();
+  const navigate = useNavigate();
   const t = useTranslation();
   const [saveLoad, saving] = useLoad();
 
@@ -18,7 +18,7 @@ export default function NewClusterForm() {
     const data = await saveLoad(duluAxios =>
       duluAxios.post("/api/clusters", { cluster: { name } })
     );
-    if (data) history.push(`/clusters/${data.clusters[0].id}`);
+    if (data) navigate(`/clusters/${data.clusters[0].id}`);
   };
 
   return (

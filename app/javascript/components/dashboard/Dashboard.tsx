@@ -5,7 +5,7 @@ import styles from "./Dashboard.css";
 import useViewPrefs from "../../reducers/useViewPrefs";
 import MainContent from "./MainContent";
 import DashboardSidebar from "./DashboardSidebar";
-import LanguagePageRouter from "../languages/LanguagePageRouter";
+import DashboardLanguagePage from "./DashboardLanguagePage";
 
 export type Selection =
   | {
@@ -34,11 +34,7 @@ export default function Dashboard() {
         <Searcher setSeacherActive={setSearcherActive} />
         {!searcherActive &&
           (selection.type == "language" ? (
-            <LanguagePageRouter
-              basePath=""
-              id={selection.id}
-              key={selection.id}
-            />
+<DashboardLanguagePage id={selection.id!} key={selection.id} />
           ) : (
             <MainContent selection={selection} />
           ))}

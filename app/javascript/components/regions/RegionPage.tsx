@@ -9,24 +9,21 @@ import { Link } from "react-router-dom";
 import { AnyObj } from "../../models/TypeBucket";
 import { fullName } from "../../models/Person";
 import Loading from "../shared/Loading";
-import { useHistory } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import FormGroup from "../shared/FormGroup";
 import PersonPicker from "../people/PersonPicker";
 import useTranslation from "../../i18n/useTranslation";
 import useLoad, { useLoadOnMount } from "../shared/useLoad";
 import useAppSelector from "../../reducers/useAppSelector";
 
-interface IProps {
-  id: number;
-}
-
-export default function RegionPage(props: IProps) {
+export default function RegionPage() {
   const t = useTranslation();
-  const history = useHistory();
+  const navigate = useNavigate();
+  const id = parseInt(useParams().id!);
   const [saveLoad, saving] = useLoad();
 
   const storeRegion = useAppSelector(state =>
-    Region.inflate(state, state.regions.get(props.id))
+    Region.inflate(state, state.regions.get(id))
   );
   const languages = useAppSelector(state => state.languages);
   const clusters = useAppSelector(state => state.clusters);
@@ -36,7 +33,7 @@ export default function RegionPage(props: IProps) {
   );
   const [editing, setEditing] = useState(false);
 
-  useLoadOnMount(`/api/regions/${props.id}`);
+  useLoadOnMount(`/api/regions/${id}`);
 
   const edit = () => {
     setDraftRegion({ ...storeRegion });
@@ -55,7 +52,7 @@ export default function RegionPage(props: IProps) {
 
   const save = async () => {
     const data = await saveLoad(duluAxios =>
-      duluAxios.put(`/api/regions/${props.id}`, {
+      duluAxios.put(`/api/regions/${id}`, {
         region: Region.regionParams(draftRegion!)
       })
     );
@@ -65,9 +62,9 @@ export default function RegionPage(props: IProps) {
   const del = async () => {
     if (confirm(t("confirm_delete_region", { name: storeRegion.name }))) {
       const data = await saveLoad(duluAxios =>
-        duluAxios.delete(`/api/regions/${props.id}`)
+        duluAxios.delete(`/api/regions/${id}`)
       );
-      if (data) history.replace("/regions");
+      if (data) navigate("/regions", { replace: true });
     }
   };
 

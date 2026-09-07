@@ -2,25 +2,23 @@ import React, { useState } from "react";
 import style from "./ReportsViewer.css";
 import ReportSideBar from "./ReportSideBar";
 import Loading from "../shared/Loading";
-import { Location } from "history";
-import { ReportType, blankReport } from "../../models/Report";
+import { useLocation, useParams } from "react-router-dom";
+import { IReport, ReportType, blankReport } from "../../models/Report";
 import SaveReportBar from "./SaveReportBar";
 import ReportBody from "./ReportBody";
 import useViewPrefs from "../../reducers/useViewPrefs";
 
-interface IProps {
-  type: ReportType;
-  location: Location;
-}
-
-export default function ReportViewer(props: IProps) {
+export default function ReportViewer() {
+  const type = useParams().type as ReportType;
+  const location = useLocation();
   const [saving, setSaving] = useState(false);
   const [loading, setLoading] = useState(false);
   const { viewPrefs } = useViewPrefs();
-  const baseReport =
-    props.location.state && props.location.state.report
-      ? props.location.state.report
-      : blankReport(props.type, viewPrefs.domainReportParams);
+  // SavedReportViewer hands the report over as navigate()'s `state` option.
+  const state = location.state as { report?: IReport } | null;
+  const baseReport = state && state.report
+    ? state.report
+    : blankReport(type, viewPrefs.domainReportParams);
   const [report, setReport] = useState(baseReport);
 
   return (

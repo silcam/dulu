@@ -3,8 +3,7 @@ import { IReport, reportParams } from "../../models/Report";
 import TextInput from "../shared/TextInput";
 import SaveButton from "../shared/SaveButton";
 import DuluAxios from "../../util/DuluAxios";
-import { useHistory } from "react-router-dom";
-import { History } from "history";
+import { useNavigate, NavigateFunction } from "react-router-dom";
 import I18nContext from "../../contexts/I18nContext";
 import FormGroup from "../shared/FormGroup";
 
@@ -14,7 +13,7 @@ interface IOwnProps {
 }
 
 interface IProps extends IOwnProps {
-  history: History;
+  navigate: NavigateFunction;
 }
 
 interface IState {
@@ -39,7 +38,7 @@ class _SaveReportBar extends React.PureComponent<IProps, IState> {
       }
     });
     if (data) {
-      this.props.history.push(`/reports/${data.report.id}`);
+      this.props.navigate(`/reports/${data.report.id}`);
     } else {
       this.setState({ saving: false });
     }
@@ -79,7 +78,7 @@ class _SaveReportBar extends React.PureComponent<IProps, IState> {
 // comes in as an ordinary prop from a function wrapper -- the same shape
 // MainRouter already uses for BaseMainRouter.
 export default function SaveReportBar(props: IOwnProps) {
-  const history = useHistory();
+  const navigate = useNavigate();
 
-  return <_SaveReportBar {...props} history={history} />;
+  return <_SaveReportBar {...props} navigate={navigate} />;
 }

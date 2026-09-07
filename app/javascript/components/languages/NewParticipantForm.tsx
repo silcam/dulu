@@ -1,5 +1,4 @@
-import { History } from "history";
-import { useHistory } from "react-router-dom";
+import { useNavigate, NavigateFunction } from "react-router-dom";
 import React from "react";
 import update from "immutability-helper";
 import SmallSaveAndCancel from "../shared/SmallSaveAndCancel";
@@ -27,16 +26,16 @@ interface IProps {
 
   // Inserted by the wrapper below
   saveLoad: ReturnType<typeof useLoad>[0];
-  history: History;
+  navigate: NavigateFunction;
 }
 
 export default function NewParticipantForm(
-  props: Omit<IProps, "saveLoad" | "history">
+  props: Omit<IProps, "saveLoad" | "navigate">
 ) {
   const [saveLoad] = useLoad();
-  const history = useHistory();
+  const navigate = useNavigate();
   return (
-    <BaseNewParticipantForm {...props} saveLoad={saveLoad} history={history} />
+    <BaseNewParticipantForm {...props} saveLoad={saveLoad} navigate={navigate} />
   );
 }
 interface IState {
@@ -88,7 +87,7 @@ class BaseNewParticipantForm extends React.PureComponent<IProps, IState> {
       })
     );
     if (data) {
-      this.props.history.push(
+      this.props.navigate(
         `${this.props.basePath}/participants/${data.participants[0].id}`
       );
     } else {

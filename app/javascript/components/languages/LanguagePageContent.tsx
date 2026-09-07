@@ -3,7 +3,6 @@ import LanguageEventsContainer from "./LanguageEventsContainer";
 import { DSICategory } from "../../models/DomainStatusItem";
 import { ILanguage } from "../../models/Language";
 import { LanguagePageTab } from "./LanguagePage";
-import { Location } from "history";
 import I18nContext from "../../contexts/I18nContext";
 import TranslationProgress from "./TranslationProgress";
 import DomainStatus from "./DomainStatus";
@@ -13,7 +12,6 @@ import ParticipantsTable from "./ParticipantsTable";
 interface IProps {
   language: ILanguage;
   tab: LanguagePageTab;
-  location: Location;
 
 }
 

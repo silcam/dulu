@@ -1,4 +1,4 @@
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import React, { useContext, useState } from "react";
 import SaveButton from "../shared/SaveButton";
 import CancelButton from "../shared/CancelButton";
@@ -10,7 +10,7 @@ import I18nContext from "../../contexts/I18nContext";
 import useLoad from "../shared/useLoad";
 
 export default function NewOrganizationForm() {
-  const history = useHistory();
+  const navigate = useNavigate();
   const t = useContext(I18nContext);
 
   const [shortName, setShortName] = useState("");
@@ -31,7 +31,7 @@ export default function NewOrganizationForm() {
         })
       );
       if (data)
-        history.push(`/organizations/${data.organizations[0].id}`);
+        navigate(`/organizations/${data.organizations[0].id}`);
     }
   };
 

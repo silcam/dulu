@@ -1,23 +1,20 @@
-import { useHistory } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import React, { useEffect } from "react";
 import Loading from "../shared/Loading";
 import { IParticipant } from "../../models/Participant";
 import { useLoadOnMount } from "../shared/useLoad";
 import useAppSelector from "../../reducers/useAppSelector";
 
-interface IProps {
-  id: number;
-}
+export default function ParticipantPage() {
+  const id = parseInt(useParams().id!);
+  const navigate = useNavigate();
+  const loading = useLoadOnMount(`/api/participants/${id}`, [id]);
 
-export default function ParticipantPage(props: IProps) {
-  const history = useHistory();
-  const loading = useLoadOnMount(`/api/participants/${props.id}`, [props.id]);
-
-  const participant = useAppSelector(state => state.participants.get(props.id));
+  const participant = useAppSelector(state => state.participants.get(id));
 
   useEffect(() => {
     if (participant.id > 0) {
-      history.replace(routeTo(participant));
+      navigate(routeTo(participant), { replace: true });
     }
   });
 

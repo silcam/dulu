@@ -1,11 +1,10 @@
-import { History } from "history";
 import React from "react";
 import EditActionBar from "../shared/EditActionBar";
 import ParticipantRoles from "./ParticipantRoles";
 import update from "immutability-helper";
 import style from "./ParticipantView.css";
 import TextOrFuzzyDateInput from "../shared/TextOrFuzzyDateInput";
-import { Link, useHistory } from "react-router-dom";
+import { Link, useNavigate, NavigateFunction } from "react-router-dom";
 import Activity, { IActivity } from "../../models/Activity";
 import Spacer from "../shared/Spacer";
 import ProgressBar from "../shared/ProgressBar";
@@ -32,17 +31,17 @@ export interface IProps {
   activities: List<IActivity>;
   languages: List<ILanguage>;
   saveLoad: ReturnType<typeof useLoad>[0];
-  history: History;
+  navigate: NavigateFunction;
 }
 
 export default function ParticipantView(
   props: Omit<
     IProps,
-    "participant" | "activities" | "languages" | "saveLoad" | "history"
+    "participant" | "activities" | "languages" | "saveLoad" | "navigate"
   >
 ) {
   const [saveLoad] = useLoad();
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const participant = useParticipants(ptpt => ptpt.id == props.id).get(
     props.id
@@ -57,7 +56,7 @@ export default function ParticipantView(
   return (
     <BaseParticipantView
       {...props}
-      {...{ participant, activities, languages, saveLoad, history }}
+      {...{ participant, activities, languages, saveLoad, navigate }}
     />
   );
 }
@@ -118,7 +117,7 @@ class BaseParticipantView extends React.PureComponent<IProps, IState> {
         duluAxios.delete(`/api/participants/${this.props.id}`)
       );
       if (success) {
-        this.props.history.push(this.props.basePath);
+        this.props.navigate(this.props.basePath);
       }
     }
   };

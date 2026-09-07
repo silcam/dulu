@@ -1,38 +1,24 @@
 import React from "react";
-import { Switch, Route, Redirect } from "react-router-dom";
+import { Navigate, Outlet, useParams } from "react-router-dom";
 import { thisYear, thisMonth } from "./dateUtils";
-import EventPage from "./EventPage";
 import EventsCalendarContainer from "./EventsCalendarContainer";
-import CrashCauser from "./CrashCauser";
 
+// Its <Switch> moved into MainRouter's route tree. What remains is the layout
+// slot the events pages render into.
 export default function EventsPage() {
-  return (
-    <Switch>
-      <Route
-        path="/events/cal/:year/:month"
-        render={({ match }) => (
-          <EventsCalendarContainer
-            year={match.params.year}
-            month={match.params.month}
-          />
-        )}
-      />
-      <Route path="/events/new" render={() => "To be added..."} />
+  return <Outlet />;
+}
 
-      {/* For Testing purposes obviously! */}
-      <Route path="/events/crash-me-now" render={() => <CrashCauser />} />
+// EventsCalendar takes year and month as ordinary props and connect() sits
+// between it and the router, so the params are read here rather than in it.
+export function EventsCalendarRoute() {
+  const { year, month } = useParams();
 
-      <Route
-        path="/events/:id"
-        render={({ match }) => (
-          <EventPage id={match.params.id} />
-        )}
-      />
-      <Route
-        render={() => (
-          <Redirect to={`/events/cal/${thisYear()}/${thisMonth()}`} />
-        )}
-      />
-    </Switch>
-  );
+  return <EventsCalendarContainer year={year!} month={month!} />;
+}
+
+// What the v5 fallback <Redirect> did: an /events URL that matches nothing else
+// lands on the current month rather than falling through to the dashboard.
+export function EventsIndexRedirect() {
+  return <Navigate to={`/events/cal/${thisYear()}/${thisMonth()}`} replace />;
 }

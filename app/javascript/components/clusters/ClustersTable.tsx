@@ -1,5 +1,5 @@
 import React from "react";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Loading from "../shared/Loading";
 import style from "../shared/MasterDetail.css";
 import { ICluster } from "../../models/Cluster";
@@ -13,7 +13,7 @@ interface IProps {
 export default ClustersTable;
 
 function ClustersTable(props: IProps) {
-  const history = useHistory();
+  const navigate = useNavigate();
   const clusters = props.clusters;
 
   if (clusters.length() == 0) return <Loading />;
@@ -26,7 +26,7 @@ function ClustersTable(props: IProps) {
             <tr
               key={cluster.id}
               className={cluster.id == props.id ? style.selected : undefined}
-              onClick={() => history.push(`/clusters/${cluster.id}`)}
+              onClick={() => navigate(`/clusters/${cluster.id}`)}
             >
               <td>{cluster.name}</td>
             </tr>

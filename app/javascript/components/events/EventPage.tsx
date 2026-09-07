@@ -1,10 +1,7 @@
 import React from "react";
 import EventView from "./EventView";
+import { useParams } from "react-router-dom";
 
-export interface IProps {
-  id: number;
-}
-
-export default function EventPage(props: IProps) {
-  return <EventView id={props.id} />;
+export default function EventPage() {
+  return <EventView id={parseInt(useParams().id!)} />;
 }

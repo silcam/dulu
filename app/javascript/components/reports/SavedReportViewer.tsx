@@ -1,6 +1,5 @@
-import { useHistory } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import React, { useState, useEffect, useContext } from "react";
-import { Location } from "history";
 import DuluAxios from "../../util/DuluAxios";
 import { IReport } from "../../models/Report";
 import Loading from "../shared/Loading";
@@ -9,19 +8,16 @@ import ReportBody from "./ReportBody";
 import style from "./ReportsViewer.css";
 import I18nContext from "../../contexts/I18nContext";
 
-interface IProps {
-  id: number;
-  location: Location;
-}
-export default function SavedReportViewer(props: IProps) {
-  const history = useHistory();
+export default function SavedReportViewer() {
+  const id = parseInt(useParams().id!);
+  const navigate = useNavigate();
   const t = useContext(I18nContext);
   const [report, setReport] = useState<IReport | null>(null);
   useEffect(() => {
-    DuluAxios.get(`/api/reports/${props.id}`).then(data => {
+    DuluAxios.get(`/api/reports/${id}`).then(data => {
       if (data) setReport(data.report);
     });
-  }, [props.id]);
+  }, [id]);
 
   if (!report) return <Loading />;
 
@@ -30,8 +26,10 @@ export default function SavedReportViewer(props: IProps) {
       <EditActionBar
         can={{ update: true }}
         edit={() =>
-          history.push(`/reports/new/${report.type}`, {
-            report
+          navigate(`/reports/new/${report.type}`, {
+            // v5 took the state as a second positional argument; v6 takes it as
+            // a NavigateOptions field. ReportViewer reads it off location.state.
+            state: { report }
           })
         }
       />

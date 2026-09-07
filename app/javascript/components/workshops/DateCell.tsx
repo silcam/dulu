@@ -4,7 +4,7 @@ import { IWorkshop } from "../../models/Workshop";
 import { ILanguage } from "../../models/Language";
 import { T } from "../../i18n/i18n";
 import I18nContext from "../../contexts/I18nContext";
-import { LocationDescriptorObject } from "history";
+import { AnyObj } from "../../models/TypeBucket";
 
 interface IProps {
   workshop: IWorkshop;
@@ -28,20 +28,21 @@ function addEventLink(
   eventId: number | null,
   canUpdate: boolean | undefined,
   newEventText: string,
-  newEventPath: string | LocationDescriptorObject
+  newEvent: { pathname: string; state: AnyObj }
 ) {
   return canUpdate && !eventId ? (
-    <Link to={newEventPath}>{newEventText}</Link>
+    <Link to={newEvent.pathname} state={newEvent.state}>
+      {newEventText}
+    </Link>
   ) : (
     ""
   );
 }
 
-function newEventLocation(
-  workshop: IWorkshop,
-  language: ILanguage,
-  t: T
-): LocationDescriptorObject {
+// React Router 5 let location state ride inside the `to` object. In v6 `to` is
+// a Partial<Path> -- pathname/search/hash only -- and state is its own <Link>
+// prop, so the two travel separately from here on.
+function newEventLocation(workshop: IWorkshop, language: ILanguage, t: T) {
   return {
     pathname: `/languages/${language.id}/events/new`,
     state: {

@@ -1,25 +1,18 @@
 import React from "react";
 import styles from "../shared/MasterDetail.css";
-import { Link } from "react-router-dom";
+import { Link, Outlet, useLocation, useParams } from "react-router-dom";
 import AddIcon from "../shared/icons/AddIcon";
 import LanguagesTable from "./LanguagesTable";
 import FlexSpacer from "../shared/FlexSpacer";
 import GoBar from "../shared/GoBar";
-import { Location } from "history";
-import LanguagePageRouter from "./LanguagePageRouter";
 import { useLoadOnMount } from "../shared/useLoad";
 import useTranslation from "../../i18n/useTranslation";
 import useAppSelector from "../../reducers/useAppSelector";
 
-interface IProps {
-  action?: string;
-  id?: number;
-  basePath: string;
-  location: Location;
-}
-
-export default function LanguagesBoard(props: IProps) {
+export default function LanguagesBoard() {
   const t = useTranslation();
+  const { id } = useParams();
+  const location = useLocation();
 
   const languages = useAppSelector(state => state.languages);
   const can = useAppSelector(state => state.can.languages);
@@ -47,23 +40,16 @@ export default function LanguagesBoard(props: IProps) {
       </div>
       <div className={styles.masterDetailContainer}>
         <div className={styles.master}>
-          <LanguagesTable id={props.id} languages={languages} />
+          <LanguagesTable
+            id={id ? parseInt(id) : undefined}
+            languages={languages}
+          />
         </div>
-        <div className={styles.detail}>
-          {/* {props.action == "new" && (
-              <NewLanguageForm
-                t={props.t}
-                saving={props.savingNew}
-                addLanguage={addLanguage}
-              />
-            )} */}
-          {props.id && (
-            <LanguagePageRouter
-              key={props.id + location.pathname}
-              id={props.id}
-              basePath={props.basePath}
-            />
-          )}
+        {/* Keyed on the full pathname, which is what the old
+            `key={props.id + location.pathname}` on LanguagePageRouter did:
+            every navigation within a language remounts the detail pane. */}
+        <div className={styles.detail} key={location.pathname}>
+          <Outlet />
         </div>
       </div>
     </div>

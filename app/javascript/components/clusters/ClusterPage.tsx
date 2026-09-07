@@ -1,4 +1,5 @@
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { useClusterContext } from "./ClusterPageRouter";
 import React, { useState, useContext } from "react";
 import EditActionBar from "../shared/EditActionBar";
 import TextOrEditText from "../shared/TextOrEditText";
@@ -12,16 +13,11 @@ import useLoad from "../shared/useLoad";
 import useAppSelector from "../../reducers/useAppSelector";
 import ParticipantsTable from "../languages/ParticipantsTable";
 
-interface IProps {
-  id: number;
-  basePath: string;
-  loading: boolean;
-}
-
 type MaybeIClusterInflated = IClusterInflated | undefined;
 
-export default function ClusterPage(props: IProps) {
-  const history = useHistory();
+export default function ClusterPage() {
+  const props = useClusterContext();
+  const navigate = useNavigate();
   const t = useContext(I18nContext);
   const [saveLoad, saving] = useLoad();
   const [editing, setEditing] = useState(false);
@@ -68,7 +64,7 @@ export default function ClusterPage(props: IProps) {
         duluAxios.delete(`/api/clusters/${props.id}`)
       );
       if (data) {
-        history.replace("/clusters");
+        navigate("/clusters", { replace: true });
       }
     }
   };

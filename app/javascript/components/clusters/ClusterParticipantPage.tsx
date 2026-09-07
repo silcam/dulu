@@ -1,21 +1,17 @@
 import React from "react";
-import { ICluster } from "../../models/Cluster";
 import { ClusterBackLink } from "../shared/BreadCrumbs";
 import ParticipantView from "../languages/ParticipantView";
+import { useParams } from "react-router-dom";
+import { useClusterContext } from "./ClusterPageRouter";
 
-interface IProps {
-  cluster: ICluster;
-  participantId: number;
-  basePath: string;
-}
-
-export default function ClusterParticipantPage(props: IProps) {
-  const cluster = props.cluster;
+export default function ClusterParticipantPage() {
+  const { cluster, basePath } = useClusterContext();
+  const participantId = parseInt(useParams().participantId!);
 
   return (
     <div>
       <ClusterBackLink cluster={cluster} />
-      <ParticipantView {...props} id={props.participantId} />
+      <ParticipantView basePath={basePath} id={participantId} />
     </div>
   );
 }

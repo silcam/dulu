@@ -4,7 +4,7 @@ import TextOrEditText from "../shared/TextOrEditText";
 import SaveIndicator from "../shared/SaveIndicator";
 import DangerButton from "../shared/DangerButton";
 import TextOrTextArea from "../shared/TextOrTextArea";
-import { Link, useHistory } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { IOrganization } from "../../models/Organization";
 import I18nContext from "../../contexts/I18nContext";
 import TextOrInput from "../shared/TextOrInput";
@@ -15,23 +15,20 @@ import { useSelector } from "react-redux";
 import { AppState } from "../../reducers/appReducer";
 import OrganizationPicker from "./OrganizationPicker";
 
-interface IProps {
-  id: number;
-}
-
-export default function OrganizationPage(props: IProps) {
-  const history = useHistory();
+export default function OrganizationPage() {
+  const id = parseInt(useParams().id!);
+  const navigate = useNavigate();
   const t = useContext(I18nContext);
 
   const organization = useSelector((state: AppState) =>
-    state.organizations.get(props.id)
+    state.organizations.get(id)
   );
 
   const [deleting, setDeleting] = useState(false);
   const [draftOrg, setDraftOrg] = useState<IOrganization | null>(null);
   const draftOrgValid = draftOrg && draftOrg.short_name.length > 0;
 
-  useLoadOnMount(`/api/organizations/${props.id}`);
+  useLoadOnMount(`/api/organizations/${id}`);
   const [load, loading] = useLoad();
 
   const updateOrganization = (mergeOrg: Partial<IOrganization>) =>
@@ -44,7 +41,7 @@ export default function OrganizationPage(props: IProps) {
   const save = async () => {
     if (draftOrgValid) {
       const data = await load(duluAxios =>
-        duluAxios.put(`/api/organizations/${props.id}`, {
+        duluAxios.put(`/api/organizations/${id}`, {
           organization: draftOrg
         })
       );
@@ -56,10 +53,10 @@ export default function OrganizationPage(props: IProps) {
 
   const deleteOrg = async () => {
     const success = await load(duluAxios =>
-      duluAxios.delete(`/api/organizations/${props.id}`)
+      duluAxios.delete(`/api/organizations/${id}`)
     );
     if (success) {
-      history.push("/organizations");
+      navigate("/organizations");
     }
   };
 

@@ -3,7 +3,7 @@ import TextInput from "../shared/TextInput";
 import styles from "./Searcher.css";
 import I18nContext from "../../contexts/I18nContext";
 import useSearch from "../shared/useSearch";
-import { Link, useHistory } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const minQueryLength = 3;
 
@@ -21,7 +21,7 @@ interface IProps {
 
 function Searcher(props: IProps) {
   const t = useContext(I18nContext);
-  const history = useHistory();
+  const navigate = useNavigate();
   const [query, setQuery] = useState("");
   const [selectedPosition, setSelectedPosition] = useState(-1);
 
@@ -46,7 +46,7 @@ function Searcher(props: IProps) {
       case "Enter":
         const index = Math.max(selectedPosition, 0);
         if (flatResults[index] && flatResults[index].route)
-          history.push(flatResults[index].route!);
+          navigate(flatResults[index].route!);
     }
   };
 

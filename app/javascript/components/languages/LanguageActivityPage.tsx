@@ -1,19 +1,17 @@
 import React from "react";
-import { ILanguage } from "../../models/Language";
 import { LanguageBackLink } from "../shared/BreadCrumbs";
 import ActivityView from "./ActivityView";
+import { useLanguageContext } from "./LanguagePageRouter";
+import { useParams } from "react-router-dom";
 
-interface IProps {
-  language: ILanguage;
-  activityId: number;
-  basePath: string;
-}
+export default function LanguageActivityPage() {
+  const { language, basePath } = useLanguageContext();
+  const activityId = parseInt(useParams().activityId!);
 
-export default function LanguageActivityPage(props: IProps) {
   return (
     <div className="padBottom">
-      <LanguageBackLink language={props.language} />
-      <ActivityView {...props} />
+      <LanguageBackLink language={language} />
+      <ActivityView {...{ language, basePath, activityId }} />
     </div>
   );
 }

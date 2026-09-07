@@ -16,13 +16,9 @@ import useAppSelector from "../../reducers/useAppSelector";
 import I18nContext from "../../contexts/I18nContext";
 import { useDispatch } from "react-redux";
 // import styles from "./PersonPage.css";
-import { useHistory } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { setCurrentUserAction } from "../../reducers/currentUserReducer";
 import MyOrganizationsTable from "./MyOrganizationsTable";
-
-export interface PersonPageProps {
-  id: number;
-}
 
 interface IState {
   person?: IPerson;
@@ -33,19 +29,20 @@ interface IState {
   edited?: boolean;
 }
 
-export default function PersonPage(props: PersonPageProps) {
+export default function PersonPage() {
   const t = useContext(I18nContext);
+  const id = parseInt(useParams().id!);
   const dispatch = useDispatch();
-  const history = useHistory();
+  const navigate = useNavigate();
   const [saveLoad] = useLoad();
-  const propsPerson = useAppSelector(state => state.people.get(props.id));
+  const propsPerson = useAppSelector(state => state.people.get(id));
   const user = useAppSelector(state => state.currentUser);
 
   const [state, _setState] = useState<IState>({});
   const setState = (stateUpdate: Partial<IState>) =>
     _setState({ ...state, ...stateUpdate });
 
-  useLoadOnMount(`/api/people/${props.id}`, [props.id]);
+  useLoadOnMount(`/api/people/${id}`, [id]);
 
   const edit = () =>
     setState({
@@ -113,7 +110,7 @@ export default function PersonPage(props: PersonPageProps) {
     const success = await saveLoad(duluAxios =>
       duluAxios.delete(`/api/people/${propsPerson.id}`)
     );
-    if (success) history.push("/people");
+    if (success) navigate("/people");
   };
 
   const person = state.editing ? state.person : propsPerson;
@@ -183,7 +180,7 @@ export default function PersonPage(props: PersonPageProps) {
 
       <PersonEventsContainer
         person={person}
-        basePath={`/people/${props.id}`}
+        basePath={`/people/${id}`}
       />
 
       {person.isUser && !state.editing && (

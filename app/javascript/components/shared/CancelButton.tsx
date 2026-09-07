@@ -1,12 +1,12 @@
 import React, { useContext } from "react";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import I18nContext from "../../contexts/I18nContext";
 
 function CancelButton() {
   const t = useContext(I18nContext);
-  const history = useHistory();
+  const navigate = useNavigate();
   return (
-    <button className="btnRed" onClick={history.goBack}>
+    <button className="btnRed" onClick={() => navigate(-1)}>
       {t("Cancel")}
     </button>
   );

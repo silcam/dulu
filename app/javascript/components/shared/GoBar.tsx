@@ -1,5 +1,5 @@
 import React, { useContext, useState, useEffect } from "react";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { IPerson, fullName } from "../../models/Person";
 import { IOrganization } from "../../models/Organization";
 import { ILanguage } from "../../models/Language";
@@ -42,7 +42,7 @@ const routes = [
 
 function BaseGoBar(props: IProps) {
   const t = useContext(I18nContext);
-  const history = useHistory();
+  const navigate = useNavigate();
   const [query, setQuery] = useState("");
   const [matches, setMatches] = useState<Match[]>([]);
   const [activeIndex, setActiveIndex] = useState(0);
@@ -55,7 +55,7 @@ function BaseGoBar(props: IProps) {
   };
 
   const goTo = (match: Match) => {
-    history.push(match.url);
+    navigate(match.url);
     setQuery("");
     setActiveIndex(0);
   };

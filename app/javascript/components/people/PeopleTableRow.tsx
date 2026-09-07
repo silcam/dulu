@@ -1,6 +1,6 @@
 import React from "react";
 import styles from "../shared/MasterDetail.css";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { IPerson } from "../../models/Person";
 
 export default PeopleTableRow;
@@ -11,13 +11,13 @@ interface IProps {
 }
 
 function PeopleTableRow(props: IProps) {
-  const history = useHistory();
+  const navigate = useNavigate();
   const person = props.person;
   const rowClass = props.selected ? styles.selected : "";
   return (
     <tr
       className={rowClass}
-      onClick={() => history.push(`/people/${person.id}`)}
+      onClick={() => navigate(`/people/${person.id}`)}
     >
       <td>{`${person.last_name}, ${person.first_name}`}</td>
       {/* <td>

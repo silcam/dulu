@@ -1,22 +1,16 @@
 import React from "react";
 import styles from "../shared/MasterDetail.css";
 import OrganizationsTable from "./OrganizationsTable";
-import NewOrganizationForm from "./NewOrganizationForm";
-import { Link } from "react-router-dom";
+import { Link, Outlet, useParams } from "react-router-dom";
 import AddIcon from "../shared/icons/AddIcon";
 import FlexSpacer from "../shared/FlexSpacer";
 import GoBar from "../shared/GoBar";
-import OrganizationPage from "./OrganizationPage";
 import useTranslation from "../../i18n/useTranslation";
 import { useLoadOnMount } from "../shared/useLoad";
 import useAppSelector from "../../reducers/useAppSelector";
 
-interface IProps {
-  id?: number;
-  action?: string;
-}
-
-export default function OrganizationsBoard(props: IProps) {
+export default function OrganizationsBoard() {
+  const { id } = useParams();
   const t = useTranslation();
   useLoadOnMount("/api/organizations");
 
@@ -42,19 +36,13 @@ export default function OrganizationsBoard(props: IProps) {
       </div>
       <div className={styles.masterDetailContainer}>
         <div className={styles.master}>
-          <OrganizationsTable id={props.id} organizations={organizations} />
+          <OrganizationsTable
+            id={id ? parseInt(id) : undefined}
+            organizations={organizations}
+          />
         </div>
-        <div className={styles.detail}>
-          {props.action == "new" && (
-            <NewOrganizationForm />
-          )}
-          {props.action == "show" && (
-            <OrganizationPage
-              key={props.id}
-              id={props.id!}
-            />
-          )}
-          {!props.action && <span />}
+        <div className={styles.detail} key={id}>
+          <Outlet />
         </div>
       </div>
     </div>

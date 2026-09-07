@@ -3,22 +3,15 @@ import style from "../shared/MasterDetail.css";
 import RegionsTable from "./RegionsTable";
 import AddIcon from "../shared/icons/AddIcon";
 import FlexSpacer from "../shared/FlexSpacer";
-import { Link } from "react-router-dom";
-import NewRegionForm from "./NewRegionForm";
+import { Link, Outlet, useParams } from "react-router-dom";
 import GoBar from "../shared/GoBar";
 import { useLoadOnMount } from "../shared/useLoad";
 import useAppSelector from "../../reducers/useAppSelector";
 import useTranslation from "../../i18n/useTranslation";
-import RegionPage from "./RegionPage";
 
-interface IProps {
-  id?: number;
-  basePath: string;
-  action: string;
-}
-
-export default function RegionsBoard(props: IProps) {
+export default function RegionsBoard() {
   const t = useTranslation();
+  const { id } = useParams();
 
   const regions = useAppSelector(state => state.regions);
   const can = useAppSelector(state => state.can.regions);
@@ -46,13 +39,16 @@ export default function RegionsBoard(props: IProps) {
       </div>
       <div className={style.masterDetailContainer}>
         <div className={style.master}>
-          <RegionsTable id={props.id} regions={regions} />
+          <RegionsTable
+            id={id ? parseInt(id) : undefined}
+            regions={regions}
+          />
         </div>
-        <div className={style.detail}>
-          {props.action == "new" && <NewRegionForm />}
-          {props.id && (
-            <RegionPage key={props.id} id={props.id} />
-          )}
+        {/* Keyed so that switching regions remounts the detail pane, which is
+            what `key={props.id}` on RegionPage used to do. Without it React
+            reuses the instance and RegionPage's mount-time fetch never re-runs. */}
+        <div className={style.detail} key={id}>
+          <Outlet />
         </div>
       </div>
     </div>

@@ -1,99 +1,33 @@
 import React from "react";
-import LanguagePage from "./LanguagePage";
-import { Switch, Route } from "react-router-dom";
-import LanguageParticipantPage from "./LanguageParticipantPage";
-import LanguageEventPage from "./LanguageEventPage";
-import LanguageActivityPage from "./LanguageActivityPage";
-import LanguageNewEventPage from "./LanguageNewEventPage";
+import { Outlet, useOutletContext, useParams } from "react-router-dom";
+import { ILanguage } from "../../models/Language";
 import Loading from "../shared/Loading";
-import DomainStatusItemPage from "./DomainStatusItemPage";
-import DomainStatusDataCollectionPage from "./DomainStatusDataCollectionPage";
 import { useLoadOnMount } from "../shared/useLoad";
 import useAppSelector from "../../reducers/useAppSelector";
 
-interface IProps {
-  basePath: string;
+export interface LanguageContext {
   id: number;
+  basePath: string;
+  language: ILanguage;
 }
 
-export default function LanguagePageRouter(props: IProps) {
-  const language = useAppSelector(state => state.languages.get(props.id));
+export const useLanguageContext = () => useOutletContext<LanguageContext>();
 
-  useLoadOnMount(`/api/languages/${props.id}`);
+// A layout route rather than a <Switch>: it loads the language and hands it to
+// whichever child route matched. Its children are declared in MainRouter.
+export default function LanguagePageRouter() {
+  const id = parseInt(useParams().id!);
+  const language = useAppSelector(state => state.languages.get(id));
+
+  useLoadOnMount(`/api/languages/${id}`);
 
   if (language.id == 0) return <Loading />;
 
-  return (
-    <Switch>
-      <Route
-        path={props.basePath + "/participants/:participantId"}
-        render={({ match }) => (
-          <LanguageParticipantPage
-            {...props}
-            participantId={parseInt(match.params.participantId)}
-            language={language}
-          />
-        )}
-      />
-      <Route
-        path={props.basePath + "/events/new"}
-        render={({ location }) => (
-          <LanguageNewEventPage
-            {...props}
-            location={location}
-            language={language}
-          />
-        )}
-      />
-      <Route
-        path={props.basePath + "/events/:eventId"}
-        render={({ match }) => (
-          <LanguageEventPage
-            eventId={match.params.eventId}
-            {...props}
-            language={language}
-          />
-        )}
-      />
-      <Route
-        path={props.basePath + "/activities/:activityId"}
-        render={({ match }) => (
-          <LanguageActivityPage
-            activityId={match.params.activityId}
-            {...props}
-            language={language}
-          />
-        )}
-      />
-      <Route
-        path={props.basePath + "/domain_status_items/lingdata/:collectionType"}
-        render={({ match }) => (
-          <DomainStatusDataCollectionPage
-            collectionType={match.params.collectionType}
-            language={language}
-            {...props}
-          />
-        )}
-      />
-      <Route
-        path={props.basePath + "/domain_status_items/:domainStatusItemId"}
-        render={({ match }) => (
-          <DomainStatusItemPage
-            domainStatusItemId={parseInt(match.params.domainStatusItemId)}
-            {...props}
-            language={language}
-          />
-        )}
-      />
-      <Route
-        render={({ location }) => (
-          <LanguagePage
-            {...props}
-            location={location}
-            language={language}
-          />
-        )}
-      />
-    </Switch>
-  );
+  const context: LanguageContext = {
+    id,
+    basePath: `/languages/${id}`,
+    language
+  };
+
+  return <Outlet context={context} />;
 }
