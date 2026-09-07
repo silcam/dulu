@@ -1848,9 +1848,47 @@ all. Counting what actually changes:
 | `withRouter` call sites | 9 | **done, 7c (1/n)** |
 | components declaring a `history` prop | 25 | **done, 7c (2/n)** |
 | `history={...}` pass-downs | 30 | **done, 7c (2/n)** |
-| `<Switch>` / `<Route>` files | **7** | remaining |
-| `push` / `replace` / `goBack` call sites | 26 | remaining (mechanical) |
-| files importing only `Link` | 44 | no work |
+| `<Switch>` / `<Route>` files | 7 | **done, 7c (3/n)** |
+| `push` / `replace` / `goBack` call sites | 26 | **done, 7c (3/n)** |
+| files importing only `Link` | 44 | no work — confirmed, `Link` is unchanged |
+
+**7c is complete. `react-router-dom` 6.30.6, Cypress 98/98, jest 125, `tsc` clean,
+production precompile clean.** What the port actually involved, beyond the mechanical
+renames:
+
+- **Brian chose the idiomatic shape over a minimal port** (2026-09-07): `MainRouter`
+  declares the whole route tree, boards render `<Outlet />` and read `useParams()`,
+  and `matchParamsForChild` / `routeActionAndId` are deleted. The enabling fact,
+  verified with a real render before committing to it: **a v6 layout route's own element
+  sees its child's params**, so a board can highlight the selected row without being
+  handed an id.
+- **Each board's detail pane is keyed.** `key={props.id}` used to sit on the page
+  components; without an equivalent, React reuses the instance across ids and the
+  mount-time fetch never re-runs. `LanguagesBoard` keys on the whole pathname because its
+  old key did.
+- **`LanguagePageRouter` and `ClusterPageRouter` became layout routes** that load their
+  record and pass it through `<Outlet context>`; children read a typed
+  `useLanguageContext()` / `useClusterContext()`.
+- **`Dashboard` was rendering `LanguagePageRouter` outside any route** with `basePath=""`,
+  which made every one of that router's paths unmatchable — so the fallback was all it
+  could ever show. That cannot work against a layout route; it now renders `LanguagePage`
+  via a small `DashboardLanguagePage`. This is also the reason `dashboard.spec.js` clicks
+  through the sidebar with no URL ever changing.
+- **Both location-state sites changed shape, not just name.** `SavedReportViewer`'s
+  `history.push(to, state)` became `navigate(to, { state })`, and `DateCell`'s `<Link>`
+  carried state *inside* `to`, which v6 types as pathname/search/hash only — it is a
+  separate `state` prop now. (The earlier claim that SavedReportViewer was the app's only
+  location-state user was wrong; `tsc` found the second one.)
+- **A real bug fell out.** `NewOrganizationForm` navigates to `/organizations/:id`, but
+  every link uses `/organizations/show/:id`. Under v5 that worked *only* because
+  `routeActionAndId()` quietly rewrote a numeric first segment into action `"show"`. The
+  v6 tree dropped the rewrite and `organizations.spec.js` failed within one run. Both
+  spellings are routed now; changing the form instead would be a behaviour change rather
+  than a port.
+- `@types/react-router-dom` is gone (v6 ships its own), and the `history` package is no
+  longer even a transitive dependency — so the four wrapper-injected props are typed
+  `NavigateFunction`, and `MainRouter`'s crash report posts the **location** instead of
+  the history object, which is what it actually wanted.
 
 Consider `react-router` 6.4+ data APIs out of scope; port to the v6
 component API and stop. **`react-router-dom` 7 is out of scope for this phase on a hard
@@ -2177,7 +2215,7 @@ Phase 7  React Router 6 -> React 18 -> react-redux 9   independent; router is th
          react-router-dom ^6.30.6; v7 needs React >=18, so not this phase
          7c (1/n) withRouter removed on v5           DONE  9 sites, not 18
          7c (2/n) history prop-drilling removed on v5 DONE  25 components, 30 pass-downs
-         7c (3/n) install v6: 7 router files + 26 navigate calls
+         7c (3/n) react-router-dom 6.30.6            DONE  nested routes + Outlet
 Phase 8  Security pass + deploy mechanics         post-upgrade, no version changes
          (8b's deploy prerequisites are needed at the FIRST deploy of this
           branch, not after Phase 7 -- see 8b)
