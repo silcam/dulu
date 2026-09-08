@@ -15,8 +15,18 @@ class DomainReport
     @cluster_ids = cluster_ids
   end
 
+  # `period` arrives as nested query params -- period[start][year]=2017 -- which is
+  # the same shape `from_database` reads out of the JSONB column.
+  #
+  # It used to arrive as a JSON *string* and be JSON.parse'd, because axios 0.x
+  # serialised a nested params object by JSON.stringify-ing it. axios 1 serialises it
+  # the way Rails expects, so the string never comes; JSON.parse on the resulting
+  # Parameters object raised a TypeError and the endpoint 500'd. Permitting the four
+  # scalars explicitly rather than calling to_unsafe_h also means nothing else in the
+  # query string can reach Period.
   def self.from_web_params(params)
-    period = Period.new(JSON.parse(params[:period]).with_indifferent_access)
+    period_params = params.require(:period).permit(start: %i[year month], end: %i[year month])
+    period = Period.new(period_params.to_h.with_indifferent_access)
     return DomainReport.new(
              params[:domain],
              period,
