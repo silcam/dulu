@@ -1780,8 +1780,10 @@ The ordering within this phase is forced by the dependency graph:
 
 ### 7a. React 16.8 → 18
 
-Small, because the codebase is already hooks-based (0 legacy lifecycle methods, 2 class
-components).
+Small, because the codebase is already hooks-based: 0 legacy lifecycle methods, no string
+refs, no `findDOMNode`, and `react-dom` imported in exactly one file. (An earlier draft
+said "2 class components"; there are 15. It does not change the estimate — none of them
+use anything React 18 removed — but the number was wrong.)
 
 - One call site to change: `app/javascript/application/index.js:33` —
   `ReactDOM.render(<App store={store} />, appDiv)` becomes `createRoot(appDiv).render(...)`.
@@ -2080,7 +2082,21 @@ Work items, in the order they deserve attention:
    through the sidebar without asserting a location. Decide whether that is intended. If
    it is not, giving the dashboard real nested routes is the fix and it is a feature
    change, not cleanup.
-15. **Re-run `bundle exec brakeman` expecting zero warnings**, and consider adding it to
+15. **The error boundary does not show its error page; it loops and blanks the app.**
+   `/events/crash-me-now` exists precisely to exercise `BaseMainRouter`'s boundary.
+   Visiting it leaves `#app` empty, throws React error #185 ("Maximum update depth
+   exceeded"), and posts a flood of reports to `/api/errors` — in production, one
+   admin email per post. The cause is `componentDidUpdate`, which clears `hasError`
+   whenever the previous state had it set: that re-renders the route that just crashed,
+   which throws again. The intent is to let the user navigate away from the error page,
+   and it does that by re-rendering the thing that crashed. Fix by clearing `hasError`
+   on a *location change* rather than on any update — the boundary already receives
+   `location` as a prop since Phase 7c, so compare it against the location the crash
+   happened at. **Verified pre-existing, not a React 18 regression:** reverting
+   `react`/`react-dom` to 16.8.6 and rebuilding reproduces it identically. Found in
+   Phase 7a. `spec/cypress/e2e/errorBoundary.spec.js` is written and `describe.skip`ped
+   — unskip it here, it is the failing test this item would otherwise ask for.
+16. **Re-run `bundle exec brakeman` expecting zero warnings**, and consider adding it to
    the gate as a hard failure rather than a compare-against-known-list.
 
 By the time this phase runs, brakeman will be unpinned (Phase 5 lifts it to 6+ on Ruby
