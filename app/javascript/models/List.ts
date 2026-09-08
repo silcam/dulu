@@ -1,4 +1,5 @@
 import update from "immutability-helper";
+import { Spec } from "immutability-helper";
 import { PartialModel } from "./TypeBucket";
 
 export default class List<T extends { id: number }> {
@@ -36,7 +37,9 @@ export default class List<T extends { id: number }> {
       );
       const mergeTarget =
         existingIndex >= 0 ? items[existingIndex] : this.emptyItem;
-      const newItem = update(mergeTarget, { $merge: itemToAdd });
+      // See the note on Spec in util/useMergeState.ts: an unresolved type
+      // parameter loses the object commands.
+      const newItem = update(mergeTarget, { $merge: itemToAdd } as Spec<T>);
       if (existingIndex >= 0) {
         return update(items, {
           $splice: [[existingIndex, 1, newItem]]

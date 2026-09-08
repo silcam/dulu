@@ -14,7 +14,7 @@ import SelectInput from "../shared/SelectInput";
 import SearchPicker from "../shared/SearchPicker";
 import update from "immutability-helper";
 import MultiSelectItemList from "../shared/MultiSelectItemList";
-import { Domains } from "../../models/Domain";
+import { Domains, Domain } from "../../models/Domain";
 
 interface IProps {
   person: IPerson;
@@ -94,6 +94,12 @@ export default function MyNotificationChannels(props: IProps) {
                 collection={props.languages}
                 selectedId={null}
                 setSelected={lang =>
+                  // SearchPicker's setSelected is (T | null) -- it passes null when
+                  // `allowBlank` is set and the box is cleared, which is not the case
+                  // here. Guarding rather than asserting: a null in this list would
+                  // be written to notification_channels and break the row that
+                  // renders it.
+                  lang &&
                   updateChannels(
                     update(channels, { languages: { $push: [lang] } })
                   )
@@ -107,6 +113,7 @@ export default function MyNotificationChannels(props: IProps) {
                 collection={props.clusters}
                 selectedId={null}
                 setSelected={cluster =>
+                  cluster &&
                   updateChannels(
                     update(channels, { clusters: { $push: [cluster] } })
                   )
@@ -120,6 +127,7 @@ export default function MyNotificationChannels(props: IProps) {
                 collection={props.regions}
                 selectedId={null}
                 setSelected={region =>
+                  region &&
                   updateChannels(
                     update(channels, { regions: { $push: [region] } })
                   )
@@ -139,7 +147,12 @@ export default function MyNotificationChannels(props: IProps) {
                   className="small"
                   onClick={() =>
                     updateChannels(
-                      update(channels, { domains: { $push: [addDomain] } })
+                      // addDomain is state typed `string` because SelectInput's
+                      // setValue is (value: string) => void, but its options are
+                      // built from `Domains`, so the value is always one of them.
+                      update(channels, {
+                        domains: { $push: [addDomain as Domain] }
+                      })
                     )
                   }
                 >

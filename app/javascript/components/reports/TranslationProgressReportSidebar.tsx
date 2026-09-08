@@ -2,7 +2,8 @@ import React, { useContext, useState } from "react";
 import P from "../shared/P";
 import Report, {
   TranslationProgressReport,
-  IReportElements
+  IReportElements,
+  IReportLanguage
 } from "../../models/TranslationProgressReport";
 import CheckBoxInput from "../shared/CheckboxInput";
 import update from "immutability-helper";
@@ -49,7 +50,9 @@ function BaseSideBar(props: IProps) {
     if (data) {
       props.setReport(
         update(report, {
-          languages: { $push: [data] }
+          // DuluAxios returns AnyObj; the endpoint's contract is that
+          // report_type=LanguageComparison yields one IReportLanguage.
+          languages: { $push: [data as IReportLanguage] }
         })
       );
     }
@@ -65,7 +68,7 @@ function BaseSideBar(props: IProps) {
     if (data) {
       props.setReport(
         update(report, {
-          clusters: { $push: [data] }
+          clusters: { $push: [data as TranslationProgressReport["clusters"][number]] }
         })
       );
     }

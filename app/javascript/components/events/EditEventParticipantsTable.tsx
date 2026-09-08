@@ -41,6 +41,8 @@ function BaseEditEventParticipantsTable(props: IProps) {
     props.replaceEvent(
       update(props.event, {
         event_participants: {
+          // No id: this participant is not saved yet. IEventParticipant.id is
+          // optional for exactly this case.
           $push: [
             { person_id: person.id, full_name: fullName(person), roles: [] }
           ]

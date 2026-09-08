@@ -80,7 +80,7 @@ function positionClass(
   return hPosition + vPosition;
 }
 
-function iconSizer(size?: "large" | "small") {
+function iconSizer(size?: "large" | "small"): React.CSSProperties {
   switch (size) {
     case "large":
       return { width: "32px", height: "32px" };
