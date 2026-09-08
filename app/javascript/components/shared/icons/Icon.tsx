@@ -2,7 +2,6 @@ import React, { CSSProperties, DetailedHTMLProps, HTMLAttributes } from "react";
 import styles from "./Icon.css";
 import update from "immutability-helper";
 import { Children } from "../../../models/TypeBucket";
-import { Omit } from "react-tabs";
 
 interface IProps
   extends DetailedHTMLProps<HTMLAttributes<HTMLSpanElement>, HTMLSpanElement> {
@@ -15,7 +14,9 @@ interface IProps
   hovertext?: string;
 }
 
-export type IconProps = Omit<Omit<IProps, "styleClass">, "children">;
+// Omit used to be imported from react-tabs, which shipped its own helper
+// before TypeScript 3.5 had one. This is the built-in.
+export type IconProps = Omit<IProps, "styleClass" | "children">;
 
 /* 
 SVG icons are taken from Google's Material Design Icons:
