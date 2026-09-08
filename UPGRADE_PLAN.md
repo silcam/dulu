@@ -2049,7 +2049,38 @@ Work items, in the order they deserve attention:
    Person allowlist is a defensible design — but the belief that `hd` enforces the domain
    should either be made true (check the returned `hd`/email domain in `#create`) or
    written down as false.
-12. **Re-run `bundle exec brakeman` expecting zero warnings**, and consider adding it to
+12. **`NewOrganizationForm` navigates to a URL nothing else in the app uses.** After
+   saving it goes to `/organizations/:id`, while every link in the app points at
+   `/organizations/show/:id`. Under React Router 5 this worked only by accident:
+   `routeActionAndId()` rewrote a numeric first segment into action `"show"`, so the
+   wrong URL was silently repaired on arrival. Phase 7c deleted that helper and
+   `organizations.spec.js` failed inside one run. **The port routes both spellings** —
+   changing the form would have been a behaviour change, not a migration — so nothing is
+   broken today, but the duplicate route in `MainRouter` is debt. Fix by making the form
+   navigate to `/organizations/show/:id` and deleting the bare `:id` route. Check first
+   that no bookmark or email links the short form; if they do, keep it as an explicit
+   `<Navigate>` redirect rather than a second copy of the page.
+13. **The activity routes now enumerate `Activity`'s STI subclasses by hand.** React
+   Router 5 matched all of them with `/*activities/:id`; v6 splats must be trailing, so
+   that pattern is inexpressible and `MainRouter` lists
+   `/translation_activities/:id`, `/linguistic_activities/:id`, `/media_activities/:id`
+   and `/activities/:id` instead. Correct today, but a fourth subclass added to
+   `Activity` will 404 on the frontend with nothing failing to say so. Either derive the
+   list from a single shared source, or add a model test asserting
+   `Activity.descendants` matches the paths the router declares. `notifications.spec.js`
+   covers the routes that exist; it cannot cover one that was never added.
+14. **The dashboard shows a language with no URL of its own, and it is the reason a
+   whole router was unreachable.** Before Phase 7c, `Dashboard` rendered
+   `LanguagePageRouter` outside any route with `basePath=""`, which made every path that
+   router declared unmatchable — the fallback `LanguagePage` was the only thing it could
+   ever display. 7c replaced it with `DashboardLanguagePage`, which renders
+   `LanguagePage` directly, so the dead code is gone. What remains is the underlying
+   design: selecting a language on the dashboard changes no URL, so it cannot be linked,
+   bookmarked, or returned to with the back button, and `dashboard.spec.js` has to click
+   through the sidebar without asserting a location. Decide whether that is intended. If
+   it is not, giving the dashboard real nested routes is the fix and it is a feature
+   change, not cleanup.
+15. **Re-run `bundle exec brakeman` expecting zero warnings**, and consider adding it to
    the gate as a hard failure rather than a compare-against-known-list.
 
 By the time this phase runs, brakeman will be unpinned (Phase 5 lifts it to 6+ on Ruby
