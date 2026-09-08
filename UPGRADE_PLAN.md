@@ -1798,6 +1798,41 @@ use anything React 18 removed — but the number was wrong.)
   requests, which reads exactly like a router bug. Adopting `createRoot` is required;
   adopting `StrictMode` is a separate, deferrable choice.
 
+**7a as landed (DONE).** `react`/`react-dom` `~16.8.0` → `18.3.1`, `@types/react` → 18,
+one call site changed to `createRoot`, `StrictMode` left off.
+
+Three things the forecast did not have:
+
+- **`react-redux` had to move in the same commit.** 7.1.3 declares `react: ^16.8.3`, so
+  landing React 18 alone would leave the tree peer-incompatible until 7b. 7.2.9 is the
+  last 7.x, declares `^16.8.3 || ^17 || ^18`, and changes no API — a same-major bump, and
+  it does not pre-empt 7b.
+- **A duplicate copy of the React types, not the React 18 types, caused the 37 type
+  errors.** `@types/react-redux`, `@types/react-tabs` and `@types/hoist-non-react-statics`
+  all depend on `"@types/react": "*"`. With `@types/react` at 18 in the root, that `*`
+  resolved to 19 in three nested copies, and every `connect()`-wrapped and `react-tabs`
+  component failed `TS2786`: the `ReactElement` of one copy is not the `ReactNode` of the
+  other. The error text points at `connect()` and reads like a react-redux
+  incompatibility, which it is not. Fixed with a `resolutions` entry pinning the tree to
+  one major (and `@types/react-redux` 7.1.5 → 7.1.34, which the `^7.1.5` range should have
+  picked up but the lockfile had pinned).
+- **One genuine type error.** `@types/react` 16's `ReactNode` included `{}`, so
+  `PlainTable` interpolating a `string | { text, url }` cell type-checked — even though
+  React 16 itself threw "Objects are not valid as a React child" on the object branch. The
+  18 types dropped `{}` and it stopped compiling. Both rows go through one `Cell`
+  component now. Note `PlainTable` is unreferenced dead code: nothing imports it and
+  nothing constructs a `TableReport`. Deleting it is a Phase 8 candidate, not a port.
+
+`react-tabs` 2.3.0 stays, and yarn warns about its `react: ^16` peer on every install. It
+renders correctly on 18 (`navigation.spec.js` walks LanguagePage's tabs) and uses only an
+unprefixed `componentWillReceiveProps`, which warns rather than fails until React 19. The
+bump to 6.x is still **7d** — and it now cannot be done any earlier, since react-tabs 6
+requires React ≥18.
+
+**What this phase found rather than caused:** nothing covered `MainRouter`'s error
+boundary, and it is broken. See Phase 8 item 15 — the spec is written and skipped, and the
+bug reproduces identically on React 16.
+
 ### 7b. react-redux 7 → 9
 
 Gated behind 7a (react-redux 8+ requires React 18). The TypeScript types shifted, so
@@ -2263,6 +2298,7 @@ Phase 7  React Router 6 -> React 18 -> react-redux 9   independent; router is th
          7c (1/n) withRouter removed on v5           DONE  9 sites, not 18
          7c (2/n) history prop-drilling removed on v5 DONE  25 components, 30 pass-downs
          7c (3/n) react-router-dom 6.30.6            DONE  nested routes + Outlet
+         7a React 18.3.1 + createRoot                DONE  react-redux 7.2.9 alongside
 Phase 8  Security pass + deploy mechanics         post-upgrade, no version changes
          (8b's deploy prerequisites are needed at the FIRST deploy of this
           branch, not after Phase 7 -- see 8b)
