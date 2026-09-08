@@ -21,7 +21,7 @@
 // to let the user navigate away from the error page, and it does that by
 // re-rendering the thing that just crashed.
 //
-// Tracked as Phase 8 item 15. Unskip it there: it is the failing test that
+// Tracked as Phase 8d item 1. Unskip it there: it is the failing test that
 // item asks for, and it already asserts the behaviour the fix should produce.
 describe.skip("Error boundary", () => {
   before(cy.appFixtures);

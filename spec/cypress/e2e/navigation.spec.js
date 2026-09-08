@@ -82,7 +82,7 @@ describe("Navigation", () => {
     // `useEffect(..., [query])` only recomputes on a query change -- so typing
     // before that fetch lands leaves the dropdown permanently empty. Waiting on
     // a row proves the store is populated first. (That the app behaves this way
-    // at all is a real defect; it is filed as a Phase 8 item.)
+    // at all is a real defect; it is filed as Phase 8d item 2.)
     cy.visit("/languages");
     cy.contains("tr", "Hdi");
 

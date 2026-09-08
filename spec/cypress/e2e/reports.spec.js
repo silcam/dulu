@@ -55,7 +55,7 @@ describe("Reports", () => {
     // only by `start_date: :desc` with no tiebreaker, so PostgreSQL is free to return
     // them either way round. Asserting fixed row positions made this spec fail roughly
     // at random. Assert that both rows are present instead, and leave their order to the
-    // application to fix -- see UPGRADE_PLAN.md Phase 8.
+    // application to fix -- see UPGRADE_PLAN.md Phase 8d item 5.
     cy.contains("table", "Language").within(() => {
       cy.contains("tr", "HdiGenesisConsultant Check in Progress2017-05-29");
       cy.contains("tr", "ZulgoEzraConsultant Check in Progress2017-05-29");

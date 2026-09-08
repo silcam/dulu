@@ -163,7 +163,7 @@ failures fall into two distinct groups, and only one of them is noise:
    `participants.spec.js` "Adds, edits and finishes Drew", `regions.spec.js` "Changes LPF",
    anything going through the `searchFill` command or `cy.placeholder("Name")`. These are
    all **one application bug**: the pickers fire a request per keystroke and let a late
-   response overwrite a newer one (Phase 8, item 6). It presents as a detached `<li>`, as a
+   response overwrite a newer one (Phase 8d item 3). It presents as a detached `<li>`, as a
    dropdown covering the next form control, or — most clearly — as
    `expected input to have value 'Drew Mambo', but the value was 'Lance Armstrong'`. It
    moves between specs because the race is probabilistic, not because it is noise. **Do not
@@ -391,7 +391,7 @@ findings + 2 EOL warnings**. From Phase 6b it is **6** (Ruby EOL cleared), and f
 Phase 6c2 it is **5** — Rails 8.1 cleared the last EOL warning, so the number is now
 exactly the pre-existing application findings. Also
 brakeman 7 reports **3** obsolete entries in `config/brakeman.ignore` rather than the 5
-noted above; the cleanup is still a Phase 8 item.
+noted above; the cleanup is still a Phase 8a item.
 
 Two more known blockers, not yet actionable:
 
@@ -1031,7 +1031,7 @@ ambiguous now gets the page.
 
 The frontend still has **no session-expiry handling at all** — `DuluAxios.handleError`
 knows only `"server"` and `"connection"`. A 401 surfaces as a generic error rather than
-"you have been logged out". Not this phase's business, but a fair Phase 8 candidate.
+"you have been logged out". Not this phase's business — Phase 8d item 6.
 
 ### 4c. The suite cannot gate this, and the plan understated by how much
 
@@ -1073,7 +1073,7 @@ POST raises from middleware, so in development it renders a 500. Rails maps
 `ActionController::InvalidAuthenticityToken` to 422 by default, but `production.rb` forces
 SSL and this could not be confirmed over plain HTTP locally. The practical case is a
 welcome page left open in a tab past session expiry: clicking sign-in shows an error page
-instead of simply retrying. Small, real, and a Phase 8 candidate.
+instead of simply retrying. Small, real, and Phase 8d item 7.
 
 ### 4e. Verified by Brian in a real browser, 2026-09-04
 
@@ -1772,6 +1772,23 @@ failure as a regression.
 
 ## Phase 7 — Frontend libraries: React 18, React Router 6, react-redux
 
+**Phase 7 is complete (2026-09-08).** Landed in the order **7c → 7a → 7b → 7d**, not the
+numbering below; the reasoning is under 7c. Twelve commits, each with its own gate. Final
+state: `react-router-dom` 6.30.6, React 18.3.1 on `createRoot`, react-redux 9.3.0 with
+redux 5.0.1, axios 1.20, immutability-helper 3.1.1, react-tabs 6.1.1, jest 30, and
+eslint 9 with the repo's first lint config.
+
+Gate at completion: Rails **401 tests / 1323 assertions, 0F 0E 0 skips**; Jest **125**;
+`tsc --noEmit` clean; `zeitwerk:check` clean; Cypress **98 passing / 1 pending**;
+clean-cache test build and production `assets:precompile` both green; `yarn install
+--check-files` clean and, for the first time in this upgrade, free of peer warnings.
+
+**Two of the four sub-phases changed application behaviour, both server-side or
+model-side, and both are recorded in their as-landed notes:** axios 1's params
+serialization broke `/api/reports/domain_report` (7d item 1), and immutability-helper 3's
+types exposed three genuine modelling errors (7d item 2). Everything the phase found and
+did *not* fix is in Phase 8.
+
 Last, and correctly last: it is entirely independent of the Rails version once Phase 2
 modernized the build chain. Nothing here blocks the backend, so if time runs short the
 app is already on a supported Rails 8 / Ruby 3.4 footing.
@@ -1821,7 +1838,7 @@ Three things the forecast did not have:
   React 16 itself threw "Objects are not valid as a React child" on the object branch. The
   18 types dropped `{}` and it stopped compiling. Both rows go through one `Cell`
   component now. Note `PlainTable` is unreferenced dead code: nothing imports it and
-  nothing constructs a `TableReport`. Deleting it is a Phase 8 candidate, not a port.
+  nothing constructs a `TableReport`. Deleting it is Phase 8f item 4, not a port.
 
 `react-tabs` 2.3.0 stays, and yarn warns about its `react: ^16` peer on every install. It
 renders correctly on 18 (`navigation.spec.js` walks LanguagePage's tabs) and uses only an
@@ -1830,7 +1847,7 @@ bump to 6.x is still **7d** — and it now cannot be done any earlier, since rea
 requires React ≥18.
 
 **What this phase found rather than caused:** nothing covered `MainRouter`'s error
-boundary, and it is broken. See Phase 8 item 15 — the spec is written and skipped, and the
+boundary, and it is broken. See Phase 8d item 1 — the spec is written and skipped, and the
 bug reproduces identically on React 16.
 
 ### 7b. react-redux 7 → 9
@@ -1842,6 +1859,24 @@ expect type churn across the 14 files using `connect()`/`createStore`.
 plain `createStore` + `combineReducers`. `createStore` is soft-deprecated in favor of
 Redux Toolkit's `configureStore`. Treat RTK adoption as **optional follow-up work**, not
 part of this upgrade — the plain API still functions.
+
+**7b as landed (DONE).** `react-redux` 7.2.9 → 9.3.0 and `redux` 4 → 5.0.1 in one commit
+— react-redux 9 requires `redux ^5.0.0`, so they are not separable. `@types/react-redux`
+is dropped rather than bumped: react-redux ships its own types from 8 on.
+
+The forecast said to "expect type churn across the 14 files using `connect()`". There was
+none. `connect()`, `useSelector`, `TypedUseSelectorHook` and `shallowEqual` all behave as
+before, and `tsc` reported exactly two errors, both the same one:
+
+**redux 5's `dispatch` takes `UnknownAction`, which carries an index signature, and
+TypeScript gives an object *type alias* an implicit index signature but never gives one to
+an *interface*.** `LoadAction` was the codebase's only action declared as an interface —
+which is precisely why the other action types dispatched fine. Converted to a type alias;
+the shape is unchanged. Worth remembering as a rule: after redux 5, an action type must be
+a `type`, not an `interface`.
+
+`createStore` is soft-deprecated in redux 5 but still exported and still works, so
+`index.js` is untouched. Redux Toolkit remains optional follow-up (Phase 8g item 10).
 
 ### 7c. React Router 5.1 → 6 — the largest single frontend item
 
@@ -2018,13 +2053,72 @@ This is the same digest-cache trap the verification recipe already warns about f
 `assets:precompile`, in a worse form — there it silently skipped work, here it silently
 launders a failure into a pass.
 
+**7d as landed (DONE), in six commits.** The forecast listed five bumps; what it did not
+anticipate is that two of them changed behaviour rather than just versions.
+
+1. **`axios` 0.21 → 1.20 — and it changed a wire format.** axios 0.x serialised a nested
+   params object by JSON.stringify-ing it, and `DomainReport.from_web_params` depended on
+   that: it called `JSON.parse(params[:period])`. axios 1 serialises nested params the way
+   Rails expects (`period[start][year]=2017`), so the parse received a Parameters object,
+   raised, and `/api/reports/domain_report` **500'd** — the domain report rendered empty
+   with "Dulu server error". Fixed on the server rather than by re-creating axios 0.x's
+   quirk with a `paramsSerializer` shim: the bracket form is what `from_database` already
+   reads out of the JSONB column, so both entry points now take the same shape, with the
+   four scalars permitted explicitly. **This was the only place relying on it** — also the
+   app's only `JSON.parse` of a query param; every other GET sends flat scalars, which
+   serialise identically in both versions. `test/controllers/reports_controller_test.rb`
+   was a `skip 'Implement'` placeholder, which is why a 500 here had nothing to fail; it
+   now pins the wire format and the missing-period case.
+2. **`immutability-helper` 2.7.1 → 3.1.1 — the runtime is unchanged, the types are new.**
+   2.x's types were `any`; 3.x ships real ones, and `tsc` produced 12 errors in 8 files.
+   Three were the types telling the truth: `Event.prepareEventParams` was `$merge`-ing
+   Rails nested-attribute names (`cluster_ids`, `event_participants_attributes`) into a
+   typed model when it is really building a request body — now a spread;
+   `IEventParticipant.id` is optional, because a participant added in the form has no id
+   until Rails assigns one, and the form has always pushed an id-less object; and three
+   `SearchPicker`s ignored that `setSelected` is `(T | null)`. The rest are casts with a
+   stated reason. One of them is worth knowing generally: **`Spec<T>` is a conditional
+   type, so on an unresolved type parameter it collapses to `$set`/`$apply` and object
+   commands like `$merge` stop type-checking** — a limitation of the library's types, not
+   of the call, and it needs `as Spec<T>` in three places.
+3. **`react-tabs` 2.3.0 → 6.1.1.** This is what 7a's peer warning was waiting on: v6
+   declares `react ^18 || ^19`, so it could not precede 7a. The API needed nothing — all
+   three call sites already use the controlled `selectedIndex`/`onSelect` pair. `Icon.tsx`
+   stopped importing `Omit` from react-tabs (it shipped its own before TypeScript 3.5 had
+   one). `@types/react-tabs` is gone, which removes one of the three
+   `"@types/react": "*"` dependents, and the sprockets stylesheet still resolves —
+   `app/assets/stylesheets/react_tabs.scss` imports a file v6 still ships.
+4. **`jest` 26 → 30, `ts-jest` 29, `mockdate` 3.** jest 30 rather than the 29 the forecast
+   named: ts-jest 29.4 supports `^29 || ^30` and nothing here touches what 30 removed. One
+   config change — ts-jest 29 reads options from the `transform` entry, not `globals`, and
+   the option is `tsconfig`, not `tsConfig`. The transform key deliberately matches the
+   `js-with-babel` preset's own ts key so it *overrides* that entry rather than adding a
+   second one; jest merges a preset's transform map with the config's, so `.js` keeps
+   going through babel-jest.
+5. **`concurrently` 5 → 9, `nodemon` 2 → 3.** Both are used by the test scripts, not
+   leftovers. concurrently 9 takes the same flags the cypress scripts pass, verified by
+   running the full suite through it.
+6. **eslint: there was nothing to migrate.** The forecast said "eslint 4 → 9 (flat
+   config)", assuming a config existed. **There was none** — no `.eslintrc` anywhere, no
+   lint script, no CI, so eslint had never run on this repo. Brian's call (2026-09-08):
+   set it up now, report, and change no application code. eslint 9.39 + typescript-eslint
+   8.70 + react/react-hooks/jest plugins, `eslint.config.mjs`, a `yarn lint` script, and
+   **144 findings** — recorded as Phase 8c. eslint 10 is out but `eslint-plugin-react`
+   peers at `^9.7`, so 9 is today's ceiling. `yarn install` is now free of peer warnings
+   for the first time in this upgrade.
+
+**The pins the forecast wanted dropped were already gone:** `babel-preset-react` is not a
+dependency, `ts-loader` is at 9.x and `webpack-dev-server` at 5.x — Phase 2 replaced those
+when it replaced the build. What remains outdated is deliberate, and is inventoried in
+Phase 8g rather than left implicit.
+
 **Gate:** full recipe green + manual click-through of the main boards
 (dashboard, people, organizations, events, activities) — routing regressions are exactly
 the class of bug that passes unit tests and breaks the app.
 
 ---
 
-## Phase 8 — Post-upgrade pass: security, plus deploy mechanics (no version changes)
+## Phase 8 — Post-upgrade pass (no version changes)
 
 **Brian's decision, 2026-09-03:** the security findings brakeman surfaced are fixed
 *after* the upgrade, not during it. Rationale, and worth keeping: a security fix inside an
@@ -2033,63 +2127,49 @@ dependencies. If the gate goes red you cannot tell which half did it, and if a f
 wrong it is buried in a diff nobody reviews line by line. Keeping them separate also means
 this phase can be reviewed by someone who does not care about Rails versions at all.
 
-Work items, in the order they deserve attention:
+The same reasoning collected everything else the upgrade *found* but deliberately did not
+fix, and by the end of Phase 7 that was too much for one list. Split into sub-phases,
+each independently reviewable and independently deployable:
+
+| | Sub-phase | Items | Why it is separate |
+|---|---|---|---|
+| **8a** | Security | 6 | brakeman findings plus the `hd` question. Reviewable by someone who does not care about Rails versions. |
+| **8b** | Deploy mechanics | 7 | **Not sequenced after Phase 7** — needed at the *first* deploy of this branch, whenever that is. |
+| **8c** | Lint findings | 144 | The first eslint run this repo has ever had (Phase 7d). Mostly mechanical; a handful are real. |
+| **8d** | Correctness defects | 7 | Real bugs found during the upgrade and left alone on purpose. Each needs a test first. |
+| **8e** | Test-suite debt | 8 | Flakes, a skipped spec that documents a live bug, tests that assert nothing, no CI. |
+| **8f** | Dead code and modelling | 4 | Debt the port created or exposed. Nothing here is broken today. |
+| **8g** | Deferred majors and forward-compat | 10 | Everything Phase 7 chose not to bump, with the reason. Includes one warning that becomes an error on a future dependency. |
+
+**Nothing in 8c–8g is a regression from this upgrade unless it says so.** Where a defect
+was verified to predate the upgrade, the verification is recorded with it — that
+distinction is the difference between "we broke this" and "we finally looked."
+
+**Note:** each item below is a genuine behaviour change with no test covering it today.
+Write the test first in each case — that is the actual work here, not the one-line fix.
+
+### 8a. Security
 
 1. **`app/controllers/api/permissions_controller.rb:3` — `params[:type].constantize`.**
    High confidence, remote code execution. User-supplied input reaching `constantize`
    lets a caller instantiate arbitrary constants. Fix by allowlisting the permitted type
    strings and mapping to classes explicitly; never derive a class from raw params.
+
 2. **`app/controllers/api/people_controller.rb:46` — `params.permit!`.** Mass assignment:
    permits every parameter, including any attribute a future migration adds. Replace with
    an explicit permit list.
+
 3. **Three SQL injection findings** — `app/models/event.rb:120`,
    `app/models/concerns/multi_word_search.rb:13`, and `app/models/domain_report.rb:64`
    (interpolated `@period.finish`). Convert to bound parameters.
-4. **`GoBar` never recomputes its matches when its data arrives.** Its
-   `useEffect(() => setMatches(search(query, props)), [query])` lists only `query` as a
-   dependency, while the languages/people/organizations it searches are fetched by
-   `CoreData` *after* first paint. Type before that lands and the dropdown stays empty
-   until you type another character. Found in Phase 7c while writing a test that had to
-   wait on a table row before typing, purely to work around it. Same family as the search
-   picker race below. Add the searched lists to the dependency array.
-5. **Two defects in the global search, both found in Phase 6g while establishing
-   that `Searcher` is not a route consumer.** Neither is a regression from this upgrade;
-   both predate it. (a) `Searcher.tsx`'s `flattenResults` discards the result of
-   `flatResults.concat(flattenResults(result.subresults.results, level + 1))` — the return
-   value is thrown away, so **subresults never render at all**. (b) `Activity.search` is
-   commented out of `Api::SearchesController`, so activities are absent from global search
-   entirely. Worth asking whether (b) was deliberate before "fixing" it; (a) is plainly a
-   bug.
-6. **The person/organization search pickers do not discard stale responses.** Typing into
-   a picker fires a request per keystroke and each response overwrites the results list,
-   so a slow earlier response can land after a later one and replace the correct results.
-   Observed in E2E as pressing Enter selecting the wrong person entirely ("expected input
-   to have value 'Drew Mambo', but the value was 'Lance Armstrong'"), and as clicking a
-   result failing because the list re-rendered underneath the click. Users hit the same
-   thing on a slow connection. Fix by tagging each request and ignoring any response that
-   is not for the current query.
-7. **`DomainReport#gen_activity_items` has no deterministic order.**
-   `app/models/domain_report.rb:66` orders by `start_date: :desc` with no tiebreaker, so
-   rows sharing a date come back in whatever order PostgreSQL feels like — users see the
-   report reshuffle between loads. It is the same method as the SQL injection finding
-   above, so fix both in one pass. `spec/cypress/integration/reports.spec.js` was made
-   order-agnostic in Phase 2 to stop it failing at random; tighten it back up once the
-   query is deterministic.
-8. **Regenerate `config/brakeman.ignore`.** Its 5 entries no longer match anything —
+
+4. **Regenerate `config/brakeman.ignore`.** Its 5 entries no longer match anything —
    they reference `app/views/dashboard/dashboard.html.erb`,
    `app/views/languages/show.html.erb` and `app/views/clusters/index.html.erb`, all ERB
    views deleted during the React migration. A stale ignore file is worse than none: it
    reads as "reviewed and accepted" for findings that no longer exist.
-9. **The frontend has no session-expiry handling.** `DuluAxios.handleError` knows only
-   `"server"` and `"connection"`. Phase 4 made a logged-out XHR return 401 (it used to
-   return a 302 that axios followed cross-origin), so the status is now clean and
-   distinguishable — nothing consumes it. Surface "you have been logged out, sign in
-   again" instead of a generic error.
-10. **A stale CSRF token on the sign-in button gives an error page.** Leave the welcome
-   page open past session expiry, click sign in, and `omniauth-rails_csrf_protection`
-   raises from middleware. Rails maps that to 422, but the user sees an error page rather
-   than a retry. Rescue it and re-render the welcome page.
-11. **`hd: 'sil.org'` does not restrict who can log in, and someone probably thinks it
+
+5. **`hd: 'sil.org'` does not restrict who can log in, and someone probably thinks it
    does.** `config/initializers/omniauth.rb` passes `hd` to Google, and Phase 4 confirmed
    it still reaches the authorize URL under `omniauth-google-oauth2` 1.x. But `hd` is a
    *hint* to Google's account chooser, not a guarantee, and Google's own guidance is to
@@ -2101,61 +2181,13 @@ Work items, in the order they deserve attention:
    Person allowlist is a defensible design — but the belief that `hd` enforces the domain
    should either be made true (check the returned `hd`/email domain in `#create`) or
    written down as false.
-12. **`NewOrganizationForm` navigates to a URL nothing else in the app uses.** After
-   saving it goes to `/organizations/:id`, while every link in the app points at
-   `/organizations/show/:id`. Under React Router 5 this worked only by accident:
-   `routeActionAndId()` rewrote a numeric first segment into action `"show"`, so the
-   wrong URL was silently repaired on arrival. Phase 7c deleted that helper and
-   `organizations.spec.js` failed inside one run. **The port routes both spellings** —
-   changing the form would have been a behaviour change, not a migration — so nothing is
-   broken today, but the duplicate route in `MainRouter` is debt. Fix by making the form
-   navigate to `/organizations/show/:id` and deleting the bare `:id` route. Check first
-   that no bookmark or email links the short form; if they do, keep it as an explicit
-   `<Navigate>` redirect rather than a second copy of the page.
-13. **The activity routes now enumerate `Activity`'s STI subclasses by hand.** React
-   Router 5 matched all of them with `/*activities/:id`; v6 splats must be trailing, so
-   that pattern is inexpressible and `MainRouter` lists
-   `/translation_activities/:id`, `/linguistic_activities/:id`, `/media_activities/:id`
-   and `/activities/:id` instead. Correct today, but a fourth subclass added to
-   `Activity` will 404 on the frontend with nothing failing to say so. Either derive the
-   list from a single shared source, or add a model test asserting
-   `Activity.descendants` matches the paths the router declares. `notifications.spec.js`
-   covers the routes that exist; it cannot cover one that was never added.
-14. **The dashboard shows a language with no URL of its own, and it is the reason a
-   whole router was unreachable.** Before Phase 7c, `Dashboard` rendered
-   `LanguagePageRouter` outside any route with `basePath=""`, which made every path that
-   router declared unmatchable — the fallback `LanguagePage` was the only thing it could
-   ever display. 7c replaced it with `DashboardLanguagePage`, which renders
-   `LanguagePage` directly, so the dead code is gone. What remains is the underlying
-   design: selecting a language on the dashboard changes no URL, so it cannot be linked,
-   bookmarked, or returned to with the back button, and `dashboard.spec.js` has to click
-   through the sidebar without asserting a location. Decide whether that is intended. If
-   it is not, giving the dashboard real nested routes is the fix and it is a feature
-   change, not cleanup.
-15. **The error boundary does not show its error page; it loops and blanks the app.**
-   `/events/crash-me-now` exists precisely to exercise `BaseMainRouter`'s boundary.
-   Visiting it leaves `#app` empty, throws React error #185 ("Maximum update depth
-   exceeded"), and posts a flood of reports to `/api/errors` — in production, one
-   admin email per post. The cause is `componentDidUpdate`, which clears `hasError`
-   whenever the previous state had it set: that re-renders the route that just crashed,
-   which throws again. The intent is to let the user navigate away from the error page,
-   and it does that by re-rendering the thing that crashed. Fix by clearing `hasError`
-   on a *location change* rather than on any update — the boundary already receives
-   `location` as a prop since Phase 7c, so compare it against the location the crash
-   happened at. **Verified pre-existing, not a React 18 regression:** reverting
-   `react`/`react-dom` to 16.8.6 and rebuilding reproduces it identically. Found in
-   Phase 7a. `spec/cypress/e2e/errorBoundary.spec.js` is written and `describe.skip`ped
-   — unskip it here, it is the failing test this item would otherwise ask for.
-16. **Re-run `bundle exec brakeman` expecting zero warnings**, and consider adding it to
+
+6. **Re-run `bundle exec brakeman` expecting zero warnings**, and consider adding it to
    the gate as a hard failure rather than a compare-against-known-list.
 
 By the time this phase runs, brakeman will be unpinned (Phase 5 lifts it to 6+ on Ruby
 3.1) and the two EOL warnings for Rails 5.2.8.1 and Ruby 2.7.4 will have resolved
 themselves.
-
-**Note:** each of the items above is a genuine behaviour change with no test covering it
-today. Write the test first in each case — that is the actual work here, not the one-line
-fix.
 
 ### 8b. Deploy mechanics — parked here, but **not** sequenced after Phase 7
 
@@ -2294,6 +2326,263 @@ Two lockfile facts for whoever runs that deploy, since `config/deploy.rb` sets
 deploy *destination* question, which is closed and out of scope (see the top of this
 plan).
 
+### 8c. Lint findings — the first eslint run this repo has ever had
+
+Phase 7d set up eslint 9 with a flat config, on Brian's call, to report and not to fix
+(see `eslint.config.mjs`, which records why there was nothing to migrate from). `yarn lint`
+is **not in the gate**; whether it should be is the last item here.
+
+**144 problems: 110 errors, 34 warnings.** By rule:
+
+| Rule | Err | Warn | Character |
+|---|---|---|---|
+| `prefer-const` | 37 | | mechanical, `--fix`able |
+| `react-hooks/exhaustive-deps` | | 21 | **needs judgement, see below** |
+| `@typescript-eslint/no-explicit-any` | 20 | | mostly at API boundaries |
+| `@typescript-eslint/no-unused-vars` | 14 | | dead code |
+| `no-var` | 7 | | mechanical |
+| `no-unused-vars` (js) | 7 | | dead code |
+| `react-hooks/set-state-in-effect` | 6 | | **real, see below** |
+| `jest/no-commented-out-tests` | | 7 | commented-out tests |
+| `jest/expect-expect` | | 5 | **tests that assert nothing** |
+| `@typescript-eslint/no-unused-expressions` | 4 | | |
+| `react/display-name` | 3 | | |
+| `@typescript-eslint/no-empty-object-type` | 3 | | `interface IProps {}` left by prop removal |
+| `no-case-declarations` | 2 | | |
+| `react-hooks/rules-of-hooks` | 1 | | **real, see below** |
+| `react/jsx-no-target-blank` | 1 | | **security, see below** |
+| `react-hooks/purity` | 1 | | |
+| `react-hooks/refs` | 1 | | |
+| `@typescript-eslint/no-require-imports` | 1 | | |
+| `no-extra-boolean-cast` | 1 | | |
+| `jest/valid-expect` | 1 | | **a broken assertion, see 8e** |
+| `jest/no-disabled-tests` | | 1 | |
+
+39 errors are `--fix`able. Do that as one mechanical commit with no review burden, and
+keep it away from everything below.
+
+The findings that are not style:
+
+1. **`react-hooks/rules-of-hooks` — `LanguagePageContent.tsx:37` calls `useContext`
+   conditionally.** There is an early `return` above it, so on renders that take the early
+   branch the hook is skipped. React's hook order is positional; a component that
+   alternates between the two branches while mounted reads the wrong hook state. This is
+   the one lint finding that is a live correctness bug rather than a smell.
+2. **`react-hooks/set-state-in-effect` ×6** — `CoreData.ts:14`,
+   `NotificationSidebar.tsx:88`, `EventsTable.tsx:55`,
+   `ActivityViewPeopleEditor.tsx:60`, `MyNotificationChannels.tsx:37`, `GoBar.tsx:50`.
+   Synchronous `setState` inside an effect triggers a second render pass immediately. Note
+   the company this keeps: the error boundary in 8d item 6 blanks the app for exactly this
+   reason, at the extreme.
+3. **`react-hooks/refs` — `useSearch.ts:36` reads a ref during render.** `useSearch` is
+   the search picker, and 8d item 3 is the search picker's stale-response race. Same file,
+   same family of problem; fix them together.
+4. **`react-hooks/purity` — `CoreData.ts:10` calls `Date.now()` during render.**
+5. **`react/jsx-no-target-blank` — `DomainStatusItemView.tsx:149`** uses `target="_blank"`
+   with no `rel="noreferrer"`. Reverse tabnabbing: the opened page gets a handle on this
+   one. A security finding brakeman cannot see because it is in the React tree, which is
+   worth noticing about the coverage of 8a.
+6. **`@typescript-eslint/no-explicit-any` ×20 and `no-unused-vars` ×21.** Worth reading
+   once as a list rather than fixing blind: the `any`s cluster at the axios boundary
+   (`DuluAxios` returns `AnyObj`), which is a modelling decision, while the unused
+   variables are just dead code.
+7. **Decide whether `yarn lint` joins the gate.** It cannot today: it exits 1. Either fix
+   to zero and add it, or add it with `--max-warnings` and a baseline. A lint step nobody
+   runs is what the last one was, and it sat in `devDependencies` for years without a
+   config.
+
+### 8d. Correctness defects found during the upgrade
+
+Each of these was found while doing something else, left alone deliberately, and needs a
+test written before the fix.
+
+1. **The error boundary does not show its error page; it loops and blanks the app.**
+   `/events/crash-me-now` exists precisely to exercise `BaseMainRouter`'s boundary.
+   Visiting it leaves `#app` empty, throws React error #185 ("Maximum update depth
+   exceeded"), and posts a flood of reports to `/api/errors` — in production, one
+   admin email per post. The cause is `componentDidUpdate`, which clears `hasError`
+   whenever the previous state had it set: that re-renders the route that just crashed,
+   which throws again. The intent is to let the user navigate away from the error page,
+   and it does that by re-rendering the thing that crashed. Fix by clearing `hasError`
+   on a *location change* rather than on any update — the boundary already receives
+   `location` as a prop since Phase 7c, so compare it against the location the crash
+   happened at. **Verified pre-existing, not a React 18 regression:** reverting
+   `react`/`react-dom` to 16.8.6 and rebuilding reproduces it identically. Found in
+   Phase 7a. `spec/cypress/e2e/errorBoundary.spec.js` is written and `describe.skip`ped
+   — unskip it here, it is the failing test this item would otherwise ask for.
+
+2. **`GoBar` never recomputes its matches when its data arrives.** Its
+   `useEffect(() => setMatches(search(query, props)), [query])` lists only `query` as a
+   dependency, while the languages/people/organizations it searches are fetched by
+   `CoreData` *after* first paint. Type before that lands and the dropdown stays empty
+   until you type another character. Found in Phase 7c while writing a test that had to
+   wait on a table row before typing, purely to work around it. Same family as the search
+   picker race below. Add the searched lists to the dependency array.
+
+3. **The person/organization search pickers do not discard stale responses.** Typing into
+   a picker fires a request per keystroke and each response overwrites the results list,
+   so a slow earlier response can land after a later one and replace the correct results.
+   Observed in E2E as pressing Enter selecting the wrong person entirely ("expected input
+   to have value 'Drew Mambo', but the value was 'Lance Armstrong'"), and as clicking a
+   result failing because the list re-rendered underneath the click. Users hit the same
+   thing on a slow connection. Fix by tagging each request and ignoring any response that
+   is not for the current query.
+
+4. **Two defects in the global search, both found in Phase 6g while establishing
+   that `Searcher` is not a route consumer.** Neither is a regression from this upgrade;
+   both predate it. (a) `Searcher.tsx`'s `flattenResults` discards the result of
+   `flatResults.concat(flattenResults(result.subresults.results, level + 1))` — the return
+   value is thrown away, so **subresults never render at all**. (b) `Activity.search` is
+   commented out of `Api::SearchesController`, so activities are absent from global search
+   entirely. Worth asking whether (b) was deliberate before "fixing" it; (a) is plainly a
+   bug.
+
+5. **`DomainReport#gen_activity_items` has no deterministic order.**
+   `app/models/domain_report.rb:66` orders by `start_date: :desc` with no tiebreaker, so
+   rows sharing a date come back in whatever order PostgreSQL feels like — users see the
+   report reshuffle between loads. It is the same method as the SQL injection finding
+   above, so fix both in one pass. `spec/cypress/integration/reports.spec.js` was made
+   order-agnostic in Phase 2 to stop it failing at random; tighten it back up once the
+   query is deterministic.
+
+6. **The frontend has no session-expiry handling.** `DuluAxios.handleError` knows only
+   `"server"` and `"connection"`. Phase 4 made a logged-out XHR return 401 (it used to
+   return a 302 that axios followed cross-origin), so the status is now clean and
+   distinguishable — nothing consumes it. Surface "you have been logged out, sign in
+   again" instead of a generic error.
+
+7. **A stale CSRF token on the sign-in button gives an error page.** Leave the welcome
+   page open past session expiry, click sign in, and `omniauth-rails_csrf_protection`
+   raises from middleware. Rails maps that to 422, but the user sees an error page rather
+   than a retry. Rescue it and re-render the welcome page.
+
+### 8e. Test-suite debt
+
+1. **`people.spec.js` "Creates person" is flaky, and it is not a test problem** — it is
+   8d item 3 (the search picker's stale responses) observed from outside. It failed once
+   in five full runs during Phase 7, always at load average 5+, and passes 11/11 in
+   isolation. Fixing the picker fixes the flake; tightening the spec would only hide it.
+   `navigation.spec.js` failed once in the same family, on its GoBar test.
+2. **`spec/cypress/e2e/errorBoundary.spec.js` is `describe.skip`ped and documents a live
+   bug.** It is 8d item 1's failing test, already written. Unskip it there.
+3. **`testIsolation: false`** in `spec/cypress.config.js`. Cypress 12 turned isolation on
+   by default; this suite predates that and is deliberately stateful — specs build on the
+   page the previous test left behind, and `log_in.spec.js` asserts on "Welcome to Dulu"
+   before it visits anything. Making the 22 specs isolation-clean is a real improvement
+   and a real project. Until then, note that **a spec's alphabetical neighbours are part
+   of its fixture.**
+4. **`Activity.test.js:74` asserts nothing.** `expect(...).toBeUndefined` — the matcher is
+   referenced, not called, so the assertion never runs. Found by `jest/valid-expect`. This
+   is the one lint finding that means a test has been silently passing.
+5. **Five more tests with no assertions** (`jest/expect-expect`): `eventsReducer.test.js`
+   ×3, `deepcopy.test.ts`, and `Workshop.test.ts` — the last is skipped in its entirety,
+   which `jest/no-disabled-tests` also reports.
+6. **Seven blocks of commented-out tests** (`jest/no-commented-out-tests`), mostly in
+   `arrayUtils.test.ts`. Delete them or restore them; a commented test is a claim that
+   something was once checked and is not now.
+7. **There is no CI.** No `.github/workflows`, no `.circleci`. Every gate in this plan has
+   been run by hand. That is why the `yarn testPacks` digest hazard below mattered enough
+   to document: with no CI there is no second place the truth shows up.
+8. **`test/system` cannot run on this machine** for want of a `chromedriver` (Phase 3g).
+   Two system tests exist and have never been exercised in this upgrade.
+
+**And a standing hazard rather than a task:** `yarn testPacks` — and therefore
+`yarn test:cypress:gate` — **exits 0 with "Everything's up-to-date" on the run immediately
+after a compile that failed**, because shakapacker records the digest regardless of
+webpack's result. Cypress then runs against the last *good* bundle, so the suite is green
+while the code does not compile. Read the **first** run's output, and `rm -rf
+tmp/shakapacker` whenever a build's result is in doubt.
+
+### 8f. Dead code and modelling
+
+Nothing here is broken today.
+
+1. **`NewOrganizationForm` navigates to a URL nothing else in the app uses.** After
+   saving it goes to `/organizations/:id`, while every link in the app points at
+   `/organizations/show/:id`. Under React Router 5 this worked only by accident:
+   `routeActionAndId()` rewrote a numeric first segment into action `"show"`, so the
+   wrong URL was silently repaired on arrival. Phase 7c deleted that helper and
+   `organizations.spec.js` failed inside one run. **The port routes both spellings** —
+   changing the form would have been a behaviour change, not a migration — so nothing is
+   broken today, but the duplicate route in `MainRouter` is debt. Fix by making the form
+   navigate to `/organizations/show/:id` and deleting the bare `:id` route. Check first
+   that no bookmark or email links the short form; if they do, keep it as an explicit
+   `<Navigate>` redirect rather than a second copy of the page.
+
+2. **The activity routes now enumerate `Activity`'s STI subclasses by hand.** React
+   Router 5 matched all of them with `/*activities/:id`; v6 splats must be trailing, so
+   that pattern is inexpressible and `MainRouter` lists
+   `/translation_activities/:id`, `/linguistic_activities/:id`, `/media_activities/:id`
+   and `/activities/:id` instead. Correct today, but a fourth subclass added to
+   `Activity` will 404 on the frontend with nothing failing to say so. Either derive the
+   list from a single shared source, or add a model test asserting
+   `Activity.descendants` matches the paths the router declares. `notifications.spec.js`
+   covers the routes that exist; it cannot cover one that was never added.
+
+3. **The dashboard shows a language with no URL of its own, and it is the reason a
+   whole router was unreachable.** Before Phase 7c, `Dashboard` rendered
+   `LanguagePageRouter` outside any route with `basePath=""`, which made every path that
+   router declared unmatchable — the fallback `LanguagePage` was the only thing it could
+   ever display. 7c replaced it with `DashboardLanguagePage`, which renders
+   `LanguagePage` directly, so the dead code is gone. What remains is the underlying
+   design: selecting a language on the dashboard changes no URL, so it cannot be linked,
+   bookmarked, or returned to with the back button, and `dashboard.spec.js` has to click
+   through the sidebar without asserting a location. Decide whether that is intended. If
+   it is not, giving the dashboard real nested routes is the fix and it is a feature
+   change, not cleanup.
+4. **`PlainTable.tsx` is unreferenced.** Nothing imports it and nothing constructs a
+   `TableReport`. Found in Phase 7a, when `@types/react` 18 rejected it for rendering a
+   `string | { text, url }` as a child — a latent crash in dead code. It was fixed rather
+   than deleted, because deleting a component is not a type bump. Delete it here, or find
+   out what it was for.
+
+### 8g. Deferred majors and forward-compatibility
+
+Everything Phase 7 chose not to bump, with the reason. None of these is urgent; all of
+them are cheaper to decide now than to rediscover.
+
+1. **React 19** (`react`/`react-dom` 18.3.1 → 19.x). Not a version bump: 19 removes the
+   unprefixed legacy lifecycles, `propTypes` on function components, and string refs.
+   `react-tabs` 6 already declares `^18 || ^19`, and `react-redux` 9 declares `^18 || ^19`,
+   so the dependencies are ready — the application is the question. Note the codebase has
+   15 class components and one unprefixed `componentWillReceiveProps` inside react-tabs.
+2. **`react-router-dom` 7** (6.30.6 → 7.x). Deliberately out of scope in 7c, and every 7.x
+   requires React ≥18, which is now satisfied. The v6 component API this port targets is
+   what v7 keeps, so this is a smaller hop than 5→6 was.
+3. **Revisit the `resolutions` entry in `package.json`.** 7a pinned
+   `@types/react`/`@types/react-dom` to `^18` because three packages depended on
+   `"@types/react": "*"` and a second copy of the React types breaks every `connect()`-
+   wrapped component with `TS2786`. 7d's react-tabs bump removed one of those three
+   dependents. The pin will hold the tree *below* React 19's types, so it must be
+   re-examined with item 1, not inherited.
+4. **eslint 10** (9.39.5 → 10.x). Blocked, not deferred: `eslint-plugin-react` 7.37.5
+   peers at `^9.7`, so 9 is the ceiling until that plugin ships eslint 10 support.
+5. **Cypress 16** (15.21.1 → 16.x), **TypeScript 7** (5.9.3 → 7.x), **`@types/node` 26**
+   (20.x → 26.x). Each is a major with its own gate; none is needed by anything above.
+6. **Babel 8** (`@babel/*` 7.29 → 8.x) and the **webpack loader majors** —
+   `babel-loader` 8→10, `css-loader` 6→7, `style-loader` 3→4, `webpack-cli` 5→7,
+   `webpack-merge` 5→6, `compression-webpack-plugin` 9→12,
+   `css-minimizer-webpack-plugin` 4→8, `webpack-assets-manifest` 5→6,
+   `webpack-dev-server` 5→6. These are shakapacker's neighbours, not application
+   dependencies; shakapacker 10 pins compatible ranges and the build is green. Treat them
+   as one build-toolchain phase, not as ten bumps.
+7. **`regenerator-runtime` 0.13.11 → 0.14.1.** Trivial, but it is imported by
+   `application/index.js` alongside `core-js/stable` for Babel's `useBuiltIns: "entry"`,
+   so it belongs with the Babel decision above.
+8. **`prop-types` is still a dependency for one file.** `index.js` declares
+   `App.propTypes`, which is the only `propTypes` in the codebase — and React 19 ignores
+   `propTypes` on function components entirely. Drop it with item 1; `App` takes one prop
+   and the file is not type-checked because it is `.js`.
+9. **A duplicate JSON key that becomes an error in json 3.0.** Every Rails test run prints
+   `warning: detected duplicate key "type"` from `active_support/json/encoding.rb`,
+   for activity payloads carrying both `"type" => "TranslationActivity"` and
+   `type: "TranslationActivity"` — a string key and a symbol key for the same field, from
+   a jbuilder view merging in a hash that already has one. Harmless today, an exception
+   when json 3.0 lands. Find the view and pick one key.
+10. **Redux Toolkit.** `createStore` is soft-deprecated in redux 5 and still exported;
+    `index.js` uses it and works. `configureStore` remains optional follow-up, as it was
+    before — recorded here so "deprecated" is not mistaken for "broken."
+
 ---
 
 ## Sequencing summary
@@ -2307,14 +2596,21 @@ Phase 4  OmniAuth 2                              DONE  browser login verified
 Phase 5  Ruby 3.1 + secrets -> ENV + Rails 7.0 -> 7.1   DONE  deploy-affecting; see 8b item 7
 Phase 6  Ruby 3.4 + Rails 7.2 -> 8.1 + Cypress 15     DONE  Rails 8.1 added: 8.0 EOL 2026-10-07
          6f drop Enzyme, 6g routing specs (93->97)  DONE  pre-Phase-7 groundwork
-Phase 7  React Router 6 -> React 18 -> react-redux 9   independent; router is the big one
-         (router FIRST, on React 16 -- see 7c)
-         react-router-dom ^6.30.6; v7 needs React >=18, so not this phase
+Phase 7  React Router 6 -> React 18 -> react-redux 9  DONE  order was 7c, 7a, 7b, 7d
          7c (1/n) withRouter removed on v5           DONE  9 sites, not 18
          7c (2/n) history prop-drilling removed on v5 DONE  25 components, 30 pass-downs
          7c (3/n) react-router-dom 6.30.6            DONE  nested routes + Outlet
          7a React 18.3.1 + createRoot                DONE  react-redux 7.2.9 alongside
-Phase 8  Security pass + deploy mechanics         post-upgrade, no version changes
+         7b react-redux 9.3.0 + redux 5.0.1          DONE  one type error, not "churn"
+         7d (1/n) axios 0.21 -> 1.20                 DONE  changed a wire format
+         7d (2/n) immutability-helper 3.1.1          DONE  12 type errors, 3 were real
+         7d (3/n) react-tabs 6.1.1                   DONE  needed 7a first
+         7d (4/n) jest 30 + ts-jest 29               DONE  transform, not globals
+         7d (5/n) concurrently 9, nodemon 3          DONE
+         7d (6/n) eslint 9 + flat config             DONE  first setup; 144 findings -> 8c
+Phase 8  Post-upgrade pass                       post-upgrade, no version changes
+         8a security  8b deploy  8c lint  8d correctness
+         8e test debt  8f dead code  8g deferred majors
          (8b's deploy prerequisites are needed at the FIRST deploy of this
           branch, not after Phase 7 -- see 8b)
 ```
