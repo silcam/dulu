@@ -13,6 +13,11 @@
     "typecheck": "tsc --noEmit",
     "testPacks": "RAILS_ENV=test bin/rails shakapacker:compile"
   },
+  "resolutions": {
+    "//": "@types/react-redux, @types/react-tabs and @types/hoist-non-react-statics all depend on \"@types/react\": \"*\", which resolves to 19. A second copy of the React types in the tree makes every connect()-wrapped and react-tabs component fail with TS2786 -- the ReactElement from one copy is not the ReactNode of the other. Pin the whole tree to one major.",
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1"
+  },
   "dependencies": {
     "@babel/core": "^7.21.4",
     "@babel/plugin-transform-runtime": "^7.21.4",
@@ -20,9 +25,9 @@
     "@babel/preset-react": "^7.12.13",
     "@babel/runtime": "^7.21.0",
     "@types/node": "^20.12.7",
-    "@types/react": "^16.8.3",
-    "@types/react-dom": "^16.8.1",
-    "@types/react-redux": "^7.1.5",
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "@types/react-redux": "^7.1.34",
     "@types/react-tabs": "^2.3.1",
     "axios": "^0.21.1",
     "babel-loader": "^8.3.0",
@@ -34,9 +39,9 @@
     "immutability-helper": "2.7.1",
     "mini-css-extract-plugin": "^2.7.5",
     "prop-types": "^15.6.1",
-    "react": "~16.8.0",
-    "react-dom": "~16.8.0",
-    "react-redux": "^7.1.3",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "react-redux": "^7.2.9",
     "react-router-dom": "6.30.6",
     "react-tabs": "^2.2.1",
     "redux": "^4.0.1",
