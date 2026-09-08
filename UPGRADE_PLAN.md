@@ -1832,7 +1832,8 @@ Three things the forecast did not have:
   other. The error text points at `connect()` and reads like a react-redux
   incompatibility, which it is not. Fixed with a `resolutions` entry pinning the tree to
   one major (and `@types/react-redux` 7.1.5 → 7.1.34, which the `^7.1.5` range should have
-  picked up but the lockfile had pinned).
+  picked up but the lockfile had pinned). **The `resolutions` entry was removed again at
+  the end of 7d**, once 7b and 7d had dropped all three of the packages that needed it.
 - **One genuine type error.** `@types/react` 16's `ReactNode` included `{}`, so
   `PlainTable` interpolating a `string | { text, url }` cell type-checked — even though
   React 16 itself threw "Objects are not valid as a React child" on the object branch. The
@@ -2027,12 +2028,11 @@ child component calling `useParams`/`useNavigate` for itself.
   render correctly on 18 — its one legacy call is an unprefixed
   `componentWillReceiveProps`, which warns rather than fails until React 19. react-tabs 6
   ships its own types, so `@types/react-tabs` goes away with it.
-- **Revisit the `resolutions` entry in `package.json` when it does.** 7a added it to pin
-  `@types/react`/`@types/react-dom` to one major, because three packages depend on
-  `"@types/react": "*"` and a second copy of the React types breaks every `connect()`-
-  wrapped component with `TS2786`. Dropping `@types/react-tabs` removes one of those three
-  dependents. The entry is pinned at `^18`, so it will hold the tree *below* React 19's
-  types if that is ever wanted — it needs to be re-examined, not inherited.
+- **Revisit the `resolutions` entry in `package.json` when it does.** ~~7a added it to pin
+  `@types/react`/`@types/react-dom` to one major.~~ **Done: dropping `@types/react-tabs`
+  removed the last of the three `"@types/react": "*"` dependents, so the pin became inert
+  and was deleted — see Phase 8g item 3 for the verification and for the symptom to watch
+  for.**
 
 ### 7d. Remaining dependency cleanup
 
@@ -2135,9 +2135,9 @@ each independently reviewable and independently deployable:
 |---|---|---|---|
 | **8a** | Security | 6 | brakeman findings plus the `hd` question. Reviewable by someone who does not care about Rails versions. |
 | **8b** | Deploy mechanics | 7 | **Not sequenced after Phase 7** — needed at the *first* deploy of this branch, whenever that is. |
-| **8c** | Lint findings | 144 | The first eslint run this repo has ever had (Phase 7d). Mostly mechanical; a handful are real. |
+| **8c** | Lint findings | 144 findings, 7 tasks | The first eslint run this repo has ever had (Phase 7d). Mostly mechanical; a handful are real. |
 | **8d** | Correctness defects | 7 | Real bugs found during the upgrade and left alone on purpose. Each needs a test first. |
-| **8e** | Test-suite debt | 8 | Flakes, a skipped spec that documents a live bug, tests that assert nothing, no CI. |
+| **8e** | Test-suite debt | 9 | Flakes, a skipped spec that documents a live bug, tests that assert nothing, no CI. |
 | **8f** | Dead code and modelling | 4 | Debt the port created or exposed. Nothing here is broken today. |
 | **8g** | Deferred majors and forward-compat | 10 | Everything Phase 7 chose not to bump, with the reason. Includes one warning that becomes an error on a future dependency. |
 
@@ -2485,6 +2485,12 @@ test written before the fix.
    to document: with no CI there is no second place the truth shows up.
 8. **`test/system` cannot run on this machine** for want of a `chromedriver` (Phase 3g).
    Two system tests exist and have never been exercised in this upgrade.
+9. **Notification channels have no E2E coverage at all.** No spec among the 22 opens the
+   settings page that renders `MyNotificationChannels` — `notifications.spec.js` is the
+   feed. So the three `SearchPicker` null guards and the `Domain` cast added there in 7d
+   are unexercised, as is `set-state-in-effect` at `MyNotificationChannels.tsx:37`
+   (8c item 2). Nothing there can misbehave today, but "98 green" should not be read as
+   having exercised it.
 
 **And a standing hazard rather than a task:** `yarn testPacks` — and therefore
 `yarn test:cypress:gate` — **exits 0 with "Everything's up-to-date" on the run immediately
@@ -2549,12 +2555,18 @@ them are cheaper to decide now than to rediscover.
 2. **`react-router-dom` 7** (6.30.6 → 7.x). Deliberately out of scope in 7c, and every 7.x
    requires React ≥18, which is now satisfied. The v6 component API this port targets is
    what v7 keeps, so this is a smaller hop than 5→6 was.
-3. **Revisit the `resolutions` entry in `package.json`.** 7a pinned
-   `@types/react`/`@types/react-dom` to `^18` because three packages depended on
-   `"@types/react": "*"` and a second copy of the React types breaks every `connect()`-
-   wrapped component with `TS2786`. 7d's react-tabs bump removed one of those three
-   dependents. The pin will hold the tree *below* React 19's types, so it must be
-   re-examined with item 1, not inherited.
+3. **The `resolutions` pin is gone, and this is the symptom to recognise if it comes
+   back.** 7a added `resolutions` for `@types/react`/`@types/react-dom` because three
+   packages declared `"@types/react": "*"`, which resolved to 19 in nested copies and made
+   every `connect()`-wrapped and react-tabs component fail `TS2786` — an error whose text
+   points at `connect()` and reads like a react-redux incompatibility. All three of those
+   dependents are now gone (`@types/react-redux` with 7b, `@types/react-tabs` with 7d,
+   `@types/hoist-non-react-statics` with them), so the pin was inert and was removed:
+   verified with a forced clean resolve, which produced one copy of `@types/react` at
+   18.3.31 and no lockfile change. **Nothing holds the types below 19 any more**, which is
+   what item 1 needs. If a future dependency reintroduces a `"@types/react": "*"`, the
+   symptom is a burst of `TS2786`s — check for a second copy in `node_modules` before
+   believing the error.
 4. **eslint 10** (9.39.5 → 10.x). Blocked, not deferred: `eslint-plugin-react` 7.37.5
    peers at `^9.7`, so 9 is the ceiling until that plugin ships eslint 10 support.
 5. **Cypress 16** (15.21.1 → 16.x), **TypeScript 7** (5.9.3 → 7.x), **`@types/node` 26**
