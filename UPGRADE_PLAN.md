@@ -1984,6 +1984,21 @@ Phase 6g):
 objects, so these are not mechanical `component=` → `element=` swaps; each becomes a
 child component calling `useParams`/`useNavigate` for itself.
 
+**Two things 7a left on 7d's doorstep.**
+
+- **`react-tabs` 2.3.0 → 6.x is now unavoidable here, and it could not have happened
+  earlier.** react-tabs 6 declares `react: ^18 || ^19`, so it had to follow 7a; 2.3.0
+  declares `^16` only, so yarn warns about it on every install until this lands. It does
+  render correctly on 18 — its one legacy call is an unprefixed
+  `componentWillReceiveProps`, which warns rather than fails until React 19. react-tabs 6
+  ships its own types, so `@types/react-tabs` goes away with it.
+- **Revisit the `resolutions` entry in `package.json` when it does.** 7a added it to pin
+  `@types/react`/`@types/react-dom` to one major, because three packages depend on
+  `"@types/react": "*"` and a second copy of the React types breaks every `connect()`-
+  wrapped component with `TS2786`. Dropping `@types/react-tabs` removes one of those three
+  dependents. The entry is pinned at `^18`, so it will hold the tree *below* React 19's
+  types if that is ever wanted — it needs to be re-examined, not inherited.
+
 ### 7d. Remaining dependency cleanup
 
 `axios` 0.21 → 1.x, `immutability-helper` (pinned at exactly `2.7.1`) → 3.x,
