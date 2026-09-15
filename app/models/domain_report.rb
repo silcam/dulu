@@ -71,13 +71,20 @@ class DomainReport
     start_period_str = @period.start.month == 1 ? @period.start.year.to_s : @period.start.to_s
     stage_src = @languages ? Stage.joins(:activity).where(activities: { language: @languages }) : Stage
     stages = stage_src.where(kind: :Translation)
-                      .where("start_date < '#{@period.finish}-32'")
-                      .where("start_date >= '#{start_period_str}'")
+                      # `start_date` is a *string* column (fuzzy dates: "2026",
+                      # "2026-03" and "2026-03-15" are all valid), so these are
+                      # lexicographic comparisons, not date comparisons. The "-32"
+                      # is deliberate: no real day sorts after it, so the bound
+                      # means "through the end of the finish month". Do not
+                      # "correct" it into date arithmetic -- Postgres rejects
+                      # '2026-12-32'::date outright.
+                      .where("start_date < ?", "#{@period.finish}-32")
+                      .where("start_date >= ?", start_period_str)
                       .order(start_date: :desc)
                       .includes(:activity)
     @activity_items = stages.map do |stage|
       {
-        activity: stage.activity.attributes.merge({ type: stage.activity.type }),
+        activity: stage.activity.attributes.merge("type" => stage.activity.type),
         id: stage.id,
         stage: stage.name,
         date: stage.start_date,

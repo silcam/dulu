@@ -59,8 +59,6 @@ Rails.application.routes.draw do
       get 'search', on: :collection
     end
 
-    get '/permissions/check', to: 'permissions#check'
-
     resources :person_roles do
       post 'finish', on: :collection
     end

@@ -171,6 +171,59 @@ class PeopleControllerTest < ActionDispatch::IntegrationTest
     assert_equal 'Linguistics', @drew.view_prefs['dashboardTab']
   end
 
+  test 'Update View Prefs keeps only the known top-level keys' do
+    api_login @drew
+    api_put(people_path('/update_view_prefs'),
+            view_prefs: {
+              dashboardTab: 'Linguistics',
+              dashboardSelection: { type: 'language', id: 42 },
+              evil: { anything: 'at all' }
+            })
+    assert_response 204
+    @drew.reload
+    # The hash-valued pref survives -- a bare `permit(:dashboardSelection)` would
+    # silently drop it, and the scalar-only test above would not have noticed.
+    assert_equal({ 'type' => 'language', 'id' => 42 },
+                 @drew.view_prefs['dashboardSelection'])
+    assert_equal 'Linguistics', @drew.view_prefs['dashboardTab']
+    refute @drew.view_prefs.key?('evil'), 'unknown keys must not be stored'
+  end
+
+  # `config/environments/test.rb` sets allow_forgery_protection = false, so CSRF is
+  # off for every other test in this suite. This one turns it on for a single
+  # request to prove the endpoint is protected -- Api::PeopleController used to
+  # `skip_before_action :verify_authenticity_token, only: [:update_view_prefs]`,
+  # which let any off-site page write to a logged-in user's view_prefs. See
+  # UPGRADE_PLAN 8a.8. Cypress cannot cover this: it authenticates with a
+  # tokenless `cy.request("POST", "/test-login")`, which only works while
+  # forgery protection is off.
+  test 'Update View Prefs rejects a request with no CSRF token' do
+    api_login @drew
+    before = @drew.reload.view_prefs.dup
+
+    with_forgery_protection do
+      put people_path('/update_view_prefs'),
+          params: { view_prefs: { dashboardTab: 'Snuck In' } },
+          xhr: true
+    end
+
+    assert_response 422
+    assert_equal before, @drew.reload.view_prefs, 'rejected request must not write'
+  end
+
+
+  test 'Update View Prefs Large Payload' do
+    api_login @drew
+    before = @drew.reload.view_prefs.dup
+    oversized = 'A' * (Api::PeopleController::MAX_VIEW_PREFS_BYTES + 1)
+
+    api_put(people_path('/update_view_prefs'), view_prefs: { dashboardTab: oversized })
+
+    assert_response 413
+    assert_equal before, @drew.reload.view_prefs, 'oversized payload must not write'
+  end
+
+
   test 'Search' do
     api_login @drew
     data = api_get(people_path('/search?q=conr'))

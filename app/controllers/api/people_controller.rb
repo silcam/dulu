@@ -1,7 +1,10 @@
 # frozen_string_literal: true
 
 class Api::PeopleController < ApplicationController
-  skip_before_action :verify_authenticity_token, only: [:update_view_prefs]
+  VIEW_PREF_KEYS = %w[
+    dashboardSelection dashboardTab notificationsTab domainReportParams
+  ].freeze
+  MAX_VIEW_PREFS_BYTES = 4_000
 
   def index
     @people = Person.all
@@ -43,8 +46,13 @@ class Api::PeopleController < ApplicationController
   end
 
   def update_view_prefs
-    params.permit!
-    current_user.view_prefs.merge!(params[:view_prefs])
+    # Note: attempt to a bit of sanitizing of the inputs, but since we're
+    # expecting to receive a mult-level hash there's not a lot we can do
+    # here. Expect to be sure that the content is sanitized before looking
+    # at it.
+    prefs = params.require(:view_prefs).to_unsafe_h.slice(*VIEW_PREF_KEYS)
+    return head :payload_too_large if prefs.to_json.bytesize > MAX_VIEW_PREFS_BYTES
+    current_user.view_prefs.merge!(prefs)
     current_user.save
     response_ok
   end

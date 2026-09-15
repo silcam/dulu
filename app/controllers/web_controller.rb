@@ -13,6 +13,7 @@ class WebController < ApplicationController
       ui_language: current_user.ui_language,
       view_prefs: current_user.view_prefs,
     }
-    return JSON.generate(data).html_safe
+
+    return ActiveSupport::JSON.encode(data).html_safe
   end
 end

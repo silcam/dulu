@@ -2150,20 +2150,159 @@ Write the test first in each case — that is the actual work here, not the one-
 
 ### 8a. Security
 
-1. **`app/controllers/api/permissions_controller.rb:3` — `params[:type].constantize`.**
-   High confidence, remote code execution. User-supplied input reaching `constantize`
-   lets a caller instantiate arbitrary constants. Fix by allowlisting the permitted type
-   strings and mapping to classes explicitly; never derive a class from raw params.
+1. **`app/controllers/api/permissions_controller.rb:3` — `params[:type].constantize`.
+   The fix is to delete the endpoint, not to allowlist it: it is dead code.**
+   Brakeman classifies it high-confidence remote code execution. What can be
+   demonstrated from reading it is narrower — `constantize` resolves (and under Zeitwerk
+   autoloads) any constant the caller names, then `type.find(params[:id])` is called on
+   it and the result handed to `can?`, which makes it a model/row-existence and
+   permission oracle across every table plus a reliable 500 generator on any string that
+   is not an AR model. Deletion makes the distinction moot, which is the argument for
+   deleting rather than debating the label.
 
-2. **`app/controllers/api/people_controller.rb:46` — `params.permit!`.** Mass assignment:
-   permits every parameter, including any attribute a future migration adds. Replace with
-   an explicit permit list.
+   It has no consumers. `git grep -l "permissions/check" HEAD` returns
+   `config/routes.rb` and nothing else, and `doWhat` — a parameter any caller would have
+   to send — appears nowhere in the tree but the controller itself. It was added
+   2018-12-07 in `01e5014` alongside the Events Calendar work; its only caller lived in
+   `app/javascript/components/events/NewEventForm.jsx`, which went away with the
+   events-new flow (`MainRouter` still routes `/events/new` to
+   `<span>To be added...</span>`). Meanwhile the pattern the rest of the app actually
+   uses is `can?` evaluated server-side into the jbuilder payload — `json.update can?(:update, person)`
+   and friends, ~20 call sites across `app/views/api/**`. There is nothing to migrate to
+   an allowlist.
+
+   Delete: `app/controllers/api/permissions_controller.rb` and `config/routes.rb:62`.
+   There is no `app/views/api/permissions/` and there was no controller test, so nothing
+   is lost from the gate; the regression test described below adds one
+   (401 → 402 tests). If the events-new flow is ever rebuilt, it should get a
+   `json.permissions` block like every other resource rather than a generic query
+   endpoint.
+
+   **The regression test cannot assert a 404, and it does not belong in
+   `test/controllers/`.** `config/routes.rb:88` ends with `get '*route', to: 'web#index'`,
+   so a deleted API path is *not* unroutable — it falls through to the SPA shell and
+   returns 200 HTML. `assert_raises(ActionController::RoutingError)` and
+   `recognize_path` both see a live route. Assert the two things that are actually true
+   instead: the constant is gone, and the path now resolves to `web#index`. That is a
+   routing fact rather than a controller behaviour, and a file named
+   `permissions_controller_test.rb` reads as evidence the controller still exists, so it
+   lives in `test/integration/removed_routes_test.rb` — written, passing (1 test,
+   2 assertions).
+
+   Worth recording separately: because of that catch-all, **an XHR to any dead or
+   misspelled `/api/*` path gets a 200 of HTML**, which is exactly the case
+   `require_login`'s comment calls out as indistinguishable from real data to
+   `DuluAxios`. Deleting this endpoint is safe only because nothing calls it; a *renamed*
+   endpoint would fail silently rather than loudly. Candidate for a constraint on the
+   catch-all (scope it to exclude `/api`) — filed here rather than acted on.
+
+2. **`app/controllers/api/people_controller.rb:46` — `params.permit!`.** Brakeman calls
+   this mass assignment, but the earlier wording here ("permits every attribute a future
+   migration adds") was wrong and worth correcting: line 46 is in `update_view_prefs`,
+   which assigns no model attributes at all. It does
+   `current_user.view_prefs.merge!(params[:view_prefs])`, and `view_prefs` is a `json`
+   column defaulting to `{}` (`db/schema.rb:367`). `create`/`update` already go through a
+   proper allowlist in `person_params`. So the real exposure is an **unbounded write of
+   arbitrary JSON into the current user's own prefs blob** — verified: a key named `evil`
+   posted alongside the real prefs is merged in and persisted.
+
+   **Do not derive the allowlist from `ViewPrefs` in the reducer.** The struct is small —
+   4 top-level keys (`app/javascript/reducers/useViewPrefs.ts:8`) — but transcribing its
+   *value shapes* into strong params makes the TypeScript interface and the controller two
+   sources of truth for the same contract, and the drift is silent in the worst direction:
+   add a pref in TS, forget Rails, strong params drops it, and `update_view_prefs` returns
+   `response_ok` (204) regardless, so nothing surfaces. The pref just never persists. The
+   existing test (`test/controllers/people_controller_test.rb:168`) only exercises
+   `dashboardTab`, a scalar, so it would keep passing while the two hash-valued prefs
+   broke.
+
+   Two things were checked against a real `ActionController::Parameters` rather than
+   assumed. Allowlisting only the top-level names **does not work** —
+   `permit(:dashboardSelection, :dashboardTab, :notificationsTab, :domainReportParams)`
+   returns `{"dashboardTab", "notificationsTab"}` and silently drops both hash-valued
+   prefs, because a bare key permits scalars only. The full nested form does work:
+
+   ```ruby
+   params.require(:view_prefs).permit(
+     :dashboardTab, :notificationsTab,
+     dashboardSelection: %i[type id],
+     domainReportParams: [:domain,
+       { period: { start: %i[year month], end: %i[year month] } },
+       { languageIds: [] }, { clusterIds: [] }]
+   )
+   ```
+
+   — at the cost of restating `DRDataParams` and the `Selection` union in Ruby.
+
+   **Preferred fix: treat it as the opaque bag it is, and bound it rather than typing it.**
+   `params.require(:view_prefs).to_unsafe_h.slice(*VIEW_PREF_KEYS)` returns the full
+   nested structure and drops unknown keys (verified), is scoped to the `view_prefs`
+   subtree so it can never reach an attribute assignment the way a global `permit!` could,
+   and needs only the four key *names* — which is a list that changes rarely and whose
+   drift is a deliberate two-file edit.
+
+   `to_unsafe_h` returns an `ActiveSupport::HashWithIndifferentAccess`, so
+   `VIEW_PREF_KEYS` may be `%w[]` or `%i[]` interchangeably — verified identical — and the
+   sliced result always has **String** keys either way. Use `%w[]` so the code reads the
+   same way the data does: the `json` column round-trips string keys, which is what
+   `people_controller_test.rb:171` already asserts on (`view_prefs['dashboardTab']`).
+   Absent keys are simply absent from the result rather than merged in as nils, which is
+   what the merge semantics need. One pre-existing wrinkle to leave alone but know about:
+   the merge target is a plain Hash from the column, so `view_prefs[:some_key]` (symbol)
+   is `nil` in Ruby — only string lookup works.
+
+   **But key-slicing bounds the key names only, and that is not the main problem — the
+   storage is.** Values under those four keys stay arbitrary: `dashboardTab` can hold a
+   nested structure of any shape and any size. That matters on its own, independent of
+   whether today's readers happen to handle it:
+
+   - **`Person` is `audited`** (`app/models/person.rb:31`, bare, so every column) and
+     `view_prefs` is in scope — confirmed via `Person.non_audited_columns`, which lists
+     only the timestamps, `id`, `type` and `lock_version`. So each `setViewPrefs` call
+     writes an `audits` row carrying the full before/after `view_prefs` in
+     `audited_changes`. That table is **append-only**: an attacker does not overwrite one
+     row, they add one per request, each holding arbitrary JSON of unbounded size. Write
+     amplification plus a polluted audit trail.
+   - **The blob is embedded in every page load.** `WebController#make_user_data` puts it
+     in the initial HTML, not a lazy fetch, so a bloated `view_prefs` permanently degrades
+     that user's every page load — and there is no UI anywhere to reset it.
+   - **Durability outlives the code.** Output escaping is a property every future read
+     site has to re-earn; validation is a property of one write site. A payload sitting in
+     the column is waiting for the first consumer that does not escape — a CSV export, a
+     mailer, an admin view, a `dangerouslySetInnerHTML`.
+
+   So the size cap is not hygiene, it is the control: reject a `view_prefs` payload over a
+   few KB outright rather than storing and then coping with it. Fix the write and the read
+   both — they protect against different things, and only fixing the read leaves an
+   attacker-controlled write primitive into another user's row (see item 8).
+
+   **There may already be junk in the column.** Check the restored production dump before
+   assuming this is theoretical:
+   `SELECT id, length(view_prefs::text) FROM people ORDER BY 2 DESC LIMIT 10;` and
+   `SELECT DISTINCT jsonb_object_keys(view_prefs::jsonb) FROM people;` — anything outside
+   the four known keys, or any row much larger than a few hundred bytes, is a cleanup task
+   rather than a code fix. Note the column is `t.json`, not `jsonb` (`db/schema.rb:367`),
+   so it is stored as text with no validation at the database level either.
 
 3. **Three SQL injection findings** — `app/models/event.rb:120`,
-   `app/models/concerns/multi_word_search.rb:13`, and `app/models/domain_report.rb:64`
-   (interpolated `@period.finish`). Convert to bound parameters.
+   `app/models/concerns/multi_word_search.rb:13`, and `app/models/domain_report.rb:74-75`
+   (interpolated `@period.finish` and `start_period_str`). Convert to bound parameters.
 
-4. **Regenerate `config/brakeman.ignore`.** Its 5 entries no longer match anything —
+   The `domain_report.rb` pair was traced and is **not exploitable as it stands**, which
+   does not make it not worth fixing. `DomainReport.from_web_params` permits
+   `start: %i[year month], end: %i[year month]`, and `YearMonth#initialize`
+   (`app/lib/year_month.rb`) does `year.to_i` / `month.to_i`, so `@period.finish.to_s` is
+   always `\d+-\d+` and attacker text cannot reach the query. The guard is incidental —
+   two classes away from the interpolation and not written as a guard — so it survives
+   only until someone changes `YearMonth`. Bind the query. Note the same values reach
+   `DomainReport.from_database`, which reads `report.report[:dataParams]` out of the
+   `reports` JSONB with no permit at all (`Api::ReportsController#report_params` is
+   `params.require(:report).permit(:name, report: {})` — `report: {}` permits an arbitrary
+   nested hash); the same `to_i` coercion is all that stands there too.
+
+4. **Regenerate `config/brakeman.ignore` — after items 1, 2, 3, 7, 8 and 9, not before.**
+   Regenerating first would bake in findings that are about to be deleted or fixed.
+   Its 5 entries no longer match anything —
    they reference `app/views/dashboard/dashboard.html.erb`,
    `app/views/languages/show.html.erb` and `app/views/clusters/index.html.erb`, all ERB
    views deleted during the React migration. A stale ignore file is worse than none: it
@@ -2184,6 +2323,61 @@ Write the test first in each case — that is the actual work here, not the one-
 
 6. **Re-run `bundle exec brakeman` expecting zero warnings**, and consider adding it to
    the gate as a hard failure rather than a compare-against-known-list.
+
+7. **`Note#for_type.constantize` is the same bug class as item 1, except this one is
+   live — and brakeman cannot see it.** `app/models/note.rb:14` is
+   `for_type.constantize.find(for_id)`, and `for_type` is user-supplied:
+   `Api::NotesController#create` does
+   `params.permit(:for_type, :for_id, :text).merge(person: current_user)` and passes it
+   straight to `Note.create` with **no `authorize!` call at all**, so any logged-in user
+   can store an arbitrary class name against an arbitrary id. Brakeman almost certainly
+   never flagged it because the value is laundered through a model attribute rather than
+   appearing as `params[...].constantize` at the call site — which is what makes it the
+   more dangerous of the two: notes are UI-reachable, unlike item 1's endpoint.
+
+   It is latent rather than exploited today, and worth understanding why: the *instance*
+   method `Note#for` has no callers anywhere in `app/`. The only thing that reads notes
+   is the *class* method `Note.for(model)` (`app/views/api/languages/show.json.jbuilder:3`),
+   which builds a `WHERE for_type = ? AND for_id = ?` and never constantizes. So the
+   poisoned rows sit there until someone writes the first caller of `Note#for` — at which
+   point it dereferences on their behalf. Fix both halves: allowlist `for_type` against
+   an explicit map of permitted classes on create (this is where item 1's original
+   allowlist prescription belongs), and add the missing `authorize!` so a note cannot be
+   attached to an object the author cannot see.
+
+   Two facts to pin down before writing the allowlist. The UI sends only
+   `for_type: "Language"` (`app/javascript/components/languages/LanguagePage.tsx:58` is
+   the sole `noteFor` producer), while `app/javascript/models/Note.ts:12` declares
+   `"Language" | "Cluster" | "Person"` — so the type declaration is already wider than
+   the app. And the production data may be wider than either: run
+   `SELECT DISTINCT for_type FROM notes;` against the restored dump before narrowing the
+   allowlist, or `#for` starts raising on historical rows. Note that `GO_LIVE_QA_PLAN.md`
+   currently claims notes attach to Events as well as Languages; that is wrong on this
+   reading and should be corrected to Language-only when this item is worked.
+
+8. **`skip_before_action :verify_authenticity_token, only: [:update_view_prefs]`
+   (`app/controllers/api/people_controller.rb:4`) — CSRF is off on the endpoint from
+   item 2, and this is the more serious half.** Not previously filed. Combined with
+   `permit!` it means an off-site page can write arbitrary JSON into a logged-in user's
+   `view_prefs` with no token. The skip also looks vestigial: `DuluAxios.put` sets
+   `data.authenticity_token = getAuthToken()` on every request, exactly as it does for
+   every other PUT in the app, so there is no obvious reason this one endpoint needs the
+   exemption. Try deleting the `skip_before_action` and see whether anything breaks —
+   find out why it was added before assuming it was unnecessary, but the default should be
+   removing it.
+
+9. **`WebController#make_user_data` uses `JSON.generate(...).html_safe` inside a
+   `<script>` tag — stored XSS for anything in `view_prefs`.** `app/views/web/index.html.erb`
+   interpolates it into `<script type="application/json" id="userData">`, and stdlib
+   `JSON.generate` does not escape `<` or `>`. Verified:
+   `JSON.generate({a: "</script><script>alert(1)</script>"})` returns the sequence
+   literally, whereas `{a: "</script>"}.to_json` returns `\u003c/script\u003e`. So any
+   string at any depth in `view_prefs` can close the script tag. Chained with items 2 and
+   8 — arbitrary stored JSON, written cross-site with no CSRF token — this is plantable in
+   another user's account and fires on their next page load. Fix by using `to_json` /
+   `ActiveSupport::JSON.encode` (both escape `<`, `>`, `&` by default), which holds for
+   every value regardless of what the blob contains. Fix this **as well as** item 2, not
+   instead of it: this one protects rows already in the database, item 2 stops new ones.
 
 By the time this phase runs, brakeman will be unpinned (Phase 5 lifts it to 6+ on Ruby
 3.1) and the two EOL warnings for Rails 5.2.8.1 and Ruby 2.7.4 will have resolved
@@ -2445,11 +2639,50 @@ test written before the fix.
    order-agnostic in Phase 2 to stop it failing at random; tighten it back up once the
    query is deterministic.
 
-6. **The frontend has no session-expiry handling.** `DuluAxios.handleError` knows only
-   `"server"` and `"connection"`. Phase 4 made a logged-out XHR return 401 (it used to
-   return a 302 that axios followed cross-origin), so the status is now clean and
-   distinguishable — nothing consumes it. Surface "you have been logged out, sign in
-   again" instead of a generic error.
+6. **The frontend has no session-expiry handling: a logged-out request shows "Dulu
+   server error" instead of sending the user to sign in.** `DuluAxios.handleError`
+   (`app/javascript/util/DuluAxios.ts`) branches on nothing but the presence of
+   `error.response`: any HTTP status at all becomes `{ type: "server" }`, which
+   `NetworkErrorAlerts` renders as `server_error_message` — "Dulu server error." Phase 4
+   made a logged-out XHR return 401 (`ApplicationController#require_login`,
+   `head :unauthorized`; it used to return a 302 that axios followed cross-origin into
+   Google), so the status is now clean and distinguishable — nothing consumes it.
+   The server-side log signature is the `ActionController::Callbacks` INFO line
+   `Filter chain halted as :require_login rendered or redirected`. That line is not an
+   exception and is never rendered; it is the normal trace of the 401 branch, so do not
+   go looking for a raise behind it.
+
+   **This is the most user-visible thing about the cutover, not background debt.** Every
+   session cookie is invalidated by this deploy (§8b/P5 — Rails 7.0 moved
+   `key_generator_hash_digest_class` to SHA256). An unverifiable cookie is discarded
+   silently, so `session[:user_id]` is nil, `Person.find_by id: nil` is nil, `logged_in?`
+   is false — and every user holding an open tab at deploy time gets a 401 on their next
+   XHR. The first thing they see of the new version is a generic server error. Worse,
+   `NetworkErrorAlerts` clears `serverError` on every `location.pathname` change while
+   the 401 recurs, so the banner blinks in and out as they click around and the app looks
+   alive but empty rather than plainly broken — considerably harder to diagnose from a
+   support ticket. Consider promoting this ahead of the first deploy rather than leaving
+   it in Phase 8; that is Brian's call, but it should be a knowing one.
+
+   **Prerequisite: 401 currently means two different things.** `require_login` answers a
+   logged-out XHR with an empty-bodied `head :unauthorized`, and the
+   `rescue_from "AccessGranted::AccessDenied"` handler answers a permission denial with
+   `render plain: "Not allowed", status: 401` — on HTML requests as well as XHR. Status
+   alone therefore cannot distinguish "sign in again" from "you may not do that", and
+   body-sniffing is the wrong fix. Split them first: 403 for `AccessDenied`, 401 reserved
+   for not-logged-in. That is one line in the `rescue_from` block and one line in
+   `assert_not_allowed` (`test/test_helper.rb:62`); the ~15 controller test files that
+   assert it all go through that helper. The frontend fix is unsafe without this split —
+   a 401-means-logged-out handler would try to re-authenticate a user who is simply
+   unauthorised.
+
+   **The fix has to be driven from the client.** The server cannot usefully redirect an
+   XHR — that is exactly what Phase 4b removed, because axios follows a 302 cross-origin
+   into Google. So on a 401 the frontend navigates, and it should reload the *current*
+   URL rather than go to root: `require_login`'s HTML branch sets
+   `session[:original_request] = request.path`, which survives the OAuth round trip, so a
+   reload puts the user back where they were after signing in, where root would throw the
+   deep link away.
 
 7. **A stale CSRF token on the sign-in button gives an error page.** Leave the welcome
    page open past session expiry, click sign in, and `omniauth-rails_csrf_protection`

@@ -62,6 +62,16 @@ class ActiveSupport::TestCase
     assert_response 401
   end
 
+  # CSRF is disabled suite-wide by config/environments/test.rb, so a test that
+  # needs it has to turn it on around the one request it cares about.
+  def with_forgery_protection
+    was = ActionController::Base.allow_forgery_protection
+    ActionController::Base.allow_forgery_protection = true
+    yield
+  ensure
+    ActionController::Base.allow_forgery_protection = was
+  end
+
   def assert_partial(exp, actual, no_assert = false)
     if exp.is_a? Hash
       exp.each_pair do |key, val|
