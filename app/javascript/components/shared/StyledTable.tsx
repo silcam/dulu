@@ -13,9 +13,11 @@ interface IProps {
 }
 
 export default function StyledTable(props: IProps) {
-  let { styleClass, ...otherProps } = props;
-  if (!styleClass || !Object.keys(TableStyleClass).includes(styleClass))
-    styleClass = TableStyleClass.normal;
+  const { styleClass: propsStyleClass, ...otherProps } = props;
+  const styleClass =
+    propsStyleClass && Object.keys(TableStyleClass).includes(propsStyleClass)
+      ? propsStyleClass
+      : TableStyleClass.normal;
 
   return (
     <table className={styles[styleClass]} {...otherProps}>

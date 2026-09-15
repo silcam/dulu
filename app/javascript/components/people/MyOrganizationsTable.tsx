@@ -13,7 +13,7 @@ interface IProps {
   person: IPerson;
 }
 
-export default function (props: IProps) {
+export default function MyOrganizationsTable(props: IProps) {
   const t = useTranslation();
   const [saveLoad] = useLoad();
 

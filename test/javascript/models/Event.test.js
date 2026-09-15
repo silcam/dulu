@@ -1,6 +1,5 @@
 import Event from "models/Event";
 import MockDate from "mockdate";
-import update from "immutability-helper";
 
 const christmas = { start_date: "2018-12-25", end_date: "2018-12-25" };
 const decemberMonth = { start_date: "2018-12", end_date: "2018-12" };
@@ -43,8 +42,8 @@ test("some overlap comparisons", () => {
 });
 
 test("some comparison events", () => {
-  let period = { start: { year: 2018, month: 2 } };
-  let exp = { start_date: "2018-02", end_date: "9999" };
+  const period = { start: { year: 2018, month: 2 } };
+  const exp = { start_date: "2018-02", end_date: "9999" };
   expect(Event.comparisonEvent(period)).toEqual(exp);
   period.end = { year: "2020" };
   exp.end_date = "2020";

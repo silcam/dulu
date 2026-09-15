@@ -120,7 +120,7 @@ function getAuthToken() {
       DuluAxios.authToken = document!
         .querySelector("meta[name=csrf-token]")!
         .getAttribute("content")!;
-    } catch (err) {
+    } catch {
       // In Rails test environment there is no csrf token
       DuluAxios.authToken = "None";
     }

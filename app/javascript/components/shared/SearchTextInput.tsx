@@ -56,10 +56,11 @@ export default function SearchTextInput<T>(props: IProps<T>) {
         setSelectedPosition(Math.min(selectedPosition + 1, results.length - 1));
         break;
       case "Enter":
-      case "Tab":
+      case "Tab": {
         const index = Math.max(selectedPosition, 0);
         if (results[index]) save(results[index]);
         else saveBlank();
+      }
     }
   };
 

@@ -43,10 +43,11 @@ function Searcher(props: IProps) {
       case "ArrowUp":
         setSelectedPosition(Math.max(selectedPosition - 1, -1));
         break;
-      case "Enter":
+      case "Enter": {
         const index = Math.max(selectedPosition, 0);
         if (flatResults[index] && flatResults[index].route)
           navigate(flatResults[index].route!);
+      }
     }
   };
 

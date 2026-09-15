@@ -14,15 +14,15 @@ export default function CoreData() {
       setLastUpdate(Date.now().valueOf());
 
       DuluAxios.get("/api/languages").then(data => {
-        data && dispatch(loadAction(data));
+        if (data) dispatch(loadAction(data));
       });
 
       DuluAxios.get("/api/people").then(data => {
-        data && dispatch(loadAction(data));
+        if (data) dispatch(loadAction(data));
       });
 
       DuluAxios.get("/api/organizations").then(data => {
-        data && dispatch(loadAction(data));
+        if (data) dispatch(loadAction(data));
       });
     }
   });

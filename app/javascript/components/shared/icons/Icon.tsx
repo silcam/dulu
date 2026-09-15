@@ -26,16 +26,18 @@ SVG icons are taken from Google's Material Design Icons:
 
 */
 export default function Icon(props: IProps) {
-  let {
+  // position and valign are pulled out only to keep them off the <span> below --
+  // they are read from `props` in positionClass. The underscore says so.
+  const {
     iconSize,
     styleClass,
     children,
-    svgStyle,
-    position,
-    valign,
+    svgStyle: propsSvgStyle,
+    position: _position,
+    valign: _valign,
     ...otherProps
   } = props;
-  svgStyle = update(iconSizer(iconSize), { $merge: svgStyle || {} });
+  const svgStyle = update(iconSizer(iconSize), { $merge: propsSvgStyle || {} });
 
   return (
     <span className={styles[styleClass]} {...otherProps}>

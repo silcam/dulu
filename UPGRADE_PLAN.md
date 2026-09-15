@@ -2598,6 +2598,26 @@ is **not in the gate**; whether it should be is the last item here.
 39 errors are `--fix`able. Do that as one mechanical commit with no review burden, and
 keep it away from everything below.
 
+**Mechanical pass done 2026-09-15: 144 problems → 71, in three commits.** `tsc --noEmit`
+clean and Jest 125 passing after each.
+
+- **`--fix` (144 → 105).** `prefer-const`, `no-var`, `no-extra-boolean-cast`. One thing in
+  it is not style and is called out in its commit message: the autofix also added
+  `rel="noreferrer"` to `DomainStatusItemView.tsx:149`, which closes finding 5 below.
+- **Config: the `^_` convention (105 → 98).** `_props`, `_action`, `_e` and the Cypress
+  `_` placeholders all predate this config and already mean "deliberately unused", so the
+  linter is told the convention rather than the code edited to satisfy it. Note
+  `no-unused-vars` and `@typescript-eslint/no-unused-vars` are separate rules needing
+  separate options; both are set.
+- **Code (98 → 71).** `data && dispatch(...)` → `if (data)` in `CoreData.ts`; two
+  `let {…}` destructures split so only the reassigned binding stays `let`
+  (`Icon.tsx`, `StyledTable.tsx`); two `case` blocks braced; three anonymous default
+  exports named; four unread `catch (err)` bindings → optional catch binding; two props
+  destructured only to keep them out of a spread renamed `_`; two dead imports removed.
+
+The 71 that remain are findings 1–7 below plus the jest ones, which belong to 8e. Nothing
+mechanical is left: **what is left needs a decision or a test.**
+
 The findings that are not style:
 
 1. **`react-hooks/rules-of-hooks` — `LanguagePageContent.tsx:37` calls `useContext`

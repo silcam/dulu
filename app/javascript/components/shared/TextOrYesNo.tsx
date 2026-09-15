@@ -9,7 +9,7 @@ interface IProps extends YesNoSelectProps {
 export default function TextOrYesNo(props: IProps) {
   const t = useContext(I18nContext);
 
-  const { editing, ...otherProps } = props;
+  const { editing: _editing, ...otherProps } = props;
   return props.editing ? (
     <YesNoSelect {...otherProps} />
   ) : (

@@ -36,8 +36,8 @@ interface Subs {
 
 export default function translator(setLocale: Locale) {
   setLocale = strings[setLocale] ? setLocale : Locale.en;
-  let exportedT = <T>function(key: string, subs: Subs, locale: Locale) {
-    let tLocale = locale && strings[locale] ? locale : setLocale;
+  const exportedT = <T>function(key: string, subs: Subs, locale: Locale) {
+    const tLocale = locale && strings[locale] ? locale : setLocale;
     return t(key, subs, tLocale);
   };
   exportedT.locale = setLocale;
@@ -46,7 +46,7 @@ export default function translator(setLocale: Locale) {
 
 function t(key: string, subs: Subs, locale: Locale) {
   if (!key) return "";
-  let tStr = getString(strings[locale], key);
+  const tStr = getString(strings[locale], key);
   if (tStr === undefined) {
     if (locale != "en")
       console.error(`Missing translation key: ${key} for locale: ${locale}`);
@@ -66,7 +66,7 @@ function getString(strings: any, key: string) {
     return key.split(".").reduce((stringsAccum, k) => {
       return stringsAccum[k];
     }, strings);
-  } catch (error) {
+  } catch {
     return undefined; // Key not found
   }
 }

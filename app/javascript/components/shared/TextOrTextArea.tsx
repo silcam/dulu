@@ -8,7 +8,9 @@ interface IProps extends TextAreaProps {
 }
 
 export default function TextOrTextArea(props: IProps) {
-  const { editing, label, ...otherProps } = props;
+  // Excluded from otherProps so they are not spread onto <TextArea>; both are
+  // read from `props` below.
+  const { editing: _editing, label: _label, ...otherProps } = props;
   return props.editing ? (
     <FormGroup label={props.label}>
       <TextArea {...otherProps} />
