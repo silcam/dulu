@@ -2308,6 +2308,19 @@ Write the test first in each case — that is the actual work here, not the one-
    views deleted during the React migration. A stale ignore file is worse than none: it
    reads as "reviewed and accepted" for findings that no longer exist.
 
+   **Landed 2026-09-15: deleted, not regenerated.** With every finding fixed the scan is
+   clean, so a regenerated file would have been an empty one — and an empty ignore file
+   still invites the next person to add to it. `config/brakeman.ignore` is gone; if a
+   finding ever needs accepting, the argument for accepting it belongs in a commit
+   message, not a fingerprint list.
+
+   One finding survived items 1–3 and 7 and was fixed here: `event.rb`'s `for_period`
+   composed its two filters by interpolating the fragments into `"#{a} AND #{b}"`. Both
+   came from private helpers and were literals, so it was safe — but only to a reader who
+   went and checked, which brakeman could not. It now chains `where(*a).where(*b)`, which
+   ActiveRecord ANDs into the same SQL with no fragment built by interpolation. Verified
+   identical output across all four argument shapes.
+
 5. **`hd: 'sil.org'` does not restrict who can log in, and someone probably thinks it
    does.** `config/initializers/omniauth.rb` passes `hd` to Google, and Phase 4 confirmed
    it still reaches the authorize URL under `omniauth-google-oauth2` 1.x. But `hd` is a
@@ -2330,6 +2343,13 @@ Write the test first in each case — that is the actual work here, not the one-
 
 6. **Re-run `bundle exec brakeman` expecting zero warnings**, and consider adding it to
    the gate as a hard failure rather than a compare-against-known-list.
+
+   **Landed 2026-09-15: zero warnings, and it is now a gate.** brakeman 7.1.1 against
+   Rails 8.1.3.1 reports 0 security warnings, 0 errors over 29 controllers, 40 models and
+   16 templates. `yarn security` runs `brakeman -q -z --no-pager` and `test:most` /
+   `test:all` now run it first. The `-z` matters: brakeman exits 0 even when it finds
+   warnings unless told otherwise, so without it the gate would have passed silently
+   forever.
 
 7. **`Note#for_type.constantize` is the same bug class as item 1, except this one is
    live — and brakeman cannot see it.** `app/models/note.rb:14` is

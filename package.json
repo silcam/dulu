@@ -3,8 +3,9 @@
   "scripts": {
     "test:js": "jest --watch",
     "test:rails": "nodemon --exec \"bin/rails test\" -e rb,yml,jbuilder --watch app --watch test",
-    "test:most": "rails test && yarn jest",
-    "test:all": "rails test && yarn jest && yarn test:cypress:run",
+    "security": "bundle exec brakeman -q -z --no-pager",
+    "test:most": "yarn security && rails test && yarn jest",
+    "test:all": "yarn security && rails test && yarn jest && yarn test:cypress:run",
     "test:all:mod": "rails test && yarn jest && yarn test:cypress",
     "testServer": "bin/rails server -e test -p 3002",
     "test:cypress": "concurrently -p \"[{name}]\" -n \"Server,Cypress\" -k -c yellow,green \"yarn testServer\" \"yarn cypress open --project ./spec\"",

@@ -129,17 +129,16 @@ class Event < ApplicationRecord
     # can be built unconditionally -- FuzzyDate.new(nil) raises, and
     # FuzzyDateException descends from Exception rather than StandardError, so it
     # is not caught by an ordinary rescue anywhere up the stack.
-    s_filter = start_year ? start_filter(start_year, start_month) : nil
-    e_filter = end_year ? end_filter(end_year, end_month) : nil
-
-    if s_filter && e_filter
-      where("#{s_filter.first} AND #{e_filter.first}", *s_filter.drop(1), *e_filter.drop(1))
-    elsif !s_filter && !e_filter
-      all
-    else
-      # Whichever one exists -- not both ORed together.
-      where(*(s_filter || e_filter))
-    end
+    #
+    # Chained rather than joined with " AND " into one string: ActiveRecord ANDs
+    # successive `where`s, which is the same SQL without composing a fragment by
+    # interpolation. Both fragments are literals from the private helpers below, so
+    # the old form was safe, but only to a reader who went and checked -- and
+    # brakeman, reasonably, could not.
+    scope = all
+    scope = scope.where(*start_filter(start_year, start_month)) if start_year
+    scope = scope.where(*end_filter(end_year, end_month)) if end_year
+    scope
   end
 
   def self.search(query)
