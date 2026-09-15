@@ -2649,8 +2649,12 @@ The findings that are not style:
 
    **Reorganised 2026-09-15: worked per *effect*, not per rule.** Every one of these six
    is also an `exhaustive-deps` finding — an effect that calls `setState` is exactly the
-   shape both rules catch — so the two lists overlap on all six, and 12 of the 21
-   `exhaustive-deps` messages resolve with them. Doing them as two passes would have meant
+   shape both rules catch — so the two lists overlap on all six, and six of the 21
+   `exhaustive-deps` messages resolve with them — one each, not two. (An earlier draft of
+   this paragraph, and the commit message for the family A work, both said "12 of the 21".
+   That was wrong: each of the six effects produces exactly one message under each rule.
+   Measured after family A landed: `exhaustive-deps` 21 → 18, `set-state-in-effect`
+   6 → 3.) Doing them as two passes would have meant
    reading the same effects twice. Two further `exhaustive-deps` sites were handed to 8d,
    where the surrounding bugs are already written up: `useSearch.ts:34` (8d item 3's
    picker race) and `NetworkErrorAlerts.tsx:21` (8d item 6). That leaves 13 messages in 8
