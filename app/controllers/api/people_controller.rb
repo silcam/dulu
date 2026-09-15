@@ -4,7 +4,12 @@ class Api::PeopleController < ApplicationController
   VIEW_PREF_KEYS = %w[
     dashboardSelection dashboardTab notificationsTab domainReportParams
   ].freeze
-  MAX_VIEW_PREFS_BYTES = 4_000
+  # Production's largest view_prefs is 258 bytes and every row holds only the four
+  # keys above (checked 2026-09-15), so this is roughly 4x real data. The growth
+  # term is domainReportParams.languageIds/clusterIds -- a few hundred ids would
+  # reach it. Crossing the cap fails the whole PUT, so a user who somehow does
+  # would stop persisting *all* their prefs, not just the report selection.
+  MAX_VIEW_PREFS_BYTES = 1_000
 
   def index
     @people = Person.all

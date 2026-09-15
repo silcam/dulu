@@ -2321,6 +2321,13 @@ Write the test first in each case — that is the actual work here, not the one-
    should either be made true (check the returned `hd`/email domain in `#create`) or
    written down as false.
 
+   **Decided 2026-09-15: written down as false, no code change.** Not every account that
+   legitimately accesses Dulu is an `@sil.org` account, so verifying the returned `hd`
+   claim would lock out real users. Authorization rests on the `Person` row with
+   `has_login`, as it already did; `hd` stays a convenience hint to Google's account
+   chooser and nothing should be built on it meaning more than that. This item is closed
+   — do not re-file it as an unfixed finding.
+
 6. **Re-run `bundle exec brakeman` expecting zero warnings**, and consider adding it to
    the gate as a hard failure rather than a compare-against-known-list.
 
@@ -2344,6 +2351,22 @@ Write the test first in each case — that is the actual work here, not the one-
    an explicit map of permitted classes on create (this is where item 1's original
    allowlist prescription belongs), and add the missing `authorize!` so a note cannot be
    attached to an object the author cannot see.
+
+   **Landed 2026-09-15, allowlist only.** `Note::FOR_TYPES` is `%w[Language Cluster Person]`
+   — the union `app/javascript/models/Note.ts:12` declares — enforced on the write as a
+   validation and again on the read in `#for`. Twice on purpose: the validation governs
+   only rows written after it, and prod rows and console writes go around it. `for_id` must
+   now name an existing record, and `create` returns 422 instead of `render :show` with a
+   nil id. Production holds only `Language` (checked 2026-09-15), so no historical row
+   raises.
+
+   **The `authorize!` half was deliberately not done.** Once `for_type` is bounded there is
+   no object to protect: `AccessPolicy` has no `:read` rule for `Language` at all, every
+   logged-in user can already read every language, and `languages/show.json.jbuilder`
+   renders its notes to all of them. A bare `authorize! :create, Note` would deny everyone,
+   since no `:create` rule exists. Authorship cannot be forged (`person: current_user`) and
+   edit/destroy are already author-only. Whether any logged-in user should be able to note
+   any language is a product question, not a security finding.
 
    Two facts to pin down before writing the allowlist. The UI sends only
    `for_type: "Language"` (`app/javascript/components/languages/LanguagePage.tsx:58` is

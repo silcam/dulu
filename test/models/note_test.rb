@@ -25,6 +25,23 @@ class NoteTest < ActiveSupport::TestCase
     assert_partial exp, note.attributes
   end
 
+  test '`for` refuses a for_type outside the allowlist' do
+    # Bypasses validation the way a console write or a pre-existing row would --
+    # the read-side guard has to hold on its own.
+    note = notes(:HdiNote1)
+    note.update_column(:for_type, 'Kernel')
+
+    assert_raises(ActiveRecord::RecordNotFound) { note.for }
+  end
+
+  test 'a note cannot be saved with a for_type outside the allowlist' do
+    note = Note.new(person: people(:Andreas), text: 'nope',
+                    for_type: 'Kernel', for_id: languages(:Hdi).id)
+
+    assert_not note.save
+    assert_includes note.errors[:for_type].join, 'not something a note can attach to'
+  end
+
   test 'Get notes for Hdi' do
     exp = [notes(:HdiNote2), notes(:HdiNote1)]
     assert_equal exp, Note.for(languages(:Hdi))
