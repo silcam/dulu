@@ -165,7 +165,7 @@ export default class Event {
   ): AnyObj {
     const cluster_ids = event.clusters.map(c => c.id);
     const language_ids = event.languages.map(p => p.id);
-    let eventParticipantsAttributes: AnyObj = event.event_participants.reduce(
+    const eventParticipantsAttributes: AnyObj = event.event_participants.reduce(
       (accum, participant, index) => {
         accum[index] = participant;
         return accum;

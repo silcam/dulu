@@ -54,7 +54,7 @@ export default function MonthColumn(props: IProps) {
 }
 
 function dateTitle(event: IEvent, month: IMonth) {
-  let days = [event.start_date, event.end_date].map(dateStr => {
+  const days = [event.start_date, event.end_date].map(dateStr => {
     const date = FuzzyDate.toObject(dateStr);
     return date.year == month.year && date.month == month.month
       ? date.day

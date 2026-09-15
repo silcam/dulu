@@ -87,7 +87,7 @@ function selectedTab(
   urlDomain?: LanguagePageTab,
   viewPrefsDomain?: LanguagePageTab
 ) {
-  let domain = urlDomain || viewPrefsDomain;
+  const domain = urlDomain || viewPrefsDomain;
   const index = domain ? tabs.indexOf(domain) : -1;
   return index < 0 ? 0 : index;
 }

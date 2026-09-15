@@ -65,7 +65,7 @@ interface PeriodParams {
   end_month?: number;
 }
 export function periodToGetParams(period: IPeriod) {
-  let params: PeriodParams = {};
+  const params: PeriodParams = {};
   if (period.start) {
     params.start_year = period.start.year;
     params.start_month = period.start.month;

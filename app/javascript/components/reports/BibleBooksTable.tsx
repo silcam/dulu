@@ -28,7 +28,7 @@ export default function BibleBooksTable(props: IProps) {
     <table>
       <tbody>
         {[0, 1, 2].map(rowIndex => {
-          let bookNames = BibleBook.books(t)
+          const bookNames = BibleBook.books(t)
             .slice(
               bookNamesStart + rowIndex * rowLength,
               bookNamesStart + (rowIndex + 1) * rowLength
@@ -37,8 +37,8 @@ export default function BibleBooksTable(props: IProps) {
           return (
             <tr key={rowIndex}>
               {bookNames.map((bookName: string, colIndex: number) => {
-                let stage = books[rowIndex * rowLength + colIndex];
-                let color = stage
+                const stage = books[rowIndex * rowLength + colIndex];
+                const color = stage
                   ? Activity.translationProgress[stage].color
                   : "white";
                 return (

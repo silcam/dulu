@@ -30,7 +30,7 @@ const roleDomains: StrObj = {
 };
 
 export function domainFromRole(role: string) {
-  let domain = roleDomains[role];
+  const domain = roleDomains[role];
   if (domain === undefined) console.error("No domain listed for role: " + role);
   return domain;
 }

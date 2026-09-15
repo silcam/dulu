@@ -25,7 +25,7 @@ export default function PubsTable(props: IProps) {
           <tr>
             <th>{t("Published")}</th>
             {pubs.map(pub => {
-              let color = language.report.publications[pub]
+              const color = language.report.publications[pub]
                 ? Colors.purple
                 : "white";
               return (

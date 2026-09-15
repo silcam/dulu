@@ -3,9 +3,9 @@ function dateString(date: string | undefined, monthNames: string[]) {
 
   if (date.length == 4) return date;
 
-  let year = date.slice(0, 4);
-  let monthIndex = parseInt(date.slice(5, 7)) - 1;
-  let month = monthNames[monthIndex];
+  const year = date.slice(0, 4);
+  const monthIndex = parseInt(date.slice(5, 7)) - 1;
+  const month = monthNames[monthIndex];
   if (date.length == 7) return `${month} ${year}`;
 
   let day = date.slice(8, 10);

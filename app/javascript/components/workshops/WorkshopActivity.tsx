@@ -21,7 +21,7 @@ export default class WorkshopActivity extends React.PureComponent<
   IState
 > {
   findPlaceFor = (workshop: IWorkshop, workshops: IWorkshop[]) => {
-    var i;
+    let i;
     for (i = 0; i < workshops.length; ++i) {
       if (workshop.date && !workshops[i].date) {
         return i;

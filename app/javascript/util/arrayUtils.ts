@@ -11,13 +11,13 @@ interface WithId {
  * @param {any} item The item to remove
  */
 export function arrayDelete<T>(array: T[], item: T) {
-  let index = array.indexOf(item);
+  const index = array.indexOf(item);
   if (index == -1) return array;
   return update(array, { $splice: [[index, 1]] }) as T[];
 }
 
 export function itemAfter<T>(array: T[], item: T) {
-  let index = array.indexOf(item);
+  const index = array.indexOf(item);
   if (index == -1 || index == array.length - 1) return undefined;
   return array[index + 1];
 }

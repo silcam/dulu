@@ -117,7 +117,7 @@ export default function OrganizationPage() {
         <li>
           <strong>{t("Parent_organization")}:</strong>
           &nbsp;
-          {!!draftOrg ? (
+          {draftOrg ? (
             <OrganizationPicker
               value={parent}
               setValue={parent =>

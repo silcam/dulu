@@ -36,7 +36,7 @@ export default class FuzzyDate {
 // }
 
 function toObject(date: string) {
-  let dateObj: IFuzzyDate = {
+  const dateObj: IFuzzyDate = {
     year: parseInt(date.slice(0, 4))
   };
   if (date.length > 4) dateObj.month = parseInt(date.slice(5, 7));

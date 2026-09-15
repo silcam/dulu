@@ -27,12 +27,12 @@ const cases = {
 };
 test("Compare!", () => {
   for (let i = 0; i < cases.zero.length; ++i) {
-    let testCase = cases.zero[i];
+    const testCase = cases.zero[i];
     expect(FuzzyDate.compareStr(testCase[0], testCase[1])).toBe(0);
     expect(FuzzyDate.compareStr(testCase[1], testCase[0])).toBe(0);
   }
   for (let i = 0; i < cases.negative.length; ++i) {
-    let testCase = cases.negative[i];
+    const testCase = cases.negative[i];
     expect(FuzzyDate.compareStr(testCase[0], testCase[1])).toBeLessThan(0);
     expect(FuzzyDate.compareStr(testCase[1], testCase[0])).toBeGreaterThan(0);
   }
@@ -51,7 +51,7 @@ test("toObject with full Date", () => {
 });
 
 test("some toString's", () => {
-  let date = { year: 2019 };
+  const date = { year: 2019 };
   expect(FuzzyDate.toString(date)).toEqual("2019");
   date.month = 2;
   expect(FuzzyDate.toString(date)).toEqual("2019-02");

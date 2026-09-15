@@ -114,7 +114,7 @@ function BaseGoBar(props: IProps) {
 function search(query: string, props: IProps) {
   if (query.length == 0) return [];
   const q = accentFold(query);
-  let matches = searchItems(q, props.languages, languageMatcher)
+  const matches = searchItems(q, props.languages, languageMatcher)
     .concat(
       searchItems(
         q,

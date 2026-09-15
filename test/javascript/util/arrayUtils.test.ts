@@ -1,15 +1,15 @@
 import * as arrayUtils from "../../../app/javascript/util/arrayUtils";
 
 test("arrayDelete removes an item", () => {
-  let a1 = [1, 2, 3];
-  let a2 = arrayUtils.arrayDelete(a1, 2);
+  const a1 = [1, 2, 3];
+  const a2 = arrayUtils.arrayDelete(a1, 2);
   expect(a2).toEqual([1, 3]);
   expect(a2).not.toBe(a1);
 });
 
 test("arrayDelete survives missing item", () => {
-  let a1 = [1, 2, 3];
-  let a2 = arrayUtils.arrayDelete(a1, 4);
+  const a1 = [1, 2, 3];
+  const a2 = arrayUtils.arrayDelete(a1, 4);
   expect(a2).toEqual(a1);
 });
 
