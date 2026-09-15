@@ -2622,19 +2622,79 @@ The findings that are not style:
 
 1. **`react-hooks/rules-of-hooks` — `LanguagePageContent.tsx:37` calls `useContext`
    conditionally.** There is an early `return` above it, so on renders that take the early
-   branch the hook is skipped. React's hook order is positional; a component that
-   alternates between the two branches while mounted reads the wrong hook state. This is
-   the one lint finding that is a live correctness bug rather than a smell.
+   branch the hook is skipped, and React matches hooks by position within an instance.
+
+   **Fixed 2026-09-15 by moving the hook above the returns — and the earlier claim here,
+   that this was "the one lint finding that is a live correctness bug", was wrong.** It is
+   not reachable. `LanguagePage.tsx:76-80` renders one `LanguagePageContent` per tab, keyed
+   by name, each with a **constant** `tab` prop, so an instance never switches branch and
+   its hook count never changes. What made it worth fixing is that the safety lives two
+   files away and nothing here enforces it: add a `useState` below those returns, or render
+   this component with a changing `tab`, and it starts throwing "Rendered more hooks than
+   during the previous render" — into the error boundary that currently blanks the app
+   (8d item 1). A trap rather than a bug.
+
+   Not verified, and not relied on: React reads context off the fiber's dependency list
+   rather than the hook list, which would mean `useContext` never occupied a positional
+   slot at all. This repo's Jest has no jsdom environment (`jest-environment-jsdom` is not
+   installed — every JS test here is a pure-function test), so it could not be checked, and
+   the structural argument above stands without it. The component's shape is filed as a
+   post-upgrade refactor in 8f item 4.
 2. **`react-hooks/set-state-in-effect` ×6** — `CoreData.ts:14`,
    `NotificationSidebar.tsx:88`, `EventsTable.tsx:55`,
    `ActivityViewPeopleEditor.tsx:60`, `MyNotificationChannels.tsx:37`, `GoBar.tsx:50`.
    Synchronous `setState` inside an effect triggers a second render pass immediately. Note
    the company this keeps: the error boundary in 8d item 6 blanks the app for exactly this
    reason, at the extreme.
+
+   **Reorganised 2026-09-15: worked per *effect*, not per rule.** Every one of these six
+   is also an `exhaustive-deps` finding — an effect that calls `setState` is exactly the
+   shape both rules catch — so the two lists overlap on all six, and 12 of the 21
+   `exhaustive-deps` messages resolve with them. Doing them as two passes would have meant
+   reading the same effects twice. Two further `exhaustive-deps` sites were handed to 8d,
+   where the surrounding bugs are already written up: `useSearch.ts:34` (8d item 3's
+   picker race) and `NetworkErrorAlerts.tsx:21` (8d item 6). That leaves 13 messages in 8
+   files that are genuinely just dependency-array work.
+
+   The six effects are three problems, not six. **Family A — derived state kept in
+   state — is done:**
+
+   - **`GoBar.tsx:50`.** `matches` was `search(query, props)` in state, resynced by
+     `useEffect(..., [query])`. Now derived with `useMemo`. This also closed **8d item
+     2** — see there for why deriving beat the dependency-array fix that item proposed.
+   - **`ActivityViewPeopleEditor.tsx:57-61`.** `useState(availablePtptIds[0])` plus a
+     dependency-*less* effect re-selecting the first entry when the pick fell out of the
+     list. The effect was not synchronising anything: `useState` reads its argument only
+     on the first render, and on that render the participants fetched by `useLoadOnMount`
+     have not arrived, so the initial value was always `undefined`. The pick is now state
+     and its validity a derivation. The workaround comment at line 94 ("Only need to check
+     both because of tests where Edit gets clicked before ptpts are loaded") documents the
+     render this removes; the guard is left alone because `participantPeople` can return
+     fewer entries than `availablePtptIds`, so the two conditions are not equivalent.
+   - **`MyNotificationChannels.tsx:35`.** Same shape for `addDomain`. This one had **no
+     test coverage at all** — the Domain branch sits behind the "Add Channel" type
+     selector — so `spec/cypress/e2e/notificationChannels.spec.js` was written first,
+     against the unchanged component, and passed before and after.
+
+   Families B and C remain. **B — a loading flag at the head of an async fetch**
+   (`EventsTable.tsx:55`, `NotificationSidebar.tsx:88`): the synchronous `setState` is
+   `setLoading(true)`, and the extra render it triggers is the one that shows the spinner,
+   so the rule is describing the intent. A targeted disable with the reason, not a
+   restructure. **C — `CoreData.ts`** carries three findings at once (this one, `purity`
+   at :10, `exhaustive-deps` at :12) and is a real defect: see item 4 below.
 3. **`react-hooks/refs` — `useSearch.ts:36` reads a ref during render.** `useSearch` is
    the search picker, and 8d item 3 is the search picker's stale-response race. Same file,
    same family of problem; fix them together.
 4. **`react-hooks/purity` — `CoreData.ts:10` calls `Date.now()` during render.**
+   Traced 2026-09-15 and it is worse than a purity smell: **the five-minute refresh this
+   component exists to perform does not happen on a timer at all.** There is no
+   `setInterval`. The effect has no dependency array, so it runs after *every* render and
+   only then checks the clock — meaning the refresh fires whenever something else happens
+   to re-render `CoreData`, and on a screen the user is not interacting with it never
+   fires. Fix by making it an actual interval, which deletes the `lastUpdate` state and
+   all three findings. Deferred from family A because it changes runtime behaviour on
+   every open tab (three GETs every five minutes, where today an idle tab issues none),
+   which is a decision rather than a cleanup.
 5. **`react/jsx-no-target-blank` — `DomainStatusItemView.tsx:149`** uses `target="_blank"`
    with no `rel="noreferrer"`. Reverse tabnabbing: the opened page gets a handle on this
    one. A security finding brakeman cannot see because it is in the React tree, which is
@@ -2675,6 +2735,19 @@ test written before the fix.
    until you type another character. Found in Phase 7c while writing a test that had to
    wait on a table row before typing, purely to work around it. Same family as the search
    picker race below. Add the searched lists to the dependency array.
+
+   **Fixed 2026-09-15, and not the way this item proposed.** Adding the lists to the
+   dependency array would have worked, but the better answer was to notice that `matches`
+   is not state at all: it is `search(query, props)` and nothing else. Storing a value
+   that can always be recomputed is what created the possibility of it being stale, so the
+   state and the effect are both gone and the value is derived during render (`useMemo`,
+   keyed on `query` and `props`, because hovering a result sets `activeIndex` and would
+   otherwise rescan every record). That also removes the one-render window where the query
+   had updated and the matches had not — visible on every keystroke, not just at load.
+   Found via 8c's `set-state-in-effect`, which flagged the same line.
+
+   `navigation.spec.js`'s wait-for-a-table-row, added in Phase 7c purely to work around
+   this, is now ordinary determinism and its comment says so.
 
 3. **The person/organization search pickers do not discard stale responses.** Typing into
    a picker fires a request per keystroke and each response overwrites the results list,
@@ -2832,7 +2905,63 @@ Nothing here is broken today.
    through the sidebar without asserting a location. Decide whether that is intended. If
    it is not, giving the dashboard real nested routes is the fix and it is a feature
    change, not cleanup.
-4. **`PlainTable.tsx` is unreferenced.** Nothing imports it and nothing constructs a
+4. **`LanguagePageContent` is three components sharing one name — revisit after the
+   upgrade.** It opens with two early returns that hand the whole render to
+   `LanguageEventsContainer` (tab `Events`) or `ParticipantsTable` (tab `People`), and
+   only then does the work its name suggests. 8c's `rules-of-hooks` finding was a symptom
+   of that shape: the hook sat below the returns, so the component's hook count varied
+   with its branch. 2026-09-15 moved the hook above them, which makes it correct, and
+   deliberately did not restructure — a component split is not a lint fix.
+
+   The real fix is to hoist the branching into `LanguagePage`'s `TabPanel` map
+   (`LanguagePage.tsx:76-80`), so the Events and People panels render their own component
+   directly and `LanguagePageContent` handles only the tabs it was written for. Cheap and
+   low-risk; parked only because it is a refactor rather than part of the upgrade.
+   `props.tab` is constant per instance today, which is what makes the current code safe
+   and is also what makes the split easy.
+
+5. **`foreman` is a dependency doing a job `concurrently` already does — replace
+   `foreman s` with `yarn start`.** Raised 2026-09-15. Nothing here is broken; the point
+   is that the gem is unnecessary.
+
+   Checked, and none of the three reasons to keep foreman apply. There is **no `.env` and
+   no `dotenv` gem**, so its main advantage over a plain process runner — loading `.env`
+   into every child — is buying nothing. **Nothing but `README.md:121` reads the
+   `Procfile`**: it appears nowhere in `config/deploy*` or any rake task, so it is not a
+   deploy contract (deployment is Capistrano, not Heroku). And **`concurrently` is already
+   a devDependency** at `^9.2.1`, already running multi-process setups in
+   `test:cypress`, `test:cypress:run` and `test:cypress:gate`.
+
+   foreman has also cost something already: 0.64 called `File.exists?`, removed in Ruby
+   3.4, so `foreman s` died before reading the `Procfile` and had to be bumped to
+   `~> 0.90` (see the Gemfile comment). That is maintenance paid for a tool we do not need.
+
+   Proposed replacement — one script, the same three processes:
+
+   ```json
+   "start": "concurrently -p \"[{name}]\" -n \"web,webpack,jobs\" -k -c blue,yellow,magenta \"bundle exec rails server -p ${PORT:-3000} -P tmp/pids/server_dev.pid\" \"./bin/shakapacker-dev-server\" \"bundle exec rake jobs:work\""
+   ```
+
+   `-k` kills the siblings when one dies, which is the foreman behaviour worth keeping.
+   `${PORT:-3000}` is an incidental win: the `Procfile` hardcodes `-p 3000`, and Phase 5
+   had to copy it to a temp file on 3001 to work around another project's puma holding the
+   port (`foreman start -f <copy> -d /work/work/dulu`). With `PORT` respected that becomes
+   `PORT=3001 yarn start`.
+
+   When this is done: remove `gem "foreman"` and its Gemfile comment, delete the
+   `Procfile`, and **update `README.md:121`** — plus the many references to `foreman s`
+   throughout this plan, which are historical records of what was run at each phase gate
+   and should be left as they are rather than rewritten. Verify by starting it and
+   confirming all three processes come up: 200 on the web port, the dev server serving
+   packs, and `jobs:work` polling. Note that `yarn start` makes Node a prerequisite for
+   starting Rails in development, which is already true in practice because of the webpack
+   dev server.
+
+   Deliberately **not** done during the upgrade: it changes the documented way to run the
+   app, and every phase gate in this plan was verified with `foreman s`. Changing the
+   runner mid-upgrade would mean a gate failure could be the runner rather than the code.
+
+6. **`PlainTable.tsx` is unreferenced.** Nothing imports it and nothing constructs a
    `TableReport`. Found in Phase 7a, when `@types/react` 18 rejected it for rendering a
    `string | { text, url }` as a child — a latent crash in dead code. It was fixed rather
    than deleted, because deleting a component is not a type bump. Delete it here, or find

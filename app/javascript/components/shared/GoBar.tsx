@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { useContext, useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { IPerson, fullName } from "../../models/Person";
 import { IOrganization } from "../../models/Organization";
@@ -44,10 +44,24 @@ function BaseGoBar(props: IProps) {
   const t = useContext(I18nContext);
   const navigate = useNavigate();
   const [query, setQuery] = useState("");
-  const [matches, setMatches] = useState<Match[]>([]);
   const [activeIndex, setActiveIndex] = useState(0);
 
-  useEffect(() => setMatches(search(query, props)), [query]);
+  // Derived, not stored. `matches` is a pure function of the query and the data in
+  // props, so there is nothing to keep in sync and nothing that can go stale. It
+  // used to live in state, resynced by `useEffect(..., [query])`, which had two
+  // consequences: every keystroke rendered once with the new query and the *old*
+  // matches before the effect corrected it, and -- because the dep list named only
+  // `query` -- results computed before CoreData's languages arrived were never
+  // recomputed when they did. Typing during page load left the dropdown showing
+  // only the hardcoded `routes` until the next keystroke.
+  //
+  // useMemo rather than a bare call because onMouseEnter on each result sets
+  // activeIndex (see the list below), so the component re-renders on every hover
+  // and a bare call would rescan every person, language, organization, cluster and
+  // region each time. `props` is a sound dependency here: a re-render caused by
+  // this component's own setState receives the same props object, while `connect`
+  // builds a new one when the store changes.
+  const matches = useMemo(() => search(query, props), [query, props]);
 
   const edit = (text: string) => {
     setQuery(text);

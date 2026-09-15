@@ -16,6 +16,13 @@ interface IProps {
 }
 
 export default function LanguagePageContent(props: IProps) {
+  // Above the early returns, not below them: this component calls exactly one
+  // hook, and a hook after a conditional return means the count changes with the
+  // branch. It is currently harmless only because LanguagePage gives every tab its
+  // own instance with a constant `tab` prop, so an instance never switches branch
+  // -- a fact two files away that nothing here enforces.
+  const t = useContext(I18nContext);
+
   if (props.tab == "Events") {
     return (
       <LanguageEventsContainer
@@ -33,8 +40,6 @@ export default function LanguagePageContent(props: IProps) {
       />
     );
   }
-
-  const t = useContext(I18nContext);
 
   return (
     <div className={`padBottom`}>

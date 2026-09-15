@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useContext } from "react";
 import I18nContext from "../../contexts/I18nContext";
 import { fullName } from "../../models/Person";
 import { IActivity } from "../../models/Activity";
@@ -54,11 +54,24 @@ export default function ActivityViewPeopleEditor(props: IProps) {
     people
   );
 
-  const [addPtptId, setAddPtptId] = useState(availablePtptIds[0]); // Undef if list is empty
-  useEffect(() => {
-    if (availablePtptIds.length > 0 && !availablePtptIds.includes(addPtptId))
-      setAddPtptId(availablePtptIds[0]);
-  });
+  // The user's pick is state; whether it is still *offered* is a calculation, so it
+  // is derived here rather than corrected afterwards by an effect. Undefined if the
+  // available list is empty.
+  //
+  // This used to be `useState(availablePtptIds[0])` plus a dependency-less effect
+  // that re-selected the first entry whenever the pick fell out of the list. The
+  // effect was not synchronising with anything: it existed because useState reads
+  // its argument only on the *first* render, and on that render the participants
+  // fetched by useLoadOnMount above have not arrived, so the initial value was
+  // always undefined. Correcting it in an effect meant one render where the data had
+  // arrived and the dropdown was still hidden -- which is what the guard below,
+  // whose second condition was added to work around exactly that, is about -- and it
+  // re-ran after every render, having no dependency array to compare.
+  const [chosenPtptId, setChosenPtptId] = useState<number | undefined>();
+  const addPtptId =
+    chosenPtptId !== undefined && availablePtptIds.includes(chosenPtptId)
+      ? chosenPtptId
+      : availablePtptIds[0];
 
   const save = async () => {
     const data = await saveLoad(duluAxios =>
@@ -101,7 +114,7 @@ export default function ActivityViewPeopleEditor(props: IProps) {
                     display: fullName(ptptPerson.person)
                   }))}
                   value={`${addPtptId}`}
-                  setValue={id => setAddPtptId(parseInt(id))}
+                  setValue={id => setChosenPtptId(parseInt(id))}
                 />
                 <button
                   onClick={() =>
