@@ -29,11 +29,29 @@ export default function DBParticipantsTable(props: IProps) {
           )
         );
 
+  // Stringified so the dependency is one stable value, the way DBActivitiesTable
+  // already does it. The previous form passed `props.languageIds` *as* the dependency
+  // array rather than as a dependency, and React compares dependency arrays pairwise
+  // only up to min(prev.length, next.length): a selection that was a superset of the
+  // previous one with the same leading ids compared equal on every index React looked
+  // at, so the effect was skipped and the extra languages were never fetched.
+  // Selecting North Region and then Cameroon -- the largest selection there is --
+  // fetched nothing at all. dashboardPeople.spec.js covers it.
+  const languageIdsKey = JSON.stringify(props.languageIds);
+
+  /* eslint-disable react-hooks/exhaustive-deps --
+     languageIdsKey is exactly a stringification of props.languageIds, which the rule
+     cannot see through, and `load` is redefined on every render by useLoad, so listing
+     it would refire this on every render. A block rather than a disable-next-line
+     because the rule reports on the dependency array, not on the useEffect call. */
   useEffect(() => {
-    props.languageIds.map(async id => {
-      load(duluAxios => duluAxios.get(`/api/languages/${id}/participants`));
-    });
-  }, props.languageIds);
+    // forEach, not map: the return value was discarded, and the callback was marked
+    // async while awaiting nothing.
+    props.languageIds.forEach(id =>
+      load(duluAxios => duluAxios.get(`/api/languages/${id}/participants`))
+    );
+  }, [languageIdsKey]);
+  /* eslint-enable react-hooks/exhaustive-deps */
 
   return (
     <div>

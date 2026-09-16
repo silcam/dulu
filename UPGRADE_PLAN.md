@@ -2712,6 +2712,36 @@ The findings that are not style:
    **C — `CoreData.ts`** carries three findings at once (this one, `purity` at :10,
    `exhaustive-deps` at :12) and is a real defect: see item 4 below. It is the only
    `set-state-in-effect` left.
+2b. **The remaining `exhaustive-deps` messages contained one real bug, and it is fixed.**
+   `DBParticipantsTable.tsx:36` passed `props.languageIds` **as** its dependency array
+   rather than as a dependency. React's `areHookInputsEqual` compares pairwise only up to
+   `min(prev.length, next.length)`, so a selection that was a superset of the previous one
+   with the same leading ids compared equal on every index React looked at and the effect
+   was skipped outright.
+
+   Measured on the dashboard's People tab before fixing it — participant fetches per
+   sidebar selection:
+
+   ```
+   user (Drew)    [876048951, 292428285, 248732538]
+   Ndop cluster   [292428285, 248732538]
+   North Region   [876048951, 505201461]
+   Cameroon       []                        <- nothing at all
+   South Region   [406181303, 292428285, 248732538]
+   ```
+
+   Selecting **Cameroon**, the largest selection the dashboard offers, fetched nothing,
+   leaving the tab showing whatever earlier clicking had left in the store — an incomplete
+   list with no error and no spinner. Fixed by adopting the stable key
+   `JSON.stringify(props.languageIds)` that `DBActivitiesTable.tsx:56` already used for
+   the identical problem; the codebase had two answers to one question and one of them was
+   wrong. `spec/cypress/e2e/dashboardPeople.spec.js` was written first and failed against
+   the old code with `expected 0 to be above 2`.
+
+   The spec asserts on the **requests**, not the rendered rows: the store accumulates, so
+   people loaded by an earlier selection linger and the table can look plausible while the
+   fetch it needed never happened.
+
 3. **`react-hooks/refs` — `useSearch.ts:36` reads a ref during render.** `useSearch` is
    the search picker, and 8d item 3 is the search picker's stale-response race. Same file,
    same family of problem; fix them together.
@@ -3045,7 +3075,25 @@ Nothing here is broken today.
    than cleanup, which is why it is filed here and not done. Whoever takes it should also
    decide whether two search boxes are wanted at all.
 
-7. **`PlainTable.tsx` is unreferenced.** Nothing imports it and nothing constructs a
+7. **The dashboard fetches participants one language at a time.** Surfaced 2026-09-16 by
+   the `DBParticipantsTable` fix in 8c item 2b. The effect loops over the selection's
+   language ids and issues `/api/languages/:id/participants` for each, so a selection's
+   cost is linear in its size: in the dev database, selecting **Cameroon** issues **62**
+   requests (Bamenda 26, Equatorial Guinea 8, Greater North 18, Yaoundé 10), and
+   production will be proportionally larger.
+
+   Pre-existing — every region selection already did this — but worth filing now because
+   the bug that was just fixed made the largest selection *silently free*. It fetched
+   nothing at all, so nobody ever saw what a whole-country selection costs. Fixing the
+   correctness bug turned the cheapest click into the most expensive one.
+
+   The fix is a bulk endpoint — `/api/participants?language_ids=[…]`, or extending
+   `dashboard_list` — so one selection is one request. `DBActivitiesTable` has the same
+   shape (`/api/activities` per language id) and should be done at the same time. Not
+   attempted during the upgrade: it needs a new endpoint and a jbuilder view, which is a
+   feature change.
+
+8. **`PlainTable.tsx` is unreferenced.** Nothing imports it and nothing constructs a
    `TableReport`. Found in Phase 7a, when `@types/react` 18 rejected it for rendering a
    `string | { text, url }` as a child — a latent crash in dead code. It was fixed rather
    than deleted, because deleting a component is not a type bump. Delete it here, or find
