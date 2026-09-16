@@ -3,7 +3,9 @@ import { Partial } from "../models/TypeBucket";
 import update from "immutability-helper";
 import { Spec } from "immutability-helper";
 
-export default function useMergeState<T extends {}>(
+// `object`, not `{}`: the two differ in that `{}` admits any non-nullish value, so
+// `useMergeState(42)` type-checked before today. Nothing merges into a number.
+export default function useMergeState<T extends object>(
   defaultValue: T
 ): [T, (mergeState: Partial<T>) => void] {
   const [state, setState] = useState<T>(defaultValue);

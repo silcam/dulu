@@ -74,10 +74,13 @@ export function flat<T>(array: Array<T | T[]>) {
   }, []);
 }
 
-export function all<T>(array: readonly T[], test: (t: T) => any): boolean {
+// `unknown` rather than `any` for the predicate: callers pass anything truthy-ish, which
+// is fine, but the declared `: boolean` return was a lie -- `a && b` over unpredictable
+// values is not a boolean. Boolean() makes the signature true.
+export function all<T>(array: readonly T[], test: (t: T) => unknown): boolean {
   return array
     .map(item => test(item))
-    .reduce((finalVal, testVal) => finalVal && testVal, true);
+    .reduce<boolean>((finalVal, testVal) => finalVal && Boolean(testVal), true);
 }
 
 export function max<T>(

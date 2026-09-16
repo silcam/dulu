@@ -6,7 +6,7 @@ interface IProps {
   handleCancel: () => void;
   saveDisabled?: boolean;
   saveInProgress?: boolean;
-  style?: { [rule: string]: any };
+  style?: React.CSSProperties;
   saveCaption?: string;
 }
 

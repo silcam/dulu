@@ -6,7 +6,7 @@ import {
 import styles from "./DomainStatus.css";
 
 export default function DSLingCompleteStyler(props: {
-  children: any;
+  children: React.ReactNode;
   item: IDomainStatusItem;
 }) {
   return (

@@ -14,12 +14,7 @@ interface IProps {
   basePath: string;
 }
 
-interface IState {}
-
-export default class WorkshopActivity extends React.PureComponent<
-  IProps,
-  IState
-> {
+export default class WorkshopActivity extends React.PureComponent<IProps> {
   findPlaceFor = (workshop: IWorkshop, workshops: IWorkshop[]) => {
     let i;
     for (i = 0; i < workshops.length; ++i) {

@@ -1,4 +1,3 @@
-import { SyntheticEvent } from "react";
 import { ICan } from "../actions/canActions";
 
 export interface YearMonth {
@@ -35,17 +34,6 @@ export interface Adder<T> {
 
 export interface Deleter {
   (id: number): void;
-}
-
-export interface JSEvent {
-  target: {
-    value: any;
-    target: { name: string; value: any };
-  };
-}
-
-export interface JSEventHandler {
-  (e: SyntheticEvent): void;
 }
 
 export interface UpdaterFunc {

@@ -2872,10 +2872,45 @@ The findings that are not style:
    44 → 41 lint problems (29 → 26 errors). `tsc` clean, Jest 125 passing, Cypress 104 / 103
    passing / 1 pending — no runtime change, and none intended.
 
-   **6b. The other twenty** are a separate and much cheaper conversation: mostly mechanical
-   (`children: any` → `React.ReactNode`, a style bag → `React.CSSProperties`), with the
-   `i18n` three, the generic utilities and `LoadAction`'s type guard needing a little
-   judgement each.
+   **6b. The other twenty — the mechanical nine, landed 2026-09-16.** Reading them as a
+   list first was worth it, because one of them dissolved: **`JSEvent` in `TypeBucket` is
+   dead** (2 of the 20). Its only reference anywhere in `app`, `spec`, `test` or `lib` was
+   inside `Checkbox.tsx` — a file commented out from its first line to its last.
+   `JSEventHandler` beside it was dead for the same reason. Both deleted, and `Checkbox.tsx`
+   with them.
+
+   Six more were cases where the honest type was already sitting in the file unnamed:
+   `children?: any` ×2 → `React.ReactNode`; `SmallSaveAndCancel`'s
+   `style?: { [rule: string]: any }` → `React.CSSProperties`, which is the type React
+   demands one line later at `<div style={style}>`; `useLoadOnMount`'s `deps: any[]` →
+   `React.DependencyList`, which is `useEffect`'s own parameter type. And the two
+   `no-empty-object-type` findings — `WorkshopActivity`'s `interface IState {}` (deleted;
+   it is a `PureComponent` with no state) and `useMergeState`'s `T extends {}` →
+   `T extends object`. `{}` admits any non-nullish value, so `useMergeState(42)`
+   type-checked before today.
+
+   Three needed a sentence of thought each:
+   - `ClusterPage`'s `mergeCluster: { [prop: string]: any }` → `Partial<IClusterInflated>`.
+     It feeds `update(..., { $merge })`, which keeps whatever it is handed, so a misspelt
+     field name used to travel all the way into the PUT body and quietly do nothing.
+   - `arrayUtils.all`'s `test: (t: T) => any` → `=> unknown`, with `Boolean()` inside the
+     reduce. The function declared `: boolean` and could not deliver one — `a && b` over
+     arbitrary values is not a boolean.
+   - `isLoadAction(action: any)` → `unknown`. Narrowing something already typed `any` is
+     what a type guard exists to avoid. The added null check is not ceremony:
+     `typeof null == "object"`, so the old body *threw* on `isLoadAction(null)` rather than
+     returning false.
+
+   41 → 30 lint problems (26 → 15 errors). `tsc` clean, Jest 125 passing, Rails 413 tests /
+   1367 assertions, Cypress green on re-run (see 8e item 10 — one full run failed a spec
+   that passes in isolation).
+
+   **6c. The nine left are genuinely open** and should be taken one at a time, not batched:
+   the three in `i18n.ts` (a translator returning `any` so callers can drop it into JSX or
+   into a string — a design question), `ifDef` ×2 and `takeFirst` (variadic helpers whose
+   job is heterogeneous arguments, where a naive generic breaks inference at call sites),
+   `DispatchContext` (wants the app's action union, which is real work), and `useSearch` ×2
+   — **not here**: they belong with 8d item 3, the search picker's stale-response race.
 7. **Decide whether `yarn lint` joins the gate.** It cannot today: it exits 1. Either fix
    to zero and add it, or add it with `--max-warnings` and a baseline. A lint step nobody
    runs is what the last one was, and it sat in `devDependencies` for years without a
@@ -3034,12 +3069,25 @@ test written before the fix.
    (8c item 2). Nothing there can misbehave today, but "98 green" should not be read as
    having exercised it.
 
-10. **`navigation.spec.js` flaked once, on 2026-09-16.** One of its four tests failed in a
-   full-suite run (the spec took 35s against its usual 6s, so a retry against a timeout),
-   and did not reproduce: green in isolation immediately after, and green in a second full
-   run of all 26 specs. Recorded rather than chased because a suite run by hand has no
-   history to compare against — this is the first noted flake, and a second sighting is
-   what would make it a bug. Which test failed is unknown: the run captured no screenshot.
+10. **The Cypress suite has a load-dependent flake, and it moves.** First seen as
+   `navigation.spec.js` failing one of its four tests in a full-suite run on 2026-09-16
+   (35s against its usual 6s, so a retry against a timeout); green in isolation and green
+   on a re-run, so it was filed as a possible one-off. **Three more full runs settled it.**
+   Later the same day, across three consecutive 26-spec runs on two different commits:
+   run 1 green, run 2 failed `people.spec.js` "Creates person" at
+   `cy.contains("William", { timeout: 30000 })`, run 3 failed `navigation.spec.js` "Goes
+   back from the GoBar and from Cancel" at a 30s wait for `addIcon`. Both passed in
+   isolation immediately after — `people.spec.js` in 21s where the failing full run gave
+   it 44s.
+
+   So it is not one flaky test. It is **a timeout that different specs cross depending on
+   what else the machine is doing**, and both sightings were on a first paint waiting for
+   API data. The spec file itself already carries a comment from an earlier bump to 30s for
+   exactly this. Raising the timeout again just moves the line; the shapes worth trying are
+   `cy.intercept` + `cy.wait` on the specific request instead of a content assertion with a
+   clock on it, and running the specs with less concurrency. Until then, **a single red
+   spec in a full run is not evidence of a regression** — re-run it in isolation before
+   believing it, and say so when reporting.
 
 **And a standing hazard rather than a task:** `yarn testPacks` — and therefore
 `yarn test:cypress:gate` — **exits 0 with "Everything's up-to-date" on the run immediately

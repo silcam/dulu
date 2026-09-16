@@ -1,5 +1,5 @@
 import DuluAxios, { IDuluAxios, MaybeAnyObj } from "../../util/DuluAxios";
-import { useState, useEffect } from "react";
+import { useState, useEffect, DependencyList } from "react";
 import { useDispatch } from "react-redux";
 import { loadAction } from "../../reducers/LoadAction";
 
@@ -21,7 +21,10 @@ export default function useLoad(): [
   return [loader, loading];
 }
 
-export function useLoadOnMount(path: string, deps: any[] = []): boolean {
+export function useLoadOnMount(
+  path: string,
+  deps: DependencyList = []
+): boolean {
   const [loader, loading] = useLoad();
 
   // Uncheckable by construction, and that is the point of the hook: `deps` is a

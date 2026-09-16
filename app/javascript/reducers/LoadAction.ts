@@ -42,6 +42,13 @@ export function loadAction(payload: LoadAction["payload"]): LoadAction {
   return { type: "Load", payload };
 }
 
-export function isLoadAction(action: any): action is LoadAction {
-  return typeof action == "object" && action.type == "Load";
+// `unknown`, because narrowing something already typed `any` is what this guard exists to
+// avoid. The null check is not ceremony: `typeof null == "object"`, so the old body would
+// throw on isLoadAction(null) rather than return false.
+export function isLoadAction(action: unknown): action is LoadAction {
+  return (
+    typeof action == "object" &&
+    action !== null &&
+    (action as { type?: unknown }).type == "Load"
+  );
 }

@@ -30,7 +30,10 @@ export default function ClusterPage() {
     undefined
   );
 
-  const updateCluster = (mergeCluster: { [prop: string]: any }) =>
+  // Typed rather than an open bag: this goes to `update(..., { $merge })`, which
+  // silently keeps whatever it is given, so a misspelt field name used to survive all
+  // the way to the PUT body and simply not do anything.
+  const updateCluster = (mergeCluster: Partial<IClusterInflated>) =>
     setDraftCluster(update(draftCluster, { $merge: mergeCluster }));
 
   const edit = () => {
