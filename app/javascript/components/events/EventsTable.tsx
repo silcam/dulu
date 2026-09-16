@@ -51,9 +51,25 @@ export default function EventsTable(props: IProps) {
     setLoadingMore(false);
   };
 
+  /* eslint-disable react-hooks/set-state-in-effect, react-hooks/exhaustive-deps --
+     Deliberate, both of them, and a block rather than a disable-next-line because the
+     two rules report on different lines: the setState on the call below, the
+     dependency list on the line after it.
+
+     getEvents begins with setLoadingMore(true), and the extra render pass that
+     triggers is the one that draws the spinner. The rule cannot tell a loading flag
+     -- a fact about an in-flight request, which is exactly what state is for -- apart
+     from state that should have been derived.
+
+     The dependency list is [] because this is a fetch-once-on-mount. getEvents is
+     redefined every render, so listing it would refire the effect every render; and a
+     useCallback honest about what it closes over (props.eventsUrl, props.eventsBackTo
+     and five props.add* callbacks) would change identity whenever the parent
+     re-rendered and refetch, which is a behaviour change rather than a lint fix. */
   useEffect(() => {
     getEvents({ initialGet: true });
   }, []);
+  /* eslint-enable react-hooks/set-state-in-effect, react-hooks/exhaustive-deps */
 
   return (
     <BasicEventsTable

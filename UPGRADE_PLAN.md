@@ -2680,12 +2680,38 @@ The findings that are not style:
      selector — so `spec/cypress/e2e/notificationChannels.spec.js` was written first,
      against the unchanged component, and passed before and after.
 
-   Families B and C remain. **B — a loading flag at the head of an async fetch**
-   (`EventsTable.tsx:55`, `NotificationSidebar.tsx:88`): the synchronous `setState` is
-   `setLoading(true)`, and the extra render it triggers is the one that shows the spinner,
-   so the rule is describing the intent. A targeted disable with the reason, not a
-   restructure. **C — `CoreData.ts`** carries three findings at once (this one, `purity`
-   at :10, `exhaustive-deps` at :12) and is a real defect: see item 4 below.
+   **Family B — a loading flag at the head of an async fetch — is done, as comments.**
+   `EventsTable.tsx:55` and `NotificationSidebar.tsx:88` both run an effect that calls an
+   async fetcher, and both fetchers open with `setLoading(true)`. The extra render pass
+   that triggers is the one that draws the spinner, so the rule is describing the intent:
+   it cannot tell a loading flag — a fact about an in-flight request, which is precisely
+   what state is for — apart from state that should have been derived. Unlike family A,
+   nothing here is derivable and the effect is doing what effects are for, synchronising
+   with something outside React.
+
+   Both rules are suppressed with the reasoning in the code, as a block rather than
+   `disable-next-line` because the two rules report on different lines (the `setState`
+   call, and the dependency list a line below it). The `exhaustive-deps` halves were
+   traced rather than waved away:
+
+   - `EventsTable` — `getEvents` is redefined every render, so listing it would refire the
+     effect every render; a `useCallback` honest about its closure (`props.eventsUrl`,
+     `props.eventsBackTo`, five `props.add*` callbacks) would change identity whenever the
+     parent re-rendered and **refetch**. `[]` is correct: fetch once on mount.
+   - `NotificationSidebar` — `state` is deliberately unlisted. The condition is "has this
+     tab been fetched yet", so re-running when `state` changes would defeat it. The
+     stale-closure risk this usually implies is absent: `getNotifications` reads
+     `state[channel].nextPage` for pagination, but the effect only runs on a tab change
+     and its closure is that render's.
+
+   The alternative was to hoist the loading flag out of the fetchers to their call sites so
+   the effects no longer set state. Rejected: `getEvents` has two call sites (mount, and
+   the "more events" button) and both want the flag, so hoisting duplicates it and makes
+   the fetcher's contract worse to satisfy a linter.
+
+   **C — `CoreData.ts`** carries three findings at once (this one, `purity` at :10,
+   `exhaustive-deps` at :12) and is a real defect: see item 4 below. It is the only
+   `set-state-in-effect` left.
 3. **`react-hooks/refs` — `useSearch.ts:36` reads a ref during render.** `useSearch` is
    the search picker, and 8d item 3 is the search picker's stale-response race. Same file,
    same family of problem; fix them together.
