@@ -6,7 +6,14 @@ export interface YearMonth {
   month: number;
 }
 
+// `any`, not `unknown`, and deliberately. This is the shape of a JSON response -- the
+// server's, not ours -- so there is nothing here TypeScript could check. Flipping it to
+// `unknown` was measured: 35 errors across 20 files, every one of them wanting a cast,
+// which is the same assertion `any` makes with more words around it. What the generic
+// parameter on DuluAxios buys instead is an escape: a caller that knows the shape says so
+// at the call, and the ones that do not keep today's behaviour.
 export interface AnyObj {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- see the note above
   [key: string]: any;
 }
 

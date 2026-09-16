@@ -3,11 +3,16 @@ import { AnyObj } from "../models/TypeBucket";
 
 export type MaybeAnyObj = AnyObj | undefined;
 
+// Each verb takes the response shape as a type parameter defaulting to AnyObj, so every
+// existing call site keeps exactly the type it had while a caller that knows what comes
+// back can say so at the call -- `DuluAxios.get<{ report: DomainReport }>(...)` -- and get
+// the field names checked instead of asserting them afterwards. See the note on AnyObj in
+// models/TypeBucket for why the default is `any` rather than `unknown`.
 export interface IDuluAxios {
-  get: (url: string, params?: {}) => Promise<MaybeAnyObj>;
-  post: (url: string, data: PostParams) => Promise<MaybeAnyObj>;
-  put: (url: string, data: PostParams) => Promise<MaybeAnyObj>;
-  delete: (url: string) => Promise<MaybeAnyObj>;
+  get: <T = AnyObj>(url: string, params?: AnyObj) => Promise<T | undefined>;
+  post: <T = AnyObj>(url: string, data: PostParams) => Promise<T | undefined>;
+  put: <T = AnyObj>(url: string, data: PostParams) => Promise<T | undefined>;
+  delete: <T = AnyObj>(url: string) => Promise<T | undefined>;
   authToken?: string;
   setNetworkError?: (error: DuluAxiosError) => void;
   clearNetworkError?: () => void;
@@ -17,6 +22,9 @@ export interface IDuluAxios {
 
 interface PostParams {
   authenticity_token?: string;
+  // The request body is as untyped as the response; see the note on AnyObj in
+  // models/TypeBucket.
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- see the note above
   [other: string]: any;
 }
 

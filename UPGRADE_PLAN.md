@@ -2834,9 +2834,48 @@ The findings that are not style:
    one. A security finding brakeman cannot see because it is in the React tree, which is
    worth noticing about the coverage of 8a.
 6. **`@typescript-eslint/no-explicit-any` ×20 and `no-unused-vars` ×21.** Worth reading
-   once as a list rather than fixing blind: the `any`s cluster at the axios boundary
-   (`DuluAxios` returns `AnyObj`), which is a modelling decision, while the unused
-   variables are just dead code.
+   once as a list rather than fixing blind, and reading them did correct the guess written
+   here first. **The `any`s do not cluster at the axios boundary.** Only three of the
+   twenty-three findings are there — eslint reports at *declarations*, not usages, so the
+   fifty-seven call sites that read `data.foo` off an untyped response produce no findings
+   at all. The other twenty are seven unrelated little decisions: React children typed
+   `any` ×2, a style bag, the three in `i18n`, four generic utilities, two hook parameters,
+   a type guard and the dispatch context, plus `JSEvent`'s two.
+
+   **6a. The axios boundary — landed 2026-09-16.** Three findings: `AnyObj`'s index
+   signature, `PostParams`'s, and `get`'s `params?: {}`.
+
+   The honest fix was measured rather than guessed. Flipping `AnyObj`'s index signature to
+   `unknown` produces **35 `tsc` errors across 20 files**, and every one of them wants a
+   cast — which is the assertion `any` was already making, written out longer. That is a
+   wide diff across files this upgrade has no other reason to touch, in exchange for
+   type-checking *at* the cast and nothing after it.
+
+   What landed instead makes the response shape a type parameter defaulting to `AnyObj`:
+   `get: <T = AnyObj>(url, params?: AnyObj) => Promise<T | undefined>`, and the same on
+   `post`, `put` and `delete`. Every existing call site compiles untouched and keeps the
+   type it had; a caller that knows the shape now has somewhere to say so —
+   `DuluAxios.get<{ report: DomainReport }>("/api/reports/domain_report", params)` — and
+   gets its field names checked. The debt gets paid down at call sites as they are touched
+   for other reasons, which is the only way it realistically gets paid down at all.
+
+   The two remaining `any`s are suppressed at their single declaration with the measurement
+   written above them, so a future reader inherits the reasoning rather than the verdict.
+   `params?: {}` became `params?: AnyObj`, which closes a small real hole: `{}` means "any
+   non-nullish value", so `DuluAxios.get(url, "oops")` type-checked before today.
+
+   One wart this does *not* fix, and should not be mistaken for fixed: `delete` returns
+   `false` from its catch, so `DuluAxios.delete<T>()` can hand back a boolean the signature
+   does not admit. That was equally untrue of the old `Promise<MaybeAnyObj>` signature; the
+   generic neither causes it nor cures it.
+
+   44 → 41 lint problems (29 → 26 errors). `tsc` clean, Jest 125 passing, Cypress 104 / 103
+   passing / 1 pending — no runtime change, and none intended.
+
+   **6b. The other twenty** are a separate and much cheaper conversation: mostly mechanical
+   (`children: any` → `React.ReactNode`, a style bag → `React.CSSProperties`), with the
+   `i18n` three, the generic utilities and `LoadAction`'s type guard needing a little
+   judgement each.
 7. **Decide whether `yarn lint` joins the gate.** It cannot today: it exits 1. Either fix
    to zero and add it, or add it with `--max-warnings` and a baseline. A lint step nobody
    runs is what the last one was, and it sat in `devDependencies` for years without a
