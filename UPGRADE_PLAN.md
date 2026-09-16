@@ -2725,6 +2725,39 @@ The findings that are not style:
    all three findings. Deferred from family A because it changes runtime behaviour on
    every open tab (three GETs every five minutes, where today an idle tab issues none),
    which is a decision rather than a cleanup.
+
+   **Landed 2026-09-16: the existing behaviour kept, and declared. Brian's call, and the
+   right one.** Two rewrites were tried and rejected before this. A real `setInterval`
+   polls three whole collections from every open tab forever, including tabs nobody is
+   looking at, to keep a cache only `GoBar` reads. A mount-only load leaves an active user
+   on a page-load snapshot. What the accidental implementation actually did — refresh when
+   the user navigates, at most once every five minutes — is better than both: it spends
+   requests only while someone is using the app.
+
+   So the fault was never the behaviour, it was that nothing said so. The comment claimed
+   an interval that did not exist, the mechanism was "an effect with no dependency array
+   runs after every render, and CoreData re-renders with BaseMainRouter, which calls
+   useLocation", and the clock check sat in the render path. The rewrite keeps the
+   semantics and states them: `useLocation()` directly, `[pathname, dispatch]` as the
+   dependency list, `Date.now()` inside the effect, and the timestamp in a **ref** rather
+   than state — it is bookkeeping between effect runs that nothing renders, so state only
+   bought an extra render pass. All three findings go quiet because the code now says what
+   it means.
+
+   Verified in a browser with `cy.clock(Date.now(), ["Date"])` — faking `Date` only, so
+   React's scheduler and axios keep running: one fetch on load, still one after three
+   navigations, two after advancing past the gate, and two again immediately after.
+   `spec/cypress/e2e/coreData.spec.js` keeps that pinned, because the two "obvious"
+   rewrites are each one small edit away and a future reader has no other way to know the
+   trade was considered.
+
+   Also settled while measuring: **the boards, not `CoreData`, are what refresh this data
+   in practice**, and they do it on *mount* rather than on location change — so clicking
+   "Languages" while already inside `/languages/…` refetches nothing, because
+   `LanguagesBoard` is a layout route that never unmounted. And `/api/languages` is
+   fetched twice on a cold load, once by `CoreData` and once by `LanguagesBoard`. The
+   design question underneath — `GoBar` searching the store instead of the server — is
+   filed as 8f item 6.
 5. **`react/jsx-no-target-blank` — `DomainStatusItemView.tsx:149`** uses `target="_blank"`
    with no `rel="noreferrer"`. Reverse tabnabbing: the opened page gets a handle on this
    one. A security finding brakeman cannot see because it is in the React tree, which is
@@ -2991,7 +3024,28 @@ Nothing here is broken today.
    app, and every phase gate in this plan was verified with `foreman s`. Changing the
    runner mid-upgrade would mean a gate failure could be the runner rather than the code.
 
-6. **`PlainTable.tsx` is unreferenced.** Nothing imports it and nothing constructs a
+6. **Dulu has two global searches, and one of them is why `CoreData` exists.** Raised
+   2026-09-16 while fixing 8c item 4. `Api::SearchesController` (`/api/search`) searches
+   languages, people, organizations, clusters *and* events server-side, and the
+   dashboard's `Searcher` uses it. The NavBar's `GoBar` does the same job client-side,
+   filtering whatever happens to be in the Redux store — which is why `CoreData` eagerly
+   loads `/api/languages`, `/api/people` and `/api/organizations` on every page load.
+
+   Two things make this worth revisiting rather than leaving. `GoBar` searches **five**
+   collections and `CoreData` loads **three**: clusters and regions reach the store only
+   if the user visits `ClustersBoard` or `RegionsBoard`, so a newly created cluster is
+   unfindable in `GoBar` until then. That has always been true and nobody has filed it,
+   which is the best evidence available that the eager-load design is not load-bearing.
+   And every view of this data already refetches on mount, so the store is kept current by
+   ordinary navigation regardless.
+
+   If `GoBar` used `/api/search` like `Searcher` does, its results would be complete and
+   consistent for the first time, `CoreData` could be deleted outright, and three
+   whole-collection GETs would come off every page load. That is a feature change rather
+   than cleanup, which is why it is filed here and not done. Whoever takes it should also
+   decide whether two search boxes are wanted at all.
+
+7. **`PlainTable.tsx` is unreferenced.** Nothing imports it and nothing constructs a
    `TableReport`. Found in Phase 7a, when `@types/react` 18 rejected it for rendering a
    `string | { text, url }` as a child — a latent crash in dead code. It was fixed rather
    than deleted, because deleting a component is not a type bump. Delete it here, or find
