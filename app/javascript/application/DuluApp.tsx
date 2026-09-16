@@ -35,7 +35,11 @@ export default function DuluApp() {
 
     const user = getUser();
     if (user) dispatch(setCurrentUserAction(user));
-  }, []);
+    // `dispatch` belongs in the list and costs nothing: react-redux returns the
+    // store's own dispatch, which is created once and never replaced, so naming it
+    // leaves this a once-on-mount effect while making that a fact the linter can
+    // check rather than one a reader has to take on trust.
+  }, [dispatch]);
 
   return (
     <I18nContext.Provider value={t}>

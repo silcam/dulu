@@ -24,9 +24,16 @@ export default function useLoad(): [
 export function useLoadOnMount(path: string, deps: any[] = []): boolean {
   const [loader, loading] = useLoad();
 
+  // Uncheckable by construction, and that is the point of the hook: `deps` is a
+  // parameter, so the list is whatever the caller passes and eslint has no literal to
+  // read. `loader` and `path` go unlisted for the same reason -- loader is a new
+  // closure on every render of the calling component, and callers that want a refetch
+  // when the path changes pass that through `deps` themselves.
+  /* eslint-disable react-hooks/exhaustive-deps -- see the note above */
   useEffect(() => {
     loader(axios => axios.get(path));
   }, deps);
+  /* eslint-enable react-hooks/exhaustive-deps */
 
   return loading;
 }

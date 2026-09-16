@@ -38,6 +38,19 @@ export default function EventsCalendar(props: IProps) {
     month: parseInt(props.month)
   };
 
+  // Both effects read `centerMonth` and `props`, and neither is listed.
+  //
+  // `centerMonth` is computed above from props.year and props.month and nothing else,
+  // so the second effect's list already names everything it depends on; adding the
+  // object itself would only mean a fresh identity every render and a preload on each
+  // one. `props` is the wrong dependency by the rule's own account -- it changes when
+  // any prop changes, and what these effects actually use out of it are the adder
+  // callbacks, which the parent rebuilds every render.
+  //
+  // The first effect is a mount-only load on purpose: the second one handles every
+  // subsequent month, so listing anything here would refetch the centre month twice.
+  /* eslint-disable react-hooks/exhaustive-deps -- see the note above */
+
   // Initial Load
   useEffect(() => {
     const period = {
@@ -51,6 +64,7 @@ export default function EventsCalendar(props: IProps) {
   useEffect(() => {
     preloadEvents(centerMonth, props);
   }, [props.year, props.month]);
+  /* eslint-enable react-hooks/exhaustive-deps */
 
   const [addingNew, setAddingNew] = useState(false);
 

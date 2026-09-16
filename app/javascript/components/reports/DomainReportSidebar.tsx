@@ -52,11 +52,21 @@ function BaseSidebar(props: IProps) {
       reportParams.clusterIds.map(id => props.clusters.get(id))
     );
 
+  // Keyed on the serialised params rather than the object: reportParams is rebuilt
+  // by `update()` on every change, so the object identity differs on renders where
+  // the values are identical. Hoisted out of the dependency list so eslint can check
+  // it. `props.setReport` is not listed -- it is a new arrow function on each of the
+  // parent's renders, and listing it would make this effect refetch the report every
+  // time the report it just fetched arrives.
+  const reportParamsKey = JSON.stringify(reportParams);
+
+  /* eslint-disable react-hooks/exhaustive-deps -- see the note above */
   useEffect(() => {
     DuluAxios.get("/api/reports/domain_report", reportParams).then(data => {
       if (data) props.setReport(data.report as DomainReport);
     });
-  }, [JSON.stringify(reportParams)]);
+  }, [reportParamsKey]);
+  /* eslint-enable react-hooks/exhaustive-deps */
 
   return (
     <div style={{ padding: "18px" }}>

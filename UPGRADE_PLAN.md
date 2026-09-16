@@ -2742,6 +2742,47 @@ The findings that are not style:
    people loaded by an earlier selection linger and the table can look plausible while the
    fetch it needed never happened.
 
+2c. **The other eleven `exhaustive-deps` messages: two real tidies, the rest declared.**
+   Done 2026-09-16 as one commit, **55 problems → 44**, with no behaviour change anywhere.
+   The point of the pass was to leave nothing in the file that a reader has to re-derive:
+   after it, every remaining suppression carries the reason in the code.
+
+   Two were genuinely wrong and are now correct:
+
+   - **`DuluApp.tsx:38`** omitted `dispatch`. Listing it costs nothing — react-redux
+     returns the store's own dispatch, created once and never replaced — so this stays a
+     once-on-mount effect, but now by something the linter can check.
+   - **`SavedReports.tsx:23`** guarded its fetch with `if (!savedReports)` inside a
+     mount-only effect, where `savedReports` is null by construction and the guard could
+     never be false. Deleting the dead read is what makes `[]` honest rather than
+     suppressed — the warning existed only because of the line that did nothing.
+
+   Two more were readability, not correctness: `DBActivitiesTable.tsx:56` and
+   `DomainReportSidebar.tsx:59` both computed `JSON.stringify(...)` **inside** the
+   dependency list, which the rule cannot statically check. Hoisted to a named
+   `…Key` variable, which is also where the explanation now lives. This is the same
+   stable-key technique 2b adopted for `DBParticipantsTable`.
+
+   Five sites still carry a suppression, each with its reasoning in the code — the two
+   above among them, since hoisting the key makes the dependency checkable but does not
+   make the omitted props wrong to omit:
+
+   | site | why the rule is wrong here |
+   |---|---|
+   | `DBActivitiesTable.tsx` | `domain` is computed from `props.type`, a string literal at every `MainContent` call site; `noAPILoad` is not derived from anything, but is likewise fixed per instance — a bare attribute on the Workshops table, absent elsewhere; `load` is a new closure each render |
+   | `DomainReportSidebar.tsx` | `props.setReport` is a fresh arrow per parent render; listing it would refetch the report each time the fetched report arrives |
+   | `EventsCalendar.tsx:48,53` | `centerMonth` is computed from `props.year`/`props.month`, which the second effect already lists; `props` is the wrong dependency by the rule's own admission, and the first effect is a mount-only load the second one takes over from |
+   | `useLoad.ts:29` | uncheckable **by construction** — the dependency list is a function parameter, so there is no literal for eslint to read, and that is the hook's whole purpose |
+   | `DBEventsTable.tsx:27` | family B's shape: no list on purpose, the guard (`eventsBackTo == undefined && !loadingMore`) is what stops it |
+
+   Suppressed as blocks rather than `disable-next-line`, for the reason family B already
+   found: the rule reports on the dependency-array line, not the `useEffect` call, so a
+   next-line directive lands on the wrong row and is then itself reported as unused.
+
+   **What is left of this rule is two messages, both already assigned:** `useSearch.ts:34`
+   to 8d item 3 and `NetworkErrorAlerts.tsx:21` to 8d item 6.
+
+
 3. **`react-hooks/refs` — `useSearch.ts:36` reads a ref during render.** `useSearch` is
    the search picker, and 8d item 3 is the search picker's stale-response race. Same file,
    same family of problem; fix them together.
@@ -2954,6 +2995,13 @@ test written before the fix.
    (8c item 2). Nothing there can misbehave today, but "98 green" should not be read as
    having exercised it.
 
+10. **`navigation.spec.js` flaked once, on 2026-09-16.** One of its four tests failed in a
+   full-suite run (the spec took 35s against its usual 6s, so a retry against a timeout),
+   and did not reproduce: green in isolation immediately after, and green in a second full
+   run of all 26 specs. Recorded rather than chased because a suite run by hand has no
+   history to compare against — this is the first noted flake, and a second sighting is
+   what would make it a bug. Which test failed is unknown: the run captured no screenshot.
+
 **And a standing hazard rather than a task:** `yarn testPacks` — and therefore
 `yarn test:cypress:gate` — **exits 0 with "Everything's up-to-date" on the run immediately
 after a compile that failed**, because shakapacker records the digest regardless of
@@ -3098,6 +3146,22 @@ Nothing here is broken today.
    `string | { text, url }` as a child — a latent crash in dead code. It was fixed rather
    than deleted, because deleting a component is not a type bump. Delete it here, or find
    out what it was for.
+9. **`DomainReportSidebar` keys its fetch on a value it feeds itself.** Noticed
+   2026-09-16 while hoisting the key in 8c item 2c; **pre-existing and untouched** — the
+   hoist is value-identical to the expression it replaced.
+
+   The effect refetches when `JSON.stringify(reportParams)` changes, and on every response
+   calls `props.setReport(data.report)`, which is where `reportParams` comes from
+   (`props.report.dataParams`). So the response feeds the key. It terminates today only
+   because the server echoes the params back in the same shape, and `JSON.stringify` is
+   key-order-sensitive: a response that reordered the keys, or added one, would stringify
+   differently and the effect would fetch again, forever. The loop would be a tight one —
+   no throttle, no error state, just requests.
+
+   The robust form keys on something the response cannot influence (a counter bumped by
+   `updateReportParams`) or compares the params structurally rather than by serialisation.
+   Not attempted during the upgrade: it is a change to how the report reloads, and the
+   current code is stable against the server we have.
 
 ### 8g. Deferred majors and forward-compatibility
 

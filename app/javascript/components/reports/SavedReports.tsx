@@ -14,12 +14,14 @@ export default function SavedReports() {
   const [savedReports, setSavedReports] = useState<ISavedReport[] | null>(null);
   const t = useContext(I18nContext);
 
+  // The `if (!savedReports)` guard this used to carry could never be false: the
+  // effect runs once, on mount, and savedReports is null until this very request
+  // answers. Dropping the dead read is what makes the empty dependency list honest
+  // -- nothing is omitted from it any more -- instead of something to suppress.
   useEffect(() => {
-    if (!savedReports) {
-      DuluAxios.get("/api/reports").then(
-        data => data && setSavedReports(data.reports)
-      );
-    }
+    DuluAxios.get("/api/reports").then(
+      data => data && setSavedReports(data.reports)
+    );
   }, []);
 
   return (
