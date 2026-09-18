@@ -3006,10 +3006,23 @@ The findings that are not style:
    **8c's `no-explicit-any` findings are now closed.** 27 → 23 lint problems (12 → 8
    errors), and every remaining error belongs to another sub-phase: `useSearch` ×3 (8d item
    3), `NavBar` (8b), and four in the Jest files (8e).
-7. **Decide whether `yarn lint` joins the gate.** It cannot today: it exits 1. Either fix
-   to zero and add it, or add it with `--max-warnings` and a baseline. A lint step nobody
-   runs is what the last one was, and it sat in `devDependencies` for years without a
-   config.
+7. **Decided 2026-09-18: `yarn lint` joins the gate when the error count reaches zero,
+   not before.** Brian's call. The alternative on the table was adding it now behind a
+   `--max-warnings` baseline and tightening as the other sub-phases land; the objection to
+   that is the one this repo has already lived through — the previous eslint sat in
+   `devDependencies` for years with no config and nobody ran it. A gate with a baseline is
+   a gate people learn to read past, and a baseline number nobody can justify is worse than
+   no gate at all.
+
+   **The count is 8 errors, and all 8 are already assigned**, which is what makes waiting
+   cheap rather than indefinite: `useSearch.ts` ×3 (two `no-explicit-any` plus
+   `react-hooks/refs`) to **8d item 3**, `NavBar.tsx:20` `no-require-imports` to **8b**, and
+   four in the Jest files — `Activity.test.js:74` (`no-unused-expressions` and
+   `jest/valid-expect` on the same line, a genuinely broken assertion) and
+   `DuluAxios.test.js:30,52` — to **8e**. When those three land, add the step.
+
+   The 15 warnings are all `jest/*` and belong to 8e as well; decide then whether the gate
+   runs with `--max-warnings 0` or tolerates them.
 
 ### 8d. Correctness defects found during the upgrade
 
