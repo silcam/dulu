@@ -1374,10 +1374,23 @@ adds `AbstractAdapter`.** It says 7.1+; it is **7.2**. Verified on 7.1.6:
 `activejob-7.1.6/lib/active_job/queue_adapters/` has no `abstract_adapter.rb` and the
 constant appears nowhere in the gem. Unpinning got as far as
 `uninitialized constant ActiveJob::QueueAdapters::AbstractAdapter` while booting
-production. Restored to `~> 4.1.11`; it unwinds in **Phase 6**. Note that **production is
-the only environment that sets `active_job.queue_adapter = :delayed_job`**, so no test and
-no other environment would ever have caught this — it is only visible by booting the
-production environment deliberately.
+production. Restored to `~> 4.1.11`; it unwinds in **Phase 6**.
+
+**Corrected 2026-09-18.** This used to say production is the only environment that sets
+`active_job.queue_adapter = :delayed_job`. It is not — `development.rb:30` sets it too;
+only **test** does not. The conclusion was right anyway, but for a different and more
+useful reason: **`config.eager_load` is `true` only in production** (false in development
+and test), and the adapter is not loaded at boot in either of the others. Probed directly:
+
+```
+env: development
+  adapter FILE actually loaded at boot: false
+  still merely registered for autoload: "active_job/queue_adapters/delayed_job_adapter"
+```
+
+So development sets the adapter but never resolves it until something enqueues. The
+breakage really was only reachable by booting production deliberately — because of eager
+loading, not because of the config.
 
 **3. `config/initializers/recurring_jobs.rb` referenced an autoloaded constant during
 initialization**, which 7.1 turns from a deprecation into an error:
@@ -1386,6 +1399,21 @@ initialization**, which 7.1 turns from a deprecation into an error:
 the old behaviour exactly.
 
 #### The thing the gate had never covered: a real production precompile
+
+**The mechanism behind this whole section, stated once.** `config.eager_load` is `true`
+only in production. Development and test load a constant when something first references
+it, so a file that raises *while being loaded* is invisible to them until the exact code
+path that needs it runs. Production loads everything at boot, so those errors surface
+immediately — and `assets:precompile` boots production, which is why it kept finding them.
+
+That single fact explains all three Phase 5 findings above: the `AbstractAdapter` constant,
+`recurring_jobs.rb` referencing an autoloaded `DailyEmailTask` during initialization, and
+the Uglifier failure below. It also generalises into a standing rule rather than a
+Phase-5 anecdote: **a gate that runs only in the test environment is blind to
+eager-load-time errors by construction.** No amount of test coverage substitutes for
+booting production, which is why that step belongs in the cutover checklist (§8b) and not
+only in this phase's history.
+
 
 Everything above was found by deliberately booting the production environment. Running the
 *whole* `assets:precompile RAILS_ENV=production` went further and found a **deploy-breaking
