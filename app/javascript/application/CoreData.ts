@@ -1,6 +1,6 @@
-import { useContext, useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import { useLocation } from "react-router-dom";
-import DispatchContext from "../contexts/DispatchContext";
+import { useDispatch } from "react-redux";
 import DuluAxios from "../util/DuluAxios";
 import { loadAction } from "../reducers/LoadAction";
 
@@ -32,10 +32,10 @@ const CORE_PATHS = ["/api/languages", "/api/people", "/api/organizations"];
 // nothing renders it, so putting it in state only bought an extra render pass. It is
 // read and written inside the effect, never during render.
 //
-// `dispatch` is store.dispatch from DispatchContext (application/index.js), a stable
-// reference for the store's lifetime, so it never re-triggers this on its own.
+// `dispatch` is the store's own dispatch, created once and never replaced, so naming it
+// in the dependency list below costs nothing and never re-triggers this on its own.
 export default function CoreData() {
-  const dispatch = useContext(DispatchContext);
+  const dispatch = useDispatch();
   const { pathname } = useLocation();
   const lastUpdate = useRef(0);
 

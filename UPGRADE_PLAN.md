@@ -2976,10 +2976,36 @@ The findings that are not style:
    30 → 27 lint problems (15 → 12 errors). `tsc` clean, Jest 125 passing, Rails 413 tests /
    1367 assertions, Cypress 104 / 103 passing / 1 pending, all green.
 
-   **What is left of 8c is four findings:** `ifDef` ×2 and `takeFirst`, to be measured the
-   same way before deciding (the expectation is pure cast-relocation, i.e. suppress with
-   the numbers written down), and `DispatchContext`, which wants the app's action union and
-   should be suppressed-and-filed rather than attempted here.
+   **6c-iii. `ifDef`, `takeFirst`, `DispatchContext` — landed 2026-09-18, and the
+   prediction written here was wrong.** This entry previously said to expect pure
+   cast-relocation on the first two and a suppress-and-file on the third. Measuring gave
+   the opposite answer in all three cases: **no suppressions, no casts, no call-site
+   changes, and one file deleted.** Recorded because the wrong guess is the instructive
+   part — "this `any` is load-bearing" is a hypothesis, and it is cheap to test.
+
+   - **`ifDef` → `<T, R = T>(item: T | undefined | null, cb?: (item: T) => R, ifNot?: R):
+     T | R | ""`.** Zero errors anywhere. Note the survey trap that nearly cost a deletion:
+     both *application* call sites pass only the first argument, so `cb` and `ifNot` look
+     dead — but the unit tests exercise all three parameters. An app-side grep is not a
+     usage survey.
+   - **`takeFirst` → `<T extends unknown[]>(...args: [...T]): T[number]`.** The obvious
+     `<T>(...args: T[]): T` **fails**, and how it fails is worth keeping: with an array rest
+     parameter the compiler unifies every argument into a single `T`, so
+     `takeFirst(null, undefined, "", { 4: 4 })` settles on the literal type `""` and then
+     rejects the object. A *tuple* rest parameter (`[...T]`) keeps each argument's own type,
+     and `T[number]` is the union of them — which is what the function actually returns.
+     Callers pass deliberately mixed types: `takeFirst(item.year, t("Bible"))` is
+     `number | null` against `string`.
+   - **`DispatchContext` was not a typing problem.** It is a hand-rolled second channel to
+     `store.dispatch`: one provider in `application/index.js`, one consumer in `CoreData`,
+     and **five other files already use react-redux's `useDispatch()`** for the identical
+     thing. Deleted, with `CoreData` switched to `useDispatch()`. Provably identical — both
+     resolve to the same function, and `<Provider store={store}>` already wraps the tree.
+     The `any` disappears because the type does: react-redux supplies it.
+
+   **8c's `no-explicit-any` findings are now closed.** 27 → 23 lint problems (12 → 8
+   errors), and every remaining error belongs to another sub-phase: `useSearch` ×3 (8d item
+   3), `NavBar` (8b), and four in the Jest files (8e).
 7. **Decide whether `yarn lint` joins the gate.** It cannot today: it exits 1. Either fix
    to zero and add it, or add it with `--max-warnings` and a baseline. A lint step nobody
    runs is what the last one was, and it sat in `devDependencies` for years without a
@@ -3188,9 +3214,12 @@ test written before the fix.
    spec in a full run is not evidence of a regression** — re-run it in isolation before
    believing it, and say so when reporting.
 
-11. **`yarn typecheck` does not cover the test directory.** `tsconfig.json` excludes
-   `test`, so `tsc --noEmit` compiles only `app/javascript`; the test files are typechecked
-   solely by ts-jest, through `tsconfig.test.json`. Found the hard way on 2026-09-18: after
+11. **`yarn typecheck` does not cover the test directory, and the config that looks like
+   it would matches nothing.** `tsconfig.json` excludes `test`, so `tsc --noEmit` compiles
+   only `app/javascript`. The obvious second step — `tsc -p tsconfig.test.json` — fails
+   with **TS18003, "No inputs were found"**: its `include` is `["**/*.spec.ts"]`, but the
+   Jest tests are named `*.test.ts`. So that config typechecks **zero files**; ts-jest uses
+   it for `compilerOptions` only, compiling each test file as it runs it. Found the hard way on 2026-09-18: after
    the `i18n` change, `yarn typecheck` was **clean** while `test/javascript/util/
    arrayUtils.test.ts` did not compile at all — Jest reported "Test suite failed to run",
    which reads like a broken test rather than a type error, and the suite count silently
