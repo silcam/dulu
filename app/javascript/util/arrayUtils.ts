@@ -1,5 +1,5 @@
 import update from "immutability-helper";
-import { T } from "../i18n/i18n";
+import { Translate } from "../i18n/i18n";
 
 interface WithId {
   id: number;
@@ -29,7 +29,10 @@ export function itemAfter<T>(array: T[], item: T) {
 //     : update(array, { $push: [newItem] });
 // }
 
-export function print<Ty>(array: Ty[], t: T, keyPrefix?: string) {
+// `Translate`, not `T`: this only ever looks up a string. The difference is not cosmetic
+// -- a generic signature is expensive to *supply*, so asking for `T` meant the unit test's
+// one-line `fakeT` stub could not be passed in at all.
+export function print<Ty>(array: Ty[], t: Translate, keyPrefix?: string) {
   const prefix = keyPrefix ? keyPrefix + "." : "";
   return array.map(item => t(prefix + item)).join(", ");
 }

@@ -163,7 +163,10 @@ class BaseWorkshop extends React.PureComponent<BaseWSProps, IState> {
                   setValue={this.setName}
                   handleEnter={this.save}
                   errorMessage={
-                    this.state.nameError ? t(this.state.nameError) : null
+                    // undefined, not null: errorMessage is declared `string | undefined`
+                    // and TextInput only ever tests it for truthiness, so this renders the
+                    // same and is the value the prop actually admits. See 8d.
+                    this.state.nameError ? t(this.state.nameError) : undefined
                   }
                 />
                 {this.props.workshop.completed && (

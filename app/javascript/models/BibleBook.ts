@@ -1,4 +1,4 @@
-import { T } from "../i18n/i18n";
+import { T, Translate } from "../i18n/i18n";
 
 export interface IBibleBook {
   id: number;
@@ -74,7 +74,7 @@ const bibleBooks = [
   "Revelation"
 ];
 
-function name(id: number, t: T): string {
+function name(id: number, t: Translate): string {
   const index = id - 1; // Genesis has id 1
   return t(bibleBooks[index]);
 }

@@ -2906,11 +2906,80 @@ The findings that are not style:
    that passes in isolation).
 
    **6c. The nine left are genuinely open** and should be taken one at a time, not batched:
-   the three in `i18n.ts` (a translator returning `any` so callers can drop it into JSX or
-   into a string — a design question), `ifDef` ×2 and `takeFirst` (variadic helpers whose
-   job is heterogeneous arguments, where a naive generic breaks inference at call sites),
+   the three in `i18n.ts`, `ifDef` ×2 and `takeFirst` (variadic helpers whose job is
+   heterogeneous arguments, where a naive generic breaks inference at call sites),
    `DispatchContext` (wants the app's action union, which is real work), and `useSearch` ×2
    — **not here**: they belong with 8d item 3, the search picker's stale-response race.
+
+   **6c-i. `i18n.ts` — landed 2026-09-18, and it earned its keep.**
+
+   The decision rule used throughout 8c, stated once: write the honest type, compile, then
+   read *what the errors are*. If every error says "now cast here", the type bought nothing
+   and a documented suppression is right — that was `AnyObj`, 35 errors and 35 casts. If
+   some say "this was already wrong", the type is paying for itself. `i18n` came back
+   firmly in the second category.
+
+   **What `t` actually is.** The locale files are a tree and `getString` walks it, so `t`
+   returns whatever node the key lands on: a string for ~360 call sites, a `string[]` for
+   `month_names_short` (`MonthSelector`, `PeriodInput`), and an object map for `roles`,
+   `genders`, `domains` and `languages`, which `SelectInput.fromObjectOptions` turns into
+   `<option>`s. Declaring the return `string` gives **18 errors**. Declaring it
+   `<R = string>(key, subs?, locale?): R` gives **9** — most call sites need no annotation
+   at all, because `R` infers from the parameter being fed.
+
+   Landed: the generic, plus `subs?: any` → `Subs` (6 call sites, all `{ name: string }`)
+   and `locale?: string` → `Locale`. `getString` is typed against a recursive `LocaleNode =
+   string | string[] | LocaleStrings`. **One cast remains**, inside `translator`, where the
+   untyped JSON walk meets the typed API — the same shape as the DuluAxios boundary: assert
+   once at the seam, not once per caller.
+
+   **A caveat to know about the generic.** Because `R` infers from context, a call in a
+   position expecting `JSX.Element` types as `JSX.Element` while returning a string at
+   runtime. `DomainStatusFilms`'s `t("None")` does exactly this. React renders it fine and
+   nothing breaks, but the inference is not a guarantee — `<R = string>` buys a place to be
+   explicit, not soundness.
+
+   **6c-ii. The `T`-vs-`Translate` split, and why it is not cosmetic.** `Activity.compare`
+   passes `const closeEnoughT = (key: string) => key` where `T` is expected. Under the
+   generic signature that stops compiling, with the compiler naming the reason exactly:
+   *"'R' could be instantiated with an arbitrary type which could be unrelated to
+   'string'."* Arity is a red herring — TypeScript accepts a function with *fewer*
+   parameters than the target, which is why the stub compiled before. The problem is that a
+   generic signature is a promise to the caller (*name any `R` and I will return one*) and
+   an identity function cannot keep it.
+
+   The asymmetry is the useful part: `T` → `Translate` is fine (a generic instantiates to
+   meet a concrete signature), `Translate` → `T` is not. **Generic signatures are cheap to
+   call and expensive to supply.** `T` lives in *parameter* position — it is handed to
+   `name()`, `BibleBook.name()`, `arrayUtils.print()` and a dozen more — so every supplier
+   pays.
+
+   So rather than casting the stub (`as unknown as T`, or the equally untrue
+   `<R,>(key) => key as R`), the callees now ask for the weaker contract:
+
+   ```ts
+   export type Translate = (key: string, subs?: Subs) => string;
+   ```
+
+   Both the real translator and the locale-free stub satisfy it, with **no cast anywhere**.
+   Applied to `Activity.name`, `BibleBook.name` and `arrayUtils.print`. Many other
+   functions take `t: T` and only need `Translate`; they are left alone deliberately, since
+   changing them buys nothing until something needs to pass them a stub.
+
+   **And the reason the stub exists at all, which was not written down anywhere:**
+   `Activity.compare` is the ordering function for the redux `List<IActivity>`
+   (`activitiesReducer.ts:25`). **A reducer has no locale**, so there is no real translator
+   to pass and the store necessarily sorts by key. The view re-sorts where it matters —
+   `sortActivities.ts:32` keys the Media column on `Activity.name` with the real `t`. Two
+   orderings on purpose. Now commented in place.
+
+   30 → 27 lint problems (15 → 12 errors). `tsc` clean, Jest 125 passing, Rails 413 tests /
+   1367 assertions, Cypress 104 / 103 passing / 1 pending, all green.
+
+   **What is left of 8c is four findings:** `ifDef` ×2 and `takeFirst`, to be measured the
+   same way before deciding (the expectation is pure cast-relocation, i.e. suppress with
+   the numbers written down), and `DispatchContext`, which wants the app's action union and
+   should be suppressed-and-filed rather than attempted here.
 7. **Decide whether `yarn lint` joins the gate.** It cannot today: it exits 1. Either fix
    to zero and add it, or add it with `--max-warnings` and a baseline. A lint step nobody
    runs is what the last one was, and it sat in `devDependencies` for years without a
@@ -3033,6 +3102,36 @@ test written before the fix.
    raises from middleware. Rails maps that to 422, but the user sees an error page rather
    than a retry. Rescue it and re-render the welcome page.
 
+8. **Four type lies the `i18n` `any` was hiding — found and closed 2026-09-18.** Filed
+   here rather than buried in the 8c commit because they are behaviour, not typing, and
+   because if any of them turns out *not* to be behaviour-identical, this is the entry to
+   come back to. Each was fixed with the smallest provably-equivalent change; none of them
+   could have been seen while `t()` returned `any`.
+
+   1. **`ValidatedTextInput.tsx`** — `makeErrorMessage` returned `string | null`, but
+      `TextInput` declares `errorMessage?: string`. **`errorMessage={null}` was being
+      passed on every render with no error.** Now `undefined`. Identical output:
+      `TextInput` only ever tests the prop for truthiness (`props.errorMessage ? ... : ""`
+      and `props.errorMessage && (...)`), and `null` and `undefined` are both falsy.
+   2. **`Workshop.tsx:166`** — the same shape, `... : null` inline on the same prop. Now
+      `undefined`, identical for the same reason.
+   3. **`DomainStatusCategory.tsx`** — `render` was declared
+      `(items) => JSX.Element | JSX.Element[]`, but `DomainStatusFilms` returns a bare
+      **string** when the list is empty and an array containing **nulls** when it is not.
+      Widened to `React.ReactNode`, which is what `<td>{props.render(...)}</td>` accepts.
+      A type widening only — no runtime change at all.
+   4. **`PeriodInput.tsx`** — `monthsList` built `{ value: i + 1 }`, a **number**, for a
+      `SelectInput` prop declared `{ value: string; display: string }[]`. Now
+      `String(i + 1)`. React stringifies into the DOM either way, so the markup is
+      unchanged; and `SelectInput`'s `option.value || option.display` fallback never fired
+      before (the values are 1..12, all truthy) and does not now. This one was invisible
+      even to the `string` experiment — it only surfaced once `month_names_short` had a
+      real `string[]` type, because the `any` had made the whole `.map` `any[]`.
+
+   Pattern worth naming: all four are **nullability or primitive-type mismatches at a prop
+   boundary**, and all four survived because one `any` upstream made a whole expression
+   untyped. That is the argument for typing boundaries over typing individual values.
+
 ### 8e. Test-suite debt
 
 1. **`people.spec.js` "Creates person" is flaky, and it is not a test problem** — it is
@@ -3088,6 +3187,19 @@ test written before the fix.
    clock on it, and running the specs with less concurrency. Until then, **a single red
    spec in a full run is not evidence of a regression** — re-run it in isolation before
    believing it, and say so when reporting.
+
+11. **`yarn typecheck` does not cover the test directory.** `tsconfig.json` excludes
+   `test`, so `tsc --noEmit` compiles only `app/javascript`; the test files are typechecked
+   solely by ts-jest, through `tsconfig.test.json`. Found the hard way on 2026-09-18: after
+   the `i18n` change, `yarn typecheck` was **clean** while `test/javascript/util/
+   arrayUtils.test.ts` did not compile at all — Jest reported "Test suite failed to run",
+   which reads like a broken test rather than a type error, and the suite count silently
+   dropped from 125 tests to 108. The failure was real (a `fakeT` stub could not satisfy
+   the generic `T`) and the fix was the right one, but **a green `typecheck` said nothing
+   about it**. Either add a second `tsc -p tsconfig.test.json` to the script, or drop the
+   `test` exclusion. Note also that a suite which fails to *compile* subtracts its tests
+   from the total rather than reporting failures — so watch the test count, not just the
+   pass/fail line.
 
 **And a standing hazard rather than a task:** `yarn testPacks` — and therefore
 `yarn test:cypress:gate` — **exits 0 with "Everything's up-to-date" on the run immediately
