@@ -7,12 +7,19 @@ import { Link, useNavigate } from "react-router-dom";
 
 const minQueryLength = 3;
 
+// Flat, and deliberately. The server still nests child rows under some results --
+// a person's programs, a cluster's languages -- and this component used to walk
+// them into an indented list keyed by `level`. It never actually rendered one:
+// the recursion ended in `flatResults.concat(...)`, whose return value was
+// discarded, so no subresult has been displayed since the function was written
+// (b2cc63c, Feb 2019). Rather than repair it, the hierarchy is gone: a search
+// result is a way to reach a page, and every child it used to list is already on
+// the page the parent links to -- PersonPage renders the person's participations,
+// ClusterPage its languages. The server half is removed separately.
 export interface SearchResult {
   title: string;
   route?: string;
   description: string;
-  subresults?: { results: SearchResult[] };
-  level?: number;
 }
 
 interface IProps {
@@ -26,27 +33,24 @@ function Searcher(props: IProps) {
   const [selectedPosition, setSelectedPosition] = useState(-1);
 
   const results = useSearch<SearchResult>(`/api/search`, query, minQueryLength);
-  const flatResults = results ? flattenResults(results) : undefined;
 
   useEffect(() => {
     props.setSeacherActive(query.length > 0);
   });
 
   const handleKeyDown = (key: string) => {
-    if (flatResults === undefined) return;
+    if (results === undefined) return;
     switch (key) {
       case "ArrowDown":
-        setSelectedPosition(
-          Math.min(selectedPosition + 1, flatResults.length - 1)
-        );
+        setSelectedPosition(Math.min(selectedPosition + 1, results.length - 1));
         break;
       case "ArrowUp":
         setSelectedPosition(Math.max(selectedPosition - 1, -1));
         break;
       case "Enter": {
         const index = Math.max(selectedPosition, 0);
-        if (flatResults[index] && flatResults[index].route)
-          navigate(flatResults[index].route!);
+        if (results[index] && results[index].route)
+          navigate(results[index].route!);
       }
     }
   };
@@ -63,19 +67,15 @@ function Searcher(props: IProps) {
         placeholder={t("Search_prompt")}
         handleKeyDown={handleKeyDown}
       />
-      {flatResults !== undefined &&
-        (flatResults.length == 0 ? (
+      {results !== undefined &&
+        (results.length == 0 ? (
           <p>No Results</p>
         ) : (
           <table className="table">
             <tbody>
-              {flatResults.map((result, index) => (
+              {results.map((result, index) => (
                 <tr key={index}>
                   <td
-                    style={{
-                      paddingLeft: 8 + 8 * result.level!,
-                      border: result.level! > 0 ? "none" : undefined
-                    }}
                     className={index == selectedPosition ? styles.selected : ""}
                   >
                     {result.route ? (
@@ -93,16 +93,6 @@ function Searcher(props: IProps) {
         ))}
     </div>
   );
-}
-
-function flattenResults(results: SearchResult[], level = 0) {
-  return results.reduce((flatResults: SearchResult[], result) => {
-    flatResults.push({ ...result, level });
-    if (result.subresults) {
-      flatResults.concat(flattenResults(result.subresults.results, level + 1));
-    }
-    return flatResults;
-  }, []);
 }
 
 export default Searcher;
