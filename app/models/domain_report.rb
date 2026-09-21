@@ -80,7 +80,16 @@ class DomainReport
                       # '2026-12-32'::date outright.
                       .where("start_date < ?", "#{@period.finish}-32")
                       .where("start_date >= ?", start_period_str)
-                      .order(start_date: :desc)
+                      # `id` is not meaningful here, it is only stable. Without a
+                      # tiebreaker the sort key is not a total order, so Postgres may
+                      # return equal-date rows either way round and the report reshuffles
+                      # between loads. This does not reproduce on a handful of fixture
+                      # rows -- with four rows the sort is trivial and deterministic. At
+                      # production volume (1,879 stages) it does: dropping work_mem to
+                      # 64kB pushes the planner from an in-memory quicksort to an external
+                      # merge sort and the first row changes. Memory pressure is just "the
+                      # server is busy", so this is a live defect, not a theoretical one.
+                      .order(start_date: :desc, id: :asc)
                       .includes(:activity)
     @activity_items = stages.map do |stage|
       {

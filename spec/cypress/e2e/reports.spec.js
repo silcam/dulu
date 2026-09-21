@@ -51,15 +51,17 @@ describe("Reports", () => {
       cy.contains("select", "2017").select("2017");
     });
 
-    // Both rows carry start_date 2017-05-29 and DomainReport#gen_activity_items orders
-    // only by `start_date: :desc` with no tiebreaker, so PostgreSQL is free to return
-    // them either way round. Asserting fixed row positions made this spec fail roughly
-    // at random. Assert that both rows are present instead, and leave their order to the
-    // application to fix -- see UPGRADE_PLAN.md Phase 8d item 5.
-    cy.contains("table", "Language").within(() => {
-      cy.contains("tr", "HdiGenesisConsultant Check in Progress2017-05-29");
-      cy.contains("tr", "ZulgoEzraConsultant Check in Progress2017-05-29");
-    });
+    // Positional again. Both rows carry start_date 2017-05-29, and until Phase 8d item 5
+    // gen_activity_items ordered by `start_date: :desc` alone -- not a total order, so
+    // Postgres could return them either way round and this spec was loosened to assert
+    // only that both rows exist. The query now breaks the tie on `id`, so the order is
+    // fixed and worth pinning: Hdi's stage has the lower id, so it comes first.
+    cy.contains("table", "Language")
+      .find("tr:nth-child(2)")
+      .should("have.text", "HdiGenesisConsultant Check in Progress2017-05-29");
+    cy.contains("table", "Language")
+      .find("tr:nth-child(3)")
+      .should("have.text", "ZulgoEzraConsultant Check in Progress2017-05-29");
     cy.contains("table", "Name")
       .find("tr:nth-child(3)")
       .should("have.text", "Check a book now2017-072017-07Hdi");

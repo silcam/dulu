@@ -3111,13 +3111,43 @@ test written before the fix.
    entirely. Worth asking whether (b) was deliberate before "fixing" it; (a) is plainly a
    bug.
 
-5. **`DomainReport#gen_activity_items` has no deterministic order.**
-   `app/models/domain_report.rb:66` orders by `start_date: :desc` with no tiebreaker, so
-   rows sharing a date come back in whatever order PostgreSQL feels like — users see the
-   report reshuffle between loads. It is the same method as the SQL injection finding
-   above, so fix both in one pass. `spec/cypress/integration/reports.spec.js` was made
-   order-agnostic in Phase 2 to stop it failing at random; tighten it back up once the
-   query is deterministic.
+5. **`DomainReport#gen_activity_items` had no deterministic order — fixed 2026-09-21.**
+   It ordered by `start_date: :desc` with no tiebreaker. That is not a total order, so
+   rows sharing a date could come back either way round and the report reshuffled between
+   loads. Now `.order(start_date: :desc, id: :asc)`. `id` is not meaningful, only stable;
+   ordering by language name instead would read better but `activities.language_id` is
+   **nullable**, so it would need `left_joins` rather than `joins` — an inner join would
+   silently drop rows, changing *which* rows the report contains rather than just their
+   order. Not worth that risk for a cosmetic gain, and Brian's call was the minimal fix.
+
+   **Two corrections to what this entry used to say.**
+
+   First, it claimed the Cypress spec "was made order-agnostic in Phase 2 to stop it
+   failing at random." The Phase 2c commit (`4bd01b9`) says only that Postgres *may*
+   return the rows either way round and calls it an application bug; it records **no
+   observed failure**. That was a precautionary change reasoned from the SQL, and this
+   entry had quietly promoted it to an observed one.
+
+   Second, and more usefully: **it does not reproduce at fixture scale, and that is
+   expected.** Brian could not reproduce it on dev, and neither could I — four plan
+   variations (`enable_seqscan=off`, `enable_sort=off`, small `work_mem`, forced
+   parallelism) plus real `UPDATE`s all returned the identical order, because with four
+   rows on one page the sort is trivial. Loading the test table to production volume
+   settles it:
+
+   ```
+   default plan          first 6 ids: [920175537, 920173639, ...]
+   work_mem='64kB'                    [920174487, 920173639, ...]  *** DIFFERENT ***
+   ```
+
+   Production carries **1,879 stages** (Aug 2022 dump) against the fixtures' four. At that
+   size the planner falls back from an in-memory quicksort to an external merge sort under
+   memory pressure and the order changes — and memory pressure is just "the server is
+   busy". **Keep the technique:** an ordering bug that will not reproduce on dev data is
+   not thereby theoretical; load the table to production scale and vary `work_mem`.
+
+   The spec is positional again (`spec/cypress/e2e/reports.spec.js`): Hdi's stage has the
+   lower id, so it is asserted at `tr:nth-child(2)` and Zulgo at `tr:nth-child(3)`.
 
 6. **The frontend has no session-expiry handling: a logged-out request shows "Dulu
    server error" instead of sending the user to sign in.** `DuluAxios.handleError`
