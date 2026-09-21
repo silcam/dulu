@@ -3144,19 +3144,58 @@ test written before the fix.
    support ticket. Consider promoting this ahead of the first deploy rather than leaving
    it in Phase 8; that is Brian's call, but it should be a knowing one.
 
-   **Prerequisite: 401 currently means two different things.** `require_login` answers a
-   logged-out XHR with an empty-bodied `head :unauthorized`, and the
-   `rescue_from "AccessGranted::AccessDenied"` handler answers a permission denial with
-   `render plain: "Not allowed", status: 401` — on HTML requests as well as XHR. Status
-   alone therefore cannot distinguish "sign in again" from "you may not do that", and
-   body-sniffing is the wrong fix. Split them first: 403 for `AccessDenied`, 401 reserved
-   for not-logged-in. That is one line in the `rescue_from` block and one line in
-   `assert_not_allowed` (`test/test_helper.rb:62`); the ~15 controller test files that
-   assert it all go through that helper. The frontend fix is unsafe without this split —
-   a 401-means-logged-out handler would try to re-authenticate a user who is simply
-   unauthorised.
+   **Prerequisite: 401 used to mean two different things — split 2026-09-21.**
+   `require_login` answers a logged-out XHR with an empty-bodied `head :unauthorized`, and
+   the `rescue_from "AccessGranted::AccessDenied"` handler answered a permission denial
+   with `render plain: "Not allowed", status: 401` — on HTML requests as well as XHR.
+   Status alone therefore could not distinguish "sign in again" from "you may not do that",
+   and body-sniffing would be the wrong fix. `AccessDenied` now answers **403**; 401 is
+   reserved for not-logged-in. One line in the `rescue_from`, one in `assert_not_allowed`
+   (`test/test_helper.rb`) — the **31 assertions across 13 controller test files** all run
+   through that helper, so the suite moved with it.
 
-   **The fix has to be driven from the client.** The server cannot usefully redirect an
+   Pinned by a new test in `sessions_controller_test.rb`, placed directly beside the
+   existing "API request while logged out is 401" test rather than with its siblings in
+   `workshops_controller_test.rb`, because **the pair is the point** and neither half
+   should be changeable without seeing the other. Verified non-vacuous: reinstating the 401
+   fails it with `Expected response to be a <403: forbidden>, but was a <401:
+   Unauthorized>`.
+
+   **This was inert at the time it landed, deliberately.** Verified across
+   `app/javascript` *and* the sprockets asset tree: nothing reads `.status`, `statusText`
+   or `response.status`; there is no `.catch()` outside `DuluAxios`; there are no axios
+   interceptors; and nothing handles the `"Not allowed"` body. Axios rejects anything
+   outside 2xx, so 401 and 403 take the identical path — `error.response` present →
+   `{ type: "server" }` → "Dulu server error." A user denied permission sees exactly what
+   they saw before. **That uniform blindness to status is precisely the defect below**;
+   the split is the prerequisite that makes the fix possible, and 403 is the correct answer
+   independently of whether any client ever acts on it.
+
+   **Decision 2026-09-21: the client-side reload is deferred past the cutover.** Brian's
+   call, and the reasoning is sound: **a fresh page load recovers completely.** An HTML GET
+   takes `require_login`'s HTML branch, which stores `session[:original_request]`, renders
+   the welcome page, and `send_to_correct_page` returns the user to their deep link after
+   sign-in. The broken case is only a tab that is *already open* and issues an XHR without
+   a page load — the React app never reloads itself, so it sits there collecting 401s. A
+   user told to reload is fully recovered, so the fix automates a recovery rather than
+   enabling one.
+
+   **Two facts to weigh when this is revisited, both found while deciding:**
+
+   1. **`config/initializers/session_store.rb` sets `expire_after: 7.days`.** So this is
+      not a one-time cutover event that an announcement covers — it is the routine weekly
+      experience of anyone who leaves Dulu open over a weekend or returns after a week
+      away. The cutover merely makes it happen to everyone at once.
+   2. **"They will reload automatically" is weaker than it sounds**, because
+      `NetworkErrorAlerts` clears `serverError` on every `location.pathname` change while
+      the 401 recurs. The app looks alive but empty rather than broken, and a user seeing
+      an empty page with no error is likelier to file a ticket than to press F5.
+
+   Revisit on evidence after the cutover — whether it actually generates support traffic —
+   rather than on prediction. The server-side half is already done, so the remaining work
+   is the client handler and a Cypress spec, described next.
+
+   **The fix, when it is taken up, has to be driven from the client.** The server cannot usefully redirect an
    XHR — that is exactly what Phase 4b removed, because axios follows a 302 cross-origin
    into Google. So on a 401 the frontend navigates, and it should reload the *current*
    URL rather than go to root: `require_login`'s HTML branch sets

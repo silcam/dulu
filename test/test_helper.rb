@@ -58,8 +58,10 @@ class ActiveSupport::TestCase
     @response.body
   end
 
+  # 403. Not logged in is 401 (see the pair of tests in sessions_controller_test); this is
+  # the authenticated-but-not-permitted case.
   def assert_not_allowed
-    assert_response 401
+    assert_response 403
   end
 
   # CSRF is disabled suite-wide by config/environments/test.rb, so a test that

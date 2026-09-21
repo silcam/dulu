@@ -54,7 +54,12 @@ class ApplicationController < ActionController::Base
   end
 
   rescue_from "AccessGranted::AccessDenied" do |exception|
-    render plain: "Not allowed", status: 401
+    # 403, not 401, and the distinction is load-bearing rather than pedantic. 401 means
+    # "I do not know who you are" -- require_login's answer to a logged-out XHR, and the
+    # cue a client uses to send someone back to sign in. This is the opposite case: we
+    # know exactly who the user is and they may not do this. Answering both with 401 left
+    # them indistinguishable to every client, so nothing could act on either.
+    render plain: "Not allowed", status: 403
   end
 
   rescue_from "ActiveRecord::RecordNotFound" do |exception|

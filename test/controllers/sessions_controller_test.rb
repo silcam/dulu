@@ -46,6 +46,19 @@ class SessionsControllerTest < ActionDispatch::IntegrationTest
     assert_empty @response.body
   end
 
+  # The companion to the test above, and the pair is the point: these two conditions used
+  # to answer with the same status. A client cannot act on "your session expired" while a
+  # permission denial is indistinguishable from it -- it would bounce an authenticated
+  # user to sign in for clicking a button they simply may not use. Kept here rather than
+  # with its siblings in workshops_controller_test so that neither half of the pair can be
+  # changed without seeing the other.
+  test 'permission denial is 403, not 401' do
+    api_login people(:Drew)
+    api_post("/api/activities/#{linguistic_activities(:EwondoGrammarIntro).id}/workshops",
+             workshop: { name: 'Word Order' })
+    assert_response :forbidden
+  end
+
   test '/login if already logged in' do
     api_login
     get '/login'
