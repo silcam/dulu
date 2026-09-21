@@ -155,10 +155,7 @@ class PersonTest < ActiveSupport::TestCase
   test 'Search' do
     results = Person.search 'drew'
     assert_equal 1, results.count
-    assert_equal 'Drew Mambo', results[0][:title]
-    hdi_language = languages :Hdi
-    assert_includes results[0][:subresults],
-                    title: 'Hdi', model: hdi_language,
-                    description: 'Translation Consultant' 
+    assert_equal({ title: 'Drew Mambo', model: @drew, description: 'Translation Consultant' },
+                 results[0])
   end
 end

@@ -1788,7 +1788,9 @@ test clicked the dashboard sidebar, on the assumption that `dashboard.spec.js`'s
 `Searcher` is *not* a route consumer either, on two counts — `Activity.search` is
 commented out of `Api::SearchesController`, and `flattenResults`
 (`Searcher.tsx:98`) discards the result of `flatResults.concat(...)`, so subresults never
-render at all. Notification links are the wildcard route's only live caller.
+render at all. Notification links are the wildcard route's only live caller. *(Both since
+resolved in 8d item 4 — the hierarchy was deleted, not repaired. `Searcher` is still not a
+route consumer.)*
 
 Full suite green at **97/97** including `people.spec.js` — **one run; this is not a
 status change.** See 6e's flakiness note above and re-read it before treating any Cypress
@@ -2164,10 +2166,10 @@ each independently reviewable and independently deployable:
 | **8a** | Security | 6 | brakeman findings plus the `hd` question. Reviewable by someone who does not care about Rails versions. |
 | **8b** | Deploy mechanics | 7 | **Not sequenced after Phase 7** — needed at the *first* deploy of this branch, whenever that is. |
 | **8c** | Lint findings | 144 findings, 7 tasks | The first eslint run this repo has ever had (Phase 7d). Mostly mechanical; a handful are real. |
-| **8d** | Correctness defects | 7 | Real bugs found during the upgrade and left alone on purpose. Each needs a test first. |
-| **8e** | Test-suite debt | 9 | Flakes, a skipped spec that documents a live bug, tests that assert nothing, no CI. |
-| **8f** | Dead code and modelling | 4 | Debt the port created or exposed. Nothing here is broken today. |
-| **8g** | Deferred majors and forward-compat | 10 | Everything Phase 7 chose not to bump, with the reason. Includes one warning that becomes an error on a future dependency. |
+| **8d** | Correctness defects | 8 | Real bugs found during the upgrade and left alone on purpose. Each needs a test first. |
+| **8e** | Test-suite debt | 11 | Flakes, a skipped spec that documents a live bug, tests that assert nothing, no CI. |
+| **8f** | Dead code and modelling | 10 | Debt the port created or exposed. Nothing here is broken today. |
+| **8g** | Deferred majors and forward-compat | 14 | Everything Phase 7 chose not to bump, with the reason. Includes one warning that becomes an error on a future dependency. |
 
 **Nothing in 8c–8g is a regression from this upgrade unless it says so.** Where a defect
 was verified to predate the upgrade, the verification is recorded with it — that
@@ -3102,14 +3104,49 @@ test written before the fix.
    thing on a slow connection. Fix by tagging each request and ignoring any response that
    is not for the current query.
 
-4. **Two defects in the global search, both found in Phase 6g while establishing
-   that `Searcher` is not a route consumer.** Neither is a regression from this upgrade;
-   both predate it. (a) `Searcher.tsx`'s `flattenResults` discards the result of
-   `flatResults.concat(flattenResults(result.subresults.results, level + 1))` — the return
-   value is thrown away, so **subresults never render at all**. (b) `Activity.search` is
-   commented out of `Api::SearchesController`, so activities are absent from global search
-   entirely. Worth asking whether (b) was deliberate before "fixing" it; (a) is plainly a
-   bug.
+4. **Global search is a flat list — resolved 2026-09-21, and not the way this entry
+   originally proposed.** Two defects were filed here in Phase 6g, neither a regression
+   from this upgrade. (a) `Searcher.tsx`'s `flattenResults` discarded the result of
+   `flatResults.concat(...)`, so **no subresult had rendered since the function was
+   written** (`b2cc63c`, Feb 2019) — the server computed them, serialised them and shipped
+   them, and the client dropped them. `searches_controller_test.rb` pinned the payload: two
+   child rows for Drew Mambo that never reached a screen. (b) `Activity.search` was
+   commented out of `Api::SearchesController`.
+
+   The entry called (a) "plainly a bug" and proposed repairing the `concat`. **That was
+   wrong, and the correction came from asking the user how to reach it as an end user:
+   hierarchy in search results is not the use case.** A search result is a way to reach a
+   page, and every child the tree listed is already on the page the parent links to —
+   `PersonPage.tsx:177` renders the person's participations, `ClusterPage.tsx:113` its
+   languages (both verified, not assumed). So the hierarchy was deleted rather than fixed:
+   `1192168` (client — `subresults` and `level` off `SearchResult`, `flattenResults` gone,
+   top-level rendering pixel-identical because the inline style computed `8 + 8 * 0` and
+   the CSS already sets `padding: 8px`) and the server half (the subresult loops in
+   `Person`, `Cluster` and `Organization`, and the jbuilder's recursive branch). With the
+   recursion gone `_search.json.jbuilder` had one caller and no reason to be a partial, so
+   it was inlined into `search.json.jbuilder` and deleted.
+
+   **The server half also removed an N+1**, measured before and after: `Person.search`
+   was 1 query + 2 per matched person (5 for a query matching two people); every search
+   method is now exactly 1 query regardless of match count.
+
+   On (b), `git show` answered the question this entry told us to put to the user.
+   `Activity.search` was commented out in `91819c6` (Dec 2018) because the same commit had
+   `# belongs_to :bible_book` commented out in `activity.rb` — `TranslationActivity.search`
+   does `where bible_book: book`, so it raised. The association is long restored and the
+   method works (`Activity.search("Genesis")` returns the book with 4 children). But
+   re-enabling it is now a **design change, not an uncomment**: its entire payload is
+   subresults hung under a route-less `BibleBook` parent, so flat it needs restructuring to
+   one row per activity (`"Genesis : Hdi"`). Filed in 8f. `Publication.search` stays out for
+   an unrelated reason — it links to `/publications/:id`, which no React route matches, so
+   `MainRouter`'s `path="*"` would swallow it and render the dashboard. Both reasons are
+   now recorded in the controller rather than only here.
+
+   **Method note.** The plan proposed a fix for a "bug" that was really a product decision
+   in disguise. What surfaced it was the user asking *how do I test this as an end user* —
+   a question that forces the reachability of a change to be stated, and which no amount of
+   reading `Searcher.tsx` would have answered. Worth asking of any defect filed from code
+   reading rather than from a report.
 
 5. **`DomainReport#gen_activity_items` had no deterministic order — fixed 2026-09-21.**
    It ordered by `start_date: :desc` with no tiebreaker. That is not a total order, so
@@ -3500,6 +3537,30 @@ Nothing here is broken today.
    `updateReportParams`) or compares the params structurally rather than by serialisation.
    Not attempted during the upgrade: it is a change to how the report reloads, and the
    current code is stable against the server we have.
+
+10. **Activities and publications are missing from global search, and putting them back
+    is a design task.** Filed 2026-09-21 out of 8d item 4. `Activity.search` and
+    `Publication.search` have been commented out of `Api::SearchesController` since
+    `91819c6` (Dec 2018); the original cause — a concurrent refactor had commented out
+    `belongs_to :bible_book`, so `TranslationActivity.search` raised — is long gone, and
+    both methods work today. Two separate things now stand in the way.
+
+    `Activity.search`'s entire payload is *subresults*: a route-less `BibleBook` parent
+    with one child per translation activity. Global search is a flat list as of 8d item 4,
+    so re-enabling it as-is produces a bare unlinked "Genesis" row with nothing under it.
+    Flat, it wants one row per activity (`"Genesis : Hdi"` linking to `/activities/:id`),
+    which is a rewrite of the method, not an uncomment. `MediaActivity.search` also emits
+    a **relative** route (`"activities/#{id}"`, missing the leading slash that
+    `LinguisticActivity.search` has) — currently unreachable dead code that goes live the
+    moment the controller line is restored, and it must be fixed in the same change.
+
+    `Publication.search` is blocked on something simpler: it emits
+    `model_path(publication)` → `/publications/:id`, and **no React route matches**, so
+    `MainRouter`'s `path="*"` swallows it and renders the dashboard. It needs a publication
+    page, or a link to the publication's language instead.
+
+    Both reasons are recorded at the code — in `Api::SearchesController` and above
+    `TranslationActivity.search` — so this entry is the plan, not the only record.
 
 ### 8g. Deferred majors and forward-compatibility
 

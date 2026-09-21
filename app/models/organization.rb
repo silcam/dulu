@@ -30,20 +30,8 @@ class Organization < ApplicationRecord
   end
 
   def self.search(query)
-    orgs = Organization.multi_word_where(query, "long_name", "short_name")
-    results = []
-    orgs.each do |org|
-      subresults = []
-      # org.current_programs.each do |program|
-      #   subresults << {title: program.name,
-      #                  model: program,
-      #                  description: I18n.t(:Language_program)}
-      # end
-      results << { title: org.name,
-                   model: org,
-                   description: org.description,
-                   subresults: subresults }
+    Organization.multi_word_where(query, "long_name", "short_name").map do |org|
+      { title: org.name, model: org, description: org.description }
     end
-    results
   end
 end

@@ -72,6 +72,16 @@ class TranslationActivity < Activity
     activities.update archived: true
   end
 
+  # Unreachable, and in a shape the API can no longer render. Api::SearchesController
+  # has had Activity.search commented out since 91819c6 (Dec 2018) -- a concurrent
+  # refactor had commented out `belongs_to :bible_book`, so this method raised; the
+  # association is back and the method works, but the controller line was never
+  # restored. Meanwhile the subresults below no longer serialise: global search is a
+  # flat list now and _search.json.jbuilder has no branch for nested rows. This
+  # method is the one search whose entire payload is subresults, hung under a
+  # route-less BibleBook parent, so re-enabling it means restructuring to one row
+  # per activity ("Genesis : Hdi") -- a design change, not an uncomment. Filed in
+  # UPGRADE_PLAN.md Phase 8f.
   def self.search(query)
     books = BibleBook.where("english_name ILIKE ? OR unaccent(french_name) ILIKE unaccent(?)", "%#{query}%", "%#{query}%")
     results = []

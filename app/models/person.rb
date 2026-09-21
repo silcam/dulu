@@ -114,21 +114,9 @@ class Person < ApplicationRecord
   # end
 
   def self.search(query)
-    people = Person.multi_word_where(query, 'first_name', 'last_name')
-    results = []
-    people.each do |person|
-      subresults = []
-      person.current_participants.each do |participant|
-        subresults << { title: participant.cluster_language.display_name,
-                        model: participant.cluster_language,
-                        description: participant.roles_text }
-      end
-      results << { title: person.name,
-                   model: person,
-                   description: person.roles_text,
-                   subresults: subresults }
+    Person.multi_word_where(query, 'first_name', 'last_name').map do |person|
+      { title: person.name, model: person, description: person.roles_text }
     end
-    results
   end
 
   def self.basic_search(query)

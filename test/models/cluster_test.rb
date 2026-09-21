@@ -32,10 +32,6 @@ class ClusterTest < ActiveSupport::TestCase
     ndop = results.first
     assert_equal "Ndop Cluster", ndop[:title]
     assert_equal @ndop, ndop[:model]
-    assert_equal 2, ndop[:subresults].length
-    bangolan = languages :Bangolan
-    bang_res = { title: "Bangolan", model: bangolan, description: "Language Program" }
-    assert_includes ndop[:subresults], bang_res
   end
 
   private
