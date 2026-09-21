@@ -2168,7 +2168,7 @@ each independently reviewable and independently deployable:
 | **8c** | Lint findings | 144 findings, 7 tasks | The first eslint run this repo has ever had (Phase 7d). Mostly mechanical; a handful are real. |
 | **8d** | Correctness defects | 8 | Real bugs found during the upgrade and left alone on purpose. Each needs a test first. |
 | **8e** | Test-suite debt | 11 | Flakes, a skipped spec that documents a live bug, tests that assert nothing, no CI. |
-| **8f** | Dead code and modelling | 10 | Debt the port created or exposed. Nothing here is broken today. |
+| **8f** | Dead code and modelling | 11 | Debt the port created or exposed. Nothing here is broken today. |
 | **8g** | Deferred majors and forward-compat | 14 | Everything Phase 7 chose not to bump, with the reason. Includes one warning that becomes an error on a future dependency. |
 
 **Nothing in 8c–8g is a regression from this upgrade unless it says so.** Where a defect
@@ -3270,10 +3270,57 @@ test written before the fix.
    reload puts the user back where they were after signing in, where root would throw the
    deep link away.
 
-7. **A stale CSRF token on the sign-in button gives an error page.** Leave the welcome
-   page open past session expiry, click sign in, and `omniauth-rails_csrf_protection`
-   raises from middleware. Rails maps that to 422, but the user sees an error page rather
-   than a retry. Rescue it and re-render the welcome page.
+7. **A stale CSRF token on the sign-in button — closed 2026-09-21 as not a defect.**
+   This entry claimed that a stale token on the sign-in POST shows the user an error page,
+   and proposed rescuing it. Measured, it does not: **in production the user is returned
+   to the welcome page**, which is what the fix would have built.
+
+   `OmniAuth::RailsCsrfProtection::TokenVerifier` raises
+   `ActionController::InvalidAuthenticityToken`, but that raise happens *inside*
+   `OmniAuth::Strategy#call!`'s `rescue StandardError` (`strategy.rb:191-199`), so it never
+   escapes to Rails. It becomes `fail!` → `OmniAuth::FailureEndpoint`, which reads:
+
+   ```ruby
+   raise_out! if OmniAuth.config.failure_raise_out_environments.include?(ENV['RACK_ENV'].to_s)
+   redirect_to_failure
+   ```
+
+   `failure_raise_out_environments` defaults to `['development']` and
+   `config/initializers/omniauth.rb` overrides no OmniAuth config, so `ENV['RACK_ENV']`
+   alone decides. Probed, with `allow_forgery_protection` forced on and
+   `OmniAuth.config.test_mode` off:
+
+   | `RACK_ENV` | Result |
+   |---|---|
+   | `"development"` | 422, error page |
+   | `"production"` | 302 → `/auth/failure` → 301 → `/` → welcome page |
+   | `"staging"` | welcome page |
+   | `""` / unset | welcome page |
+
+   `routes.rb:82` (`get '/auth/failure', to: redirect('/')`) is what closes the loop. The
+   user clicks sign in again with a fresh token and it works. The development error page is
+   real — confirmed against a dev server on a scratch port — and is OmniAuth's deliberate
+   design: raise out in development so a developer sees the failure rather than a silent
+   bounce.
+
+   **Unverified, and deliberately left so:** how the production host starts puma, and
+   therefore whether `RACK_ENV` is set there. The chain above rests on
+   `rack-2.2.24/lib/rack/server.rb:403` (`ENV["RACK_ENV"] = options[:environment]`), which
+   is what `bin/rails server` does. What makes it near-moot is that the raise-out list is
+   `['development']` *exactly* — `nil`, `""`, `"production"` and everything else take the
+   graceful path, so only a literal `RACK_ENV=development` in production reproduces it. To
+   settle it on the host: `tr '\0' '\n' < /proc/<puma-pid>/environ | grep RACK_ENV`.
+
+   Not reconciled, because neither is production behaviour: the dev *server* returned the
+   static `public/500.html` (1477 bytes, matching the file exactly) while the test
+   environment with `RACK_ENV=development` returned 422.
+
+   **Where the entry went wrong, because the pattern matters.** The Phase 4 note that
+   spawned it hedged correctly — *"One rough edge, **unverified in production**... this
+   could not be confirmed over plain HTTP locally."* Promoting it into 8d dropped the hedge
+   and turned an unverified worry into an assertion about what users see. Third entry this
+   phase to claim more than its evidence supported. When promoting a hedged observation
+   into a defect list, the hedge is the part that must survive the move.
 
 8. **Four type lies the `i18n` `any` was hiding — found and closed 2026-09-18.** Filed
    here rather than buried in the 8c commit because they are behaviour, not typing, and
@@ -3561,6 +3608,27 @@ Nothing here is broken today.
 
     Both reasons are recorded at the code — in `Api::SearchesController` and above
     `TranslationActivity.search` — so this entry is the plan, not the only record.
+
+11. **Every OmniAuth failure bounces to the welcome page with no explanation.** Found
+    2026-09-21 while closing 8d item 7. `routes.rb:82` is
+    `get '/auth/failure', to: redirect('/')`, which discards the `?message=` parameter
+    OmniAuth puts there. For a stale CSRF token that is the right outcome — the user
+    clicks again and it works — but the same path carries real failures: a user who
+    cancels Google's consent screen (`access_denied`) is returned to the welcome page as
+    if nothing happened, with no hint that anything was declined or that they should try
+    again.
+
+    The app already has the pattern this wants. `sessions#create` sets
+    `session[:failed_login]` for an unrecognised address, `require_login` reads it into
+    `@failed_login_email` and clears it, and `welcome.html.erb:47` renders a red message.
+    A small controller action behind `/auth/failure` could set a sibling key from
+    `params[:message]` and render the same way, instead of a bare route-level redirect.
+
+    Weakly held, and worth saying: the route is not load-bearing. Deleting it entirely
+    still lands on the welcome page, because `get '*route'` → `web#index` →
+    `require_login` renders it too. So this is a message-quality item, not a correctness
+    one, and there is no regression test worth writing for the redirect itself — the
+    behaviour being relied on is inside the gem.
 
 ### 8g. Deferred majors and forward-compatibility
 
