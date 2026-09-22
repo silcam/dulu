@@ -2168,7 +2168,7 @@ each independently reviewable and independently deployable:
 | **8c** | Lint findings | 144 findings, 7 tasks | The first eslint run this repo has ever had (Phase 7d). Mostly mechanical; a handful are real. |
 | **8d** | Correctness defects | 8 | Real bugs found during the upgrade and left alone on purpose. Each needs a test first. |
 | **8e** | Test-suite debt | 13 | Flakes, a skipped spec that documents a live bug, tests that assert nothing, a gate that lied in both directions, no CI. |
-| **8f** | Dead code and modelling | 12 | Debt the port created or exposed. All pre-existing, none caused by the upgrade -- but item 12 (logout may not log you out) *is* broken today. |
+| **8f** | Dead code and modelling | 11 | Debt the port created or exposed. Nothing here is broken today. |
 | **8g** | Deferred majors and forward-compat | 14 | Everything Phase 7 chose not to bump, with the reason. Includes one warning that becomes an error on a future dependency. |
 
 **Nothing in 8c–8g is a regression from this upgrade unless it says so.** Where a defect
@@ -3674,9 +3674,10 @@ test written before the fix.
 
 ### 8f. Dead code and modelling
 
-Nothing here was caused by the upgrade. Items 1-11 are not broken today either; **item 12
-is** -- it is a live defect, found while diagnosing 8e item 10, and it is listed here
-rather than in 8d only because it is pre-existing and wants its own change.
+Nothing here is broken today. (A live defect *was* filed here briefly -- logout not
+reliably logging out, found while diagnosing 8e item 10 -- but it is pre-existing and was
+deferred to **Post-release fixes** on 2026-09-22, so this section is back to what its
+title says.)
 
 1. **`NewOrganizationForm` navigates to a URL nothing else in the app uses.** After
    saving it goes to `/organizations/:id`, while every link in the app points at
@@ -3873,34 +3874,6 @@ rather than in 8d only because it is pre-existing and wants its own change.
     one, and there is no regression test worth writing for the redirect itself — the
     behaviour being relied on is inside the gem.
 
-12. **Logging out may not log you out, and it is the same mechanism as 8e item 10.**
-    Found 2026-09-22 while diagnosing that flake, and filed rather than fixed because it
-    is a different change with its own testing.
-
-    `log_out` is `session.delete(:user_id)` -- not `reset_session`. Rails writes
-    `Set-Cookie: _dulu_session` on *every* response, including ones that only read the
-    session (measured; see 8e item 10). So if the SPA has any request in flight when the
-    user clicks Logout, that request's response restores the pre-logout cookie: the page
-    navigates to the welcome screen and looks logged out, while the cookie still
-    authenticates. Reload, and you are back in.
-
-    This is not hypothetical timing. `CoreData` refreshes three collections on every
-    navigation, and every board fetches on mount, so there is usually something in flight.
-
-    Impact is real but narrow: it needs the user's own browser, and the visible state is
-    already "logged out", so the likely victim is someone on a shared machine who believes
-    they have signed off. `login_as` (admin impersonation) has the mirror problem -- an
-    in-flight response can drop the impersonation, or restore it after it ends.
-
-    The fix is `reset_session` in `log_out` rather than deleting one key, which also
-    guards against session fixation. Worth confirming first whether anything depends on
-    other session keys surviving a logout -- `session[:original_request]` is set by
-    `require_login`, and `reset_user_session` already exists precisely to preserve the
-    hash across a `reset_session`, so the pattern is in the codebase.
-
-    **Not a Rails 8 regression.** `session.delete` has been there since the app was
-    written; the upgrade neither caused it nor made it worse.
-
 ### 8g. Deferred majors and forward-compatibility
 
 Everything Phase 7 chose not to bump, with the reason. None of these is urgent; all of
@@ -3992,6 +3965,71 @@ Rails 7 retires it, and Node 12 blocks the modern Jest the frontend needs. Attem
 Rails 7 before the bundler migration means doing the bundler migration anyway, under
 pressure, with a broken build. Phase 2 is where the two halves genuinely touch — after
 that, the split holds.
+
+## Post-release fixes
+
+Real defects, deliberately **not** fixed on the upgrade branch. Every one of them
+predates the upgrade by years and none is made worse by shipping it, so the release does
+not wait on them. Decided 2026-09-22.
+
+### 1. Logging out may not log you out
+
+**Same mechanism as 8e item 10.**
+Found 2026-09-22 while diagnosing that flake, and filed rather than fixed because it
+is a different change with its own testing.
+
+`log_out` is `session.delete(:user_id)` -- not `reset_session`. Rails writes
+`Set-Cookie: _dulu_session` on *every* response, including ones that only read the
+session (measured; see 8e item 10). So if the SPA has any request in flight when the
+user clicks Logout, that request's response restores the pre-logout cookie: the page
+navigates to the welcome screen and looks logged out, while the cookie still
+authenticates. Reload, and you are back in.
+
+This is not hypothetical timing. `CoreData` refreshes three collections on every
+navigation, and every board fetches on mount, so there is usually something in flight.
+
+Impact is real but narrow: it needs the user's own browser, and the visible state is
+already "logged out", so the likely victim is someone on a shared machine who believes
+they have signed off. `login_as` (admin impersonation) has the mirror problem -- an
+in-flight response can drop the impersonation, or restore it after it ends.
+
+**Correction, 2026-09-22: `reset_session` is not the fix, and this entry said it was.**
+Measured: log in, make an ordinary request and keep the cookie its response set, then
+log out. The current cookie correctly gives 401 -- and **the kept one still gives
+200**. A cookie session store has no server-side invalidation, so every copy of the
+pre-logout cookie stays valid until it expires, which here is seven days.
+`reset_session` issues a clean new cookie and guards session fixation, both worth
+having, but it cannot make an already-issued cookie stop working. A late in-flight
+response restores the old cookie and the user is simply logged in again.
+
+The user path is worth stating exactly, because it bounds the window. Logout is an
+XHR, not a navigation: `NavBar.tsx` does `await DuluAxios.post("/logout", {})` and
+then `document.location.href = "/"`. So anything still pending when that POST returns
+can land before the page is torn down.
+
+Two real fixes, and they are not alternatives so much as different depths:
+  - **Client**: make logout a genuine navigation (form POST to `/logout`, let the
+    server's redirect be the page change) so the browser cancels pending requests as
+    part of committing it. Cheap, no schema, no change to authentication. Narrows the
+    window a great deal; does not provably close it, and does nothing about a copied
+    cookie.
+  - **Server**: a `session_token` column on `people`, written into the session at
+    login, compared in `current_user`, rotated on logout. Deterministic -- a restored
+    cookie fails because the token no longer matches -- and it also ends cookie replay
+    after logout. Costs a migration and touches authentication.
+
+**Deferred by decision on 2026-09-22, not by oversight, and not a Rails 8 regression.**
+It is pre-existing --
+`session.delete(:user_id)` dates to `87a4015`, "Add login and session", 2017-04-28; the
+XHR logout in `NavBar.tsx` to `f8e7d35`, 2019-05-08; `expire_after: 7.days` to `8a534d6`,
+2017-10-27. Nothing in the Rails 8 upgrade touched any of it, so releasing does not make
+it worse. Worth noting that `8a534d6`'s own message reads "Also reset the session on each
+login to defend against Session Fixation" -- fixation *was* considered, deliberately, and
+handled on login via `reset_user_session`. Logout never got the same treatment.
+
+**Before picking a fix, measure the frequency.** The mechanism is proven; how often it
+actually bites a user is not. That number should decide between the cheap client-side
+change and the migration.
 
 ## Deferred / explicitly out of scope
 
