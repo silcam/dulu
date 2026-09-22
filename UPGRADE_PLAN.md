@@ -2167,7 +2167,7 @@ each independently reviewable and independently deployable:
 | **8b** | Deploy mechanics | 7 | **Not sequenced after Phase 7** — needed at the *first* deploy of this branch, whenever that is. |
 | **8c** | Lint findings | 144 findings, 7 tasks | The first eslint run this repo has ever had (Phase 7d). Mostly mechanical; a handful are real. |
 | **8d** | Correctness defects | 8 | Real bugs found during the upgrade and left alone on purpose. Each needs a test first. |
-| **8e** | Test-suite debt | 12 | Flakes, a skipped spec that documents a live bug, tests that assert nothing, no CI. |
+| **8e** | Test-suite debt | 13 | Flakes, a skipped spec that documents a live bug, tests that assert nothing, a gate that lied in both directions, no CI. |
 | **8f** | Dead code and modelling | 12 | Debt the port created or exposed. All pre-existing, none caused by the upgrade -- but item 12 (logout may not log you out) *is* broken today. |
 | **8g** | Deferred majors and forward-compat | 14 | Everything Phase 7 chose not to bump, with the reason. Includes one warning that becomes an error on a future dependency. |
 
@@ -3572,45 +3572,105 @@ test written before the fix.
     does not rest on it -- the cookie rewrite is proven by curl and the wrong session by
     the page capture -- but the ratio should not be quoted as though it were.
 
-11. **`yarn typecheck` does not cover the test directory, and the config that looks like
-   it would matches nothing.** `tsconfig.json` excludes `test`, so `tsc --noEmit` compiles
-   only `app/javascript`. The obvious second step — `tsc -p tsconfig.test.json` — fails
-   with **TS18003, "No inputs were found"**: its `include` is `["**/*.spec.ts"]`, but the
-   Jest tests are named `*.test.ts`. So that config typechecks **zero files**; ts-jest uses
-   it for `compilerOptions` only, compiling each test file as it runs it. Found the hard way on 2026-09-18: after
-   the `i18n` change, `yarn typecheck` was **clean** while `test/javascript/util/
-   arrayUtils.test.ts` did not compile at all — Jest reported "Test suite failed to run",
-   which reads like a broken test rather than a type error, and the suite count silently
-   dropped from 125 tests to 108. The failure was real (a `fakeT` stub could not satisfy
-   the generic `T`) and the fix was the right one, but **a green `typecheck` said nothing
-   about it**. Either add a second `tsc -p tsconfig.test.json` to the script, or drop the
-   `test` exclusion. Note also that a suite which fails to *compile* subtracts its tests
-   from the total rather than reporting failures — so watch the test count, not just the
-   pass/fail line.
+11. **~~`yarn typecheck` does not cover the test directory~~ Fixed 2026-09-22.**
 
-**And a standing hazard rather than a task:** `yarn testPacks` — and therefore
-`yarn test:cypress:gate` — **exits 0 with "Everything's up-to-date" on the run immediately
-after a compile that failed**, because shakapacker records the digest regardless of
-webpack's result. Cypress then runs against the last *good* bundle, so the suite is green
-while the code does not compile. Read the **first** run's output, and `rm -rf
-tmp/shakapacker` whenever a build's result is in doubt.
+    `tsconfig.json` excludes `test`, so `tsc --noEmit` compiled only `app/javascript`. The
+    obvious second step, `tsc -p tsconfig.test.json`, failed with **TS18003, "No inputs
+    were found"**: its `include` was `["**/*.spec.ts"]` and there is not one `.spec.ts` in
+    the repo -- the Jest tests are `*.test.ts`/`.js`, and the Cypress specs are `.spec.js`
+    under `spec/`, which that config excludes. So it typechecked **zero files**, and the
+    only thing keeping it alive was ts-jest, which reads its `compilerOptions` and ignores
+    `include` entirely.
 
-12. **`shakapacker:compile` can report "Everything's up-to-date" after a real source
-    change.** Found 2026-09-21 while verifying the 8d item 3 fix. A `yarn testPacks` run
-    immediately after editing `SearchTextInput.tsx` printed *"Everything's up-to-date.
-    Nothing to do"* and skipped the build, so the Cypress run that followed exercised the
-    **previous** bundle. The effect is worse than a slow feedback loop: a test written to
-    fail against the old code passed, and looked like confirmation that the fix worked.
+    Two changes. `tsconfig.test.json` now includes `test` **and
+    `app/javascript/types`** -- the app config has no `include` at all so it sweeps the
+    ambient `*.css` and `*.png` declarations up with everything else, while a program
+    scoped to `test` does not, and without them every app component a test imports fails
+    on its `import styles from "./Foo.css"`. And `yarn typecheck` is now two programs:
+    `tsc --noEmit && tsc -p tsconfig.test.json`. Both clean.
 
-    Not diagnosed — the digest in `tmp/shakapacker/last-compilation-digest-test` was
-    rewritten, so the compiler believed it had done the work. Whether the watched-paths
-    digest misses `.tsx` under some condition, or the digest was written before the source
-    change settled, is unresolved.
+    **Why it mattered**, and the reason to keep the second program in the gate: on
+    2026-09-18 `yarn typecheck` was green while `test/javascript/util/arrayUtils.test.ts`
+    did not compile at all. Jest reported "Test suite failed to run", which reads like a
+    broken test rather than a type error, and the suite count silently fell from 125 to
+    108. Verified again on 2026-09-22 by putting a deliberate `const n: number = "not a
+    number"` into a test file: `typecheck` named the file and line, while Jest alone said
+    **`Tests: 0 total`** -- a suite that fails to compile *subtracts* its tests from the
+    total rather than failing them. **Watch the count, not just the pass line.**
 
-    **Working rule until it is:** any before/after check on application behaviour must
-    start with `rm -rf tmp/shakapacker public/packs-test`. A green run against a stale
-    bundle is indistinguishable from a green run against the fix, which makes this a
-    correctness problem for the gate, not a performance one.
+12. **~~`shakapacker:compile` can report "Everything's up-to-date" after a real source
+    change.~~ Diagnosed and fixed 2026-09-22 — and the cause was not what this item
+    guessed.**
+
+    The guess was that the watched-paths digest misses `.tsx` under some condition. It
+    does not: measured directly, appending a line to `SearchTextInput.tsx` changed the
+    digest and forced a rebuild. That theory is dead.
+
+    **What it actually is: a failed compile still records the digest.** Reproduced
+    deterministically -- put a syntax error in a `.tsx`, and:
+
+    | | result |
+    |---|---|
+    | run 1 | compile **fails**, exit 1, 15 error lines — digest recorded anyway |
+    | run 2 | *"Everything's up-to-date"*, **exit 0**, broken source untouched, stale bundle in place |
+
+    `yarn test:cypress:gate` is `yarn testPacks && cypress run`, so run 2 hands Cypress the
+    last **good** bundle and the suite goes green over code that does not compile. This was
+    already written up below as "a standing hazard rather than a task"; it is a gate
+    correctness bug, and it is now fixed rather than documented.
+
+    **The fix** is in `testPacks`: delete the digest when the compile fails, so the next
+    run rebuilds and fails again honestly. Incremental caching is preserved -- a clean
+    source still legitimately skips on the second run. Verified both directions.
+
+    This also explains the original 2026-09-21 sighting, where a `yarn testPacks` after
+    editing `SearchTextInput.tsx` skipped the build and the Cypress run exercised the
+    previous bundle, so a test written to fail against the old code passed and looked like
+    confirmation of a fix. Almost certainly a preceding failed or interrupted compile, not
+    a missed `.tsx`.
+
+    **The working rule this item imposed can be relaxed but not dropped.** `rm -rf
+    tmp/shakapacker public/packs-test` before a before/after behaviour check is no longer
+    load-bearing for the failed-compile case. One gap remains unmeasured: editing a source
+    file *while* webpack is running. Shakapacker computes the digest before compiling, so
+    the stored digest should be the pre-edit one and the next run should rebuild -- the
+    safe direction -- but that was reasoned, not tested. Keep the clean build for anything
+    where a stale bundle would be indistinguishable from a passing fix.
+
+    Note the digest file is per-environment (`last-compilation-digest-test`); the fix is
+    scoped to `testPacks` because that is what the gate runs. A failed *development*
+    compile has the same behaviour and is not covered.
+
+
+13. **The Cypress gate reported failure on a fully green suite, and had done all along.**
+    Found 2026-09-22 while verifying items 11 and 12 -- the gate exited 1 immediately
+    after printing `yarn cypress run --project ./spec exited with code 0`.
+
+    `concurrently ... -k -s last` is the cause. `-k` kills the server as soon as Cypress
+    exits, so the **last** process to exit is always the server concurrently just killed,
+    reporting SIGTERM; `-s last` makes that the script's exit code. It is not
+    intermittent and not load-related: it is every run. Both `test:cypress:run` and
+    `test:cypress:gate` had it, which means **`yarn test:all` could not pass, ever.**
+
+    Fixed by naming the judge: `-s command-Cypress`. Verified in isolation rather than by
+    inference --
+
+    | scenario | exit | right? |
+    |---|---|---|
+    | Cypress passes, server killed at end | 0 | yes |
+    | Cypress fails | 1 | yes |
+    | server dies early, taking Cypress with it | 1 | yes -- a dead server must not pass |
+
+    **Worth pausing on.** This is item 12's failure mode with the sign flipped. Item 12 was
+    a gate that goes green over code that does not compile; this is a gate that goes red
+    over a suite that passed. The second is not the harmless direction -- a check that
+    always fails gets read as noise, and then the one real failure is read as noise too.
+    Both were in the same script, and neither was noticed because the suite was usually
+    run as a bare `yarn cypress run`, which is exactly the habit a distrusted gate creates.
+
+    Note the `//`-prefixed sibling keys in package.json: `yarn` ignores them and they
+    survive an `npm install`, which is why the reasoning for `testPacks`, `typecheck` and
+    this live next to the scripts rather than only here.
 
 ### 8f. Dead code and modelling
 

@@ -24,8 +24,21 @@
       "jsx": "react",
       "strict": true
     },
+    // "test", not "**/*.spec.ts". The old pattern matched *nothing*: there is not one
+    // .spec.ts in the repo -- the Jest tests are *.test.ts/.tsx/.js, and the Cypress
+    // specs are .spec.js under spec/, which is excluded below. So `tsc -p` on this file
+    // failed with TS18003 ("No inputs were found"), and the only thing keeping it alive
+    // was ts-jest, which reads compilerOptions and ignores include entirely.
+    //
+    // Now that it names real files, `yarn typecheck` runs it as a second program; see
+    // the note on that script in package.json.
     "include": [
-      "**/*.spec.ts"
+      "test",
+      // The ambient module declarations. The app config has no `include` at all, so it
+      // sweeps these up with everything else; this program is scoped to `test`, and a
+      // scoped program does not pick up .d.ts files outside it. Without this line every
+      // app component a test imports fails on its `import styles from "./Foo.css"`.
+      "app/javascript/types"
     ],
     "exclude": [
       "spec",

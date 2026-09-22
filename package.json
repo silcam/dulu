@@ -9,11 +9,14 @@
     "test:all:mod": "rails test && yarn jest && yarn test:cypress",
     "testServer": "bin/rails server -e test -p 3002",
     "test:cypress": "concurrently -p \"[{name}]\" -n \"Server,Cypress\" -k -c yellow,green \"yarn testServer\" \"yarn cypress open --project ./spec\"",
-    "test:cypress:run": "concurrently -p \"[{name}]\" -n \"Server,Cypress\" -k -s last -c yellow,green \"yarn testServer\" \"yarn cypress run --project ./spec\"",
-    "test:cypress:gate": "yarn testPacks && concurrently -p \"[{name}]\" -n \"Server,Cypress\" -k -s last -c yellow,green \"yarn testServer\" \"yarn cypress run --project ./spec\"",
+    "//test:cypress:run": "`-s command-Cypress`, not `-s last`. With `-k`, concurrently kills the server as soon as Cypress exits, so the *last* process to exit is always the server it just killed, reporting SIGTERM -- and `-s last` turned that into a failing exit code on a fully green suite. Both this and test:cypress:gate did it, so `yarn test:all` could not pass no matter what. Verified in isolation on 2026-09-22: Cypress passes -> 0, Cypress fails -> 1, server dies early (taking Cypress with it) -> 1. See UPGRADE_PLAN 8e item 13.",
+    "test:cypress:run": "concurrently -p \"[{name}]\" -n \"Server,Cypress\" -k -s command-Cypress -c yellow,green \"yarn testServer\" \"yarn cypress run --project ./spec\"",
+    "test:cypress:gate": "yarn testPacks && concurrently -p \"[{name}]\" -n \"Server,Cypress\" -k -s command-Cypress -c yellow,green \"yarn testServer\" \"yarn cypress run --project ./spec\"",
     "lint": "eslint",
-    "typecheck": "tsc --noEmit",
-    "testPacks": "RAILS_ENV=test bin/rails shakapacker:compile"
+    "//typecheck": "Two programs, not one. tsconfig.json excludes test/, so `tsc --noEmit` alone never looks at a single Jest test -- which mattered on 2026-09-18, when typecheck was green while test/javascript/util/arrayUtils.test.ts did not compile at all. Jest reported that as \"Test suite failed to run\", which reads like a broken test rather than a type error, and the suite count silently fell from 125 to 108. A suite that fails to compile subtracts its tests from the total instead of failing them, so watch the count, not just the pass line. See UPGRADE_PLAN 8e item 11.",
+    "typecheck": "tsc --noEmit && tsc -p tsconfig.test.json",
+    "//testPacks": "The `||` clause is not defensive padding, it closes a hole in the gate. Shakapacker records the compilation digest even when webpack FAILED, so the next run finds the digest current, prints \"Everything's up-to-date\", and exits 0 -- handing Cypress the last *good* bundle while the source does not compile. Reproduced deterministically on 2026-09-22: run 1 exit 1 with 15 error lines, run 2 exit 0, broken source untouched. Deleting the digest on failure forces the next run to rebuild and fail again, honestly. See UPGRADE_PLAN 8e item 12.",
+    "testPacks": "RAILS_ENV=test bin/rails shakapacker:compile || (rm -f tmp/shakapacker/last-compilation-digest-test; exit 1)"
   },
   "dependencies": {
     "@babel/core": "^7.21.4",
