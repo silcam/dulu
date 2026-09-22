@@ -10,11 +10,13 @@
     "noEmit": true,
     "resolveJsonModule": true,
     "skipLibCheck": true,
-    // "node" is here only for the `require()` call in components/layout/NavBar.tsx (a
-    // webpack image require). The allow-list also keeps the program small; nothing else in
-    // application code needs an ambient global, and explicit module imports (react,
-    // react-dom, redux, ...) resolve through @types regardless of this field.
-    "types": ["node"],
+    // Empty, not absent. "node" used to be here for one `require()` in NavBar.tsx, a
+    // webpack image require now written as an ordinary import (see types/images.d.ts).
+    // Nothing else in application code needs an ambient global, and explicit module
+    // imports (react, react-dom, redux, ...) resolve through @types regardless of this
+    // field -- but omitting it entirely would pull in *every* installed @types package,
+    // which is the opposite of what this allow-list is for.
+    "types": [],
     "sourceMap": true,
     // es2019, not es2020. ts-loader emits whatever `target` says and never consults
     // browserslist, so this -- not package.json -- is the real browser floor for every

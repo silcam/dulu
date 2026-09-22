@@ -27,7 +27,7 @@ test("Basic get", async () => {
 
 test("Get with params", async () => {
   expect.assertions(1);
-  const resp = await DuluAxios.get(mockUrl, mockParams);
+  await DuluAxios.get(mockUrl, mockParams);
   expect(axios.get.mock.calls[1][1]).toEqual({ params: mockParams });
 });
 
@@ -49,7 +49,7 @@ test("Put", async () => {
 
 test("Delete", async () => {
   expect.assertions(1);
-  const resp = await DuluAxios.delete(mockUrl);
+  await DuluAxios.delete(mockUrl);
   expect(axios.mock.calls[0][0]).toEqual({
     method: "delete",
     url: mockUrl,

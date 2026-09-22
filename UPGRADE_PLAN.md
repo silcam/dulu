@@ -3054,6 +3054,37 @@ The findings that are not style:
    The 15 warnings are all `jest/*` and belong to 8e as well; decide then whether the gate
    runs with `--max-warnings 0` or tolerates them.
 
+   **Done 2026-09-22 — the count reached zero and the step is in.** `test:most` and
+   `test:all` now run `yarn lint && yarn typecheck` after `yarn security` and before the
+   Rails and Jest suites, so the cheap checks fail first. The last three errors cleared
+   like this:
+
+   - **`NavBar.tsx:20`** — `<img src={require("./dulu.png")} />` became an ordinary
+     `import duluLogo from "./dulu.png"`, with a new ambient `types/images.d.ts` declaring
+     `*.png` the way `types/css.d.ts` declares `*.css`. Verified equivalent rather than
+     assumed: the emitted asset is the same path and the same content hash before and
+     after (`static/components/layout/dulu-45587f94db0a1fd8272c.png`). That also let
+     `tsconfig.json`'s `"types": ["node"]` become `"types": []` — node was there for this
+     one `require` and nothing else. Empty, not absent: omitting the field pulls in every
+     installed `@types` package.
+   - **`Activity.test.js:74`** — `toBeUndefined` without its parentheses, so the matcher
+     was never called and the test asserted nothing. Restoring them would have *failed*:
+     `nextStage` ends `itemAfter(...) || ""`, so past the last stage the name is `""`, and
+     `IStage.name` is typed `string`. Now asserts `""` and the title says so.
+   - **`DuluAxios.test.js:30,52`** — two `const resp = await ...` bindings nothing read.
+     Dropped the bindings; the other three tests do use theirs.
+
+   **`cssModules.spec.js` gained a second check** in the same spirit as its first: the nav
+   logo resolves to an asset the browser can actually load. Every other assertion in every
+   suite selects by text, so a `src` of `undefined` or `[object Object]` would ship with
+   all specs green and a broken logo on every page. It asserts the URL shape *and*
+   `naturalWidth > 0` — the attribute alone passes on a URL that 404s. Confirmed
+   non-vacuous by pointing the `img` at a missing file and watching it fail.
+
+   The 14 remaining warnings are all `jest/*` and still belong to 8e, which is also where
+   the `--max-warnings 0` question gets settled. `yarn lint` exits 0 on warnings today, so
+   the gate is green.
+
 ### 8d. Correctness defects found during the upgrade
 
 Each of these was found while doing something else, left alone deliberately, and needs a

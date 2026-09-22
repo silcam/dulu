@@ -68,10 +68,16 @@ test("translation next stage", () => {
   expect(Activity.nextStage(translationActivity)).toEqual(exp);
 });
 
-test("stage after last stage in undefined", () => {
+// `toBeUndefined` was written without its parentheses, so the matcher was never
+// called and this test asserted nothing for as long as it has existed -- eslint found
+// it, not a failure. Restoring the parentheses would have failed: `nextStage` ends
+// `itemAfter(...) || ""`, so past the last stage the name is the empty string, never
+// undefined. Asserting what the code does rather than what the old title claimed;
+// both are falsy, and `IStage.name` is typed `string`, so "" is the honest answer.
+test("stage after the last stage has no name", () => {
   const publishedActivity = Object.assign({}, translationActivity);
   publishedActivity.stage_name = "Published";
-  expect(Activity.nextStage(publishedActivity).name).toBeUndefined;
+  expect(Activity.nextStage(publishedActivity).name).toEqual("");
 });
 
 test("Some names", () => {

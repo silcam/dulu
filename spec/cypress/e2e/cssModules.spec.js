@@ -51,4 +51,20 @@ describe("CSS Modules", () => {
       })
       .should("have.css", "border-collapse", "collapse");
   });
+
+  // Same blind spot, different loader. The nav logo is the app's only image import, and
+  // every other assertion in every suite selects by text, so a `src` of "undefined" or
+  // "[object Object]" would ship with all specs green -- a broken logo on every page.
+  // `naturalWidth` is the half that matters: an attribute check alone passes on a URL
+  // that 404s, which is exactly what a wrong asset path produces.
+  it("resolves the imported logo to an asset the browser can load", () => {
+    cy.login();
+    cy.visit("/");
+    cy.get("nav img")
+      .should("have.attr", "src")
+      .and("match", /\/packs-test\/static\/.*dulu-[a-f0-9]+\.png$/);
+    cy.get("nav img").should($img => {
+      expect($img[0].naturalWidth, "logo natural width").to.be.greaterThan(0);
+    });
+  });
 });
