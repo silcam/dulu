@@ -15,6 +15,12 @@ system "tail -n 10000 log/#{Rails.env}.log | tac | sed \"/APPCLEANED/ q\" | tac 
 json_result = {}
 json_result['error'] = command_options.fetch('error_message', 'no error message')
 
+# What the browser saw when the command timed out -- the page's URL, the icons actually
+# present, the visible text, and any uncaught exception the support file swallowed. The
+# Rails log alone cannot show any of this: the server is typically finished and idle long
+# before the failure. Collected in the Cypress `fail` hook; see support/commands.js.
+json_result['diagnostics'] = command_options['diagnostics'] if command_options['diagnostics']
+
 if defined?(ActiveRecord::Base)
   json_result['records'] =
     ActiveRecord::Base.descendants.each_with_object({}) do |record_class, records|

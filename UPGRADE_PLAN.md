@@ -2168,7 +2168,7 @@ each independently reviewable and independently deployable:
 | **8c** | Lint findings | 144 findings, 7 tasks | The first eslint run this repo has ever had (Phase 7d). Mostly mechanical; a handful are real. |
 | **8d** | Correctness defects | 8 | Real bugs found during the upgrade and left alone on purpose. Each needs a test first. |
 | **8e** | Test-suite debt | 12 | Flakes, a skipped spec that documents a live bug, tests that assert nothing, no CI. |
-| **8f** | Dead code and modelling | 11 | Debt the port created or exposed. Nothing here is broken today. |
+| **8f** | Dead code and modelling | 12 | Debt the port created or exposed. All pre-existing, none caused by the upgrade -- but item 12 (logout may not log you out) *is* broken today. |
 | **8g** | Deferred majors and forward-compat | 14 | Everything Phase 7 chose not to bump, with the reason. Includes one warning that becomes an error on a future dependency. |
 
 **Nothing in 8c–8g is a regression from this upgrade unless it says so.** Where a defect
@@ -3498,34 +3498,79 @@ test written before the fix.
    (8c item 2). Nothing there can misbehave today, but "98 green" should not be read as
    having exercised it.
 
-10. **The Cypress suite has a load-dependent flake, and it moves.** First seen as
-   `navigation.spec.js` failing one of its four tests in a full-suite run on 2026-09-16
-   (35s against its usual 6s, so a retry against a timeout); green in isolation and green
-   on a re-run, so it was filed as a possible one-off. **Three more full runs settled it.**
-   Later the same day, across three consecutive 26-spec runs on two different commits:
-   run 1 green, run 2 failed `people.spec.js` "Creates person" at
-   `cy.contains("William", { timeout: 30000 })`, run 3 failed `navigation.spec.js` "Goes
-   back from the GoBar and from Cancel" at a 30s wait for `addIcon`. Both passed in
-   isolation immediately after — `people.spec.js` in 21s where the failing full run gave
-   it 44s.
+10. **~~The Cypress suite has a load-dependent flake, and it moves.~~ Diagnosed and
+    fixed on 2026-09-22: it was never a timeout. It was a session-clobbering race, and
+    the 30s wait was the test correctly waiting for an element that was never going to
+    appear.**
 
-   So it is not one flaky test. It is **a timeout that different specs cross depending on
-   what else the machine is doing**, and both sightings were on a first paint waiting for
-   API data. The spec file itself already carries a comment from an earlier bump to 30s for
-   exactly this. Raising the timeout again just moves the line; the shapes worth trying are
-   `cy.intercept` + `cy.wait` on the specific request instead of a content assertion with a
-   clock on it, and running the specs with less concurrency. Until then, **a single red
-   spec in a full run is not evidence of a regression** — re-run it in isolation before
-   believing it, and say so when reporting.
+    **The mechanism.** Rails writes `Set-Cookie: _dulu_session` on *every* response, not
+    only when the session changes -- measured directly: a plain `GET /api/regions` that
+    merely *reads* the session still rewrites the cookie. So a request left in flight by
+    the **previous** test's page, carrying the **previous** user's cookie, restores that
+    user's session if its response lands after the login's. The browser is then somebody
+    else for the rest of the test.
 
-   **2026-09-22: it fails in isolation too, which blunts that rule.** The same
-   `navigation.spec.js` test failed once in twelve isolated runs (34s against a usual 4–5s),
-   having passed 3/3 that morning and 6/6 immediately after. So "green in isolation" is
-   weaker evidence than this entry assumed — it lowers the odds rather than clearing the
-   change. When a suspect change cannot plausibly touch the failing path, say why in
-   mechanism terms as well as in run counts; the boundary fix that surfaced this could be
-   cleared on the argument that `componentDidUpdate` did nothing outside an error before
-   and does nothing now.
+    **How it presented.** `navigation.spec.js` "Goes back from the GoBar and from Cancel"
+    logs in as Olga and clicks the add-region icon. The icon is permission-gated, and
+    `olga -> regions.create: true` while `drew -> regions.create: false` (both by curl).
+    On a failing run the page had been re-sessioned as **Drew** -- the capture shows the
+    nav bar reading "Drew Logout" and the bootstrap JSON carrying Drew's id -- so the icon
+    correctly never rendered and `cy.get` waited out its 30s. Every API response on such a
+    run comes back **304**, because the user matches the earlier cached responses and the
+    ETags match; that is a symptom of the wrong session, not a cause.
+
+    **The fix** is in `cy.login` (support/commands.js): stop the previous page before
+    POSTing the login, so nothing of the old user's is in flight to clobber the new
+    cookie. One place, and every spec gets it.
+
+    **Measured**, `navigation.spec.js` alone, 40 consecutive runs each way, same
+    instrumentation, same machine: **15 failures in 40 before, 0 in 40 after.** (The
+    before-runs also carried a `cy.recordApi` intercept the after-runs did not; the flake
+    predates all instrumentation, and the cookie mechanism is proven independently by
+    curl, so the asymmetry does not carry the result.) A first after-measurement was
+    discarded as confounded -- the server was still running the temporarily-edited
+    `session_store.rb` from the experiment below.
+
+    **A hypothesis that was tested and refuted:** that `expire_after: 7.days` was what
+    forced the rewrite, so dropping it in the test env would be a one-line fix. Removing
+    it and restarting changed nothing -- `Set-Cookie` is still written on every response.
+    The config route is dead; the fix has to be in the test harness.
+
+    **What the earlier entries in this item got wrong**, recorded because the reasoning
+    was wrong in an instructive way:
+    - "It is a timeout that different specs cross depending on what else the machine is
+      doing." Load was a red herring throughout. The failing runs show the server
+      answering in single-digit milliseconds and then thirty seconds of silence.
+    - "A single red spec in a full run is not evidence of a regression -- re-run it in
+      isolation." It reproduced in isolation at better than one run in three once looked
+      for properly. Green-in-isolation was never clearing anything; it was sampling.
+    - "It is not one flaky test, it moves." True of the suite, but for a reason: **eleven
+      specs switch identity mid-run**, and each is exposed. `people.spec.js` -- this
+      item's other recorded sighting -- logs in twelve times as five different people.
+      That is a grep, not a run.
+
+    **What made it findable.** `support/e2e.js` swallowed every uncaught exception with a
+    bare `return false`, under a comment admitting it hid an "occasional spurious failure"
+    whose cause was never found. Exceptions are still swallowed, but now recorded, and the
+    Cypress `fail` hook ships a page capture -- URL, the icons actually present, the
+    visible text, the recorded API responses -- into `log_fail`'s dump. The page text is
+    what cracked this: nothing else said "Drew". Keep it. A "never found element" timeout
+    otherwise reaches the Rails log as a clean run of 200s and a silence.
+
+    A third instrument, `cy.recordApi(pattern)`, recorded each matching response's status
+    and `can` payload via `cy.intercept`. It is what showed the 304s, and it was **deleted
+    once the cause was known** rather than kept for next time. Two reasons, and the second
+    is the real one: nothing called it, and `cy.intercept` with `req.continue` buffers
+    every matching response before delivering it, so it perturbs what it measures. It also
+    reported statuses of 304, and whether the application receives those raw -- axios
+    rejects anything outside 200-299 -- was never established. An unverified diagnostic
+    that can manufacture the failures it is looking for is a trap, not an asset. If a
+    future investigation wants it back, write it then and settle that question first.
+
+    Note for anyone reading the numbers above: the before-runs carried `recordApi` and the
+    after-runs did not, so 15/40 -> 0/40 is not a perfectly controlled pair. The diagnosis
+    does not rest on it -- the cookie rewrite is proven by curl and the wrong session by
+    the page capture -- but the ratio should not be quoted as though it were.
 
 11. **`yarn typecheck` does not cover the test directory, and the config that looks like
    it would matches nothing.** `tsconfig.json` excludes `test`, so `tsc --noEmit` compiles
@@ -3569,7 +3614,9 @@ tmp/shakapacker` whenever a build's result is in doubt.
 
 ### 8f. Dead code and modelling
 
-Nothing here is broken today.
+Nothing here was caused by the upgrade. Items 1-11 are not broken today either; **item 12
+is** -- it is a live defect, found while diagnosing 8e item 10, and it is listed here
+rather than in 8d only because it is pre-existing and wants its own change.
 
 1. **`NewOrganizationForm` navigates to a URL nothing else in the app uses.** After
    saving it goes to `/organizations/:id`, while every link in the app points at
@@ -3765,6 +3812,34 @@ Nothing here is broken today.
     `require_login` renders it too. So this is a message-quality item, not a correctness
     one, and there is no regression test worth writing for the redirect itself — the
     behaviour being relied on is inside the gem.
+
+12. **Logging out may not log you out, and it is the same mechanism as 8e item 10.**
+    Found 2026-09-22 while diagnosing that flake, and filed rather than fixed because it
+    is a different change with its own testing.
+
+    `log_out` is `session.delete(:user_id)` -- not `reset_session`. Rails writes
+    `Set-Cookie: _dulu_session` on *every* response, including ones that only read the
+    session (measured; see 8e item 10). So if the SPA has any request in flight when the
+    user clicks Logout, that request's response restores the pre-logout cookie: the page
+    navigates to the welcome screen and looks logged out, while the cookie still
+    authenticates. Reload, and you are back in.
+
+    This is not hypothetical timing. `CoreData` refreshes three collections on every
+    navigation, and every board fetches on mount, so there is usually something in flight.
+
+    Impact is real but narrow: it needs the user's own browser, and the visible state is
+    already "logged out", so the likely victim is someone on a shared machine who believes
+    they have signed off. `login_as` (admin impersonation) has the mirror problem -- an
+    in-flight response can drop the impersonation, or restore it after it ends.
+
+    The fix is `reset_session` in `log_out` rather than deleting one key, which also
+    guards against session fixation. Worth confirming first whether anything depends on
+    other session keys surviving a logout -- `session[:original_request]` is set by
+    `require_login`, and `reset_user_session` already exists precisely to preserve the
+    hash across a `reset_session`, so the pattern is in the codebase.
+
+    **Not a Rails 8 regression.** `session.delete` has been there since the app was
+    written; the upgrade neither caused it nor made it worse.
 
 ### 8g. Deferred majors and forward-compatibility
 

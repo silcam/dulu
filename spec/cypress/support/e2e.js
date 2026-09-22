@@ -1,29 +1,8 @@
 // ***********************************************************
-// This example support/index.js is processed and
-// loaded automatically before your test files.
-//
-// This is a great place to put global configuration and
-// behavior that modifies Cypress.
-//
-// You can change the location of this file or turn off
-// automatically serving support files with the
-// 'supportFile' configuration option.
-//
-// You can read more here:
-// https://on.cypress.io/configuration
+// Loaded automatically before every spec file.
 // ***********************************************************
 
-// Import commands.js using ES2015 syntax:
+// commands.js first: on-rails.js imports the failure diagnostics from it, and the
+// uncaught-exception recorder has to be installed before any spec runs.
 import "./commands";
 import "./on-rails";
-
-// Alternatively you can use CommonJS syntax:
-// require('./commands')
-
-Cypress.on("uncaught:exception", err => {
-  console.log(err);
-  console.log(JSON.stringify(err));
-
-  // I'd like to throw these, but I haven't been able to track down the root cause of the occasional spurious failure
-  return false;
-});
