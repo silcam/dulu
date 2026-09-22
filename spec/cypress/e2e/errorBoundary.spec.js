@@ -7,23 +7,19 @@
 // componentDidCatch are the only class lifecycle methods left in the codebase,
 // they are the kind of thing a React major changes, and nothing covered them.
 //
-// It is SKIPPED because it fails -- on the behaviour, not on the assertions.
-// The boundary does not show its error page. Visiting the crash route leaves a
-// blank page (#app empty), throws React error #185 "Maximum update depth
-// exceeded", and posts a flood of reports to /api/errors instead of one. In
-// production that is an email per post.
+// It was written SKIPPED because it failed -- on the behaviour, not on the
+// assertions. The boundary did not show its error page: visiting the crash
+// route left a blank page (#app empty), threw React error #185 "Maximum update
+// depth exceeded", and posted a flood of reports to /api/errors instead of
+// one, which in production is an admin email per post.
 //
-// Verified NOT to be a React 18 regression: reverting react/react-dom to
-// 16.8.6 and rebuilding reproduces it identically, same blank page, same
-// flood. The cause is BaseMainRouter.componentDidUpdate, which clears
-// `hasError` whenever the previous state had it set -- so the crashing route
-// re-renders, throws again, and the boundary re-enters the cycle. It is meant
-// to let the user navigate away from the error page, and it does that by
-// re-rendering the thing that just crashed.
-//
-// Tracked as Phase 8d item 1. Unskip it there: it is the failing test that
-// item asks for, and it already asserts the behaviour the fix should produce.
-describe.skip("Error boundary", () => {
+// Verified at the time NOT to be a React 18 regression: reverting
+// react/react-dom to 16.8.6 and rebuilding reproduced it identically. The
+// cause was BaseMainRouter.componentDidUpdate clearing `hasError` on any
+// update, which re-rendered the route that had just crashed, so it threw
+// again. Fixed in Phase 8d item 1 by clearing on a location change instead,
+// and unskipped here.
+describe("Error boundary", () => {
   before(cy.appFixtures);
 
   it("Catches a render crash, reports it, and recovers", () => {
@@ -43,12 +39,13 @@ describe.skip("Error boundary", () => {
         expect(content.location.pathname).to.eq("/events/crash-me-now");
       });
 
-    // Not one per render attempt. The exact number is deliberately not
-    // asserted: React 18 invokes componentDidCatch twice for a boundary-caught
-    // error (it retries the render synchronously for a better stack), so the
-    // correct count here is 1 or 2, and the #185 loop masks which. Pin it once
-    // the loop is fixed and the real number is observable.
-    cy.get("@errorReport.all").should("have.length.at.most", 2);
+    // Exactly one, now that the loop is fixed and the real number is
+    // observable -- this assertion was `at.most(2)` while it was not. The note
+    // it replaces expected 1 or 2, on the grounds that React 18 can invoke
+    // componentDidCatch twice for a boundary-caught error; measured here, and
+    // stable across runs, it posts once. This is the assertion that would have
+    // caught the original defect on its own: the flood was thousands.
+    cy.get("@errorReport.all").should("have.length", 1);
 
     // And the user has to be able to leave.
     cy.contains("button", "Reload").should("exist");

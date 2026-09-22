@@ -97,8 +97,20 @@ class BaseMainRouter extends React.Component<IProps, IState> {
     axios.post("/api/errors", { content: content });
   }
 
-  componentDidUpdate(_prevProps: IProps, prevState: IState) {
-    if (prevState.hasError) this.setState({ hasError: false });
+  // Clear the error on a *location change*, not on any update. Clearing it whenever the
+  // previous state had it set re-rendered the route that had just crashed: it threw
+  // again, the boundary caught it again, and the app sat in React error #185 ("Maximum
+  // update depth exceeded") showing a blank page and posting to /api/errors on every
+  // pass -- one admin email per pass in production. The intent was to let the user
+  // navigate away from the error page, and that intent is kept; what it no longer does
+  // is retry the thing that failed. Pre-existing, not a React 18 regression: reverting
+  // react/react-dom to 16.8.6 reproduced it identically.
+  componentDidUpdate(prevProps: IProps, prevState: IState) {
+    if (!prevState.hasError) return;
+    const moved =
+      prevProps.location.pathname !== this.props.location.pathname ||
+      prevProps.location.search !== this.props.location.search;
+    if (moved) this.setState({ hasError: false });
   }
 
   render() {

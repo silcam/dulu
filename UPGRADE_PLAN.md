@@ -3090,20 +3090,32 @@ The findings that are not style:
 Each of these was found while doing something else, left alone deliberately, and needs a
 test written before the fix.
 
-1. **The error boundary does not show its error page; it loops and blanks the app.**
-   `/events/crash-me-now` exists precisely to exercise `BaseMainRouter`'s boundary.
-   Visiting it leaves `#app` empty, throws React error #185 ("Maximum update depth
-   exceeded"), and posts a flood of reports to `/api/errors` — in production, one
-   admin email per post. The cause is `componentDidUpdate`, which clears `hasError`
-   whenever the previous state had it set: that re-renders the route that just crashed,
-   which throws again. The intent is to let the user navigate away from the error page,
-   and it does that by re-rendering the thing that crashed. Fix by clearing `hasError`
-   on a *location change* rather than on any update — the boundary already receives
-   `location` as a prop since Phase 7c, so compare it against the location the crash
-   happened at. **Verified pre-existing, not a React 18 regression:** reverting
-   `react`/`react-dom` to 16.8.6 and rebuilding reproduces it identically. Found in
-   Phase 7a. `spec/cypress/e2e/errorBoundary.spec.js` is written and `describe.skip`ped
-   — unskip it here, it is the failing test this item would otherwise ask for.
+1. **The error boundary did not show its error page; it looped and blanked the app —
+   fixed 2026-09-22.** `/events/crash-me-now` exists precisely to exercise
+   `BaseMainRouter`'s boundary. Visiting it left `#app` empty, threw React error #185
+   ("Maximum update depth exceeded"), and posted a flood of reports to `/api/errors` — in
+   production, one admin email per post.
+
+   The cause was `componentDidUpdate`, which cleared `hasError` whenever the previous
+   state had it set: that re-rendered the route that had just crashed, which threw again.
+   The intent was to let the user navigate away from the error page, and it pursued that
+   by re-rendering the thing that crashed. It now clears on a **location change** instead
+   — the boundary has received `location` as a prop since Phase 7c — comparing `pathname`
+   and `search` against the previous props. The intent is kept; retrying the failure is
+   not. **Verified pre-existing, not a React 18 regression:** reverting `react`/`react-dom`
+   to 16.8.6 and rebuilding reproduced it identically. Found in Phase 7a.
+
+   `spec/cypress/e2e/errorBoundary.spec.js` was written and `describe.skip`ped at the time
+   as the failing test this item asked for; it is unskipped and passes. Two things about
+   it are worth keeping:
+
+   - It **pins the report count at exactly 1**. The assertion was `at.most(2)` while the
+     loop made the real number unobservable, with a note to pin it once it wasn't. Measured
+     and stable across runs: one POST. This is the assertion that would have caught the
+     original defect on its own — the flood was thousands.
+   - Confirmed **non-vacuous** by neutralising the fix and watching it fail on the
+     behaviour (`Expected to find content: 'Oh, bother!'` — the blank page), then restoring
+     it.
 
 2. **`GoBar` never recomputes its matches when its data arrives.** Its
    `useEffect(() => setMatches(search(query, props)), [query])` lists only `query` as a
@@ -3505,6 +3517,15 @@ test written before the fix.
    clock on it, and running the specs with less concurrency. Until then, **a single red
    spec in a full run is not evidence of a regression** — re-run it in isolation before
    believing it, and say so when reporting.
+
+   **2026-09-22: it fails in isolation too, which blunts that rule.** The same
+   `navigation.spec.js` test failed once in twelve isolated runs (34s against a usual 4–5s),
+   having passed 3/3 that morning and 6/6 immediately after. So "green in isolation" is
+   weaker evidence than this entry assumed — it lowers the odds rather than clearing the
+   change. When a suspect change cannot plausibly touch the failing path, say why in
+   mechanism terms as well as in run counts; the boundary fix that surfaced this could be
+   cleared on the argument that `componentDidUpdate` did nothing outside an error before
+   and does nothing now.
 
 11. **`yarn typecheck` does not cover the test directory, and the config that looks like
    it would matches nothing.** `tsconfig.json` excludes `test`, so `tsc --noEmit` compiles
