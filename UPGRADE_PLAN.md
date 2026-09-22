@@ -2167,7 +2167,7 @@ each independently reviewable and independently deployable:
 | **8b** | Deploy mechanics | 7 | **Not sequenced after Phase 7** — needed at the *first* deploy of this branch, whenever that is. |
 | **8c** | Lint findings | 144 findings, 7 tasks | The first eslint run this repo has ever had (Phase 7d). Mostly mechanical; a handful are real. |
 | **8d** | Correctness defects | 8 | Real bugs found during the upgrade and left alone on purpose. Each needs a test first. |
-| **8e** | Test-suite debt | 11 | Flakes, a skipped spec that documents a live bug, tests that assert nothing, no CI. |
+| **8e** | Test-suite debt | 12 | Flakes, a skipped spec that documents a live bug, tests that assert nothing, no CI. |
 | **8f** | Dead code and modelling | 11 | Debt the port created or exposed. Nothing here is broken today. |
 | **8g** | Deferred majors and forward-compat | 14 | Everything Phase 7 chose not to bump, with the reason. Includes one warning that becomes an error on a future dependency. |
 
@@ -3095,14 +3095,81 @@ test written before the fix.
    `navigation.spec.js`'s wait-for-a-table-row, added in Phase 7c purely to work around
    this, is now ordinary determinism and its comment says so.
 
-3. **The person/organization search pickers do not discard stale responses.** Typing into
-   a picker fires a request per keystroke and each response overwrites the results list,
-   so a slow earlier response can land after a later one and replace the correct results.
-   Observed in E2E as pressing Enter selecting the wrong person entirely ("expected input
-   to have value 'Drew Mambo', but the value was 'Lance Armstrong'"), and as clicking a
-   result failing because the list re-rendered underneath the click. Users hit the same
-   thing on a slow connection. Fix by tagging each request and ignoring any response that
-   is not for the current query.
+3. **The search pickers could commit the wrong row — fixed 2026-09-21, and not the bug
+   this entry described.** The symptom was real and is now understood exactly; the
+   mechanism written here was not.
+
+   **What this entry got wrong.** It said each response overwrites the results list and
+   proposed "tagging each request and ignoring any response that is not for the current
+   query". `useSearch` already does that: the cache is a dictionary keyed by the query
+   string, so a late response writes its own key and cannot overwrite a newer query's
+   results. The proposed fix was the code that was already there.
+
+   **What actually happened**, reproduced rather than reasoned. Two ordinary things
+   combine. `multi_word_where` joins every word × every column with `OR`, and `Person`
+   has `default_scope { order(:last_name, :first_name) }`. So partway through typing a
+   name:
+
+   | query | results | first row |
+   |---|---|---|
+   | `"Drew"` | 1 | Drew Mambo |
+   | **`"Drew M"`** | **4** | **Lance Armstrong** |
+   | `"Drew Mambo"` | 1 | Drew Mambo |
+
+   "Armstrong" sorts first and contains an "m". Meanwhile `SearchTextInput`'s Enter takes
+   `results[Math.max(selectedPosition, 0)]` — index 0 when the user has not arrowed — and
+   `useSearch.bestResults` serves the longest cached *prefix* while the current query is in
+   flight. Type a full name at speed, press Enter, and the form saves Lance Armstrong.
+   A prefix of a multi-word query is not a narrower search than the query; under OR it is
+   a **broader** one, which is the part that makes this counter-intuitive.
+
+   **The OR is deliberate** — the user's call, 2026-09-21, when offered AND-across-words
+   as the root-cause fix. Changing it would have altered every search in the app. So the
+   fix is client-side.
+
+   **What landed.** An Enter with no arrow-key selection is only honoured when the results
+   are the answer to exactly what is typed; otherwise it is *held* and fires when the
+   answer arrives. `useSearch` now reports `exact` alongside `results` for that. A row the
+   user actually pointed at is honoured either way.
+
+   **Holding rather than dropping was the second attempt, and the gate is what forced it.**
+   The first version simply ignored such an Enter, and `regions.spec.js` "Changes LPF"
+   failed: the dropdown narrows to the right person one keystroke *before* the query is
+   answered, so the user sees the name they want, presses Enter, and nothing happens. That
+   is a worse experience than the bug in one respect, and it would not have shown up in
+   any amount of reading.
+
+   **Three more defects in `useSearch`, all fixed in the same change**, all of which the
+   entry missed: the re-render was triggered by writing `new Date().valueOf()` into state,
+   so two responses landing in the same millisecond wrote the same value and React skipped
+   the render; the effect's dependencies omitted `queryPath` while the cache was keyed by
+   query alone, so one endpoint's results could answer for another's; and the container was
+   a ref read during render, which is what `react-hooks/refs` forbids. The container is now
+   state, keyed by endpoint and text together. Lint went 23 → 19 problems, 8 → 5 errors.
+
+   **Two suppressions, both documented at the code**: the held-Enter effect calls `save`,
+   which the `set-state-in-effect` rule flags. It is not a cascade — one extra render, then
+   the flag is clear and the effect returns — and synchronising React state to an answer
+   that arrived from outside React is what an effect is for.
+
+   **The regression test is `personPicker.spec.js` "Does not select a prefix match when
+   Enter beats the response"**, and getting it to mean anything took three tries. It
+   `cy.intercept`s the search endpoint with a 400ms delay and aliases the request for the
+   full name, so the race is deterministic rather than probabilistic. The trap is asserted
+   before it is sprung — Lance Armstrong must be the top row for "Drew M" — and the
+   verdict is read *after* `cy.wait` on the exact request. **The first two drafts passed
+   against the unfixed code**: a negative assertion made in the same tick as the keystroke
+   is satisfied by the pre-save value, before React has re-rendered. Confirmed non-vacuous
+   by neutralising the guard and watching it fail with `actual: 'Lance Armstrong'`, then
+   restoring it. A trailing "and a later Enter selects" assertion was removed rather than
+   left flaky: the response arriving is not the same moment as React rendering it, so a
+   keystroke sent straight after `cy.wait` sometimes still, correctly, sees prefix results.
+   That path is covered where it is stable, by `participants.spec.js` and `clusters.spec.js`.
+
+   **Also learned, the hard way:** `shakapacker:compile` reported "Everything's up-to-date"
+   after a source edit, so a verification run tested the *previous* bundle and a vacuous
+   test looked like a passing one. Any before/after check on application behaviour needs
+   `rm -rf tmp/shakapacker public/packs-test` first. Filed as 8e item 12.
 
 4. **Global search is a flat list — resolved 2026-09-21, and not the way this entry
    originally proposed.** Two defects were filed here in Phase 6g, neither a regression
@@ -3430,6 +3497,23 @@ after a compile that failed**, because shakapacker records the digest regardless
 webpack's result. Cypress then runs against the last *good* bundle, so the suite is green
 while the code does not compile. Read the **first** run's output, and `rm -rf
 tmp/shakapacker` whenever a build's result is in doubt.
+
+12. **`shakapacker:compile` can report "Everything's up-to-date" after a real source
+    change.** Found 2026-09-21 while verifying the 8d item 3 fix. A `yarn testPacks` run
+    immediately after editing `SearchTextInput.tsx` printed *"Everything's up-to-date.
+    Nothing to do"* and skipped the build, so the Cypress run that followed exercised the
+    **previous** bundle. The effect is worse than a slow feedback loop: a test written to
+    fail against the old code passed, and looked like confirmation that the fix worked.
+
+    Not diagnosed — the digest in `tmp/shakapacker/last-compilation-digest-test` was
+    rewritten, so the compiler believed it had done the work. Whether the watched-paths
+    digest misses `.tsx` under some condition, or the digest was written before the source
+    change settled, is unresolved.
+
+    **Working rule until it is:** any before/after check on application behaviour must
+    start with `rm -rf tmp/shakapacker public/packs-test`. A green run against a stale
+    bundle is indistinguishable from a green run against the fix, which makes this a
+    correctness problem for the gate, not a performance one.
 
 ### 8f. Dead code and modelling
 

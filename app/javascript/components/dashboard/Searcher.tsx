@@ -32,7 +32,11 @@ function Searcher(props: IProps) {
   const [query, setQuery] = useState("");
   const [selectedPosition, setSelectedPosition] = useState(-1);
 
-  const results = useSearch<SearchResult>(`/api/search`, query, minQueryLength);
+  const { results, exact } = useSearch<SearchResult>(
+    `/api/search`,
+    query,
+    minQueryLength
+  );
 
   useEffect(() => {
     props.setSeacherActive(query.length > 0);
@@ -48,6 +52,12 @@ function Searcher(props: IProps) {
         setSelectedPosition(Math.max(selectedPosition - 1, -1));
         break;
       case "Enter": {
+        // Same guard as SearchTextInput, for the same reason: without an arrow-key
+        // selection this takes the top row, and until the current query's response
+        // lands that row belongs to a prefix, which matches more than the query
+        // does. Here it navigates somewhere wrong rather than saving something
+        // wrong, which is cheaper but no more correct.
+        if (selectedPosition < 0 && !exact) return;
         const index = Math.max(selectedPosition, 0);
         if (results[index] && results[index].route)
           navigate(results[index].route!);
