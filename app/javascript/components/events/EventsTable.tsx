@@ -3,7 +3,6 @@ import DuluAxios from "../../util/DuluAxios";
 import { lastYear } from "../../util/Date";
 import BasicEventsTable from "./BasicEventsTable";
 import { IEvent, IPeriod } from "../../models/Event";
-import { History } from "history";
 import { Adder, SetCan } from "../../models/TypeBucket";
 import { IPerson } from "../../models/Person";
 import { ICluster } from "../../models/Cluster";
@@ -14,7 +13,6 @@ import List from "../../models/List";
 export interface IProps {
   events: List<IEvent>;
   basePath: string;
-  history: History;
   addPeople: Adder<IPerson>;
   addClusters: Adder<ICluster>;
   addLanguages: Adder<ILanguage>;
@@ -53,9 +51,25 @@ export default function EventsTable(props: IProps) {
     setLoadingMore(false);
   };
 
+  /* eslint-disable react-hooks/set-state-in-effect, react-hooks/exhaustive-deps --
+     Deliberate, both of them, and a block rather than a disable-next-line because the
+     two rules report on different lines: the setState on the call below, the
+     dependency list on the line after it.
+
+     getEvents begins with setLoadingMore(true), and the extra render pass that
+     triggers is the one that draws the spinner. The rule cannot tell a loading flag
+     -- a fact about an in-flight request, which is exactly what state is for -- apart
+     from state that should have been derived.
+
+     The dependency list is [] because this is a fetch-once-on-mount. getEvents is
+     redefined every render, so listing it would refire the effect every render; and a
+     useCallback honest about what it closes over (props.eventsUrl, props.eventsBackTo
+     and five props.add* callbacks) would change identity whenever the parent
+     re-rendered and refetch, which is a behaviour change rather than a lint fix. */
   useEffect(() => {
     getEvents({ initialGet: true });
   }, []);
+  /* eslint-enable react-hooks/set-state-in-effect, react-hooks/exhaustive-deps */
 
   return (
     <BasicEventsTable
@@ -63,7 +77,6 @@ export default function EventsTable(props: IProps) {
       basePath={props.basePath}
       can={props.can}
       noAdd={props.noAdd}
-      history={props.history}
       moreEventsState={
         loadingMore ? "loading" : props.eventsBackTo ? "button" : "none"
       }

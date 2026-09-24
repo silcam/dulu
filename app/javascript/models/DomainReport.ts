@@ -1,7 +1,7 @@
 import { Domain } from "./Domain";
 import { IEvent, IPeriodStrict } from "./Event";
 import { IDomainStatusItem } from "./DomainStatusItem";
-import { PartialModel, YearMonth } from "./TypeBucket";
+import { PartialModel } from "./TypeBucket";
 import { ActivityReportItem } from "../components/reports/ActivityReportTable";
 import update from "immutability-helper";
 

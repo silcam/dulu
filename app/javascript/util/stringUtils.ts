@@ -6,7 +6,7 @@ export function allMatches(
   if (!pattern.global)
     throw "Pattern must be global! (You forgot the 'g' after the ending slash.)";
   let result;
-  let found: string[] = [];
+  const found: string[] = [];
   while ((result = pattern.exec(str)) !== null) {
     found.push(result[group]);
   }

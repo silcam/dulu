@@ -2,7 +2,6 @@ import React, { CSSProperties, DetailedHTMLProps, HTMLAttributes } from "react";
 import styles from "./Icon.css";
 import update from "immutability-helper";
 import { Children } from "../../../models/TypeBucket";
-import { Omit } from "react-tabs";
 
 interface IProps
   extends DetailedHTMLProps<HTMLAttributes<HTMLSpanElement>, HTMLSpanElement> {
@@ -15,7 +14,9 @@ interface IProps
   hovertext?: string;
 }
 
-export type IconProps = Omit<Omit<IProps, "styleClass">, "children">;
+// Omit used to be imported from react-tabs, which shipped its own helper
+// before TypeScript 3.5 had one. This is the built-in.
+export type IconProps = Omit<IProps, "styleClass" | "children">;
 
 /* 
 SVG icons are taken from Google's Material Design Icons:
@@ -25,16 +26,18 @@ SVG icons are taken from Google's Material Design Icons:
 
 */
 export default function Icon(props: IProps) {
-  let {
+  // position and valign are pulled out only to keep them off the <span> below --
+  // they are read from `props` in positionClass. The underscore says so.
+  const {
     iconSize,
     styleClass,
     children,
-    svgStyle,
-    position,
-    valign,
+    svgStyle: propsSvgStyle,
+    position: _position,
+    valign: _valign,
     ...otherProps
   } = props;
-  svgStyle = update(iconSizer(iconSize), { $merge: svgStyle || {} });
+  const svgStyle = update(iconSizer(iconSize), { $merge: propsSvgStyle || {} });
 
   return (
     <span className={styles[styleClass]} {...otherProps}>
@@ -80,7 +83,7 @@ function positionClass(
   return hPosition + vPosition;
 }
 
-function iconSizer(size?: "large" | "small") {
+function iconSizer(size?: "large" | "small"): React.CSSProperties {
   switch (size) {
     case "large":
       return { width: "32px", height: "32px" };

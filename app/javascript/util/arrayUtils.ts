@@ -1,5 +1,5 @@
 import update from "immutability-helper";
-import { T } from "../i18n/i18n";
+import { Translate } from "../i18n/i18n";
 
 interface WithId {
   id: number;
@@ -11,13 +11,13 @@ interface WithId {
  * @param {any} item The item to remove
  */
 export function arrayDelete<T>(array: T[], item: T) {
-  let index = array.indexOf(item);
+  const index = array.indexOf(item);
   if (index == -1) return array;
   return update(array, { $splice: [[index, 1]] }) as T[];
 }
 
 export function itemAfter<T>(array: T[], item: T) {
-  let index = array.indexOf(item);
+  const index = array.indexOf(item);
   if (index == -1 || index == array.length - 1) return undefined;
   return array[index + 1];
 }
@@ -29,7 +29,10 @@ export function itemAfter<T>(array: T[], item: T) {
 //     : update(array, { $push: [newItem] });
 // }
 
-export function print<Ty>(array: Ty[], t: T, keyPrefix?: string) {
+// `Translate`, not `T`: this only ever looks up a string. The difference is not cosmetic
+// -- a generic signature is expensive to *supply*, so asking for `T` meant the unit test's
+// one-line `fakeT` stub could not be passed in at all.
+export function print<Ty>(array: Ty[], t: Translate, keyPrefix?: string) {
   const prefix = keyPrefix ? keyPrefix + "." : "";
   return array.map(item => t(prefix + item)).join(", ");
 }
@@ -74,10 +77,13 @@ export function flat<T>(array: Array<T | T[]>) {
   }, []);
 }
 
-export function all<T>(array: readonly T[], test: (t: T) => any): boolean {
+// `unknown` rather than `any` for the predicate: callers pass anything truthy-ish, which
+// is fine, but the declared `: boolean` return was a lie -- `a && b` over unpredictable
+// values is not a boolean. Boolean() makes the signature true.
+export function all<T>(array: readonly T[], test: (t: T) => unknown): boolean {
   return array
     .map(item => test(item))
-    .reduce((finalVal, testVal) => finalVal && testVal, true);
+    .reduce<boolean>((finalVal, testVal) => finalVal && Boolean(testVal), true);
 }
 
 export function max<T>(

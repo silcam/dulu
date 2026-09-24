@@ -100,7 +100,7 @@ export default function NewEventForm(props: IProps) {
 }
 
 function newEvent(t: T, startEvent?: Partial<IEventInflated>): IEventInflated {
-  let event = {
+  const event = {
     ...emptyEvent(),
     domain: Object.keys(t("domains"))[0] as Domain,
     languages: [],

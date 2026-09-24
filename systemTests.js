@@ -12,11 +12,11 @@ for (let i = 0; i < testFiles.length; ++i) {
   );
   try {
     runTest(testName);
-  } catch (err) {
+  } catch {
     try {
       // Give it a second try:
       runTest(testName);
-    } catch (err2) {
+    } catch {
       testsWithFailures.push(testFiles[i]);
     }
   }

@@ -26,6 +26,5 @@ class OrganizationTest < ActiveSupport::TestCase
     orgs = Organization.search("sil")
     assert_equal 1, orgs.count
     assert_equal @sil.name, orgs[0][:title]
-    # assert_not_empty orgs[0][:subresults]
   end
 end

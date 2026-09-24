@@ -4,7 +4,7 @@ import { itemAfter } from "../util/arrayUtils";
 import FuzzyDate from "../util/FuzzyDate";
 import { IWorkshop } from "./Workshop";
 import { ICan } from "../actions/canActions";
-import { T } from "../i18n/i18n";
+import { T, Translate } from "../i18n/i18n";
 import List from "./List";
 
 export interface IActivity {
@@ -121,7 +121,7 @@ function nextStage(activity: IActivity): IStage {
   };
 }
 
-function name(activity: IActivity, t: T) {
+function name(activity: IActivity, t: Translate) {
   switch (activity.type) {
     case "LinguisticActivity":
       return activity.title;
@@ -227,6 +227,12 @@ function compare(a: IActivity, b: IActivity) {
     const categoryCompare = a.category.localeCompare(b.category);
     if (categoryCompare != 0) return categoryCompare;
   }
+  // Sorts by translation key, not by translated name, and deliberately: this comparator
+  // is the ordering function for the redux List (activitiesReducer), and a reducer has no
+  // locale to translate with. The view re-sorts for display where it matters --
+  // sortActivities keys the Media column on Activity.name with the real translator. The
+  // stub is legal rather than merely tolerated because `name` asks for `Translate`, not
+  // for the full tree-walking `T`.
   const closeEnoughT = (key: string) => key;
   return name(a, closeEnoughT).localeCompare(name(b, closeEnoughT));
 }

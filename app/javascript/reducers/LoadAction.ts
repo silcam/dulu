@@ -9,7 +9,13 @@ import { CanState } from "./canReducer";
 import { IEvent } from "../models/Event";
 import { IActivity } from "../models/Activity";
 
-export interface LoadAction {
+// A `type`, not an `interface`, and the distinction is load-bearing since redux 5:
+// `dispatch` now takes `UnknownAction`, which carries an index signature
+// (`[extraProps: string]: unknown`). TypeScript gives an object type alias an
+// implicit index signature but never gives one to an interface, so as an
+// interface this failed to dispatch while every other action in the app -- all
+// of them type aliases -- passed. Nothing else about the shape changed.
+export type LoadAction = {
   type: "Load";
   payload: {
     activities?: PartialModel<IActivity>[];
@@ -36,6 +42,13 @@ export function loadAction(payload: LoadAction["payload"]): LoadAction {
   return { type: "Load", payload };
 }
 
-export function isLoadAction(action: any): action is LoadAction {
-  return typeof action == "object" && action.type == "Load";
+// `unknown`, because narrowing something already typed `any` is what this guard exists to
+// avoid. The null check is not ceremony: `typeof null == "object"`, so the old body would
+// throw on isLoadAction(null) rather than return false.
+export function isLoadAction(action: unknown): action is LoadAction {
+  return (
+    typeof action == "object" &&
+    action !== null &&
+    (action as { type?: unknown }).type == "Load"
+  );
 }

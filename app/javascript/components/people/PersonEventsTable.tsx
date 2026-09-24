@@ -2,7 +2,6 @@ import React from "react";
 import EventsTable from "../events/EventsTable";
 import { IPerson } from "../../models/Person";
 import { IAddEventsForPerson } from "../../actions/eventActions";
-import { History } from "history";
 import { Adder, SetCan } from "../../models/TypeBucket";
 import { ICluster } from "../../models/Cluster";
 import { ILanguage } from "../../models/Language";
@@ -14,7 +13,6 @@ interface IProps {
   person: IPerson;
   addEventsForPerson: IAddEventsForPerson;
   basePath: string;
-  history: History;
   addPeople: Adder<IPerson>;
   addClusters: Adder<ICluster>;
   addLanguages: Adder<ILanguage>;

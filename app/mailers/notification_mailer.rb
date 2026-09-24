@@ -2,7 +2,7 @@
 
 class NotificationMailer < ApplicationMailer
   helper ApplicationHelper
-  default from: Rails.application.secrets.smtp_username
+  default from: Rails.application.config.x.smtp_username
 
   def welcome(person, creator)
     @person = person

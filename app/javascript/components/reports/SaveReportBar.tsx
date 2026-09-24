@@ -3,13 +3,17 @@ import { IReport, reportParams } from "../../models/Report";
 import TextInput from "../shared/TextInput";
 import SaveButton from "../shared/SaveButton";
 import DuluAxios from "../../util/DuluAxios";
-import { withRouter, RouteComponentProps } from "react-router-dom";
+import { useNavigate, NavigateFunction } from "react-router-dom";
 import I18nContext from "../../contexts/I18nContext";
 import FormGroup from "../shared/FormGroup";
 
-interface IProps extends RouteComponentProps {
+interface IOwnProps {
   report: IReport;
   cancel: () => void;
+}
+
+interface IProps extends IOwnProps {
+  navigate: NavigateFunction;
 }
 
 interface IState {
@@ -34,7 +38,7 @@ class _SaveReportBar extends React.PureComponent<IProps, IState> {
       }
     });
     if (data) {
-      this.props.history.push(`/reports/${data.report.id}`);
+      this.props.navigate(`/reports/${data.report.id}`);
     } else {
       this.setState({ saving: false });
     }
@@ -69,6 +73,12 @@ class _SaveReportBar extends React.PureComponent<IProps, IState> {
   }
 }
 
-const SaveReportBar = withRouter(_SaveReportBar);
+// The one class component that took its router props from withRouter, which
+// React Router 6 removes. Hooks cannot be called in a class, so the history
+// comes in as an ordinary prop from a function wrapper -- the same shape
+// MainRouter already uses for BaseMainRouter.
+export default function SaveReportBar(props: IOwnProps) {
+  const navigate = useNavigate();
 
-export default SaveReportBar;
+  return <_SaveReportBar {...props} navigate={navigate} />;
+}

@@ -1,27 +1,17 @@
 import React from "react";
 import ClustersTable from "./ClustersTable";
 import style from "../shared/MasterDetail.css";
-import ClusterPageRouter from "./ClusterPageRouter";
 import FlexSpacer from "../shared/FlexSpacer";
-import { Link } from "react-router-dom";
+import { Link, Outlet, useParams } from "react-router-dom";
 import AddIcon from "../shared/icons/AddIcon";
-import NewClusterForm from "./NewClusterForm";
-import { History, Location } from "history";
 import GoBar from "../shared/GoBar";
 import useTranslation from "../../i18n/useTranslation";
 import { useLoadOnMount } from "../shared/useLoad";
 import useAppSelector from "../../reducers/useAppSelector";
 
-interface IProps {
-  id?: number;
-  action: string;
-  basePath: string;
-  history: History;
-  location: Location;
-}
-
-export default function ClustersBoard(props: Omit<IProps, "t">) {
+export default function ClustersBoard() {
   const t = useTranslation();
+  const { id } = useParams();
 
   const clusters = useAppSelector(state => state.clusters);
   const can = useAppSelector(state => state.can.clusters);
@@ -49,17 +39,15 @@ export default function ClustersBoard(props: Omit<IProps, "t">) {
       </div>
       <div className={style.masterDetailContainer}>
         <div className={style.master}>
-          <ClustersTable id={props.id} clusters={clusters} />
+          <ClustersTable
+            id={id ? parseInt(id) : undefined}
+            clusters={clusters}
+          />
         </div>
-        <div className={style.detail}>
-          {props.action == "new" && <NewClusterForm history={props.history} />}
-          {!!props.id && (
-            <ClusterPageRouter
-              key={props.id}
-              id={props.id}
-              basePath={props.basePath}
-            />
-          )}
+        {/* Keyed so switching clusters remounts the detail, as the old
+            `key={props.id}` on ClusterPageRouter did. */}
+        <div className={style.detail} key={id}>
+          <Outlet />
         </div>
       </div>
     </div>

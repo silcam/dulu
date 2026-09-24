@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { useContext, useState } from "react";
 import { IPerson } from "../../models/Person";
 import List from "../../models/List";
 import { ILanguage } from "../../models/Language";
@@ -14,7 +14,7 @@ import SelectInput from "../shared/SelectInput";
 import SearchPicker from "../shared/SearchPicker";
 import update from "immutability-helper";
 import MultiSelectItemList from "../shared/MultiSelectItemList";
-import { Domains } from "../../models/Domain";
+import { Domains, Domain } from "../../models/Domain";
 
 interface IProps {
   person: IPerson;
@@ -31,11 +31,16 @@ export default function MyNotificationChannels(props: IProps) {
   const channels = parseChannels(props.person.notification_channels, props);
   const [addWhat, setAddWhat] = useState(0); // Index of channelTypes
   const domainOpts = Domains.filter(d => !channels.domains.includes(d));
-  const [addDomain, setAddDomain] = useState<string>(domainOpts[0] || "");
-  useEffect(() => {
-    if (domainOpts.length > 0 && !(domainOpts as string[]).includes(addDomain))
-      setAddDomain(domainOpts[0]);
-  });
+  // The pick is state; whether it is still on offer is a calculation. Was
+  // useState(domainOpts[0] || "") plus a dependency-less effect that re-selected the
+  // first option whenever the pick fell out of the list -- see
+  // ActivityViewPeopleEditor for the same shape and the fuller reasoning. Deriving it
+  // here means no render can show a selection that is no longer offered, and there is
+  // no effect re-running after every render to keep a copy honest.
+  const [chosenDomain, setChosenDomain] = useState<string>("");
+  const addDomain = (domainOpts as string[]).includes(chosenDomain)
+    ? chosenDomain
+    : domainOpts[0] || "";
 
   const updateChannels = (channels: NotificationChannels) =>
     props.updatePersonAndSave({
@@ -94,6 +99,12 @@ export default function MyNotificationChannels(props: IProps) {
                 collection={props.languages}
                 selectedId={null}
                 setSelected={lang =>
+                  // SearchPicker's setSelected is (T | null) -- it passes null when
+                  // `allowBlank` is set and the box is cleared, which is not the case
+                  // here. Guarding rather than asserting: a null in this list would
+                  // be written to notification_channels and break the row that
+                  // renders it.
+                  lang &&
                   updateChannels(
                     update(channels, { languages: { $push: [lang] } })
                   )
@@ -107,6 +118,7 @@ export default function MyNotificationChannels(props: IProps) {
                 collection={props.clusters}
                 selectedId={null}
                 setSelected={cluster =>
+                  cluster &&
                   updateChannels(
                     update(channels, { clusters: { $push: [cluster] } })
                   )
@@ -120,6 +132,7 @@ export default function MyNotificationChannels(props: IProps) {
                 collection={props.regions}
                 selectedId={null}
                 setSelected={region =>
+                  region &&
                   updateChannels(
                     update(channels, { regions: { $push: [region] } })
                   )
@@ -133,13 +146,18 @@ export default function MyNotificationChannels(props: IProps) {
                 <SelectInput
                   value={addDomain}
                   options={SelectInput.translatedOptions(domainOpts, t)}
-                  setValue={setAddDomain}
+                  setValue={setChosenDomain}
                 />
                 <button
                   className="small"
                   onClick={() =>
                     updateChannels(
-                      update(channels, { domains: { $push: [addDomain] } })
+                      // addDomain is state typed `string` because SelectInput's
+                      // setValue is (value: string) => void, but its options are
+                      // built from `Domains`, so the value is always one of them.
+                      update(channels, {
+                        domains: { $push: [addDomain as Domain] }
+                      })
                     )
                   }
                 >

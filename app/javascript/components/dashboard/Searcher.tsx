@@ -3,50 +3,65 @@ import TextInput from "../shared/TextInput";
 import styles from "./Searcher.css";
 import I18nContext from "../../contexts/I18nContext";
 import useSearch from "../shared/useSearch";
-import { withRouter, RouteComponentProps } from "react-router";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const minQueryLength = 3;
 
+// Flat, and deliberately. The server still nests child rows under some results --
+// a person's programs, a cluster's languages -- and this component used to walk
+// them into an indented list keyed by `level`. It never actually rendered one:
+// the recursion ended in `flatResults.concat(...)`, whose return value was
+// discarded, so no subresult has been displayed since the function was written
+// (b2cc63c, Feb 2019). Rather than repair it, the hierarchy is gone: a search
+// result is a way to reach a page, and every child it used to list is already on
+// the page the parent links to -- PersonPage renders the person's participations,
+// ClusterPage its languages. The server half is removed separately.
 export interface SearchResult {
   title: string;
   route?: string;
   description: string;
-  subresults?: { results: SearchResult[] };
-  level?: number;
 }
 
-interface IProps extends RouteComponentProps {
+interface IProps {
   setSeacherActive: (a: boolean) => void;
 }
 
-function BasicSearcher(props: IProps) {
+function Searcher(props: IProps) {
   const t = useContext(I18nContext);
+  const navigate = useNavigate();
   const [query, setQuery] = useState("");
   const [selectedPosition, setSelectedPosition] = useState(-1);
 
-  const results = useSearch<SearchResult>(`/api/search`, query, minQueryLength);
-  const flatResults = results ? flattenResults(results) : undefined;
+  const { results, exact } = useSearch<SearchResult>(
+    `/api/search`,
+    query,
+    minQueryLength
+  );
 
   useEffect(() => {
     props.setSeacherActive(query.length > 0);
   });
 
   const handleKeyDown = (key: string) => {
-    if (flatResults === undefined) return;
+    if (results === undefined) return;
     switch (key) {
       case "ArrowDown":
-        setSelectedPosition(
-          Math.min(selectedPosition + 1, flatResults.length - 1)
-        );
+        setSelectedPosition(Math.min(selectedPosition + 1, results.length - 1));
         break;
       case "ArrowUp":
         setSelectedPosition(Math.max(selectedPosition - 1, -1));
         break;
-      case "Enter":
+      case "Enter": {
+        // Same guard as SearchTextInput, for the same reason: without an arrow-key
+        // selection this takes the top row, and until the current query's response
+        // lands that row belongs to a prefix, which matches more than the query
+        // does. Here it navigates somewhere wrong rather than saving something
+        // wrong, which is cheaper but no more correct.
+        if (selectedPosition < 0 && !exact) return;
         const index = Math.max(selectedPosition, 0);
-        if (flatResults[index] && flatResults[index].route)
-          props.history.push(flatResults[index].route!);
+        if (results[index] && results[index].route)
+          navigate(results[index].route!);
+      }
     }
   };
 
@@ -62,19 +77,15 @@ function BasicSearcher(props: IProps) {
         placeholder={t("Search_prompt")}
         handleKeyDown={handleKeyDown}
       />
-      {flatResults !== undefined &&
-        (flatResults.length == 0 ? (
+      {results !== undefined &&
+        (results.length == 0 ? (
           <p>No Results</p>
         ) : (
           <table className="table">
             <tbody>
-              {flatResults.map((result, index) => (
+              {results.map((result, index) => (
                 <tr key={index}>
                   <td
-                    style={{
-                      paddingLeft: 8 + 8 * result.level!,
-                      border: result.level! > 0 ? "none" : undefined
-                    }}
                     className={index == selectedPosition ? styles.selected : ""}
                   >
                     {result.route ? (
@@ -93,17 +104,5 @@ function BasicSearcher(props: IProps) {
     </div>
   );
 }
-
-function flattenResults(results: SearchResult[], level = 0) {
-  return results.reduce((flatResults: SearchResult[], result) => {
-    flatResults.push({ ...result, level });
-    if (result.subresults) {
-      flatResults.concat(flattenResults(result.subresults.results, level + 1));
-    }
-    return flatResults;
-  }, []);
-}
-
-const Searcher = withRouter(BasicSearcher);
 
 export default Searcher;

@@ -15,8 +15,18 @@ class DomainReport
     @cluster_ids = cluster_ids
   end
 
+  # `period` arrives as nested query params -- period[start][year]=2017 -- which is
+  # the same shape `from_database` reads out of the JSONB column.
+  #
+  # It used to arrive as a JSON *string* and be JSON.parse'd, because axios 0.x
+  # serialised a nested params object by JSON.stringify-ing it. axios 1 serialises it
+  # the way Rails expects, so the string never comes; JSON.parse on the resulting
+  # Parameters object raised a TypeError and the endpoint 500'd. Permitting the four
+  # scalars explicitly rather than calling to_unsafe_h also means nothing else in the
+  # query string can reach Period.
   def self.from_web_params(params)
-    period = Period.new(JSON.parse(params[:period]).with_indifferent_access)
+    period_params = params.require(:period).permit(start: %i[year month], end: %i[year month])
+    period = Period.new(period_params.to_h.with_indifferent_access)
     return DomainReport.new(
              params[:domain],
              period,
@@ -61,13 +71,29 @@ class DomainReport
     start_period_str = @period.start.month == 1 ? @period.start.year.to_s : @period.start.to_s
     stage_src = @languages ? Stage.joins(:activity).where(activities: { language: @languages }) : Stage
     stages = stage_src.where(kind: :Translation)
-                      .where("start_date < '#{@period.finish}-32'")
-                      .where("start_date >= '#{start_period_str}'")
-                      .order(start_date: :desc)
+                      # `start_date` is a *string* column (fuzzy dates: "2026",
+                      # "2026-03" and "2026-03-15" are all valid), so these are
+                      # lexicographic comparisons, not date comparisons. The "-32"
+                      # is deliberate: no real day sorts after it, so the bound
+                      # means "through the end of the finish month". Do not
+                      # "correct" it into date arithmetic -- Postgres rejects
+                      # '2026-12-32'::date outright.
+                      .where("start_date < ?", "#{@period.finish}-32")
+                      .where("start_date >= ?", start_period_str)
+                      # `id` is not meaningful here, it is only stable. Without a
+                      # tiebreaker the sort key is not a total order, so Postgres may
+                      # return equal-date rows either way round and the report reshuffles
+                      # between loads. This does not reproduce on a handful of fixture
+                      # rows -- with four rows the sort is trivial and deterministic. At
+                      # production volume (1,879 stages) it does: dropping work_mem to
+                      # 64kB pushes the planner from an in-memory quicksort to an external
+                      # merge sort and the first row changes. Memory pressure is just "the
+                      # server is busy", so this is a live defect, not a theoretical one.
+                      .order(start_date: :desc, id: :asc)
                       .includes(:activity)
     @activity_items = stages.map do |stage|
       {
-        activity: stage.activity.attributes.merge({ type: stage.activity.type }),
+        activity: stage.activity.attributes.merge("type" => stage.activity.type),
         id: stage.id,
         stage: stage.name,
         date: stage.start_date,

@@ -1,24 +1,18 @@
 import React from "react";
-import { ILanguage } from "../../models/Language";
-import { History } from "history";
 import { LanguageBackLink } from "../shared/BreadCrumbs";
 import ParticipantView from "./ParticipantView";
+import { useLanguageContext } from "./LanguagePageRouter";
+import { useParams } from "react-router-dom";
 
-interface IProps {
-  language: ILanguage;
-  basePath: string;
-  participantId: number;
-  history: History;
-}
-
-export default function LanguageParticipantPage(props: IProps) {
-  const language = props.language;
+export default function LanguageParticipantPage() {
+  const { language, basePath } = useLanguageContext();
+  const participantId = parseInt(useParams().participantId!);
 
   return (
     <div>
       <LanguageBackLink language={language} />
 
-      <ParticipantView {...props} id={props.participantId} />
+      <ParticipantView basePath={basePath} id={participantId} />
     </div>
   );
 }

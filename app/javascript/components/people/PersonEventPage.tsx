@@ -2,20 +2,19 @@ import React from "react";
 import { PersonBackLink } from "../shared/BreadCrumbs";
 import useAppSelector from "../../reducers/useAppSelector";
 import EventView from "../events/EventView";
+import { useParams } from "react-router-dom";
 
-interface IProps {
-  id: number;
-  eventId: number;
-}
-
-export default function LanguageEventPage(props: IProps) {
-  const person = useAppSelector(state => state.people.get(props.id));
+export default function PersonEventPage() {
+  const params = useParams();
+  const person = useAppSelector(state =>
+    state.people.get(parseInt(params.id!))
+  );
 
   return (
     <div>
       <PersonBackLink person={person} />
 
-      <EventView id={props.eventId} />
+      <EventView id={parseInt(params.eventId!)} />
     </div>
   );
 }

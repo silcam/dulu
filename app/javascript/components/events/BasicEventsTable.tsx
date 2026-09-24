@@ -1,9 +1,9 @@
+import { useNavigate } from "react-router-dom";
 import React, { useContext } from "react";
 import InlineAddIcon from "../shared/icons/InlineAddIcon";
 import EventRow from "./EventRow";
 import { IEvent } from "../../models/Event";
 import I18nContext from "../../contexts/I18nContext";
-import { History } from "history";
 import StyledTable from "../shared/StyledTable";
 import List from "../../models/List";
 
@@ -16,13 +16,13 @@ interface IProps {
   basePath?: string;
   can: { create?: boolean };
   noAdd?: boolean;
-  history?: History; // Not required if noAdd is set
   moreEventsState: "none" | "loading" | "button";
   moreEvents: () => void;
   noHeader?: boolean;
 }
 
 export default function BasicEventsTable(props: IProps) {
+  const navigate = useNavigate();
   const yearGroups = (): EventsByYear => {
     return props.events.reduce((accum: EventsByYear, event) => {
       const year = event.start_date.slice(0, 4);
@@ -43,7 +43,7 @@ export default function BasicEventsTable(props: IProps) {
           {t("Events")}
           {props.can.create && !props.noAdd && (
             <InlineAddIcon
-              onClick={() => props.history!.push(`${basePath}/events/new`)}
+              onClick={() => navigate(`${basePath}/events/new`)}
             />
           )}
         </h3>

@@ -36,6 +36,9 @@ db/*.sql.gz
 # Webpacker ignores
 /public/packs
 /public/packs-test
+# Sprockets output. `RAILS_ENV=production bin/rails assets:precompile` -- now part of the
+# upgrade gate (UPGRADE_PLAN.md Phase 2) -- writes here, and none of it belongs in git.
+/public/assets
 /node_modules
 yarn-debug.log*
 .yarn-integrity
@@ -45,3 +48,17 @@ yarn-debug.log*
 
 # Mac
 .DS_Store
+
+# Live database dumps — real user data, never commit
+/LIVE_DUMP/
+
+# Yarn error log (yarn-debug is already covered above)
+yarn-error.log*
+
+# Local-only / scratch files, kept on disk but not for commit.
+# Left in place deliberately during the Rails 8 upgrade — see UPGRADE_PLAN.md Phase 0.
+/notes.txt
+/rick-meeting.txt
+/old--jest--config--js
+/config/.ruby-version
+/config/deploy/amazon.rb

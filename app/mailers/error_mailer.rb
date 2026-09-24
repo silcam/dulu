@@ -7,6 +7,6 @@ class ErrorMailer < ApplicationMailer
   private
 
   def admin_email
-    Rails.application.secrets.admin_email
+    Rails.application.config.x.admin_email
   end
 end

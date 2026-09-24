@@ -1,5 +1,4 @@
 import DomainStatusItem, {
-  IDomainStatusItem,
   DataCollections,
   countUnit,
   sortByDate,

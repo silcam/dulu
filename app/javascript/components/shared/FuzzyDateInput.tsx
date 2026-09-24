@@ -33,7 +33,7 @@ function daysInMonth(month: number) {
 
 function assembleDateString(year?: number, month?: number, day?: number) {
   if (!year) return "";
-  var s = zeroPad(year, 4);
+  let s = zeroPad(year, 4);
   if (!month) return s;
   s += "-" + zeroPad(month, 2);
   if (!day) return s;
@@ -42,7 +42,7 @@ function assembleDateString(year?: number, month?: number, day?: number) {
 }
 
 function zeroPad(number: number, digits: number) {
-  var s = String(number);
+  let s = String(number);
   while (s.length < digits) {
     s = "0" + s;
   }
@@ -125,7 +125,7 @@ export default class FuzzyDateInput extends React.PureComponent<
   };
 
   render() {
-    var showErrors = this.showErrors();
+    const showErrors = this.showErrors();
     return (
       <I18nContext.Consumer>
         {t => (

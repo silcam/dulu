@@ -65,8 +65,13 @@ function YearMonthInput(props: YMProps) {
 }
 
 function monthsList(t: T) {
-  return t("month_names_short").map((month: string, i: number) => ({
-    value: i + 1,
+  // String(i + 1), not i + 1: SelectInput declares `value: string` and React stringifies
+  // it into the DOM anyway, so this is the same markup -- but it is now the type the prop
+  // asks for. The number went unnoticed because `t` returned `any`, which made this whole
+  // map `any[]`. Identical at runtime: the values are 1..12, so SelectInput's
+  // `option.value || option.display` fallback never fired before and does not now. See 8d.
+  return t<string[]>("month_names_short").map((month, i) => ({
+    value: String(i + 1),
     display: month
   }));
 }

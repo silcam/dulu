@@ -6,6 +6,7 @@ import NavLoadingIndicator from "./NavLoadingIndicator";
 import useAppSelector from "../../reducers/useAppSelector";
 import useTranslation from "../../i18n/useTranslation";
 import { User } from "../../reducers/currentUserReducer";
+import duluLogo from "./dulu.png";
 
 export default function NavBar() {
   const t = useTranslation();
@@ -17,7 +18,7 @@ export default function NavBar() {
       <ul>
         <li>
           <Link to="/" className={styles.duluLink}>
-            <img src={require("./dulu.png")} alt="Dulu" />
+            <img src={duluLogo} alt="Dulu" />
           </Link>
         </li>
         <li>

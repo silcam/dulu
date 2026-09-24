@@ -4,8 +4,11 @@
 
 require File.expand_path('../config/environment', __dir__)
 require 'rails/test_help'
+# Provides Object#stub, used by the notification and report tests to freeze
+# Time/Date. This was previously loaded transitively via minitest-rails-capybara;
+# it is required directly now that that gem is gone.
+require 'minitest/mock'
 require 'minitest/reporters'
-require 'minitest/rails/capybara'
 Minitest::Reporters.use!
 
 Delayed::Worker.delay_jobs = false
@@ -55,8 +58,20 @@ class ActiveSupport::TestCase
     @response.body
   end
 
+  # 403. Not logged in is 401 (see the pair of tests in sessions_controller_test); this is
+  # the authenticated-but-not-permitted case.
   def assert_not_allowed
-    assert_response 401
+    assert_response 403
+  end
+
+  # CSRF is disabled suite-wide by config/environments/test.rb, so a test that
+  # needs it has to turn it on around the one request it cares about.
+  def with_forgery_protection
+    was = ActionController::Base.allow_forgery_protection
+    ActionController::Base.allow_forgery_protection = true
+    yield
+  ensure
+    ActionController::Base.allow_forgery_protection = was
   end
 
   def assert_partial(exp, actual, no_assert = false)

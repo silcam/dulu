@@ -1,18 +1,15 @@
 import React, { useState } from "react";
 import SaveButton from "../shared/SaveButton";
 import CancelButton from "../shared/CancelButton";
-import { History } from "history";
+import { useNavigate } from "react-router-dom";
 import FormGroup from "../shared/FormGroup";
 import TextInput from "../shared/TextInput";
 import useTranslation from "../../i18n/useTranslation";
 import useLoad from "../shared/useLoad";
 
-interface IProps {
-  history: History;
-}
-
-export default function NewRegionForm(props: IProps) {
+export default function NewRegionForm() {
   const t = useTranslation();
+  const navigate = useNavigate();
   const [saveLoad, saving] = useLoad();
 
   const [name, setName] = useState("");
@@ -21,7 +18,7 @@ export default function NewRegionForm(props: IProps) {
     const data = await saveLoad(duluAxios =>
       duluAxios.post("/api/regions", { region: { name } })
     );
-    if (data) props.history.push(`/regions/${data.regions[0].id}`);
+    if (data) navigate(`/regions/${data.regions[0].id}`);
   };
 
   return (

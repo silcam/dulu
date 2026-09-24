@@ -8,8 +8,8 @@ class SearchesControllerTest < ActionDispatch::IntegrationTest
     assert_equal(
       {
         results: [
-          { title: 'Andreas Everest', description: 'Language Program Facilitator', route: '/people/463209896', subresults: { results: [] } },
-          { title: 'Drew Mambo', description: 'Translation Consultant', route: '/people/883742519', subresults: { results: [{ title: 'Hdi', description: 'Translation Consultant', route: '/languages/876048951' }, { title: 'Ndop Cluster', description: 'Translation Consultant', route: '/clusters/657561020' }] } }
+          { title: 'Andreas Everest', description: 'Language Program Facilitator', route: '/people/463209896' },
+          { title: 'Drew Mambo', description: 'Translation Consultant', route: '/people/883742519' }
         ]
       },
       data
@@ -22,8 +22,8 @@ class SearchesControllerTest < ActionDispatch::IntegrationTest
     assert_equal(
       {
         results: [
-          { title: 'Andreas Everest', description: 'Facilitateur du programme de langue', route: '/people/463209896', subresults: { results: [] } },
-          { title: 'Drew Mambo', description: 'Conseiller en traduction', route: '/people/883742519', subresults: { results: [{ title: 'Hdi', description: 'Conseiller en traduction', route: '/languages/876048951' }, { title: 'Groupe Ndop', description: 'Conseiller en traduction', route: '/clusters/657561020' }] } }
+          { title: 'Andreas Everest', description: 'Facilitateur du programme de langue', route: '/people/463209896' },
+          { title: 'Drew Mambo', description: 'Conseiller en traduction', route: '/people/883742519' }
         ]
       },
       data

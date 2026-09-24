@@ -19,7 +19,7 @@ export default function RolesTable(props: IProps) {
     props.person.can.update && props.person.grantable_roles.length > 0;
 
   const deleteRole = async (role: string) => {
-    const data = await saveLoad(duluAxios =>
+    await saveLoad(duluAxios =>
       duluAxios.post("/api/person_roles/finish", {
         person_id: props.person.id,
         role: role

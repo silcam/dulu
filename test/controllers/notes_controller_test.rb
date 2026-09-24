@@ -53,6 +53,29 @@ class Api::NotesControllerTest < ActionDispatch::IntegrationTest
     assert_includes Note.for(@hdi), @note
   end
 
+  test 'Create refuses an unknown for_type' do
+    api_login @drew
+    before = Note.count
+
+    # Not a class a note can attach to. `Note#for` would constantize this, which
+    # under Zeitwerk autoloads whatever it names -- so it must not be stored.
+    api_post(notes_path,
+             for_type: 'Person; DROP', for_id: @hdi.id, text: 'nope')
+
+    assert_response 422
+    assert_equal before, Note.count, 'a refused note must not be written'
+  end
+
+  test 'Create refuses a for_id that names nothing' do
+    api_login @drew
+    before = Note.count
+
+    api_post(notes_path, for_type: 'Language', for_id: 0, text: 'nope')
+
+    assert_response 422
+    assert_equal before, Note.count, 'a refused note must not be written'
+  end
+
   test 'Update' do
     api_login @drew
     data = api_put(

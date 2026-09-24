@@ -1,21 +1,19 @@
+import { useNavigate, useParams } from "react-router-dom";
+import { useLanguageContext } from "./LanguagePageRouter";
 import React, { useState, useContext } from "react";
 import EditActionBar from "../shared/EditActionBar";
-import { ILanguage } from "../../models/Language";
 import { findById } from "../../util/arrayUtils";
 import DomainStatusItemView from "./DomainStatusItemView";
 import DomainStatusItemForm, { DsiForServer } from "./DomainStatusItemForm";
 import I18nContext from "../../contexts/I18nContext";
-import { History } from "history";
 import BreadCrumbs, { LanguageBackLink } from "../shared/BreadCrumbs";
 import useLoad, { useLoadOnMount } from "../shared/useLoad";
 
-interface IProps {
-  language: ILanguage;
-  domainStatusItemId: number;
-  history: History;
-}
-
-export default function DomainStatusItemPage(props: IProps) {
+export default function DomainStatusItemPage() {
+  const { language } = useLanguageContext();
+  const domainStatusItemId = parseInt(useParams().domainStatusItemId!);
+  const props = { language, domainStatusItemId };
+  const navigate = useNavigate();
   const t = useContext(I18nContext);
 
   useLoadOnMount(`/api/languages/${props.language.id}/domain_status_items`);
@@ -41,7 +39,7 @@ export default function DomainStatusItemPage(props: IProps) {
       await saveLoad(duluAxios =>
         duluAxios.delete(`/api/domain_status_items/${props.domainStatusItemId}`)
       );
-      props.history.replace(`/languages/${props.language.id}`);
+      navigate(`/languages/${props.language.id}`, { replace: true });
     }
   };
 

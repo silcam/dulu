@@ -39,7 +39,13 @@ class Person < ApplicationRecord
 
   before_save :normalize_name_email
 
-  enum email_pref: %i[immediate daily weekly]
+  # Positional, not keyword: Rails 7.2 deprecates `enum email_pref: [...]` and
+  # Rails 8.0 removes it. Worth knowing how this fails under
+  # `deprecation = :raise` -- the deprecation fires partway through the class
+  # body, the reload re-runs `enum`, and the error you actually see is
+  # `ArgumentError: ... "immediate?" ... already defined by another enum`,
+  # which points at a conflict that does not exist.
+  enum :email_pref, %i[immediate daily weekly]
 
   def full_name
     "#{first_name} #{last_name}"
@@ -108,21 +114,9 @@ class Person < ApplicationRecord
   # end
 
   def self.search(query)
-    people = Person.multi_word_where(query, 'first_name', 'last_name')
-    results = []
-    people.each do |person|
-      subresults = []
-      person.current_participants.each do |participant|
-        subresults << { title: participant.cluster_language.display_name,
-                        model: participant.cluster_language,
-                        description: participant.roles_text }
-      end
-      results << { title: person.name,
-                   model: person,
-                   description: person.roles_text,
-                   subresults: subresults }
+    Person.multi_word_where(query, 'first_name', 'last_name').map do |person|
+      { title: person.name, model: person, description: person.roles_text }
     end
-    results
   end
 
   def self.basic_search(query)

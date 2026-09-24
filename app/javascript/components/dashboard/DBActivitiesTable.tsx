@@ -42,6 +42,22 @@ export default function DBActivitiesTable(props: IProps) {
   const domain = ["Research", "Workshops"].includes(props.type)
     ? "linguistics"
     : props.type.toLocaleLowerCase();
+  // Stringified because the dependency has to be one value of stable length: React
+  // compares dependency lists pairwise only as far as the shorter of the two, so an
+  // array spread straight into the list stops being compared at all the moment it
+  // grows. (That is the bug that was live in DBParticipantsTable.) The stringify
+  // moves out of the list itself so eslint can see what the dependency is.
+  //
+  // `domain` and `props.noAPILoad` are left out deliberately, for related but not
+  // identical reasons. `domain` is computed above from `props.type`, which is a string
+  // literal at every call site in MainContent, so an instance's domain never changes.
+  // `noAPILoad` is an independent prop rather than anything derived, but it too is fixed
+  // per instance: MainContent passes it as a bare attribute on the Workshops table and
+  // omits it everywhere else. `load` is left out because useLoad returns a new closure
+  // every render, and naming it would refetch on every render.
+  const languageIdsKey = JSON.stringify(props.languageIds);
+
+  /* eslint-disable react-hooks/exhaustive-deps -- see the note above */
   useEffect(() => {
     if (!props.noAPILoad) {
       props.languageIds.forEach(id =>
@@ -53,7 +69,8 @@ export default function DBActivitiesTable(props: IProps) {
         )
       );
     }
-  }, [JSON.stringify(props.languageIds)]);
+  }, [languageIdsKey]);
+  /* eslint-enable react-hooks/exhaustive-deps */
 
   return (
     <div>

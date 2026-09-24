@@ -1,5 +1,6 @@
 import FuzzyDate, { IFuzzyDate } from "../util/FuzzyDate";
 import update from "immutability-helper";
+import { Spec } from "immutability-helper";
 import { AnyObj } from "./TypeBucket";
 import { ILanguage } from "./Language";
 import { ICluster } from "./Cluster";
@@ -18,7 +19,12 @@ export interface IPeriodStrict {
 }
 
 export interface IEventParticipant {
-  id: number;
+  // Optional because a participant added in the form has not been saved yet, and
+  // Rails assigns the id when prepareEventParams posts it as a nested attribute.
+  // The model claimed `id: number` and immutability-helper 2's `any` types let the
+  // form push an id-less object anyway; 3's types surfaced it. One reader compares
+  // ids (prepareEventParams' _destroy pass) and is unaffected.
+  id?: number;
   person_id: number;
   roles: string[];
   _destroy?: boolean; // For API
@@ -148,7 +154,9 @@ export default class Event {
   static ensureEndDate<T extends IEvent>(event: T) {
     return event.end_date
       ? event
-      : update(event, { end_date: { $set: event.start_date } });
+      : // Generic T, so the object commands are not visible on Spec<T> -- see
+        // util/useMergeState.ts.
+        update(event, { end_date: { $set: event.start_date } } as Spec<T>);
   }
 
   static prepareEventParams(
@@ -157,7 +165,7 @@ export default class Event {
   ): AnyObj {
     const cluster_ids = event.clusters.map(c => c.id);
     const language_ids = event.languages.map(p => p.id);
-    let eventParticipantsAttributes: AnyObj = event.event_participants.reduce(
+    const eventParticipantsAttributes: AnyObj = event.event_participants.reduce(
       (accum, participant, index) => {
         accum[index] = participant;
         return accum;
@@ -175,16 +183,21 @@ export default class Event {
           };
       });
     }
-    return update(event, {
-      $merge: {
-        cluster_ids,
-        language_ids,
-        event_participants_attributes: eventParticipantsAttributes,
-        event_location_id: (event.location && event.location.id) || null,
-        new_event_location:
-          event.location && event.location.id == 0 ? event.location.name : null
-      }
-    });
+    // A plain spread rather than `update(event, { $merge: ... })`. Three of these
+    // keys -- cluster_ids, language_ids, event_participants_attributes -- do not
+    // exist on IEventInflated at all; they are Rails nested-attribute names, which
+    // is why the return type is AnyObj. immutability-helper 3's types reject
+    // $merge-ing keys that are not on the target, and correctly: this is building a
+    // request body, not updating a model.
+    return {
+      ...event,
+      cluster_ids,
+      language_ids,
+      event_participants_attributes: eventParticipantsAttributes,
+      event_location_id: (event.location && event.location.id) || null,
+      new_event_location:
+        event.location && event.location.id == 0 ? event.location.name : null
+    };
   }
 
   static languageBackToId(languageId: number) {

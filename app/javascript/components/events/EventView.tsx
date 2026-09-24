@@ -23,7 +23,7 @@ import useAppSelector, {
   useClusters,
   useEventParticipants
 } from "../../reducers/useAppSelector";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 interface IProps {
   id: number;
@@ -42,10 +42,14 @@ export default function EventView(props: IProps) {
   const [draftEvent, setDraftEvent] = useState<IEventInflated | null>(null);
   const editing = draftEvent != null;
   const t = useContext(I18nContext);
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const updateEvent = (mergeEvent: Partial<IEvent>) =>
-    setDraftEvent(update(draftEvent, { $merge: mergeEvent }));
+    // immutability-helper types the result of `$merge` from the merge object, so it comes
+    // back as `IEvent | null` and loses the inflated fields that are still present at
+    // runtime. TypeScript 3.8 did not notice; 5.x does. The cast preserves the existing
+    // behaviour rather than restructuring the state shape mid-upgrade.
+    setDraftEvent(update(draftEvent, { $merge: mergeEvent }) as IEventInflated | null);
 
   const edit = () => {
     setDraftEvent({
@@ -78,7 +82,7 @@ export default function EventView(props: IProps) {
       const data = await saveLoad(duluAxios =>
         duluAxios.delete(`/api/events/${props.id}`)
       );
-      if (data) history.goBack();
+      if (data) navigate(-1);
     }
   };
 

@@ -1,1 +1,10 @@
-json.partial! "search", results: @results
+json.results @results do |result|
+  json.title result[:title]
+  json.description result[:description]
+
+  if result[:route]
+    json.route result[:route]
+  elsif result[:model]
+    json.route model_path(result[:model])
+  end
+end

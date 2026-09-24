@@ -3,7 +3,6 @@ import LanguageEventsContainer from "./LanguageEventsContainer";
 import { DSICategory } from "../../models/DomainStatusItem";
 import { ILanguage } from "../../models/Language";
 import { LanguagePageTab } from "./LanguagePage";
-import { Location, History } from "history";
 import I18nContext from "../../contexts/I18nContext";
 import TranslationProgress from "./TranslationProgress";
 import DomainStatus from "./DomainStatus";
@@ -13,12 +12,17 @@ import ParticipantsTable from "./ParticipantsTable";
 interface IProps {
   language: ILanguage;
   tab: LanguagePageTab;
-  location: Location;
 
-  history: History;
 }
 
 export default function LanguagePageContent(props: IProps) {
+  // Above the early returns, not below them: this component calls exactly one
+  // hook, and a hook after a conditional return means the count changes with the
+  // branch. It is currently harmless only because LanguagePage gives every tab its
+  // own instance with a constant `tab` prop, so an instance never switches branch
+  // -- a fact two files away that nothing here enforces.
+  const t = useContext(I18nContext);
+
   if (props.tab == "Events") {
     return (
       <LanguageEventsContainer
@@ -36,8 +40,6 @@ export default function LanguagePageContent(props: IProps) {
       />
     );
   }
-
-  const t = useContext(I18nContext);
 
   return (
     <div className={`padBottom`}>
@@ -72,7 +74,6 @@ export default function LanguagePageContent(props: IProps) {
       <LanguageEventsContainer
         language={props.language}
         basePath={`/languages/${props.language.id}`}
-        history={props.history}
         domain={props.tab}
       />
       <ParticipantsTable
@@ -80,7 +81,6 @@ export default function LanguagePageContent(props: IProps) {
         language={props.language}
         can={props.language.can}
         basePath={`/languages/${props.language.id}`}
-        history={props.history}
       />
 
       <DomainStatus {...props} categories={categoriesByDomain(props.tab)} />

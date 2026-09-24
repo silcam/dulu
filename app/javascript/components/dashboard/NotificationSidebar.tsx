@@ -83,10 +83,27 @@ export default function NotificationsSidebar() {
   };
 
   const currentChannel = viewPrefs.notificationsTab || 0;
+  /* eslint-disable react-hooks/set-state-in-effect, react-hooks/exhaustive-deps --
+     Deliberate, both of them. getNotifications begins with
+     setChannelState(channel, { loading: true }), and the render that triggers is the
+     one that shows the tab as loading.
+
+     The dependency list names viewPrefs.notificationsTab and deliberately omits
+     `state`, which the condition below reads. Fetch-on-tab-change is the intent: the
+     check is "has this tab been fetched yet", so re-running whenever `state` changed
+     would defeat it -- the effect would fire after its own fetch populated the tab,
+     find the length non-zero, and do nothing. currentChannel is derived from
+     viewPrefs.notificationsTab a line above, so it is already covered.
+
+     The stale-closure risk this normally implies was checked and is not present:
+     getNotifications reads state[channel].nextPage for pagination, but the effect
+     only runs on a tab change, and at that moment its closure is the current
+     render's. */
   useEffect(() => {
     if (state[currentChannel].notifications.length == 0)
       getNotifications(currentChannel);
   }, [viewPrefs.notificationsTab]);
+  /* eslint-enable react-hooks/set-state-in-effect, react-hooks/exhaustive-deps */
 
   return (
     <div className={styles.container}>

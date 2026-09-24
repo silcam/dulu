@@ -14,7 +14,7 @@ import { Locale } from "../../i18n/i18n";
 import { ICan } from "../../actions/canActions";
 import useLoad from "../shared/useLoad";
 import useAppSelector from "../../reducers/useAppSelector";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 interface IState {
   person: IPerson;
@@ -24,7 +24,7 @@ interface IState {
 }
 
 export default function NewPersonForm() {
-  const history = useHistory();
+  const navigate = useNavigate();
   const can = useAppSelector(state => state.can.people);
   const [saveLoad] = useLoad();
 
@@ -35,7 +35,7 @@ export default function NewPersonForm() {
     saveLoad(async duluAxios => {
       const data = await duluAxios.post("/api/people", { person });
       if (data) {
-        if (data.people) history.push(`/people/${data.people[0].id}`);
+        if (data.people) navigate(`/people/${data.people[0].id}`);
         else setDuplicates(data.duplicates);
       }
       return data;

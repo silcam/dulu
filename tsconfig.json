@@ -9,8 +9,24 @@
     "moduleResolution": "node",
     "noEmit": true,
     "resolveJsonModule": true,
+    "skipLibCheck": true,
+    // Empty, not absent. "node" used to be here for one `require()` in NavBar.tsx, a
+    // webpack image require now written as an ordinary import (see types/images.d.ts).
+    // Nothing else in application code needs an ambient global, and explicit module
+    // imports (react, react-dom, redux, ...) resolve through @types regardless of this
+    // field -- but omitting it entirely would pull in *every* installed @types package,
+    // which is the opposite of what this allow-list is for.
+    "types": [],
     "sourceMap": true,
-    "target": "es3",
+    // es2019, not es2020. ts-loader emits whatever `target` says and never consults
+    // browserslist, so this -- not package.json -- is the real browser floor for every
+    // .ts/.tsx file. es2020 emits optional chaining (`?.`) and nullish coalescing natively,
+    // which Chromium below 80 cannot even parse: the Cypress 4.1 gate runs on Electron 78
+    // and the whole app died with "Uncaught SyntaxError: Unexpected token '.'". es2019
+    // downlevels those two and keeps everything else modern. Raise this when Cypress moves
+    // in Phase 6 -- and check the browserslist floor at the same time, since the two have
+    // been silently disagreeing.
+    "target": "es2019",
     "jsx": "react",
     "strict": true,
     "noUnusedLocals": true,
@@ -22,7 +38,15 @@
     "spec",
     "node_modules",
     "vendor",
-    "public"
+    "public",
+    // Build configuration, not application code. With `allowJs` and no `include`, these
+    // would otherwise be pulled into the program, and TypeScript would follow their
+    // `require`s into webpack's and Shakapacker's own .d.ts files -- which are typed for a
+    // much newer TypeScript than this project needs to care about.
+    "config",
+    "babel.config.js",
+    "postcss.config.js",
+    "cypress.json"
   ],
   "compileOnSave": true
 }

@@ -1,3 +1,5 @@
+import { useNavigate } from "react-router-dom";
+import { useClusterContext } from "./ClusterPageRouter";
 import React, { useState, useContext } from "react";
 import EditActionBar from "../shared/EditActionBar";
 import TextOrEditText from "../shared/TextOrEditText";
@@ -5,23 +7,17 @@ import update from "immutability-helper";
 // import styles from "./PersonPage.css";
 import ClusterLanguagesTable from "./ClusterLanguagesTable";
 import Cluster, { IClusterInflated } from "../../models/Cluster";
-import { History } from "history";
 import Loading from "../shared/Loading";
 import I18nContext from "../../contexts/I18nContext";
 import useLoad from "../shared/useLoad";
 import useAppSelector from "../../reducers/useAppSelector";
 import ParticipantsTable from "../languages/ParticipantsTable";
 
-interface IProps {
-  id: number;
-  basePath: string;
-  history: History<any>;
-  loading: boolean;
-}
-
 type MaybeIClusterInflated = IClusterInflated | undefined;
 
-export default function ClusterPage(props: IProps) {
+export default function ClusterPage() {
+  const props = useClusterContext();
+  const navigate = useNavigate();
   const t = useContext(I18nContext);
   const [saveLoad, saving] = useLoad();
   const [editing, setEditing] = useState(false);
@@ -34,7 +30,10 @@ export default function ClusterPage(props: IProps) {
     undefined
   );
 
-  const updateCluster = (mergeCluster: { [prop: string]: any }) =>
+  // Typed rather than an open bag: this goes to `update(..., { $merge })`, which
+  // silently keeps whatever it is given, so a misspelt field name used to survive all
+  // the way to the PUT body and simply not do anything.
+  const updateCluster = (mergeCluster: Partial<IClusterInflated>) =>
     setDraftCluster(update(draftCluster, { $merge: mergeCluster }));
 
   const edit = () => {
@@ -68,7 +67,7 @@ export default function ClusterPage(props: IProps) {
         duluAxios.delete(`/api/clusters/${props.id}`)
       );
       if (data) {
-        props.history.replace("/clusters");
+        navigate("/clusters", { replace: true });
       }
     }
   };
@@ -122,7 +121,6 @@ export default function ClusterPage(props: IProps) {
           cluster={cluster}
           can={cluster.can}
           basePath={props.basePath}
-          history={props.history}
         />
       )}
     </div>

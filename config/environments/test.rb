@@ -34,13 +34,26 @@ Rails.application.configure do
   # ActionMailer::Base.deliveries array.
   config.action_mailer.delivery_method = :test
 
-  # Print deprecation notices to the stderr.
-  config.active_support.deprecation = :stderr
+  # Raise on deprecation notices rather than printing them.
+  # Set during the Rails 8 upgrade (see UPGRADE_PLAN.md): this converts each Rails
+  # version's deprecation warnings into test failures at the hop that introduces them,
+  # instead of letting them scroll past and become hard errors two versions later.
+  config.active_support.deprecation = :raise
 
   # Raises error for missing translations
-  config.action_view.raise_on_missing_translations = true
+  # Renamed in Rails 6.1 (action_view.* removed in 7.0). Note this is not a
+  # pure rename: i18n.raise_on_missing_translations also covers translations
+  # looked up from controllers, not just views, so it is strictly stricter.
+  config.i18n.raise_on_missing_translations = true
 
-  # Disable logging to make tests faster
-  config.logger = Logger.new(nil)
-  config.log_level = :fatal
+  # Log to log/test.log rather than discarding output. `Logger.new(nil)` made
+  # `bin/rails test` marginally faster, but it also meant the Cypress failure-capture
+  # hook (spec/cypress/app_commands/log_fail.rb) had nothing to capture: every failing
+  # E2E test wrote a file containing whatever stale bytes were already in log/test.log.
+  # Diagnosing an intermittent E2E failure without the server side of the story is
+  # guesswork, and this upgrade spent several runs doing exactly that. See UPGRADE_PLAN.md
+  # Phase 2. Keep the level at :info -- :debug logs every SQL statement and makes the file
+  # unreadable.
+  config.logger = ActiveSupport::Logger.new(Rails.root.join("log", "test.log"))
+  config.log_level = :info
 end

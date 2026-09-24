@@ -2,22 +2,16 @@ import React, { useContext } from "react";
 import styles from "../shared/MasterDetail.css";
 import PeopleTable from "./PeopleTable";
 import AddIcon from "../shared/icons/AddIcon";
-import { Link } from "react-router-dom";
+import { Link, Outlet, useParams } from "react-router-dom";
 import FlexSpacer from "../shared/FlexSpacer";
 import GoBar from "../shared/GoBar";
-import { History } from "history";
 import I18nContext from "../../contexts/I18nContext";
 import { useLoadOnMount } from "../shared/useLoad";
 import useAppSelector from "../../reducers/useAppSelector";
-import PeopleRouter from "./PeopleRouter";
 
-interface IProps {
-  id?: number;
-  history: History;
-}
-
-export default function PeopleBoard(props: IProps) {
+export default function PeopleBoard() {
   const t = useContext(I18nContext);
+  const { id } = useParams();
   const people = useAppSelector(state => state.people);
   const can = useAppSelector(state => state.can.people);
 
@@ -42,10 +36,10 @@ export default function PeopleBoard(props: IProps) {
       </div>
       <div className={styles.masterDetailContainer}>
         <div className={styles.master}>
-          <PeopleTable id={props.id} people={people} />
+          <PeopleTable id={id ? parseInt(id) : undefined} people={people} />
         </div>
-        <div className={styles.detail}>
-          <PeopleRouter />
+        <div className={styles.detail} key={id}>
+          <Outlet />
         </div>
       </div>
     </div>

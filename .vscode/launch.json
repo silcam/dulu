@@ -9,71 +9,27 @@
       "webRoot": "${workspaceFolder}/public"
     },
     {
-      "name": "Debug Local File",
-      "type": "Ruby",
-      "request": "launch",
-      "cwd": "${workspaceRoot}",
-      "program": "${workspaceRoot}/main.rb"
-    },
-    {
-      "name": "Listen for rdebug-ide",
-      "type": "Ruby",
-      "request": "attach",
-      "cwd": "${workspaceRoot}",
-      "remoteHost": "127.0.0.1",
-      "remotePort": "1234",
-      "remoteWorkspaceRoot": "${workspaceRoot}"
-    },
-    {
       "name": "Rails server",
-      "type": "Ruby",
+      "type": "rdbg",
       "request": "launch",
       "cwd": "${workspaceRoot}",
-      "program": "${workspaceRoot}/bin/rails",
-      "args": [
-        "server"
-      ]
+      "script": "${workspaceRoot}/bin/rails",
+      "args": ["server"],
+      "askParameters": false
     },
     {
-      "name": "Rails Test",
-      "type": "Ruby",
+      "name": "Rails Test (current file:line)",
+      "type": "rdbg",
       "request": "launch",
       "cwd": "${workspaceRoot}",
-      "program": "${workspaceRoot}/bin/rails",
-      "args": [
-        "test",
-        "${file}:${lineNumber}"
-      ]
+      "script": "${workspaceRoot}/bin/rails",
+      "args": ["test", "${file}:${lineNumber}"],
+      "askParameters": false
     },
     {
-      "name": "RSpec - all",
-      "type": "Ruby",
-      "request": "launch",
-      "cwd": "${workspaceRoot}",
-      "program": "${workspaceRoot}/bin/rspec",
-      "args": [
-        "-I",
-        "${workspaceRoot}"
-      ]
-    },
-    {
-      "name": "RSpec - active spec file only",
-      "type": "Ruby",
-      "request": "launch",
-      "cwd": "${workspaceRoot}",
-      "program": "${workspaceRoot}/bin/rspec",
-      "args": [
-        "-I",
-        "${workspaceRoot}",
-        "${file}"
-      ]
-    },
-    {
-      "name": "Cucumber",
-      "type": "Ruby",
-      "request": "launch",
-      "cwd": "${workspaceRoot}",
-      "program": "${workspaceRoot}/bin/cucumber"
+      "name": "Attach to rdbg",
+      "type": "rdbg",
+      "request": "attach"
     }
   ]
 }

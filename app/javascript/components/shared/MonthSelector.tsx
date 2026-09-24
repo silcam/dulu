@@ -18,7 +18,7 @@ export default function MonthSelector(props: IProps) {
       onChange={e => props.handleInput(e.target.value)}
     >
       <option value="">{t("Month")}</option>
-      {t("month_names_short").map((month: string, index: number) => {
+      {t<string[]>("month_names_short").map((month, index) => {
         return (
           <option key={index + 1} value={index + 1}>
             {month}

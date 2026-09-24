@@ -146,7 +146,7 @@ export default function DomainStatusItemView(props: IProps) {
           <tr>
             <th>{t("Link")}</th>
             <td>
-              <a href={props.item.link} target="_blank">
+              <a href={props.item.link} target="_blank" rel="noreferrer">
                 {props.item.link}
               </a>
             </td>

@@ -29,20 +29,9 @@ class Cluster < ApplicationRecord
   end
 
   def self.search(query)
-    clusters = Cluster.multi_word_where(query, "name")
-    results = []
-    clusters.each do |cluster|
-      subresults = []
-      cluster.languages.each do |language|
-        subresults << { title: language.name,
-                       model: language,
-                       description: I18n.t(:Language_program) }
-      end
-      results << { title: I18n.t(:Cluster_x, name: cluster.name),
-                   model: cluster,
-                   subresults: subresults }
+    Cluster.multi_word_where(query, "name").map do |cluster|
+      { title: I18n.t(:Cluster_x, name: cluster.name), model: cluster }
     end
-    results
   end
 
   def self.basic_search(query)

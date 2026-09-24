@@ -1,25 +1,18 @@
 import React from "react";
-import { ILanguage } from "../../models/Language";
-import { History } from "history";
 import { LanguageBackLink } from "../shared/BreadCrumbs";
 import EventView from "../events/EventView";
+import { useLanguageContext } from "./LanguagePageRouter";
+import { useParams } from "react-router-dom";
 
-interface IProps {
-  language: ILanguage;
-  eventId: number;
-  basePath: string;
-
-  history: History;
-}
-
-export default function LanguageEventPage(props: IProps) {
-  const language = props.language;
+export default function LanguageEventPage() {
+  const { language } = useLanguageContext();
+  const eventId = parseInt(useParams().eventId!);
 
   return (
     <div>
       <LanguageBackLink language={language} />
 
-      <EventView id={props.eventId} />
+      <EventView id={eventId} />
     </div>
   );
 }
