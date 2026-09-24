@@ -5,7 +5,7 @@
 // a hand-copied snapshot -- which is exactly how the `browserslist` key went missing at the
 // Webpacker 4 hop. See UPGRADE_PLAN.md Phase 2c.
 //
-// The preset's `isTestEnv` branch is load-bearing for Jest: `@babel/preset-env` with
+// The preset's `isTestEnv` branch is needed for Jest: `@babel/preset-env` with
 // `targets: { node: "current" }` leaves `modules` at "auto", i.e. CommonJS. Without it Jest
 // fails with "Cannot use import statement outside a module", which reads like a ts-jest
 // problem and is not one.

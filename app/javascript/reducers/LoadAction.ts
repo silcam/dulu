@@ -9,7 +9,7 @@ import { CanState } from "./canReducer";
 import { IEvent } from "../models/Event";
 import { IActivity } from "../models/Activity";
 
-// A `type`, not an `interface`, and the distinction is load-bearing since redux 5:
+// A `type`, not an `interface`, part of the redux 5 dependency upgrade:
 // `dispatch` now takes `UnknownAction`, which carries an index signature
 // (`[extraProps: string]: unknown`). TypeScript gives an object type alias an
 // implicit index signature but never gives one to an interface, so as an

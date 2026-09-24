@@ -83,8 +83,8 @@ describe("Notification Channels", () => {
     domainSelect().should("contain", "Literacy");
 
     // Leave Drew as the fixtures had him -- this spec sorts immediately before
-    // notifications.spec.js, which reads his feed. (That spec reloads the fixtures
-    // itself, so this is belt-and-braces rather than load-bearing.)
+    // notifications.spec.js, which reads his feed. The reloading is tested in
+    // another spec, so this is re-verified here.
     channelsRow()
       .contains("button", "Anthropology")
       .click();

@@ -76,15 +76,14 @@ describe("Navigation", () => {
     // also has to account for.
     cy.login("olga_ngombo@sil.org");
 
-    // On the languages board, not the regions board. The table assertion used to be
-    // load-bearing: GoBar searches the languages/people/organizations CoreData
-    // fetches after first paint, and its `useEffect(..., [query])` only recomputed
-    // on a query change, so typing before that fetch landed left the dropdown
-    // permanently empty (Phase 8d item 2). GoBar now derives its matches during
-    // render instead of storing them, so that defect is gone and this wait is
-    // ordinary determinism rather than a workaround -- keep it, since a race
-    // between the fetch and the keystroke would make the assertion below flaky
-    // for reasons unrelated to what this test is about.
+    // On the languages board, not the regions board.
+    // GoBar searches the languages/people/organizations and CoreData fetches after
+    // first paint, and its `useEffect(..., [query])` only recomputed on a query
+    // change, so typing before that fetch landed left the dropdown permanently empty
+    // GoBar now derives its matches during render instead of storing them, so that
+    // defect is gone and this wait is ordinary determinism rather than a workaround.
+    // keep it, since a race between the fetch and the keystroke would make the
+    // assertion below flaky for reasons unrelated to what this test is about.
     cy.visit("/languages");
     cy.contains("tr", "Hdi");
 
