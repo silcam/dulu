@@ -93,7 +93,9 @@ group :development do
   # documented way to run this app -- dies before reading the Procfile.
   gem "foreman", "~> 0.90"
   gem "rubocop"
-  # gem 'capistrano-yarn'
+  gem "capistrano-yarn"
+  gem "ed25519", "~> 1.2"
+  gem "bcrypt_pbkdf", "~> 1.0"
 
   # Access an IRB console on exception pages or by using <%= console %> anywhere in the code.
   gem "web-console", ">= 3.3.0"

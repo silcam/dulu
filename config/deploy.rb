@@ -3,8 +3,6 @@ lock '~> 3.8'
 
 set :application, "dulu"
 set :repo_url, "https://github.com/silcam/dulu.git"
-set :deploy_via, :remote_cache
-set :bundle_flags, '--deployment'
 # set :branch, "postgres"
 
 append :linked_files, "config/secrets.yml", "config/initializers/omniauth.rb", "config/database.yml"
@@ -12,6 +10,10 @@ append :linked_dirs, "tmp/pids", "node_modules"
 
 after 'deploy:publishing', 'delayed_job:restart'
 
+# Node comes from nvm on the server; the version is pinned by .nvmrc
+# the same way .ruby-version pins Ruby for rbenv.
+node_version = File.read(File.expand_path("../.nvmrc", __dir__)).strip
+set :default_env, { path: "$HOME/.nvm/versions/node/v#{node_version}/bin:$PATH" }
 
 # after 'deploy:publishing', 'recurring:init'
 
@@ -23,6 +25,9 @@ after 'deploy:publishing', 'delayed_job:restart'
 #   end
 # end
 # after 'deploy:updating', 'deploy:bundle_install'
+
+# Signal yarn to do a production install
+set :yarn_flags, %w(--production --frozen-lockfile)
 
 # Default branch is :master
 # ask :branch, `git rev-parse --abbrev-ref HEAD`.chomp
