@@ -5,7 +5,7 @@ class DailyEmailTask
   timezone "UTC"
 
   def perform
-    if Date.today.monday?
+    if Date.current.monday?
       people = Person.where(email_pref: [:daily, :weekly])
     else
       people = Person.where(email_pref: :daily)
