@@ -12,9 +12,9 @@ trying to setup Dulu for whatever reason, let me know so I can help you out.
   pinned in `.ruby-version` (currently set to 3.4.9). `Capfile` pins the same version for
   deploys, so the two must be changed together.
 * [Node.js](https://nodejs.org/). Recommended to use `nvm`. The version as pinned in `.nvmrc`
-  (currently 20.20.2). With nvm: `nvm install && nvm use`.
+  (currently 22.23.5). With nvm: `nvm install && nvm use`.
 * **Yarn Classic**, via corepack: run `corepack enable` once after installing Node. Node
-  20.20.2 ships `corepack` so after `corepack enable` yarn will download the correct version
+  22 ships `corepack` so after `corepack enable` yarn will download the correct version
   on first use, which is pinned to Yarn classic.
 * [PostGreSQL](https://www.postgresql.org/)
 
