@@ -6,7 +6,7 @@ set :repo_url, "https://github.com/silcam/dulu.git"
 # set :branch, "postgres"
 
 append :linked_files, "config/secrets.yml", "config/initializers/omniauth.rb", "config/database.yml"
-append :linked_dirs, "tmp/pids", "node_modules"
+append :linked_dirs, "tmp/pids", "node_modules", "log"
 
 after 'deploy:publishing', 'delayed_job:restart'
 
